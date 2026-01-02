@@ -880,7 +880,18 @@ final class InvoiceController extends BaseController
             return $this->webService->getNotFoundResponse();
         }
         if (($sR->getSetting('debug_mode') == '1') && $this->userService->hasPermission(Permissions::EDIT_INV)) {
-            $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/invoice'));
+            // Load language-specific info file from locale subfolder (e.g., ru/invoice.php)
+            $language = (string) $session->get('_language', 'en');
+            $languageFile = "//invoice/info/{$language}/invoice";
+            
+            // Check if language-specific file exists by attempting to render it
+            try {
+                $content = $this->viewRenderer->renderPartialAsString($languageFile);
+                $this->flashMessage('info', $content);
+            } catch (\Throwable) {
+                // Fallback to default English version
+                $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/en/invoice'));
+            }
         }
         $gR->repoCountAll() === 0 ? $this->install_default_invoice_and_quote_group($gR) : '';
         $pmR->count() === 0 ? $this->install_default_payment_methods($pmR) : '';

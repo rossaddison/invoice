@@ -4,22 +4,40 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Invoice\QuoteAmount\QuoteAmountRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\QuoteAmount\QuoteAmountRepository::class)]
+#[Entity(repository: QuoteAmountRepository::class)]
 class QuoteAmount
 {
     #[BelongsTo(target: Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $quote_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $item_subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $item_tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $quote_id = null,
+        
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $item_subtotal = 0.00,
+            
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $item_tax_total = 0.00,
+        
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private float $packhandleship_total = 0.00,
+            
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private float $packhandleship_tax = 0.00,
+            
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $tax_total = 0.00,
+            
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $total = 0.00)
     {
     }
@@ -67,6 +85,31 @@ class QuoteAmount
     public function setItem_tax_total(float $item_tax_total): void
     {
         $this->item_tax_total = $item_tax_total;
+    }
+    
+    // Holds QuoteAllowanceCharge accumulative totals
+    public function getPackhandleship_total(): float
+    {
+        return $this->packhandleship_total;
+    }
+
+    public function setPackhandleship_total(float $packhandleship_total): void
+    {
+        $this->packhandleship_total = $packhandleship_total;
+    }
+
+    // Holds QuoteAllowanceCharge accumulative tax totals
+    // See src/Invoice/Helpers/NumberHelper function calculate_quote
+    // which recalculates this total when the quote is redirected
+    // to the view after adding/deleting/editing an qac
+    public function getPackhandleship_tax(): float
+    {
+        return $this->packhandleship_tax;
+    }
+
+    public function setPackhandleship_tax(float $packhandleship_tax): void
+    {
+        $this->packhandleship_tax = $packhandleship_tax;
     }
 
     public function getTax_total(): ?float

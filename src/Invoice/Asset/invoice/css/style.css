@@ -4082,7 +4082,7 @@ button.close {
     word-spacing: normal;
     word-wrap: normal;
     white-space: normal;
-    font-size: 12px;
+    font-size: 18px;
     filter: alpha(opacity=0);
     opacity: 0
 }
@@ -4163,12 +4163,14 @@ button.close {
     border-bottom-color: #000
 }
 .tooltip-inner {
-    max-width: 200px;
-    padding: 3px 8px;
+    max-width: 300px;
+    padding: 6px 12px;
     color: #fff;
     text-align: center;
     background-color: #000;
-    border-radius: 4px
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: 500;
 }
 .tooltip-arrow {
     position: absolute;

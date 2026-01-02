@@ -12,7 +12,6 @@ use Yiisoft\Validator\Rule\Required;
 final class SalesOrderItemForm extends FormModel
 {
     private ?string $id = '';
-    private ?string $so_id = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $peppol_po_itemid = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
@@ -46,7 +45,7 @@ final class SalesOrderItemForm extends FormModel
 
     private ?int $product_unit_id = null;
 
-    public function __construct(SoItem $salesOrderItem)
+    public function __construct(SoItem $salesOrderItem, private readonly ?string $so_id )
     {
         $this->id = $salesOrderItem->getId();
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
@@ -61,8 +60,7 @@ final class SalesOrderItemForm extends FormModel
         $this->discount_amount = $salesOrderItem->getDiscount_amount();
         $this->charge_amount = $salesOrderItem->getCharge_amount();
         $this->order = $salesOrderItem->getOrder();
-        $this->product_unit = $salesOrderItem->getProduct_unit();        
-        $this->so_id = $salesOrderItem->getSales_order_id();
+        $this->product_unit = $salesOrderItem->getProduct_unit();  
         $this->tax_rate_id = $salesOrderItem->getTax_rate_id();
         $this->product_id = $salesOrderItem->getProduct_id();
         $this->task_id = $salesOrderItem->getTask_id();

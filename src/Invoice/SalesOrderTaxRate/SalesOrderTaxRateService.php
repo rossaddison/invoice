@@ -18,10 +18,10 @@ final readonly class SalesOrderTaxRateService
      */
     public function saveSoTaxRate(SalesOrderTaxRate $model, array $array): void
     {
-        isset($array['so_id']) ? $model->setSo_id((int) $array['so_id']) : '';
+        isset($array['sales_order_id']) ? $model->setSales_order_id((int) $array['sales_order_id']) : '';
         isset($array['tax_rate_id']) ? $model->setTax_rate_id((int) $array['tax_rate_id']) : '';
         $model->setInclude_item_tax((int) $array['include_item_tax'] ?: 0);
-        $model->setSo_tax_rate_amount((float) $array['so_tax_rate_amount'] ?: 0.00);
+        $model->setSales_order_tax_rate_amount((float) $array['sales_order_tax_rate_amount'] ?: 0.00);
 
         $this->repository->save($model);
     }

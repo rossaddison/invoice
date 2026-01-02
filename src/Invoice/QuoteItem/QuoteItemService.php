@@ -14,11 +14,14 @@ use App\Invoice\Task\TaskRepository as TaskR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UR;
 use Yiisoft\Translator\TranslatorInterface as Translator;
+use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR;
 
 final readonly class QuoteItemService
 {
-    public function __construct(private QuoteItemRepository $repository)
-    {
+    public function __construct(
+        private QuoteItemRepository $repository,
+        private ACQIR $acqir
+    ) {
     }
 
     /**
@@ -86,7 +89,15 @@ final readonly class QuoteItemService
         $tax_rate_percentage = $this->taxrate_percentage((int) $tax_rate_id, $trr);       
         $this->repository->save($model);
         if (isset($array['quantity'], $array['price'], $array['discount_amount']) && null !== $tax_rate_percentage) {
-            $this->saveQuoteItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], $tax_rate_percentage, $qiar, $qias);
+            $this->saveQuoteItemAmount(
+                (int) $model->getId(),
+                (float) $array['quantity'],
+                (float) $array['price'],
+                (float) $array['discount_amount'],
+                $tax_rate_percentage,
+                $qiar,
+                $qias
+            );
         }
     }
 
@@ -138,7 +149,15 @@ final readonly class QuoteItemService
         if ($product_id) {
             $this->repository->save($model);
             if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
-                $this->saveQuoteItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], $tax_rate_percentage, $qiar, $qias);
+                $this->saveQuoteItemAmount(
+                    (int) $model->getId(),
+                    (float) $array['quantity'],
+                    (float) $array['price'],
+                    (float) $array['discount_amount'],
+                    $tax_rate_percentage,
+                    $qiar,
+                    $qias
+                );
             }
         }
     }
@@ -191,7 +210,15 @@ final readonly class QuoteItemService
         if ($task_id > 0) {
             $this->repository->save($model);
             if (isset($array['quantity'], $array['price'], $array['discount_amount']) && null !== $tax_rate_percentage) {
-                $this->saveQuoteItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], $tax_rate_percentage, $qiar, $qias);
+                $this->saveQuoteItemAmount(
+                    (int) $model->getId(),
+                    (float) $array['quantity'],
+                    (float) $array['price'],
+                    (float) $array['discount_amount'],
+                    $tax_rate_percentage,
+                    $qiar,
+                    $qias
+                );
             }
         }
     }
@@ -314,6 +341,7 @@ final readonly class QuoteItemService
     }
 
     /**
+     * Enhanced: Recalculate QuoteItemAmount including all related allowance/charges.
      * @param int $quote_item_id
      * @param float $quantity
      * @param float $price
@@ -322,21 +350,47 @@ final readonly class QuoteItemService
      * @param QIAR $qiar
      * @param QIAS $qias
      */
-    public function saveQuoteItemAmount(int $quote_item_id, float $quantity, float $price, float $discount, ?float $tax_rate_percentage, QIAR $qiar, QIAS $qias): void
-    {
+    public function saveQuoteItemAmount(
+        int $quote_item_id,
+        float $quantity,
+        float $price,
+        float $discount,
+        ?float $tax_rate_percentage,
+        QIAR $qiar,
+        QIAS $qias
+    ): void {
         $qias_array = [];
         $qias_array['quote_item_id'] = $quote_item_id;
         $sub_total = $quantity * $price;
-        if (null !== $tax_rate_percentage) {
-            $tax_total = ($sub_total * ($tax_rate_percentage / 100.00));
-        } else {
-            $tax_total = 0.00;
-        }
         $discount_total = $quantity * $discount;
+        // Fetch all allowance/charges for this item
+        $all_charges = 0.00;
+        $all_charges_vat_or_tax = 0.00;
+        $all_allowances = 0.00;
+        $all_allowances_vat_or_tax = 0.00;
+        $acqis = $this->acqir->repoQuoteItemquery((string)$quote_item_id);
+        /** @var \App\Invoice\Entity\QuoteItemAllowanceCharge $acqi */
+        foreach ($acqis as $acqi) {
+            if ($acqi->getAllowanceCharge()?->getIdentifier() == '1') {
+                $all_charges += (float) $acqi->getAmount();
+                $all_charges_vat_or_tax += (float) $acqi->getVatOrTax();
+            } else {
+                $all_allowances += (float) $acqi->getAmount();
+                $all_allowances_vat_or_tax += (float) $acqi->getVatOrTax();
+            }
+        }
+        $qpIncAc = $sub_total + $all_charges - $all_allowances;
+        if (null !== $tax_rate_percentage) {
+            $current_tax_total = ($qpIncAc - $discount_total) * ($tax_rate_percentage / 100.00);
+        } else {
+            $current_tax_total = 0.00;
+        }
+        $all_vat_or_tax = $all_charges_vat_or_tax - $all_allowances_vat_or_tax;
+        $new_tax_total = $current_tax_total + $all_vat_or_tax;
         $qias_array['discount'] = $discount_total;
-        $qias_array['subtotal'] = $sub_total;
-        $qias_array['taxtotal'] = $tax_total;
-        $qias_array['total'] = $sub_total - $discount_total + $tax_total;
+        $qias_array['subtotal'] = $qpIncAc;
+        $qias_array['taxtotal'] = $new_tax_total;
+        $qias_array['total'] = $qpIncAc - $discount_total + $new_tax_total;
         if ($qiar->repoCount((string) $quote_item_id) === 0) {
             $qias->saveQuoteItemAmountNoForm(new QuoteItemAmount(), $qias_array);
         } else {

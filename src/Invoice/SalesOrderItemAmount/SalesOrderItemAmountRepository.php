@@ -34,7 +34,7 @@ final class SalesOrderItemAmountRepository extends Select\Repository
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-                      ->load('so_item');
+                      ->load('sales_order_item');
         return $this->prepareDataReader($query);
     }
 
@@ -85,22 +85,22 @@ final class SalesOrderItemAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderItemAmountquery(string $so_item_id): ?SalesOrderItemAmount
+    public function repoSalesOrderItemAmountquery(string $sales_order_item_id): ?SalesOrderItemAmount
     {
         $query = $this->select()
-                      ->load(['so_item'])
-                      ->where(['so_item_id' => $so_item_id]);
+                      ->load(['sales_order_item'])
+                      ->where(['sales_order_item_id' => $sales_order_item_id]);
         return  $query->fetchOne() ?: null;
     }
 
     /**
-     * @param string $so_item_id
+     * @param string $sales_order_item_id
      * @return int
      */
-    public function repoCount(string $so_item_id): int
+    public function repoCount(string $sales_order_item_id): int
     {
         $query = $this->select()
-                      ->where(['so_item_id' => $so_item_id]);
+                      ->where(['sales_order_item_id' => $sales_order_item_id]);
         return $query->count();
     }
 }

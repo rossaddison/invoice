@@ -8,24 +8,30 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Widget\FormFields;
 // Entity's
+use App\Invoice\Entity\AllowanceCharge;
 use App\Invoice\Entity\Contract;
 use App\Invoice\Entity\CustomField;
 use App\Invoice\Entity\DeliveryLocation;
 use App\Invoice\Entity\EmailTemplate;
 use App\Invoice\Entity\Group;
 use App\Invoice\Entity\Inv;
+use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvCustom;
 use App\Invoice\Entity\InvTaxRate;
 use App\Invoice\Entity\Quote;
 use App\Invoice\Entity\QuoteAmount;
+use App\Invoice\Entity\QuoteAllowanceCharge;
 use App\Invoice\Entity\QuoteItem;
+use App\Invoice\Entity\QuoteItemAllowanceCharge;
 use App\Invoice\Entity\QuoteCustom;
 use App\Invoice\Entity\QuoteTaxRate;
 use App\Invoice\Entity\SalesOrder as SoEntity;
 use App\Invoice\Entity\SalesOrderAmount as SoAmount;
+use App\Invoice\Entity\SalesOrderAllowanceCharge;
 use App\Invoice\Entity\SalesOrderItem as SoItem;
+use App\Invoice\Entity\SalesOrderItemAllowanceCharge;
 use App\Invoice\Entity\SalesOrderCustom as SoCustom;
 use App\Invoice\Entity\SalesOrderTaxRate as SoTaxRate;
 use App\Invoice\Entity\TaxRate;
@@ -36,6 +42,7 @@ use App\User\User;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Inv\InvService;
 use App\Invoice\InvItem\InvItemService;
+use App\Invoice\InvAllowanceCharge\InvAllowanceChargeService;
 use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\InvItemAmount\InvItemAmountService;
 use App\Invoice\InvTaxRate\InvTaxRateService;
@@ -46,12 +53,16 @@ use App\Invoice\SalesOrder\SalesOrderService as soS;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountService as soAS;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomService as soCS;
 use App\Invoice\SalesOrderItem\SalesOrderItemService as soIS;
+use App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeService
+    as soIACS;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountService as soIAS;
 use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateService as soTRS;
 // Quote
+use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeService;
 use App\Invoice\QuoteAmount\QuoteAmountService;
 use App\Invoice\QuoteCustom\QuoteCustomService;
 use App\Invoice\QuoteItem\QuoteItemService;
+use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeService;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountService as QIAS;
 use App\Invoice\QuoteTaxRate\QuoteTaxRateService;
 use App\Service\WebControllerService;
@@ -61,14 +72,17 @@ use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateForm as SoTaxRateForm;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomForm as SoCustomForm;
 use App\Invoice\SalesOrder\SalesOrderForm as SoForm;
 use App\Invoice\Inv\InvForm;
+use App\Invoice\InvAllowanceCharge\InvAllowanceChargeForm;
 use App\Invoice\InvAmount\InvAmountForm;
 use App\Invoice\InvItem\InvItemForm;
 use App\Invoice\InvCustom\InvCustomForm;
 use App\Invoice\InvTaxRate\InvTaxRateForm;
+use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeForm;
 use App\Invoice\QuoteItem\QuoteItemForm;
 use App\Invoice\QuoteTaxRate\QuoteTaxRateForm;
 use App\Invoice\QuoteCustom\QuoteCustomForm;
 // Repositories
+use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\ClientCustom\ClientCustomRepository as CCR;
 use App\Invoice\Contract\ContractRepository as ContractRepo;
@@ -81,14 +95,18 @@ use App\Invoice\Group\Exception\GroupException;
 use App\Invoice\InvCustom\InvCustomRepository as ICR;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\PaymentCustom\PaymentCustomRepository as PCR;
 use App\Invoice\PaymentMethod\PaymentMethodRepository as PMR;
 use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\ProductImage\ProductImageRepository as PIR;
 use App\Invoice\Quote\QuoteRepository as QR;
+use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as ACQR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
 use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
+use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository
+    as ACQIR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTRR;
@@ -124,6 +142,7 @@ use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Http\Method;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Json\Json;
 use Yiisoft\Mailer\MailerInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
@@ -151,6 +170,7 @@ final class QuoteController extends BaseController
      *
      * @param DataResponseFactoryInterface $factory
      * @param FormFields $formFields
+     * @param InvAllowanceChargeService $inv_allowance_charge_service
      * @param InvAmountService $inv_amount_service
      * @param InvService $inv_service
      * @param InvCustomService $inv_custom_service
@@ -161,11 +181,13 @@ final class QuoteController extends BaseController
      * @param soAS $so_amount_service
      * @param soCS $so_custom_service
      * @param soIS $so_item_service
+     * @param soIACS $so_item_ac_service
      * @param soS $so_service
      * @param soTRS $so_tax_rate_service
      * @param QuoteAmountService $quote_amount_service
      * @param QuoteCustomService $quote_custom_service
      * @param QuoteItemService $quote_item_service
+     * @param QuoteItemAllowanceChargeService $quote_item_ac_service
      * @param QuoteService $quote_service
      * @param QuoteTaxRateService $quote_tax_rate_service
      * @param QuoteCustomFieldProcessor $quoteCustomFieldProcessor
@@ -182,6 +204,7 @@ final class QuoteController extends BaseController
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
         private readonly FormFields $formFields,
+        private readonly InvAllowanceChargeService $inv_allowance_charge_service,
         private readonly InvAmountService $inv_amount_service,
         private readonly InvService $inv_service,
         private readonly InvCustomService $inv_custom_service,
@@ -192,11 +215,14 @@ final class QuoteController extends BaseController
         private readonly soAS $so_amount_service,
         private readonly soCS $so_custom_service,
         private readonly soIS $so_item_service,
+        private readonly soIACS $so_item_ac_service,    
         private readonly soS $so_service,
         private readonly soTRS $so_tax_rate_service,
+        private readonly QuoteAllowanceChargeService $qac_Service,
         private readonly QuoteAmountService $quote_amount_service,
         private readonly QuoteCustomService $quote_custom_service,
         private readonly QuoteItemService $quote_item_service,
+        private readonly QuoteItemAllowanceChargeService $quote_item_ac_service,
         private readonly QuoteService $quote_service,
         private readonly QuoteTaxRateService $quote_tax_rate_service,
         private readonly QuoteCustomFieldProcessor $quoteCustomFieldProcessor,
@@ -210,7 +236,8 @@ final class QuoteController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+            $viewRenderer, $session, $sR, $flash);
         $this->number_helper = new NumberHelper($sR);
         $this->pdf_helper = new PdfHelper($sR, $session, $translator);
     }
@@ -222,7 +249,8 @@ final class QuoteController extends BaseController
      * @param UIR $uiR
      * @return User|null
      */
-    private function active_user(string $client_id, UR $uR, UCR $ucR, UIR $uiR): ?User
+    private function active_user(string $client_id, UR $uR, UCR $ucR,
+        UIR $uiR): ?User
     {
         $user_client = $ucR->repoUserquery($client_id);
         if (null !== $user_client) {
@@ -277,17 +305,22 @@ final class QuoteController extends BaseController
             $ucR,
             $form,
         );
-        $layoutWithForm = $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString($origin, $errors);
+        $layoutWithForm =
+            $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString($origin,
+                $errors);
         $layoutParameters = [];
         $parametersNonModalForm = [];
-        // do not use a modal if originating from the main menu or from the dashboard
+        // do not use a modal if originating from the main menu or from
+        // the dashboard
         if (($origin == 'main') || ($origin == 'dashboard')) {
             $parametersNonModalForm = [
                 'form' => $bootstrap5ModalQuote->getFormParameters(),
                 /**
                  * Purpose: To build the delivery location route
-                 * A delivery location can be added from the quote form when a quote is being added or edited
-                 * Once the delivery location is added, use the below action to return back to this form
+                 * A delivery location can be added from the quote form when a
+                 * quote is being added or edited
+                 * Once the delivery location is added, use the below action
+                 * to return back to this form
                  */
                 'return_url_action' => 'add',
             ];
@@ -295,14 +328,17 @@ final class QuoteController extends BaseController
         // use a modal if originating from the quote/view
         if ($origin == 'quote') {
             $layoutParameters = [
-                // use type to id the quote\modal_layout.php eg.  ->options(['id' => 'modal-add-'.$type,
+                // use type to id the quote\modal_layout.php eg.
+                // ->options(['id' => 'modal-add-'.$type,
                 'type' => 'quote',
                 'form' => $layoutWithForm,
                 'return_url_action' => 'add',
             ];
         }
         // otherwise it will be a client number eg. 25
-        if (($origin != 'main') && ($origin != 'quote') && ($origin != 'dashboard')) {
+        if (($origin != 'main')
+                && ($origin != 'quote')
+                && ($origin != 'dashboard')) {
             $layoutParameters = [
                 'type' => 'client',
                 'form' => $layoutWithForm,
@@ -318,7 +354,8 @@ final class QuoteController extends BaseController
         // Use the RouteArgument's origin argument to return to correct origin
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                // Only clients that were assigned to user accounts were made available in dropdown
+                // Only clients that were assigned to user accounts were made
+                // available in dropdown
                 // therefore use the 'user client' user id
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
@@ -328,66 +365,102 @@ final class QuoteController extends BaseController
                     $client_id = $body['client_id'];
                     $client_fullname = '';
                     $user_client = $ucR->repoUserquery($client_id);
-                    if (null !== $user_client && null !== $user_client->getClient()) {
-                        $client_first_name = $user_client->getClient()?->getClient_name();
-                        $client_surname = $user_client->getClient()?->getClient_surname();
-                        $client_fullname = ($client_first_name ?? '')
+                    if (null !== $user_client &&
+                        null !== $user_client->getClient()) {
+                        $client_first_name =
+                            $user_client->getClient()?->getClient_name();
+                        $client_surname =
+                            $user_client->getClient()?->getClient_surname();
+                        $client_fullname =
+                            ($client_first_name ?? '')
                                          . ' '
                                          . ($client_surname ?? '');
                     } else {
-                        $this->flashMessage('danger', $clientRepository->repoClientquery($client_id)->getClient_full_name() . ': ' . $this->translator->translate('user.client.no.account'));
+                        $this->flashMessage('danger',
+                            $clientRepository->repoClientquery($client_id)
+                                ->getClient_full_name() . ': '
+                                    . $this->translator->translate(
+                                        'user.client.no.account'));
                     }
-                    // Ensure that the client has only one (paying) user account otherwise reject this quote
-                    // Related logic: see UserClientRepository function get_not_assigned_to_user which ensures that only
-                    // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
-                    // So this line is an extra measure to ensure that the quote is being made out to the correct payer
+                    // Ensure that the client has only one (paying) user account
+                    // otherwise reject this quote
+                    // Related logic: see UserClientRepository function
+                    // get_not_assigned_to_user which ensures that only
+                    // clients that have   NOT   been assigned to a user account
+                    // are presented in the dropdown box for available clients
+                    // So this line is an extra measure to ensure that the quote
+                    // is being made out to the correct payer
                     // ie. not more than one user is associated with the client.
                     $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     if (null !== $user) {
-                        $saved_model = $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $gR);
+                        $saved_model =
+                            $this->quote_service->saveQuote(
+                                $user, $quote, $body, $this->sR, $gR);
                         /**
-                         * The QuoteAmount entity is created automatically during the above saveQuote
-                         * Related logic: see src\Invoice\Entity\Quote $this->quoteAmount = new QuoteAmount();
+                         * The QuoteAmount entity is created automatically
+                         * during the above saveQuote
+                         * Related logic: see src\Invoice\Entity\Quote
+                         * $this->quoteAmount = new QuoteAmount();
                          */
                         $model_id = $saved_model->getId();
                         if (null !== $model_id) {
                             $this->default_taxes($quote, $trR, $formHydrator);
-                            // Inform the user of generated quote number for draft setting
-                            $this->flashMessage('info', $this->sR->getSetting('generate_quote_number_for_draft') === '1'
-                            ? $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('yes')
-                            : $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('no'));
+                            // Inform the user of generated quote number for
+                            // draft setting
+                            $this->flashMessage('info',
+                                $this->sR->getSetting(
+                                    'generate_quote_number_for_draft') === '1'
+                            ? $this->translator->translate(
+                                'generate.quote.number.for.draft')
+                                    . '=>'
+                                    . $this->translator->translate('yes')
+                            : $this->translator->translate(
+                                'generate.quote.number.for.draft')
+                                    . '=>'
+                                    . $this->translator->translate('no'));
                         } //$model_id
-                        $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
+                        $this->flashMessage('success',
+                            $this->translator->translate(
+                                'record.successfully.created'));
                         if ($origin == 'main' || $origin == 'quote') {
-                            return $this->webService->getRedirectResponse('quote/view', ['id' => $model_id]);
+                            return $this->webService->getRedirectResponse(
+                                'quote/view', ['id' => $model_id]);
                         }
                         if ($origin == 'dashboard') {
-                            return $this->webService->getRedirectResponse('quote/view', ['id' => $model_id]);
+                            return $this->webService->getRedirectResponse(
+                                'quote/view', ['id' => $model_id]);
                         }
                         // otherwise return to new quote view (client origin)
-                        return $this->webService->getRedirectResponse('quote/view', ['id' => $model_id]);
+                        return $this->webService->getRedirectResponse(
+                            'quote/view', ['id' => $model_id]);
                     }
                 }
             }
-            $errors = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $errors = $form->getValidationResult()
+                           ->getErrorMessagesIndexedByProperty();
         } // POST
         // show the form without a modal when using the main menu or dashboard
         if ($origin == 'main' || $origin == 'dashboard') {
             // update the errors array with latest errors
-            $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString($origin, $errors);
+            $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
+                $origin, $errors);
             // do not use the layout just get the formParameters
             $parameters = $bootstrap5ModalQuote->getFormParameters();
             /**
              * @psalm-suppress MixedArgumentTypeCoercion $parameters
              */
-            return $this->viewRenderer->render('modal_add_quote_form', $parameters);
+            return $this->viewRenderer->render(
+                'modal_add_quote_form', $parameters);
         }
         // show the form inside a modal when engaging with a view
         if ($origin == 'quote') {
             return $this->viewRenderer->render('modal_layout', [
-                // use type to id the quote\modal_layout.php eg.  ->options(['id' => 'modal-add-'.$type,
+                // use type to id the quote\modal_layout.php eg.
+                // ->options(['id' => 'modal-add-'.$type,
                 'type' => 'quote',
-                'form' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString($origin, $errors),
+                'form' =>
+                    $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
+                        $origin, $errors),
                 'return_url_action' => 'add',
             ]);
         }
@@ -395,7 +468,9 @@ final class QuoteController extends BaseController
         if (($origin != 'main') && ($origin != 'quote')) {
             return $this->viewRenderer->render('modal_layout', [
                 'type' => 'client',
-                'form' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString($origin, $errors),
+                'form' =>
+                    $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
+                        $origin, $errors),
                 'return_url_action' => 'add',
             ]);
         }
@@ -403,9 +478,12 @@ final class QuoteController extends BaseController
     }
 
     /**
-     * Client approves quote WITH purchase order number(if needed by the client ie. can be empty). Sales Order generated recording client's purchase order number
+     * Client approves quote WITH purchase order number(if needed by the client
+     *  ie. can be empty). Sales Order generated recording client's
+     *  purchase order number
      * @param Request $request
      * @param FormHydrator $formHydrator
+     * @param ACQIR $acqiR
      * @param CFR $cfR
      * @param GR $gR
      * @param soIAS $soiaS
@@ -429,6 +507,7 @@ final class QuoteController extends BaseController
     public function approve(
         Request $request,
         FormHydrator $formHydrator,
+        ACQIR $acqiR,
         CFR $cfR,
         GR $gR,
         soIAS $soiaS,
@@ -454,8 +533,12 @@ final class QuoteController extends BaseController
         if (!empty($url_key)) {
             if ($qR->repoUrl_key_guest_count($url_key) > 0) {
                 $quote = $qR->repoUrl_key_guest_loaded($url_key);
-                // default_invoice_group 1, default_quote_group 2, default_sales_order_group 3, default_ 
-                $number = $gR->generate_number((int) $this->sR->getSetting('default_sales_order_group'), true);
+                // default_invoice_group 1,
+                // default_quote_group 2,
+                // default_sales_order_group 3, default_ 
+                $number = $gR->generate_number(
+                    (int) $this->sR->getSetting(
+                        'default_sales_order_group'), true);
                 if (null !== $number) {
                     if ($quote && null !== $quote->getId()) {
                         $quote_id = $quote->getId();
@@ -463,51 +546,76 @@ final class QuoteController extends BaseController
                             'quote_id' => $quote_id,
                             'inv_id' => 0,
                             'client_id' => $quote->getClient_id(),
-                            'group_id' => (int) $this->sR->getSetting('default_sales_order_group'),
+                            'group_id' => (int) $this->sR->getSetting(
+                                'default_sales_order_group'),
                             'status_id' => 4,
                             'client_po_number' => $purchase_order_number,
                             'client_po_person' => $purchase_order_person,
                             'number' => $number,
-                            'discount_amount' => (float) $quote->getDiscount_amount(),
-                            'discount_percent' => (float) $quote->getDiscount_percent(),
-                            // The quote's url will be the same for the po allowing for a trace
+                            'discount_amount' =>
+                                (float) $quote->getDiscount_amount(),
+                            'discount_percent' =>
+                                (float) $quote->getDiscount_percent(),
+                            // The quote's url will be the same for the 
+                            // po allowing for a trace
                             'url_key' => $quote->getUrl_key(),
                             'password' => $quote->getPassword() ?? '',
                             'notes' => $quote->getNotes(),
                         ];
-                        $this->flashMessage('info', $this->translator->translate('salesorder.agree.to.terms'));
+                        $this->flashMessage('info',
+                            $this->translator->translate(
+                                'salesorder.agree.to.terms'));
                         $new_so = new SoEntity();
                         $form = new SoForm($new_so);
-                        if ($formHydrator->populateAndValidate($form, $so_body) && ($quote->getSo_id() === (string) 0)) {
+                        if ($formHydrator->populateAndValidate($form, $so_body)
+                            && ($quote->getSo_id() === (string) 0)) {
                             $quote_id = $so_body['quote_id'];
                             $client_id = $so_body['client_id'];
-                            $user = $this->active_user($client_id, $uR, $ucR, $uiR);
+                            $user = $this->active_user(
+                                $client_id, $uR, $ucR, $uiR);
                             if (null !== $user) {
-                                $this->so_service->addSo($user, $new_so, $so_body);
-                                // Ensure that the quote has a specific po and therefore cannot be copied again.
+                                $this->so_service->addSo(
+                                    $user, $new_so, $so_body);
+                                // Ensure that the quote has a specific po and
+                                // therefore cannot be copied again.
                                 $new_so_id = $new_so->getId();
-                                // Transfer each quote_item to so_item and the corresponding so_item_amount to so_item_amount for each item
+                                // Transfer each quote_item to so_item and the
+                                // corresponding so_item_amount to 
+                                // so_item_amount for each item
                                 if (null !== $new_so_id && null !== $quote_id) {
-                                    $this->quote_to_so_quote_items($quote_id, $new_so_id, $soiaR, $soiaS, $pR, $taskR, $qiR, $trR, $unR, $formHydrator);
-                                    $this->quote_to_so_quote_tax_rates($quote_id, $new_so_id, $qtrR, $formHydrator);
-                                    $this->quote_to_so_quote_custom($quote_id, $new_so_id, $qcR, $cfR, $formHydrator);
-                                    $this->quote_to_so_quote_amount($quote_id, $new_so_id, $qaR, $soaR);
-                                    // Set the quote's sales order id so that it cannot be copied in the future
+                                    $this->quote_to_so_quote_items(
+                                        $quote_id, $new_so_id, $acqiR, $soiaR,
+                                        $soiaS, $pR, $taskR, $qiR, $trR, $unR,
+                                        $formHydrator);
+                                    $this->quote_to_so_quote_tax_rates(
+                                        $quote_id, $new_so_id, $qtrR,
+                                            $formHydrator);
+                                    $this->quote_to_so_quote_custom($quote_id,
+                                        $new_so_id, $qcR, $cfR, $formHydrator);
+                                    $this->quote_to_so_quote_amount($quote_id,
+                                        $new_so_id, $qaR, $soaR);
+                                    // Set the quote's sales order id so that
+                                    // it cannot be copied in the future
                                     $quote->setSo_id($new_so_id);
-                                    // The quote has been approved with purchase order number
+                                    // The quote has been approved with purchase
+                                    // order number
                                     $quote->setStatus_id(4);
                                     $qR->save($quote);
                                     $parameters = ['success' => 1];
-                                    //return response to quote.js to reload page at location
-                                    return $this->factory->createResponse(Json::encode($parameters));
+                                    //return response to quote.js to reload page
+                                    //at location
+                                    return $this->factory->createResponse(
+                                        Json::encode($parameters));
                                 } // null!==$new_so_id
                             } // null!==$user
                         } else {
                             $parameters = [
                                 'success' => 0,
                             ];
-                            //return response to quote.js to reload page at location
-                            return $this->factory->createResponse(Json::encode($parameters));
+                            //return response to quote.js to reload page at
+                            //location
+                            return $this->factory->createResponse(
+                                Json::encode($parameters));
                         }
                     } // quote
                     return $this->webService->getNotFoundResponse();
@@ -524,7 +632,8 @@ final class QuoteController extends BaseController
      * @param QR $qR
      * @return Response
      */
-    public function reject(#[RouteArgument('url_key')] string $url_key, QR $qR): Response
+    public function reject(#[RouteArgument('url_key')] string $url_key, QR $qR):
+        Response
     {
         if ($url_key) {
             if ($qR->repoUrl_key_guest_count($url_key) > 0) {
@@ -533,9 +642,12 @@ final class QuoteController extends BaseController
                     $quote_id = $quote->getId();
                     $quote->setStatus_id(5);
                     $qR->save($quote);
-                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+                    return $this->factory->createResponse(
+                        $this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/quote_successful',
-                        ['heading' => $this->translator->translate('record.successfully.updated'),'url' => 'quote/view','id' => $quote_id],
+                        ['heading' => $this->translator->translate(
+                            'record.successfully.updated'),'url' =>
+                            'quote/view','id' => $quote_id],
                     ));
                 }
                 return $this->webService->getNotFoundResponse();
@@ -577,7 +689,8 @@ final class QuoteController extends BaseController
     }
 
     /**
-     * Data fed from quote.js->$(document).on('click', '#quote_create_confirm', function () {
+     * Data fed from quote.js->$(document).on('click',
+     * '#quote_create_confirm', function () {
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param GR $gR
@@ -587,7 +700,9 @@ final class QuoteController extends BaseController
      * @param UIR $uiR
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function create_confirm(Request $request, FormHydrator $formHydrator, GR $gR, TRR $trR, UR $uR, UCR $ucR, UIR $uiR): \Yiisoft\DataResponse\DataResponse
+    public function create_confirm(Request $request, FormHydrator $formHydrator,
+        GR $gR, TRR $trR, UR $uR, UCR $ucR, UIR $uiR):
+            \Yiisoft\DataResponse\DataResponse
     {
         $body = $request->getQueryParams();
         $ajax_body = [
@@ -596,26 +711,36 @@ final class QuoteController extends BaseController
             'client_id' => (int) $body['client_id'],
             'group_id' => (int) $body['quote_group_id'],
             'status_id' => 1,
-            // Generate a number based on the GroupRepository Next id value and not on a newly generated quote_id
-            // if generate_quote_number_for_draft is set to 'yes' otherwise set to empty string ie. nothing.
+            // Generate a number based on the GroupRepository Next id value
+            // and not on a newly generated quote_id
+            // if generate_quote_number_for_draft is set to 'yes' otherwise set
+            // to empty string ie. nothing.
             // Note: Clients cannot see draft quotes
-            'number' => $this->sR->getSetting('generate_quote_number_for_draft') == '1' ? $gR->generate_number((int) $body['quote_group_id'], true) : '',
+            'number' => $this->sR->getSetting('generate_quote_number_for_draft')
+                == '1' ? $gR->generate_number(
+                    (int) $body['quote_group_id'], true) : '',
             'discount_amount' => (float) 0,
             'discount_percent' => (float) 0,
             'url_key' => '',
             'password' => $body['quote_password'],
             'notes' => '',
         ];
-        $unsuccessful = $this->translator->translate('quote.creation.unsuccessful');
+        $unsuccessful =
+            $this->translator->translate('quote.creation.unsuccessful');
         $quote = new Quote();
         $ajax_content = new QuoteForm($quote);
-        if ($formHydrator->populate($ajax_content, $ajax_body) && $ajax_content->isValid()) {
+        if ($formHydrator->populate($ajax_content, $ajax_body)
+            && $ajax_content->isValid()) {
             $client_id = $ajax_body['client_id'];
             $user_client = $ucR->repoUserquery((string) $client_id);
-            // Ensure that the client has only one (paying) user account otherwise reject this quote
-            // Related logic: see UserClientRepository function get_not_assigned_to_user which ensures that only
-            // clients that have   NOT   been assigned to a user account are presented in the dropdown box for available clients
-            // So this line is an extra measure to ensure that the invoice is being made out to the correct payer
+            // Ensure that the client has only one (paying) user account
+            // otherwise reject this quote
+            // Related logic: see UserClientRepository 
+            // function get_not_assigned_to_user which ensures that only
+            // clients that have   NOT   been assigned to a user account are
+            // presented in the dropdown box for available clients
+            // So this line is an extra measure to ensure that the invoice is
+            // being made out to the correct payer
             // ie. not more than one user is associated with the client.
             $user_client_count = $ucR->repoUserquerycount((string) $client_id);
             if (null !== $user_client && $user_client_count == 1) {
@@ -625,32 +750,51 @@ final class QuoteController extends BaseController
                 if (null !== $user) {
                     $user_inv = $uiR->repoUserInvUserIdquery($user_id);
                     if (null !== $user_inv && $user_inv->getActive()) {
-                        $saved_model = $this->quote_service->saveQuote($user, $quote, $ajax_body, $this->sR, $gR);
+                        $saved_model = $this->quote_service->saveQuote(
+                            $user, $quote, $ajax_body, $this->sR, $gR);
                         $model_id = $saved_model->getId();
                         if (null !== $model_id) {
-                            $this->quote_amount_service->initializeQuoteAmount(new QuoteAmount(), (int) $model_id);
+                            $this->quote_amount_service->initializeQuoteAmount(
+                                new QuoteAmount(), (int) $model_id);
                             $this->default_taxes($quote, $trR, $formHydrator);
                             $parameters = ['success' => 1];
-                            // Inform the user of generated invoice number for drat setting
+                            // Inform the user of generated invoice number for
+                            // draft setting
                             $this->flashMessage(
                                 'info',
-                                $this->sR->getSetting('generate_quote_number_for_draft') === '1'
-                                  ? $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('yes')
-                                  : $this->translator->translate('generate.quote.number.for.draft') . '=>' . $this->translator->translate('no'),
+                                $this->sR->getSetting(
+                                    'generate_quote_number_for_draft') === '1'
+                                  ? $this->translator->translate(
+                                        'generate.quote.number.for.draft')
+                                        . '=>'
+                                        . $this->translator->translate('yes')
+                                  : $this->translator->translate(
+                                    'generate.quote.number.for.draft')
+                                    . '=>'
+                                    . $this->translator->translate('no'),
                             );
-                            //return response to quote.js to reload page at location
-                            return $this->factory->createResponse(Json::encode($parameters));
+                            //return response to quote.js to reload page at
+                            //location
+                            return $this->factory->createResponse(
+                                Json::encode($parameters));
                         }
                     } // null!==$user_inv && $user_inv->getActive()
-                    return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => $unsuccessful]));
+                    return $this->factory->createResponse(
+                        Json::encode([
+                            'success' => 0,
+                            'message' => $unsuccessful]));
                 } // null!==$user
-                return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => $unsuccessful]));
+                return $this->factory->createResponse(
+                    Json::encode(['success' => 0, 'message' => $unsuccessful]));
             } // null!== $user_client && $user_client_count==1
-            // In the event of the database being manually edited (highly unlikely) present this warning anyway
+            // In the event of the database being manually edited
+            // (highly unlikely) present this warning anyway
             if ($user_client_count > 1) {
-                $this->flashMessage('warning', $this->translator->translate('user.inv.more.than.one.assigned'));
+                $this->flashMessage('warning', $this->translator->translate(
+                    'user.inv.more.than.one.assigned'));
             }
-            return $this->factory->createResponse(Json::encode(['success' => 0, 'message' => $unsuccessful]));
+            return $this->factory->createResponse(
+                Json::encode(['success' => 0, 'message' => $unsuccessful]));
         }
         $parameters = [
             'success' => 0,
@@ -660,20 +804,21 @@ final class QuoteController extends BaseController
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-
-
     /**
      * @param Quote $quote
      * @param TRR $trR
      * @param FormHydrator $formHydrator
      */
-    public function default_taxes(Quote $quote, TRR $trR, FormHydrator $formHydrator): void
+    public function default_taxes(
+        Quote $quote, TRR $trR, FormHydrator $formHydrator): void
     {
         if ($trR->repoCountAll() > 0) {
             $taxrates = $trR->findAllPreloaded();
             /** @var TaxRate $taxrate */
             foreach ($taxrates as $taxrate) {
-                $taxrate->getTaxRateDefault()  == 1 ? $this->default_tax_quote($taxrate, $quote, $formHydrator) : '';
+                $taxrate->getTaxRateDefault()  == 1 ?
+                    $this->default_tax_quote($taxrate, $quote, $formHydrator) :
+                        '';
             }
         }
     }
@@ -683,7 +828,8 @@ final class QuoteController extends BaseController
      * @param Quote $quote
      * @param FormHydrator $formHydrator
      */
-    public function default_tax_quote(?TaxRate $taxrate, Quote $quote, FormHydrator $formHydrator): void
+    public function default_tax_quote(
+        ?TaxRate $taxrate, Quote $quote, FormHydrator $formHydrator): void
     {
         $quoteTaxRate = new QuoteTaxRate();
         $quoteTaxRateForm = new QuoteTaxRateForm($quoteTaxRate);
@@ -695,13 +841,18 @@ final class QuoteController extends BaseController
             $quote_tax_rate['tax_rate_id'] = 1;
         }
         /**
-         * Related logic: see Settings ... View ... Taxes ... Default Invoice Tax Rate Placement
-         * Related logic: see ..\resources\views\invoice\setting\views partial_settings_taxes.php
+         * Related logic: see Settings ... View ... Taxes
+         * ... Default Invoice Tax Rate Placement
+         * Related logic: see
+         * ..\resources\views\invoice\setting\views partial_settings_taxes.php
          */
-        $quote_tax_rate['include_item_tax'] = ($this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0);
+        $quote_tax_rate['include_item_tax'] =
+            ($this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0);
         $quote_tax_rate['quote_tax_rate_amount'] = 0;
-        if ($formHydrator->populate($quoteTaxRateForm, $quote_tax_rate) && $quoteTaxRateForm->isValid()) {
-            $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate, $quote_tax_rate);
+        if ($formHydrator->populate($quoteTaxRateForm, $quote_tax_rate)
+                && $quoteTaxRateForm->isValid()) {
+            $this->quote_tax_rate_service->saveQuoteTaxRate(
+                $quoteTaxRate, $quote_tax_rate);
         }
     }
 
@@ -733,12 +884,17 @@ final class QuoteController extends BaseController
     ): Response {
         $deleteNot = $this->translator->translate('quote.delete.not');
         try {
-            $quote = $this->quote($id, $quoteRepo);            
-            // Quotes cannot be deleted if either a corresponding Sales Order or Invoice is derived from it
-            if ($quote && (($quote->getSo_id() == 0) && ($quote->getInv_id() == 0))) {
+            $quote = $this->quote($id, $quoteRepo);
+            // Quotes cannot be deleted if either a corresponding Sales Order
+            // or Invoice is derived from it
+            if ($quote && (($quote->getSo_id() == 0)
+                    && ($quote->getInv_id() == 0))) {
                 $this->quote_service
-                     ->deleteQuote($quote, $qcR, $qcS, $qiR, $qiS, $qtrR, $qtrS, $qaR, $qaS);
-                $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
+                     ->deleteQuote(
+                        $quote, $qcR, $qcS, $qiR, $qiS, $qtrR, $qtrS, $qaR,
+                            $qaS);
+                $this->flashMessage('success', $this->translator->translate(
+                        'record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('quote/index');
             }
             $this->flashMessage('danger', $deleteNot);
@@ -755,7 +911,8 @@ final class QuoteController extends BaseController
      * @param QIR $qiR
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function delete_quote_item(#[RouteArgument('id')] int $id, QIR $qiR): \Yiisoft\DataResponse\DataResponse|Response
+    public function delete_quote_item(#[RouteArgument('id')] int $id, QIR $qiR):
+        \Yiisoft\DataResponse\DataResponse|Response
     {
         $quote_id = (string) $this->session->get('quote_id');
         try {
@@ -763,18 +920,28 @@ final class QuoteController extends BaseController
 
             if ($quoteItem) {
                 $this->quote_item_service->deleteQuoteItem($quoteItem);
-                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
+                $this->flashMessage('info', $this->translator->translate(
+                    'record.successfully.deleted'));
+                return $this->webService->getRedirectResponse('quote/view',
+                        ['id' => $quote_id]);
             }
-            $this->flashMessage('danger', $this->translator->translate('quote.item.cannot.delete'));
-            return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
+            $this->flashMessage(
+                'danger', $this->translator->translate(
+                    'quote.item.cannot.delete'));
+            return $this->webService->getRedirectResponse(
+                'quote/view', ['id' => $quote_id]);
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('quote.item.cannot.delete'));
+            $this->flashMessage(
+                'danger', $this->translator->translate(
+                    'quote.item.cannot.delete'));
         }
-        return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+        return $this->factory->createResponse(
+                $this->viewRenderer->renderPartialAsString(
             '//invoice/setting/quote_successful',
-            ['heading' => '','message' => $this->translator->translate('record.successfully.deleted'),'url' => 'quote/view','id' => $quote_id],
+            ['heading' => '','message' => $this->translator->translate(
+                'record.successfully.deleted'),'url' => 'quote/view','id' =>
+                $quote_id],
         ));
     }
 
@@ -783,18 +950,26 @@ final class QuoteController extends BaseController
      * @param QTRR $quotetaxrateRepository
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function delete_quote_tax_rate(#[RouteArgument('id')] int $id, QTRR $quotetaxrateRepository): \Yiisoft\DataResponse\DataResponse
+    public function delete_quote_tax_rate(
+        #[RouteArgument('id')] int $id, QTRR $quotetaxrateRepository):
+        \Yiisoft\DataResponse\DataResponse
     {
         try {
-            $this->quote_tax_rate_service->deleteQuoteTaxRate($this->quotetaxrate($id, $quotetaxrateRepository));
+            $this->quote_tax_rate_service->deleteQuoteTaxRate(
+                $this->quotetaxrate($id, $quotetaxrateRepository));
         } catch (\Exception $e) {
             unset($e);
-            $this->flashMessage('danger', $this->translator->translate('quote.tax.rate.cannot.delete'));
+            $this->flashMessage('danger', $this->translator->translate(
+                'quote.tax.rate.cannot.delete'));
         }
         $quote_id = (string) $this->session->get('quote_id');
-        return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+        return $this->factory->createResponse(
+            $this->viewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('quote.tax.rate'),'message' => $this->translator->translate('record.successfully.deleted'),'url' => 'quote/view','id' => $quote_id],
+            ['heading' => $this->translator->translate(
+                'quote.tax.rate'),'message' => $this->translator->translate(
+                    'record.successfully.deleted'),'url' =>
+                        'quote/view','id' => $quote_id],
         ));
     }
 
@@ -866,18 +1041,25 @@ final class QuoteController extends BaseController
                 'numberhelper' => new NumberHelper($this->sR),
                 'quote_statuses' => $quoteRepo->getStatuses($this->translator),
                 'cvH' => new CVH($this->sR, $cvR),
-                'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'quote_custom')['customFields'],
-                // Applicable to normally building up permanent selection lists eg. dropdowns
-                'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'quote_custom')['customValues'],
-                // There will initially be no custom_values attached to this quote until they are filled in the field on the form
-                'quoteCustomValues' => null !== $quote_id ? $this->quote_custom_values($quote_id, $qcR) : null,
+                'customFields' => $this->fetchCustomFieldsAndValues(
+                    $cfR, $cvR, 'quote_custom')['customFields'],
+                // Applicable to normally building up permanent selection lists
+                // eg. dropdowns
+                'customValues' => $this->fetchCustomFieldsAndValues(
+                    $cfR, $cvR, 'quote_custom')['customValues'],
+                // There will initially be no custom_values attached to this
+                // quote until they are filled in the field on the form
+                'quoteCustomValues' => null !== $quote_id ?
+                    $this->quote_custom_values($quote_id, $qcR) : null,
                 'quote' => $quote,
                 'quoteCustomForm' => $quoteCustomForm,
                 'delCount' => $delRepo->repoClientCount($quote->getClient_id()),
                 'returnUrlAction' => 'edit',
                 'formFields' => $this->formFields,
             ];
-            $delRepo->repoClientCount($quote->getClient_id()) > 0 ? '' : $this->flashMessage('warning', $this->translator->translate('quote.delivery.location.none'));
+            $delRepo->repoClientCount($quote->getClient_id()) > 0 ? '' :
+                $this->flashMessage('warning', $this->translator->translate(
+                    'quote.delivery.location.none'));
             if ($request->getMethod() === Method::POST) {
                 $body = (array) $request->getParsedBody();
                 $quote = $this->quote($id, $quoteRepo, false);
@@ -887,13 +1069,21 @@ final class QuoteController extends BaseController
                     $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     if (null !== $user) {
                         if ($formHydrator->populateAndValidate($form, $body)) {
-                            $this->quote_service->saveQuote($user, $quote, $body, $this->sR, $groupRepo);
-                            $this->processCustomFields($body, $formHydrator, $this->quoteCustomFieldProcessor, (string) $quote_id);
-                            $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
-                            return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
+                            $this->quote_service->saveQuote($user, $quote,
+                                $body, $this->sR, $groupRepo);
+                            $this->processCustomFields($body, $formHydrator,
+                                $this->quoteCustomFieldProcessor,
+                                    (string) $quote_id);
+                            $this->flashMessage('success',
+                                $this->translator->translate(
+                                    'record.successfully.updated'));
+                            return $this->webService->getRedirectResponse(
+                                'quote/view', ['id' => $quote_id]);
                         }
                         $parameters['form'] = $form;
-                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                        $parameters['errors'] =
+                            $form->getValidationResult()
+                                 ->getErrorMessagesIndexedByProperty();
                         return $this->viewRenderer->render('_form', $parameters);
                     }
                 }
@@ -943,10 +1133,14 @@ final class QuoteController extends BaseController
         QCR $qcR,
         UIR $uiR,
     ): Response {
-        $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
-        $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+        $mailer_helper = new MailerHelper(
+            $this->sR, $this->session, $this->translator, $this->logger,
+                $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+        $template_helper = new TemplateHelper(
+            $this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         if (!$mailer_helper->mailer_configured()) {
-            $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
+            $this->flashMessage('warning', $this->translator->translate(
+                'email.not.configured'));
             return $this->webService->getRedirectResponse('quote/index');
         }
         $quote_entity = $this->quote($id, $qR, true);
@@ -961,28 +1155,35 @@ final class QuoteController extends BaseController
                     'inv_custom' => 'invoice',
                     'payment_custom' => 'payment',
                     'quote_custom' => 'quote',
-                    'salesorder_custom' => 'salesorder',
-                    // TODO 'user_custom' => 'user',
+                    'salesorder_custom' => 'salesorder'
                 ];
                 foreach (array_keys($custom_tables) as $table) {
                     $custom_fields[$table] = $cfR->repoTablequery($table);
                 }
                 if ($template_helper->select_email_quote_template() == '') {
-                    $this->flashMessage('warning', $this->translator->translate('quote.email.templates.not.configured'));
-                    return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'quotes'], 'settings[email_quote_template]');
+                    $this->flashMessage('warning',
+                        $this->translator->translate(
+                            'quote.email.templates.not.configured'));
+                    return $this->webService->getRedirectResponse(
+                        'setting/tab_index', ['_language' => 'en'],
+                            ['active' => 'quotes'],
+                                'settings[email_quote_template]');
                 }
-                $setting_status_email_template = $etR->repoEmailTemplatequery($template_helper->select_email_quote_template())
+                $setting_status_email_template = $etR->repoEmailTemplatequery(
+                    $template_helper->select_email_quote_template())
                                                ?: null;
                 null === $setting_status_email_template ? $this->flashMessage(
                     'info',
-                    $this->translator->translate('default.email.template') . '=>'
-                                                  . $this->translator->translate('not.set'),
+                    $this->translator->translate('default.email.template')
+                        . '=>'
+                        . $this->translator->translate('not.set'),
                 ) : '';
 
-                empty($template_helper->select_pdf_quote_template()) ? $this->flashMessage(
-                    'info',
-                    $this->translator->translate('default.pdf.template') . '=>'
-                                                  . $this->translator->translate('not.set'),
+                empty($template_helper->select_pdf_quote_template()) ?
+                    $this->flashMessage('info',
+                    $this->translator->translate('default.pdf.template')
+                        . '=>'
+                        . $this->translator->translate('not.set'),
                 ) : '';
                 $parameters = [
                     'head' => $head,
@@ -990,19 +1191,29 @@ final class QuoteController extends BaseController
                     'actionArguments' => ['id' => $quote_id],
                     'alert' => $this->alert(),
                     'autoTemplate' => null !== $setting_status_email_template
-                                           ? $this->get_inject_email_template_array($setting_status_email_template)
-                                           : [],
-                    'settingStatusPdfTemplate' => $template_helper->select_pdf_quote_template(),
+                        ? $this->get_inject_email_template_array(
+                            $setting_status_email_template)
+                        : [],
+                    'settingStatusPdfTemplate' =>
+                        $template_helper->select_pdf_quote_template(),
                     'email_templates' => $etR->repoEmailTemplateType('quote'),
-                    'dropdownTitlesOfEmailTemplates' => $this->email_templates($etR),
-                    'userInv' => $uiR->repoUserInvUserIdcount($quote->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($quote->getUser_id()) : null,
+                    'dropdownTitlesOfEmailTemplates' =>
+                        $this->email_templates($etR),
+                    'userInv' => $uiR->repoUserInvUserIdcount(
+                        $quote->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery(
+                            $quote->getUser_id()) : null,
                     'quote' => $quote,
                     'pdfTemplates' => $this->email_get_quote_templates('pdf'),
-                    'templateTags' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags', [
+                    'templateTags' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/emailtemplate/template-tags', [
                         'custom_fields' => $custom_fields,
                         'template_tags_inv' => '',
-                        'template_tags_quote' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-quote', [
-                            'custom_fields_quote_custom' => $custom_fields['quote_custom'],
+                        'template_tags_quote' =>
+                            $this->viewRenderer->renderPartialAsString(
+                                '//invoice/emailtemplate/template-tags-quote', [
+                            'custom_fields_quote_custom' =>
+                                $custom_fields['quote_custom'],
                         ]),
                     ]),
                     'form' => new MailerQuoteForm(),
@@ -1019,16 +1230,24 @@ final class QuoteController extends BaseController
      * @param EmailTemplate $email_template
      * @return array
      */
-    public function get_inject_email_template_array(EmailTemplate $email_template): array
+    public function get_inject_email_template_array(
+        EmailTemplate $email_template): array
     {
         return [
-            'body' => Json::htmlEncode($email_template->getEmail_template_body()),
-            'subject' => $email_template->getEmail_template_subject() ?? '',
-            'from_name' => $email_template->getEmail_template_from_name() ?? '',
-            'from_email' => $email_template->getEmail_template_from_email() ?? '',
-            'cc' => $email_template->getEmail_template_cc() ?? '',
-            'bcc' => $email_template->getEmail_template_bcc() ?? '',
-            'pdf_template' => $email_template->getEmail_template_pdf_template() ?? '',
+            'body' => Json::htmlEncode(
+                $email_template->getEmail_template_body()),
+            'subject' =>
+                $email_template->getEmail_template_subject() ?? '',
+            'from_name' =>
+                $email_template->getEmail_template_from_name() ?? '',
+            'from_email' =>
+                $email_template->getEmail_template_from_email() ?? '',
+            'cc' =>
+                $email_template->getEmail_template_cc() ?? '',
+            'bcc' =>
+                $email_template->getEmail_template_bcc() ?? '',
+            'pdf_template' =>
+                $email_template->getEmail_template_pdf_template() ?? '',
         ];
     }
 
@@ -1110,30 +1329,53 @@ final class QuoteController extends BaseController
         ViewRenderer $viewrenderer,
     ): bool {
         // All custom repositories, including icR have to be initialised.
-        $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
-        $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+        $template_helper = new TemplateHelper(
+            $this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+        $mailer_helper = new MailerHelper(
+            $this->sR, $this->session, $this->translator, $this->logger,
+                $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         if (null !== $quote_id) {
-            $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
+            $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ?
+                $qaR->repoQuotequery($quote_id) : null);
             $quote_custom_values = $this->quote_custom_values($quote_id, $qcR);
-            $quote_entity = $qR->repoCount($quote_id) > 0 ? $qR->repoQuoteUnLoadedquery($quote_id) : null;
+            $quote_entity = $qR->repoCount($quote_id) > 0 ?
+                $qR->repoQuoteUnLoadedquery($quote_id) : null;
             if ($quote_entity) {
                 $stream = false;
                 /** @var string $pdf_template_target_path */
-                $pdf_template_target_path = $this->pdf_helper->generate_quote_pdf($quote_id, $quote_entity->getUser_id(), $stream, true, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR, $viewrenderer);
+                $pdf_template_target_path =
+                    $this->pdf_helper->generate_quote_pdf(
+                        $quote_id, $quote_entity->getUser_id(), $stream, true,
+                            $quote_amount, $quote_custom_values, $cR, $cvR,
+                                $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR,
+                                    $viewrenderer);
                 if ($pdf_template_target_path) {
-                    $mail_message = $template_helper->parse_template($quote_id, false, $email_body, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
-                    $mail_subject = $template_helper->parse_template($quote_id, false, $subject, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
-                    $mail_cc = $template_helper->parse_template($quote_id, false, $cc, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
-                    $mail_bcc = $template_helper->parse_template($quote_id, false, $bcc, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
+                    $mail_message = $template_helper->parse_template(
+                        $quote_id, false, $email_body, $cR, $cvR, $iR, $iaR,
+                            $qR, $qaR, $soR, $uiR);
+                    $mail_subject = $template_helper->parse_template(
+                        $quote_id, false, $subject, $cR, $cvR, $iR, $iaR, $qR,
+                            $qaR, $soR, $uiR);
+                    $mail_cc = $template_helper->parse_template(
+                        $quote_id, false, $cc, $cR, $cvR, $iR, $iaR, $qR, $qaR,
+                            $soR, $uiR);
+                    $mail_bcc = $template_helper->parse_template($quote_id,
+                        false, $bcc, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR,
+                            $uiR);
                     // from[0] is the from_email and from[1] is the from_name
                     /**
                      * @var string $from[0]
                      * @var string $from[1]
                      */
                     $mail_from
-                        = [$template_helper->parse_template($quote_id, false, $from[0], $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR),
-                            $template_helper->parse_template($quote_id, false, $from[1], $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR)];
-                    // mail_from[0] is the from_email and mail_from[1] is the from_name
+                        = [$template_helper->parse_template($quote_id, false,
+                            $from[0], $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR,
+                                $uiR),
+                            $template_helper->parse_template($quote_id, false,
+                                $from[1], $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR,
+                                    $uiR)];
+                    // mail_from[0] is the from_email and mail_from[1] is
+                    // the from_name
                     return $mailer_helper->yii_mailer_send(
                         $mail_from[0],
                         $mail_from[1],
@@ -1202,13 +1444,17 @@ final class QuoteController extends BaseController
         UIR $uiR,
     ): Response {
         if ($quote_id) {
-            $mailer_helper = new MailerHelper($this->sR, $this->session, $this->translator, $this->logger, $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+            $mailer_helper = new MailerHelper(
+                $this->sR, $this->session, $this->translator, $this->logger,
+                    $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 $body['btn_cancel'] = 0;
                 if (!$mailer_helper->mailer_configured()) {
-                    $this->flashMessage('warning', $this->translator->translate('email.not.configured'));
-                    return $this->webService->getRedirectResponse('quote/index');
+                    $this->flashMessage('warning', $this->translator->translate(
+                        'email.not.configured'));
+                    return $this->webService->getRedirectResponse(
+                        'quote/index');
                 }
 
                 /**
@@ -1216,9 +1462,13 @@ final class QuoteController extends BaseController
                  */
                 $to = (string) $body['MailerQuoteForm']['to_email'] ?: '';
                 if (empty($to)) {
-                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+                    return $this->factory->createResponse(
+                        $this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/quote_message',
-                        ['heading' => '','message' => $this->translator->translate('email.to.address.missing'),'url' => 'quote/view','id' => $quote_id],
+                        ['heading' => '',
+                            'message' => $this->translator->translate(
+                                'email.to.address.missing'), 'url' =>
+                                    'quote/view','id' => $quote_id],
                     ));
                 }
 
@@ -1232,9 +1482,13 @@ final class QuoteController extends BaseController
 
 
                 if (empty($from[0])) {
-                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+                    return $this->factory->createResponse(
+                        $this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/quote_message',
-                        ['heading' => '','message' => $this->translator->translate('email.to.address.missing'),'url' => 'quote/view','id' => $quote_id],
+                        ['heading' => '', 'message' =>
+                            $this->translator->translate(
+                                'email.to.address.missing'),
+                                    'url' => 'quote/view','id' => $quote_id],
                     ));
                 }
 
@@ -1256,17 +1510,26 @@ final class QuoteController extends BaseController
 
                 $attachFiles = $request->getUploadedFiles();
 
-                $this->generate_quote_number_if_applicable((string) $quote_id, $qR, $this->sR, $gR);
+                $this->generate_quote_number_if_applicable((string) $quote_id,
+                    $qR, $this->sR, $gR);
                 // Custom fields are automatically included on the quote
-                if ($this->email_stage_1((string) $quote_id, $from, $to, $subject, $email_body, $cc, $bcc, $attachFiles, $cR, $ccR, $cfR, $dlR, $cvR, $iaR, $icR, $qiaR, $qiR, $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR, $soR, $uiR, $this->viewRenderer)) {
+                if ($this->email_stage_1((string) $quote_id, $from, $to,
+                        $subject, $email_body, $cc, $bcc, $attachFiles, $cR,
+                            $ccR, $cfR, $dlR, $cvR, $iaR, $icR, $qiaR, $qiR,
+                                $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR, $soR,
+                                    $uiR, $this->viewRenderer)) {
                     $this->sR->quote_mark_sent((string) $quote_id, $qR);
-                    $this->flashMessage('success', $this->translator->translate('email.successfully.sent'));
-                    return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
+                    $this->flashMessage('success', $this->translator->translate(
+                        'email.successfully.sent'));
+                    return $this->webService->getRedirectResponse('quote/view',
+                        ['id' => $quote_id]);
                 }
             }
         } // quote_id
-        $this->flashMessage('danger', $this->translator->translate('email.not.sent.successfully'));
-        return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
+        $this->flashMessage('danger', $this->translator->translate(
+                'email.not.sent.successfully'));
+        return $this->webService->getRedirectResponse(
+                'quote/view', ['id' => $quote_id]);
     }
 
     /**
@@ -1275,13 +1538,17 @@ final class QuoteController extends BaseController
      * @param SR $sR
      * @param GR $gR
      */
-    public function generate_quote_number_if_applicable(string $quote_id, QR $qR, SR $sR, GR $gR): void
+    public function generate_quote_number_if_applicable(
+        string $quote_id, QR $qR, SR $sR, GR $gR): void
     {
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
-        if (!empty($quote) && ($quote->getStatus_id() == 1) && ($quote->getNumber() == '')) {
+        if (!empty($quote) && ($quote->getStatus_id() == 1)
+            && ($quote->getNumber() == '')) {
             // Generate new quote number if applicable
-            if ((int) $sR->getSetting('generate_quote_number_for_draft') === 0) {
-                $quote_number = (string) $qR->get_quote_number($quote->getGroup_id(), $gR);
+            if ((int) $sR->getSetting(
+                'generate_quote_number_for_draft') === 0) {
+                $quote_number = (string) $qR->get_quote_number(
+                    $quote->getGroup_id(), $gR);
                 // Set new quote number and save
                 $quote->setNumber($quote_number);
                 $qR->save($quote);
@@ -1327,42 +1594,60 @@ final class QuoteController extends BaseController
         $urlCreator = new UrlCreator($this->url_generator);
         $order = OrderHelper::stringToArray($sortString);
         $urlCreator->__invoke([], $order);
-        $sort = Sort::only(['status_id','number','date_created','date_expires','id','client_id'])->withOrderString($sortString);
+        $sort = Sort::only(['status_id','number','date_created','date_expires',
+            'id','client_id'])->withOrderString($sortString);
 
-        // Get the current user and determine from (Related logic: see Settings...User Account) whether they have been given
-        // either guest or admin rights. These rights are unrelated to rbac and serve as a second
-        // 'line of defense' to support role based admin control.
+        // Get the current user and determine from (Related logic: see
+        // Settings...User Account) whether they have been given
+        // either guest or admin rights. These rights are unrelated to rbac and
+        // serve as a second line of defense' to support role based admin
+        // control.
 
         // Retrieve the user from Yii-Demo's list of users in the User Table
         $user = $this->userService->getUser();
         if ($user) {
-            // Use this user's id to see whether a user has been setup under UserInv ie. yii-invoice's list of users
-            $userinv = ($uiR->repoUserInvUserIdcount((string) $user->getId()) > 0
+            // Use this user's id to see whether a user has been setup under
+            // UserInv ie. yii-invoice's list of users
+            $userinv = ($uiR->repoUserInvUserIdcount(
+                    (string) $user->getId()) > 0
                      ? $uiR->repoUserInvUserIdquery((string) $user->getId())
                      : null);
             if ($userinv) {
-                // Determine what clients have been allocated to this user (Related logic: see Settings...User Account)
+                // Determine what clients have been allocated to this user
+                // (Related logic: see Settings...User Account)
                 // by looking at UserClient table
 
-                // eg. If the user is a guest-accountant, they will have been allocated certain clients
+                // eg. If the user is a guest-accountant, they will have been
+                // allocated certain clients
                 // A user-quest-accountant will be allocated a series of clients
-                // A user-guest-client will be allocated their client number by the administrator so that
-                // they can view their quotes when they log in
-                $user_clients = $ucR->get_assigned_to_user((string) $user->getId());
+                // A user-guest-client will be allocated their client number by
+                // the administrator so that they can view their quotes when
+                // they log in
+                $user_clients = $ucR->get_assigned_to_user(
+                    (string) $user->getId());
                 if (!empty($user_clients)) {
-                    /**
-                     * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $quotes
-                     */
-                    $quotes = $this->quotes_status_with_sort_guest($qR, $status, $user_clients, $sort);
-                    if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
-                        $quotes = $qR->filterQuoteNumber((string) $query_params['filterQuoteNumber']);
+/**
+ * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $quotes
+ */
+                    $quotes = $this->quotes_status_with_sort_guest($qR,
+                            $status, $user_clients, $sort);
+                    if (isset($query_params['filterQuoteNumber'])
+                        && !empty($query_params['filterQuoteNumber'])) {
+                        $quotes = $qR->filterQuoteNumber(
+                            (string) $query_params['filterQuoteNumber']);
                     }
-                    if (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal'])) {
-                        $quotes = $qR->filterQuoteAmountTotal((string) $query_params['filterQuoteAmountTotal']);
+                    if (isset($query_params['filterQuoteAmountTotal'])
+                        && !empty($query_params['filterQuoteAmountTotal'])) {
+                        $quotes = $qR->filterQuoteAmountTotal(
+                            (string) $query_params['filterQuoteAmountTotal']);
                     }
-                    if ((isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber']))
-                       && (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
-                        $quotes = $qR->filterQuoteNumberAndQuoteAmountTotal((string) $query_params['filterQuoteNumber'], (float) $query_params['filterQuoteAmountTotal']);
+                    if ((isset($query_params['filterQuoteNumber'])
+                        && !empty($query_params['filterQuoteNumber']))
+                        && (isset($query_params['filterQuoteAmountTotal'])
+                        && !empty($query_params['filterQuoteAmountTotal']))) {
+                        $quotes = $qR->filterQuoteNumberAndQuoteAmountTotal(
+                            (string) $query_params['filterQuoteNumber'],
+                                (float) $query_params['filterQuoteAmountTotal']);
                     }
                     $paginator = (new DataOffsetPaginator($quotes))
                     ->withPageSize($this->sR->positiveListLimit())
@@ -1376,7 +1661,8 @@ final class QuoteController extends BaseController
                         'qaR' => $qaR,
                         'quotes' => $quotes,
                         // guests will not have access to the pageListLimiter
-                        'editInv' => $this->userService->hasPermission(Permissions::EDIT_INV),
+                        'editInv' => $this->userService->hasPermission(
+                            Permissions::EDIT_INV),
                         'grid_summary' => $this->sR->grid_summary(
                             $paginator,
                             $this->translator,
@@ -1384,10 +1670,13 @@ final class QuoteController extends BaseController
                             $this->translator->translate('quotes'),
                             $qR->getSpecificStatusArrayLabel((string) $status),
                         ),
-                        'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                        ? (int) $this->sR->getSetting('default_list_limit') : 1,
+                        'defaultPageSizeOffsetPaginator' =>
+                            $this->sR->getSetting('default_list_limit')
+                            ? (int) $this->sR->getSetting('default_list_limit')
+                            : 1,
                         'quoteStatuses' => $quote_statuses,
-                        'max' => (int) $this->sR->getSetting('default_list_limit'),
+                        'max' => (int)
+                            $this->sR->getSetting('default_list_limit'),
                         'page' => (string) $pageMixed,
                         'paginator' => $paginator,
                         'sortOrder' => $sortString,
@@ -1402,7 +1691,8 @@ final class QuoteController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    // Only users with editInv permission can access this index. Refer to config/routes accesschecker.
+    // Only users with editInv permission can access this index.
+    // Refer to config/routes accesschecker.
 
     /**
      * @param Request $request
@@ -1433,6 +1723,8 @@ final class QuoteController extends BaseController
         string $page = '1',
         #[RouteArgument('status')]
         string $status = '0',
+        #[Query('groupBy')]
+        ?string $queryGroupBy = 'none',
     ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the quote
         $quote = new Quote();
@@ -1458,7 +1750,8 @@ final class QuoteController extends BaseController
             foreach ($clients as $client) {
                 $client_id = $client->getClient_id();
                 if (null !== $client_id) {
-                    $optionsDataActive[$client_id] = $client->getClient_full_name();
+                    $optionsDataActive[$client_id] =
+                        $client->getClient_full_name();
                 }
             }
             $query_params = $request->getQueryParams();
@@ -1475,24 +1768,33 @@ final class QuoteController extends BaseController
             $urlCreator = new UrlCreator($this->url_generator);
             $order = OrderHelper::stringToArray($sortString);
             $urlCreator->__invoke([], $order);
-            $sort = Sort::only(['id','status_id','number','date_created','date_expires','client_id'])
-                        // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
-                        // - => 'desc'  so -id => default descending on id
-                        // Show the latest quotes first => -id
-                        ->withOrder($order);
+            $sort = Sort::only(['id', 'status_id', 'number', 'date_created',
+                'date_expires','client_id'])
+                // (Related logic: see vendor\yiisoft\data\src\Reader\Sort
+                // - => 'desc'  so -id => default descending on id
+                // Show the latest quotes first => -id
+                    ->withOrder($order);
             /**
              * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $quotes
              */
             $quotes = $this->quotes_status_with_sort($quoteRepo, $status, $sort);
-            if (isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber'])) {
-                $quotes = $quoteRepo->filterQuoteNumber((string) $query_params['filterQuoteNumber']);
+            if (isset($query_params['filterQuoteNumber'])
+                && !empty($query_params['filterQuoteNumber'])) {
+                $quotes = $quoteRepo->filterQuoteNumber(
+                    (string) $query_params['filterQuoteNumber']);
             }
-            if (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal'])) {
-                $quotes = $quoteRepo->filterQuoteAmountTotal((string) $query_params['filterQuoteAmountTotal']);
+            if (isset($query_params['filterQuoteAmountTotal'])
+                && !empty($query_params['filterQuoteAmountTotal'])) {
+                $quotes = $quoteRepo->filterQuoteAmountTotal(
+                    (string) $query_params['filterQuoteAmountTotal']);
             }
-            if ((isset($query_params['filterQuoteNumber']) && !empty($query_params['filterQuoteNumber']))
-               && (isset($query_params['filterQuoteAmountTotal']) && !empty($query_params['filterQuoteAmountTotal']))) {
-                $quotes = $quoteRepo->filterQuoteNumberAndQuoteAmountTotal((string) $query_params['filterQuoteNumber'], (float) $query_params['filterQuoteAmountTotal']);
+            if ((isset($query_params['filterQuoteNumber'])
+                && !empty($query_params['filterQuoteNumber']))
+                && (isset($query_params['filterQuoteAmountTotal'])
+                && !empty($query_params['filterQuoteAmountTotal']))) {
+                $quotes = $quoteRepo->filterQuoteNumberAndQuoteAmountTotal(
+                    (string) $query_params['filterQuoteNumber'],
+                        (float) $query_params['filterQuoteAmountTotal']);
             }
             $paginator = (new DataOffsetPaginator($quotes))
             ->withPageSize($this->sR->positiveListLimit())
@@ -1502,12 +1804,26 @@ final class QuoteController extends BaseController
             $quote_statuses = $quoteRepo->getStatuses($this->translator);
             $parameters = [
                 'status' => $status,
-                'decimalPlaces' => (int) $this->sR->getSetting('tax_rate_decimal_places'),
+                'decimalPlaces' => (int)
+                    $this->sR->getSetting('tax_rate_decimal_places'),
                 'paginator' => $paginator,
                 'sortOrder' => $query_params['sort'] ?? '',
+                'sortString' => $sortString,
                 'alert' => $this->alert(),
                 'clientCount' => $clientRepo->count(),
-                'optionsDataClientsDropdownFilter' => $this->optionsDataClients($quoteRepo),
+                'groupBy' => $queryGroupBy,
+                'label' => $quoteRepo->getSpecificStatusArrayLabel((string) $status),
+                'page' => $currentPageNeverZero,
+                'quotes' => $quotes,
+                'visible' => $this->sR->getSetting('columns_all_visible') === '1',
+                'optionsDataClientsDropdownFilter' =>
+                    $this->optionsDataClients($quoteRepo),
+                'optionsDataClientGroupDropDownFilter' =>
+                    $this->optionsDataClientGroup($quoteRepo),
+                'optionsDataQuoteNumberDropDownFilter' =>
+                    $this->optionsDataQuoteNumber($quoteRepo),
+                'optionsDataStatusDropDownFilter' =>
+                    $this->optionsDataStatuses($quoteRepo),
                 'grid_summary' => $sR->grid_summary(
                     $paginator,
                     $this->translator,
@@ -1515,55 +1831,76 @@ final class QuoteController extends BaseController
                     $this->translator->translate('quotes'),
                     $quoteRepo->getSpecificStatusArrayLabel((string) $status),
                 ),
-                'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                        ? (int) $this->sR->getSetting('default_list_limit') : 1,
-                'defaultQuoteGroup' => null !== ($gR = $groupRepo->repoGroupquery($this->sR->getSetting('default_quote_group')))
-                                            ? (strlen($groupName = $gR->getName() ?? '') > 0 ? $groupName
-                                                                                             : $this->sR->getSetting('not_set'))
-                                            : $this->sR->getSetting('not_set'),
+                'defaultPageSizeOffsetPaginator' =>
+                    $this->sR->getSetting('default_list_limit')
+                    ? (int) $this->sR->getSetting('default_list_limit') : 1,
+                'defaultQuoteGroup' => null !==
+                    ($gR = $groupRepo->repoGroupquery(
+                        $this->sR->getSetting('default_quote_group')))
+                        ? (strlen(
+                            $groupName = $gR->getName() ?? '') > 0 ? $groupName
+                                : $this->sR->getSetting('not_set'))
+                                    : $this->sR->getSetting('not_set'),
                 'quoteStatuses' => $quote_statuses,
                 'max' => (int) $sR->getSetting('default_list_limit'),
                 'qR' => $quoteRepo,
                 'qaR' => $qaR,
                 'soR' => $soR,
-                'modal_add_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString('quote', []),
+                'modal_add_quote' =>
+                    $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
+                        'quote', []),
                 'urlCreator' => $urlCreator,
             ];
             return $this->viewRenderer->render('index', $parameters);
         }
-        $this->flashMessage('info', $this->translator->translate('user.client.active.no'));
+        $this->flashMessage('info',
+            $this->translator->translate('user.client.active.no'));
         return $this->webService->getRedirectResponse('client/index');
     }
 
     // jquery function currently not used
-    // Data parsed from quote.js:$(document).on('click', '#client_change_confirm', function () {
+    // Data parsed from quote.js:$(document).on('click',
+    // '#client_change_confirm', function () {
 
     /**
      * @param Request $request
      * @param CR $cR
      * @param SR $sR
      */
-    public function modal_change_client(Request $request, CR $cR, SR $sR): \Yiisoft\DataResponse\DataResponse
+    public function modal_change_client(Request $request, CR $cR, SR $sR):
+        \Yiisoft\DataResponse\DataResponse
     {
         $body = $request->getQueryParams();
         $client = $cR->repoClientquery((string) $body['client_id']);
         $parameters = [
             'success' => 1,
-            // Set a client id on quote/view.php so that details can be saved later.
+            // Set a client id on quote/view.php so that details
+            // can be saved later.
             'pre_save_client_id' => $body['client_id'],
-            'client_address_1' => ($client->getClient_address_1() ?? '') . '<br>',
-            'client_address_2' => ($client->getClient_address_2() ?? '') . '<br>',
-            'client_townline' => ($client->getClient_city() ?? '') . '<br>' . ($client->getClient_state() ?? '') . '<br>' . ($client->getClient_zip() ?? '') . '<br>',
+            'client_address_1' => ($client->getClient_address_1() ?? '')
+            . '<br>',
+            'client_address_2' => ($client->getClient_address_2() ?? '')
+            . '<br>',
+            'client_townline' => ($client->getClient_city() ?? '') 
+                . '<br>' . ($client->getClient_state() ?? '') . '<br>'
+                . ($client->getClient_zip() ?? '') . '<br>',
             'client_country' => $client->getClient_country() ?? '',
-            'client_phone' => $this->translator->translate('phone') . '&nbsp;' . ($client->getClient_phone() ?? ''),
-            'client_mobile' => $this->translator->translate('mobile') . '&nbsp;' . ($client->getClient_mobile() ?? ''),
-            'client_fax' => $this->translator->translate('fax') . '&nbsp;' . ($client->getClient_fax() ?? ''),
-            'client_email' => $this->translator->translate('email') . '&nbsp;' . (string) Html::link($client->getClient_email()),
-            // Reset the a href id="after_client_change_url" link to the new client url
-            'after_client_change_url' => 'client/view/' . (string) $body['client_id'],
+            'client_phone' => $this->translator->translate('phone')
+                . '&nbsp;' . ($client->getClient_phone() ?? ''),
+            'client_mobile' => $this->translator->translate('mobile')
+                . '&nbsp;' . ($client->getClient_mobile() ?? ''),
+            'client_fax' => $this->translator->translate('fax')
+                . '&nbsp;' . ($client->getClient_fax() ?? ''),
+            'client_email' => $this->translator->translate('email') . '&nbsp;'
+                . (string) Html::link($client->getClient_email()),
+            // Reset the a href id="after_client_change_url" link
+            // to the new client url
+            'after_client_change_url' => 'client/view/' 
+                . (string) $body['client_id'],
             'after_client_change_name' => $client->getClient_name(),
         ];
-        // return parameters to quote.js:client_change_confirm ajax success function for processing
+        // return parameters to quote.js:client_change_confirm ajax success
+        // function for processing
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
@@ -1586,31 +1923,46 @@ final class QuoteController extends BaseController
      * @param UIR $uiR
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function pdf(#[RouteArgument('include')] int $include, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+    public function pdf(#[RouteArgument('include')] int $include, CR $cR,
+        CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR,
+        QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR):
+        \Yiisoft\DataResponse\DataResponse|Response
     {
-        // include is a value of 0 or 1 passed from quote.js function quote_to_pdf_with(out)_custom_fields indicating whether the user
-        // wants custom fields included on the quote or not.
+        // include is a value of 0 or 1 passed from quote.js
+        // function quote_to_pdf_with(out)_custom_fields indicating whether
+        // the user wants custom fields included on the quote or not.
         $quote_id = (string) $this->session->get('quote_id');
-        $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
+        $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ?
+            $qaR->repoQuotequery($quote_id) : null);
         if ($quote_amount) {
             $custom = (($include === 1) ? true : false);
-            $quote_custom_values = $this->quote_custom_values((string) $this->session->get('quote_id'), $qcR);
-            // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
+            $quote_custom_values = $this->quote_custom_values(
+                (string) $this->session->get('quote_id'), $qcR);
+            // session is passed to the pdfHelper and will be used for the
+            // locale ie. $session->get('_language') or the print_language
+            // ie $session->get('print_language')
             $pdfhelper = new PdfHelper($sR, $this->session, $this->translator);
             // The quote will be streamed ie. shown, and not archived
             $stream = true;
             // If we are required to mark quotes as 'sent' when sent.
             if ($sR->getSetting('mark_quotes_sent_pdf') == 1) {
-                $this->generate_quote_number_if_applicable($quote_id, $qR, $sR, $gR);
+                $this->generate_quote_number_if_applicable(
+                    $quote_id, $qR, $sR, $gR);
                 $sR->quote_mark_sent($quote_id, $qR);
             }
             $quote = $qR->repoQuoteUnloadedquery($quote_id);
             if ($quote) {
-                $pdfhelper->generate_quote_pdf($quote_id, $quote->getUser_id(), $stream, $custom, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
-                $parameters = ($include == '1' ? ['success' => 1] : ['success' => 0]);
-                return $this->factory->createResponse(Json::encode($parameters));
+                $pdfhelper->generate_quote_pdf($quote_id,
+                    $quote->getUser_id(), $stream, $custom, $quote_amount,
+                        $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR,
+                            $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
+                $parameters = ($include == '1' ?
+                    ['success' => 1] : ['success' => 0]);
+                return $this->factory->createResponse(
+                    Json::encode($parameters));
             } // $inv
-            return $this->factory->createResponse(Json::encode(['success' => 0]));
+            return $this->factory->createResponse(
+                Json::encode(['success' => 0]));
         } // quote_amount
         return $this->webService->getNotFoundResponse();
     }
@@ -1631,24 +1983,38 @@ final class QuoteController extends BaseController
      * @param SR $sR
      * @param UIR $uiR
      */
-    public function pdf_dashboard_include_cf(#[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): void
+    public function pdf_dashboard_include_cf(
+        #[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR,
+            DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR,
+            QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): void
     {
         if ($quote_id) {
-            $quote_amount = (($qaR->repoQuoteAmountCount((string) $quote_id) > 0) ? $qaR->repoQuotequery((string) $quote_id) : null);
+            $quote_amount = (($qaR->repoQuoteAmountCount(
+                (string) $quote_id) > 0) ? $qaR->repoQuotequery(
+                    (string) $quote_id) : null);
             if ($quote_amount) {
-                $quote_custom_values = $this->quote_custom_values((string) $quote_id, $qcR);
-                // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-                $pdfhelper = new PdfHelper($sR, $this->session, $this->translator);
+                $quote_custom_values = $this->quote_custom_values(
+                    (string) $quote_id, $qcR);
+                // session is passed to the pdfHelper and will be used for the
+                // locale ie. $session->get('_language') or the print_language
+                // ie $session->get('print_language')
+                $pdfhelper = new PdfHelper($sR, $this->session,
+                    $this->translator);
                 // The quote will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark quotes as 'sent' when sent.
                 if ($sR->getSetting('mark_quotes_sent_pdf') == 1) {
-                    $this->generate_quote_number_if_applicable((string) $quote_id, $qR, $sR, $gR);
+                    $this->generate_quote_number_if_applicable(
+                        (string) $quote_id, $qR, $sR, $gR);
                     $sR->quote_mark_sent((string) $quote_id, $qR);
                 }
                 $quote = $qR->repoQuoteUnloadedquery((string) $quote_id);
                 if ($quote) {
-                    $pdfhelper->generate_quote_pdf((string) $quote_id, $quote->getUser_id(), $stream, true, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
+                    $pdfhelper->generate_quote_pdf(
+                        (string) $quote_id, $quote->getUser_id(), $stream,
+                            true, $quote_amount, $quote_custom_values, $cR,
+                                $cvR, $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR,
+                                    $this->viewRenderer);
                 }
             }
         } //quote_id
@@ -1670,24 +2036,37 @@ final class QuoteController extends BaseController
      * @param SR $sR
      * @param UIR $uiR
      */
-    public function pdf_dashboard_exclude_cf(#[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): void
+    public function pdf_dashboard_exclude_cf(
+        #[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR,
+            DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR,
+                QTRR $qtrR, SR $sR, UIR $uiR): void
     {
         if ($quote_id) {
-            $quote_amount = (($qaR->repoQuoteAmountCount((string) $quote_id) > 0) ? $qaR->repoQuotequery((string) $quote_id) : null);
+            $quote_amount = (($qaR->repoQuoteAmountCount(
+                (string) $quote_id) > 0) ? $qaR->repoQuotequery(
+                    (string) $quote_id) : null);
             if ($quote_amount) {
-                $quote_custom_values = $this->quote_custom_values((string) $quote_id, $qcR);
-                // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
-                $pdfhelper = new PdfHelper($sR, $this->session, $this->translator);
+                $quote_custom_values = $this->quote_custom_values(
+                    (string) $quote_id, $qcR);
+                // session is passed to the pdfHelper and will be used for the
+                // locale ie. $session->get('_language') or the
+                // print_language ie $session->get('print_language')
+                $pdfhelper = new PdfHelper($sR, $this->session,
+                    $this->translator);
                 // The quote will be streamed ie. shown, and not archived
                 $stream = true;
                 // If we are required to mark quotes as 'sent' when sent.
                 if ($sR->getSetting('mark_quotes_sent_pdf') == 1) {
-                    $this->generate_quote_number_if_applicable((string) $quote_id, $qR, $sR, $gR);
+                    $this->generate_quote_number_if_applicable(
+                        (string) $quote_id, $qR, $sR, $gR);
                     $sR->quote_mark_sent((string) $quote_id, $qR);
                 }
                 $quote = $qR->repoQuoteUnloadedquery((string) $quote_id);
                 if ($quote) {
-                    $pdfhelper->generate_quote_pdf((string) $quote_id, $quote->getUser_id(), $stream, false, $quote_amount, $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
+                    $pdfhelper->generate_quote_pdf((string) $quote_id,
+                        $quote->getUser_id(), $stream, false, $quote_amount,
+                            $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR,
+                                $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
                 }
             }
         } // quote_id
@@ -1705,7 +2084,8 @@ final class QuoteController extends BaseController
         bool $unloaded = false,
     ): ?Quote {
         if ($id) {
-            return $unloaded ? $quoteRepo->repoQuoteUnLoadedquery((string) $id) : $quoteRepo->repoQuoteLoadedquery((string) $id);
+            return $unloaded ? $quoteRepo->repoQuoteUnLoadedquery((string) $id)
+                : $quoteRepo->repoQuoteLoadedquery((string) $id);
         }
         return null;
     }
@@ -1715,7 +2095,8 @@ final class QuoteController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function quotes(QR $quoteRepo, int $status): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function quotes(QR $quoteRepo, int $status):
+        \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $quoteRepo->findAllWithStatus($status);
     }
@@ -1726,7 +2107,8 @@ final class QuoteController extends BaseController
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    private function quotes_status_with_sort(QR $quoteRepo, int $status, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    private function quotes_status_with_sort(QR $quoteRepo, int $status,
+        Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $quoteRepo->findAllWithStatus($status)
                             ->withSort($sort);
@@ -1739,9 +2121,12 @@ final class QuoteController extends BaseController
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    private function quotes_status_with_sort_guest(QR $qR, int $status, array $user_clients, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    private function quotes_status_with_sort_guest(QR $qR, int $status,
+        array $user_clients, Sort $sort):
+            \Yiisoft\Data\Reader\SortableDataInterface
     {
-        return $qR->repoGuest_Clients_Sent_Viewed_Approved_Rejected_Cancelled($status, $user_clients)
+        return $qR->repoGuest_Clients_Sent_Viewed_Approved_Rejected_Cancelled(
+            $status, $user_clients)
                      ->withSort($sort);
     }
 
@@ -1752,7 +2137,8 @@ final class QuoteController extends BaseController
      */
     public function quote_custom_values(string $quote_id, QCR $qcR): array
     {
-        // Get all the custom fields that have been registered with this quote on creation, retrieve existing values via repo, and populate
+        // Get all the custom fields that have been registered with this
+        // quote on creation, retrieve existing values via repo, and populate
         // custom_field_form_values array
         $custom_field_form_values = [];
         if ($qcR->repoQuoteCount($quote_id) > 0) {
@@ -1785,11 +2171,15 @@ final class QuoteController extends BaseController
         return null;
     }
 
-    // Data fed from quote.js->$(document).on('click', '#quote_to_invoice_confirm', function () {
+    // Data fed from quote.js->$(document).on('click',
+    // '#quote_to_invoice_confirm', function () {
 
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
+     * @param ACIIR $aciiR
+     * @param ACQIR $acqiR
+     * @param ACQR $acqR
      * @param CFR $cfR
      * @param GR $gR
      * @param IIAR $iiaR
@@ -1811,14 +2201,19 @@ final class QuoteController extends BaseController
     public function quote_to_invoice_confirm(
         Request $request,
         FormHydrator $formHydrator,
+        ACIIR $aciiR,
+        ACQIR $acqiR,
+        ACQR $acqR,
         CFR $cfR,
         GR $gR,
         IIAR $iiaR,
         InvItemAmountService $iiaS,
         PR $pR,
+        TASKR $taskR,    
         QAR $qaR,
         QCR $qcR,
         QIR $qiR,
+        QIAR $qiaR,
         QR $qR,
         QTRR $qtrR,
         TRR $trR,
@@ -1831,15 +2226,25 @@ final class QuoteController extends BaseController
         $quote_id = (string) $body['quote_id'];
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         if ($quote) {
+            // Check if quote has already been converted to an invoice
+            if ($quote->getInv_id() !== '0' && $quote->getInv_id() !== '') {
+                $parameters = [
+                    'success' => 0,
+                    'flash_message' => $this->translator->translate(
+                        'quote.invoice.already.created.from.quote'),
+                ];
+                return $this->factory->createResponse(Json::encode($parameters));
+            }
             $ajax_body = [
                 'client_id' => $body['client_id'],
                 'group_id' => $body['group_id'],
                 'status_id' => 1,
                 'quote_id' => $quote->getId(),
                 'is_read_only' => 0,
-                'date_created' => (new \DateTimeImmutable('now'))->format('Y-m-d'),
+                'date_created' =>
+                    (new \DateTimeImmutable('now'))->format('Y-m-d'),
                 'password' => $body['password'] ?? '',
-                'number' => $gR->generate_number((int) $body['group_id']),
+                'number' => '',
                 'discount_amount' => (float) $quote->getDiscount_amount(),
                 'discount_percent' => (float) $quote->getDiscount_percent(),
                 'url_key' => $quote->getUrl_key(),
@@ -1850,8 +2255,6 @@ final class QuoteController extends BaseController
             $inv = new Inv();
             $form = new InvForm($inv);
             if ($formHydrator->populateAndValidate($form, $ajax_body)
-                    // Quote has not been copied before:  inv_id = 0
-                    && ($quote->getInv_id() === (string) 0)
             ) {
                 /**
                  * @var string $ajax_body['client_id']
@@ -1866,23 +2269,44 @@ final class QuoteController extends BaseController
                     if (null !== $user) {
                         $user_inv = $uiR->repoUserInvUserIdquery($user_id);
                         if (null !== $user_inv && $user_inv->getActive()) {
-                            $this->inv_service->saveInv($user, $inv, $ajax_body, $this->sR, $gR);
+                            // Generate number only after validation passes
+                            $ajax_body['number'] = (string) $gR->generate_number((int) $body['group_id']);
+                            $this->inv_service->saveInv($user, $inv, $ajax_body,
+                                $this->sR, $gR);
                             $inv_id = $inv->getId();
                             if (null !== $inv_id) {
-                                // Transfer each quote_item to inv_item and the corresponding quote_item_amount to inv_item_amount for each item
-                                $this->quote_to_invoice_quote_items($quote_id, $inv_id, $iiaR, $iiaS, $pR, $qiR, $trR, $formHydrator, $this->sR, $unR);
-                                $this->quote_to_invoice_quote_tax_rates($quote_id, $inv_id, $qtrR, $formHydrator);
-                                $this->quote_to_invoice_quote_custom($quote_id, $inv_id, $qcR, $cfR, $formHydrator);
-                                $this->quote_to_invoice_quote_amount($quote_id, $inv_id, $qaR, $formHydrator);
+                                // Transfer each quote_item to inv_item and the
+                                // corresponding quote_item_amount to 
+                                // inv_item_amount for each item
+                                $this->quote_to_invoice_quote_items(
+                                    $quote_id, $inv_id, $acqiR, $aciiR, $iiaR,
+                                        $iiaS, $pR, $taskR, $qiR,
+                                        $trR, $formHydrator, $this->sR, $unR);
+                                $this->quote_to_invoice_quote_tax_rates(
+                                    $quote_id, $inv_id, $qtrR, $formHydrator);
+                                $this->quote_to_invoice_quote_custom(
+                                    $quote_id, $inv_id, $qcR, $cfR,
+                                        $formHydrator);
+                                $this->quote_to_invoice_quote_amount(
+                                    $quote_id, $inv_id, $qaR, $formHydrator);
+                                $this->quote_to_invoice_quote_allowance_charges(
+                                    $quote_id, $inv_id, $acqR, $formHydrator);
                                 // Update the quotes inv_id.
                                 $quote->setInv_id($inv_id);
                                 $qR->save($quote);
+                                // Update the quote amounts after conversion
+                                $this->quote_amount_service->updateQuoteAmount(
+                                    (int) $quote_id, $qaR, $qiaR, $qtrR,
+                                    $this->number_helper);
                                 $parameters = [
                                     'success' => 1,
-                                    'flash_message' => $this->translator->translate('quote.copied.to.invoice'),
-                                    'new_invoice_id' => $inv_id,
+                                    'flash_message' =>
+                                        $this->translator->translate(
+                                            'quote.copied.to.invoice'),
+                                    'redirect_url' => $this->url_generator->generate('inv/view', ['_language' => (string) $this->session->get('_language'), 'id' => $inv_id]),
                                 ];
-                                return $this->factory->createResponse(Json::encode($parameters));
+                                return $this->factory->createResponse(
+                                    Json::encode($parameters));
                             } //null!==$inv_id
                         } // null!==$user_inv && $user_inv->getActive()
                     } // null!==$user
@@ -1890,10 +2314,12 @@ final class QuoteController extends BaseController
             } else {
                 $parameters = [
                     'success' => 0,
-                    'flash_message' => $this->translator->translate('quote.not.copied.to.invoice'),
+                    'flash_message' => $this->translator->translate(
+                        'quote.not.copied.to.invoice'),
                 ];
                 //return response to quote.js to reload page at location
-                return $this->factory->createResponse(Json::encode($parameters));
+                return $this->factory->createResponse(
+                    Json::encode($parameters));
             }
         } // quote
         return $this->webService->getNotFoundResponse();
@@ -1902,6 +2328,7 @@ final class QuoteController extends BaseController
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
+     * @param ACQIR $acqiR
      * @param CFR $cfR
      * @param GR $gR
      * @param soIAS $soiaS
@@ -1923,12 +2350,14 @@ final class QuoteController extends BaseController
     public function quote_to_so_confirm(
         Request $request,
         FormHydrator $formHydrator,
+        ACQIR $acqiR,
         CFR $cfR,
         GR $gR,
         soIAS $soiaS,
         PR $pR,
-        TASKR $taskR,    
+        TASKR $taskR,
         QAR $qaR,
+        QIAR $qiaR,
         soAR $soaR,
         QCR $qcR,
         soIAR $soiaR,
@@ -1940,33 +2369,47 @@ final class QuoteController extends BaseController
         UCR $ucR,
         UR $uR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
-        // $body data received from user in ...resources\views\invoice\quote\modal_quote_to_so
-        // ...src\Invoice\Asset\rebuild-1.13\js\ $(document).on('click', '#quote_to_so_confirm', function () {var url = $(location).attr('origin') + "/invoice/quote/quote_to_so_confirm";
+        // $body data received from user in 
+        // ...resources\views\invoice\quote\modal_quote_to_so
+        // ...src\Invoice\Asset\rebuild-1.13\js\ $(document).on('click',
+        // '#quote_to_so_confirm', function () {var url =
+        //  $(location).attr('origin') + "/invoice/quote/quote_to_so_confirm";
         // These parameters inserted into url
-        // A route is necessary for it to pass. see config/common/routes/routes.php  'quote/quote_to_so_confirm'
+        // A route is necessary for it to pass.
+        // see config/common/routes/routes.php  'quote/quote_to_so_confirm'
         $body = $request->getQueryParams();
         $quote_id = (string) $body['quote_id'];
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         if ($quote) {
+            // Check if quote has already been converted to a sales order
+            if ($quote->getSo_id() !== '0' && $quote->getSo_id() !== '') {
+                $parameters = [
+                    'success' => 0,
+                    'flash_message' => $this->translator->translate(
+                        'quote.sales.order.already.created.from.quote'),
+                ];
+                return $this->factory->createResponse(Json::encode($parameters));
+            }
             $so_body = [
                 'quote_id' => $quote_id,
                 'inv_id' => null,
                 'client_id' => $body['client_id'],
                 'group_id' => $body['group_id'],
-                'client_po_number' => $body['po'],
-                'client_po_person' => $body['person'],
+                'client_po_number' => $body['po_number'],
+                'client_po_person' => $body['po_person'],
                 'status_id' => 1,
-                'number' => $gR->generate_number((int) $body['group_id']),
+                'number' => '',
                 'discount_amount' => (float) $quote->getDiscount_amount(),
                 'discount_percent' => (float) $quote->getDiscount_percent(),
-                // The quote's url will be the same for the so allowing for a trace
+                // The quote's url will be the same for the so allowing
+                // for a trace
                 'url_key' => $quote->getUrl_key(),
                 'password' => $body['password'] ?? '',
                 'notes' => '',
             ];
             $new_so = new SoEntity();
             $form = new SoForm($new_so);
-            if ($formHydrator->populateAndValidate($form, $so_body) && ($quote->getSo_id() === (string) 0)) {
+            if ($formHydrator->populateAndValidate($form, $so_body)) {
                 /**
                  * @var string $so_body['client_id']
                  */
@@ -1978,31 +2421,51 @@ final class QuoteController extends BaseController
                     $user_id = $user_client->getUser_id();
                     $user = $uR->findById($user_id);
                     if (null !== $user) {
-                        $this->so_service->addSo($user, $new_so, $so_body);
-                        // Ensure that the quote has a specific po and therefore cannot be copied again.
-                        $new_so_id = $new_so->getId();
-                        // Transfer each quote_item to so_item and the corresponding so_item_amount to so_item_amount for each item
+                        // Generate number only after validation passes
+                        $so_body['number'] = (string) $gR->generate_number((int) $body['group_id'], true);
+                        $so = $this->so_service->addSo($user, $new_so, $so_body);
+                        $new_so_id = $so->getId();
+                        // Ensure that the quote has a specific po and therefore
+                        // cannot be copied again.
+                        // Transfer each quote_item to so_item and the
+                        // corresponding so_item_amount to so_item_amount
+                        // for each item
                         if (null !== $new_so_id) {
-                            $this->quote_to_so_quote_items($quote_id, $new_so_id, $soiaR, $soiaS, $pR, $taskR, $qiR, $trR, $unR, $formHydrator);
-                            $this->quote_to_so_quote_tax_rates($quote_id, $new_so_id, $qtrR, $formHydrator);
-                            $this->quote_to_so_quote_custom($quote_id, $new_so_id, $qcR, $cfR, $formHydrator);
-                            $this->quote_to_so_quote_amount($quote_id, $new_so_id, $qaR, $soaR);
-                            // Set the quote's sales order id so that it cannot be copied in the future
+                            $this->quote_to_so_quote_items($quote_id,
+                                $new_so_id, $acqiR, $soiaR, $soiaS, $pR, $taskR,
+                                    $qiR, $trR, $unR, $formHydrator);
+                            $this->quote_to_so_quote_tax_rates($quote_id,
+                                $new_so_id, $qtrR, $formHydrator);
+                            $this->quote_to_so_quote_custom($quote_id,
+                                $new_so_id, $qcR, $cfR, $formHydrator);
+                            $this->quote_to_so_quote_amount($quote_id,
+                                $new_so_id, $qaR, $soaR);
+                            // Set the quote's sales order id so that it
+                            // cannot be copied in the future
                             $quote->setSo_id($new_so_id);
                             $qR->save($quote);
+                            // Update the quote amounts after conversion
+                            $this->quote_amount_service->updateQuoteAmount(
+                                (int) $quote_id, $qaR, $qiaR, $qtrR,
+                                $this->number_helper);
                             $parameters = [
                                 'success' => 1,
-                                'flash_message' => $this->translator->translate('quote.sales.order.created.from.quote'),
+                                'flash_message' => $this->translator->translate(
+                                    'quote.sales.order.created.from.quote'),
+                                'redirect_url' => $this->url_generator->generate('salesorder/view', ['_language' => (string) $this->session->get('_language'), 'id' => $new_so_id]),
                             ];
-                            //return response to quote.js to reload page at location
-                            return $this->factory->createResponse(Json::encode($parameters));
+                            //return response to quote.js to reload page at
+                            //location
+                            return $this->factory->createResponse(
+                                Json::encode($parameters));
                         } // null!==$new_so_id
                     }  // null!==$user
                 } // null!==$user_client && $user_client_count==1
             } else {
                 $parameters = [
                     'success' => 0,
-                    'flash_message' => $this->translator->translate('quote.sales.order.not.created.from.quote'),
+                    'flash_message' => $this->translator->translate(
+                        'quote.sales.order.not.created.from.quote'),
                 ];
                 //return response to quote.js to reload page at location
                 return $this->factory->createResponse(Json::encode($parameters));
@@ -2014,6 +2477,8 @@ final class QuoteController extends BaseController
     /**
      * @param string $quote_id
      * @param string $inv_id
+     * @param ACQIR $acqiR
+     * @param ACIIR $aciiR
      * @param IIAR $iiaR
      * @param InvItemAmountService $iiaS
      * @param PR $pR
@@ -2022,17 +2487,23 @@ final class QuoteController extends BaseController
      * @param FormHydrator $formHydrator
      * @param UNR $unR
      */
-    private function quote_to_invoice_quote_items(string $quote_id, string $inv_id, IIAR $iiaR, InvItemAmountService $iiaS, PR $pR, QIR $qiR, TRR $trR, FormHydrator $formHydrator, SR $sR, UNR $unR): void
+    private function quote_to_invoice_quote_items(string $quote_id,
+        string $inv_id, ACQIR $acqiR, ACIIR $aciiR, IIAR $iiaR,
+            InvItemAmountService $iiaS,
+        PR $pR, TaskR $taskR, QIR $qiR, TRR $trR, FormHydrator $formHydrator,
+        SR $sR, UNR $unR): void
     {
         // Get all items that belong to the quote
         $items = $qiR->repoQuoteItemIdquery($quote_id);
         /** @var QuoteItem $quote_item */
         foreach ($items as $quote_item) {
+            $product_id = $quote_item->getProduct_id() ?: null;
+            $task_id = $quote_item->getTask_id() ?: null;
             $inv_item = [
                 'inv_id' => $inv_id,
                 'tax_rate_id' => $quote_item->getTax_rate_id(),
-                'product_id' => $quote_item->getProduct_id(),
-                'task_id' => '',
+                'product_id' => $product_id,
+                'task_id' => $task_id,
                 'name' => $quote_item->getName(),
                 'description' => $quote_item->getDescription(),
                 'quantity' => $quote_item->getQuantity(),
@@ -2049,7 +2520,17 @@ final class QuoteController extends BaseController
             $invItem = new InvItem();
             $form = new InvItemForm($invItem, (int) $inv_id);
             if ($formHydrator->populateAndValidate($form, $inv_item)) {
-                $this->inv_item_service->addInvItem_product($invItem, $inv_item, $inv_id, $pR, $trR, $iiaS, $iiaR, $sR, $unR);
+                null!== $product_id && null === $task_id ?
+                $this->inv_item_service->addInvItem_product($invItem, $inv_item,
+                    $inv_id, $pR, $trR, $iiaS, $iiaR, $sR, $unR):
+                $this->inv_item_service->addInvItem_task($invItem, $inv_item,
+                    $inv_id, $taskR, $trR, $iiaS, $iiaR, $sR);
+                $invItemId = $invItem->getId();
+                if (null !== $invItemId) {
+                    $this->inv_item_service->addInvItem_allowance_charges_from_quote(
+                        $inv_id, (int) $quote_item->getId(), $invItemId, $acqiR,
+                        $aciiR);
+                }
             }
         } // items
     }
@@ -2060,7 +2541,8 @@ final class QuoteController extends BaseController
      * @param QTRR $qtrR
      * @param FormHydrator $formHydrator
      */
-    private function quote_to_invoice_quote_tax_rates(string $quote_id, ?string $inv_id, QTRR $qtrR, FormHydrator $formHydrator): void
+    private function quote_to_invoice_quote_tax_rates(string $quote_id,
+        ?string $inv_id, QTRR $qtrR, FormHydrator $formHydrator): void
     {
         // Get all tax rates that have been setup for the quote
         $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
@@ -2070,12 +2552,14 @@ final class QuoteController extends BaseController
                 'inv_id' => (string) $inv_id,
                 'tax_rate_id' => $quote_tax_rate->getTax_rate_id(),
                 'include_item_tax' => $quote_tax_rate->getInclude_item_tax(),
-                'inv_tax_rate_amount' => $quote_tax_rate->getQuote_tax_rate_amount(),
+                'inv_tax_rate_amount' =>
+                    $quote_tax_rate->getQuote_tax_rate_amount(),
             ];
             $entity = new InvTaxRate();
             $form = new InvTaxRateForm($entity);
             if ($formHydrator->populateAndValidate($form, $inv_tax_rate)) {
-                $this->inv_tax_rate_service->saveInvTaxRate($entity, $inv_tax_rate);
+                $this->inv_tax_rate_service->saveInvTaxRate(
+                    $entity, $inv_tax_rate);
             }
         } // foreach
     }
@@ -2086,22 +2570,28 @@ final class QuoteController extends BaseController
      * @param QTRR $qtrR
      * @param FormHydrator $formHydrator
      */
-    private function quote_to_so_quote_tax_rates(string $quote_id, ?string $so_id, QTRR $qtrR, FormHydrator $formHydrator): void
+    private function quote_to_so_quote_tax_rates(
+        string $quote_id, ?string $so_id, QTRR $qtrR,
+            FormHydrator $formHydrator): void
     {
         // Get all tax rates that have been setup for the quote
         $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
         /** @var QuoteTaxRate $quote_tax_rate */
         foreach ($quote_tax_rates as $quote_tax_rate) {
             $so_tax_rate = [
-                'so_id' => (string) $so_id,
-                'tax_rate_id' => $quote_tax_rate->getTax_rate_id(),
-                'include_item_tax' => $quote_tax_rate->getInclude_item_tax(),
-                'so_tax_rate_amount' => $quote_tax_rate->getQuote_tax_rate_amount(),
+                'sales_order_id' => (string) $so_id,
+                'tax_rate_id' =>
+                    $quote_tax_rate->getTax_rate_id(),
+                'include_item_tax' =>
+                    $quote_tax_rate->getInclude_item_tax(),
+                'sales_order_tax_rate_amount' =>
+                    $quote_tax_rate->getQuote_tax_rate_amount(),
             ];
             $entity = new SoTaxRate();
             $form = new SoTaxRateForm($entity);
             if ($formHydrator->populateAndValidate($form, $so_tax_rate)) {
-                $this->so_tax_rate_service->saveSoTaxRate($entity, $so_tax_rate);
+                $this->so_tax_rate_service->saveSoTaxRate(
+                    $entity, $so_tax_rate);
             }
         } // foreach
     }
@@ -2121,21 +2611,29 @@ final class QuoteController extends BaseController
         FormHydrator $formHydrator,
     ): void {
         $quote_customs = $qcR->repoFields($quote_id);
-        // For each quote custom field, build a new custom field for 'inv_custom' using the custom_field_id to find details
+        // For each quote custom field, build a new custom field for
+        // 'inv_custom' using the custom_field_id to find details
         /** @var QuoteCustom $quote_custom */
         foreach ($quote_customs as $quote_custom) {
-            // For each quote custom field, build a new custom field for 'inv_custom'
+            // For each quote custom field, build a new custom field
+            // for 'inv_custom'
             // using the custom_field_id to find details
             /** @var CustomField $existing_custom_field */
-            $existing_custom_field = $cfR->repoCustomFieldquery($quote_custom->getCustom_field_id());
-            if ($cfR->repoTableAndLabelCountquery('inv_custom', (string) $existing_custom_field->getLabel()) !== 0) {
+            $existing_custom_field = $cfR->repoCustomFieldquery(
+                $quote_custom->getCustom_field_id());
+            if ($cfR->repoTableAndLabelCountquery('inv_custom',
+                (string) $existing_custom_field->getLabel()) !== 0) {
                 // Build an identitcal custom field for the invoice
                 $custom_field = new CustomField();
                 $custom_field->setTable('inv_custom');
-                $custom_field->setLabel((string) $existing_custom_field->getLabel());
-                $custom_field->setType($existing_custom_field->getType());
-                $custom_field->setLocation((int) $existing_custom_field->getLocation());
-                $custom_field->setOrder((int) $existing_custom_field->getOrder());
+                $custom_field->setLabel((string)
+                    $existing_custom_field->getLabel());
+                $custom_field->setType(
+                    $existing_custom_field->getType());
+                $custom_field->setLocation(
+                    (int) $existing_custom_field->getLocation());
+                $custom_field->setOrder(
+                    (int) $existing_custom_field->getOrder());
                 $cfR->save($custom_field);
                 // Build the inv_custom field record
                 $inv_custom = [
@@ -2145,8 +2643,10 @@ final class QuoteController extends BaseController
                 ];
                 $entity = new InvCustom();
                 $form = new InvCustomForm($entity);
-                if ($formHydrator->populateAndValidate($form, $inv_custom)) {
-                    $this->inv_custom_service->saveInvCustom($entity, $inv_custom);
+                if ($formHydrator->populateAndValidate(
+                    $form, $inv_custom)) {
+                    $this->inv_custom_service
+                         ->saveInvCustom($entity, $inv_custom);
                 }
             } // existing_custom_field
         } // foreach
@@ -2167,21 +2667,29 @@ final class QuoteController extends BaseController
         FormHydrator $formHydrator,
     ): void {
         $quote_customs = $qcR->repoFields($quote_id);
-        // For each quote custom field, build a new custom field for 'inv_custom' using the custom_field_id to find details
+        // For each quote custom field, build a new custom field for
+        // 'inv_custom' using the custom_field_id to find details
         /** @var QuoteCustom $quote_custom */
         foreach ($quote_customs as $quote_custom) {
-            // For each quote custom field, build a new custom field for 'so_custom'
+            // For each quote custom field, build a new custom field
+            // for 'so_custom'
             // using the custom_field_id to find details
             /** @var CustomField $existing_custom_field */
-            $existing_custom_field = $cfR->repoCustomFieldquery($quote_custom->getCustom_field_id());
-            if ($cfR->repoTableAndLabelCountquery('inv_custom', (string) $existing_custom_field->getLabel()) !== 0) {
+            $existing_custom_field = $cfR->repoCustomFieldquery(
+                $quote_custom->getCustom_field_id());
+            if ($cfR->repoTableAndLabelCountquery(
+                'inv_custom', (string) $existing_custom_field->getLabel()
+                ) !== 0) {
                 // Build an identitcal custom field for the po
                 $custom_field = new CustomField();
                 $custom_field->setTable('so_custom');
-                $custom_field->setLabel((string) $existing_custom_field->getLabel());
+                $custom_field->setLabel(
+                    (string) $existing_custom_field->getLabel());
                 $custom_field->setType($existing_custom_field->getType());
-                $custom_field->setLocation((int) $existing_custom_field->getLocation());
-                $custom_field->setOrder((int) $existing_custom_field->getOrder());
+                $custom_field->setLocation(
+                    (int) $existing_custom_field->getLocation());
+                $custom_field->setOrder(
+                    (int) $existing_custom_field->getOrder());
                 $cfR->save($custom_field);
                 // Build the so_custom field record
                 $so_custom = [
@@ -2204,7 +2712,8 @@ final class QuoteController extends BaseController
      * @param QAR $qaR
      * @param FormHydrator $formHydrator
      */
-    private function quote_to_invoice_quote_amount(string $quote_id, ?string $inv_id, QAR $qaR, FormHydrator $formHydrator): void
+    private function quote_to_invoice_quote_amount(string $quote_id,
+        ?string $inv_id, QAR $qaR, FormHydrator $formHydrator): void
     {
         $quote_amount = $qaR->repoQuotequery($quote_id);
         $inv_amount = [];
@@ -2226,16 +2735,43 @@ final class QuoteController extends BaseController
             $this->inv_amount_service->saveInvAmount($entity, $inv_amount);
         }
     }
+    
+    private function quote_to_invoice_quote_allowance_charges(string $quote_id,
+        string $copy_id, ACQR $acqR, FormHydrator $formHydrator): void
+    {
+        $quote_allowance_charges = $acqR->repoACQquery($quote_id);
+        /**
+         * @var QuoteAllowanceCharge $quote_allowance_charge
+         */
+        foreach ($quote_allowance_charges as $quote_allowance_charge) {
+            $copy_inv_ac = [
+                'inv_id' => $copy_id,
+                'allowance_charge_id' =>
+                    $quote_allowance_charge->getAllowance_charge_id(),
+                'amount' => $quote_allowance_charge->getAmount(),
+                'vat_or_tax' => $quote_allowance_charge->getVatOrTax(),
+            ];
+            $invAllowanceCharge = new InvAllowanceCharge();
+            $form = new InvAllowanceChargeForm($invAllowanceCharge,
+                (int) $copy_id);
+            if ($formHydrator->populateAndValidate($form, $copy_inv_ac)) {
+                $this->inv_allowance_charge_service->saveInvAllowanceCharge(
+                    $invAllowanceCharge, $copy_inv_ac);
+            }
+        }
+    }
 
     /**
-     * Note: When a new Quote is created the Quote Amount is created automatically in the Quote Entity Construct
+     * Note: When a new Quote is created the Quote Amount is created
+     * automatically in the Quote Entity Construct
      * so pass the qaR to find this new Quote Amount
      * Related logic: InvController function inv_to_inv_inv_amount()
      * @param int $quoteId
      * @param int $copiedId
      * @param  QAR $qaR
      */
-    private function quote_to_quote_quote_amount(int $quoteId, int $copiedId, QAR $qaR): void
+    private function quote_to_quote_quote_amount(int $quoteId, int $copiedId,
+        QAR $qaR): void
     {
         $original = $qaR->repoQuotequery((string) $quoteId);
         if (null !== $original) {
@@ -2243,29 +2779,40 @@ final class QuoteController extends BaseController
             $array['quote_id'] = (int) $original->getQuote_id();
             $array['item_subtotal'] = $original->getItem_subtotal();
             $array['item_taxtotal'] = $original->getItem_tax_total();
+            $array['packhandleship_total'] =
+                $original->getPackhandleship_total();
+            $array['packhandleship_tax'] =
+                $original->getPackhandleship_tax();
             $array['tax_total'] = $original->getTax_total();
             $array['total'] = $original->getTotal();
             $copied = $qaR->repoQuotequery((string) $copiedId);
-            null !== $copied ? $this->quote_amount_service->saveQuoteAmountViaCalculations($copied, $array) : '';
+            null !== $copied ?
+                $this->quote_amount_service->saveQuoteAmountViaCalculations(
+                    $copied, $array) : '';
         }
     }
 
     /**
      * @param string $quote_id
-     * @param string|null $copy_id
+     * @param string $copy_id
      * @param QAR $qaR
      * @param soAR $soaR
      */
-    private function quote_to_so_quote_amount(string $quote_id, ?string $copy_id, QAR $qaR, soAR $soaR): void
+    private function quote_to_so_quote_amount(string $quote_id,
+        string $copy_id, QAR $qaR, soAR $soaR): void
     {
-        $this->so_amount_service->initializeCopyQuoteAmount(new SoAmount(), $qaR, $soaR, $quote_id, $copy_id);
+        $this->so_amount_service->initializeCopyQuoteAmount(new SoAmount(),
+            $qaR, $soaR, $quote_id, $copy_id);
     }
 
-    // Data fed from quote.js->$(document).on('click', '#quote_to_quote_confirm', function () {
+    // Data fed from quote.js->$(document).on('click',
+    // '#quote_to_quote_confirm', function () {
 
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
+     * @param ACQR $acqR
+     * @param ACQIR $acqiR
      * @param GR $gR
      * @param QIAS $qiaS
      * @param PR $pR
@@ -2285,6 +2832,8 @@ final class QuoteController extends BaseController
     public function quote_to_quote_confirm(
         Request $request,
         FormHydrator $formHydrator,
+        ACQR $acqR,    
+        ACQIR $acqiR,
         GR $gR,
         QIAS $qiaS,
         PR $pR,
@@ -2334,21 +2883,36 @@ final class QuoteController extends BaseController
                     if (null !== $user) {
                         $user_inv = $uiR->repoUserInvUserIdquery($user_id);
                         if (null !== $user_inv && $user_inv->getActive()) {
-                            $this->quote_service->saveQuote($user, $copy, $quote_body, $this->sR, $gR);
-                            // Transfer each quote_item to quote_item and the corresponding quote_item_amount to quote_item_amount for each item
+                            $this->quote_service->saveQuote($user, $copy,
+                                $quote_body, $this->sR, $gR);
+                            // Transfer each quote_item to quote_item and the
+                            // corresponding quote_item_amount to
+                            // quote_item_amount for each item
                             $copy_id = $copy->getId();
                             if (null !== $copy_id) {
-                                $this->quote_to_quote_quote_items($quote_id, $copy_id, $qiaR, $qiaS, $pR, $taskR, $qiR, $trR, $unR, $formHydrator);
-                                $this->quote_to_quote_quote_tax_rates($quote_id, $copy_id, $qtrR, $formHydrator);
-                                $this->quote_to_quote_quote_custom($quote_id, $copy_id, $qcR, $formHydrator);
-                                $this->quote_to_quote_quote_amount((int) $quote_id, (int) $copy_id, $qaR);
+                                $this->quote_to_quote_quote_items($quote_id,
+                                        $copy_id, $acqiR, $qiaR, $qiaS, $pR,
+                                        $taskR, $qiR, $trR, $unR, $formHydrator);
+                                $this->quote_to_quote_quote_tax_rates($quote_id,
+                                    $copy_id, $qtrR, $formHydrator);
+                                $this->quote_to_quote_quote_custom($quote_id,
+                                    $copy_id, $qcR, $formHydrator);
+                                $this->quote_to_quote_quote_amount(
+                                    (int) $quote_id, (int) $copy_id, $qaR);
+                                $this->quote_to_quote_quote_allowance_charges(
+                                    $quote_id, $copy_id, $acqR,
+                                    $formHydrator);
                                 $qR->save($copy);
                                 $parameters = [
                                     'success' => 1,
-                                    'flash_message' => $this->translator->translate('quote.copied.to.quote'),
+                                    'flash_message' =>
+                                        $this->translator->translate(
+                                            'quote.copied.to.quote'),
                                 ];
-                                //return response to quote.js to reload page at location
-                                return $this->factory->createResponse(Json::encode($parameters));
+                                //return response to quote.js to reload page at
+                                //location
+                                return $this->factory->createResponse(
+                                    Json::encode($parameters));
                             } // null!==$copy_id
                         } // null!==$user_inv && $user_inv->getActive()
                     } // null!== $user
@@ -2370,7 +2934,8 @@ final class QuoteController extends BaseController
      * @param QCR $qcR
      * @param FormHydrator $formHydrator
      */
-    private function quote_to_quote_quote_custom(string $quote_id, ?string $copy_id, QCR $qcR, FormHydrator $formHydrator): void
+    private function quote_to_quote_quote_custom(string $quote_id,
+        ?string $copy_id, QCR $qcR, FormHydrator $formHydrator): void
     {
         $quote_customs = $qcR->repoFields($quote_id);
         /** @var QuoteCustom $quote_custom */
@@ -2383,7 +2948,8 @@ final class QuoteController extends BaseController
             $entity = new QuoteCustom();
             $form = new QuoteCustomForm($entity);
             if ($formHydrator->populateAndValidate($form, $copy_custom)) {
-                $this->quote_custom_service->saveQuoteCustom($entity, $copy_custom);
+                $this->quote_custom_service->saveQuoteCustom(
+                    $entity, $copy_custom);
             }
         }
     }
@@ -2391,6 +2957,7 @@ final class QuoteController extends BaseController
     /**
      * @param string $quote_id
      * @param string $copy_id
+     * @param ACQIR $acqiR
      * @param QIAR $qiaR
      * @param QIAS $qiaS
      * @param PR $pR
@@ -2400,14 +2967,18 @@ final class QuoteController extends BaseController
      * @param UNR $unR
      * @param FormHydrator $formHydrator
      */
-    private function quote_to_quote_quote_items(string $quote_id, string $copy_id, QIAR $qiaR, QIAS $qiaS, PR $pR, TASKR $taskR, QIR $qiR, TRR $trR, UNR $unR, FormHydrator $formHydrator): void
+    private function quote_to_quote_quote_items(string $quote_id,
+        string $new_quote_id, ACQIR $acqiR, QIAR $qiaR, QIAS $qiaS, PR $pR,
+        TASKR $taskR, QIR $qiR, TRR $trR, UNR $unR,
+            FormHydrator $formHydrator): void
     {
         // Get all items that belong to the original quote
         $items = $qiR->repoQuoteItemIdquery($quote_id);
         /** @var QuoteItem $quote_item */
         foreach ($items as $quote_item) {
+            $origQuoteItemId = $quote_item->getId();
             $copy_item = [
-                'quote_id' => $copy_id,
+                'quote_id' => $new_quote_id,
                 'tax_rate_id' => $quote_item->getTax_rate_id(),
                 'product_id' => $quote_item->getProduct_id(),
                 'task_id' => $quote_item->getTask_id(),
@@ -2423,27 +2994,65 @@ final class QuoteController extends BaseController
                 // Recurring date
                 'date' => '',
             ];
-            // Create an equivalent invoice item for the quote item
-            $copyItem = new QuoteItem();
-            $form = new QuoteItemForm($copyItem, $copy_id);
+            $newQuoteItem = new QuoteItem();
+            $form = new QuoteItemForm($newQuoteItem, $new_quote_id);
             if ($formHydrator->populateAndValidate($form, $copy_item)) {
-                $this->quote_item_service->addQuoteItemProductTask($copyItem, $copy_item, $copy_id, $pR, $taskR, $qiaR, $qiaS, $unR, $trR, $this->translator);
+                $this->quote_item_service->addQuoteItemProductTask(
+                    $newQuoteItem, $copy_item, $new_quote_id, $pR, $taskR, $qiaR,
+                        $qiaS, $unR, $trR, $this->translator);
+                // All the original allowance charges associated with the quote
+                // item will have to be copied as well
+                $this->copy_quote_item_allowance_charges($origQuoteItemId,
+                    $acqiR, $new_quote_id, $newQuoteItem);
             }
+            
         } // items as quote_item
     }
-
-    private function quote_to_so_quote_items(string $quote_id, string $so_id, soIAR $soiaR, soIAS $soiaS, PR $pR, TASKR $taskR, QIR $qiR, TRR $trR, UNR $unR, FormHydrator $formHydrator): void
+    
+    private function copy_quote_item_allowance_charges(string $origQuoteItemId,
+        ACQIR $acqiR, string $new_quote_id, QuoteItem $newQuoteItem): void {
+        // Note: QuoteAllowanceCharges are irrelevant here since they relate
+        // to the final grand totals and not individual items
+        // Both the individual item and the grand total inherit from the
+        // AllowanceCharge Entity
+        //
+        // All AllowanceCharges belonging to the current quote item
+        // have to be copied as well
+         
+        $all = $acqiR->repoQuoteItemquery($origQuoteItemId);
+        /**
+         * @var QuoteItemAllowanceCharge $quoteItemAllowanceCharge
+         */
+        foreach ($all as $quoteItemAllowanceCharge) {
+            $acqItem = new QuoteItemAllowanceCharge();
+            $array = [
+                'allowance_charge_id' =>
+                    $quoteItemAllowanceCharge->getAllowanceCharge()?->getId(),
+                'quote_id' => $new_quote_id,
+                'quote_item_id' => $newQuoteItem->getId(),
+                // duplicate the amount of the original quote item's ac
+                'amount' => $quoteItemAllowanceCharge->getAmount(),
+            ];
+            $this->quote_item_ac_service->saveQuoteItemAllowanceCharge(
+                $acqItem, $array,
+                    ((float) $quoteItemAllowanceCharge->getVatOrTax()) ?: 0.00);
+        }
+    }
+    
+    private function quote_to_so_quote_items(string $quote_id, string $new_so_id,
+        ACQIR $acqiR, soIAR $soiaR, soIAS $soiaS, PR $pR, TASKR $taskR, 
+        QIR $qiR, TRR $trR,
+        UNR $unR, FormHydrator $formHydrator): void
     {
-        // Note: The $soiaR variable will be used to see if there are pre-existing amounts later towards the end of this function
+        // Note: The $soiaR variable will be used to see if there are
+        // pre-existing amounts later towards the end of this function
         // Get all items that belong to the original quote
         $items = $qiR->repoQuoteItemIdquery($quote_id);
         /** @var QuoteItem $quote_item */        
         foreach ($items as $quote_item) {
-            // Create an equivalent purchase order item for the quote item
-            $soItem = new SoItem();
-            // array keys match the Entity/SoItem construct sequence
+            $origQuoteItemId = $quote_item->getId();
+            $newSoItem = new SoItem();
             $so_item = [
-                'id' => $soItem->getId(),
                 'peppol_po_itemid' => '',
                 'peppol_po_lineid' => '',
                 'name' => $quote_item->getName(),
@@ -2454,19 +3063,48 @@ final class QuoteController extends BaseController
                 'charge_amount' => 0.00,
                 'order' => $quote_item->getOrder(),
                 'product_unit' => $quote_item->getProduct_unit(),
-                'sales_order_id' => $so_id,
+                'sales_order_id' => $new_so_id,
                 'tax_rate_id' => $quote_item->getTax_rate_id(),
                 'product_id' => $quote_item->getProduct_id(),
-                // There are currently no tasks provided in a quote and tasks and products are mutually exclusive
                 'task_id' => $quote_item->getTask_id(),
                 'product_unit_id' => $quote_item->getProduct_unit_id(),
                 'date_added' => new \DateTimeImmutable(),
             ];
-            $form = new SoItemForm($soItem);
+            
+            
+            $form = new SoItemForm($newSoItem, $new_so_id);
             if ($formHydrator->populateAndValidate($form, $so_item)) {
-                $this->so_item_service->addSoItemProductTask($soItem, $so_item, $so_id, $pR, $taskR, $soiaR, $soiaS, $unR, $trR, $this->translator);
+                $this->so_item_service->addSoItemProductTask($newSoItem, $so_item,
+                    $new_so_id, $pR, $taskR, $soiaR, $soiaS, $unR, $trR,
+                        $this->translator);
+                $this->copy_quote_item_allowance_charges_to_so($origQuoteItemId,
+                    $acqiR, $new_so_id, $newSoItem);
             }
         } // items as quote_item
+    }
+    
+    private function copy_quote_item_allowance_charges_to_so(
+        string $origQuoteItemId, ACQIR $acqiR, string $new_so_id,
+            SoItem $newSalesOrderItem): void {
+         
+        $all = $acqiR->repoQuoteItemquery($origQuoteItemId);
+        /**
+         * @var QuoteItemAllowanceCharge $quoteItemAllowanceCharge
+         */
+        foreach ($all as $quoteItemAllowanceCharge) {
+            $acsoItem = new SalesOrderItemAllowanceCharge();
+            $array = [
+                'allowance_charge_id' =>
+                    $quoteItemAllowanceCharge->getAllowanceCharge()?->getId(),
+                'sales_order_id' => $new_so_id,
+                'sales_order_item_id' => $newSalesOrderItem->getId(),
+                // duplicate the amount of the original quote item's ac
+                'amount' => $quoteItemAllowanceCharge->getAmount(),
+            ];
+            $this->so_item_ac_service->saveSalesOrderItemAllowanceCharge(
+                $acsoItem, $array,
+                    ((float) $quoteItemAllowanceCharge->getVatOrTax()) ?: 0.00);
+        }
     }
 
     /**
@@ -2475,7 +3113,8 @@ final class QuoteController extends BaseController
      * @param QTRR $qtrR
      * @param FormHydrator $formHydrator
      */
-    private function quote_to_quote_quote_tax_rates(string $quote_id, ?string $copy_id, QTRR $qtrR, FormHydrator $formHydrator): void
+    private function quote_to_quote_quote_tax_rates(string $quote_id,
+        ?string $copy_id, QTRR $qtrR, FormHydrator $formHydrator): void
     {
         // Get all tax rates that have been setup for the quote
         $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
@@ -2483,14 +3122,44 @@ final class QuoteController extends BaseController
         foreach ($quote_tax_rates as $quote_tax_rate) {
             $copy_tax_rate = [
                 'quote_id' => $copy_id,
-                'tax_rate_id' => $quote_tax_rate->getTax_rate_id(),
-                'include_item_tax' => $quote_tax_rate->getInclude_item_tax(),
-                'quote_tax_rate_amount' => $quote_tax_rate->getQuote_tax_rate_amount(),
+                'tax_rate_id' =>
+                    $quote_tax_rate->getTax_rate_id(),
+                'include_item_tax' =>
+                    $quote_tax_rate->getInclude_item_tax(),
+                'quote_tax_rate_amount' =>
+                    $quote_tax_rate->getQuote_tax_rate_amount(),
             ];
             $entity = new QuoteTaxRate();
             $form = new QuoteTaxRateForm($entity);
             if ($formHydrator->populateAndValidate($form, $copy_tax_rate)) {
-                $this->quote_tax_rate_service->saveQuoteTaxRate($entity, $copy_tax_rate);
+                $this->quote_tax_rate_service->saveQuoteTaxRate($entity,
+                    $copy_tax_rate);
+            }
+        }
+    }
+    
+    private function quote_to_quote_quote_allowance_charges(string $quote_id,
+        string $copy_id, ACQR $acqR, FormHydrator $formHydrator): void
+    {
+        $quote_allowance_charges = $acqR->repoACQquery($quote_id);
+        /**
+         * @var QuoteAllowanceCharge $quote_allowance_charge
+         */
+        foreach ($quote_allowance_charges as $quote_allowance_charge) {
+            $copy_quote_allowance_charge = [
+                'quote_id' => $copy_id,
+                'allowance_charge_id' =>
+                    $quote_allowance_charge->getAllowance_charge_id(),
+                'amount' => $quote_allowance_charge->getAmount(),
+                // vat_or_tax amount worked out by qac_Service
+            ];
+            $quoteAllowanceCharge = new QuoteAllowanceCharge();
+            $form = new QuoteAllowanceChargeForm($quoteAllowanceCharge,
+                (int) $copy_id);
+            if ($formHydrator->populateAndValidate($form,
+                    $copy_quote_allowance_charge)) {
+                    $this->qac_Service->saveQuoteAllowanceCharge(
+                    $quoteAllowanceCharge, $copy_quote_allowance_charge);
             }
         }
     }
@@ -2500,10 +3169,12 @@ final class QuoteController extends BaseController
      * @param QTRR $quotetaxrateRepository
      * @return QuoteTaxRate|null
      */
-    private function quotetaxrate(int $id, QTRR $quotetaxrateRepository): ?QuoteTaxRate
+    private function quotetaxrate(int $id, QTRR $quotetaxrateRepository):
+        ?QuoteTaxRate
     {
         if ($id) {
-            $quotetaxrate = $quotetaxrateRepository->repoQuoteTaxRatequery((string) $id);
+            $quotetaxrate = $quotetaxrateRepository->repoQuoteTaxRatequery(
+                (string) $id);
             if (null !== $quotetaxrate) {
                 return $quotetaxrate;
             }
@@ -2528,14 +3199,16 @@ final class QuoteController extends BaseController
         return $files;
     }
 
-    // quote/view => '#btn_save_quote_custom_fields' => quote_custom_field.js => /invoice/quote/save_custom";
+    // quote/view => '#btn_save_quote_custom_fields' => quote_custom_field.js
+    // => /invoice/quote/save_custom";
 
     /**
      * @param FormHydrator $formHydrator
      * @param Request $request
      * @param QCR $qcR
      */
-    public function save_custom(FormHydrator $formHydrator, Request $request, QCR $qcR): \Yiisoft\DataResponse\DataResponse
+    public function save_custom(FormHydrator $formHydrator, Request $request,
+        QCR $qcR): \Yiisoft\DataResponse\DataResponse
     {
         $parameters = [
             'success' => 0,
@@ -2545,7 +3218,8 @@ final class QuoteController extends BaseController
         $custom_field_body = [
             'custom' => $js_data['custom'] ?: '',
         ];
-        $this->processCustomFields($custom_field_body, $formHydrator, $this->quoteCustomFieldProcessor, (string) $quote_id);
+        $this->processCustomFields($custom_field_body, $formHydrator,
+            $this->quoteCustomFieldProcessor, (string) $quote_id);
         $parameters['success'] = 1;
         return $this->factory->createResponse(Json::encode($parameters));
     }
@@ -2556,7 +3230,8 @@ final class QuoteController extends BaseController
      * @param Request $request
      * @param FormHydrator $formHydrator
      */
-    public function save_quote_tax_rate(Request $request, FormHydrator $formHydrator): \Yiisoft\DataResponse\DataResponse
+    public function save_quote_tax_rate(Request $request,
+        FormHydrator $formHydrator): \Yiisoft\DataResponse\DataResponse
     {
         $body = $request->getQueryParams();
         $ajax_body = [
@@ -2568,39 +3243,48 @@ final class QuoteController extends BaseController
         $quoteTaxRate = new QuoteTaxRate();
         $ajax_content = new QuoteTaxRateForm($quoteTaxRate);
         if ($formHydrator->populateAndValidate($ajax_content, $ajax_body)) {
-            $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate, $ajax_body);
+            $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate,
+                $ajax_body);
             $parameters = [
                 'success' => 1,
-                'flash_message' => $this->translator->translate('quote.tax.rate.saved'),
+                'flash_message' => $this->translator->translate(
+                    'quote.tax.rate.saved'),
             ];
             //return response to quote.js to reload page at location
             return $this->factory->createResponse(Json::encode($parameters));
         }
         $parameters = [
             'success' => 0,
-            'flash_message' => $this->translator->translate('quote.tax.rate.incomplete.fields'),
+            'flash_message' => $this->translator->translate(
+                'quote.tax.rate.incomplete.fields'),
         ];
         //return response to quote.js to reload page at location
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    // When you click on Send Mail whilst in the view, you will get mailer_quote view showing with the url_key at the bottom
-    // Use this url_key to test what the customer will experience eg. invoice/quote/url_key/{url_key}
+    // When you click on Send Mail whilst in the view, you will get
+    // mailer_quote view showing with the url_key at the bottom
+    // Use this url_key to test what the customer will
+    // experience eg. invoice/quote/url_key/{url_key}
     // config/routes accesschecker ensures client has viewInv permission
 
-    public function url_key(#[RouteArgument('url_key')] string $urlKey, CurrentUser $currentUser, CFR $cfR, QAR $qaR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, UIR $uiR, UCR $ucR, PMR $pmR): Response
+    public function url_key(#[RouteArgument('url_key')] string $urlKey,
+        CurrentUser $currentUser, CFR $cfR, QAR $qaR, QIR $qiR, QIAR $qiaR,
+            QR $qR, QTRR $qtrR, UIR $uiR, UCR $ucR, PMR $pmR): Response
     {
         // If there is no quote with such a url_key, issue a not found response
         if ($urlKey === '') {
             return $this->webService->getNotFoundResponse();
         }
 
-        // If there is a quote with the url key ... continue or else issue not found response
+        // If there is a quote with the url key ... continue or else issue
+        // not found response
         if ($qR->repoUrl_key_guest_count($urlKey) < 1) {
             return $this->webService->getNotFoundResponse();
         }
 
-        // If this quote has a status id that falls into the category of (just)sent, viewed(in the past), approved(in the past) then continue
+        // If this quote has a status id that falls into the category of
+        // (just)sent, viewed(in the past), approved(in the past) then continue
         $quote = $qR->repoUrl_key_guest_loaded($urlKey);
         $quote_tax_rates = null;
         if ($quote) {
@@ -2610,20 +3294,26 @@ final class QuoteController extends BaseController
                     $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
                 }
             }
-            // If the quote status is sent 2, viewed 3, or approved_with 4, or approved_without 5 or rejected 6
+            // If the quote status is sent 2, viewed 3, or approved_with 4,
+            // or approved_without 5 or rejected 6
             if (in_array($quote->getStatus_id(), [2,3,4,5,6])) {
                 $user_id = $quote->getUser_id();
                 if ($uiR->repoUserInvUserIdcount($user_id) === 1) {
-                    // After signup the user was included in the userinv using Settings...User Account...+
+                    // After signup the user was included in the userinv using
+                    // Settings...User Account...+
                     $user_inv = $uiR->repoUserInvUserIdquery($user_id);
-                    // The client has been assigned to the user id using Setting...User Account...Assigned Clients
-                    $user_client = $ucR->repoUserClientqueryCount($user_id, $quote->getClient_id()) === 1 ? true : false;
+                    // The client has been assigned to the user id using
+                    // Setting...User Account...Assigned Clients
+                    $user_client = $ucR->repoUserClientqueryCount($user_id,
+                        $quote->getClient_id()) === 1 ? true : false;
                     if ($user_inv && $user_client) {
-                        // If the userinv is a Guest => type = 1 ie. NOT an administrator =>type = 0
+                        // If the userinv is a Guest => type = 1 ie. NOT an
+                        // administrator =>type = 0
                         // So if the user has a type of 1 they are a guest.
                         if ($user_inv->getType() == 1) {
                             if ($quote->getStatus_id() === 2) {
-                                // The quote has just been sent so change its status otherwise leave its status alone
+                                // The quote has just been sent so change its
+                                // status otherwise leave its status alone
                                 $quote->setStatus_id(3);
                             }
                             $qR->save($quote);
@@ -2634,30 +3324,57 @@ final class QuoteController extends BaseController
                             ];
 
                             if (null !== $quote_id) {
-                                $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
+                                $quote_amount = (
+                                    ($qaR->repoQuoteAmountCount($quote_id) > 0)
+                                        ? $qaR->repoQuotequery($quote_id) : null);
                                 if ($quote_amount) {
                                     $parameters = [
-                                        'renderTemplate' => $this->viewRenderer->renderPartialAsString('//invoice/template/quote/public/' . ($this->sR->getSetting('public_quote_template') ?: 'Quote_Web'), [
+                                        'renderTemplate' =>
+                                            $this->viewRenderer
+                                                 ->renderPartialAsString(
+                                            '//invoice/template/quote/public/'
+                                            . ($this->sR->getSetting(
+                                                'public_quote_template')
+                                            ?: 'Quote_Web'), [
                                             'isGuest' => $currentUser->isGuest(),
                                             'alert' => $this->alert(),
                                             'quote' => $quote,
                                             'qiaR' => $qiaR,
                                             'quote_amount' => $quote_amount,
-                                            'items' => $qiR->repoQuotequery($quote_id),
-                                            // Get all the quote tax rates that have been setup for this quote
-                                            'quote_tax_rates' => $quote_tax_rates,
-                                            'quote_url_key' => $urlKey,
-                                            'flash_message' => $this->flashMessage('info', ''),
+                                            'items' => $qiR->repoQuotequery(
+                                                $quote_id),
+                                            // Get all the quote tax rates that
+                                            // have been setup for this quote
+                                            'quote_tax_rates' =>
+                                                $quote_tax_rates,
+                                            'quote_url_key' =>
+                                                $urlKey,
+                                            'flash_message' =>
+                                                $this->flashMessage('info', ''),
                                             //'attachments' => $attachments,
-                                            'custom_fields' => $custom_fields,
-                                            'has_expired' => new \DateTimeImmutable('now') > $quote->getDate_expires() ? true : false,
+                                            'custom_fields' =>
+                                                $custom_fields,
+                                            'has_expired' =>
+                                                new \DateTimeImmutable('now')
+                                                > $quote->getDate_expires() ?
+                                                    true : false,
                                             'client' => $quote->getClient(),
-                                            // Get the details of the user of this quote
-                                            'userInv' => $uiR->repoUserInvUserIdcount($user_id) > 0 ? $uiR->repoUserInvUserIdquery($user_id) : null,
-                                            'modal_purchase_order_number' => $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_purchase_order_number', ['urlKey' => $urlKey]),
+                                            // Get the details of the user
+                                            // of this quote
+                                            'userInv' =>
+                                                $uiR->repoUserInvUserIdcount(
+                                                $user_id) > 0 ?
+                                                $uiR->repoUserInvUserIdquery(
+                                                    $user_id) : null,
+                                            'modal_purchase_order_number' =>
+                                                $this->viewRenderer
+                                                     ->renderPartialAsString(
+                                '//invoice/quote/modal_purchase_order_number',
+                                                    ['urlKey' => $urlKey]),
                                         ]),
                                     ];
-                                    return $this->viewRenderer->render('url_key', $parameters);
+                                    return $this->viewRenderer->render(
+                                        'url_key', $parameters);
                                 } // if quote_amount
                             } // if there is a quote id
                         } // user_inv->getType
@@ -2686,6 +3403,9 @@ final class QuoteController extends BaseController
      * @param TRR $trR
      * @param FR $fR
      * @param UNR $uR
+     * @param ACR $acR,
+     * @param ACQR $acqR,
+     * @param ACQIR $acqiR,
      * @param CR $cR
      * @param GR $gR
      * @param QCR $qcR
@@ -2712,6 +3432,9 @@ final class QuoteController extends BaseController
         TRR $trR,
         FR $fR,
         UNR $uR,
+        ACR $acR,
+        ACQR $acqR,
+        ACQIR $acqiR,
         CR $cR,
         GR $gR,
         QCR $qcR,
@@ -2720,110 +3443,168 @@ final class QuoteController extends BaseController
         $quote = $this->quote($id, $qR, false);
         if (null !== $quote) {
             $quote_id = $quote->getId();
+            $quoteAllowanceCharge = new QuoteAllowanceCharge();
+            $quoteAllowanceChargeForm = new QuoteAllowanceChargeForm(
+                $quoteAllowanceCharge, (int) $quote_id);
             if (null !== $quote_id) {
                 $this->session->set('quote_id', $quote_id);
-                $this->number_helper->calculate_quote((string) $this->session->get('quote_id'), $qiR, $qiaR, $qtrR, $qaR, $qR);
-                $quote_tax_rates = (($qtrR->repoCount((string) $this->session->get('quote_id')) > 0) ? $qtrR->repoQuotequery((string) $this->session->get('quote_id')) : null);
+                $this->number_helper->calculate_quote(
+                    (string) $this->session->get('quote_id'), $acqR, $qiR,
+                        $qiaR, $qtrR, $qaR, $qR);
+                $quote_tax_rates = (($qtrR->repoCount(
+                    (string) $this->session->get('quote_id')) > 0) ?
+                        $qtrR->repoQuotequery(
+                            (string) $this->session->get('quote_id')) : null);
                 $sales_order_number = '';
                 if ($quote->getSo_id()) {
                     $so = $soR->repoSalesOrderUnloadedquery($quote->getSo_id());
                     $sales_order_number = $so ? ($so->getNumber() ?? '') : '';
                 }
-                $quote_amount = (($qaR->repoQuoteAmountCount((string) $this->session->get('quote_id')) > 0) ? $qaR->repoQuotequery((string) $this->session->get('quote_id')) : null);
+                $quote_amount = (($qaR->repoQuoteAmountCount(
+                    (string) $this->session->get('quote_id')) > 0) ?
+                        $qaR->repoQuotequery(
+                            (string) $this->session->get('quote_id')) : null);
                 if ($quote_amount) {
-                    $quote_custom_values = $this->quote_custom_values((string) $this->session->get('quote_id'), $qcR);
-                    $quoteEdit = $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false;
+                    $quote_custom_values = $this->quote_custom_values(
+                            (string) $this->session->get('quote_id'), $qcR);
+                    $quoteEdit = $this->userService->hasPermission(
+                            Permissions::EDIT_INV) ? true : false;
                     $vat = $this->sR->getSetting('enable_vat_registration');
                     $quoteAmountTotal = $quote_amount->getTotal();
-                    $customValues = $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom'));
+                    $customValues =
+                    $cvR->attach_hard_coded_custom_field_values_to_custom_field(
+                        $cfR->repoTablequery('quote_custom'));
                     $parameters = [
                         '_language' => $_language,
                         'body' => $this->body($quote),
                         'alert' => $this->alert(),
-                        // Hide buttons on the view if a 'viewInv' user does not have 'editInv' permission
+                        // Hide buttons on the view if a 'viewInv' user does not
+                        // have 'editInv' permission
                         'invEdit' => $quoteEdit,
-                        // if the quote amount total is greater than zero show the buttons eg. Send email
+                        // if the quote amount total is greater than zero show
+                        // the buttons eg. Send email
                         'quote_amount_total' => $quoteAmountTotal,
                         'sales_order_number' => $sales_order_number,
-                        'quoteToolbar' => $this->quoteToolbar->renderWithStatus($quote, $quoteEdit, $vat, $quoteAmountTotal),
+                        'quoteToolbar' => $this->quoteToolbar->renderWithStatus(
+                            $quote, $quoteEdit, $vat, $quoteAmountTotal),
                         'dateHelper' => new DateHelper($this->sR),
                         'numberHelper' => $this->number_helper,
-                        'view_product_task_tabs' => $this->viewRenderer->renderPartialAsString('//invoice/quote/view_product_task_tabs', [
+                        'view_product_task_tabs' =>
+                            $this->viewRenderer->renderPartialAsString(
+                                '//invoice/quote/view_product_task_tabs', [
                             'quote' => $quote,
                             'invEdit' => $quoteEdit,
-                            'add_quote_product' => $this->viewRenderer->renderPartialAsString('//invoice/quoteitem/_item_form_product', [
+                            'add_quote_product' =>
+                                $this->viewRenderer->renderPartialAsString(
+                                    '//invoice/quoteitem/_item_form_product', [
                                 'actionName' => 'quoteitem/add_product',
                                 'actionArguments' => ['_language' => $_language],
                                 'errors' => [],
-                                'form' => new QuoteItemForm(new QuoteItem(), $quote_id),
+                                'form' => new QuoteItemForm(
+                                    new QuoteItem(), $quote_id),
                                 'quote_id' => $this->quote($id, $qR, true),
                                 'taxRates' => $trR->findAllPreloaded(),
                                 'products' => $pR->findAllPreloaded(),
                                 'units' => $uR->findAllPreloaded(),
                                 'numberHelper' => new NumberHelper($this->sR),
                             ]),
-                            'add_quote_task' => $this->viewRenderer->renderPartialAsString('//invoice/quoteitem/_item_form_task', [
+                            'add_quote_task' =>
+                                    $this->viewRenderer->renderPartialAsString(
+                                        '//invoice/quoteitem/_item_form_task', [
                                 'actionName' => 'quoteitem/add_task',
                                 'actionArguments' => ['_language' => $_language],
                                 'errors' => [],
-                                'form' => new QuoteItemForm(new QuoteItem(), $quote_id),
+                                'form' => new QuoteItemForm(
+                                    new QuoteItem(), $quote_id),
                                 'quote_id' => $this->quote($id, $qR, true),
                                 'tasks' => $taskR->repoTaskStatusquery(1),
                                 'taxRates' => $trR->findAllPreloaded(),
                                 'numberHelper' => new NumberHelper($this->sR),
                             ]),
-                        ]),                        
-                        'view_quote_number' => $this->viewRenderer->renderPartialAsString('//invoice/quote/view_quote_number', [
+                        ]),
+                        'view_quote_number' =>
+                            $this->viewRenderer->renderPartialAsString(
+                                '//invoice/quote/view_quote_number', [
                             'quote' => $quote,
                         ]),
-                        'view_quote_vat_enabled_switch' => $this->viewRenderer->renderPartialAsString('//invoice/quote/view_quote_vat_enabled_switch'),
-                        'view_quote_client_details' => $this->viewRenderer->renderPartialAsString('//invoice/quote/view_quote_client_details', [
+                        'view_quote_vat_enabled_switch' =>
+                            $this->viewRenderer->renderPartialAsString(
+                                '//invoice/quote/view_quote_vat_enabled_switch'),
+                        'view_quote_client_details' =>
+                            $this->viewRenderer->renderPartialAsString(
+                                '//invoice/quote/view_quote_client_details', [
                             'clientHelper' => new ClientHelper($this->sR),
                             'countryHelper' => new CountryHelper(),
                             'quote' => $quote,
                             '_language' => $_language,
                         ]),
-                        'view_details_box_with_custom_field' => $this->viewRenderer->renderPartialAsString('//invoice/quote/view_details_box_with_custom_field', [
-                            'quote' => $quote,
-                            'cvH' => new CVH($this->sR, $cvR),
-                            'cvR' => $cvR,
-                            'quoteForm' => new QuoteForm($quote),
-                            'quoteCustomValues' => $quote_custom_values,
-                            'customValues' =>  $customValues,
-                            'customFields' => $cfR->repoTablequery('quote_custom'),
-                            'vat' => $vat,
-                        ]),
-                        'view_quote_approve_reject' => $this->viewRenderer->renderPartialAsString('//invoice/quote/view_quote_approve_reject', [
+                        'view_details_box_with_custom_field' =>
+                            $this->viewRenderer->renderPartialAsString(
+                            '//invoice/quote/view_details_box_with_custom_field',
+                            [
+                                'quote' => $quote,
+                                'cvH' => new CVH($this->sR, $cvR),
+                                'cvR' => $cvR,
+                                'quoteForm' => new QuoteForm($quote),
+                                'quoteCustomValues' => $quote_custom_values,
+                                'customValues' =>  $customValues,
+                                'customFields' => $cfR->repoTablequery(
+                                    'quote_custom'),
+                                'vat' => $vat,
+                            ]),
+                        'view_quote_approve_reject' =>
+                            $this->viewRenderer->renderPartialAsString(
+                                '//invoice/quote/view_quote_approve_reject', [
                             'quote' => $quote,
                             'body' => $this->body($quote),
                             'invEdit' => $quoteEdit,
-                            'quoteStatuses' => $qR->getStatuses($this->translator),
+                            'quoteStatuses' => $qR->getStatuses(
+                                $this->translator),
                             'sales_order_number' => $sales_order_number,
                         ]),
-                        'view_custom_fields' => $this->viewRenderer->renderPartialAsString('//invoice/quote/view_custom_fields', [
-                            'custom_fields' => $cfR->repoTablequery('quote_custom'),
+                        'view_custom_fields' =>
+                            $this->viewRenderer->renderPartialAsString(
+                                '//invoice/quote/view_custom_fields', [
+                            'custom_fields' => $cfR->repoTablequery(
+                                'quote_custom'),
                             'custom_values' => $customValues,
                             'quote_custom_values' => $quote_custom_values,
                             'cvH' => new CVH($this->sR, $cvR),
                             'cvR' => $cvR,
-                            'quoteCustomForm' => new QuoteCustomForm(new QuoteCustom()),
+                            'quoteCustomForm' => new QuoteCustomForm(
+                                new QuoteCustom()),
                         ]),
-                        // Get all the fields that have been setup for this SPECIFIC quote in quote_custom.
-                        'fields' => $qcR->repoFields((string) $this->session->get('quote_id')),
-                        // Get the standard extra custom fields built for EVERY quote.
+                        // Get all the fields that have been setup for this
+                        // SPECIFIC quote in quote_custom.
+                        'fields' => $qcR->repoFields(
+                            (string) $this->session->get('quote_id')),
+                        // Get the standard extra custom fields built for EVERY
+                        // quote.
                         'customFields' => $cfR->repoTablequery('quote_custom'),
-                        'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
+                        'customValues' =>
+                        $cvR->attach_hard_coded_custom_field_values_to_custom_field(
+                            $cfR->repoTablequery('quote_custom')),
                         'cvH' => new CVH($this->sR, $cvR),
                         'quoteCustomValues' => $quote_custom_values,
                         'quoteStatuses' => $qR->getStatuses($this->translator),
                         'quote' => $quote,
-                        'partial_item_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_item_table', [
-                            'included' => $this->translator->translate('item.tax.included'),
-                            'excluded' => $this->translator->translate('item.tax.excluded'),
-                            'invEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
+                        'partial_item_table' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/quote/partial_item_table', [
+                            'acqiR' => $acqiR,
+                            'packHandleShipTotal' =>
+                                $acqR->getPackHandleShipTotal(
+                                    (string) $quote->getId()),
+                            'included' => $this->translator->translate(
+                                'item.tax.included'),
+                            'excluded' => $this->translator->translate(
+                                'item.tax.excluded'),
+                            'invEdit' => $this->userService->hasPermission(
+                                Permissions::EDIT_INV) ? true : false,
                             'piR' => $piR,
                             'products' => $pR->findAllPreloaded(),
-                            'quoteItems' => $qiR->repoQuotequery((string) $this->session->get('quote_id')),
+                            'quoteItems' => $qiR->repoQuotequery(
+                                (string) $this->session->get('quote_id')),
                             'qiaR' => $qiaR,
                             'quoteTaxRates' => $quote_tax_rates,
                             'quoteAmount' => $quote_amount,
@@ -2833,31 +3614,43 @@ final class QuoteController extends BaseController
                             'tasks' => $taskR->findAllPreloaded(),
                             'units' => $uR->findAllPreloaded(),
                         ]),
-                        'modal_choose_products' => $this->viewRenderer->renderPartialAsString(
+                        'modal_choose_products' =>
+                            $this->viewRenderer->renderPartialAsString(
                             '//invoice/product/modal_product_lookups_quote',
                             [
                                 'families' => $fR->findAllPreloaded(),
-                                'default_item_tax_rate' => $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
+                                'default_item_tax_rate' =>
+                                $this->sR->getSetting(
+                                    'default_item_tax_rate') !== '' ?: 0,
                                 'filter_product' => '',
                                 'filter_family' => '',
                                 'reset_table' => '',
                                 'products' => $pR->findAllPreloadedwithPrice(),
-                                'partial_product_table_modal' => $this->viewRenderer->renderPartialAsString('//invoice/product/_partial_product_table_modal', [
+                                'partial_product_table_modal' =>
+                                $this->viewRenderer->renderPartialAsString(
+                                '//invoice/product/_partial_product_table_modal',
+                                [
                                     'products' => $pR->findAllPreloadedwithPrice(),
                                 ]),
                             ],
                         ),
-                        'modal_choose_tasks' => $this->viewRenderer->renderPartialAsString(
+                        'modal_choose_tasks' =>
+                        $this->viewRenderer->renderPartialAsString(
                             '//invoice/task/modal_task_lookups_quote',
                             [
-                                'default_item_tax_rate' => $this->sR->getSetting('default_item_tax_rate') !== '' ?: 0,
-                                'partial_task_table_modal' => $this->viewRenderer->renderPartialAsString('//invoice/task/partial_task_table_modal', [
+                                'default_item_tax_rate' =>
+                                $this->sR->getSetting(
+                                        'default_item_tax_rate') !== '' ?: 0,
+                                'partial_task_table_modal' =>
+                                $this->viewRenderer->renderPartialAsString(
+                                    '//invoice/task/partial_task_table_modal', [
                                     'tasks' => $taskR->repoTaskStatusquery(1),
                                     'projectR' => $projectR,
                                 ]),
                             ],
                         ),
-                        'modal_add_quote_tax' => $this->viewRenderer->renderPartialAsString(
+                        'modal_add_quote_tax' =>
+                            $this->viewRenderer->renderPartialAsString(
                             '//invoice/quote/modal_add_quote_tax',
                             [
                                 'taxRates' => $trR->findAllPreloaded(),
@@ -2866,37 +3659,83 @@ final class QuoteController extends BaseController
                                 'translator' => $this->translator,
                             ],
                         ),
-                        'modal_copy_quote' => $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_copy_quote', [ 's' => $this->sR,
-                            'quote' => $qR->repoQuoteLoadedquery((string) $this->session->get('quote_id')),
+                        'modal_add_allowance_charge' =>
+                            $this->viewRenderer->renderPartialAsString(
+                            '//invoice/quote/modal_add_allowance_charge',
+                            [
+                                'modal_add_allowance_charge_form' =>
+                                $this->viewRenderer->renderPartialAsString(
+                                '//invoice/quote/modal_add_allowance_charge_form',
+                                    [
+                                        'optionsDataAllowanceCharges' =>
+                                        $acR->optionsDataAllowanceCharges(),
+                                        'actionName' => 'quoteallowancecharge/add',
+                                        'actionArguments' => [
+                                            'quote_id' =>
+                                            (string) $this->session->get(
+                                                    'quote_id')],
+                                        'errors' => [],
+                                        'title' => $this->translator->translate(
+                                            'allowance.or.charge.add'),
+                                        'form' => $quoteAllowanceChargeForm,
+                                    ],
+                                ),
+                            ],
+                        ),
+                        'modal_copy_quote' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/quote/modal_copy_quote', [
+                                's' => $this->sR,
+                            'quote' => $qR->repoQuoteLoadedquery(
+                                (string) $this->session->get('quote_id')),
                             'clients' => $cR->findAllPreloaded(),
                             'groups' => $gR->findAllPreloaded(),
                         ]),
-                        'modal_delete_quote' => $this->viewRenderer->renderPartialAsString(
+                        'modal_delete_quote' =>
+                        $this->viewRenderer->renderPartialAsString(
                             '//invoice/quote/modal_delete_quote',
                             [
                                 'actionName' => 'quote/delete',
-                                'actionArguments' => ['_language' => $_language, 'id' => $this->session->get('quote_id')],
+                                'actionArguments' => [
+                                    '_language' => $_language,
+                                    'id' => $this->session->get('quote_id')],
                             ],
                         ),
-                        'modal_delete_items' => $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_delete_item', [
-                            'partial_item_table_modal' => $this->viewRenderer->renderPartialAsString('//invoice/quoteitem/_partial_item_table_modal', [
-                                'quoteItems' => $qiR->repoQuotequery((string) $this->session->get('quote_id')),
-                                'taskR' => $taskR,
-                                'numberHelper' => new NumberHelper($this->sR),
+                        'modal_delete_items' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/quote/modal_delete_item', [
+                            'partial_item_table_modal' =>
+                                $this->viewRenderer->renderPartialAsString(
+                                '//invoice/quoteitem/_partial_item_table_modal',
+                                [
+                                    'quoteItems' => $qiR->repoQuotequery(
+                                        (string) $this->session->get(
+                                            'quote_id')),
+                                    'taskR' => $taskR,
+                                    'numberHelper' => new NumberHelper(
+                                        $this->sR),
                             ]),
                         ]),
-                        'modal_quote_to_invoice' => $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_quote_to_invoice', [
+                        'modal_quote_to_invoice' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/quote/modal_quote_to_invoice', [
                             'quote' => $quote,
                             'groups' => $gR->findAllPreloaded(),
                         ]),
-                        'modal_quote_to_so' => $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_quote_to_so', [
+                        'modal_quote_to_so' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/quote/modal_quote_to_so', [
                             'quote' => $quote,
                             'groups' => $gR->findAllPreloaded(),
                         ]),
-                        'modal_quote_to_pdf' => $this->viewRenderer->renderPartialAsString('//invoice/quote/modal_quote_to_pdf', [
+                        'modal_quote_to_pdf' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/quote/modal_quote_to_pdf', [
                             'quote' => $quote,
                         ]),
-                        'partial_quote_delivery_location' => $this->view_partial_delivery_location($_language, $dlR, $quote->getDelivery_location_id()),                        
+                        'partial_quote_delivery_location' =>
+                        $this->view_partial_delivery_location(
+                            $_language, $dlR, $quote->getDelivery_location_id()),                        
                     ];
                     return $this->viewRenderer->render('view', $parameters);
                 } // quote_amount
@@ -3002,7 +3841,8 @@ final class QuoteController extends BaseController
     public function optionsDataClients(QR $qR): array
     {
         $optionsDataClients = [];
-        // Get all the invoices that have been made out to clients with user accounts
+        // Get all the invoices that have been made out to clients with
+        // user accounts
         $quotes = $qR->findAllPreloaded();
         /**
          * @var Quote $quote
@@ -3012,10 +3852,76 @@ final class QuoteController extends BaseController
             if (null !== $client) {
                 if (strlen($client->getClient_full_name()) > 0) {
                     $fullName = $client->getClient_full_name();
-                    $optionsDataClients[$fullName] = !empty($fullName) ? $fullName : '';
+                    $optionsDataClients[$fullName] =
+                        !empty($fullName) ? $fullName : '';
                 }
             }
         }
         return $optionsDataClients;
+    }
+
+    /**
+     * @param QR $qR
+     * @return array
+     */
+    public function optionsDataClientGroup(QR $qR): array
+    {
+        $clientGroup = [];
+        $quotes = $qR->findAllPreloaded();
+        /**
+         * @var Quote $quote
+         */
+        foreach ($quotes as $quote) {
+            $client = $quote->getClient();
+            if (null !== $client) {
+                $group = $client->getClient_group();
+                if (null !== $group && !in_array($group, $clientGroup)) {
+                    $clientGroup[$group] = $group;
+                }
+            }
+        }
+        return $clientGroup;
+    }
+
+    /**
+     * @param QR $qR
+     * @return array
+     */
+    public function optionsDataQuoteNumber(QR $qR): array
+    {
+        $optionsDataQuoteNumbers = [];
+        $quotes = $qR->findAllPreloaded();
+        /**
+         * @var Quote $quote
+         */
+        foreach ($quotes as $quote) {
+            $quoteNumber = $quote->getNumber();
+            if (null !== $quoteNumber) {
+                if (!in_array($quoteNumber, $optionsDataQuoteNumbers)) {
+                    $optionsDataQuoteNumbers[$quoteNumber] = $quoteNumber;
+                }
+            }
+        }
+        return $optionsDataQuoteNumbers;
+    }
+
+    /**
+     * @param QR $qR
+     * @return array
+     */
+    public function optionsDataStatuses(QR $qR): array
+    {
+        $optionsDataStatus = [];
+        $statuses = $qR->getStatuses($this->translator);
+        
+        /** @var array<int, array<string, string>> $statuses */
+        foreach ($statuses as $statusId => $statusData) {
+            /** @var int $statusId */
+            /** @var array<string, string> $statusData */
+            $label = $qR->getSpecificStatusArrayLabel((string) $statusId);
+            $optionsDataStatus[$statusId] = $label;
+        }
+        
+        return $optionsDataStatus;
     }
 }

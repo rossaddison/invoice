@@ -7,8 +7,12 @@ namespace App\Invoice\InvItem;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvItemAmount;
 use App\Invoice\Entity\InvItemAllowanceCharge;
+use App\Invoice\Entity\QuoteItemAllowanceCharge;
 use App\Invoice\Entity\Task;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
+use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository
+    as ACQIR;
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository
+    as ACIIR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
 use App\Invoice\Product\ProductRepository as PR;
@@ -128,7 +132,8 @@ final readonly class InvItemService
      * @param int $newId
      * @param ACIIR $aciiR
      */
-    public function addInvItem_allowance_charges(string $copyInvId, int $originalId, int $newId, ACIIR $aciiR): void
+    public function addInvItem_allowance_charges(string $copyInvId,
+        int $originalId, int $newId, ACIIR $aciiR): void
     {
         $originalACs = $aciiR->repoInvItemquery((string) $originalId);
         /**
@@ -136,7 +141,36 @@ final readonly class InvItemService
          */
         foreach ($originalACs as $originalAC) {
             $iiac = new InvItemAllowanceCharge();
-            $iiac->setAllowance_charge_id((int) $originalAC->getAllowanceCharge()?->getId());
+            $iiac->setAllowance_charge_id(
+                (int) $originalAC->getAllowanceCharge()?->getId());
+            $iiac->setInv_id((int) $copyInvId);
+            $iiac->setInv_item_id($newId);
+            $iiac->setAmount((float) $originalAC->getAmount());
+            $iiac->setVatOrTax((float) $originalAC->getVatOrTax());
+            $aciiR->save($iiac);
+        }
+    }
+    
+    /**
+     * Related logic: see QuoteController function quote_to_invoice_quote_items
+     * @param string $copyInvId
+     * @param int $originalId
+     * @param int $newId
+     * @param ACQIR $acqiR
+     * @param ACIIR $aciiR
+     */
+    public function addInvItem_allowance_charges_from_quote(string $copyInvId,
+        int $originalId, int $newId, ACQIR $acqiR, ACIIR $aciiR): void
+    {
+        // Get all allowance charges associated with quote_item i.e. $originalId
+        $originalACs = $acqiR->repoQuoteItemquery((string) $originalId);
+        /**
+         * @var QuoteItemAllowanceCharge $originalAC
+         */
+        foreach ($originalACs as $originalAC) {
+            $iiac = new InvItemAllowanceCharge();
+            $iiac->setAllowance_charge_id(
+                (int) $originalAC->getAllowanceCharge()?->getId());
             $iiac->setInv_id((int) $copyInvId);
             $iiac->setInv_item_id($newId);
             $iiac->setAmount((float) $originalAC->getAmount());

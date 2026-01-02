@@ -244,7 +244,7 @@ final class InvRepository extends Select\Repository
     public function repoInvLoadInvAmountquery(string $id): ?Inv
     {
         $query = $this->select()
-                      ->load('invamount')
+                      ->load('invAmount')
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }

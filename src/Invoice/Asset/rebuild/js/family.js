@@ -211,14 +211,21 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert(`✅ Successfully generated ${data.count || 0} products from selected families.`);
-                // Close modal and reload page
-                const modal = document.getElementById('generate-products-modal');
-                if (modal) {
-                    const modalInstance = bootstrap.Modal.getInstance(modal);
-                    if (modalInstance) modalInstance.hide();
+                if (data.redirect_url) {
+                    // Redirect to ProductClient association workflow
+                    alert(`✅ Successfully generated ${data.count || 0} products from selected families. Redirecting to client association...`);
+                    window.location.href = data.redirect_url;
+                } else {
+                    // Standard success without client association
+                    alert(`✅ Successfully generated ${data.count || 0} products from selected families.`);
+                    // Close modal and reload page
+                    const modal = document.getElementById('generate-products-modal');
+                    if (modal) {
+                        const modalInstance = bootstrap.Modal.getInstance(modal);
+                        if (modalInstance) modalInstance.hide();
+                    }
+                    window.location.reload();
                 }
-                window.location.reload();
             } else {
                 alert('❌ Error generating products: ' + (data.message || 'Unknown error'));
             }

@@ -63,14 +63,15 @@ final class SalesOrderItemController extends BaseController
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $so_item = $this->salesorderitem($currentRoute, $soiR);
         if ($so_item) {
-            $form = new SalesOrderItemForm($so_item);
+            $so_id = $so_item->getSales_order_id();
+            $form = new SalesOrderItemForm($so_item, $so_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'salesorderitem/edit',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
                 'form' => $form,
-                'so_id' => $so_item->getSales_order_id(),
+                'so_id' => $so_id,
                 'tax_rates' => $trR->findAllPreloaded(),
                 'products' => $pR->findAllPreloaded(),
                 'tasks' => $taskR->findAllPreloaded(),

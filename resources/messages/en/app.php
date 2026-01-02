@@ -70,9 +70,15 @@ return [
     . ' Charges relative to line item',
   'allowance.or.charge.inv' => 'Invoice Allowance'
     . ' or Charge',
+  'allowance.or.charge.quote' => 'Quote Allowance'
+    . ' or Charge',  
   'allowance.or.charge.inv.add' => 'Add Invoice Allowance'
     . ' or Charge',
-  'allowance.or.charge.item' => 'Invoice Item'
+  'allowance.or.charge.quote.add' => 'Add Quote Allowance'
+    . ' or Charge',
+  'allowance.or.charge.item.invoice' => 'Invoice Item'
+    . ' Allowance or Charge',
+  'allowance.or.charge.item.quote' => 'Quote Item'
     . ' Allowance or Charge',
   'allowance.or.charge.item.add' => 'Allowance/Charge'
     . ' Add',
@@ -91,7 +97,8 @@ return [
     'Tax on Shipping/Handling/Packaging',
   'already.paid' => 'This invoice was already paid.',
   'amount.payment' => 'Payment Amount to be paid in full',
-  'amount' => 'Invoice Item Amount',
+  'amount.inv.item' => 'Invoice Item Amount',
+  'amount.quote.item' => 'Quote Item Amount',
   'amount.add' => 'Invoice Item Amount Add',
   'amount.due' => 'Amount Due',
   'amount.no' => 'There is no Invoice Amount',
@@ -248,6 +255,7 @@ return [
   'client.name' => 'Client Name',
   'client.not.allocated.to.user' => 'Client not'
     . ' allocated to user',
+  'client.not.found' => 'Client not found',
   'client.note' => 'Client Note',
   'client.note.add' => 'Client Note Add',
   'client.note.date' => 'Client Date',
@@ -422,6 +430,7 @@ return [
     . ' invoice will contain the current state with'
     . ' all items but with negative amounts and balances.',
   'create.invoice' => 'Create Invoice',
+  'create.new.client' => 'Create a new Client',
   'create.product' => 'Create product',
   'create.project' => 'Create Project',
   'create.quote' => 'Create Quote',
@@ -874,6 +883,8 @@ return [
     'Translate English\\diff_lang.php',
   'generator.google.translate.gateway' =>
     'Translate English\\gateway_lang.php',
+  'generator.google.translate.info' =>
+    'Translate Info Documentation (invoice.php)',
   'generator.google.translate.ip' =>
     'Translate English\\ip_lang.php',
   'generator.google.translate.latest.a' =>
@@ -1019,6 +1030,8 @@ return [
   'invalid.amount' => 'Invalid Amount',
   'invalid.subscriber.number' => 'Invalid Subscriber Number',
   'invoice' => 'Invoice',
+  'invoice.created.from.quote' => 'Invoice created from quote',
+  'invoice.validation.errors' => 'Invoice Validation Errors',
   'invoiced' => 'Invoiced',
   'invoiceplane' => 'InvoicePlane',
   'invoiceplane.clients' => 'Clients inserted',
@@ -1595,8 +1608,13 @@ prior to importing and no existing documents e.g. Invoices.',
   'peppol' => 'Peppol Universal Business Language'
     . ' (UBL) 2.1 Invoice - Ecosio Validated',
   'peppol.abbreviation' => 'Peppol',
-  'peppol.allowance.or.charge.inherit' =>
+  'peppol.allowance.or.charge.inherit.inv' =>
     'Invoice Allowance Charges and Invoice'
+    . ' Item Allowance Charges inherit from a'
+    . ' completed '
+    . 'Peppol Document Level Allowance Charge',
+  'peppol.allowance.or.charge.inherit.quote' =>
+    'Quote Allowance Charges and Quote'
     . ' Item Allowance Charges inherit from a'
     . ' completed '
     . 'Peppol Document Level Allowance Charge',
@@ -1685,7 +1703,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . '... Edit '
     . '... Document'
     . ' Description',
-  'peppol.validator.Invoice.cac.Note' => 
+  'peppol.validator.Invoice.cac.Note' =>
     'Source: src/Invoice/Ubl/Invoice:'
     . '  Missing invoice note '
     . '- Ecosio: Document MUST not contain empty elements.',
@@ -1841,6 +1859,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'productimage.view' => 'Multiple images relating'
     . ' to the product can be added under Product View',
   'products' => 'Products',
+  'products.remaining.after.this' => 'Products remaining after this one',
   'products.form' => 'Product Form',
   'profile.deleted' => 'Profile has been deleted',
   'profile.history' => 'Cannot delete Profile. History exists',
@@ -2160,6 +2179,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' Read Only Functionality'
     . ' for Invoice Protection and Deletion Prevention'
     . ' has been disabled',
+  'select.existing.client' => 'Select the existing client',
   'select.family' => 'Select family',
   'select.payment.method' => 'Select the Payment Method',
   'select.project' => 'Select project',
@@ -2323,6 +2343,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'subtotal' => 'Subtotal',
   'success' => 'Success',
   'successful' => 'Successful',
+  'suggested.from.previous.selection' => 'Suggested from previous selection',
   'sumex' => 'Sumex',
   'sumex.add' => 'Sumex Add',
   'sumex.canton' => 'Canton',
@@ -2858,6 +2879,10 @@ prior to importing and no existing documents e.g. Invoices.',
   'api.success.created' => '{resource} created successfully',
   'api.success.updated' => '{resource} updated successfully',
   'api.success.deleted' => '{resource} deleted successfully',
+  
+  // === INVOICE ORIGIN TRACKING ===
+  'invoice.origin' => 'Origin',
+  'invoice.created.from.quote' => 'Created from Quote',
   
   // === PROMETHEUS MONITORING ===
   'monitoring.health.database' => 'Database Connection',

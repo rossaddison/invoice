@@ -44,6 +44,8 @@ Yii3 Invoice
 
 [Family Commalist Picker using Angular.](docs/FAMILY_COMMALIST_PICKER.md)
 
+[Cycle ORM HasOne and outerKey Issue.](docs/CYCLE_ORM_HASONE_OUTERKEY_ISSUE.md)
+
 **Features**
 
 * Cycle ORM Interface using Invoiceplane type database schema. 

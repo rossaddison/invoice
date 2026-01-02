@@ -172,7 +172,7 @@ final class InvItemAllowanceChargeController extends BaseController
         $params = $request->getQueryParams();
         /** @var string $params['inv_item_id'] */
         $inv_item_id = $params['inv_item_id'] ?? '';
-        $this->flashMessage('info', $this->translator->translate('peppol.allowance.or.charge.inherit'));
+        $this->flashMessage('info', $this->translator->translate('peppol.allowance.or.charge.inherit.inv'));
         // retrieve all the allowances or charges associated with the inv_item_id
         $invoice_item_allowances_or_charges = $iiacR->repoInvItemquery($inv_item_id);
         $paginator = (new OffsetPaginator($invoice_item_allowances_or_charges));

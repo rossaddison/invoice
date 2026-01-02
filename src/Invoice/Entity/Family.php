@@ -19,7 +19,7 @@ class Family
         #[Column(type: 'text', nullable: true)]
         public ?string $family_commalist = '',
         #[Column(type: 'text', nullable: true)]
-        public ?string $family_productprefix = '',        
+        public ?string $family_productprefix = '',
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $category_primary_id = null,
         #[Column(type: 'integer(11)', nullable: true)]

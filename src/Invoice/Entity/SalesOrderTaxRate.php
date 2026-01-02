@@ -13,23 +13,23 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class SalesOrderTaxRate
 {
     #[BelongsTo(target: SalesOrder::class, nullable: false, fkAction: 'NO ACTION')]
-    private ?SalesOrder $so = null;
+    private ?SalesOrder $sales_order = null;
 
     #[BelongsTo(target: TaxRate::class, nullable: false)]
     private ?TaxRate $tax_rate = null;
 
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $so_id = null, #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $sales_order_id = null, #[Column(type: 'integer(11)', nullable: false)]
         private ?int $tax_rate_id = null, #[Column(type: 'integer(1)', nullable: false, default: 0)]
         private ?int $include_item_tax = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $so_tax_rate_amount = 0.00)
+        private ?float $sales_order_tax_rate_amount = 0.00)
     {
     }
 
     public function getSalesOrder(): ?SalesOrder
     {
-        return $this->so;
+        return $this->sales_order;
     }
 
     public function getTaxRate(): ?TaxRate
@@ -47,14 +47,14 @@ class SalesOrderTaxRate
         $this->id = $id;
     }
 
-    public function getSo_id(): string
+    public function getSales_order_id(): string
     {
-        return (string) $this->so_id;
+        return (string) $this->sales_order_id;
     }
 
-    public function setSo_id(int $so_id): void
+    public function setSales_order_id(int $sales_order_id): void
     {
-        $this->so_id = $so_id;
+        $this->sales_order_id = $sales_order_id;
     }
 
     public function getTax_rate_id(): string
@@ -77,13 +77,13 @@ class SalesOrderTaxRate
         $this->include_item_tax = $include_item_tax;
     }
 
-    public function getSo_tax_rate_amount(): ?float
+    public function getSales_order_tax_rate_amount(): ?float
     {
-        return $this->so_tax_rate_amount;
+        return $this->sales_order_tax_rate_amount;
     }
 
-    public function setSo_tax_rate_amount(float $so_tax_rate_amount): void
+    public function setSales_order_tax_rate_amount(float $sales_order_tax_rate_amount): void
     {
-        $this->so_tax_rate_amount = $so_tax_rate_amount;
+        $this->sales_order_tax_rate_amount = $sales_order_tax_rate_amount;
     }
 }

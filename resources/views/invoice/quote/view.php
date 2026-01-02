@@ -13,7 +13,8 @@ use Yiisoft\Html\Tag\I;
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
  *
- * Related logic: see $quoteForm is necessary for customValuesHelper viewing custom fields and is not used for input
+ * Related logic: see $quoteForm is necessary for customValuesHelper viewing
+ * custom fields and is not used for input
  * @var App\Invoice\Quote\QuoteForm $quoteForm
  *
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -21,6 +22,7 @@ use Yiisoft\Html\Tag\I;
  * @var Yiisoft\View\WebView $this
  * @var string $alert
  * @var string $csrf
+ * @var string $modal_add_allowance_charge
  * @var string $modal_add_quote_tax
  * @var string $modal_choose_products
  * @var string $modal_choose_tasks
@@ -115,13 +117,15 @@ $vat = $s->getSetting('enable_vat_registration');
                         <textarea name="notes" 
                                   id="notes" 
                                   rows="3" disabled
-                            	  class="input-sm form-control"><?= Html::encode($body['notes'] ?? ''); ?>
+                            	  class="input-sm form-control">
+                                    <?= Html::encode($body['notes'] ?? ''); ?>
                         </textarea>
                     </div>
                 </div>
                 <div class="col-xs-12 visible-xs visible-sm"><br></div>
             </div> 
-            <div id="view_partial_inv_delivery_location" class="col-xs-12 col-md-6">
+            <div id="view_partial_inv_delivery_location"
+                 class="col-xs-12 col-md-6">
                 <?= $partial_quote_delivery_location; ?>
             </div> 
             <div id="view_custom_fields" class="col-xs-12 col-md-6">
@@ -129,4 +133,4 @@ $vat = $s->getSetting('enable_vat_registration');
             </div>
     </div>
 </div>
-</div>    
+<?php echo $modal_add_allowance_charge; ?>

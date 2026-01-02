@@ -99,12 +99,12 @@ class SalesOrderItem
         $this->task = $task;
     }
 
-    public function getSalesOrder(): ?SalesOrder
+    public function getSales_order(): ?SalesOrder
     {
         return $this->sales_order;
     }
 
-    public function setSalesOrder(?SalesOrder $sales_order): void
+    public function setSales_order(?SalesOrder $sales_order): void
     {
         $this->sales_order = $sales_order;
     }
@@ -249,17 +249,17 @@ class SalesOrderItem
     {
         $this->charge_amount = $charge_amount;
     }
-
+    
     public function getOrder(): ?int
     {
         return $this->order;
     }
-
-    public function setOrder(int $order): void
+    
+    public function setOrder(?int $order): void
     {
         $this->order = $order;
     }
-
+    
     public function getProduct_unit(): ?string
     {
         return $this->product_unit;
@@ -278,5 +278,20 @@ class SalesOrderItem
     public function setProduct_unit_id(int $product_unit_id): void
     {
         $this->product_unit_id = $product_unit_id;
+    }
+    
+    /**
+     * @param int $sales_order_id
+     * @param int $tax_rate_id
+     */
+    public function nullifyRelationOnChange(int $sales_order_id, int $tax_rate_id
+                                                                         ): void
+    {
+        if ($this->sales_order_id != $sales_order_id) {
+            $this->sales_order = null;
+        }
+        if ($this->tax_rate_id != $tax_rate_id) {
+            $this->tax_rate = null;
+        }
     }
 }

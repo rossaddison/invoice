@@ -20,6 +20,8 @@ class QuoteItemAmount
         private ?float $subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $charge = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $allowance = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $total = 0.00)
     {
     }
@@ -77,6 +79,26 @@ class QuoteItemAmount
     public function setDiscount(float $discount): void
     {
         $this->discount = $discount;
+    }
+    
+    public function getCharge(): ?float
+    {
+        return $this->charge;
+    }
+
+    public function setCharge(float $charge): void
+    {
+        $this->charge = $charge;
+    }
+
+    public function getAllowance(): ?float
+    {
+        return $this->allowance;
+    }
+
+    public function setAllowance(float $allowance): void
+    {
+        $this->allowance = $allowance;
     }
 
     public function getTotal(): ?float

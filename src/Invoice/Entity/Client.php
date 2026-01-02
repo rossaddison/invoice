@@ -41,6 +41,12 @@ class Client
     #[HasMany(target: Inv::class)]
     private ArrayCollection $invs;
 
+    /**
+     * @var ArrayCollection<array-key, ProductClient>
+     */
+    #[HasMany(target: ProductClient::class)]
+    private ArrayCollection $product_associations;
+
     public function __construct(
         #[Column(type: 'string(254)', nullable: true)]
         private string $client_email = '',
@@ -107,6 +113,7 @@ class Client
         $this->client_date_modified = new DateTimeImmutable();
         $this->delivery_locations = new ArrayCollection();
         $this->invs = new ArrayCollection();
+        $this->product_associations = new ArrayCollection();
     }
 
     public function getClient_id(): ?int

@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use Cycle\Annotated\Annotation\Relation\HasMany;
+use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
-use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\User\User;
+use DateTimeImmutable;
 
-#[Entity(repository: \App\Invoice\SalesOrder\SalesOrderRepository::class)]
+#[Entity(repository: SOR::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 
@@ -25,6 +29,31 @@ class SalesOrder
 
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
+    
+    #[BelongsTo(target: Quote::class, nullable: false)]
+    private ?Quote $quote = null;
+    
+    /**
+     * Note: HasOne will default to fkAction: CASCADE & Camelcase salesOrder_id
+     * foreign key which creates a conflict with snake case sales_order_id.
+     *
+     * Solution: Specify the outerKey (the foreign key in the table) 
+     * explicitly here to avoid conflicts between automatically inserted
+     * Camelcase foreign keys in tables during schema building after Entity
+     * changes. 
+     * 
+     * Related logic: 
+     * https://cycle-orm.dev/        ...
+     * docs/relation-has-one/current/en#differences-from-belongsto
+     */
+    #[HasOne(target: SalesOrderAmount::class, outerKey: 'sales_order_id')]
+    private readonly SalesOrderAmount $sales_order_amount;
+
+    /**
+     * @var ArrayCollection<array-key, SalesOrderItem>
+     */
+    #[HasMany(target: SalesOrderItem::class, outerKey: 'sales_order_id')]
+    private readonly ArrayCollection $items;
 
     #[Column(type: 'primary')]
     private ?int $id = null;
@@ -40,10 +69,11 @@ class SalesOrder
 
     public function __construct(
         // The purchase order is derived from the quote => quote_id
-        // If a contract has been established between the supplier and the client, use the contract reference
+        // If a contract has been established between the supplier and the
+        // client, use the contract reference
         #[Column(type: 'integer(11)', nullable: false, default: 0)]
         private ?int $quote_id = null,
-        #[Column(type: 'integer(11)', nullable: false, default: 0)]
+        #[Column(type: 'integer(11)', nullable: true, default: 0)]
         private ?int $inv_id = null,
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $client_id = null,
@@ -74,6 +104,8 @@ class SalesOrder
         #[Column(type: 'longText', nullable: true)]
         private ?string $payment_term = '',
     ) {
+        $this->items = new ArrayCollection();
+        $this->sales_order_amount = new SalesOrderAmount();
         $this->date_modified = new DateTimeImmutable();
         $this->date_created = new DateTimeImmutable();
         $this->date_expires = new DateTimeImmutable();
@@ -107,6 +139,16 @@ class SalesOrder
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+    
+    public function getQuote(): ?Quote
+    {
+        return $this->quote;
+    }
+
+    public function setQuote(Quote $quote): void
+    {
+        $this->quote = $quote;
     }
 
     public function getPaymentTerm(): ?string
@@ -147,7 +189,8 @@ class SalesOrder
      */
     public function setQuote_id(string|int|null $quote_id): void
     {
-        $quote_id === null ? $this->quote_id = null : $this->quote_id = (int) $quote_id ;
+        $quote_id === null ? $this->quote_id = null
+                           : $this->quote_id = (int) $quote_id ;
     }
 
     public function getQuote_id(): string
@@ -209,7 +252,8 @@ class SalesOrder
 
     public function setStatus_id(int $status_id): void
     {
-        !in_array($status_id, [1,2,3,4,5,6,7,8,9]) ? $this->status_id = 1 : $this->status_id = $status_id ;
+        !in_array($status_id, [1,2,3,4,5,6,7,8,9]) ?
+                $this->status_id = 1 : $this->status_id = $status_id ;
     }
 
     public function getDate_created(): DateTimeImmutable
@@ -230,7 +274,8 @@ class SalesOrder
     public function setDate_expires(): void
     {
         $days = (string) 1;
-        $this->date_expires = (new DateTimeImmutable('now'))->add(new \DateInterval('P' . $days . 'D'));
+        $this->date_expires =
+        (new DateTimeImmutable('now'))->add(new \DateInterval('P' . $days . 'D'));
     }
 
     public function getDate_expires(): DateTimeImmutable
@@ -326,6 +371,32 @@ class SalesOrder
     public function setNotes(string $notes): void
     {
         $this->notes = $notes;
+    }
+    
+    public function getItems(): ArrayCollection
+    {
+        return $this->items;
+    }
+    
+    /**
+     * @param int $group_id
+     * @param int $client_id
+     * @param int $quote_id
+     */
+    public function nullifyRelationOnChange(int $group_id, int $client_id,
+                                                           int $quote_id): void
+    {
+        if ($this->group_id != $group_id) {
+            $this->group = null;
+        }
+        if ($this->client_id != $client_id) {
+            $this->client = null;
+        }
+        if ($this->quote_id != $quote_id) {
+            $this->quote = null;
+        }
+        // the user_id will always be attached to the client therefore
+        // will not change
     }
 
     public function isNewRecord(): bool

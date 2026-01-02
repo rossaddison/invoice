@@ -12,22 +12,23 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 class SalesOrderItemAmount
 {
     #[BelongsTo(target: SalesOrderItem::class, nullable: false)]
-    private ?SalesOrderItem $so_item = null;
+    private ?SalesOrderItem $sales_order_item = null;
 
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $so_item_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?int $sales_order_item_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $subtotal = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $tax_total = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $charge = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $allowance = 0.00, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $total = 0.00)
     {
     }
 
     public function getSalesOrderItem(): ?SalesOrderItem
     {
-        return $this->so_item;
+        return $this->sales_order_item;
     }
 
     public function getId(): string
@@ -40,14 +41,14 @@ class SalesOrderItemAmount
         $this->id = $id;
     }
 
-    public function getSo_item_id(): string
+    public function getSales_order_item_id(): string
     {
-        return (string) $this->so_item_id;
+        return (string) $this->sales_order_item_id;
     }
 
-    public function setSo_item_id(int $so_item_id): void
+    public function setSales_order_item_id(int $sales_order_item_id): void
     {
-        $this->so_item_id = $so_item_id;
+        $this->sales_order_item_id = $sales_order_item_id;
     }
 
     public function getSubtotal(): ?float
@@ -88,6 +89,16 @@ class SalesOrderItemAmount
     public function setCharge(float $charge): void
     {
         $this->charge = $charge;
+    }
+
+    public function getAllowance(): ?float
+    {
+        return $this->allowance;
+    }
+
+    public function setAllowance(float $allowance): void
+    {
+        $this->allowance = $allowance;
     }
 
     public function getTotal(): ?float

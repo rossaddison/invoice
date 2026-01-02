@@ -19,7 +19,7 @@ final readonly class SalesOrderItemAmountService
      */
     public function saveSalesOrderItemAmountNoForm(SalesOrderItemAmount $model, array $soitem): void
     {
-        $model->setSo_item_id((int) $soitem['so_item_id']);
+        $model->setSales_order_item_id((int) $soitem['sales_order_item_id']);
         /**
          * @var float $soitem['subtotal']
          * @var float $soitem['taxtotal']

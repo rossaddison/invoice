@@ -399,10 +399,13 @@ export class QuoteHandler {
             if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
             
             // Redirect to the created invoice if successful
-            if (data.success && data.new_invoice_id) {
+            if (data.success && data.redirect_url) {
+                window.location.href = data.redirect_url;
+            } else if (data.success && data.new_invoice_id) {
+                // Fallback to old behavior for backward compatibility
                 window.location.href = `${location.origin}/invoice/inv/view/${data.new_invoice_id}`;
             } else {
-                // Fallback to reload if no invoice ID is provided
+                // Fallback to reload if no redirect URL is provided
                 secureReload();
             }
             
@@ -440,7 +443,15 @@ export class QuoteHandler {
             const data = parsedata(response);
 
             if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-            secureReload();
+            
+            // Redirect to the created sales order if successful
+            if (data.success && data.redirect_url) {
+                window.location.href = data.redirect_url;
+            } else {
+                // Fallback to reload if no redirect URL is provided
+                secureReload();
+            }
+            
             if (data.flash_message) alert(data.flash_message);
         } catch (error) {
             console.error('quote_to_so_confirm error', error);

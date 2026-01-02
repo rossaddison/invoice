@@ -209,7 +209,7 @@ if ($items) {
                     <?php echo Html::encode($salesorder_tax_rate->getTaxRate()?->getTaxRateName()) . ' (' . Html::encode($s->format_amount($salesorder_tax_rate->getTaxRate()?->getTaxRatePercent())) . '%)'; ?>
                 </td>
                 <td class="text-right">
-                    <?php echo Html::encode($s->format_currency($salesorder_tax_rate->getSo_tax_rate_amount())); ?>
+                    <?php echo Html::encode($s->format_currency($salesorder_tax_rate->getSales_order_tax_rate_amount())); ?>
                 </td>
             </tr>
         <?php endforeach ?>

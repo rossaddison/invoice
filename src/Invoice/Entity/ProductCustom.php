@@ -17,10 +17,14 @@ class ProductCustom
     #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $product_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $product_id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $custom_field_id = null,
+        #[Column(type: 'text', nullable: true)]
         private ?string $value = '')
     {
     }

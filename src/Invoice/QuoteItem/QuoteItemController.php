@@ -208,14 +208,14 @@ final class QuoteItemController extends BaseController
                              * @psalm-suppress PossiblyNullReference getId
                              */
                             $request_quote_item = (int) $this->quoteitem($currentRoute, $qiR)->getId();
-                            $this->saveQuoteItemAmount(
+                            $this->quoteitemService->saveQuoteItemAmount(
                                 $request_quote_item,
                                 $quantity,
                                 $price,
                                 $discount,
                                 $tax_rate_percentage,
-                                $qias,
                                 $qiar,
+                                $qias
                             );
                             $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
@@ -280,14 +280,14 @@ final class QuoteItemController extends BaseController
                              * @psalm-suppress PossiblyNullReference getId
                              */
                             $request_quote_item = (int) $this->quoteitem($currentRoute, $qiR)->getId();
-                            $this->saveQuoteItemAmount(
+                            $this->quoteitemService->saveQuoteItemAmount(
                                 $request_quote_item,
                                 $quantity,
                                 $price,
                                 $discount,
                                 $tax_rate_percentage,
-                                $qias,
                                 $qiar,
+                                $qias
                             );
                             $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
@@ -314,48 +314,6 @@ final class QuoteItemController extends BaseController
             return $taxrate->getTaxRatePercent();
         }
         return null;
-    }
-
-    /**
-     * @param int $quote_item_id
-     * @param float $quantity
-     * @param float $price
-     * @param float $discount
-     * @param float $tax_rate_percentage
-     * @param QIAS $qias
-     * @param QIAR $qiar
-     */
-    public function saveQuoteItemAmount(int $quote_item_id, float $quantity, float $price, float $discount, float $tax_rate_percentage, QIAS $qias, QIAR $qiar): void
-    {
-        $qias_array = [];
-        if ($quote_item_id) {
-            $qias_array['quote_item_id'] = $quote_item_id;
-            $sub_total = $quantity * $price;
-            $discount_total = ($quantity * $discount);
-            $tax_total = 0.00;
-            // NO VAT
-            if ($this->sR->getSetting('enable_vat_registration') === '0') {
-                $tax_total = ($sub_total * ($tax_rate_percentage / 100.00));
-            }
-            // VAT
-            if ($this->sR->getSetting('enable_vat_registration') === '1') {
-                // EARLY SETTLEMENT CASH DISCOUNT MUST BE REMOVED BEFORE VAT DETERMINED
-                // Related logic: see https://informi.co.uk/finance/how-vat-affected-discounts
-                $tax_total = (($sub_total - $discount_total) * ($tax_rate_percentage / 100.00));
-            }
-            $qias_array['discount'] = $discount_total;
-            $qias_array['subtotal'] = $sub_total;
-            $qias_array['taxtotal'] = $tax_total;
-            $qias_array['total'] = $sub_total - $discount_total + $tax_total;
-            if ($qiar->repoCount((string) $quote_item_id) === 0) {
-                $qias->saveQuoteItemAmountNoForm(new QuoteItemAmount(), $qias_array);
-            } else {
-                $quote_item_amount = $qiar->repoQuoteItemAmountquery((string) $quote_item_id);
-                if ($quote_item_amount) {
-                    $qias->saveQuoteItemAmountNoForm($quote_item_amount, $qias_array);
-                }
-            }
-        } // $quote_item_id
     }
 
     /**

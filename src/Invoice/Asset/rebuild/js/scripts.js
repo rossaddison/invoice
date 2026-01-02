@@ -4,7 +4,21 @@
     function initTooltips() {
         if (typeof bootstrap === 'undefined' || !bootstrap.Tooltip) return;
         Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(function (el) {
-            try { new bootstrap.Tooltip(el); } catch (e) { /* ignore init errors */ }
+            try {
+                // Dispose existing tooltip instance if present
+                var existingTooltip = bootstrap.Tooltip.getInstance(el);
+                if (existingTooltip) {
+                    existingTooltip.dispose();
+                }
+                // Create new tooltip with enhanced options
+                new bootstrap.Tooltip(el, {
+                    html: false,
+                    trigger: 'hover focus',
+                    delay: { show: 300, hide: 100 },
+                    animation: true,
+                    placement: 'auto'
+                });
+            } catch (e) { /* ignore init errors */ }
         });
     }
 
@@ -138,6 +152,7 @@
     }
 
     // Make functions globally available for other scripts
+    window.initTooltips = initTooltips;
     window.initSimpleSelects = initSimpleSelects;
     window.initTagSelects = initTagSelects;
     window.showFullpageLoader = showFullpageLoader;

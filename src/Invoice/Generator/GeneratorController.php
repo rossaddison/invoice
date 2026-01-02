@@ -290,6 +290,171 @@ class GeneratorController extends BaseController
     }
 
     /**
+     * Translate info documentation files (e.g., invoice.php) from English to target language
+     * Purpose: To translate large HTML/PHP documentation files from resources/views/invoice/info/en/
+     *          to target language folders like resources/views/invoice/info/ru/, de/, nl/, etc.
+     *
+     * @throws CaCertFileNotFoundException
+     * @throws GoogleTranslateJsonFileNotFoundException
+     * @throws GoogleTranslateLocaleSettingNotFoundException
+     * @return Response|\Yiisoft\DataResponse\DataResponse
+     */
+    public function google_translate_info(): \Yiisoft\DataResponse\DataResponse|Response
+    {
+        $curlcertificate = \ini_get('curl.cainfo');
+        if ($curlcertificate == false) {
+            throw new CaCertFileNotFoundException();
+        }
+
+        $targetLanguage = $this->sR->getSetting('google_translate_locale');
+        if (empty($targetLanguage)) {
+            throw new GoogleTranslateLocaleSettingNotFoundException();
+        }
+
+        // Get Google Translate credentials
+        $aliases = $this->sR->get_google_translate_json_file_aliases();
+        $targetPath = $aliases->get('@google_translate_json_file_folder');
+        $path_and_filename = $targetPath . DIRECTORY_SEPARATOR . $this->sR->getSetting('google_translate_json_filename');
+        
+        if (strlen($this->sR->getSetting('google_translate_json_filename')) == 0 || !$this->ensureJsonExtension($path_and_filename)) {
+            throw new GoogleTranslateJsonFileNotFoundException();
+        }
+
+        $data = file_get_contents(FileHelper::normalizePath($path_and_filename));
+        if ($data == false) {
+            $this->flashMessage('danger', 'Failed to read Google Translate JSON credentials file.');
+            return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+        }
+
+        /** @var array $json */
+        $json = Json::decode($data, true);
+        $projectId = (string) $json['project_id'];
+        putenv("GOOGLE_APPLICATION_CREDENTIALS=$path_and_filename");
+
+        try {
+            $translationClient = new TranslationServiceClient([]);
+            
+            // Read the English invoice.php file
+            $sourceFile = dirname(__DIR__, 3) . '/resources/views/invoice/info/en/invoice.php';
+            if (!file_exists($sourceFile)) {
+                $this->flashMessage('danger', 'Source file not found: ' . $sourceFile);
+                return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+            }
+
+            $htmlContent = file_get_contents($sourceFile);
+            if ($htmlContent == false) {
+                $this->flashMessage('danger', 'Failed to read source file.');
+                return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+            }
+
+            // Extract text content while preserving HTML structure
+            // We'll split by HTML tags and translate only the text parts
+            $segments = $this->extractTranslatableSegments($htmlContent);
+            
+            // Google Translate API limit: 30,720 codepoints per request
+            // With 5000 char chunks, send only 5 chunks per batch (25,000 codepoints safely under limit)
+            $batchSize = 5;
+            $translatedSegments = [];
+            $numSegments = count($segments);
+            
+            // Translate in batches
+            for ($i = 0; $i < $numSegments; $i += $batchSize) {
+                $batch = array_slice($segments, $i, $batchSize);
+                
+                // Progress indicator
+                $batchNumber = (int) ($i / $batchSize) + 1;
+                $totalBatches = (int) ceil($numSegments / $batchSize);
+                
+                $request = new TranslateTextRequest();
+                $request->setParent('projects/' . $projectId);
+                $request->setContents($batch);
+                $request->setTargetLanguageCode($targetLanguage);
+                $request->setMimeType('text/html');
+                
+                $response = $translationClient->translateText($request);
+                /** @var \Google\Cloud\Translate\V3\TranslateTextResponse $response_get_translations */
+                $response_get_translations = $response->getTranslations();
+                
+                /**
+                 * @psalm-suppress RawObjectIteration $response_get_translations
+                 * @var \Google\Cloud\Translate\V3\Translation $translation
+                 */
+                foreach ($response_get_translations as $translation) {
+                    $translatedSegments[] = $translation->getTranslatedText();
+                }
+                
+                // Log progress every 5 batches
+                if ($batchNumber % 5 == 0 || $batchNumber == $totalBatches) {
+                    error_log(sprintf('Translated batch %d of %d', $batchNumber, $totalBatches));
+                }
+            }
+
+            // Combine translated segments back together
+            $translatedContent = implode('', $translatedSegments);
+            
+            // Save to target language folder
+            $targetDir = dirname(__DIR__, 3) . '/resources/views/invoice/info/' . $targetLanguage;
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0755, true);
+            }
+            
+            $targetFile = $targetDir . '/invoice.php';
+            file_put_contents($targetFile, $translatedContent);
+            
+            $this->flashMessage(
+                'success',
+                sprintf(
+                    'Successfully translated invoice.php to %s in %d batches (%d segments). Output: %s',
+                    $targetLanguage,
+                    (int) ceil($numSegments / $batchSize),
+                    $numSegments,
+                    $targetFile
+                )
+            );
+            
+            return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+            
+        } catch (\Exception $e) {
+            $this->flashMessage('danger', 'Translation error: ' . $e->getMessage());
+            return $this->webService->getRedirectResponse('setting/tab_index', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
+        }
+    }
+
+    /**
+     * Extract translatable segments from HTML content
+     * Splits content into chunks while preserving HTML structure
+     *
+     * @param string $html
+     * @return array<int, string>
+     */
+    private function extractTranslatableSegments(string $html): array
+    {
+        // Split into smaller chunks (approximately 5000 characters each)
+        // to stay within Google Translate API limits
+        $maxChunkSize = 5000;
+        $segments = [];
+        $length = strlen($html);
+        
+        for ($i = 0; $i < $length; $i += $maxChunkSize) {
+            $chunk = substr($html, $i, $maxChunkSize);
+            
+            // Try to break at a logical point (end of tag or paragraph)
+            if ($i + $maxChunkSize < $length) {
+                // Look for last closing tag in chunk
+                $lastCloseTag = strrpos($chunk, '>');
+                if ($lastCloseTag !== false && $lastCloseTag > $maxChunkSize * 0.8) {
+                    $chunk = substr($chunk, 0, $lastCloseTag + 1);
+                    $i = $i + $lastCloseTag + 1 - $maxChunkSize; // Adjust offset
+                }
+            }
+            
+            $segments[] = $chunk;
+        }
+        
+        return $segments;
+    }
+
+    /**
      * Ensure the file path ends with .json
      *
      * @param string $filepath

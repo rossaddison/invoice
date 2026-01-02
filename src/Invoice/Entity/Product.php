@@ -7,6 +7,8 @@ namespace App\Invoice\Entity;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
+use Cycle\Annotated\Annotation\Relation\HasMany;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[Entity(repository: \App\Invoice\Product\ProductRepository::class)]
 class Product
@@ -23,6 +25,12 @@ class Product
 
     #[BelongsTo(target: Unit::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Unit $unit = null;
+
+    /**
+     * @var ArrayCollection<array-key, ProductClient>
+     */
+    #[HasMany(target: ProductClient::class)]
+    private ArrayCollection $client_associations;
 
     public function __construct(
         #[Column(type: 'text', nullable: true)]
@@ -66,6 +74,7 @@ class Product
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $family_id = null,
     ) {
+        $this->client_associations = new ArrayCollection();
     }
 
     //get relation $family

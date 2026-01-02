@@ -43,6 +43,7 @@ use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SoCR;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomService as SoCS;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SoIR;
 use App\Invoice\SalesOrderItem\SalesOrderItemService as SoIS;
+use App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SoIAR;
 use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository as SoTRR;
 use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateService as SoTRS;
@@ -531,9 +532,9 @@ final class SalesOrderController extends BaseController
     }
 
     /**
-     * 
      * @param int $id
      * @param string $_language
+     * @param ACSOIR $acsoiR
      * @param CFR $cfR
      * @param CVR $cvR
      * @param DR $dR
@@ -558,7 +559,8 @@ final class SalesOrderController extends BaseController
         #[RouteArgument('id')]
         int $id,
         #[RouteArgument('_language')]
-        string $_language,    
+        string $_language,
+        ACSOIR $acsoiR,    
         CFR $cfR,
         CVR $cvR,
         DR $dR,
@@ -615,6 +617,7 @@ final class SalesOrderController extends BaseController
                     'soStatuses' => $soR->getStatuses($this->translator),
                     'salesOrderCustomValues' => $salesorder_custom_values,
                     'partial_item_table' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/partial_item_table', [
+                        'acsoiR' => $acsoiR,
                         'included' => $this->translator->translate('item.tax.included'),
                         'excluded' => $this->translator->translate('item.tax.excluded'),
                         'invEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
@@ -866,7 +869,7 @@ final class SalesOrderController extends BaseController
                 'inv_id' => (string) $inv_id,
                 'tax_rate_id' => $so_tax_rate->getTax_rate_id(),
                 'include_item_tax' => $so_tax_rate->getInclude_item_tax(),
-                'inv_tax_rate_amount' => $so_tax_rate->getSo_tax_rate_amount(),
+                'inv_tax_rate_amount' => $so_tax_rate->getSales_order_tax_rate_amount(),
             ];
             $entity = new InvTaxRate();
             $form = new InvTaxRateForm($entity);

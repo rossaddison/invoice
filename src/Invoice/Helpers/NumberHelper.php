@@ -5,7 +5,14 @@ declare(strict_types=1);
 namespace App\Invoice\Helpers;
 
 use App\Invoice\Entity\Inv;
+
 use App\Invoice\Entity\InvAllowanceCharge;
+use App\Invoice\Entity\QuoteAllowanceCharge;
+use App\Invoice\Entity\SalesOrderAllowanceCharge;
+use App\Invoice\Entity\SalesOrderAmount;
+use App\Invoice\Entity\SalesOrderItem;
+use App\Invoice\Entity\SalesOrderItemAmount;
+use App\Invoice\Entity\SalesOrderTaxRate;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvTaxRate;
@@ -18,7 +25,16 @@ use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use App\Invoice\InvItem\InvItemRepository as IIR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
+
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
+use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository aS ACQR;
+use App\Invoice\SalesOrderAllowanceCharge\SalesOrderAllowanceChargeRepository
+    as ACSOR;
+use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
+use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SOIAR;
+use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository as SOTRR;
+use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SOAR;
+use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\Inv\InvRepository as IR;
@@ -45,12 +61,20 @@ final readonly class NumberHelper
         $thousands_separator = $this->s->getSetting('thousands_separator');
         $decimal_point = $this->s->getSetting('decimal_point');
         if ($currency_symbol_placement == 'before') {
-            return $currency_symbol . number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
+            return $currency_symbol . number_format(
+                (float) $amount, ($decimal_point) ? 2 : 0, $decimal_point,
+                    $thousands_separator
+            );
         }
         if ($currency_symbol_placement == 'afterspace') {
-            return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . '&nbsp;' . $currency_symbol;
+            return number_format(
+                (float) $amount, ($decimal_point) ? 2 : 0, $decimal_point,
+                    $thousands_separator
+            ) . '&nbsp;' . $currency_symbol;
         }
-        return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator) . $currency_symbol;
+        return number_format(
+            (float) $amount, ($decimal_point) ? 2 : 0, $decimal_point,
+                $thousands_separator) . $currency_symbol;
     }
 
     /**
@@ -65,7 +89,9 @@ final readonly class NumberHelper
         if (null !== $amount) {
             $thousands_separator = $this->s->getSetting('thousands_separator');
             $decimal_point = $this->s->getSetting('decimal_point');
-            return number_format((float) $amount, ($decimal_point) ? 2 : 0, $decimal_point, $thousands_separator);
+            return number_format(
+                (float) $amount, ($decimal_point) ? 2 : 0,
+                    $decimal_point, $thousands_separator);
         }
         return null;
     }
@@ -89,16 +115,28 @@ final readonly class NumberHelper
     /**
      * @param $quote_id
      */
-    public function calculate_quote(string $quote_id, QIR $qiR, QIAR $qiaR, QTRR $qtrR, QAR $qaR, QR $qR): void
+    public function calculate_quote(
+        string $quote_id,
+        ACQR $acqR, QIR $qiR, QIAR $qiaR, QTRR $qtrR, QAR $qaR, QR $qR): void
     {
+        $quote_allowance_charge_amount_total = 0.00;
+        $quote_allowance_charge_tax_total = 0.00;
+        
         // Get all items that belong to a specific quote by accessing $qiR
         // Sum all these item's amounts
         // -------------------------
         // Quote Subtotal + Item Tax
         // -------------------------
-        $quote_item_amounts = $this->quote_calculateTotalsofItemTotals($quote_id, $qiR, $qiaR);
-        $quote_item_subtotal_discount_inclusive = (float) $quote_item_amounts['subtotal'] - (float) $quote_item_amounts['discount'];
-        $quote_subtotal_discount_and_tax_included = $quote_item_subtotal_discount_inclusive + (float) $quote_item_amounts['tax_total'];
+        $quote_item_amounts = $this->quote_calculateTotalsofItemTotals(
+            $quote_id, $qiR, $qiaR);
+        
+        // individual quote_item_amount['subtotal'] already includes charges and allowances
+        $quote_item_subtotal_discount_inclusive =
+            (float) $quote_item_amounts['subtotal']
+                - (float) $quote_item_amounts['discount'];
+        $quote_subtotal_discount_and_charge_and_tax_included =
+                $quote_item_subtotal_discount_inclusive
+                    + (float) $quote_item_amounts['tax_total'];
         //----------
         // Quote Tax
         // ---------
@@ -108,14 +146,39 @@ final readonly class NumberHelper
             // No Quote Taxes are allowed under the VAT regime.
             $quote_tax_rate_total = 0.00;
         }
-        //----------------------
-        // Before Cash Discount
-        // ---------------------
-        $final_discountable_total = $quote_subtotal_discount_and_tax_included + $quote_tax_rate_total;
+        
+        $quote_allowance_charges = $acqR->repoACQquery($quote_id);
+        /** @var QuoteAllowanceCharge $quote_allowance_charge */
+        foreach ($quote_allowance_charges as $quote_allowance_charge) {
+            $isCharge = $quote_allowance_charge->getAllowanceCharge()?->getIdentifier();
+            if ($isCharge) {
+                $quote_allowance_charge_amount_total +=
+                    (float) $quote_allowance_charge->getAmount();
+                $quote_allowance_charge_tax_total +=
+                    (float) $quote_allowance_charge->getVatOrTax();
+            } else {
+                $quote_allowance_charge_amount_total -=
+                    (float) $quote_allowance_charge->getAmount();
+                $quote_allowance_charge_tax_total -=
+                    (float) $quote_allowance_charge->getVatOrTax();
+            }
+        }
+        
+        //--------------------------------------------------
+        // Before Early Cash Settlement Discount and Charge
+        // -------------------------------------------------
+        $final_discountable_and_chargeable_total
+            = $quote_subtotal_discount_and_charge_and_tax_included
+            + $quote_tax_rate_total
+            + $quote_allowance_charge_amount_total
+            + $quote_allowance_charge_tax_total;
+        
         //------------------------------------------------
         // Final Grand Total after Applying Cash Discount
         // -----------------------------------------------
-        $quote_total = $this->quote_include_customer_discount_request($quote_id, $final_discountable_total, $qR);
+        $quote_total =
+            $this->quote_include_customer_discount_request(
+                $quote_id, $final_discountable_and_chargeable_total, $qR);
 
         //-----------------------------------------------------------------
         // Give the Quote its summary of amounts at the bottom of the quote
@@ -127,9 +190,19 @@ final readonly class NumberHelper
             $quote_amount = $qaR->repoQuotequery($quote_id);
             if ($quote_amount) {
                 $quote_amount->setQuote_id((int) $quote_id);
-                $quote_amount->setItem_subtotal($quote_item_subtotal_discount_inclusive ?: 0.00);
-                $quote_amount->setItem_tax_total((float) $quote_item_amounts['tax_total'] ?: 0.00);
-                $quote_amount->setTax_total($quote_tax_rate_total ?: 0.00);
+                $quote_amount->setItem_subtotal(
+                    $quote_item_subtotal_discount_inclusive ?: 0.00
+                );
+                $quote_amount->setItem_tax_total(
+                    (float) $quote_item_amounts['tax_total'] ?: 0.00
+                );
+                /** Overall i.e. not line item total */
+                $quote_amount->setPackhandleship_total($quote_allowance_charge_amount_total);
+                /** Overall i.e. not line item tax e.g. vat or gst */
+                $quote_amount->setPackhandleship_tax($quote_allowance_charge_tax_total);
+                $quote_amount->setTax_total(
+                    $quote_tax_rate_total ?: 0.00
+                );
                 $quote_amount->setTotal($quote_total ?: 0.00);
                 $qaR->save($quote_amount);
             }
@@ -147,7 +220,8 @@ final readonly class NumberHelper
             }
         }
         if (($count === 0) && ($count_quote_amount === 0)) {
-            // Create a Quote Amount Record for this quote if it does not exist even if there are no items
+            // Create a Quote Amount Record for this quote if it does not exist
+            // even if there are no items
             $quote_amount = new QuoteAmount();
             $quote_amount->setQuote_id((int) $quote_id);
             $quote_amount->setItem_subtotal(0.00);
@@ -155,6 +229,130 @@ final readonly class NumberHelper
             $quote_amount->setTax_total(0.00);
             $quote_amount->setTotal(0.00);
             $qaR->save($quote_amount);
+        }
+    }
+    
+    /**
+     * @param $salesorder_id
+     */
+    public function calculate_so(
+        string $salesorder_id,
+        ACSOR $acsoR, SOIR $soiR, SOIAR $soiaR, SOTRR $sotrR, SOAR $soaR,
+        SOR $soR): void
+    {
+        $salesorder_allowance_charge_amount_total = 0.00;
+        $salesorder_allowance_charge_tax_total = 0.00;
+        
+        // Get all items that belong to a specific salesorder by accessing $soiR
+        // Sum all these item's amounts
+        // -------------------------
+        // SalesOrder Subtotal + Item Tax
+        // -------------------------
+        $salesorder_item_amounts = $this->salesorder_calculateTotalsofItemTotals(
+            $salesorder_id, $soiR, $soiaR);
+        
+        // individual salesorder_item_amount['subtotal'] already includes
+        // charges and allowances
+        $salesorder_item_subtotal_discount_inclusive =
+            (float) $salesorder_item_amounts['subtotal']
+                - (float) $salesorder_item_amounts['discount'];
+        $salesorder_subtotal_discount_and_charge_and_tax_included =
+                $salesorder_item_subtotal_discount_inclusive
+                    + (float) $salesorder_item_amounts['tax_total'];
+        //----------
+        // SalesOrder Tax
+        // ---------
+        if ($this->s->getSetting('enable_vat_registration') === '0') {
+            $salesorder_tax_rate_total = $this->calculate_salesorder_taxes(
+               $salesorder_id, $sotrR, $soaR);
+        } else {
+            // No SalesOrder Taxes are allowed under the VAT regime.
+            $salesorder_tax_rate_total = 0.00;
+        }
+        
+        $salesorder_allowance_charges = $acsoR->repoACSOquery($salesorder_id);
+        /** @var SalesOrderAllowanceCharge $salesorder_allowance_charge */
+        foreach ($salesorder_allowance_charges as $salesorder_allowance_charge) {
+            $isCharge =
+            $salesorder_allowance_charge->getAllowanceCharge()?->getIdentifier();
+            if ($isCharge) {
+                $salesorder_allowance_charge_amount_total +=
+                    (float) $salesorder_allowance_charge->getAmount();
+                $salesorder_allowance_charge_tax_total +=
+                    (float) $salesorder_allowance_charge->getVatOrTax();
+            } else {
+                $salesorder_allowance_charge_amount_total -=
+                    (float) $salesorder_allowance_charge->getAmount();
+                $salesorder_allowance_charge_tax_total -=
+                    (float) $salesorder_allowance_charge->getVatOrTax();
+            }
+        }
+        
+        //--------------------------------------------------
+        // Before Early Cash Settlement Discount and Charge
+        // -------------------------------------------------
+        $final_discountable_and_chargeable_total
+            = $salesorder_subtotal_discount_and_charge_and_tax_included
+            + $salesorder_tax_rate_total
+            + $salesorder_allowance_charge_amount_total
+            + $salesorder_allowance_charge_tax_total;
+        
+        //------------------------------------------------
+        // Final Grand Total after Applying Cash Discount
+        // -----------------------------------------------
+        $salesorder_total =
+            $this->salesorder_include_customer_discount_request(
+                $salesorder_id, $final_discountable_and_chargeable_total, $soR);
+
+        //-----------------------------------------------------------------
+        // Give the SalesOrder its summary of amounts at the bottom of the
+        // salesorder
+        //-----------------------------------------------------------------
+        $count = $soiR->repoCount($salesorder_id);
+        $count_salesorder_amount = $soaR->repoSalesOrderAmountCount(
+            $salesorder_id);
+        //At least one item and a preexisting salesorder amount record exists =>
+        //Update the SalesOrder Amount Record
+        if (($count > 0) && ($count_salesorder_amount > 0)) {
+            $salesorder_amount = $soaR->repoSalesOrderquery($salesorder_id);
+            if ($salesorder_amount) {
+                $salesorder_amount->setSales_order_id((int) $salesorder_id);
+                $salesorder_amount->setItem_subtotal(
+                    $salesorder_item_subtotal_discount_inclusive ?: 0.00
+                );
+                $salesorder_amount->setItem_tax_total(
+                    (float) $salesorder_item_amounts['tax_total'] ?: 0.00
+                );
+                /** Overall i.e. not line item total */
+                $salesorder_amount->setPackhandleship_total($salesorder_allowance_charge_amount_total);
+                /** Overall i.e. not line item tax e.g. vat or gst */
+                $salesorder_amount->setPackhandleship_tax($salesorder_allowance_charge_tax_total);
+                $salesorder_amount->setTax_total(
+                    $salesorder_tax_rate_total ?: 0.00
+                );
+                $salesorder_amount->setTotal($salesorder_total ?: 0.00);
+                $soaR->save($salesorder_amount);
+            }
+        }
+        if (($count === 0) && ($count_salesorder_amount > 0)) {
+            $salesorder_amount = $soaR->repoSalesOrderquery($salesorder_id);
+            if ($salesorder_amount) {
+                $salesorder_amount->setSales_order_id((int) $salesorder_id);
+                $salesorder_amount->setItem_subtotal(0.00);
+                $salesorder_amount->setItem_tax_total(0.00);
+                $salesorder_amount->setTax_total(0.00);
+                $salesorder_amount->setTotal(0.00);
+                $soaR->save($salesorder_amount);
+            }
+        }
+        if (($count === 0) && ($count_salesorder_amount === 0)) {
+            $salesorder_amount = new SalesOrderAmount();
+            $salesorder_amount->setSales_order_id((int) $salesorder_id);
+            $salesorder_amount->setItem_subtotal(0.00);
+            $salesorder_amount->setItem_tax_total(0.00);
+            $salesorder_amount->setTax_total(0.00);
+            $salesorder_amount->setTotal(0.00);
+            $soaR->save($salesorder_amount);
         }
     }
 
@@ -275,19 +473,29 @@ final readonly class NumberHelper
      *
      * @return (float|mixed)[]
      *
-     * @psalm-return array{subtotal: float|mixed, tax_total: float|mixed, discount: float|mixed, total: float|mixed}
+     * @psalm-return array{subtotal: float|mixed,
+                     tax_total: float|mixed,
+                     discount: float|mixed,
+                     charge: float|mixed,
+                     allowance: float|mixed,
+                     total: float|mixed}
      */
-    private function quote_calculateTotalsofItemTotals(string $quote_id, QIR $qiR, QIAR $qiaR): array
+    private function quote_calculateTotalsofItemTotals(string $quote_id,
+        QIR $qiR, QIAR $qiaR): array
     {
         $get_all_items_in_quote = $qiR->repoQuoteItemIdquery($quote_id);
         $grand_sub_total = 0.00;
         $grand_taxtotal = 0.00;
         $grand_discount = 0.00;
+        $grand_charge = 0.00;
+        $grand_allowance = 0.00;
         $grand_total = 0.00;
         $totals = [
             'subtotal' => $grand_sub_total,
             'tax_total' => $grand_taxtotal,
             'discount' => $grand_discount,
+            'charge' => $grand_charge,
+            'allowance' => $grand_allowance,
             'total' => $grand_total,
         ];
 
@@ -304,17 +512,100 @@ final readonly class NumberHelper
                      * @var QuoteItemAmount $quote_item_amount
                      * @psalm-suppress RedundantCastGivenDocblockType $value
                      */
-                    $quote_item_amount = $qiaR->repoQuoteItemAmountquery((string) $value);
-                    $grand_sub_total = $grand_sub_total + ($quote_item_amount->getSubTotal() ?? 0.00) ;
-                    $grand_taxtotal = $grand_taxtotal + ($quote_item_amount->getTax_total() ?? 0.00);
-                    $grand_discount = $grand_discount + ($quote_item_amount->getDiscount() ?? 0.00);
-                    $grand_total = $grand_total + ($quote_item_amount->getTotal() ?? 0.00);
+                    $quote_item_amount = $qiaR->repoQuoteItemAmountquery(
+                        (string) $value);
+                    $grand_sub_total = $grand_sub_total +
+                            ($quote_item_amount->getSubTotal() ?? 0.00) ;
+                    $grand_taxtotal = $grand_taxtotal +
+                            ($quote_item_amount->getTax_total() ?? 0.00);
+                    $grand_charge = $grand_charge +
+                            ($quote_item_amount->getCharge() ?? 0.00);
+                    $grand_allowance = $grand_allowance +
+                            ($quote_item_amount->getAllowance() ?? 0.00);
+                    $grand_discount = $grand_discount +
+                            ($quote_item_amount->getDiscount() ?? 0.00);
+                    $grand_total = $grand_total +
+                            ($quote_item_amount->getTotal() ?? 0.00);
                 }
             }
             $totals = [
                 'subtotal' => $grand_sub_total,
                 'tax_total' => $grand_taxtotal,
                 'discount' => $grand_discount,
+                'charge' => $grand_charge,
+                'allowance' => $grand_allowance,
+                'total' => $grand_total,
+            ];
+        }
+        return $totals;
+    }
+    
+    /**
+     * @param $quote_id
+     *
+     * @return (float|mixed)[]
+     *
+     * @psalm-return array{subtotal: float|mixed,
+                     tax_total: float|mixed,
+                     discount: float|mixed,
+                     charge: float|mixed,
+                     allowance: float|mixed, total: float|mixed}
+     */
+    private function salesorder_calculateTotalsofItemTotals(string $salesorder_id,
+        SOIR $soiR, SOIAR $soiaR): array
+    {
+        $get_all_items_in_salesorder = $soiR->repoSalesOrderItemIdquery(
+            $salesorder_id);
+        $grand_sub_total = 0.00;
+        $grand_taxtotal = 0.00;
+        $grand_discount = 0.00;
+        $grand_charge = 0.00;
+        $grand_allowance = 0.00;
+        $grand_total = 0.00;
+        $totals = [
+            'subtotal' => $grand_sub_total,
+            'tax_total' => $grand_taxtotal,
+            'discount' => $grand_discount,
+            'charge' => $grand_charge,
+            'allowance' => $grand_allowance,
+            'total' => $grand_total,
+        ];
+
+        /** @var SalesOrderItem $item */
+        foreach ($get_all_items_in_salesorder as $item) {
+            /**
+             * @psalm-suppress RawObjectIteration $item
+             * @var string $key
+             * @var string $value
+             */
+            foreach ($item as $key => $value) {
+                if ($key === 'id') {
+                    /**
+                     * @var SalesOrderItemAmount $salesorder_item_amount
+                     * @psalm-suppress RedundantCastGivenDocblockType $value
+                     */
+                    $salesorder_item_amount =
+                        $soiaR->repoSalesOrderItemAmountquery((string) $value);
+                    $grand_sub_total = $grand_sub_total +
+                        ($salesorder_item_amount->getSubTotal() ?? 0.00) ;
+                    $grand_taxtotal = $grand_taxtotal +
+                        ($salesorder_item_amount->getTax_total() ?? 0.00);
+                    $grand_charge = $grand_charge +
+                        ($salesorder_item_amount->getCharge() ?? 0.00);
+                    $grand_allowance = $grand_allowance +
+                        ($salesorder_item_amount->getAllowance() ?? 0.00);
+                    $grand_discount = $grand_discount +
+                        ($salesorder_item_amount->getDiscount() ?? 0.00);
+                    $grand_total = $grand_total +
+                        ($salesorder_item_amount->getTotal() ?? 0.00);
+                }
+            }
+            $totals = [
+                'subtotal' => $grand_sub_total,
+                'tax_total' => $grand_taxtotal,
+                'discount' => $grand_discount,
+                'charge' => $grand_charge,
+                'allowance' => $grand_allowance,
                 'total' => $grand_total,
             ];
         }
@@ -410,6 +701,27 @@ final readonly class NumberHelper
         $trimmed_total = $total - $discount_amount;
         return $trimmed_total - round($trimmed_total / 100.00 * $discount_percent, 2);
     }
+    
+    /**
+     * @param string $salesorder_id
+     * @param float $salesorder_total
+     * @param SOR $soR
+     * @return float
+     */
+    public function salesorder_include_customer_discount_request(
+        string $salesorder_id, float $salesorder_total, SOR $soR): float
+    {
+        $salesorder = $soR->repoSalesOrderUnloadedquery($salesorder_id);
+        $total = $salesorder_total;
+        $discount_amount = 0.00;
+        $discount_percent = 0.00;
+        if ($salesorder) {
+            $discount_amount = (float) $salesorder->getDiscount_amount();
+            $discount_percent = (float) $salesorder->getDiscount_percent();
+        }
+        $trimmed_total = $total - $discount_amount;
+        return $trimmed_total - round($trimmed_total / 100.00 * $discount_percent, 2);
+    }
 
     /**
      * @param string $inv_id
@@ -476,6 +788,46 @@ final readonly class NumberHelper
         }
         return $total_quote_tax_rate_amount;
     }
+    
+    /**
+     * Related logic: see SalesOrderController function default_tax_salesorder
+     * @param string $salesorder_id
+     */
+    public function calculate_salesorder_taxes(
+        string $salesorder_id, SOTRR $sotrR, SOAR $soaR): float
+    {
+        $total_salesorder_tax_rate_amount = 0.00;
+        $salesorder_tax_rate_amount = 0.00;
+        $salesorder_tax_rates = $sotrR->repoSalesOrderquery($salesorder_id);
+        $salesorder_tax_rates_count = $sotrR->repoCount($salesorder_id);
+        if (($salesorder_tax_rates_count > 0)
+            && ($soaR->repoSalesOrderAmountCount($salesorder_id) > 0)) {
+            $salesorder_amount = $soaR->repoSalesOrderquery($salesorder_id);
+            if ($salesorder_amount) {
+                /** @var SalesOrderTaxRate $salesorder_tax_rate */
+                foreach ($salesorder_tax_rates as $salesorder_tax_rate) {
+                    $salesorder_tax_rate_amount = (
+                        (null !== $salesorder_tax_rate->getInclude_item_tax()
+                           && $salesorder_tax_rate->getInclude_item_tax() === 1)
+                            ? ((($salesorder_amount->getItem_subtotal() ?? 0.00)
+                            + ($salesorder_amount->getItem_tax_total() ?? 0.00))
+                    * (($salesorder_tax_rate->getTaxRate()?->getTaxRatePercent()
+                                ?? 0.00)  / 100.00))
+                            : (($salesorder_amount->getItem_subtotal() ?? 0.00)
+                    * (($salesorder_tax_rate->getTaxRate()?->getTaxRatePercent()
+                                ?? 0.00) / 100.00))
+                    );
+                    $salesorder_tax_rate->setSales_order_tax_rate_amount(
+                        $salesorder_tax_rate_amount);
+                    $sotrR->save($salesorder_tax_rate);
+                    $total_salesorder_tax_rate_amount +=
+                        $salesorder_tax_rate_amount;
+                }
+            }
+        }
+        return $total_salesorder_tax_rate_amount;
+    }
+
 
     /**
      * Related logic: see InvController function default_tax_inv

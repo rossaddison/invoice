@@ -63,7 +63,7 @@ foreach ($allowance_charges as $allowance_charge) {
 }
 ?>
             <?= Field::select($form, 'allowance_charge_id')
-    ->label($translator->translate('allowance.or.charge.item'))
+    ->label($translator->translate('allowance.or.charge.item.invoice'))
     ->addInputAttributes([
         'class' => 'form-control',
         'readonly' => 'readonly',
@@ -74,7 +74,7 @@ foreach ($allowance_charges as $allowance_charge) {
     ->prompt($translator->translate('none'));
 ?>
             <?= Field::text($form, 'amount')
-    ->label($translator->translate('amount') . '(' . $s->getSetting('currency_symbol') . ')')
+    ->label($translator->translate('amount.inv.item') . '(' . $s->getSetting('currency_symbol') . ')')
     ->addInputAttributes([
         'class' => 'form-control',
         'readonly' => 'readonly',

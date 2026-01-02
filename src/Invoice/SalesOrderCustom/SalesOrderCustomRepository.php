@@ -21,7 +21,8 @@ final class SalesOrderCustomRepository extends Select\Repository
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, private readonly EntityWriter $entityWriter)
+    public function __construct(Select $select,
+        private readonly EntityWriter $entityWriter)
     {
         parent::__construct($select);
     }
@@ -35,7 +36,7 @@ final class SalesOrderCustomRepository extends Select\Repository
     {
         $query = $this->select()
                       ->load('custom_field')
-                      ->load('quote');
+                      ->load('sales_order');
         return $this->prepareDataReader($query);
     }
 
@@ -55,22 +56,22 @@ final class SalesOrderCustomRepository extends Select\Repository
 
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|SalesOrderCustom|null $quotecustom
+     * @param array|SalesOrderCustom|null $salesordercustom
      * @throws Throwable
      */
-    public function save(array|SalesOrderCustom|null $quotecustom): void
+    public function save(array|SalesOrderCustom|null $salesordercustom): void
     {
-        $this->entityWriter->write([$quotecustom]);
+        $this->entityWriter->write([$salesordercustom]);
     }
 
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|SalesOrderCustom|null $so_custom
+     * @param array|SalesOrderCustom|null $sales_order_custom
      * @throws Throwable
      */
-    public function delete(array|SalesOrderCustom|null $so_custom): void
+    public function delete(array|SalesOrderCustom|null $sales_order_custom): void
     {
-        $this->entityWriter->delete([$so_custom]);
+        $this->entityWriter->delete([$sales_order_custom]);
     }
 
     private function prepareDataReader(Select $query): EntityReader
@@ -85,31 +86,33 @@ final class SalesOrderCustomRepository extends Select\Repository
     {
         $query = $this->select()
                       ->load('custom_field')
-                      ->load('customsalesorder')
+                      ->load('sales_order')
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoFormValuequery(string $so_id, string $custom_field_id): ?SalesOrderCustom
+    public function repoFormValuequery(string $sales_order_id,
+            string $custom_field_id): ?SalesOrderCustom
     {
         $query = $this->select()
-                      ->where(['so_id' => $so_id])
+                      ->where(['sales_order_id' => $sales_order_id])
                       ->andWhere(['custom_field_id' => $custom_field_id]);
         return  $query->fetchOne();
     }
 
-    public function repoSalesOrderCustomCount(string $so_id, string $custom_field_id): int
+    public function repoSalesOrderCustomCount(string $sales_order_id,
+            string $custom_field_id): int
     {
         $query = $this->select()
-                      ->where(['so_id' => $so_id])
+                      ->where(['sales_order_id' => $sales_order_id])
                       ->andWhere(['custom_field_id' => $custom_field_id]);
         return $query->count();
     }
 
-    public function repoSalesOrderCount(string $so_id): int
+    public function repoSalesOrderCount(string $sales_order_id): int
     {
         $query = $this->select()
-                      ->where(['so_id' => $so_id]);
+                      ->where(['sales_order_id' => $sales_order_id]);
         return $query->count();
     }
 
@@ -118,10 +121,10 @@ final class SalesOrderCustomRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoFields(string $so_id): EntityReader
+    public function repoFields(string $sales_order_id): EntityReader
     {
         $query = $this->select()
-                      ->where(['so_id' => $so_id]);
+                      ->where(['sales_order_id' => $sales_order_id]);
         return $this->prepareDataReader($query);
     }
 }

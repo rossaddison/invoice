@@ -37,7 +37,8 @@ class InvoiceAsset extends AssetBundle
     public array $js = [
 
         // TypeScript compiled bundle (IIFE format) - contains
-        // quote, inv, salesorder, client, family, product, task, setting, scripts, modal-product-lookups, modal-task-lookups
+        // quote, inv, salesorder, client, family, product, productclient, task,
+        // setting, scripts, modal-product-lookups, modal-task-lookups
         'rebuild/js/invoice-typescript-iife.js',
 
         // Individual JS files included in TypeScript bundle
@@ -47,6 +48,7 @@ class InvoiceAsset extends AssetBundle
         //'rebuild/js/client.js',
         //'rebuild/js/family.js',
         //'rebuild/js/product.js',
+        //'rebuild/js/productclient.js',
         //'rebuild/js/setting.js',
         //'rebuild/js/scripts.js',
 

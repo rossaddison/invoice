@@ -42,3 +42,6 @@ php-cs-fixer.cache
 # VitePress
 /docs/.vitepress/dist
 /docs/.vitepress/cache
+
+# Tests
+/Tests/_output

@@ -18,7 +18,8 @@ use Yiisoft\Html\Html;
                 <div class = "row">
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="settings[google_translate_json_filename]" <?= $s->where('google_translate_json_filename'); ?>><i class="bi bi-info-circle"></i>
+                            <label for="settings[google_translate_json_filename]">
+                                <i class="bi bi-info-circle" <?= $s->where('google_translate_json_filename'); ?>></i>
                                 <?= 'Google Translate Json Filename (eg. my_json_filename.json)'; ?>
                             </label>
                             <?php $body['settings[google_translate_json_filename]'] = $s->getSetting('google_translate_json_filename');?>

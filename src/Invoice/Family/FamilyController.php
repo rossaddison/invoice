@@ -29,6 +29,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
+use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -45,6 +46,7 @@ final class FamilyController extends BaseController
         private FamilyCustomService $familyCustomService,
         private FamilyCustomFieldProcessor $familyCustomFieldProcessor,
         private DataResponseFactoryInterface $factory,
+        private UrlGeneratorInterface $urlGenerator,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -56,6 +58,7 @@ final class FamilyController extends BaseController
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
         $this->familyService = $familyService;
         $this->factory = $factory;
+        $this->urlGenerator = $urlGenerator;
     }
 
     /**
@@ -491,6 +494,7 @@ final class FamilyController extends BaseController
                     // Split comma list and generate products
                     $items = array_map('trim', explode(',', $cl));
                     $items = array_filter($items); // Remove empty items
+                    $newProductIds = [];
                     
                     foreach ($items as $item) {
                         $productName = $pp . ' ' . $item;
@@ -513,20 +517,40 @@ final class FamilyController extends BaseController
                         $product->setProduct_sku($item); // Use the item as SKU
                         
                         $productRepository->save($product);
+                        if ($product->getProduct_id()) {
+                            $newProductIds[] = $product->getProduct_id();
+                        }
                         $generatedCount++;
                     }
                 }
                 
-                $responseData = [
-                    'success' => true,
-                    'count' => $generatedCount,
-                    'message' => $generatedCount == 0 ? "No products generated becau" : "Generated $generatedCount products"
-                ];
-                
+                // If products were generated, redirect to ProductClient association workflow
+                if ($generatedCount > 0 && !empty($newProductIds) && is_array($newProductIds)) {
+                    $safeProductIds = array_map(function($id) {
+                            return is_scalar($id) ? (string)$id : '';
+                        }, $newProductIds
+                    );
+                    $responseData = [
+                        'success' => true,
+                        'count' => $generatedCount,
+                        'message' => "Generated $generatedCount products. Redirecting to client association.",
+                        'redirect_url' => $this->urlGenerator->generate('productclient/associate-multiple', [
+                            'product_ids' => implode(',', array_filter($safeProductIds, fn($id) => $id !== '')),
+                            'index' => '0'
+                        ])
+                    ];
+                } else {
+                    $responseData = [
+                        'success' => true,
+                        'count' => $generatedCount,
+                        'message' => $generatedCount == 0 ? "No products generated" : "Generated $generatedCount products"
+                    ];
+                }
+
                 if (!empty($errors)) {
                     $responseData['warnings'] = $errors;
                 }
-                
+
                 return $this->factory->createResponse(Json::encode($responseData))
                     ->withHeader('Content-Type', 'application/json');
                     

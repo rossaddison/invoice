@@ -21,6 +21,7 @@ use App\Invoice\Payment\PaymentRepository as pymR;
 use App\Invoice\Project\ProjectRepository as prjctR;
 use App\Invoice\Quote\QuoteRepository as qR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as qaR;
+use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as acqR;
 use App\Invoice\QuoteItem\QuoteItemRepository as qiR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as qiaR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountService as qiaS;
@@ -311,6 +312,7 @@ final class TaskController extends BaseController
      * @param qaR $qaR
      * @param qR $qR
      * @param pymR $pymR
+     * @param acqR $acqR
      */
     public function selection_quote(
         FormHydrator $formHydrator,
@@ -324,6 +326,7 @@ final class TaskController extends BaseController
         qaR $qaR,
         qR $qR,
         pymR $pymR,
+        acqR $acqR,    
     ): \Yiisoft\DataResponse\DataResponse {
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
@@ -340,7 +343,7 @@ final class TaskController extends BaseController
             $this->save_task_lookup_item_quote($order, $task, $quote_id, $taskR, $trR, $qiaR, $qiaS, $formHydrator);
             $order++;
         }
-        $numberHelper->calculate_quote($quote_id, $qiR, $qiaR, $qtrR, $qaR, $qR);
+        $numberHelper->calculate_quote($quote_id, $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
         return $this->factory->createResponse(Json::encode($tasks));
     }
 

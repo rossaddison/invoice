@@ -86,10 +86,10 @@ final class SalesOrderAmountRepository extends Select\Repository
     /**
      * @param string $so_id
      */
-    public function repoSalesOrderAmountCount(string $so_id): int
+    public function repoSalesOrderAmountCount(string $sales_order_id): int
     {
         return $this->select()
-                      ->where(['so_id' => $so_id])
+                      ->where(['sales_order_id' => $sales_order_id])
                       ->count();
     }
 
@@ -98,41 +98,41 @@ final class SalesOrderAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderAmountqueryTest(string $so_id): ?SalesOrderAmount
+    public function repoSalesOrderAmountqueryTest(string $sales_order_id): ?SalesOrderAmount
     {
         $query = $this->select()
-                      ->load('so')
-                      ->where(['so_id' => $so_id]);
+                      ->load('sales_order')
+                      ->where(['sales_order_id' => $sales_order_id]);
         return  $query->fetchOne() ?: null;
     }
 
     /**
-     * @param string $so_id
+     * @param string $sales_order_id
      *
      * @return SalesOrderAmount|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoSoquery(string $so_id): ?SalesOrderAmount
+    public function repoSoquery(string $sales_order_id): ?SalesOrderAmount
     {
         $query = $this->select()
-                      ->load('so')
-                      ->where(['so_id' => $so_id]);
+                      ->load('sales_order')
+                      ->where(['sales_order_id' => $sales_order_id]);
         return  $query->fetchOne() ?: null;
     }
 
     /**
-     * @param string $so_id
+     * @param string $sales_order_id
      *
      * @return SalesOrderAmount|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderquery(string $so_id): ?SalesOrderAmount
+    public function repoSalesOrderquery(string $sales_order_id): ?SalesOrderAmount
     {
         $query = $this->select()
-                      ->load('so')
-                      ->where(['so_id' => $so_id]);
+                      ->load('sales_order')
+                      ->where(['sales_order_id' => $sales_order_id]);
         return  $query->fetchOne() ?: null;
     }
 
@@ -150,9 +150,9 @@ final class SalesOrderAmountRepository extends Select\Repository
          * @var \DateTimeImmutable $range['upper']
          */
         $query = $this->select()
-                      ->where(['so.status_id' => $key])
-                      ->andWhere('so.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('so.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']));
+                      ->where(['sales_order.status_id' => $key])
+                      ->andWhere('sales_order.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
+                      ->andWhere('sales_order.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']));
         return $this->prepareDataReader($query);
     }
 
@@ -170,10 +170,10 @@ final class SalesOrderAmountRepository extends Select\Repository
          * @var \DateTimeImmutable $range['upper']
          */
         return $this->select()
-                      ->load('so')
-                      ->where(['so.status_id' => $key])
-                      ->andWhere('so.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('so.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
+                      ->load('sales_order')
+                      ->where(['sales_order.status_id' => $key])
+                      ->andWhere('sales_order.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
+                      ->andWhere('sales_order.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
                       ->count();
     }
 
@@ -202,7 +202,7 @@ final class SalesOrderAmountRepository extends Select\Repository
                 $total = $total + (float) $so_amount->getTotal();
             }
             $return[$key] = [
-                'so_status_id' => $key,
+                'sales_order_status_id' => $key,
                 'class' => $status['class'],
                 'label' => $status['label'],
                 'href' => (string) $status['href'],

@@ -115,8 +115,6 @@ final readonly class SalesOrderItemService
         $task_id = ((isset($array['task_id'])) ? (int) $array['task_id'] : null);
         $model->setTask_id((int) $task_id);
         
-        !empty($sales_order_id) ? $model->setSalesOrder($model->getSalesOrder()?->getId() == $sales_order_id ? $model->getSalesOrder() : null) : null;
-        // The sales order is passed as a parameter
         $model->setSales_order_id((int) $sales_order_id);
 
         $product = $pr->repoProductquery((string) $array['product_id']);
@@ -132,7 +130,7 @@ final readonly class SalesOrderItemService
         isset($array['quantity']) ? $model->setQuantity((int) $array['quantity']) : '';
         isset($array['price']) ? $model->setPrice((float) $array['price']) : '';
         isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : $model->setDiscount_amount(0.00);
-        isset($array['charget_amount']) ? $model->setCharge_amount((float) $array['discount_amount']) : $model->setCharge_amount(0.00);
+        isset($array['charge_amount']) ? $model->setCharge_amount((float) $array['charge_amount']) : $model->setCharge_amount(0.00);
         isset($array['peppol_po_itemid']) ? $model->setPeppol_po_itemid((string) $array['peppol_po_itemid']) : $model->setPeppol_po_itemid('');
         isset($array['peppol_po_lineid']) ? $model->setPeppol_po_lineid((string) $array['peppol_po_lineid']) : $model->setPeppol_po_lineid('');
         isset($array['order']) ? $model->setOrder((int) $array['order']) : '';
@@ -186,7 +184,7 @@ final readonly class SalesOrderItemService
     }
 
     /**
-     * @param int $so_item_id
+     * @param int $sales_order_item_id
      * @param float $quantity
      * @param float $price
      * @param float $discount
@@ -194,10 +192,10 @@ final readonly class SalesOrderItemService
      * @param SoIAR $soiar
      * @param SoIAS $soias
      */
-    public function saveSalesOrderItemAmount(int $so_item_id, float $quantity, float $price, float $discount, ?float $tax_rate_percentage, SoIAR $soiar, SoIAS $soias): void
+    public function saveSalesOrderItemAmount(int $sales_order_item_id, float $quantity, float $price, float $discount, ?float $tax_rate_percentage, SoIAR $soiar, SoIAS $soias): void
     {
         $soias_array = [];
-        $soias_array['so_item_id'] = $so_item_id;
+        $soias_array['sales_order_item_id'] = $sales_order_item_id;
         $sub_total = $quantity * $price;
         if (null !== $tax_rate_percentage) {
             $tax_total = ($sub_total * ($tax_rate_percentage / 100.00));
@@ -209,12 +207,12 @@ final readonly class SalesOrderItemService
         $soias_array['subtotal'] = $sub_total;
         $soias_array['taxtotal'] = $tax_total;
         $soias_array['total'] = $sub_total - $discount_total + $tax_total;
-        if ($soiar->repoCount((string) $so_item_id) === 0) {
+        if ($soiar->repoCount((string) $sales_order_item_id) === 0) {
             $soias->saveSalesOrderItemAmountNoForm(new SalesOrderItemAmount(), $soias_array);
         } else {
-            $so_item_amount = $soiar->repoSalesOrderItemAmountquery((string) $so_item_id);
-            if ($so_item_amount) {
-                $soias->saveSalesOrderItemAmountNoForm($so_item_amount, $soias_array);
+            $sales_order_item_amount = $soiar->repoSalesOrderItemAmountquery((string) $sales_order_item_id);
+            if ($sales_order_item_amount) {
+                $soias->saveSalesOrderItemAmountNoForm($sales_order_item_amount, $soias_array);
             }
         }
     }

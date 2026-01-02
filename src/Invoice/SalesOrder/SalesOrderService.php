@@ -35,11 +35,12 @@ final readonly class SalesOrderService
      * @param User $user
      * @param SalesOrder $model
      * @param array $array
+     * @return SalesOrder
      */
-    public function addSo(User $user, SalesOrder $model, array $array): void
+    public function addSo(User $user, SalesOrder $model, array $array): SalesOrder  
     {
         isset($array['quote_id']) ? $model->setQuote_id((int) $array['quote_id']) : '';
-        isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
+        isset($array['inv_id']) ? $model->setInv_id((int) ($array['inv_id'] ?? null)) : '';
         isset($array['group_id']) ? $model->setGroup_id((int) $array['group_id']) : '';
         isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
         isset($array['client_po_number']) ? $model->setClient_po_number((string) $array['client_po_number']) : '';
@@ -59,6 +60,7 @@ final readonly class SalesOrderService
             $model->setDiscount_amount(0.00);
         }
         $this->repository->save($model);
+        return $model;
     }
 
     /**

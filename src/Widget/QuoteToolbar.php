@@ -117,13 +117,15 @@ final readonly class QuoteToolbar
         if ($quoteEdit && $quote->getInv_id() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
             if ($quote->getStatus_id() === 4) {
                 // Quote is approved - show enabled button
-                $buttons[] = $this->createModalButton(
-                    'quote-to-invoice',
-                    '#quote-to-invoice',
-                    'fa-refresh',
-                    'btn-outline-primary',
-                    $this->translator->translate('quote.to.invoice'),
-                );
+                $buttons[] = [
+                    'type' => 'modal',
+                    'id' => 'quote-to-invoice',
+                    'href' => '#quote-to-invoice',
+                    'icon' => 'fa-refresh',
+                    'class' => '',
+                    'title' => $this->translator->translate('quote.to.invoice'),
+                    'style' => 'background-color: #ffffff !important; border: 2px solid #b19cd9 !important; color: #b19cd9 !important; font-weight: 500;'
+                ];
             } else {
                 // Quote not approved - show disabled button with indicator
                 $buttons[] = $this->createDisabledButton(
@@ -134,6 +136,16 @@ final readonly class QuoteToolbar
                     $this->translator->translate('quote.must.be.approved.first'),
                 );
             }
+        }
+        
+        if ($quoteEdit) {
+            $buttons[] = $this->createModalButton(
+                'allowance-charge',
+                '#add-quote-allowance-charge',
+                'fa-plus',
+                'btn-outline-secondary',
+                $this->translator->translate('allowance.or.charge.quote.add'),
+            );
         }
 
         // Copy Quote button
@@ -262,12 +274,16 @@ final readonly class QuoteToolbar
                 ->render();
         } else {
             // Modal button
+            $styleAttr = isset($button['style']) 
+                ? 'text-decoration: none; ' . (string) $button['style']
+                : 'text-decoration: none';
+            
             return A::tag()
                 ->href((string) $button['href'])
                 ->addClass($baseClasses)
                 ->id($this->getButtonId($button))
                 ->attribute('data-bs-toggle', 'modal')
-                ->attribute('style', 'text-decoration: none')
+                ->attribute('style', $styleAttr)
                 ->content($iconHtml . ' ' . (string) $button['title'])
                 ->encode(false)
                 ->render();

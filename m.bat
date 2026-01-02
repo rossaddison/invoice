@@ -191,8 +191,8 @@ echo ===========================================================================
 echo                            INSTALLATION MENU
 echo ======================================================================================
 echo [0x] Check PHP Extensions (Pre-install)    [3] Full Installation 
-echo [1]  Check System Requirements              [4] Back to Main Menu
-echo [2]  Install Dependencies Only              
+echo [1]  Check System Requirements             [4] Shipmonk Dependency Analyser
+echo [2]  Install Dependencies Only             [5] Back to Main Menu              
 echo ======================================================================================
 set /p install_choice="Enter your choice [0x-4]: "
 
@@ -200,7 +200,8 @@ if "%install_choice%"=="0x" goto check_extensions
 if "%install_choice%"=="1" goto check_requirements  
 if "%install_choice%"=="2" goto install_dependencies
 if "%install_choice%"=="3" goto full_installation
-if "%install_choice%"=="4" goto menu
+if "%install_choice%"=="4" goto shipmonk_dependency_analyser
+if "%install_choice%"=="5" goto menu
 echo Invalid choice. Please try again.
 pause
 goto installation_menu
@@ -247,6 +248,12 @@ if exist install.bat (
     composer install
     npm install
 )
+pause
+goto installation_menu
+
+:shipmonk_dependency_analyser
+echo Running Shipmonk Composer Dependency Analyser (https://github.com/shipmonk-rnd/composer-dependency-analyser)...
+php vendor/bin/composer-dependency-analyser
 pause
 goto installation_menu
 

@@ -4,23 +4,31 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\SalesOrderCustom\SalesOrderCustomRepository::class)]
+#[Entity(repository: SOCR::class)]
 class SalesOrderCustom
 {
     #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
     #[BelongsTo(target: SalesOrder::class, nullable: false)]
-    private ?SalesOrder $so = null;
+    private ?SalesOrder $sales_order = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $so_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $sales_order_id = null,
+            
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $custom_field_id = null,
+            
+        #[Column(type: 'text', nullable: true)]
         private string $value = '')
     {
     }
@@ -32,7 +40,7 @@ class SalesOrderCustom
 
     public function getSalesOrder(): ?SalesOrder
     {
-        return $this->so;
+        return $this->sales_order;
     }
 
     public function getId(): string
@@ -45,14 +53,14 @@ class SalesOrderCustom
         $this->id = $id;
     }
 
-    public function getSo_id(): string
+    public function getSales_order_id(): string
     {
-        return (string) $this->so_id;
+        return (string) $this->sales_order_id;
     }
 
-    public function setSo_id(int $so_id): void
+    public function setSales_order_id(int $sales_order_id): void
     {
-        $this->so_id = $so_id;
+        $this->sales_order_id = $sales_order_id;
     }
 
     public function getCustom_field_id(): string

@@ -43,6 +43,7 @@ use App\Invoice\TaxRate\TaxRateRepository as trR;
 use App\Invoice\Unit\UnitRepository as uR;
 use App\Invoice\UnitPeppol\UnitPeppolRepository as upR;
 use App\Invoice\QuoteItem\QuoteItemRepository as qiR;
+use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as acqR;
 use App\Invoice\InvItem\InvItemRepository as iiR;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as aciR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as qiaR;
@@ -618,6 +619,7 @@ final class ProductController extends BaseController
      * @param uR $uR
      * @param qiaR $qiaR
      * @param qiaS $qiaS
+     * @param acqR $acqR
      */
     public function selection_quote(
         FormHydrator $formHydrator,
@@ -631,6 +633,7 @@ final class ProductController extends BaseController
         uR $uR,
         qiaR $qiaR,
         qiaS $qiaS,
+        acqR $acqR,    
     ): \Yiisoft\DataResponse\DataResponse {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
@@ -648,7 +651,7 @@ final class ProductController extends BaseController
             $this->save_product_lookup_item_quote($order, $product, $quote_id, $pR, $trR, $uR, $qiaR, $qiaS, $formHydrator);
             $order++;
         }
-        $numberHelper->calculate_quote((string) $this->session->get('quote_id'), $qiR, $qiaR, $qtrR, $qaR, $qR);
+        $numberHelper->calculate_quote((string) $this->session->get('quote_id'), $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
         return $this->responseFactory->createResponse(Json::encode($products));
     }
 
