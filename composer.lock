@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4bef11be7f994c9b1834d5016b5f119d",
+    "content-hash": "e43f2cd726adbe98879ac33714e95905",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -24163,16 +24163,16 @@
         },
         {
             "name": "spatie/phpunit-watcher",
-            "version": "1.24.3",
+            "version": "1.24.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/phpunit-watcher.git",
-                "reference": "a00178cbba2aa205aefa7314dafff7581883154d"
+                "reference": "3b0e68596c70eba9bec99566b5e2199afb9f289d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/phpunit-watcher/zipball/a00178cbba2aa205aefa7314dafff7581883154d",
-                "reference": "a00178cbba2aa205aefa7314dafff7581883154d",
+                "url": "https://api.github.com/repos/spatie/phpunit-watcher/zipball/3b0e68596c70eba9bec99566b5e2199afb9f289d",
+                "reference": "3b0e68596c70eba9bec99566b5e2199afb9f289d",
                 "shasum": ""
             },
             "require": {
@@ -24220,7 +24220,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/phpunit-watcher/issues",
-                "source": "https://github.com/spatie/phpunit-watcher/tree/1.24.3"
+                "source": "https://github.com/spatie/phpunit-watcher/tree/1.24.4"
             },
             "funding": [
                 {
@@ -24228,7 +24228,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-30T21:13:01+00:00"
+            "time": "2026-01-05T09:33:23+00:00"
         },
         {
             "name": "staabm/side-effects-detector",
@@ -24936,5 +24936,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
