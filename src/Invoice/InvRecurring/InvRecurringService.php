@@ -14,21 +14,30 @@ final readonly class InvRecurringService
     /**
      * @param InvRecurringRepository $repository
      */
-    public function __construct(private InvRecurringRepository $repository, private InvRepository $invR, private SettingRepository $s)
-    {
+    public function __construct(
+        private InvRecurringRepository $repository,
+        private InvRepository $invR,
+        private SettingRepository $s,
+    ) {
     }
 
     /**
      * @param InvRecurring $model
      * @param array $array
      */
-    public function saveInvRecurring(InvRecurring $model, array $array): void
-    {
+    public function saveInvRecurring(
+        InvRecurring $model,
+        array $array
+    ): void {
+        $this->persist($model, $array);
         $model->setInv_id((int) $array['inv_id']);
 
-        isset($array['frequency']) ? $model->setFrequency((string) $array['frequency']) : '';
+        isset($array['frequency']) ? 
+            $model->setFrequency(
+                (string) $array['frequency']) : '';
 
-        $baseInvoice = $this->invR->repoInvUnloadedquery((string) $array['inv_id']);
+        $baseInvoice = $this->invR->repoInvUnloadedquery(
+            (string) $array['inv_id']);
         if (null !== $baseInvoice) {
             $dateHelper = new DateHelper($this->s);
 
@@ -36,29 +45,55 @@ final readonly class InvRecurringService
             // The start has been adjusted
             // A new next = start + frequency
             $invNext = $model->getNext();
-            if (null !== $invNext && !is_string($invNext) && isset($array['start'])) {
-                $nextDate = $dateHelper->incrementDateStringToDateTime((string) $array['start'], (string) $array['frequency']);
+            if (null !== $invNext 
+                && !is_string($invNext) 
+                && isset($array['start'])) {
+                $nextDate = $dateHelper
+                    ->incrementDateStringToDateTime(
+                        (string) $array['start'], 
+                        (string) $array['frequency']);
                 $model->setNext($nextDate);
-                $model->setStart(new \DateTime((string) $array['start']));
+                $model->setStart(
+                    new \DateTime((string) $array['start']));
             }
 
             // Next is null because it has stopped
             // Restart => allow new start and new next
             // A new next = start + frequency
             if (null == $invNext && isset($array['start'])) {
-                $nextDate = $dateHelper->incrementDateStringToDateTime((string) $array['start'], (string) $array['frequency']);
+                $nextDate = $dateHelper
+                    ->incrementDateStringToDateTime(
+                        (string) $array['start'], 
+                        (string) $array['frequency']);
                 $model->setNext($nextDate);
-                $model->setStart(new \DateTime((string) $array['start']));
+                $model->setStart(
+                    new \DateTime((string) $array['start']));
             }
 
             /**
              * @var string|null $array['end']
              */
-            $end = isset($array['end']) ? new \DateTime($array['end']) : null;
+            $end = isset($array['end']) ? 
+                new \DateTime($array['end']) : null;
             $end ? $model->setEnd($end) : '';
 
             $this->repository->save($model);
         }
+    }
+
+    private function persist(
+        InvRecurring $model,
+        array $array
+    ): InvRecurring {
+        $inv = 'inv_id';
+        if (isset($array[$inv])) {
+            $invEntity = $this->invR->repoInvUnLoadedquery(
+                (string) $array[$inv]);
+            if ($invEntity) {
+                $model->setInv($invEntity);
+            }
+        }
+        return $model;
     }
 
     /**

@@ -279,19 +279,4 @@ class SalesOrderItem
     {
         $this->product_unit_id = $product_unit_id;
     }
-    
-    /**
-     * @param int $sales_order_id
-     * @param int $tax_rate_id
-     */
-    public function nullifyRelationOnChange(int $sales_order_id, int $tax_rate_id
-                                                                         ): void
-    {
-        if ($this->sales_order_id != $sales_order_id) {
-            $this->sales_order = null;
-        }
-        if ($this->tax_rate_id != $tax_rate_id) {
-            $this->tax_rate = null;
-        }
-    }
 }

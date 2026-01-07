@@ -14,6 +14,7 @@ use Yiisoft\Html\Tag\Img;
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository $acqiR
  * @var App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -208,7 +209,83 @@ $vat = $s->getSetting('enable_vat_registration');
                             /**
                              * @var App\Invoice\Entity\InvItem $item
                              */
-                            foreach ($items as $item) : ?>
+                            foreach ($items as $item) :
+                        // Display item-level allowances/charges BEFORE the item
+                        // if Peppol is enabled
+                        if ($s->getSetting('enable_peppol') == '1') {
+                            $itemId = $item->getId();
+                            if (null !== $itemId) {
+                            $quoteItemAllowanceCharges =
+                                $acqiR->repoQuoteItemquery(
+                                    (string)$itemId
+                                );
+                            /**
+                             * @var App\Invoice\Entity\QuoteItemAllowanceCharge $quoteItemAllowanceCharge
+                             */
+                            foreach (
+                                $quoteItemAllowanceCharges
+                                as $quoteItemAllowanceCharge
+                            ) {
+                                $isCharge = (
+                                    $quoteItemAllowanceCharge
+                                        ->getAllowanceCharge()
+                                            ?->getIdentifier() == 1
+                                            ? true : false
+                                );
+                        ?>
+                            <tr>
+                                <td colspan="5">
+                                    <?=
+                                        $quoteItemAllowanceCharge
+                                            ->getAllowanceCharge()
+                                                ?->getIdentifier()
+                                                    == '1'
+                                        ? $translator->translate(
+                                            'allowance.or.charge.charge'
+                                        )
+                                        : '(' .
+                                            $translator->translate(
+                                                'allowance.or.charge.allowance'
+                                            ) . ')'; ?>
+                                    <?=
+                                        $translator->translate(
+                                            'allowance.or.charge.reason.code'
+                                        ) . ': ' . (
+                                            $quoteItemAllowanceCharge
+                                                ->getAllowanceCharge()
+                                                    ?->getReasonCode()
+                                                        ?? '#'
+                                        ); ?>
+                                    -
+                                    <?=
+                                        $translator->translate(
+                                            'allowance.or.charge.reason'
+                                        ) . ': ' . (
+                                            $quoteItemAllowanceCharge
+                                                ->getAllowanceCharge()
+                                                    ?->getReason() ?? '#'
+                                        ); ?>
+                                </td>
+                                <td class="amount">
+                                    <?= ($isCharge ? '' : '(')
+                                        . $numberHelper
+                                            ->format_currency(
+                                                $quoteItemAllowanceCharge
+                                                    ->getAmount()
+                                            ) . ($isCharge ? '' : ')'); ?>
+                                </td>
+                                <td class="amount">
+                                    <?php $vatQuoteItem = $quoteItemAllowanceCharge->getVatOrTax();
+                                        echo ($isCharge ? '' : '(')
+                                            . $numberHelper->format_currency($vatQuoteItem)
+                                            . ($isCharge ? '' : ')'); ?>
+                                </td>
+                            </tr>
+                        <?php
+                            }
+                            }
+                        }
+                        ?>
                             <tr>
                                 <td><?= Html::encode($item->getName()); ?></td>
                                 <td><?= nl2br(Html::encode($item->getDescription())); ?></td>
@@ -221,22 +298,82 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getPrice()); ?></td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getDiscount_amount()); ?></td>
-                                <?php $query = $qiaR->repoQuoteItemAmountquery((string) $item->getId()); ?>
-                                <td class="amount"><?= $numberHelper->format_currency(null !== $query ? $query->getSubtotal() : 0.00); ?></td>
+                                <?php
+                                    $query =
+                                        $qiaR
+                                            ->repoQuoteItemAmountquery(
+                                                (string) $item->getId()
+                                            );
+                                ?>
+                                <td class="amount">
+                                    <b>
+                                    <?= $numberHelper->format_currency(
+                                        null !== $query
+                                            ? $query->getSubtotal()
+                                            : 0.00
+                                    ); ?>
+                                    </b>
+                                </td>
                             </tr>
-                        <?php endforeach ?>
+                        <?php
+                        endforeach ?>
                         <tr>
                             <td colspan="4"></td>
                             <td class="text-right"><?= $translator->translate('subtotal'); ?>:</td>
-                            <td class="amount"><?= $numberHelper->format_currency($quote_amount->getItem_subtotal()); ?></td>
+                            <td class="amount"><b><?= $numberHelper->format_currency($quote_amount->getItem_subtotal()); ?></b></td>
                         </tr>
                         <?php if ($quote_amount->getItem_tax_total() > 0) { ?>
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
                                 <td class="text-right"><?= $vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax'); ?></td>
-                                <td class="amount"><?= $numberHelper->format_currency($quote_amount->getItem_tax_total()); ?></td>
+                                <td class="amount"><b><?= $numberHelper->format_currency($quote_amount->getItem_tax_total()); ?></b></td>
                             </tr>
                         <?php } ?>
+                        <?php
+                        if ($s->getSetting('enable_peppol') == '1') {
+                            if ($quote_amount->getPackhandleship_total()
+                                != 0.00
+                            ) { ?>
+                            <tr>
+                                <td class="no-bottom-border"
+                                    colspan="4"></td>
+                                <td class="text-right">
+                                    <?= $translator->translate(
+                                        'allowance.or.charge.shipping.handling.packaging'
+                                    ); ?>
+                                </td>
+                                <td class="amount">
+                                    <b><?= $numberHelper->format_currency(
+                                        $quote_amount
+                                            ->getPackhandleship_total()
+                                    ); ?></b>
+                                </td>
+                            </tr>
+                        <?php }
+                            if ($quote_amount->getPackhandleship_tax()
+                                != 0.00
+                            ) { ?>
+                            <tr>
+                                <td class="no-bottom-border"
+                                    colspan="4"></td>
+                                <td class="text-right">
+                                    <?= $vat == '1'
+                                        ? $translator->translate(
+                                            'allowance.or.charge.shipping.handling.packaging.vat'
+                                        )
+                                        : $translator->translate(
+                                            'allowance.or.charge.shipping.handling.packaging.tax'
+                                        ); ?>
+                                </td>
+                                <td class="amount">
+                                    <b><?= $numberHelper->format_currency(
+                                        $quote_amount
+                                            ->getPackhandleship_tax()
+                                    ); ?></b>
+                                </td>
+                            </tr>
+                        <?php }
+                        } ?>
                         <?php
                             if (!empty($quote_tax_rates) && $vat == '0') {
                                 /**
@@ -255,11 +392,11 @@ $vat = $s->getSetting('enable_vat_registration');
                                     ?>%
                                     </td>
                                     <td class="amount">
-                                        <?php
+                                        <b><?php
                                     $quoteTaxRate = $quote_tax_rate->getQuote_tax_rate_amount();
                                     if ($quoteTaxRate >= 0.00) {
                                         echo $numberHelper->format_currency($quoteTaxRate);
-                                    } ?>
+                                    } ?></b>
                                     </td>
                                 </tr>
                             <?php endforeach;
@@ -269,7 +406,7 @@ $vat = $s->getSetting('enable_vat_registration');
                             <td class="no-bottom-border" colspan="4"></td>
                             <td class="text-right"><?= $translator->translate('discount'); ?>:</td>
                             <td class="amount">
-                                <?php
+                                <b><?php
                                     $percent = $quote->getDiscount_percent();
                             if ($percent >= 0.00) {
                                 echo (string) $numberHelper->format_amount($percent) . ' %';
@@ -279,14 +416,14 @@ $vat = $s->getSetting('enable_vat_registration');
                                     echo $numberHelper->format_amount($discountAmount);
                                 }
                             }
-                            ?>
+                            ?></b>
                             </td>
                         </tr>
                         <?php } ?>
                         <tr>
                             <td class="no-bottom-border" colspan="4"></td>
                             <td class="text-right"><?= $translator->translate('total'); ?>:</td>
-                            <td class="amount"><?= $numberHelper->format_currency($quote_amount->getTotal()); ?></td>
+                            <td class="amount"><b><?= $numberHelper->format_currency($quote_amount->getTotal()); ?></b></td>
                         </tr>
                         </tbody>
                     </table>

@@ -32,9 +32,19 @@ class InvTaxRate
         return $this->inv;
     }
 
+    public function setInv(?Inv $inv): void
+    {
+        $this->inv = $inv;
+    }
+
     public function getTaxRate(): ?TaxRate
     {
         return $this->tax_rate;
+    }
+
+    public function setTaxRate(?TaxRate $tax_rate): void
+    {
+        $this->tax_rate = $tax_rate;
     }
 
     public function getId(): string

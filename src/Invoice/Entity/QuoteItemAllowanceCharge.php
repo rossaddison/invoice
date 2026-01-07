@@ -119,17 +119,4 @@ class QuoteItemAllowanceCharge
     {
         $this->vat_or_tax = $vatOrTax;
     }
-
-    public function nullifyRelationOnChange(int $allowance_charge_id, int $quote_item_id, int $quote_id): void
-    {
-        if ($this->allowance_charge_id != $allowance_charge_id) {
-            $this->allowance_charge = null;
-        }
-        if ($this->quote_item_id != $quote_item_id) {
-            $this->quote_item = null;
-        }
-        if ($this->quote_id != $quote_id) {
-            $this->quote = null;
-        }
-    }
 }

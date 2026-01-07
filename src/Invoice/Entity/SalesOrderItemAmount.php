@@ -31,6 +31,11 @@ class SalesOrderItemAmount
         return $this->sales_order_item;
     }
 
+    public function setSalesOrderItem(?SalesOrderItem $sales_order_item): void
+    {
+        $this->sales_order_item = $sales_order_item;
+    }
+
     public function getId(): string
     {
         return (string) $this->id;

@@ -353,21 +353,6 @@ class Quote
         return $this->items;
     }
 
-    /**
-     * @param int $group_id
-     * @param int $client_id
-     */
-    public function nullifyRelationOnChange(int $group_id, int $client_id): void
-    {
-        if ($this->group_id != $group_id) {
-            $this->group = null;
-        }
-        if ($this->client_id != $client_id) {
-            $this->client = null;
-        }
-        // the user_id will always be attached to the client therefore will not change
-    }
-
     public function isNewRecord(): bool
     {
         return null === $this->getId() ? true : false;

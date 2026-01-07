@@ -36,9 +36,19 @@ class Task
         return $this->tax_rate;
     }
 
+    public function setTaxRate(?TaxRate $tax_rate): void
+    {
+        $this->tax_rate = $tax_rate;
+    }
+
     public function getProject(): ?Project
     {
         return $this->project;
+    }
+
+    public function setProject(?Project $project): void
+    {
+        $this->project = $project;
     }
 
     public function getId(): string

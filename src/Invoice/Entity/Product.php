@@ -348,24 +348,4 @@ class Product
     {
         $this->product_tariff = $product_tariff;
     }
-
-    /**
-     * Make sure the sequence of parameters is correct
-     * Related logic: see https://github.com/yiisoft/demo/issues/462
-     * @param int $tax_rate_id
-     * @param int $unit_id
-     * @param int $family_id
-     */
-    public function nullifyRelationOnChange(int $tax_rate_id, int $unit_id, int $family_id): void
-    {
-        if ($this->tax_rate_id != $tax_rate_id) {
-            $this->tax_rate = null;
-        }
-        if ($this->unit_id != $unit_id) {
-            $this->unit = null;
-        }
-        if ($this->family_id != $family_id) {
-            $this->family = null;
-        }
-    }
 }

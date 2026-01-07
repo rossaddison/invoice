@@ -36,6 +36,11 @@ class InvAmount
         return $this->inv;
     }
 
+    public function setInv(?Inv $inv): void
+    {
+        $this->inv = $inv;
+    }
+
     public function getId(): string
     {
         return (string) $this->id;

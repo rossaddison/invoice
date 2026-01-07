@@ -30,9 +30,19 @@ class UserClient
         return $this->user;
     }
 
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
+    }
+
     public function getClient(): ?Client
     {
         return $this->client;
+    }
+
+    public function setClient(?Client $client): void
+    {
+        $this->client = $client;
     }
 
     public function getId(): string

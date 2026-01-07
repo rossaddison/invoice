@@ -224,14 +224,7 @@ class CompanyPrivate
     {
         $this->end_date = $end_date;
     }
-
-    public function nullifyRelationOnChange(int $company_id): void
-    {
-        if ($this->company_id != $company_id) {
-            $this->company = null;
-        }
-    }
-
+    
     public function isNewRecord(): bool
     {
         return $this->getId() === null;

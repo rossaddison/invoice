@@ -109,11 +109,4 @@ class ProductClient
     {
         $this->updated_at = $updatedAt;
     }
-
-    public function nullifyRelationOnChange(int $product_id): void
-    {
-        if ($this->product_id != $product_id) {
-            $this->product = null;
-        }
-    }
 }

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Entity\InvItemAllowanceCharge;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Img;
 
@@ -17,6 +18,7 @@ use Yiisoft\Html\Tag\Img;
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR
  * @var App\Invoice\InvItemAmount\InvItemAmountRepository $iiaR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -244,15 +246,106 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getPrice()); ?></td>
                                 <td class="amount"><?= $numberHelper->format_currency($item->getDiscount_amount()); ?></td>
-                                <?php $query = $iiaR->repoInvItemAmountquery((string) $item->getId()); ?>
-                                <td class="amount"><?= $numberHelper->format_currency(null !== $query ? $query->getSubtotal() : 0.00); ?></td>                                   
-                            </tr>  
-                            <?php } ?>
+                                <?php
+                                    $query =
+                                        $iiaR->repoInvItemAmountquery(
+                                            (string) $item->getId()
+                                        );
+                                ?>
+                                <td class="amount">
+                                    <?= $numberHelper->format_currency(
+                                        null !== $query
+                                            ? $query->getSubtotal()
+                                            : 0.00
+                                    ); ?>
+                                </td>                                   
+                            </tr>
+                            <?php
+                            // Display item-level allowances/charges
+                            // if Peppol is enabled
+                            if (
+                                $s->getSetting('enable_peppol') == '1'
+                            ) {
+                                $invItemAllowanceCharges =
+                                    $aciiR->repoInvItemquery(
+                                        (string) $item->getId()
+                                    );
+                                /**
+                                 * @var InvItemAllowanceCharge $invItemAllowanceCharge
+                                 */
+                                foreach (
+                                    $invItemAllowanceCharges
+                                    as $invItemAllowanceCharge
+                                ) {
+                                    $isCharge = (
+                                        $invItemAllowanceCharge
+                                            ->getAllowanceCharge()
+                                                ?->getIdentifier() == 1
+                                                ? true : false
+                                    );
+                            ?>
+                            <tr>
+                                <td colspan="5">
+                                    <b>
+                                    <?=
+                                        $invItemAllowanceCharge
+                                            ->getAllowanceCharge()
+                                                ?->getIdentifier() == '1'
+                                        ? $translator->translate(
+                                            'allowance.or.charge.charge'
+                                        )
+                                        : '(' .
+                                            $translator->translate(
+                                                'allowance.or.charge.allowance'
+                                            ) . ')'; ?>
+                                    </b>
+                                    <?=
+                                        $translator->translate(
+                                            'allowance.or.charge.reason.code'
+                                        ) . ': ' . (
+                                            $invItemAllowanceCharge
+                                                ->getAllowanceCharge()
+                                                    ?->getReasonCode()
+                                                        ?? '#'
+                                        ); ?>
+                                    -
+                                    <?=
+                                        $translator->translate(
+                                            'allowance.or.charge.reason'
+                                        ) . ': ' . (
+                                            $invItemAllowanceCharge
+                                                ->getAllowanceCharge()
+                                                    ?->getReason() ?? '#'
+                                        ); ?>
+                                </td>
+                                <td class="amount">
+                                    <b>
+                                    <?= ($isCharge ? '' : '(')
+                                        . $numberHelper
+                                            ->format_currency(
+                                                $invItemAllowanceCharge
+                                                    ->getAmount()
+                                            ) . ($isCharge ? '' : ')'); ?>
+                                    </b>
+                                </td>
+                                <td class="amount">
+                                    <b>
+                                    <?php $vatInvItem = $invItemAllowanceCharge->getVatOrTax();
+                                        echo ($isCharge ? '' : '(')
+                                            . $numberHelper->format_currency($vatInvItem)
+                                            . ($isCharge ? '' : ')'); ?>
+                                    </b>
+                                </td>
+                            </tr>
+                            <?php
+                                }
+                            }
+                            } ?>
 
                             <tr>
                                 <td colspan="4"></td>
                                 <td class="text-right"><?= $translator->translate('subtotal'); ?>:</td>
-                                <td class="amount"><?= $numberHelper->format_currency($inv_amount->getItem_subtotal()); ?></td>
+                                <td class="amount"><b><?= $numberHelper->format_currency($inv_amount->getItem_subtotal()); ?></b></td>
                             </tr>                            
 
                             <?php if ($inv_amount->getItem_tax_total() > 0) { ?>
@@ -260,13 +353,59 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td class="no-bottom-border" colspan="4"></td>
                                <td class="text-right"><?= $vat === '0' ? $translator->translate('item.tax') : $translator->translate('vat.abbreviation') ?></td>
                                 <td class="amount">
-                                    <?php
+                                    <b><?php
                                         $invAmountItemTaxTotal = $inv_amount->getItem_tax_total();
                                 echo($invAmountItemTaxTotal >= 0.00 ? $numberHelper->format_currency($invAmountItemTaxTotal) : '');
-                                ?>
+                                ?></b>
                                 </td>
                             </tr>
                             <?php } ?>
+
+                            <?php
+                            if ($s->getSetting('enable_peppol') == '1') {
+                                if ($inv_amount->getPackhandleship_total()
+                                    != 0.00
+                                ) { ?>
+                                <tr>
+                                    <td class="no-bottom-border"
+                                        colspan="4"></td>
+                                    <td class="text-right">
+                                        <?= $translator->translate(
+                                            'allowance.or.charge.shipping.handling.packaging'
+                                        ); ?>
+                                    </td>
+                                    <td class="amount">
+                                        <b><?= $numberHelper->format_currency(
+                                            $inv_amount
+                                                ->getPackhandleship_total()
+                                        ); ?></b>
+                                    </td>
+                                </tr>
+                            <?php }
+                                if ($inv_amount->getPackhandleship_tax()
+                                    != 0.00
+                                ) { ?>
+                                <tr>
+                                    <td class="no-bottom-border"
+                                        colspan="4"></td>
+                                    <td class="text-right">
+                                        <?= $vat == '1'
+                                            ? $translator->translate(
+                                                'allowance.or.charge.shipping.handling.packaging.vat'
+                                            )
+                                            : $translator->translate(
+                                                'allowance.or.charge.shipping.handling.packaging.tax'
+                                            ); ?>
+                                    </td>
+                                    <td class="amount">
+                                        <b><?= $numberHelper->format_currency(
+                                            $inv_amount
+                                                ->getPackhandleship_tax()
+                                        ); ?></b>
+                                    </td>
+                                </tr>
+                            <?php }
+                            } ?>
 
                             <?php if ($vat  === '0') { ?>
                             <?php
@@ -288,11 +427,11 @@ $vat = $s->getSetting('enable_vat_registration');
                                     %
                                 </td>
                                 <td class="amount">
-                                    <?php
+                                    <b><?php
                                     $invTaxRate = $inv_tax_rate->getInv_tax_rate_amount();
                                 if ($invTaxRate >= 0.00) {
                                     echo $numberHelper->format_currency($invTaxRate);
-                                } ?>
+                                } ?></b>
                                 </td>
                             </tr>
                             <?php   endforeach; ?>
@@ -302,7 +441,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td class="no-bottom-border" colspan="4"></td>
                                 <td class="text-right"><?= $translator->translate('discount'); ?>:</td>
                                 <td class="amount">
-                                    <?php
+                                    <b><?php
                                     $percent = $inv->getDiscount_percent();
                                 if ($percent >= 0.00) {
                                     echo (string) $numberHelper->format_amount($percent) . ' %';
@@ -312,7 +451,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                         echo $numberHelper->format_amount($discountAmount);
                                     }
                                 }
-                                ?>
+                                ?></b>
                                 </td>
                             </tr>
                             <?php } ?>
@@ -320,13 +459,13 @@ $vat = $s->getSetting('enable_vat_registration');
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
                                 <td class="text-right"><?= $translator->translate('total'); ?>:</td>
-                                <td class="amount"><?= $numberHelper->format_currency($inv_amount->getTotal()); ?></td>
+                                <td class="amount"><b><?= $numberHelper->format_currency($inv_amount->getTotal()); ?></b></td>
                             </tr>
 
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
                                 <td class="text-right"><?= $translator->translate('paid'); ?></td>
-                                <td class="amount"><?= $numberHelper->format_currency($inv_amount->getPaid()) ?></td>
+                                <td class="amount"><b><?= $numberHelper->format_currency($inv_amount->getPaid()) ?></b></td>
                             </tr>
                             <tr class="<?= ($is_overdue) ? 'overdue' : 'text-success'; ?>">
                                 <td class="no-bottom-border" colspan="4"></td>

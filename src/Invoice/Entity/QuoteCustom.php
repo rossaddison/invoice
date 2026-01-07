@@ -37,9 +37,19 @@ class QuoteCustom
         return $this->custom_field;
     }
 
+    public function setCustomField(?CustomField $custom_field): void
+    {
+        $this->custom_field = $custom_field;
+    }
+
     public function getQuote(): ?Quote
     {
         return $this->quote;
+    }
+
+    public function setQuote(?Quote $quote): void
+    {
+        $this->quote = $quote;
     }
 
     public function getId(): string

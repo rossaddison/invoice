@@ -11,12 +11,14 @@ use App\Invoice\Entity\QuoteCustom;
 use App\Invoice\Entity\QuoteItem;
 use App\Invoice\Entity\QuoteTaxRate;
 // Repositories
+use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
 use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTRR;
 use App\Invoice\Setting\SettingRepository as SR;
+use App\User\UserRepository as UR;
 // Services
 use App\Invoice\QuoteAmount\QuoteAmountService as QAS;
 use App\Invoice\QuoteCustom\QuoteCustomService as QCS;
@@ -29,8 +31,43 @@ use Yiisoft\Session\SessionInterface;
 
 final readonly class QuoteService
 {
-    public function __construct(private QuoteRepository $repository, private SessionInterface $session)
+    public function __construct(
+        private QuoteRepository $repository,
+        private CR $cR,
+        private GR $gR,
+        private UR $uR,
+    ) {
+    }
+
+    /**
+     * @param array $array
+     * @param Quote $model
+     * @return void
+     */
+    private function persist(array $array, Quote $model): void
     {
+        if (isset($array['client_id'])) {
+            $client = $this->cR->repoClientquery(
+                (string) $array['client_id']
+            );
+            $model->setClient($client);
+        }
+        if (isset($array['group_id'])) {
+            $group = $this->gR->repoGroupquery(
+                (string) $array['group_id']
+            );
+            if ($group) {
+                $model->setGroup($group);
+            }
+        }
+        if (isset($array['user_id'])) {
+            $user = $this->uR->findById(
+                (string) $array['user_id']
+            );
+            if ($user) {
+                $model->setUser($user);
+            }
+        }
     }
 
     /**
@@ -41,9 +78,14 @@ final readonly class QuoteService
      * @param GR $gR
      * @return Quote
      */
-    public function saveQuote(User $user, Quote $model, array $array, SR $s, GR $gR): Quote
-    {
-        $model->nullifyRelationOnChange((int) $array['group_id'], (int) $array['client_id']);
+    public function saveQuote(
+        User $user,
+        Quote $model,
+        array $array,
+        SR $s,
+        GR $gR
+    ): Quote {
+        $this->persist($array, $model);
         
         /**
          * Give a legitimate quote number to a quote that currently:
@@ -51,8 +93,15 @@ final readonly class QuoteService
          * 2. Has no quote number
          * 3. Has a status of 'draft'
          */
-        if ((!$model->isNewRecord()) && (strlen($model->getNumber() ?? '') == 0)  && ($array['status_id'] == 1)) {
-            $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true));
+        if ((!$model->isNewRecord()) &&
+            (strlen($model->getNumber() ?? '') == 0)  &&
+            ($array['status_id'] == 1)) {
+            $model->setNumber(
+                (string) $gR->generate_number(
+                    (int) $array['group_id'],
+                    true
+                )
+            );
         }
 
         $datetime_created = new \DateTimeImmutable();
@@ -60,25 +109,54 @@ final readonly class QuoteService
          * @var string $array['date_created']
          */
         $date_created = $array['date_created'] ?? '';
-        $model->setDate_created($datetime_created::createFromFormat('Y-m-d', $date_created) ?: new \DateTimeImmutable('1901/01/01'));
+        $model->setDate_created(
+            $datetime_created::createFromFormat(
+                'Y-m-d',
+                $date_created
+            ) ?: new \DateTimeImmutable('1901/01/01')
+        );
 
-        isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
-        isset($array['so_id']) ? $model->setSo_id((int) $array['so_id']) : '';
-        isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : 0;
-        isset($array['group_id']) ? $model->setGroup_id((int) $array['group_id']) : 0;
-        isset($array['status_id']) ? $model->setStatus_id((int) $array['status_id']) : '';
-        isset($array['delivery_location_id']) ? $model->setDelivery_location_id((int) $array['delivery_location_id']) : '';
-        isset($array['discount_percent']) ? $model->setDiscount_percent((float) $array['discount_percent']) : '';
-        isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : '';
-        isset($array['url_key']) ? $model->setUrl_key((string) $array['url_key']) : '';
-        isset($array['password']) ? $model->setPassword((string) $array['password']) : '';
-        isset($array['notes']) ? $model->setNotes((string) $array['notes']) : '';
+        isset($array['inv_id']) ?
+            $model->setInv_id((int) $array['inv_id']) : '';
+        isset($array['so_id']) ?
+            $model->setSo_id((int) $array['so_id']) : '';
+        isset($array['client_id']) ?
+            $model->setClient_id((int) $array['client_id']) : 0;
+        isset($array['group_id']) ?
+            $model->setGroup_id((int) $array['group_id']) : 0;
+        isset($array['status_id']) ?
+            $model->setStatus_id((int) $array['status_id']) : '';
+        isset($array['delivery_location_id']) ?
+            $model->setDelivery_location_id(
+                (int) $array['delivery_location_id']
+            ) : '';
+        isset($array['discount_percent']) ?
+            $model->setDiscount_percent(
+                (float) $array['discount_percent']
+            ) : '';
+        isset($array['discount_amount']) ?
+            $model->setDiscount_amount(
+                (float) $array['discount_amount']
+            ) : '';
+        isset($array['url_key']) ?
+            $model->setUrl_key((string) $array['url_key']) : '';
+        isset($array['password']) ?
+            $model->setPassword((string) $array['password']) : '';
+        isset($array['notes']) ?
+            $model->setNotes((string) $array['notes']) : '';
         if ($model->isNewRecord()) {
             $model->setInv_id(0);
             $model->setSo_id(0);
             // if draft quotes must get quote numbers
-            if ($s->getSetting('generate_quote_number_for_draft') === '1') {
-                $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true));
+            if ($s->getSetting(
+                'generate_quote_number_for_draft'
+            ) === '1') {
+                $model->setNumber(
+                    (string) $gR->generate_number(
+                        (int) $array['group_id'],
+                        true
+                    )
+                );
             } else {
                 $model->setNumber('');
             }
@@ -105,11 +183,22 @@ final readonly class QuoteService
      * @param QAR $qaR
      * @param QAS $qaS
      */
-    public function deleteQuote(Quote $model, QCR $qcR, QCS $qcS, QIR $qiR, QIS $qiS, QTRR $qtrR, QTRS $qtrS, QAR $qaR, QAS $qaS): void
-    {
+    public function deleteQuote(
+        Quote $model,
+        QCR $qcR,
+        QCS $qcS,
+        QIR $qiR,
+        QIS $qiS,
+        QTRR $qtrR,
+        QTRS $qtrS,
+        QAR $qaR,
+        QAS $qaS
+    ): void {
         $quote_id = $model->getId();
-        // Quotes with no items: If there are no quote items there will be no quote amount record
-        // so check if there is a quote amount otherwise null error will occur.
+        // Quotes with no items: If there are no quote items
+        // there will be no quote amount record
+        // so check if there is a quote amount otherwise null
+        // error will occur.
         if (null !== $quote_id) {
             $count = $qaR->repoQuoteAmountCount($quote_id);
             if ($count > 0) {
@@ -125,7 +214,9 @@ final readonly class QuoteService
             }
 
             /** @var QuoteTaxRate $quote_tax_rate */
-            foreach ($qtrR->repoQuotequery($quote_id) as $quote_tax_rate) {
+            foreach ($qtrR->repoQuotequery(
+                $quote_id
+            ) as $quote_tax_rate) {
                 $qtrS->deleteQuoteTaxRate($quote_tax_rate);
             }
 
@@ -135,17 +226,5 @@ final readonly class QuoteService
             }
             $this->repository->delete($model);
         }
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return Flash
-     */
-    private function flash(string $level, string $message): Flash
-    {
-        $flash = new Flash($this->session);
-        $flash->set($level, $message);
-        return $flash;
     }
 }

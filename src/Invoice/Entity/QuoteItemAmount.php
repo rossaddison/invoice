@@ -31,6 +31,11 @@ class QuoteItemAmount
         return $this->quote_item;
     }
 
+    public function setQuoteItem(?QuoteItem $quote_item): void
+    {
+        $this->quote_item = $quote_item;
+    }
+
     public function getId(): string
     {
         return (string) $this->id;

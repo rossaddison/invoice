@@ -101,13 +101,6 @@ class Contract
         $this->period_end = $period_end;
     }
 
-    public function nullifyRelationOnChange(int $client_id): void
-    {
-        if ($this->client_id != $client_id) {
-            $this->client = null;
-        }
-    }
-
     public function isNewRecord(): bool
     {
         return null === $this->getId() ? true : false;

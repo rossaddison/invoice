@@ -673,9 +673,9 @@ final class SalesOrderController extends BaseController
     }
     
     public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR,
-        DR $dlR, SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR, SoR $soR,
-            SoTRR $sotrR, SettingRepository $sR, UIR $uiR):
-                \Yiisoft\DataResponse\DataResponse|Response
+        DR $dlR, SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR,
+        ACSOIR $acsoiR, SoR $soR, SoTRR $sotrR, SettingRepository $sR,
+        UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
     {
         // include is a value of 0 or 1 passed from quote.js function
         // quote_to_pdf_with(out)_custom_fields indicating whether the user
@@ -700,7 +700,7 @@ final class SalesOrderController extends BaseController
                 $pdfhelper->generate_salesorder_pdf($so_id, $so->getUser_id(),
                     $stream, $custom, $salesorder_amount,
                         $salesorder_custom_values, $cR, $cvR, $cfR, $dlR,
-                            $soiR, $soiaR, $soR, $sotrR, $uiR,
+                            $soiR, $soiaR, $acsoiR, $soR, $sotrR, $uiR,
                                 $this->viewRenderer, $this->translator);
                 $parameters = ($include == '1'
                 ? [
@@ -1316,8 +1316,8 @@ final class SalesOrderController extends BaseController
      * @return Response
      */
     public function url_key(CurrentRoute $currentRoute, CurrentUser $currentUser,
-        CFR $cfR, SoAR $soaR, SoIR $soiR, SoIAR $soiaR, SoR $soR, SoTRR $sotrR,
-            UIR $uiR, UCR $ucR): Response
+        CFR $cfR, SoAR $soaR, SoIR $soiR, SoIAR $soiaR, ACSOIR $acsoiR,
+            SoR $soR, SoTRR $sotrR, UIR $uiR, UCR $ucR): Response
     {
         // Get the url key from the browser
         $url_key = $currentRoute->getArgument('key');
@@ -1390,6 +1390,7 @@ final class SalesOrderController extends BaseController
                                             'alert' => $this->alert(),
                                             'salesorder' => $salesorder,
                                             'soiaR' => $soiaR,
+                                            'acsoiR' => $acsoiR,
                                             'salesorder_amount' =>
                                                             $salesorder_amount,
                                             'items' =>

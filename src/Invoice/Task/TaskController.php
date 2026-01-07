@@ -259,7 +259,7 @@ final class TaskController extends BaseController
         /** @var Task $task */
         foreach ($tasks as $task) {
             $task->setPrice((float) $numberHelper->format_amount($task->getPrice()));
-            $this->save_task_lookup_item_inv($order, $task, $inv_id, $taskR, $trR, $iiaR, $formHydrator);
+            $this->save_task_lookup_item_inv($order, $task, $inv_id, $taskR, $trR, $iiaR, $iiR, $formHydrator);
             $order++;
         }
         $numberHelper->calculate_inv((string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
@@ -273,9 +273,10 @@ final class TaskController extends BaseController
      * @param tR $taskR
      * @param trR $trR
      * @param iiaR $iiaR
+     * @param iiR $iiR
      * @param FormHydrator $formHydrator
      */
-    private function save_task_lookup_item_inv(int $order, Task $task, string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, FormHydrator $formHydrator): void
+    private function save_task_lookup_item_inv(int $order, Task $task, string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, iiR $iiR, FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
         $form = new InvItemForm($invItem, (int) $inv_id);
@@ -295,7 +296,7 @@ final class TaskController extends BaseController
             'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->invitemService->addInvItem_task($invItem, $ajax_content, $inv_id, $taskR, $trR, new iiaS($iiaR), $iiaR, $this->sR);
+            $this->invitemService->addInvItem_task($invItem, $ajax_content, $inv_id, $taskR, $trR, new iiaS($iiaR, $iiR), $iiaR, $this->sR);
         }
     }
 
@@ -377,7 +378,7 @@ final class TaskController extends BaseController
             'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->quoteitemService->addQuoteItemTask($quoteItem, $ajax_content, $quote_id, $taskR, $qiaR, $qiaS, $trR, $this->translator);
+            $this->quoteitemService->addQuoteItemTask($quoteItem, $ajax_content, $quote_id, $taskR, $qiaR, $qiaS, $trR);
         }
     }
 

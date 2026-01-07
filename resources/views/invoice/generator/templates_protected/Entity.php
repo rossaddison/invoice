@@ -272,7 +272,6 @@ foreach ($orm_schema->getColumns() as $column) {
 }
 echo '    }' . "\n";
 
-$nullify_relation_string = '';
 /**
  * @var App\Invoice\Entity\GentorRelation $relation
  */
@@ -287,11 +286,7 @@ foreach ($relations as $relation) {
     echo '   {' . "\n";
     echo '     $this->' . ($relation->getLowercase_name() ?? '#') . ' = $' . ($relation->getLowercase_name() ?? '#') . ';' . "\n";
     echo '   }' . "\n";
-    $nullify_relation_string .= 'int $' . ($relation->getLowercase_name() ?? '#') . '_id, ';
 }
-
-//remove the last comma and space in the string
-$final_string = substr($nullify_relation_string, 0, -2);
 
 /**
  * @var Cycle\Database\Schema\AbstractColumn $column
@@ -339,23 +334,4 @@ foreach ($orm_schema->getColumns() as $column) {
     echo '   }' . "\n";
 }
 ?>
-    
-    /**
-     * Make sure the sequence of parameters is correct
-     * Related logic: see https://github.com/yiisoft/demo/issues/462 
-     * Related logic: see e.g. Entity\Product.php which has 3 relations tax_rate, unit, and family
-     */
-    public function nullifyRelationOnChange(<?= $final_string; ?>) : void 
-    {
-        <?php
-    /**
-     * @var App\Invoice\Entity\GentorRelation $relation
-     */
-    foreach ($relations as $relation) {
-        $lcn = $relation->getLowercase_name();
-        echo 'if ($this->' . ($lcn ?? '#') . '_id <> $' . ($lcn ?? '#') . '_id) {' . "\n";
-        echo '           $this->' . ($lcn ?? '#') . ' = null;' . "\n";
-        echo '       }' . "\n";
-    } ?>
-    }
 }

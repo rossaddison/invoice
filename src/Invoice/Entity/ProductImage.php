@@ -106,11 +106,4 @@ class ProductImage
     {
         $this->uploaded_date = $uploaded_date;
     }
-
-    public function nullifyRelationOnChange(int $product_id): void
-    {
-        if ($this->product_id != $product_id) {
-            $this->product = null;
-        }
-    }
 }

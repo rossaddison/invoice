@@ -3916,6 +3916,7 @@ echo file_get_contents($temp_aliase, true);
         CFR $cfR,
         IAR $iaR,
         IIAR $iiaR,
+        ACIIR $aciiR,
         IIR $iiR,
         IR $iR,
         ITRR $itrR,
@@ -4011,6 +4012,7 @@ echo file_get_contents($temp_aliase, true);
                                             $itrR->repoInvquery($inv_id) : [],
                                     'inv_url_key' => $urlKey,
                                     'iiaR' => $iiaR,
+                                    'aciiR' => $aciiR,
                                     'is_overdue' => $is_overdue,
                                     'items' => ($inv_id > 0) ?
                                         $iiR->repoInvquery($inv_id) :

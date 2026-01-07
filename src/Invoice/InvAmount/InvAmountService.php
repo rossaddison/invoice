@@ -8,21 +8,27 @@ use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
+use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 
 final readonly class InvAmountService
 {
-    public function __construct(private IAR $repository)
-    {
+    public function __construct(
+        private IAR $repository,
+        private IR $iR,
+    ) {
     }
 
     /**
      * @param InvAmount $model
      * @param string $inv_id
      */
-    public function initializeInvAmount(InvAmount $model, string $inv_id): void
-    {
+    public function initializeInvAmount(
+        InvAmount $model,
+        string $inv_id
+    ): void {
+        $this->persist($model, ['inv_id' => $inv_id]);
         $inv_id ? $model->setInv_id((int) $inv_id) : '';
         $model->setSign(1);
         $model->setItem_subtotal(0.00);
@@ -41,9 +47,14 @@ final readonly class InvAmountService
      * @param int $basis_inv_id
      * @param string $new_inv_id
      */
-    public function initializeCreditInvAmount(InvAmount $model, int $basis_inv_id, string $new_inv_id): void
-    {
-        $basis_invoice = $this->repository->repoInvquery($basis_inv_id);
+    public function initializeCreditInvAmount(
+        InvAmount $model,
+        int $basis_inv_id,
+        string $new_inv_id
+    ): void {
+        $this->persist($model, ['inv_id' => $new_inv_id]);
+        $basis_invoice = $this->repository->repoInvquery(
+            $basis_inv_id);
         $new_inv_id ? $model->setInv_id((int) $new_inv_id) : '';
         $model->setSign(1);
         null !== $basis_invoice ? $model->setItem_subtotal(($basis_invoice->getItem_subtotal() ?: 0.00) * -1.00) : '';
@@ -62,9 +73,14 @@ final readonly class InvAmountService
      * @param int $basis_inv_id
      * @param string $new_inv_id
      */
-    public function initializeCopyInvAmount(InvAmount $model, int $basis_inv_id, string $new_inv_id): void
-    {
-        $basis_invoice = $this->repository->repoInvquery($basis_inv_id);
+    public function initializeCopyInvAmount(
+        InvAmount $model,
+        int $basis_inv_id,
+        string $new_inv_id
+    ): void {
+        $this->persist($model, ['inv_id' => $new_inv_id]);
+        $basis_invoice = $this->repository->repoInvquery(
+            $basis_inv_id);
         $new_inv_id ? $model->setInv_id((int) $new_inv_id) : '';
         $model->setSign(1);
         /** @psalm-suppress PossiblyNullArgument, PossiblyNullReference */
@@ -84,19 +100,50 @@ final readonly class InvAmountService
      * @param array $array
      * @param InvAmountForm $form
      */
-    public function saveInvAmount(InvAmount $model, array $array): void
-    {
-        isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
+    public function saveInvAmount(
+        InvAmount $model,
+        array $array
+    ): void {
+        $this->persist($model, $array);
+        isset($array['inv_id']) ?
+            $model->setInv_id((int) $array['inv_id']) : '';
         $model->setSign(1);
-        isset($array['item_subtotal']) ? $model->setItem_subtotal((float) $array['item_subtotal']) : '';
-        isset($array['item_tax_total']) ? $model->setItem_tax_total((float) $array['item_tax_total']) : '';
-        isset($array['packhandleship_total']) ? $model->setPackhandleship_total((float) $array['packhandleship_total']) : '';
-        isset($array['packhandleship_tax']) ? $model->setPackhandleship_tax((float) $array['packhandleship_tax']) : '';
-        isset($array['tax_total']) ? $model->setTax_total((float) $array['tax_total']) : '';
-        isset($array['total']) ? $model->setTotal((float) $array['total']) : '';
-        isset($array['paid']) ? $model->setPaid((float) $array['paid']) : '';
-        isset($array['balance']) ? $model->setBalance((float) $array['balance']) : '';
+        isset($array['item_subtotal']) ?
+            $model->setItem_subtotal(
+                (float) $array['item_subtotal']) : '';
+        isset($array['item_tax_total']) ?
+            $model->setItem_tax_total(
+                (float) $array['item_tax_total']) : '';
+        isset($array['packhandleship_total']) ?
+            $model->setPackhandleship_total(
+                (float) $array['packhandleship_total']) : '';
+        isset($array['packhandleship_tax']) ?
+            $model->setPackhandleship_tax(
+                (float) $array['packhandleship_tax']) : '';
+        isset($array['tax_total']) ?
+            $model->setTax_total((float) $array['tax_total']) : '';
+        isset($array['total']) ?
+            $model->setTotal((float) $array['total']) : '';
+        isset($array['paid']) ?
+            $model->setPaid((float) $array['paid']) : '';
+        isset($array['balance']) ?
+            $model->setBalance((float) $array['balance']) : '';
         $this->repository->save($model);
+    }
+
+    private function persist(
+        InvAmount $model,
+        array $array
+    ): InvAmount {
+        $inv = 'inv_id';
+        if (isset($array[$inv])) {
+            $invEntity = $this->iR->repoInvUnLoadedquery(
+                (string) $array[$inv]);
+            if ($invEntity) {
+                $model->setInv($invEntity);
+            }
+        }
+        return $model;
     }
 
     /**

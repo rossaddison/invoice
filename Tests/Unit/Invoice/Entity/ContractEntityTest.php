@@ -109,23 +109,6 @@ class ContractEntityTest extends TestCase
         $this->assertTrue($contract->isNewRecord());
     }
 
-    public function testNullifyRelationOnChange(): void
-    {
-        $contract = new Contract();
-        $client = $this->createMock(Client::class);
-        
-        $contract->setClient_id(123);
-        $contract->setClient($client);
-        
-        // Same client ID - should not nullify relation
-        $contract->nullifyRelationOnChange(123);
-        $this->assertSame($client, $contract->getClient());
-        
-        // Different client ID - should nullify relation
-        $contract->nullifyRelationOnChange(456);
-        $this->assertNull($contract->getClient());
-    }
-
     public function testDateTimeImmutableProperties(): void
     {
         $contract = new Contract();
@@ -357,19 +340,11 @@ class ContractEntityTest extends TestCase
         $contract->setClient_id(100);
         $contract->setClient($client1);
         $this->assertSame($client1, $contract->getClient());
-        
-        // Change to different client - relation should be nullified
-        $contract->nullifyRelationOnChange(200);
-        $this->assertNull($contract->getClient());
-        
+                
         // Set new client
         $contract->setClient_id(200);
         $contract->setClient($client2);
-        $this->assertSame($client2, $contract->getClient());
-        
-        // Same client ID - relation should remain
-        $contract->nullifyRelationOnChange(200);
-        $this->assertSame($client2, $contract->getClient());
+        $this->assertSame($client2, $contract->getClient());        
     }
 
     public function testTimezoneHandling(): void

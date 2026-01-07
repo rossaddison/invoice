@@ -44,7 +44,7 @@
         "cycle/orm": "^2.12.3",
         "cycle/schema-provider": "^1.0",
         "digitalbazaar/json-ld": "^0.4.8",
-        "doctrine/collections": "^2.4.0",
+        "doctrine/collections": "^2.5.0",
         "doctrine/inflector": "^2.2.0||^3.0",
         "fakerphp/faker": "^1.24.1",
         "google/cloud-translate": "^2.1.1",

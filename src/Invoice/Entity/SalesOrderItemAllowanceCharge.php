@@ -126,18 +126,4 @@ class SalesOrderItemAllowanceCharge
     {
         $this->vat_or_tax = $vatOrTax;
     }
-
-    public function nullifyRelationOnChange(int $allowance_charge_id,
-        int $sales_order_item_id, int $sales_order_id): void
-    {
-        if ($this->allowance_charge_id != $allowance_charge_id) {
-            $this->allowance_charge = null;
-        }
-        if ($this->sales_order_item_id != $sales_order_item_id) {
-            $this->sales_order_item = null;
-        }
-        if ($this->sales_order_id != $sales_order_id) {
-            $this->sales_order = null;
-        }
-    }
 }

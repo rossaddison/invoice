@@ -117,11 +117,4 @@ class Upload
     {
         $this->uploaded_date = $uploaded_date;
     }
-
-    public function nullifyRelationOnChange(int $client_id): void
-    {
-        if ($this->client_id != $client_id) {
-            $this->client = null;
-        }
-    }
 }

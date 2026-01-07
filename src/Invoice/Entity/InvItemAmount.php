@@ -31,6 +31,11 @@ class InvItemAmount
         return $this->inv_item;
     }
 
+    public function setInvItem(?InvItem $inv_item): void
+    {
+        $this->inv_item = $inv_item;
+    }
+
     public function getId(): string
     {
         return (string) $this->id;

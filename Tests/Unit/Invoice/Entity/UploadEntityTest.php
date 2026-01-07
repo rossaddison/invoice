@@ -115,23 +115,6 @@ class UploadEntityTest extends TestCase
         $this->assertNull($upload->getClient());
     }
 
-    public function testNullifyRelationOnChange(): void
-    {
-        $upload = new Upload();
-        $client = $this->createMock(Client::class);
-        
-        $upload->setClient_id(100);
-        $upload->setClient($client);
-        
-        // Same client ID - should not nullify relation
-        $upload->nullifyRelationOnChange(100);
-        $this->assertSame($client, $upload->getClient());
-        
-        // Different client ID - should nullify relation
-        $upload->nullifyRelationOnChange(200);
-        $this->assertNull($upload->getClient());
-    }
-
     public function testIdTypeConversion(): void
     {
         $upload = new Upload();
@@ -409,17 +392,9 @@ class UploadEntityTest extends TestCase
         $upload->setClient($client1);
         $this->assertSame($client1, $upload->getClient());
         
-        // Nullify relation when client ID changes
-        $upload->nullifyRelationOnChange(200);
-        $this->assertNull($upload->getClient());
-        
         // Set new client
         $upload->setClient_id(200);
         $upload->setClient($client2);
-        $this->assertSame($client2, $upload->getClient());
-        
-        // No change when same client ID
-        $upload->nullifyRelationOnChange(200);
         $this->assertSame($client2, $upload->getClient());
     }
 

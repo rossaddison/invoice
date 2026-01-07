@@ -5,11 +5,29 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrderItemAmount;
 
 use App\Invoice\Entity\SalesOrderItemAmount;
+use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
 
 final readonly class SalesOrderItemAmountService
 {
-    public function __construct(private SalesOrderItemAmountRepository $repository)
-    {
+    public function __construct(
+        private SalesOrderItemAmountRepository $repository,
+        private SOIR $soiR,
+    ) {
+    }
+
+    private function persist(
+        SalesOrderItemAmount $model,
+        array $array
+    ): void {
+        $sales_order_item = $this->soiR->repoSalesOrderItemquery(
+            (string) $array['sales_order_item_id']
+        );
+        if ($sales_order_item) {
+            $model->setSalesOrderItem($sales_order_item);
+            $model->setSales_order_item_id(
+                (int) $sales_order_item->getId()
+            );
+        }
     }
 
     /**
@@ -17,9 +35,11 @@ final readonly class SalesOrderItemAmountService
      * @param SalesOrderItemAmount $model
      * @param array $soitem
      */
-    public function saveSalesOrderItemAmountNoForm(SalesOrderItemAmount $model, array $soitem): void
-    {
-        $model->setSales_order_item_id((int) $soitem['sales_order_item_id']);
+    public function saveSalesOrderItemAmountNoForm(
+        SalesOrderItemAmount $model,
+        array $soitem
+    ): void {
+        $this->persist($model, $soitem);
         /**
          * @var float $soitem['subtotal']
          * @var float $soitem['taxtotal']

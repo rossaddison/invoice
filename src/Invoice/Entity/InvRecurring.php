@@ -46,6 +46,11 @@ class InvRecurring
         return $this->inv;
     }
 
+    public function setInv(?Inv $inv): void
+    {
+        $this->inv = $inv;
+    }
+
     public function getInv_id(): string
     {
         return (string) $this->inv_id;

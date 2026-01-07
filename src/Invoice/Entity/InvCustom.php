@@ -30,9 +30,19 @@ class InvCustom
         return $this->inv;
     }
 
+    public function setInv(?Inv $inv): void
+    {
+        $this->inv = $inv;
+    }
+
     public function getCustomField(): ?CustomField
     {
         return $this->custom_field;
+    }
+
+    public function setCustomField(?CustomField $custom_field): void
+    {
+        $this->custom_field = $custom_field;
     }
 
     public function getId(): string

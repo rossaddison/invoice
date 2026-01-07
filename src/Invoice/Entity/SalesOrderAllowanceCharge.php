@@ -50,6 +50,11 @@ class SalesOrderAllowanceCharge
         return $this->sales_order;
     }
 
+    public function setSalesOrder(?SalesOrder $sales_order): void
+    {
+        $this->sales_order = $sales_order;
+    }
+
     public function setAllowanceCharge(?AllowanceCharge $allowance_charge): void
     {
         $this->allowance_charge = $allowance_charge;
@@ -103,16 +108,5 @@ class SalesOrderAllowanceCharge
     public function setVatOrTax(float $vat_or_tax): void
     {
         $this->vat_or_tax = $vat_or_tax;
-    }
-
-    public function nullifyRelationOnChange(int $allowance_charge_id,
-                                                      int $sales_order_id): void
-    {
-        if ($this->allowance_charge_id != $allowance_charge_id) {
-            $this->allowance_charge = null;
-        }
-        if ($this->sales_order_id != $sales_order_id) {
-            $this->sales_order = null;
-        }
     }
 }

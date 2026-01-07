@@ -1320,6 +1320,7 @@ final class QuoteController extends BaseController
         IAR $iaR,
         ICR $icR,
         QIAR $qiaR,
+        ACQIR $acqiR,
         QIR $qiR,
         IR $iR,
         QTRR $qtrR,
@@ -1351,8 +1352,8 @@ final class QuoteController extends BaseController
                     $this->pdf_helper->generate_quote_pdf(
                         $quote_id, $quote_entity->getUser_id(), $stream, true,
                             $quote_amount, $quote_custom_values, $cR, $cvR,
-                                $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR,
-                                    $viewrenderer);
+                                $cfR, $dlR, $qiR, $qiaR, $acqiR, $qR, $qtrR,
+                                    $uiR, $viewrenderer);
                 if ($pdf_template_target_path) {
                     $mail_message = $template_helper->parse_template(
                         $quote_id, false, $email_body, $cR, $cvR, $iR, $iaR,
@@ -1435,6 +1436,7 @@ final class QuoteController extends BaseController
         GR $gR,
         IAR $iaR,
         QIAR $qiaR,
+        ACQIR $acqiR,
         ICR $icR,
         QIR $qiR,
         IR $iR,
@@ -1519,9 +1521,9 @@ final class QuoteController extends BaseController
                 // Custom fields are automatically included on the quote
                 if ($this->email_stage_1((string) $quote_id, $from, $to,
                         $subject, $email_body, $cc, $bcc, $attachFiles, $cR,
-                            $ccR, $cfR, $dlR, $cvR, $iaR, $icR, $qiaR, $qiR,
-                                $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR, $soR,
-                                    $uiR, $this->viewRenderer)) {
+                            $ccR, $cfR, $dlR, $cvR, $iaR, $icR, $qiaR, $acqiR,
+                                $qiR, $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR,
+                                    $soR, $uiR, $this->viewRenderer)) {
                     $this->sR->quote_mark_sent((string) $quote_id, $qR);
                     $this->flashMessage('success', $this->translator->translate(
                         'email.successfully.sent'));
@@ -1938,9 +1940,9 @@ final class QuoteController extends BaseController
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function pdf(#[RouteArgument('include')] int $include, CR $cR,
-        CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR,
-        QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR):
-        \Yiisoft\DataResponse\DataResponse|Response
+        CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, ACQIR $acqiR,
+        QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR,
+        UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
     {
         // include is a value of 0 or 1 passed from quote.js
         // function quote_to_pdf_with(out)_custom_fields indicating whether
@@ -1969,7 +1971,8 @@ final class QuoteController extends BaseController
                 $pdfhelper->generate_quote_pdf($quote_id,
                     $quote->getUser_id(), $stream, $custom, $quote_amount,
                         $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR,
-                            $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
+                            $qiaR, $acqiR, $qR, $qtrR, $uiR,
+                                $this->viewRenderer);
                 $parameters = ($include == '1' ?
                     ['success' => 1] : ['success' => 0]);
                 return $this->factory->createResponse(
@@ -1999,8 +2002,8 @@ final class QuoteController extends BaseController
      */
     public function pdf_dashboard_include_cf(
         #[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR,
-            DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR,
-            QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): void
+            DLR $dlR, GR $gR, QAR $qaR, ACQIR $acqiR, QCR $qcR, QIR $qiR,
+            QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): void
     {
         if ($quote_id) {
             $quote_amount = (($qaR->repoQuoteAmountCount(
@@ -2027,8 +2030,8 @@ final class QuoteController extends BaseController
                     $pdfhelper->generate_quote_pdf(
                         (string) $quote_id, $quote->getUser_id(), $stream,
                             true, $quote_amount, $quote_custom_values, $cR,
-                                $cvR, $cfR, $dlR, $qiR, $qiaR, $qR, $qtrR, $uiR,
-                                    $this->viewRenderer);
+                                $cvR, $cfR, $dlR, $qiR, $qiaR, $acqiR, $qR,
+                                    $qtrR, $uiR, $this->viewRenderer);
                 }
             }
         } //quote_id
@@ -2052,8 +2055,8 @@ final class QuoteController extends BaseController
      */
     public function pdf_dashboard_exclude_cf(
         #[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR,
-            DLR $dlR, GR $gR, QAR $qaR, QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR,
-                QTRR $qtrR, SR $sR, UIR $uiR): void
+            DLR $dlR, GR $gR, QAR $qaR, ACQIR $acqiR, QCR $qcR, QIR $qiR,
+            QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR, UIR $uiR): void
     {
         if ($quote_id) {
             $quote_amount = (($qaR->repoQuoteAmountCount(
@@ -2080,7 +2083,8 @@ final class QuoteController extends BaseController
                     $pdfhelper->generate_quote_pdf((string) $quote_id,
                         $quote->getUser_id(), $stream, false, $quote_amount,
                             $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR,
-                                $qiaR, $qR, $qtrR, $uiR, $this->viewRenderer);
+                                $qiaR, $acqiR, $qR, $qtrR, $uiR,
+                                    $this->viewRenderer);
                 }
             }
         } // quote_id
@@ -3346,7 +3350,7 @@ final class QuoteController extends BaseController
 
     public function url_key(#[RouteArgument('url_key')] string $urlKey,
         CurrentUser $currentUser, CFR $cfR, QAR $qaR, QIR $qiR, QIAR $qiaR,
-            QR $qR, QTRR $qtrR, UIR $uiR, UCR $ucR, PMR $pmR): Response
+            ACQIR $acqiR, QR $qR, QTRR $qtrR, UIR $uiR, UCR $ucR, PMR $pmR): Response
     {
         // If there is no quote with such a url_key, issue a not found response
         if ($urlKey === '') {
@@ -3416,6 +3420,7 @@ final class QuoteController extends BaseController
                                             'alert' => $this->alert(),
                                             'quote' => $quote,
                                             'qiaR' => $qiaR,
+                                            'acqiR' => $acqiR,
                                             'quote_amount' => $quote_amount,
                                             'items' => $qiR->repoQuotequery(
                                                 $quote_id),

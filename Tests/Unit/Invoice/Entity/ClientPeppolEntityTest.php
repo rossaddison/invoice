@@ -218,23 +218,6 @@ class ClientPeppolEntityTest extends TestCase
         $this->assertNull($clientPeppol->getClient());
     }
 
-    public function testNullifyRelationOnChange(): void
-    {
-        $clientPeppol = new ClientPeppol();
-        $client = $this->createMock(Client::class);
-        
-        $clientPeppol->setClient_id(100);
-        $clientPeppol->setClient($client);
-        
-        // Same client ID - should not nullify relation
-        $clientPeppol->nullifyRelationOnChange(100);
-        $this->assertSame($client, $clientPeppol->getClient());
-        
-        // Different client ID - should nullify relation
-        $clientPeppol->nullifyRelationOnChange(200);
-        $this->assertNull($clientPeppol->getClient());
-    }
-
     public function testIdTypeConversion(): void
     {
         $clientPeppol = new ClientPeppol();
@@ -539,17 +522,9 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol->setClient($client1);
         $this->assertSame($client1, $clientPeppol->getClient());
         
-        // Nullify relation when client ID changes
-        $clientPeppol->nullifyRelationOnChange(200);
-        $this->assertNull($clientPeppol->getClient());
-        
         // Set new client
         $clientPeppol->setClient_id(200);
         $clientPeppol->setClient($client2);
-        $this->assertSame($client2, $clientPeppol->getClient());
-        
-        // No change when same client ID
-        $clientPeppol->nullifyRelationOnChange(200);
         $this->assertSame($client2, $clientPeppol->getClient());
     }
 

@@ -30,9 +30,19 @@ class FamilyCustom
         return $this->family;
     }
 
+    public function setFamily(?Family $family): void
+    {
+        $this->family = $family;
+    }
+
     public function getCustomField(): ?CustomField
     {
         return $this->custom_field;
+    }
+
+    public function setCustomField(?CustomField $custom_field): void
+    {
+        $this->custom_field = $custom_field;
     }
 
     public function getId(): string

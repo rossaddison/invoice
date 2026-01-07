@@ -46,6 +46,11 @@ class Profile
         return $this->company;
     }
 
+    public function setCompany(?Company $company): void
+    {
+        $this->company = $company;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

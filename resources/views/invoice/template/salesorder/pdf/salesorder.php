@@ -12,6 +12,8 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository $acsoiR
  * @var App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository $soiaR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -134,6 +136,81 @@ if ($items) {
      */
     foreach ($items as $item) {
         $salesorder_item_amount = $soiaR->repoSalesOrderItemAmountquery((string) $item->getId());
+        // Display item-level allowances/charges BEFORE the item
+        // if Peppol is enabled
+        if ($s->getSetting('enable_peppol') == '1') {
+            $itemId = $item->getId();
+            if (null !== $itemId) {
+            $salesOrderItemAllowanceCharges =
+                $acsoiR->repoSalesOrderItemquery(
+                    (string)$itemId
+                );
+            /**
+             * @var App\Invoice\Entity\SalesOrderItemAllowanceCharge $salesOrderItemAllowanceCharge
+             */
+            foreach (
+                $salesOrderItemAllowanceCharges
+                as $salesOrderItemAllowanceCharge
+            ) {
+                $isCharge = (
+                    $salesOrderItemAllowanceCharge
+                        ->getAllowanceCharge()
+                            ?->getIdentifier() == 1
+                            ? true : false
+                );
+        ?>
+            <tr>
+                <td colspan="<?php
+                    echo($show_item_discounts ? '5' : '4');
+                ?>">
+                    <?= $salesOrderItemAllowanceCharge
+                            ->getAllowanceCharge()
+                                ?->getIdentifier() == '1'
+                        ? $translator->translate(
+                            'allowance.or.charge.charge'
+                        )
+                        : '(' . $translator->translate(
+                            'allowance.or.charge.allowance'
+                        ) . ')'; ?>
+                    <?= $translator->translate(
+                        'allowance.or.charge.reason.code'
+                    ) . ': ' . (
+                        $salesOrderItemAllowanceCharge
+                            ->getAllowanceCharge()
+                                ?->getReasonCode() ?? '#'
+                    ); ?>
+                    -
+                    <?= $translator->translate(
+                        'allowance.or.charge.reason'
+                    ) . ': ' . (
+                        $salesOrderItemAllowanceCharge
+                            ->getAllowanceCharge()
+                                ?->getReason() ?? '#'
+                    ); ?>
+                </td>
+                <td class="text-right">
+                    <?= ($isCharge ? '' : '(')
+                        . $numberHelper->format_currency(
+                            $salesOrderItemAllowanceCharge
+                                ->getAmount()
+                        ) . ($isCharge ? '' : ')'); ?>
+                </td>
+                <td class="text-right">
+                    <?php $vatSalesOrderItem = $salesOrderItemAllowanceCharge->getVatOrTax();
+                        echo Html::encode(($isCharge ? '' : '(')
+                            . $numberHelper->format_currency($vatSalesOrderItem)
+                            . ($isCharge ? '' : ')')); ?>
+                </td>
+                <td class="text-right">
+                    <?php $percent = $salesOrderItemAllowanceCharge
+                        ->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent();
+                        echo Html::encode($percent ?? 0.00); ?>
+                </td>
+            </tr>
+        <?php
+            }
+            }
+        }
         ?>
             <tr>
                 <td><?= Html::encode($item->getName()); ?></td>
@@ -159,12 +236,19 @@ if ($items) {
         ?>
                 </td>
                 <td class="text-right">
+                    <b>
                     <?php
-            echo Html::encode($s->format_currency($salesorder_item_amount?->getTotal()));
+            echo Html::encode(
+                $s->format_currency(
+                    $salesorder_item_amount?->getTotal()
+                )
+            );
         ?>
+                    </b>
                 </td>
             </tr>
-        <?php }
+        <?php
+        }
     }?>
 
         </tbody>
@@ -182,7 +266,7 @@ if ($items) {
                         $translator->translate('subtotal'),
                     ); ?></td> 
             <?php } ?> 
-            <td class="text-right"><?php echo Html::encode($s->format_currency($so_amount->getItem_subtotal())); ?></td>
+            <td class="text-right"><b><?php echo Html::encode($s->format_currency($so_amount->getItem_subtotal())); ?></b></td>
         </tr>
 
         <?php if ($so_amount->getItem_tax_total() > 0) { ?>
@@ -191,11 +275,54 @@ if ($items) {
                     <?= Html::encode($vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax')); ?>
                 </td>
                 <td class="text-right">
-                    <?php echo Html::encode($s->format_currency($so_amount->getItem_tax_total())); ?>
+                    <b><?php echo Html::encode($s->format_currency($so_amount->getItem_tax_total())); ?></b>
                 </td>
             </tr>
         <?php } ?>
 
+        <?php
+        if ($s->getSetting('enable_peppol') == '1') {
+            if ($so_amount->getPackhandleship_total() != 0.00) { ?>
+            <tr>
+                <td <?php
+                    echo($show_item_discounts
+                        ? 'colspan="6"' : 'colspan="5"');
+                    ?> class="text-right">
+                    <?= Html::encode($translator->translate(
+                        'allowance.or.charge.shipping.handling.packaging'
+                    )); ?>
+                </td>
+                <td class="text-right">
+                    <b><?php
+                    echo Html::encode($s->format_currency(
+                        $so_amount->getPackhandleship_total()
+                    )); ?></b>
+                </td>
+            </tr>
+        <?php }
+            if ($so_amount->getPackhandleship_tax() != 0.00) { ?>
+            <tr>
+                <td <?php
+                    echo($show_item_discounts
+                        ? 'colspan="6"' : 'colspan="5"');
+                    ?> class="text-right">
+                    <?= Html::encode($vat == '1'
+                        ? $translator->translate(
+                            'allowance.or.charge.shipping.handling.packaging.vat'
+                        )
+                        : $translator->translate(
+                            'allowance.or.charge.shipping.handling.packaging.tax'
+                        )); ?>
+                </td>
+                <td class="text-right">
+                    <b><?php
+                    echo Html::encode($s->format_currency(
+                        $so_amount->getPackhandleship_tax()
+                    )); ?></b>
+                </td>
+            </tr>
+        <?php }
+        } ?>
             
         <?php if (!empty($so_tax_rates) && ($vat === '0')) { ?>
             
@@ -209,7 +336,7 @@ if ($items) {
                     <?php echo Html::encode($salesorder_tax_rate->getTaxRate()?->getTaxRateName()) . ' (' . Html::encode($s->format_amount($salesorder_tax_rate->getTaxRate()?->getTaxRatePercent())) . '%)'; ?>
                 </td>
                 <td class="text-right">
-                    <?php echo Html::encode($s->format_currency($salesorder_tax_rate->getSales_order_tax_rate_amount())); ?>
+                    <b><?php echo Html::encode($s->format_currency($salesorder_tax_rate->getSales_order_tax_rate_amount())); ?></b>
                 </td>
             </tr>
         <?php endforeach ?>

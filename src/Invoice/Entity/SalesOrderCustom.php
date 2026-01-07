@@ -38,9 +38,19 @@ class SalesOrderCustom
         return $this->custom_field;
     }
 
+    public function setCustomField(?CustomField $custom_field): void
+    {
+        $this->custom_field = $custom_field;
+    }
+
     public function getSalesOrder(): ?SalesOrder
     {
         return $this->sales_order;
+    }
+
+    public function setSalesOrder(?SalesOrder $sales_order): void
+    {
+        $this->sales_order = $sales_order;
     }
 
     public function getId(): string

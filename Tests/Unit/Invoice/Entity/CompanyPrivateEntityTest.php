@@ -265,23 +265,6 @@ class CompanyPrivateEntityTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testNullifyRelationOnChange(): void
-    {
-        $companyPrivate = new CompanyPrivate();
-        $company = $this->createMock(Company::class);
-        
-        $companyPrivate->setCompany_id(123);
-        $companyPrivate->setCompany($company);
-        
-        // Same company ID - should not nullify relation
-        $companyPrivate->nullifyRelationOnChange(123);
-        $this->assertSame($company, $companyPrivate->getCompany());
-        
-        // Different company ID - should nullify relation
-        $companyPrivate->nullifyRelationOnChange(456);
-        $this->assertNull($companyPrivate->getCompany());
-    }
-
     public function testDateTimeImmutableProperties(): void
     {
         $companyPrivate = new CompanyPrivate();
@@ -509,18 +492,10 @@ class CompanyPrivateEntityTest extends TestCase
         $companyPrivate->setCompany_id(100);
         $companyPrivate->setCompany($company1);
         $this->assertSame($company1, $companyPrivate->getCompany());
-        
-        // Change to different company - relation should be nullified
-        $companyPrivate->nullifyRelationOnChange(200);
-        $this->assertNull($companyPrivate->getCompany());
-        
+                
         // Set new company
         $companyPrivate->setCompany_id(200);
         $companyPrivate->setCompany($company2);
-        $this->assertSame($company2, $companyPrivate->getCompany());
-        
-        // Same company ID - relation should remain
-        $companyPrivate->nullifyRelationOnChange(200);
         $this->assertSame($company2, $companyPrivate->getCompany());
     }
 

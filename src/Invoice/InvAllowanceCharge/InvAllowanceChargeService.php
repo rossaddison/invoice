@@ -20,7 +20,6 @@ final readonly class InvAllowanceChargeService
      */
     public function saveInvAllowanceCharge(InvAllowanceCharge $model, array $array): void
     {
-        $model->nullifyRelationOnChange((int) $array['allowance_charge_id']);
         isset($array['id']) ? $model->setId((int) $array['id']) : '';
         isset($array['inv_id']) ? $model->setInv_id((int) $array['inv_id']) : '';
         isset($array['allowance_charge_id']) ? $model->setAllowance_charge_id((int) $array['allowance_charge_id']) : '';

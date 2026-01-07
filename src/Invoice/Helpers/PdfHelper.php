@@ -87,6 +87,7 @@ class PdfHelper
         \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
         \App\Invoice\QuoteItem\QuoteItemRepository $qiR,
         \App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR,
+        \App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository $acqiR,
         \App\Invoice\Quote\QuoteRepository $qR,
         \App\Invoice\QuoteTaxRate\QuoteTaxRateRepository $qtrR,
         \App\Invoice\UserInv\UserInvRepository $uiR,
@@ -124,6 +125,7 @@ class PdfHelper
                     'quote_tax_rates' => (($qtrR->repoCount((string) $this->session->get('quote_id')) > 0) ? $qtrR->repoQuotequery((string) $this->session->get('quote_id')) : null),
                     'items' => $items,
                     'qiaR' => $qiaR,
+                    'acqiR' => $acqiR,
                     'output_type' => 'pdf',
                     'show_item_discounts' => $show_item_discounts,
                     // Show the custom fields if the user has answered yes on the modal ie $custom = true
@@ -211,6 +213,7 @@ class PdfHelper
         \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
         \App\Invoice\SalesOrderItem\SalesOrderItemRepository $soiR,
         \App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository $soiaR,
+        \App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository $acsoiR,
         \App\Invoice\SalesOrder\SalesOrderRepository $soR,
         \App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository $sotrR,
         \App\Invoice\UserInv\UserInvRepository $uiR,
@@ -248,6 +251,7 @@ class PdfHelper
                     'salesorder_tax_rates' => (($sotrR->repoCount((string) $this->session->get('so_id')) > 0) ? $sotrR->repoSalesOrderquery((string) $this->session->get('so_id')) : null),
                     'items' => $items,
                     'soiaR' => $soiaR,
+                    'acsoiR' => $acsoiR,
                     'output_type' => 'pdf',
                     'show_item_discounts' => $show_item_discounts,
                     // Show the custom fields if the user has answered yes on the modal ie $custom = true

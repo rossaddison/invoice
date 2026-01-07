@@ -34,9 +34,19 @@ class ProductCustom
         return $this->product;
     }
 
+    public function setProduct(?Product $product): void
+    {
+        $this->product = $product;
+    }
+
     public function getCustomField(): ?CustomField
     {
         return $this->custom_field;
+    }
+
+    public function setCustomField(?CustomField $custom_field): void
+    {
+        $this->custom_field = $custom_field;
     }
 
     public function getId(): string

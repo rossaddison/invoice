@@ -386,27 +386,6 @@ class SalesOrder
     {
         return $this->sales_order_amount;
     }
-    
-    /**
-     * @param int $group_id
-     * @param int $client_id
-     * @param int $quote_id
-     */
-    public function nullifyRelationOnChange(int $group_id, int $client_id,
-                                                           int $quote_id): void
-    {
-        if ($this->group_id != $group_id) {
-            $this->group = null;
-        }
-        if ($this->client_id != $client_id) {
-            $this->client = null;
-        }
-        if ($this->quote_id != $quote_id) {
-            $this->quote = null;
-        }
-        // the user_id will always be attached to the client therefore
-        // will not change
-    }
 
     public function isNewRecord(): bool
     {

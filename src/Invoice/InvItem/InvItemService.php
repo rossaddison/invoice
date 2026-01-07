@@ -11,6 +11,7 @@ use App\Invoice\Entity\QuoteItemAllowanceCharge;
 use App\Invoice\Entity\Task;
 use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository
     as ACQIR;
+use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository
     as ACIIR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
@@ -24,8 +25,50 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class InvItemService
 {
-    public function __construct(private InvItemRepository $repository)
-    {
+    public function __construct(
+        private InvItemRepository $repository,
+        private IR $iR,
+        private TRR $trR,
+        private PR $pR,
+        private taskR $taskR,
+    ) {
+    }
+
+    private function persist(
+        InvItem $model,
+        array $array
+    ): InvItem {
+        $inv = 'inv_id';
+        if (isset($array[$inv])) {
+            $invEntity = $this->iR->repoInvUnLoadedquery(
+                (string) $array[$inv]);
+            if ($invEntity) {
+                $model->setInv($invEntity);
+            }
+        }
+        $tax_rate = 'tax_rate_id';
+        if (isset($array[$tax_rate])) {
+            $model->setTaxRate(
+                $this->trR->repoTaxRatequery(
+                    (string) $array[$tax_rate]));
+        }
+        $product = 'product_id';
+        if (isset($array[$product])) {
+            $productEntity = $this->pR->repoProductquery(
+                (string) $array[$product]);
+            if ($productEntity) {
+                $model->setProduct($productEntity);
+            }
+        }
+        $task = 'task_id';
+        if (isset($array[$task])) {
+            $taskEntity = $this->taskR->repoTaskquery(
+                (string) $array[$task]);
+            if ($taskEntity) {
+                $model->setTask($taskEntity);
+            }
+        }
+        return $model;
     }
 
     /**
@@ -41,8 +84,21 @@ final readonly class InvItemService
      * @param UNR $unR
      * @return int|null
      */
-    public function addInvItem_product(InvItem $model, array $array, string $inv_id, PR $pr, TRR $trr, IIAS $iias, IIAR $iiar, SR $s, UNR $unR): ?int
-    {
+    public function addInvItem_product(
+        InvItem $model,
+        array $array,
+        string $inv_id,
+        PR $pr,
+        TRR $trr,
+        IIAS $iias,
+        IIAR $iiar,
+        SR $s,
+        UNR $unR
+    ): ?int {
+        $this->persist($model, array_merge(
+            $array,
+            ['inv_id' => $inv_id]
+        ));
         // This function is used in product/save_product_lookup_item_product when adding a product using the modal
         $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int) $array['tax_rate_id'] : '');
         // The form is required to have a tax value even if it is a zero rate
@@ -60,14 +116,22 @@ final readonly class InvItemService
 
             $productDescription = $product->getProduct_description();
             if (null !== $productDescription) {
-                isset($array['description']) ? $model->setDescription((string) $array['description']) : $model->setDescription($productDescription);
+                isset($array['description']) ? 
+                    $model->setDescription(
+                        (string) $array['description']) : 
+                    $model->setDescription($productDescription);
             }
         }
 
-        isset($array['note']) ? $model->setNote((string) $array['note']) : '';
-        isset($array['quantity']) ? $model->setQuantity((float) $array['quantity']) : '';
-        isset($array['price']) ? $model->setPrice((float) $array['price']) : '';
-        isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : '';
+        isset($array['note']) ? 
+            $model->setNote((string) $array['note']) : '';
+        isset($array['quantity']) ? 
+            $model->setQuantity((float) $array['quantity']) : '';
+        isset($array['price']) ? 
+            $model->setPrice((float) $array['price']) : '';
+        isset($array['discount_amount']) ? 
+            $model->setDiscount_amount(
+                (float) $array['discount_amount']) : '';
         isset($array['order']) ? $model->setOrder((int) $array['order']) : '';
 
         $model->setDate(new \DateTimeImmutable('now'));
@@ -81,12 +145,28 @@ final readonly class InvItemService
         $tax_rate_percentage = $this->taxrate_percentage((int) $tax_rate_id, $trr);
         // Users are required to enter a tax rate even if it is zero percent.
 
-        $model->setBelongs_to_vat_invoice((int) ($s->getSetting('enable_vat_registration') ?: '0'));
+        $model->setBelongs_to_vat_invoice(
+            (int) ($s->getSetting('enable_vat_registration') ?: '0'));
         if ($product_id > 0) {
             $this->repository->save($model);
-            // Peppol Allowances / charges can only be added on an existing product => zero for allowances or charges
-            if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
-                $this->saveInvItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], 0.00, 0.00, $tax_rate_percentage, $iias, $iiar, $s);
+            // Peppol Allowances / charges can only be added
+            // on an existing product => zero for allowances
+            // or charges
+            if (isset($array['quantity'], 
+                      $array['price'], 
+                      $array['discount_amount']) 
+                && null !== $tax_rate_percentage) {
+                $this->saveInvItemAmount(
+                    (int) $model->getId(), 
+                    (float) $array['quantity'], 
+                    (float) $array['price'], 
+                    (float) $array['discount_amount'], 
+                    0.00, 
+                    0.00, 
+                    $tax_rate_percentage, 
+                    $iias, 
+                    $iiar, 
+                    $s);
             }
         }
         return $model->getId();

@@ -92,14 +92,4 @@ class InvSentLog
     {
         $this->date_sent = $date_sent;
     }
-
-    public function nullifyRelationOnChange(int $client_id, int $inv_id): void
-    {
-        if ($this->client_id != $client_id) {
-            $this->client = null;
-        }
-        if ($this->inv_id != $inv_id) {
-            $this->inv = null;
-        }
-    }
 }

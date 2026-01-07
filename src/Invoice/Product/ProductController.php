@@ -573,10 +573,11 @@ final class ProductController extends BaseController
      * @param trR $trR
      * @param uR $unR
      * @param iiaR $iiaR
+     * @param iiR $iiR
      * @param uR $uR
      * @param FormHydrator $formHydrator
      */
-    private function save_product_lookup_item_inv(int $order, Product $product, string $inv_id, pR $pR, trR $trR, uR $unR, iiaR $iiaR, uR $uR, FormHydrator $formHydrator): void
+    private function save_product_lookup_item_inv(int $order, Product $product, string $inv_id, pR $pR, trR $trR, uR $unR, iiaR $iiaR, iiR $iiR, uR $uR, FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
         $form = new InvItemForm($invItem, (int) $inv_id);
@@ -598,7 +599,7 @@ final class ProductController extends BaseController
             'product_unit_id' => $product->getUnit_id(),
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->invitemService->addInvItem_product($invItem, $ajax_content, $inv_id, $pR, $trR, new iiaS($iiaR), $iiaR, $this->sR, $uR);
+            $this->invitemService->addInvItem_product($invItem, $ajax_content, $inv_id, $pR, $trR, new iiaS($iiaR, $iiR), $iiaR, $this->sR, $uR);
         }
     }
 
@@ -684,7 +685,7 @@ final class ProductController extends BaseController
         /** @var Product $product */
         foreach ($products as $product) {
             $product->setProduct_price((float) $numberHelper->format_amount($product->getProduct_price()));
-            $this->save_product_lookup_item_inv($order, $product, $inv_id, $pR, $trR, $uR, $iiaR, $uR, $formHydrator);
+            $this->save_product_lookup_item_inv($order, $product, $inv_id, $pR, $trR, $uR, $iiaR, $iiR, $uR, $formHydrator);
             $order++;
         }
         $numberHelper->calculate_inv((string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);

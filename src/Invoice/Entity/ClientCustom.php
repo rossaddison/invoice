@@ -30,9 +30,19 @@ class ClientCustom
         return $this->client;
     }
 
+    public function setClient(?Client $client): void
+    {
+        $this->client = $client;
+    }
+
     public function getCustomField(): ?CustomField
     {
         return $this->custom_field;
+    }
+
+    public function setCustomField(?CustomField $custom_field): void
+    {
+        $this->custom_field = $custom_field;
     }
 
     public function getId(): string

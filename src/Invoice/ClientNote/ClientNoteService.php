@@ -5,17 +5,24 @@ declare(strict_types=1);
 namespace App\Invoice\ClientNote;
 
 use App\Invoice\Entity\ClientNote;
+use App\Invoice\Client\ClientRepository as CR;
 use DateTime;
 
 final readonly class ClientNoteService
 {
-    public function __construct(private ClientNoteRepository $repository)
-    {
+    public function __construct(
+        private ClientNoteRepository $repository,
+        private CR $cR,
+    ) {
     }
 
-    public function addClientNote(ClientNote $model, array $array): void
-    {
-        isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
+    public function addClientNote(
+        ClientNote $model,
+        array $array
+    ): void {
+        $this->persist($model, $array);
+        isset($array['client_id']) ?
+            $model->setClient_id((int) $array['client_id']) : '';
 
         $datetime = new DateTime();
         /**
@@ -23,13 +30,16 @@ final readonly class ClientNoteService
          */
         $date = $array['date_note'] ?? '';
         /**
-         * Related logic: see https://www.php.net/manual/en/datetime.createfromformat
+         * Related logic:
+         * @see https://www.php.net/manual/en/datetime.createfromformat
          * @var bool|DateTime $result
          */
         $result = $datetime::createFromFormat('Y-m-d', $date);
-        $model->setDate_note(!is_bool($result) ? $result : $datetime);
+        $model->setDate_note(
+            !is_bool($result) ? $result : $datetime);
 
-        isset($array['note']) ? $model->setNote((string) $array['note']) : '';
+        isset($array['note']) ?
+            $model->setNote((string) $array['note']) : '';
         $this->repository->save($model);
     }
 
@@ -37,13 +47,13 @@ final readonly class ClientNoteService
      * @param ClientNote $model
      * @param array $array
      */
-    public function saveClientNote(ClientNote $model, array $array): void
-    {
-        isset($array['client_id'])
-        && $model->getClient()?->getClient_id() == $array['client_id']
-        ? $model->setClient($model->getClient()) : $model->setClient(null);
-
-        isset($array['client_id']) ? $model->setClient_id((int) $array['client_id']) : '';
+    public function saveClientNote(
+        ClientNote $model,
+        array $array
+    ): void {
+        $this->persist($model, $array);
+        isset($array['client_id']) ?
+            $model->setClient_id((int) $array['client_id']) : '';
 
         $datetime = new DateTime();
         /**
@@ -51,14 +61,30 @@ final readonly class ClientNoteService
          */
         $date = $array['date_note'] ?? '';
         /**
-         * Related logic: see https://www.php.net/manual/en/datetime.createfromformat
+         * Related logic:
+         * @see https://www.php.net/manual/en/datetime.createfromformat
          * @var bool|DateTime $result
          */
         $result = $datetime::createFromFormat('Y-m-d', $date);
-        $model->setDate_note(!is_bool($result) ? $result : $datetime);
+        $model->setDate_note(
+            !is_bool($result) ? $result : $datetime);
 
-        isset($array['note']) ? $model->setNote((string) $array['note']) : '';
+        isset($array['note']) ?
+            $model->setNote((string) $array['note']) : '';
         $this->repository->save($model);
+    }
+
+    private function persist(
+        ClientNote $model,
+        array $array
+    ): ClientNote {
+        $client = 'client_id';
+        if (isset($array[$client])) {
+            $model->setClient(
+                $this->cR->repoClientquery(
+                    (string) $array[$client]));
+        }
+        return $model;
     }
 
     /**

@@ -67,7 +67,9 @@ final class InvItemController extends BaseController
      * @param PR $pR
      * @param UR $uR
      * @param TRR $trR
+     * @param IRR $irR
      * @param IIAR $iiar
+     * @param IIR $iiR
      * @return \Psr\Http\Message\ResponseInterface|\Yiisoft\DataResponse\DataResponse
      */
     public function add_product(
@@ -78,6 +80,7 @@ final class InvItemController extends BaseController
         TRR $trR,
         IRR $irR,
         IIAR $iiar,
+        IIR $iiR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv_id = (string) $this->session->get('inv_id');
         $invitem = new InvItem();
@@ -99,7 +102,7 @@ final class InvItemController extends BaseController
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                    $this->invitemService->addInvItem_product($invitem, $body, $inv_id, $pR, $trR, new IIAS($iiar), $iiar, $this->sR, $uR);
+                    $this->invitemService->addInvItem_product($invitem, $body, $inv_id, $pR, $trR, new IIAS($iiar, $iiR),  $iiar, $this->sR, $uR);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }
@@ -127,6 +130,7 @@ final class InvItemController extends BaseController
         TRR $trR,
         IRR $irR,
         IIAR $iiar,
+        IIR $iiR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv_id = (string) $this->session->get('inv_id');
         $invitem = new InvItem();
@@ -149,7 +153,7 @@ final class InvItemController extends BaseController
             $body = $request->getParsedBody();
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                    $this->invitemService->addInvItem_task($invitem, $body, $inv_id, $taskR, $trR, new IIAS($iiar), $iiar, $this->sR);
+                    $this->invitemService->addInvItem_task($invitem, $body, $inv_id, $taskR, $trR, new IIAS($iiar, $iiR), $iiar, $this->sR);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }

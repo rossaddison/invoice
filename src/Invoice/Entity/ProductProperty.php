@@ -64,10 +64,8 @@ class ProductProperty
         return $this->product;
     }
 
-    public function nullifyRelationOnChange(int $product_id): void
+    public function setProduct(?Product $product): void
     {
-        if ($this->product_id != $product_id) {
-            $this->product = null;
-        }
+        $this->product = $product;
     }
 }

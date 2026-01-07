@@ -12,6 +12,8 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Entity\QuoteTaxRate $quote_tax_rate
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
+ * @var App\Invoice\Helpers\NumberHelper $numberHelper
+ * @var App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository $acqiR
  * @var App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -137,6 +139,79 @@ if ($items) {
      */
     foreach ($items as $item) {
         $quote_item_amount = $qiaR->repoQuoteItemAmountquery((string) $item->getId());
+        // Display item-level allowances/charges BEFORE the item
+        // if Peppol is enabled
+        if ($s->getSetting('enable_peppol') == '1') {
+            $itemId = $item->getId();
+            if (null !== $itemId) {
+            $quoteItemAllowanceCharges =
+                $acqiR->repoQuoteItemquery((string)$itemId);
+            /**
+             * @var App\Invoice\Entity\QuoteItemAllowanceCharge $quoteItemAllowanceCharge
+             */
+            foreach (
+                $quoteItemAllowanceCharges
+                as $quoteItemAllowanceCharge
+            ) {
+                $isCharge = (
+                    $quoteItemAllowanceCharge
+                        ->getAllowanceCharge()
+                            ?->getIdentifier() == 1
+                            ? true : false
+                );
+        ?>
+            <tr>
+                <td colspan="<?php
+                    echo($show_item_discounts ? '5' : '4');
+                ?>">
+                    <?= $quoteItemAllowanceCharge
+                            ->getAllowanceCharge()
+                                ?->getIdentifier() == '1'
+                        ? $translator->translate(
+                            'allowance.or.charge.charge'
+                        )
+                        : '(' . $translator->translate(
+                            'allowance.or.charge.allowance'
+                        ) . ')'; ?>
+                    <?= $translator->translate(
+                        'allowance.or.charge.reason.code'
+                    ) . ': ' . (
+                        $quoteItemAllowanceCharge
+                            ->getAllowanceCharge()
+                                ?->getReasonCode() ?? '#'
+                    ); ?>
+                    -
+                    <?= $translator->translate(
+                        'allowance.or.charge.reason'
+                    ) . ': ' . (
+                        $quoteItemAllowanceCharge
+                            ->getAllowanceCharge()
+                                ?->getReason() ?? '#'
+                    ); ?>
+                </td>
+                <td class="text-right">
+                    <?= ($isCharge ? '' : '(')
+                        . $numberHelper->format_currency(
+                            $quoteItemAllowanceCharge
+                                ->getAmount()
+                        ) . ($isCharge ? '' : ')'); ?>
+                </td>
+                <td class="text-right">
+                    <?php $vatQuoteItem = $quoteItemAllowanceCharge->getVatOrTax();
+                        echo Html::encode(($isCharge ? '' : '(')
+                            . $numberHelper->format_currency($vatQuoteItem)
+                            . ($isCharge ? '' : ')')); ?>
+                </td>
+                <td class="text-right">
+                    <?php $percent = $quoteItemAllowanceCharge
+                        ->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent();
+                        echo Html::encode($percent ?? 0.00); ?>
+                </td>
+            </tr>
+        <?php
+            }
+            }
+        }
         ?>
             <tr>
                 <td><?= Html::encode($item->getName()); ?></td>
@@ -167,12 +242,15 @@ if ($items) {
         ?>
                 </td>
                 <td class="text-right">
+                    <b>
                     <?php
             echo Html::encode($s->format_currency($quote_item_amount?->getTotal()));
         ?>
+                    </b>
                 </td>
             </tr>
-        <?php }
+        <?php
+        }
     }?>
 
         </tbody>
@@ -190,7 +268,7 @@ if ($items) {
                         $translator->translate('subtotal'),
                     ); ?></td> 
             <?php } ?> 
-            <td class="text-right"><?php echo Html::encode($s->format_currency($quote_amount->getItem_subtotal())); ?></td>
+            <td class="text-right"><b><?php echo Html::encode($s->format_currency($quote_amount->getItem_subtotal())); ?></b></td>
         </tr>
 
         <?php if ($quote_amount->getItem_tax_total() > 0) { ?>
@@ -199,11 +277,54 @@ if ($items) {
                     <?= Html::encode($vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax')); ?>
                 </td>
                 <td class="text-right">
-                    <?php echo Html::encode($s->format_currency($quote_amount->getItem_tax_total())); ?>
+                    <b><?php echo Html::encode($s->format_currency($quote_amount->getItem_tax_total())); ?></b>
                 </td>
             </tr>
         <?php } ?>
 
+        <?php
+        if ($s->getSetting('enable_peppol') == '1') {
+            if ($quote_amount->getPackhandleship_total() != 0.00) { ?>
+            <tr>
+                <td <?php
+                    echo($show_item_discounts
+                        ? 'colspan="7"' : 'colspan="6"');
+                    ?> class="text-right">
+                    <?= Html::encode($translator->translate(
+                        'allowance.or.charge.shipping.handling.packaging'
+                    )); ?>
+                </td>
+                <td class="text-right">
+                    <b><?php
+                    echo Html::encode($s->format_currency(
+                        $quote_amount->getPackhandleship_total()
+                    )); ?></b>
+                </td>
+            </tr>
+        <?php }
+            if ($quote_amount->getPackhandleship_tax() != 0.00) { ?>
+            <tr>
+                <td <?php
+                    echo($show_item_discounts
+                        ? 'colspan="7"' : 'colspan="6"');
+                    ?> class="text-right">
+                    <?= Html::encode($vat == '1'
+                        ? $translator->translate(
+                            'allowance.or.charge.shipping.handling.packaging.vat'
+                        )
+                        : $translator->translate(
+                            'allowance.or.charge.shipping.handling.packaging.tax'
+                        )); ?>
+                </td>
+                <td class="text-right">
+                    <b><?php
+                    echo Html::encode($s->format_currency(
+                        $quote_amount->getPackhandleship_tax()
+                    )); ?></b>
+                </td>
+            </tr>
+        <?php }
+        } ?>
             
         <?php if (!empty($quote_tax_rates) && ($vat === '0')) { ?>    
         <?php
@@ -216,7 +337,7 @@ if ($items) {
                     <?php echo Html::encode($quote_tax_rate->getTaxRate()?->getTaxRateName()) . ' (' . Html::encode($s->format_amount($quote_tax_rate->getTaxRate()?->getTaxRatePercent())) . '%)'; ?>
                 </td>
                 <td class="text-right">
-                    <?php echo Html::encode($s->format_currency($quote_tax_rate->getQuote_tax_rate_amount())); ?>
+                    <b><?php echo Html::encode($s->format_currency($quote_tax_rate->getQuote_tax_rate_amount())); ?></b>
                 </td>
             </tr>
         <?php endforeach ?>
@@ -228,7 +349,7 @@ if ($items) {
                     <?= Html::encode($translator->translate('discount')); ?>
                 </td>
                 <td class="text-right">
-                    <?php echo Html::encode($s->format_amount($quote->getDiscount_percent())); ?>%
+                    <b><?php echo Html::encode($s->format_amount($quote->getDiscount_percent())); ?>%</b>
                 </td>
             </tr>
         <?php endif; ?>
@@ -238,7 +359,7 @@ if ($items) {
                     <?= Html::encode($translator->translate('discount')); ?>
                 </td>
                 <td class="text-right">
-                    <?php echo Html::encode($s->format_currency($quote->getDiscount_amount())); ?>
+                    <b><?php echo Html::encode($s->format_currency($quote->getDiscount_amount())); ?></b>
                 </td>
             </tr>
         <?php endif; ?>

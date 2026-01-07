@@ -63,6 +63,12 @@ class Delivery
         return $this->delivery_location;
     }
 
+    public function setDelivery_location(
+        ?DeliveryLocation $delivery_location
+    ): void {
+        $this->delivery_location = $delivery_location;
+    }
+
     public function setId(int $id): void
     {
         $this->id = $id;

@@ -119,17 +119,4 @@ class InvItemAllowanceCharge
     {
         $this->vat_or_tax = $vatOrTax;
     }
-
-    public function nullifyRelationOnChange(int $allowance_charge_id, int $inv_item_id, int $inv_id): void
-    {
-        if ($this->allowance_charge_id != $allowance_charge_id) {
-            $this->allowance_charge = null;
-        }
-        if ($this->inv_item_id != $inv_item_id) {
-            $this->inv_item = null;
-        }
-        if ($this->inv_id != $inv_id) {
-            $this->inv = null;
-        }
-    }
 }

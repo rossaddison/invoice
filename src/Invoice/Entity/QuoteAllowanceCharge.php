@@ -37,6 +37,11 @@ class QuoteAllowanceCharge
         return $this->quote;
     }
 
+    public function setQuote(?Quote $quote): void
+    {
+        $this->quote = $quote;
+    }
+
     public function setAllowanceCharge(?AllowanceCharge $allowance_charge): void
     {
         $this->allowance_charge = $allowance_charge;
@@ -90,12 +95,5 @@ class QuoteAllowanceCharge
     public function setVatOrTax(float $vat_or_tax): void
     {
         $this->vat_or_tax = $vat_or_tax;
-    }
-
-    public function nullifyRelationOnChange(int $allowance_charge_id): void
-    {
-        if ($this->allowance_charge_id != $allowance_charge_id) {
-            $this->allowance_charge = null;
-        }
     }
 }

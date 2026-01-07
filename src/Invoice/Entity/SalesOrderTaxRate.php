@@ -32,9 +32,19 @@ class SalesOrderTaxRate
         return $this->sales_order;
     }
 
+    public function setSalesOrder(?SalesOrder $sales_order): void
+    {
+        $this->sales_order = $sales_order;
+    }
+
     public function getTaxRate(): ?TaxRate
     {
         return $this->tax_rate;
+    }
+
+    public function setTaxRate(?TaxRate $tax_rate): void
+    {
+        $this->tax_rate = $tax_rate;
     }
 
     public function getId(): string

@@ -48,6 +48,11 @@ class SalesOrderAmount
         return $this->sales_order;
     }
 
+    public function setSales_order(?SalesOrder $sales_order): void
+    {
+        $this->sales_order = $sales_order;
+    }
+
     public function getId(): string
     {
         return (string) $this->id;
@@ -126,15 +131,5 @@ class SalesOrderAmount
     public function setTotal(float $total): void
     {
         $this->total = $total;
-    }
-    
-    /**
-     * @param int $sales_order_id
-     */
-    public function nullifyRelationOnChange(int $sales_order_id): void
-    {
-        if ($this->sales_order_id != $sales_order_id) {
-            $this->sales_order = null;
-        }
     }
 }
