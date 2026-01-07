@@ -37,14 +37,18 @@ class SalesOrder
      * Note: HasOne will default to fkAction: CASCADE & Camelcase salesOrder_id
      * foreign key which creates a conflict with snake case sales_order_id.
      *
-     * Solution: Specify the outerKey (the foreign key in the table) 
+     * Solution: Specify the outerKey (the foreign key in the table)
      * explicitly here to avoid conflicts between automatically inserted
      * Camelcase foreign keys in tables during schema building after Entity
-     * changes. 
-     * 
-     * Related logic: 
+     * changes. If not using 'outerKey:' always check your table and
+     * runtime/schema.php for evidence perhaps of this conflict.
+     *
+     * Related logic:
      * https://cycle-orm.dev/        ...
      * docs/relation-has-one/current/en#differences-from-belongsto
+     *
+     * QuoteController function quote_to_so_quote_amount uses
+     * $salesOrder->getSales_order_amount()
      */
     #[HasOne(target: SalesOrderAmount::class, outerKey: 'sales_order_id')]
     private readonly SalesOrderAmount $sales_order_amount;
@@ -376,6 +380,11 @@ class SalesOrder
     public function getItems(): ArrayCollection
     {
         return $this->items;
+    }
+    
+    public function getSales_order_amount(): SalesOrderAmount
+    {
+        return $this->sales_order_amount;
     }
     
     /**

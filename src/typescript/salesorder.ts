@@ -18,6 +18,7 @@ function secureReload(): void {
 interface SalesOrderConversionResponse {
     success?: number;
     validation_errors?: Record<string, any>;
+    inv_id?: string;
 }
 
 // SalesOrder-specific interfaces
@@ -194,8 +195,12 @@ export class SalesOrderHandler {
                 if (btn) {
                     btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
                 }
-                // Navigate to the new invoice or reload
-                secureReload();
+                // Navigate to the new invoice if inv_id is provided, otherwise reload
+                if (response.inv_id) {
+                    window.location.href = `${location.origin}/invoice/inv/view/${response.inv_id}`;
+                } else {
+                    secureReload();
+                }
             } else {
                 // Handle validation errors or failures
                 if (response?.validation_errors) {

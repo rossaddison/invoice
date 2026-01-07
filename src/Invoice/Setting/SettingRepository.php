@@ -2127,50 +2127,49 @@ final class SettingRepository extends Select\Repository
     public function debug_mode_file_location(int $key): string
     {
         $layout = '..resources/views/layout/';
-        $common_invoice = '..resources/views/invoice/';
-        $common_quote = '..resources/views/quote/';
+        $common_route = '..resources/views/invoice/';
         $array = [//0
             $layout . 'invoice',
             //1
-            $common_invoice . 'inv/view',
+            $common_route . 'inv/view',
             //2
-            $common_invoice . 'invitem/_item_form_product',
+            $common_route . 'invitem/_item_form_product',
             //3
-            $common_invoice . 'invitem/_item_form_task',
+            $common_route . 'invitem/_item_form_task',
             //4
-            $common_invoice . 'inv/view_custom_fields',
+            $common_route . 'inv/view_custom_fields',
             //5
-            $common_invoice . 'inv/partial_inv_attachments',
+            $common_route . 'inv/partial_inv_attachments',
             //6
-            $common_invoice . 'inv/partial_inv_delivery_location',
+            $common_route . 'inv/partial_inv_delivery_location',
             //7
-            $common_invoice . 'inv/partial_item_table',
+            $common_route . 'inv/partial_item_table',
             //8
-            $common_invoice . 'product/views/partial_product_image',
+            $common_route . 'product/views/partial_product_image',
             //9
-            $common_invoice . 'product/views/partial_product_gallery',
+            $common_route . 'product/views/partial_product_gallery',
             //10
             $layout . 'quote',
             //11
-            $common_quote . 'quote/view',
+            $common_route . 'quote/view',
             //12
-            $common_quote . 'quoteitem/_item_edit_form',
+            $common_route . 'quoteitem/_item_edit_form',
             //13
-            $common_quote . 'quoteitem/_item_form_product',
+            $common_route . 'quoteitem/_item_form_product',
             //14
-            $common_quote . 'quoteitem/_item_form_task',
+            $common_route . 'quoteitem/_item_form_task',
             //15
-            $common_invoice . 'invitem/_item_edit_product',
+            $common_route . 'invitem/_item_edit_product',
             //16
-            $common_invoice . 'inv/modal_message_layout',
+            $common_route . 'inv/modal_message_layout',
             //17
-            $common_invoice . 'inv/modal_message',
+            $common_route . 'inv/modal_message',
             //18
-            $common_invoice . 'inv/modal_message_action',
+            $common_route . 'inv/modal_message_action',
             //19
-            $common_quote . 'quoteitem/partial_item_table',
+            $common_route . 'quoteitem/partial_item_table',
             //20
-            $common_quote. 'salesorderitem/partial_item_table',
+            $common_route. 'salesorder/partial_item_table',
         ];
         return $array[$key];
     }

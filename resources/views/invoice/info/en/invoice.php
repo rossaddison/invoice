@@ -51,6 +51,60 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>6th January 2026</b></p>
+<p>quote to salesorder to invoice tested</p>
+<p>A json formatted peppol based electronic invoice can once again be produced</p>
+<p>Reminders: </p>
+<p>The client has to be setup for peppol on the client index. Far right plus sign</p>
+<p>Each client will have to have a valid Postal Address Client...View..+ Add a
+    client postal address</p>
+<p>Make sure all the current tax rates i.e. ⚙️ ... TaxRate have Peppol
+    associated values.</p>
+<p>Peppol Testing will now recommence.</p>
+<p>The charge_amount under the SalesOrderItem has been removed. Redundant since
+    we now have a fully functional salesorderitemallowancecharge many-to-one
+    salesorderitem relationship for all possible peppol allowances or charges
+    which stems from the quoteitemallowancecharge relationship and is passed to 
+    the invitemallowancecharge relationship.</p>
+<p>Updated the README with additional Cycle/Orm links 
+    into Cycle/Orm</p>
+<p><b>4th January 2026</b></p>
+<p>quote to salesorder tested</p>
+<p>salesorder to invoice tested</p>
+<p>The SalesOrderController function quote_to_so_amount is a good example of the 
+   application of the hasOne Entity function ... for both the quote and the salesorder
+   <pre>
+       /**
+     * @param SalesOrder $so
+     * @param Inv $inv
+     * @param InvRepo $iR
+     * @return void
+     */
+    private function so_to_invoice_so_amount(SalesOrder $so, Inv $inv, InvRepo $iR): void
+    {
+        /**
+         * @var SalesOrderAmount $soA
+         */
+        $soA = $so->getSales_order_amount();   <--- hasOne
+        /**
+         * @var InvAmount $iA
+         */
+        $iA = $inv->getInvAmount();  <-- hasOne
+        // hydrate the hasOne with values from the Sales Order hasOne
+        $iA->setInv_id((int) $inv->getId());
+        $iA->setItem_subtotal(
+            $soA->getItem_subtotal() ?? 0.00);
+        $iA->setItem_tax_total(
+            $soA->getItem_tax_total() ?? 0.00);
+        $iA->setPackhandleship_total(
+            $soA->getPackhandleship_total() ?: 0.00);
+        $iA->setPackhandleship_tax(
+            $soA->getPackhandleship_tax() ?: 0.00);
+        $iA->setTax_total($soA->getTax_total() ?? 0.00);
+        $iA->setTotal($soA->getTotal() ?? 0.00);
+        $iR->save($inv);
+    }
+   </pre>
 <p><b>2nd January 2026</b></p>
 <p>php 8.5: composer.json yiisoft related packages not php8.5 ready yet ...  marked
    with greater than sign</p>

@@ -80,7 +80,8 @@ $toolbarReset = A::tag()
     ->render();
 
 $allVisible = A::tag()
-    ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
+    ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
+        'title' => $translator->translate('hide.or.unhide.columns')])
     ->addClass('btn btn-warning me-1 ajax-loader')
     ->content('↔️')
     ->href($urlGenerator->generate('setting/visible', ['origin' => 'quote']))
@@ -91,7 +92,9 @@ $enabledAddQuoteButton = A::tag()
     ->addAttributes([
         'class' => 'btn',
         'data-bs-toggle' => 'modal',
-        'style' => 'text-decoration:none; background-color: #ffffff !important; border: 2px solid #b19cd9 !important; color: #b19cd9 !important; font-weight: 500;',
+        'style' => 'text-decoration:none; background-color: #ffffff !important;'
+        . ' border: 2px solid #b19cd9 !important; color: #b19cd9 !important;'
+        . ' font-weight: 500;',
     ])
     ->content('➕')
     ->href('#modal-add-quote')
@@ -104,7 +107,9 @@ $disabledAddQuoteButton = A::tag()
         'data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('add.client'),
         'disabled' => 'disabled',
-        'style' => 'text-decoration:none; background-color: #ffffff !important; border: 2px solid #b19cd9 !important; color: #b19cd9 !important; font-weight: 500; opacity: 0.5;',
+        'style' => 'text-decoration:none; background-color: #ffffff !important;'
+        . ' border: 2px solid #b19cd9 !important; color: #b19cd9 !important;'
+        . ' font-weight: 500; opacity: 0.5;',
     ])
     ->content('➕')
     ->href('#modal-add-quote')
@@ -121,7 +126,8 @@ $totalAmount = 0.0;
  * @var Quote $quote
  */
 foreach ($quotes as $quote) {
-    $totalAmount += null !== ($total = $quote->getQuoteAmount()->getTotal()) ? $total : 0.00;
+    $totalAmount += null !== ($total = $quote->getQuoteAmount()->getTotal())
+            ? $total : 0.00;
 }
 
 echo Breadcrumbs::widget()
@@ -137,7 +143,8 @@ echo Breadcrumbs::widget()
              active: true,
              attributes: [
                  'data-bs-toggle' => 'tooltip',
-                 'title' => $defaultQuoteGroup ?? $translator->translate('not.set'),
+                 'title' => $defaultQuoteGroup ??
+                 $translator->translate('not.set'),
              ],
              encodeLabel: false,
          ),
@@ -152,7 +159,8 @@ echo Breadcrumbs::widget()
              active: false,
              attributes: [
                  'data-bs-toggle' => 'tooltip',
-                 'title' => $s->getSetting('default.quote.notes') ?: $translator->translate('not.set'),
+                 'title' => $s->getSetting('default.quote.notes') ?:
+                 $translator->translate('not.set'),
              ],
              encodeLabel: false,
          ),
@@ -167,7 +175,8 @@ echo Breadcrumbs::widget()
              active: false,
              attributes: [
                  'data-bs-toggle' => 'tooltip',
-                 'title' => $s->getSetting('quotes_expire_after') ?: $translator->translate('not.set'),
+                 'title' => $s->getSetting('quotes_expire_after') ?:
+                 $translator->translate('not.set'),
              ],
              encodeLabel: false,
          ),
@@ -182,7 +191,8 @@ echo Breadcrumbs::widget()
              active: false,
              attributes: [
                  'data-bs-toggle' => 'tooltip',
-                 'title' => $s->getSetting('generate_quote_number_for_draft') == '1' ? '✅' : '❌',
+                 'title' => $s->getSetting('generate_quote_number_for_draft')
+                 == '1' ? '✅' : '❌',
              ],
              encodeLabel: false,
          ),
@@ -197,7 +207,9 @@ echo Breadcrumbs::widget()
              active: false,
              attributes: [
                  'data-bs-toggle' => 'tooltip',
-                 'title' => strlen($s->getSetting('email_quote_template')) > 0 ? $s->getSetting('email_quote_template') : $translator->translate('not.set'),
+                 'title' => strlen($s->getSetting('email_quote_template')) > 0 ?
+                    $s->getSetting('email_quote_template')
+                    : $translator->translate('not.set'),
              ],
              encodeLabel: false,
          ),
@@ -212,7 +224,8 @@ echo Breadcrumbs::widget()
              active: false,
              attributes: [
                  'data-bs-toggle' => 'tooltip',
-                 'title' => $s->getSetting('pdf_quote_footer') ?: $translator->translate('not.set'),
+                 'title' => $s->getSetting('pdf_quote_footer') ?:
+                    $translator->translate('not.set'),
              ],
              encodeLabel: false,
          ),
@@ -228,7 +241,8 @@ $columns = [
         /**
          * Related logic: see header checkbox: name: 'checkbox-selection-all'
          */
-        content: static function (Checkbox $input, DataContext $context) use ($translator): string {
+        content: static function (Checkbox $input, DataContext $context)
+            use ($translator): string {
             $quote = $context->data;
             if (($quote instanceof Quote) && (null !== ($id = $quote->getId()))) {
                 return Input::tag()
@@ -238,9 +252,11 @@ $columns = [
                            'name' => 'checkbox[]',
                            'data-bs-toggle' => 'tooltip',
                            'title' => $quote->getQuoteAmount()->getTotal() == 0
-                               ? $translator->translate('index.checkbox.add.some.items.to.enable') : ''])
+                               ? $translator->translate(
+                               'index.checkbox.add.some.items.to.enable') : ''])
                        ->value($id)
-                       ->disabled($quote->getQuoteAmount()->getTotal() > 0 ? false : true)
+                       ->disabled($quote->getQuoteAmount()->getTotal() > 0 ?
+                               false : true)
                        ->render();
             }
             return '';
@@ -296,7 +312,8 @@ $columns = [
                 return ($model->getSo_id() == 0) && ($model->getInv_id() == 0)
                 ?  
                 [
-                    'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                    'onclick' => "return confirm(" . "'"
+                    . $translator->translate('delete.record.warning') . "');",
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('delete.quote.single'),
                     'class' => 'btn btn-outline-danger btn-sm',
@@ -313,8 +330,14 @@ $columns = [
     new DataColumn(
         property: 'filterStatus',
         header: '<span data-bs-toggle="tooltip" data-bs-html="true" title="' . 
-                Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 ' . $translator->translate('draft') . '<br/>📨 ' . $translator->translate('sent') . '<br/>👀 ' . $translator->translate('viewed') . '<br/>✅ ' . $translator->translate('approved') . '<br/>❌ ' . $translator->translate('rejected') . '<br/>🚫 ' . $translator->translate('canceled')) . 
-                '">📊 ' . $translator->translate('status') . '</span>',
+                Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 '
+                . $translator->translate('draft') . '<br/>📨 '
+                . $translator->translate('sent') . '<br/>👀 '
+                . $translator->translate('viewed') . '<br/>✅ '
+                . $translator->translate('approved') . '<br/>❌ '
+                . $translator->translate('rejected') . '<br/>🚫 '
+                . $translator->translate('canceled')) . '">📊 '
+                . $translator->translate('status') . '</span>',
         encodeHeader: false,
         content: static function (Quote $model) use ($qR): string {
             $statusId = $model->getStatus_id();
@@ -324,7 +347,9 @@ $columns = [
             $label = $qR->getSpecificStatusArrayLabel((string) $statusId);
             $class = $qR->getSpecificStatusArrayClass((string) $statusId);
             
-            return '<span data-bs-toggle="tooltip" title="' . Html::encode($label) . '" class="label ' . $class . '">' . Html::encode($label) . '</span>';
+            return '<span data-bs-toggle="tooltip" title="'
+            . Html::encode($label) . '" class="label ' . $class . '">'
+                    . Html::encode($label) . '</span>';
         },
         filter: DropdownFilter::widget()
             ->addAttributes([
@@ -334,7 +359,7 @@ $columns = [
             ->optionsData($optionsDataStatusDropDownFilter),
         encodeContent: false,
         withSorting: true,
-        visible: $visible,
+        visible: true,
     ),
     new DataColumn(
         'so_id',
@@ -404,7 +429,7 @@ $columns = [
         encodeContent: false,
         filter: DropdownFilter::widget()
                 ->addAttributes([
-                    'name' => 'client_id',
+                    'name' => 'filterClient',
                     'class' => 'native-reset',
                 ])
                 ->optionsData($optionsDataClientsDropdownFilter),
@@ -652,7 +677,6 @@ echo $gridView
 ->enableFooter(true)
 ->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
-->header($translator->translate('quote'))
 ->id('w2-grid')
 ->summaryAttributes(['class' => 'mt-3 me-3 summary d-flex justify-content-between align-items-center'])
 /**

@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Form;
 use App\Widget\LabelSwitch;
+use Yiisoft\VarDumper\VarDumper;
 
 /**
  * Related logic: see App\Invoice\ClientPeppol\ClientPeppolController.php
@@ -14,8 +17,8 @@ use App\Widget\LabelSwitch;
  * @var App\Widget\Button $button
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var array $electronic_address_scheme
- * @var array $iso_6523_array
+ * @psalm-var array<array-key, array{code: string, description: string}> $electronic_address_scheme
+ * @psalm-var array<array-key, array{Id: string, Name: string, Description: string}> $iso_6523_array
  * @var array $pep
  * @var array $pep['endpointid']
  * @var array $pep['endpointid_schemeid']
@@ -31,7 +34,7 @@ use App\Widget\LabelSwitch;
  * @var array $pep['accounting_cost']
  * @var array $pep['buyer_reference']
  * @var array $pep['supplier_assigned_accountid']
- * @var array $receiver_identifier_array
+ * @psalm-var array<array-key, array{region: string, country: string, tax?: string}> $receiver_identifier_array
  * @var bool $defaults
  * @var int $client_id
  * @var string $actionName
@@ -44,329 +47,392 @@ use App\Widget\LabelSwitch;
 
 ?>
 
-<?= Html::openTag('h1'); ?><?= Html::encode($title) ?><?= Html::closeTag('h1'); ?>
-<form id="ClientPeppolForm" 
-      method="POST" 
-      action="
-<?= $urlGenerator->generate($actionName, $actionArguments) ?>" 
-    enctype="multipart/form-data">
-    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-    <div id="headerbar">
-        <h1 class="headerbar-title">
-        <?= Html::a($translator->translate('client.peppol.clientpeppols.form'),
-            'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/'
-                . 'cac-AccountingCustomerParty/'); ?></h1>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', [
+    'class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', [
+    'class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
+    <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
+        <?= Html::encode($title) ?>
+    <?= Html::closeTag('h1'); ?>
+        <?= Form::tag()
+            ->post($urlGenerator->generate($actionName, $actionArguments))
+            ->enctypeMultipartFormData()
+            ->csrf($csrf)
+            ->id('ClientPeppolForm')
+            ->open() ?>
+                <?= Html::openTag('div', ['class' => 'container']); ?>
+                    <?= Html::openTag('div', ['class' => 'row']); ?>
+                        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
+                            <?= Html::openTag('div', ['class' => 'card-header']); ?>
+                                <?php
+                                LabelSwitch::checkbox(
+                                    'client-peppol-label-switch',
+                                    $setting,
+                                    $translator->translate(
+                                            'peppol.label.switch.on'),
+                                    $translator->translate(
+                                            'peppol.label.switch.off'),
+                                    'client-peppol-label-switch-id',
+                                    '16',
+                                );
+                                ?>
+                                <?= Html::openTag('div'); ?>
+                                    <?= Field::errorSummary($form)
+                                        ->errors($errors)
+                                        ->header($translator->translate(
+                                                'error.summary'))
+                                        ->onlyCommonErrors()
+                                    ?>
+                                <?= Html::closeTag('div'); ?>
+                                
+                                <?= Field::hidden($form, 'client_id')
+                                    ->value($form->getClient_id() ?? $client_id)
+                                ?>
+                                
+                                <?= Field::hidden($form, 'id')
+                                    ->value($form->getId() ?? '')
+                                ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::email($form, 'endpointid')
+                    ->label($translator->translate('client.peppol.endpointid'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'endpointid',
+                        'placeholder' => $translator->translate(
+                                'client.peppol.endpointid'),
+                        'maxlength' => 100,
+                    ])
+                    ->value($form->getEndpointid() !== ''
+                            && $form->getEndpointid() !== null ?
+                            $form->getEndpointid() : ($defaults ?
+                                    $pep['endpointid']['eg'] : ''))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::select($form, 'endpointid_schemeid')
+                    ->label($translator->translate(
+                            'client.peppol.endpointid.schemeid')
+                            . $translator->translate('peppol.optional'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'endpointid_schemeid',
+                    ])
+                    ->value($form->getEndpointid_schemeid() !== ''
+                            && $form->getEndpointid_schemeid() !== null ?
+                            $form->getEndpointid_schemeid() :
+                        ($defaults ? $pep['endpointid_schemeid']['eg'] : '0088'))
+                    ->optionsData(array_combine(
+                        /** @var list<string> */
+                        array_column($electronic_address_scheme, 'code'),
+                        array_map(
+                            /** @param array{code: string, description: string} $v */
+                            fn($v) => $v['code']
+                                . str_repeat("-", 10) . $v['description'],
+                            $electronic_address_scheme
+                        )
+                    ))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'identificationid')
+                    ->label($translator->translate(
+                            'client.peppol.identificationid'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'identificationid',
+                        'maxlength' => 100,
+                    ])
+                    ->value($form->getIdentificationid() !== ''
+                            && $form->getIdentificationid() !== null ?
+                            $form->getIdentificationid() :
+                        ($defaults ? $pep['identificationid']['eg'] : ''))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'identificationid_schemeid')
+                    ->label($translator->translate(
+                            'client.peppol.identificationid.schemeid')
+                            . $translator->translate('peppol.optional'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'identificationid_schemeid',
+                        'maxlength' => 4,
+                    ])
+                    ->value($form->getIdentificationid_schemeid() !== ''
+                            && $form->getIdentificationid_schemeid() !== null ?
+                            $form->getIdentificationid_schemeid() :
+                        ($defaults ?
+                                $pep['identificationid_schemeid']['eg'] : ''))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'taxschemecompanyid')
+                    ->label($translator->translate(
+                            'client.peppol.taxschemecompanyid'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'taxschemecompanyid',
+                        'maxlength' => 100,
+                    ])
+                    ->value($form->getTaxschemecompanyid() !== ''
+                            && $form->getTaxschemecompanyid() !== null ?
+                            $form->getTaxschemecompanyid() : ($defaults ?
+                                    $pep['taxschemecompanyid']['eg'] : ''))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::select($form, 'taxschemeid')
+                    ->label($translator->translate('client.peppol.taxschemeid'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'taxschemeid',
+                    ])
+                    ->value($form->getTaxschemeid() !== ''
+                            && $form->getTaxschemeid() !== null ?
+                            $form->getTaxschemeid() :
+                                ($defaults ? $pep['taxschemeid']['eg'] : ''))
+                    ->optionsData(array_map(
+                        /**
+                         * @param array{region: string, country: string, tax?: string} $value
+                         */
+                        function($key, $value) use ($translator) {
+                            return ucfirst(
+                                $value['region'] .
+                                str_repeat(" ", 2) .
+                                str_repeat("-", 10) .
+                                str_repeat(" ", 2) .
+                                $value['country'] .
+                                str_repeat(" ", 2) .
+                                str_repeat("-", 10) .
+                                str_repeat(" ", 2) .
+                                (isset($value['tax']) && $value['tax'] !== '' ?
+                                        $value['tax'] : $translator->translate(
+                                                'storecove.not.available'))
+                            );
+                        },
+                        array_keys($receiver_identifier_array),
+                        $receiver_identifier_array
+                    ))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'legal_entity_registration_name')
+                    ->label($translator->translate(
+                            'client.peppol.legal.entity.registration.name'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'legal_entity_registration_name',
+                        'maxlength' => 100,
+                    ])
+                    ->value($form->getLegal_entity_registration_name() !== ''
+                        && $form->getLegal_entity_registration_name() !== null ?
+                            $form->getLegal_entity_registration_name() :
+                ($defaults ? $pep['legal_entity_registration_name']['eg'] : ''))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::select($form, 'legal_entity_companyid')
+                    ->label($translator->translate(
+                                        'client.peppol.legal.entity.companyid'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'legal_entity_companyid',
+                    ])
+                    ->value($form->getLegal_entity_companyid() !== ''
+                            && $form->getLegal_entity_companyid() !== null ?
+                                        $form->getLegal_entity_companyid() : '')
+                    ->optionsData(array_combine(
+                        /** @var list<string> */
+                        array_column($iso_6523_array, 'Id'),
+                        array_map(
+                            /** @param array{Id: string, Name: string, Description: string} $v */
+                            fn($v) => ucfirst(
+                                $v['Id'] .
+                                str_repeat(" ", 2) .
+                                str_repeat("-", 10) .
+                                str_repeat(" ", 2) .
+                                $v['Name'] .
+                                str_repeat(" ", 2) .
+                                str_repeat("-", 10) .
+                                str_repeat(" ", 2) .
+                                $v['Description']
+                            ),
+                            $iso_6523_array
+                        )
+                    ))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::select($form, 'legal_entity_companyid_schemeid')
+                    ->label($translator->translate(
+                            'client.peppol.legal.entity.companyid.schemeid')
+                            . $translator->translate('peppol.optional'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'legal_entity_companyid_schemeid',
+                    ])
+                    ->value($form->getLegal_entity_companyid_schemeid() !== '' &&
+                        $form->getLegal_entity_companyid_schemeid() !== null ?
+                            $form->getLegal_entity_companyid_schemeid() : '')
+                    ->optionsData(array_combine(
+                        /** @var list<string> */
+                        array_column($iso_6523_array, 'Id'),
+                        array_map(
+                            /** @param array{Id: string, Name: string, Description: string} $v */
+                            fn($v) => ucfirst(
+                                $v['Id'] .
+                                str_repeat(" ", 2) .
+                                str_repeat("-", 10) .
+                                str_repeat(" ", 2) .
+                                $v['Name'] .
+                                str_repeat(" ", 2) .
+                                str_repeat("-", 10) .
+                                str_repeat(" ", 2) .
+                                $v['Description']
+                            ),
+                            $iso_6523_array
+                        )
+                    ))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'legal_entity_company_legal_form')
+                    ->label($translator->translate(
+                            'client.peppol.legal.entity.company.legal.form'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'legal_entity_company_legal_form',
+                        'maxlength' => 50,
+                    ])
+                    ->value($form->getLegal_entity_company_legal_form() !== '' &&
+                        $form->getLegal_entity_company_legal_form() !== null ?
+                            $form->getLegal_entity_company_legal_form() :
+               ($defaults ? $pep['legal_entity_company_legal_form']['eg'] : ''))
+                    ->required(true)
+                    ->hint($translator->translate(
+                                                'hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'financial_institution_branchid')
+                    ->label($translator->translate(
+                                'client.peppol.financial.institution.branchid'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'financial_institution_branchid',
+                        'maxlength' => 20,
+                    ])
+                    ->value($form->getFinancial_institution_branchid() !== ''
+                            && $form->getFinancial_institution_branchid()
+                                !== null ?
+                            $form->getFinancial_institution_branchid() :
+                ($defaults ? $pep['financial_institution_branchid']['eg'] : ''))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'accounting_cost')
+                    ->label($translator->translate(
+                                                'client.peppol.accounting.cost'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'accounting_cost',
+                        'maxlength' => 30,
+                    ])
+                    ->value($form->getAccounting_cost() !== '' &&
+                            $form->getAccounting_cost() !== null ?
+                            $form->getAccounting_cost() : ($defaults ?
+                                    $pep['accounting_cost']['eg'] : ''))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'buyer_reference')
+                    ->label($translator->translate(
+                            'client.peppol.buyer.reference.default')
+                            . ' ' . $translator->translate(
+                                    'client.peppol.buyer.reference.example'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'buyer_reference',
+                        'maxlength' => 20,
+                    ])
+                    ->value($form->getBuyer_reference() !== '' &&
+                            $form->getBuyer_reference() !== null ?
+                            $form->getBuyer_reference() :
+                        ($defaults ? $pep['buyer_reference']['eg'] : ''))
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                <?= Html::closeTag('div'); ?>
+                
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                  <?= Field::text($form, 'supplier_assigned_accountid')
+                    ->label($translator->translate(
+                            'client.peppol.supplier.assigned.account.id')
+                            . ' ' . $translator->translate(
+                                    'client.peppol.buyer.reference.example'))
+                    ->addInputAttributes([
+                        'class' => 'form-control',
+                        'id' => 'supplier_assigned_accountid',
+                        'maxlength' => 20,
+                    ])
+                    ->value($form->getSupplierAssignedAccountId() !== ''
+                            && $form->getSupplierAssignedAccountId() !== null ?
+                            $form->getSupplierAssignedAccountId() : '')
+                    ->required(true)
+                    ->hint($translator->translate('hint.this.field.is.required'))
+                  ?>
+                                <?= Html::closeTag('div'); ?>
+                            <?= Html::closeTag('div'); ?>
+                        <?= Html::closeTag('div'); ?>
+                    <?= Html::closeTag('div'); ?>
+                <?= Html::closeTag('div'); ?>
         <?= $button::backSave(); ?>
-        <div id="content">
-        <?php
-        LabelSwitch::checkbox(
-            'client-peppol-label-switch',
-            $setting,
-            $translator->translate('peppol.label.switch.on'),
-            $translator->translate('peppol.label.switch.off'),
-            'client-peppol-label-switch-id',
-            '16',
-        );
-?>
-            <?= Html::openTag('div', ['class' => 'row']); ?>
-                <div class="mb3 form-group">
-                    <input type="text"
-                           name="client_id"
-                           id="client_id"
-                           class="form-control"
-                           hidden
-                           value="
-<?= Html::encode($form->getClient_id() ?? $client_id); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <input type="text"
-                           name="id"
-                           id="id"
-                           class="form-control"
-                           hidden
-                           value="<?= Html::encode($form->getId() ?? ''); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <label for="endpointid">
-<?= $translator->translate('client.peppol.endpointid'); ?>
-                    </label>
-                    <input type="text"
-                           name="endpointid"
-                           id="endpointid"
-                           class="form-control"
-                           required
-                           value="<?= Html::encode(
-    $form->getEndpointid() ?? ($defaults ? $pep['endpointid']['eg'] : '')); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <label for="endpointid_schemeid">
-<?= $translator->translate('client.peppol.endpointid.schemeid')
-    . $translator->translate('peppol.optional'); ?></label>
-                    <select name="endpointid_schemeid"
-                            id="endpointid_schemeid"
-                            class="form-control"
-                            required>
-                        <?php
-/**
- * Search $customer_endpointID_schemeID = $party['EndPointID']['schemeID']
- *  ?? ''; in PeppolHelper.php
- * Related logic: see src/Invoice/Helpers/Peppol/PeppolArrays.php
- *  function electronic_address_scheme
- * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/
- * ubl-invoice/cac-AccountingCustomerParty/cac-Party/cbc-EndpointID/schemeID/
- * @var int $key
- * @var array $value
- * @var string $value['code']
- * @var string $value['description']
- */
-                foreach ($electronic_address_scheme as $key => $value) {
-                    ?>
-                          <option value="
-<?= $value['code']; ?>" <?php $s->check_select($form->getEndpointid_schemeid()
-        ?? ($defaults ? $pep['endpointid_schemeid']['eg'] : '0088'),
-        $value['code']); ?>>
-                              <?= $value['code'] . str_repeat("-", 10)
-                                    . $value['description'] ?>
-                          </option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="mb3 form-group">
-                    <label for="identificationid">
-<?= $translator->translate('client.peppol.identificationid'); ?>
-                    </label>
-                    <input type="text"
-                           name="identificationid"
-                           id="identificationid"
-                           class="form-control"
-                           required
-                           value="
-<?= Html::encode($form->getIdentificationid() ?? ($defaults ?
-        $pep['identificationid']['eg'] : '')); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <label for="identificationid_schemeid">
-<?= $translator->translate('client.peppol.identificationid.schemeid')
-        . $translator->translate('peppol.optional'); ?>
-                    </label>
-                    <input type="text"
-                           name="identificationid_schemeid"
-                           id="identificationid_schemeid"
-                           class="form-control"
-                           required
-                           value="
-<?= Html::encode($form->getIdentificationid_schemeid() ??
-        ($defaults ? $pep['identificationid_schemeid']['eg'] : '')); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <label for="taxschemecompanyid">
-<?= $translator->translate('client.peppol.taxschemecompanyid'); ?>
-                    </label>
-                    <input type="text"
-                           name="taxschemecompanyid"
-                           id="taxschemecompanyid"
-                           class="form-control"
-                           required
-                           value="
-<?= Html::encode($form->getTaxschemecompanyid() ??
-        ($defaults ? $pep['taxschemecompanyid']['eg'] : '')); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <label for="taxschemeid">
-<?= $translator->translate('client.peppol.taxschemeid'); ?>
-                    </label>
-                    <select name="taxschemeid"
-                            id="taxschemeid"
-                            class="form-control"
-                            required>
-                        <?php
-                        /**
-                         * @var int $key
-                         * @var array $value
-                         * @var string $value['region']
-                         * @var string $value['country']
-                         * @var string $value['tax']
-                         */
-                        foreach ($receiver_identifier_array as $key => $value) {
-                            ?>
+    <?= Html::closeTag('div'); ?>
+    
+<?= Html::closeTag('div'); ?>
 
-                          <option value="<?= $key; ?>"
-<?php $s->check_select($form->getTaxschemeid() ??
-    ($defaults ? $pep['taxschemeid']['eg'] : ''), $key) ?>>
-                              <?=
-                                ucfirst(
-                                    $value['region']
-                                . str_repeat("&nbsp;", 2)
-                                . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2)
-                                . $value['country']
-                                . str_repeat("&nbsp;", 2)
-                                . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2)
-                                . (!empty($value['tax']) ?
-    $value['tax'] : $translator->translate('storecove.not.available')),
-                                );
-                            ?>
-                          </option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="mb3 form-group">
-                    <label for="legal_entity_registration_name">
-<?= $translator->translate('client.peppol.legal.entity.registration.name'); ?>
-                    </label>
-                    <input type="text"
-                           name="legal_entity_registration_name"
-                           id="legal_entity_registration_name"
-                           class="form-control"
-                           required
-                           value="
-<?= Html::encode($form->getLegal_entity_registration_name() ??
-    ($defaults ? $pep['legal_entity_registration_name']['eg'] : '')); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <label for="legal_entity_companyid">
-<?= $translator->translate('client.peppol.legal.entity.companyid'); ?>
-                    </label>
-                    <select name="legal_entity_companyid"
-                            id="legal_entity_companyid"
-                            class="form-control"
-                            required>
-                        <?php
-                        /**
-                         * @var int $key
-                         * @var array $value
-                         * @var string $value['Id']
-                         * @var string $value['Name']
-                         * @var string $value['Description']
-                         */
-                        foreach ($iso_6523_array as $key => $value) {
-                            ?>
-                          <option value="<?= $value['Id']; ?>"
-<?php $s->check_select($form->getLegal_entity_companyid() ?? '', $value['Id']) ?>>
-                              <?=
-                                ucfirst(
-                                    $value['Id']
-                                . str_repeat("&nbsp;", 2)
-                                . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2)
-                                . $value['Name']
-                                . str_repeat("&nbsp;", 2)
-                                . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2)
-                                . $value['Description'],
-                                );
-                            ?>
-                          </option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="mb3 form-group">
-                    <label for="legal_entity_companyid_schemeid">
-<?= $translator->translate('client.peppol.legal.entity.companyid.schemeid')
-    . $translator->translate('peppol.optional'); ?>
-                    </label>
-                    <select name="legal_entity_companyid_schemeid"
-                            id="legal_entity_companyid_schemeid"
-                            class="form-control"
-                            required>
-                        <?php
-                        /**
-                         * @var int $key
-                         * @var array $value
-                         * @var string $value['Id']
-                         * @var string $value['Name']
-                         * @var string $value['Description']
-                         */
-                        foreach ($iso_6523_array as $key => $value) {
-                            ?>
-                          <option value="<?= $value['Id']; ?>"
-<?php $s->check_select($form->getLegal_entity_companyid_schemeid() ??
-        '', $value['Id']) ?>>
-                              <?=
-                                ucfirst(
-                                    $value['Id']
-                                . str_repeat("&nbsp;", 2)
-                                . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2)
-                                . $value['Name']
-                                . str_repeat("&nbsp;", 2)
-                                . str_repeat("-", 10)
-                                . str_repeat("&nbsp;", 2)
-                                . $value['Description'],
-                                );
-                            ?>
-                          </option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="mb3 form-group">
-                    <label for="legal_entity_company_legal_form">
-<?= $translator->translate('client.peppol.legal.entity.company.legal.form'); ?>
-                    </label>
-                    <input type="text"
-                           name="legal_entity_company_legal_form"
-                           id="legal_entity_company_legal_form"
-                           class="form-control"
-                           required
-                           value="
-<?= Html::encode($form->getLegal_entity_company_legal_form() ??
-    ($defaults ? $pep['legal_entity_company_legal_form']['eg'] : '')); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <label for="financial_institution_branchid">
-<?= $translator->translate('client.peppol.financial.institution.branchid'); ?>
-                    </label>
-                    <input type="text"
-                           name="financial_institution_branchid"
-                           id="financial_institution_branchid"
-                           class="form-control"
-                           required
-                           value="
-<?= Html::encode($form->getFinancial_institution_branchid() ??
-        ($defaults ? $pep['financial_institution_branchid']['eg'] : '')); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <label for="accounting_cost">
-<?= $translator->translate('client.peppol.accounting.cost'); ?>
-                    </label>
-                    <input type="text"
-                           name="accounting_cost"
-                           id="accounting_cost"
-                           class="form-control"
-                           required
-                           value="
-<?= Html::encode($form->getAccounting_cost() ??
-        ($defaults ? $pep['accounting_cost']['eg'] : '')); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <label for="buyer_reference">
-<?= $translator->translate('client.peppol.buyer.reference.default')
-    . ' ' . $translator->translate('client.peppol.buyer.reference.example'); ?>
-                    </label>
-                    <input type="text"
-                           name="buyer_reference"
-                           id="buyer_reference"
-                           class="form-control"
-                           required
-                           value="
-<?= Html::encode($form->getBuyer_reference() ??
-    ($defaults ? $pep['buyer_reference']['eg'] : '')); ?>">
-                </div>
-                <div class="mb3 form-group">
-                    <label for="supplier_assigned_accountid">
-<?= $translator->translate('client.peppol.supplier.assigned.account.id')
-    . ' ' . $translator->translate('client.peppol.buyer.reference.example'); ?>
-                    </label>
-                    <input type="text"
-                           name="supplier_assigned_accountid"
-                           id="supplier_assigned_accountid"
-                           class="form-control"
-                           required
-                           value="
-<?= Html::encode($form->getSupplierAssignedAccountId() ?? ''); ?>">
-                </div>
-        </div>
-    </div>
-</form>
+<?= Html::closeTag('form'); ?>
 
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>

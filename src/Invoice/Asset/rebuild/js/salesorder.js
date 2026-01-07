@@ -81,21 +81,36 @@
                     cache: 'no-store'
                 })
                 .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status);
+                    }
                     return response.json();
                 })
                 .then(function (data) {
-                    var response = parsedata(data);
+                    // Data is already parsed JSON from response.json()
+                    var response = (typeof data === 'object') ? data : parsedata(data);
+                    
                     if (response.success === 1) {
                         if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absoluteUrl.href;
-                        window.location.reload();
-                        alert(response.flash_message);
-                    }
-                    if (response.success === 0) {
-                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-                        window.location = absoluteUrl.href;
-                        window.location.reload();
-                        alert(response.flash_message);
+                        
+                        // Redirect immediately - don't show alert that blocks redirect
+                        if (response.inv_id) {
+                            window.location.href = getOrigin() + '/invoice/inv/view/' + response.inv_id;
+                        } else {
+                            window.location.href = absoluteUrl.href;
+                        }
+                    } else {
+                        // Only show error messages when success is 0
+                        if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-times text-danger"></i></h2>';
+                        if (response.flash_message) {
+                            alert(response.flash_message);
+                        } else {
+                            alert('Conversion failed. Please try again.');
+                        }
+                        // Reload to show any server-side flash messages
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 2000);
                     }
                 })
                 .catch(function (error) {

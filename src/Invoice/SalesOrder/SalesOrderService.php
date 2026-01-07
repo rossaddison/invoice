@@ -83,6 +83,19 @@ final readonly class SalesOrderService
         isset($array['password']) ? $model->setPassword((string) $array['password']) : '';
         isset($array['notes']) ? $model->setNotes((string) $array['notes']) : '';
         isset($array['payment_term']) ? $model->setPaymentTerm((string) $array['payment_term']) : '';
+        
+        // Handle date_created like InvService does
+        if (isset($array['date_created'])) {
+            /**
+             * @var string $array['date_created']
+             */
+            $date_created = $array['date_created'];
+            $datetime = \DateTimeImmutable::createFromFormat('Y-m-d', $date_created);
+            if ($datetime !== false) {
+                $model->setDate_created($datetime);
+            }
+        }
+        
         $this->repository->save($model);
         return $model;
     }

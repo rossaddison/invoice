@@ -104,6 +104,26 @@ $vat = $s->getSetting('enable_vat_registration');
             <?php endif; ?>
         </div>
         <br>
+        
+        <?php 
+        // Show Peppol form for guests when terms are agreed (status 3 or 4) and before invoice is generated
+        if (in_array($salesorder->getStatus_id(), [3, 4]) 
+            && $salesorder->getInv_id() === '0'
+            && isset($isGuest) && $isGuest === true) : 
+        ?>
+            <div class="alert alert-info" role="alert">
+                <h4 class="alert-heading">
+                    <i class="fa fa-file-text-o"></i>
+                    <?= $translator->translate('invoice.peppol.information.required'); ?>
+                </h4>
+                <p><?= $translator->translate('invoice.peppol.guest.instructions'); ?></p>
+                <hr>
+                <p class="mb-0">
+                    <?= $translator->translate('invoice.peppol.click.items.below'); ?>
+                </p>
+            </div>
+        <?php endif; ?>
+        
         <br>
         <h2><?= $translator->translate('salesorder'); ?>&nbsp;
             <?= $salesorder->getNumber(); ?>
@@ -251,18 +271,60 @@ $vat = $s->getSetting('enable_vat_registration');
                             <th class="text-right">
                                 <?= $translator->translate('total'); ?>
                             </th>
+                            <?php 
+                            // Show edit column for guests when they can edit Peppol fields
+                            if (in_array($salesorder->getStatus_id(), [3, 4]) 
+                                && $salesorder->getInv_id() === '0'
+                                && isset($isGuest) && $isGuest === true) : 
+                            ?>
+                            <th class="text-center">
+                                <?= $translator->translate('invoice.peppol.edit'); ?>
+                            </th>
+                            <?php endif; ?>
                         </tr>
                         </thead>
                         <tbody>
                         <?php
                            /**
-                             * @var App\Invoice\Entity\InvItem $item
+                             * @var App\Invoice\Entity\SalesOrderItem $item
                              */
-                            foreach ($items as $item) : ?>
+                            foreach ($items as $item) : 
+                                // Show Peppol fields if they have been entered
+                                /** @var string|null $peppolItemId */
+                                $peppolItemId = $item->getPeppol_po_itemid();
+                                /** @var string|null $peppolLineId */
+                                $peppolLineId = $item->getPeppol_po_lineid();
+                            ?>
                             <tr>
                                 <td>
                                            <?= Html::encode($item->getName()); ?>
+                                           <?php if (null !== $peppolItemId || null !== $peppolLineId) : ?>
+                                               <br><small class="text-muted">
+                                                   <?php if (null !== $peppolItemId) : ?>
+                                                       <i class="fa fa-barcode"></i> <?= Html::encode($peppolItemId); ?>
+                                                   <?php endif; ?>
+                                                   <?php if (null !== $peppolLineId) : ?>
+                                                       <br><i class="fa fa-list-ol"></i> <?= Html::encode($peppolLineId); ?>
+                                                   <?php endif; ?>
+                                               </small>
+                                           <?php endif; ?>
                                 </td>
+                                <?php 
+                                // Show edit button for guests when they can edit Peppol fields
+                                if (in_array($salesorder->getStatus_id(), [3, 4]) 
+                                    && $salesorder->getInv_id() === '0'
+                                    && isset($isGuest) && $isGuest === true) : 
+                                ?>
+                                <td class="text-center">
+                                    <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]); ?>" 
+                                       class="btn btn-sm btn-primary"
+                                       data-bs-toggle="tooltip"
+                                       title="<?= $translator->translate('invoice.peppol.edit.item'); ?>">
+                                        <i class="fa fa-edit"></i>
+                                        <?= $translator->translate('invoice.peppol.enter'); ?>
+                                    </a>
+                                </td>
+                                <?php endif; ?>
                                 <td>
                             <?= nl2br(Html::encode($item->getDescription())); ?>
                                 </td>
@@ -283,7 +345,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                     <?= $numberHelper->format_currency(
                                             $item->getDiscount_amount()); ?>
                                 </td>
-<?php $query = $soiaR->repoSalesOrderItemAmountquery((string) $item->getId()); ?>
+<?php $query = $soiaR->repoSalesOrderItemAmountquery($item->getId()); ?>
                                 <td class="amount">
 <?= $numberHelper->format_currency(null !== $query ?
         $query->getSubtotal() : 0.00); ?>

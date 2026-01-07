@@ -112,6 +112,7 @@ use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTRR;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as soAR;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
+use App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as soIAR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -496,6 +497,7 @@ final class QuoteController extends BaseController
      * @param QIR $qiR
      * @param QR $qR
      * @param QTRR $qtrR
+     * @param SOR $soR
      * @param TRR $trR
      * @param UR $uR
      * @param UCR $ucR
@@ -508,6 +510,7 @@ final class QuoteController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         ACQIR $acqiR,
+        ACSOIR $acsoiR,
         CFR $cfR,
         GR $gR,
         soIAS $soiaS,
@@ -520,6 +523,7 @@ final class QuoteController extends BaseController
         QIR $qiR,
         QR $qR,
         QTRR $qtrR,
+        SOR $soR,    
         TRR $trR,
         UR $uR,
         UCR $ucR,
@@ -584,7 +588,7 @@ final class QuoteController extends BaseController
                                 // so_item_amount for each item
                                 if (null !== $new_so_id && null !== $quote_id) {
                                     $this->quote_to_so_quote_items(
-                                        $quote_id, $new_so_id, $acqiR, $soiaR,
+                                        $quote_id, $new_so_id, $acqiR, $acsoiR, $soiaR,
                                         $soiaS, $pR, $taskR, $qiR, $trR, $unR,
                                         $formHydrator);
                                     $this->quote_to_so_quote_tax_rates(
@@ -593,7 +597,7 @@ final class QuoteController extends BaseController
                                     $this->quote_to_so_quote_custom($quote_id,
                                         $new_so_id, $qcR, $cfR, $formHydrator);
                                     $this->quote_to_so_quote_amount($quote_id,
-                                        $new_so_id, $qaR, $soaR);
+                                        $new_so_id, $qaR, $soaR, $soR);
                                     // Set the quote's sales order id so that
                                     // it cannot be copied in the future
                                     $quote->setSo_id($new_so_id);
@@ -1725,6 +1729,10 @@ final class QuoteController extends BaseController
         string $status = '0',
         #[Query('groupBy')]
         ?string $queryGroupBy = 'none',
+        #[Query('filterClient')]
+        ?string $queryFilterClient = null,
+        #[Query('filterStatus')]
+        ?string $queryFilterStatus = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         // build the quote
         $quote = new Quote();
@@ -1774,10 +1782,13 @@ final class QuoteController extends BaseController
                 // - => 'desc'  so -id => default descending on id
                 // Show the latest quotes first => -id
                     ->withOrder($order);
+            $effectiveStatus = isset($queryFilterStatus)
+                && !empty($queryFilterStatus) ?
+                    $queryFilterStatus : $status;
             /**
              * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $quotes
              */
-            $quotes = $this->quotes_status_with_sort($quoteRepo, $status, $sort);
+            $quotes = $this->quotes_status_with_sort($quoteRepo, (int) $effectiveStatus, $sort);
             if (isset($query_params['filterQuoteNumber'])
                 && !empty($query_params['filterQuoteNumber'])) {
                 $quotes = $quoteRepo->filterQuoteNumber(
@@ -1787,6 +1798,9 @@ final class QuoteController extends BaseController
                 && !empty($query_params['filterQuoteAmountTotal'])) {
                 $quotes = $quoteRepo->filterQuoteAmountTotal(
                     (string) $query_params['filterQuoteAmountTotal']);
+            }
+            if (isset($queryFilterClient) && !empty($queryFilterClient)) {
+                $quotes = $quoteRepo->filterClient($queryFilterClient);
             }
             if ((isset($query_params['filterQuoteNumber'])
                 && !empty($query_params['filterQuoteNumber']))
@@ -2280,7 +2294,7 @@ final class QuoteController extends BaseController
                                 // inv_item_amount for each item
                                 $this->quote_to_invoice_quote_items(
                                     $quote_id, $inv_id, $acqiR, $aciiR, $iiaR,
-                                        $iiaS, $pR, $taskR, $qiR,
+                                        $iiaS, $pR, $taskR, $qiR, $qiaR,
                                         $trR, $formHydrator, $this->sR, $unR);
                                 $this->quote_to_invoice_quote_tax_rates(
                                     $quote_id, $inv_id, $qtrR, $formHydrator);
@@ -2351,6 +2365,7 @@ final class QuoteController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         ACQIR $acqiR,
+        ACSOIR $acsoiR,
         CFR $cfR,
         GR $gR,
         soIAS $soiaS,
@@ -2364,6 +2379,7 @@ final class QuoteController extends BaseController
         QIR $qiR,
         QR $qR,
         QTRR $qtrR,
+        SOR $soR,
         TRR $trR,
         UNR $unR,
         UCR $ucR,
@@ -2422,7 +2438,9 @@ final class QuoteController extends BaseController
                     $user = $uR->findById($user_id);
                     if (null !== $user) {
                         // Generate number only after validation passes
-                        $so_body['number'] = (string) $gR->generate_number((int) $body['group_id'], true);
+                        $so_body['number'] =
+                                (string) $gR->generate_number(
+                                    (int) $body['group_id'], true);
                         $so = $this->so_service->addSo($user, $new_so, $so_body);
                         $new_so_id = $so->getId();
                         // Ensure that the quote has a specific po and therefore
@@ -2432,27 +2450,28 @@ final class QuoteController extends BaseController
                         // for each item
                         if (null !== $new_so_id) {
                             $this->quote_to_so_quote_items($quote_id,
-                                $new_so_id, $acqiR, $soiaR, $soiaS, $pR, $taskR,
+                                $new_so_id, $acqiR, $acsoiR, $soiaR, $soiaS, $pR, $taskR,
                                     $qiR, $trR, $unR, $formHydrator);
                             $this->quote_to_so_quote_tax_rates($quote_id,
                                 $new_so_id, $qtrR, $formHydrator);
                             $this->quote_to_so_quote_custom($quote_id,
                                 $new_so_id, $qcR, $cfR, $formHydrator);
                             $this->quote_to_so_quote_amount($quote_id,
-                                $new_so_id, $qaR, $soaR);
+                                $new_so_id, $qaR, $soaR, $soR);
                             // Set the quote's sales order id so that it
                             // cannot be copied in the future
                             $quote->setSo_id($new_so_id);
                             $qR->save($quote);
-                            // Update the quote amounts after conversion
-                            $this->quote_amount_service->updateQuoteAmount(
-                                (int) $quote_id, $qaR, $qiaR, $qtrR,
-                                $this->number_helper);
                             $parameters = [
                                 'success' => 1,
                                 'flash_message' => $this->translator->translate(
                                     'quote.sales.order.created.from.quote'),
-                                'redirect_url' => $this->url_generator->generate('salesorder/view', ['_language' => (string) $this->session->get('_language'), 'id' => $new_so_id]),
+                                'redirect_url' => $this->url_generator->generate(
+                                    'salesorder/view',
+                                        ['_language' =>
+                                            (string) $this->session->get(
+                                                    '_language'),
+                                            'id' => $new_so_id]),
                             ];
                             //return response to quote.js to reload page at
                             //location
@@ -2483,6 +2502,7 @@ final class QuoteController extends BaseController
      * @param InvItemAmountService $iiaS
      * @param PR $pR
      * @param QIR $qiR
+     * @param QIAR $qiaR
      * @param TRR $trR
      * @param FormHydrator $formHydrator
      * @param UNR $unR
@@ -2490,13 +2510,14 @@ final class QuoteController extends BaseController
     private function quote_to_invoice_quote_items(string $quote_id,
         string $inv_id, ACQIR $acqiR, ACIIR $aciiR, IIAR $iiaR,
             InvItemAmountService $iiaS,
-        PR $pR, TaskR $taskR, QIR $qiR, TRR $trR, FormHydrator $formHydrator,
-        SR $sR, UNR $unR): void
+        PR $pR, TaskR $taskR, QIR $qiR, QIAR $qiaR, TRR $trR,
+            FormHydrator $formHydrator, SR $sR, UNR $unR): void
     {
         // Get all items that belong to the quote
         $items = $qiR->repoQuoteItemIdquery($quote_id);
         /** @var QuoteItem $quote_item */
         foreach ($items as $quote_item) {
+            $origQuoteItemId = $quote_item->getId();
             $product_id = $quote_item->getProduct_id() ?: null;
             $task_id = $quote_item->getTask_id() ?: null;
             $inv_item = [
@@ -2527,8 +2548,26 @@ final class QuoteController extends BaseController
                     $inv_id, $taskR, $trR, $iiaS, $iiaR, $sR);
                 $invItemId = $invItem->getId();
                 if (null !== $invItemId) {
+                    // Copy the quote item amounts to the invoice item amounts
+                    $quoteItemAmount = $qiaR->repoQuoteItemAmountquery(
+                        $origQuoteItemId);
+                    if (null !== $quoteItemAmount) {
+                        $invItemAmount = $iiaR->repoInvItemAmountquery(
+                            (string) $invItemId);
+                        if (null !== $invItemAmount) {
+                            $invItemAmount->setSubtotal(
+                                $quoteItemAmount->getSubtotal() ?? 0.00);
+                            $invItemAmount->setTax_total(
+                                $quoteItemAmount->getTax_total() ?? 0.00);
+                            $invItemAmount->setDiscount(
+                                $quoteItemAmount->getDiscount() ?? 0.00);
+                            $invItemAmount->setTotal(
+                                $quoteItemAmount->getTotal() ?? 0.00);
+                            $iiaR->save($invItemAmount);
+                        }
+                    }
                     $this->inv_item_service->addInvItem_allowance_charges_from_quote(
-                        $inv_id, (int) $quote_item->getId(), $invItemId, $acqiR,
+                        $inv_id, (int) $origQuoteItemId, $invItemId, $acqiR,
                         $aciiR);
                 }
             }
@@ -2793,16 +2832,39 @@ final class QuoteController extends BaseController
     }
 
     /**
+     * Note: hasOne
      * @param string $quote_id
      * @param string $copy_id
      * @param QAR $qaR
      * @param soAR $soaR
+     * @param SOR $soR
+     * @return void
      */
     private function quote_to_so_quote_amount(string $quote_id,
-        string $copy_id, QAR $qaR, soAR $soaR): void
+        string $copy_id, QAR $qaR, soAR $soaR, SOR $soR): void
     {
-        $this->so_amount_service->initializeCopyQuoteAmount(new SoAmount(),
-            $qaR, $soaR, $quote_id, $copy_id);
+        $basis_quote = $qaR->repoQuotequery($quote_id);
+        $newSo = $soR->repoSalesOrderUnLoadedquery($copy_id);
+        if (null!==$newSo && null!==$basis_quote) {
+            // use the hasOne Relationship to retrieve the Sales Order Amount
+            // relation
+            $soA = $newSo->getSales_order_amount();
+            // hydrate
+            $soA->setSales_order_id((int) $copy_id);
+            $soA->setItem_subtotal(
+                $basis_quote->getItem_subtotal() ?? 0.00);
+            $soA->setItem_tax_total(
+                $basis_quote->getItem_tax_total() ?? 0.00);
+            $soA->setPackhandleship_total(
+                $basis_quote->getPackhandleship_total() ?: 0.00);
+            $soA->setPackhandleship_tax(
+                $basis_quote->getPackhandleship_total() ?: 0.00);
+            $soA->setTax_total(
+                $basis_quote->getTax_total() ?? 0.00);
+            $soA->setTotal(
+                $basis_quote->getTotal() ?? 0.00);
+        }
+        $soR->save($newSo);
     }
 
     // Data fed from quote.js->$(document).on('click',
@@ -3025,22 +3087,30 @@ final class QuoteController extends BaseController
          */
         foreach ($all as $quoteItemAllowanceCharge) {
             $acqItem = new QuoteItemAllowanceCharge();
-            $array = [
-                'allowance_charge_id' =>
-                    $quoteItemAllowanceCharge->getAllowanceCharge()?->getId(),
-                'quote_id' => $new_quote_id,
-                'quote_item_id' => $newQuoteItem->getId(),
-                // duplicate the amount of the original quote item's ac
-                'amount' => $quoteItemAllowanceCharge->getAmount(),
-            ];
-            $this->quote_item_ac_service->saveQuoteItemAllowanceCharge(
-                $acqItem, $array,
-                    ((float) $quoteItemAllowanceCharge->getVatOrTax()) ?: 0.00);
+            
+            // CRITICAL: Set relationship objects to allow Cycle ORM to determine persistence order
+            $acqItem->setQuote($newQuoteItem->getQuote());
+            $acqItem->setQuoteItem($newQuoteItem);
+            $acqItem->setAllowanceCharge($quoteItemAllowanceCharge->getAllowanceCharge());
+            
+            // Also set FK IDs for consistency
+            $acqItem->setQuote_id((int) $new_quote_id);
+            $acqItem->setQuote_item_id((int) $newQuoteItem->getId());
+            $acqItem->setAllowance_charge_id(
+                (int) $quoteItemAllowanceCharge->getAllowanceCharge()?->getId()
+            );
+            
+            // Set other properties
+            $acqItem->setAmount((float) $quoteItemAllowanceCharge->getAmount());
+            $acqItem->setVatOrTax((float) $quoteItemAllowanceCharge->getVatOrTax() ?: 0.00);
+            
+            // Save directly via repository
+            $acqiR->save($acqItem);
         }
     }
     
     private function quote_to_so_quote_items(string $quote_id, string $new_so_id,
-        ACQIR $acqiR, soIAR $soiaR, soIAS $soiaS, PR $pR, TASKR $taskR, 
+        ACQIR $acqiR, ACSOIR $acsoiR, soIAR $soiaR, soIAS $soiaS, PR $pR, TASKR $taskR, 
         QIR $qiR, TRR $trR,
         UNR $unR, FormHydrator $formHydrator): void
     {
@@ -3053,6 +3123,12 @@ final class QuoteController extends BaseController
             $origQuoteItemId = $quote_item->getId();
             $newSoItem = new SoItem();
             $so_item = [
+                'sales_order_id' => $new_so_id,
+                'tax_rate_id' => $quote_item->getTax_rate_id(),
+                'product_id' => $quote_item->getProduct_id(),
+                'task_id' => $quote_item->getTask_id(),
+                'product_unit' => $quote_item->getProduct_unit(),
+                'product_unit_id' => $quote_item->getProduct_unit_id(),
                 'peppol_po_itemid' => '',
                 'peppol_po_lineid' => '',
                 'name' => $quote_item->getName(),
@@ -3060,32 +3136,23 @@ final class QuoteController extends BaseController
                 'quantity' => $quote_item->getQuantity(),
                 'price' => $quote_item->getPrice(),
                 'discount_amount' => $quote_item->getDiscount_amount(),
-                'charge_amount' => 0.00,
                 'order' => $quote_item->getOrder(),
-                'product_unit' => $quote_item->getProduct_unit(),
-                'sales_order_id' => $new_so_id,
-                'tax_rate_id' => $quote_item->getTax_rate_id(),
-                'product_id' => $quote_item->getProduct_id(),
-                'task_id' => $quote_item->getTask_id(),
-                'product_unit_id' => $quote_item->getProduct_unit_id(),
                 'date_added' => new \DateTimeImmutable(),
             ];
-            
-            
             $form = new SoItemForm($newSoItem, $new_so_id);
             if ($formHydrator->populateAndValidate($form, $so_item)) {
                 $this->so_item_service->addSoItemProductTask($newSoItem, $so_item,
                     $new_so_id, $pR, $taskR, $soiaR, $soiaS, $unR, $trR,
                         $this->translator);
                 $this->copy_quote_item_allowance_charges_to_so($origQuoteItemId,
-                    $acqiR, $new_so_id, $newSoItem);
+                    $acqiR, $new_so_id, $newSoItem, $acsoiR);
             }
         } // items as quote_item
     }
     
     private function copy_quote_item_allowance_charges_to_so(
         string $origQuoteItemId, ACQIR $acqiR, string $new_so_id,
-            SoItem $newSalesOrderItem): void {
+            SoItem $newSalesOrderItem, ACSOIR $acsoiR): void {
          
         $all = $acqiR->repoQuoteItemquery($origQuoteItemId);
         /**
@@ -3093,17 +3160,26 @@ final class QuoteController extends BaseController
          */
         foreach ($all as $quoteItemAllowanceCharge) {
             $acsoItem = new SalesOrderItemAllowanceCharge();
-            $array = [
-                'allowance_charge_id' =>
-                    $quoteItemAllowanceCharge->getAllowanceCharge()?->getId(),
-                'sales_order_id' => $new_so_id,
-                'sales_order_item_id' => $newSalesOrderItem->getId(),
-                // duplicate the amount of the original quote item's ac
-                'amount' => $quoteItemAllowanceCharge->getAmount(),
-            ];
-            $this->so_item_ac_service->saveSalesOrderItemAllowanceCharge(
-                $acsoItem, $array,
-                    ((float) $quoteItemAllowanceCharge->getVatOrTax()) ?: 0.00);
+            
+            // CRITICAL: Set relationship objects to allow Cycle ORM to determine persistence order
+            // The SalesOrder entity must be loaded and set, not just the FK ID
+            $acsoItem->setSalesOrder($newSalesOrderItem->getSales_order());
+            $acsoItem->setSalesOrderItem($newSalesOrderItem);
+            $acsoItem->setAllowanceCharge($quoteItemAllowanceCharge->getAllowanceCharge());
+            
+            // Also set FK IDs for consistency
+            $acsoItem->setSales_order_id((int) $new_so_id);
+            $acsoItem->setSales_order_item_id((int) $newSalesOrderItem->getId());
+            $acsoItem->setAllowance_charge_id(
+                (int) $quoteItemAllowanceCharge->getAllowanceCharge()?->getId()
+            );
+            
+            // Set other properties
+            $acsoItem->setAmount((float) $quoteItemAllowanceCharge->getAmount());
+            $acsoItem->setVatOrTax((float) $quoteItemAllowanceCharge->getVatOrTax() ?: 0.00);
+            
+            // Save directly via repository - bypassing the service that calls nullifyRelationOnChange
+            $acsoiR->save($acsoItem);
         }
     }
 

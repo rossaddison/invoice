@@ -32,7 +32,7 @@ class Inv
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
-    #[HasOne(target: InvAmount::class)]
+    #[HasOne(target: InvAmount::class, outerKey: 'inv_id')]
     private readonly InvAmount $invAmount;
 
     /**

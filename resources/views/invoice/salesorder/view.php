@@ -32,6 +32,7 @@ use App\Invoice\Helpers\NumberHelper;
  * @var string $alert
  * @var string $csrf
  * @var string $invNumber
+ * @var string $quoteNumber
  * @var string $modal_salesorder_to_pdf
  * @var string $modal_so_to_invoice
  * @var string $partial_item_table
@@ -202,6 +203,14 @@ $vat = $s->getSetting('enable_vat_registration');
                                         </span>
                                     </div>
                                 </div>
+                                <?php if ($quoteNumber) { ?>  
+                                <div has-feedback">
+                                    <label for="salesorder_to_quote"><?= $translator->translate('salesorder.quote'); ?></label>
+                                    <div class="input-group">
+                                        <?= Html::a($quoteNumber, $urlGenerator->generate('quote/view', ['id' => $so->getQuote_id()]), ['class' => 'btn btn-info']); ?>
+                                    </div>
+                                </div>
+                                <?php } ?>
                                 <?php if ($invNumber) { ?>  
                                 <div has-feedback">
                                     <label for="salesorder_to_url"><?= $translator->translate('salesorder.invoice'); ?></label>

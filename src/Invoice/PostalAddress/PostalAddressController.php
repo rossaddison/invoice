@@ -61,9 +61,9 @@ final class PostalAddressController extends BaseController
         /**
          * @var array $queryParams
          */
-        $origin = (string) $queryParams['origin'];
-        $origin_id = (int) $queryParams['origin_id'];
-        $action = (string) $queryParams['action'];
+        $origin = (string) ($queryParams['origin'] ?? '');
+        $origin_id = (int) ($queryParams['origin_id'] ?? 0);
+        $action = (string) ($queryParams['action'] ?? '');
         $postalAddress = new PostalAddress();
         $form = new PostalAddressForm($this->translator, $postalAddress, (int) $client_id);
         $parameters = [
@@ -86,9 +86,11 @@ final class PostalAddressController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    $this->postaladdressService->savePostalAddress($postalAddress, $body);
-                    $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
-                    $url = $origin . '/' . $action;
+                    $this->postaladdressService->savePostalAddress(
+                        $postalAddress, $body);
+                    $this->flashMessage('success', $this->translator->translate(
+                        'record.successfully.created'));
+                    $url = $origin . '/' . ($action ?: 'index');
                     if ($origin_id) {
                         /**
                          * @psalm-suppress MixedArgumentTypeCoercion
@@ -97,10 +99,11 @@ final class PostalAddressController extends BaseController
                             'id' => $origin_id,
                         ]);
                     }
-                    return $this->webService->getRedirectResponse($url);
+                    return $this->webService->getRedirectResponse('client/index');
                 }
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['errors']
+                = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -183,9 +186,9 @@ final class PostalAddressController extends BaseController
              * Related logic: see config/common/routes/routes.php '/postaladdress/edit/{id}[/{origin}/{origin_id}/{action}]'
              * @var array $queryParams
              */
-            $origin = (string) $queryParams['origin'];
-            $origin_id = (int) $queryParams['origin_id'];
-            $action = (string) $queryParams['action'];
+            $origin = (string) ($queryParams['origin'] ?? '');
+            $origin_id = (int) ($queryParams['origin_id'] ?? 0);
+            $action = (string) ($queryParams['action'] ?? '');
             $form = new PostalAddressForm($this->translator, $postalAddress, (int) $postalAddress->getClient_id());
             $parameters = [
                 'title' => $this->translator->translate('edit'),

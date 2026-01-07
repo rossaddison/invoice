@@ -20,6 +20,7 @@ use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\Task\TaskRepository as taskR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UNR;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class InvItemService
 {
@@ -280,8 +281,19 @@ final readonly class InvItemService
         $tax_rate_percentage = $this->taxrate_percentage((int) $tax_rate_id, $trr);
         if ($task_id > 0) {
             $this->repository->save($model);
-            if (isset($array['quantity'], $array['price'], $array['discount_amount'])     && null !== $tax_rate_percentage) {
-                $this->saveInvItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], 0.00, 0.00, $tax_rate_percentage, $iias, $iiar, $s);
+            if (isset($array['quantity'], $array['price'],
+                    $array['discount_amount'])
+                        && null !== $tax_rate_percentage) {
+                $this->saveInvItemAmount((int) $model->getId(),
+                        (float) $array['quantity'],
+                        (float) $array['price'],
+                        (float) $array['discount_amount'],
+                        0.00,
+                        0.00,
+                        $tax_rate_percentage,
+                        $iias,
+                        $iiar,
+                        $s);
             }
         }
         return $model->getId();
@@ -340,6 +352,87 @@ final readonly class InvItemService
         }
         return (int) $tax_rate_id;
     }
+    
+    /**
+     * Used in salesorder/so_to_invoice_so_items subfunction in salesorder/so_to_invoice
+     * Functional: 05/01/2026: Emulates the SalesOrderItemService function addSoItemProductTask
+     * @param InvItem $model
+     * @param array $array
+     * @param string $inv_id
+     * @param PR $pr
+     * @param taskR $taskR
+     * @param IIAR $iiar
+     * @param IIAS $iias
+     * @param UNR $unR
+     * @param TRR $trr
+     * @param Translator $translator
+     * @param SR $sR
+     */
+    public function addInvItemProductTask(InvItem $model, array $array,
+            string $inv_id, PR $pr, taskR $taskR, IIAR $iiar, IIAS $iias,
+            UNR $uR, TRR $trr, Translator $translator, SR $sR): void
+    {
+        $tax_rate_id = ((isset($array['tax_rate_id'])) ? (int) $array['tax_rate_id'] : '');
+        $model->setTax_rate_id((int) $tax_rate_id);        
+        $product_id = (int) ($array['product_id'] ?? null);        
+        $task_id = (int) ($array['task_id'] ?? null);
+        $model->setInv_id((int) $inv_id);
+        $so_item_id = ((isset($array['so_item_id'])) ? (int) $array['so_item_id'] : '');
+        $model->setSo_item_id((int)$so_item_id);
+        $product = $pr->repoProductquery((string) $array['product_id']);
+        $name = '';
+        if ($product) {            
+            $model->setProduct_id($product_id);
+            if (isset($array['product_id']) && $pr->repoCount((string) $product_id) > 0) {
+                $name = $product->getProduct_name();
+            }
+            null !== $name ? $model->setName($name) : $model->setName('');
+            // If the user has changed the description on the form => override default product description
+            $description = ((isset($array['description']))
+                                   ? (string) $array['description']
+                                   : $product->getProduct_description());
+            null !== $description ? 
+                $model->setDescription($description) : 
+                $model->setDescription($translator->translate('not.available')) ;
+        }
+        $task = $taskR->repoTaskquery((string) $array['task_id']);
+        if ($task) {
+            $model->setTask_id($task_id);
+            if (isset($array['task_id']) && $taskR->repoCount((string) $task_id) > 0) {
+                $name = $task->getName();
+            }
+            null !== $name ? $model->setName($name) : $model->setName('');
+            // If the user has changed the description on the form => override default product description
+            $description = (isset($array['description'])
+                                      ? (string) $array['description']
+                                      : $task->getDescription());
+
+            strlen($description) > 0 ? $model->setDescription($description) : $model->setDescription($translator->translate('not.available'));
+        }
+        isset($array['quantity']) ? $model->setQuantity((float) $array['quantity']) : $model->setQuantity(0);
+        isset($array['price']) ? $model->setPrice((float) $array['price']) : $model->setPrice(0.00);
+        isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : $model->setDiscount_amount(0.00);
+        isset($array['order']) ? $model->setOrder((int) $array['order']) : $model->setOrder(0) ;
+        // Product_unit is a string which we get from unit's name field using the unit_id
+        $unit = $uR->repoUnitquery((string) $array['product_unit_id']);
+        if ($unit) {
+            $model->setProduct_unit($unit->getUnit_name());
+        }
+        $model->setProduct_unit_id((int) $array['product_unit_id']);
+        // Users are required to enter a tax rate even if it is zero percent.
+        $tax_rate_percentage = $this->taxrate_percentage((int) $tax_rate_id, $trr);
+        $this->repository->save($model);
+        if (isset($array['quantity'], $array['price'], $array['discount_amount']) && null !== $tax_rate_percentage) {
+            $this->saveInvItemAmount(
+                    (int) $model->getId(),
+                    (float) $array['quantity'],
+                    (float) $array['price'],
+                    (float) $array['discount_amount'],
+                    0.00,
+                    0.00,
+                    $tax_rate_percentage, $iias, $iiar, $sR);
+        }
+    }
 
     /**
      * Used solely for building up an invoice line item which is an identical copy of the copied invoice
@@ -354,8 +447,8 @@ final readonly class InvItemService
      * @param float $quantity
      * @param float $price
      * @param float $discount
-     * @param float $charge_total
-     * @param float $allowance_total
+     * @param float $charge
+     * @param float $allowance
      * @param float $tax_rate_percentage
      * @param IIAS $iias
      * @param IIAR $iiar
@@ -366,8 +459,8 @@ final readonly class InvItemService
         float $quantity,
         float $price,
         float $discount,
-        float $charge_total,
-        float $allowance_total,
+        float $charge,
+        float $allowance,
         float $tax_rate_percentage,
         IIAS $iias,
         IIAR $iiar,
@@ -380,20 +473,20 @@ final readonly class InvItemService
         $tax_total = 0.00;
         // NO VAT
         if ($s->getSetting('enable_vat_registration') === '0') {
-            $tax_total = (($sub_total - $discount_total + $charge_total - $allowance_total) * ($tax_rate_percentage / 100.00));
+            $tax_total = (($sub_total - $discount_total + $charge - $allowance) * ($tax_rate_percentage / 100.00));
         }
         // VAT
         if ($s->getSetting('enable_vat_registration') === '1') {
             // EARLY SETTLEMENT CASH DISCOUNTS MUST BE REMOVED BEFORE VAT IS DETERMINED
             // Related logic: see https://informi.co.uk/finance/how-vat-affected-discounts
-            $tax_total = (($sub_total - $discount_total + $charge_total) * ($tax_rate_percentage / 100.00));
+            $tax_total = (($sub_total - $discount_total + $charge) * ($tax_rate_percentage / 100.00));
         }
         $iias_array['discount'] = $discount_total;
-        $iias_array['charge'] = $charge_total;
-        $iias_array['allowance'] = $allowance_total;
-        $iias_array['subtotal'] = $sub_total - $allowance_total + $charge_total;
+        $iias_array['charge'] = $charge;
+        $iias_array['allowance'] = $allowance;
+        $iias_array['subtotal'] = $sub_total - $allowance + $charge;
         $iias_array['taxtotal'] = $tax_total;
-        $iias_array['total'] = ($sub_total - $discount_total + $charge_total - $allowance_total + $tax_total);
+        $iias_array['total'] = ($sub_total - $discount_total + $charge - $allowance + $tax_total);
         // Create a new Inv Item Amount record if one does not exist
         if ($iiar->repoCount((string) $inv_item_id) === 0) {
             $iias->saveInvItemAmountNoForm(new InvItemAmount(), $iias_array);

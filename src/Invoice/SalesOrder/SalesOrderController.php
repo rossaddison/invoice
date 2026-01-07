@@ -6,39 +6,50 @@ namespace App\Invoice\SalesOrder;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-// Entity
+use App\Invoice\Client\ClientRepository as CR;
+use App\Invoice\CustomField\CustomFieldRepository as CFR;
+use App\Invoice\CustomValue\CustomValueRepository as CVR;
+use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DR;
 use App\Invoice\Entity\CustomField;
 use App\Invoice\Entity\DeliveryLocation;
 use App\Invoice\Entity\Group;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvCustom;
+use App\Invoice\Entity\InvItem;
+use App\Invoice\Entity\InvItemAllowanceCharge;
 use App\Invoice\Entity\InvTaxRate;
 use App\Invoice\Entity\SalesOrder;
+use App\Invoice\Entity\SalesOrderAmount;
 use App\Invoice\Entity\SalesOrderCustom;
 use App\Invoice\Entity\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderTaxRate;
-use App\Invoice\Client\ClientRepository as CR;
-use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DR;
-use App\Invoice\CustomValue\CustomValueRepository as CVR;
-use App\Invoice\CustomField\CustomFieldRepository as CFR;
+use App\Invoice\Entity\SalesOrderItemAllowanceCharge;
 use App\Invoice\Group\GroupRepository as GR;
-use App\Invoice\Inv\InvRepository as InvRepo;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
-use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
+use App\Invoice\Helpers\CustomValuesHelper as CVH;
+use App\Invoice\Helpers\PdfHelper;
 use App\Invoice\Inv\InvForm;
+use App\Invoice\Inv\InvRepository as InvRepo;
+use App\Invoice\Inv\InvService;
 use App\Invoice\InvAmount\InvAmountForm;
-use App\Invoice\InvItem\InvItemForm;
+use App\Invoice\InvAmount\InvAmountService;
 use App\Invoice\InvCustom\InvCustomForm;
 use App\Invoice\InvCustom\InvCustomService;
+use App\Invoice\InvItem\InvItemForm;
+use App\Invoice\InvItem\InvItemService;
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeService as IIACS;
+use App\Invoice\InvAmount\InvAmountRepository as IAR;
+use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
+use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
 use App\Invoice\InvTaxRate\InvTaxRateForm;
+use App\Invoice\InvTaxRate\InvTaxRateService;
 use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\ProductImage\ProductImageRepository as PIR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SoR;
-use App\Invoice\SalesOrderAmount\SalesOrderAmountService as SoAS;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SoAR;
+use App\Invoice\SalesOrderAmount\SalesOrderAmountService as SoAS;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SoCR;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomService as SoCS;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SoIR;
@@ -50,29 +61,23 @@ use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateService as SoTRS;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Task\TaskRepository as TASKR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
-use App\Invoice\UserClient\UserClientRepository as UCR;
-use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
-use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\Invoice\Unit\UnitRepository as UNR;
-use App\User\UserRepository as UR;
-use App\Invoice\Inv\InvService;
-use App\Invoice\InvAmount\InvAmountService;
-use App\Invoice\InvItem\InvItemService;
-use App\Invoice\InvTaxRate\InvTaxRateService;
-use App\User\UserService;
+use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
+use App\Invoice\UserClient\UserClientRepository as UCR;
+use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\Service\WebControllerService;
-// Helpers
-use App\Invoice\Helpers\CustomValuesHelper as CVH;
-use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Helpers\PdfHelper;
-// Psr
+use App\User\UserRepository as UR;
+use App\User\UserService;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
@@ -80,9 +85,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
-use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
-use Exception;
 
 final class SalesOrderController extends BaseController
 {
@@ -94,6 +97,7 @@ final class SalesOrderController extends BaseController
         private readonly InvCustomService $inv_custom_service,
         private readonly InvAmountService $invAmountService,
         private readonly InvItemService $invItemService,
+        private readonly IIACS $inv_item_ac_service,
         private readonly InvTaxRateService $invTaxRateService,
         private readonly SalesOrderService $salesorderService,
         Session $session,
@@ -104,7 +108,8 @@ final class SalesOrderController extends BaseController
         TranslatorInterface $translator,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+                $viewRenderer, $session, $sR, $flash);
     }
 
     /**
@@ -135,30 +140,40 @@ final class SalesOrderController extends BaseController
         $status = (int) $currentRoute->getArgument('status', '0');
         /** @psalm-suppress MixedAssignment $sort_string */
         $sort_string = $query_params['sort'] ?? '-id';
-        $sort = Sort::only(['status_id','number','date_created', 'id','client_id'])->withOrderString((string) $sort_string);
+        $sort =  Sort::only([
+                    'status_id',
+                    'number',
+                    'date_created',
+                    'id','client_id'])->withOrderString((string) $sort_string);
 
-        // Get the current user and determine from (Related logic: see Settings...User Account) whether they have been given
-        // either guest or admin rights. These rights are unrelated to rbac and serve as a second
-        // 'line of defense' to support role based admin control.
+        // Get the current user and determine from (Related logic:
+        // see Settings...User Account) whether they have been given
+        // either guest or admin rights. These rights are unrelated to rbac
+        // and serve as a second 'line of defense' to support role based admin
+        // control.
 
         // Retrieve the user from Yii-Demo's list of users in the User Table
         $user = $this->userService->getUser();
         if ($user) {
-            // Use this user's id to see whether a user has been setup under UserInv ie. yii-invoice's list of users
+            // Use this user's id to see whether a user has been setup under
+            // UserInv ie. yii-invoice's list of users
             $userinv = ($uiR->repoUserInvUserIdcount((string) $user->getId()) > 0
                      ? $uiR->repoUserInvUserIdquery((string) $user->getId())
                      : null);
             if ($userinv) {
-                // Determine what clients have been allocated to this user (Related logic: see Settings...User Account)
-                // by looking at UserClient table
+                // Determine what clients have been allocated to this user
+                // (Related logic: see Settings...User Account) by looking at
+                // UserClient table
 
-                // eg. If the user is a guest-accountant, they will have been allocated certain clients
-                // A user-quest-accountant will be allocated a series of clients
-                // A user-guest-client will be allocated their client number by the administrator so that
+                // eg. If the user is a guest-accountant, they will have been
+                // allocated certain clients. A user-quest-accountant will be
+                // allocated a series of clients. A user-guest-client will be
+                // allocated their client number by the administrator so that
                 // they can view their salesorders when they log in
                 $user_clients = $ucR->get_assigned_to_user((string) $user->getId());
                 if (!empty($user_clients)) {
-                    $salesOrders = $this->salesorders_status_with_sort_guest($soR, $status, $user_clients, $sort);
+                    $salesOrders = $this->salesorders_status_with_sort_guest(
+                        $soR, $status, $user_clients, $sort);
                     $paginator = (new OffsetPaginator($salesOrders))
                     ->withPageSize($this->sR->positiveListLimit())
                     ->withCurrentPage($currentPageNeverZero);
@@ -171,8 +186,10 @@ final class SalesOrderController extends BaseController
                         'soaR' => $soaR,
                         'soR' => $soR,
                         'status' => $status,
-                        'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                         ? (int) $this->sR->getSetting('default_list_limit') : 1,
+                        'defaultPageSizeOffsetPaginator' =>
+                            $this->sR->getSetting('default_list_limit')
+                                ? (int) $this->sR->getSetting(
+                                        'default_list_limit') : 1,
                         'so_statuses' => $so_statuses,
                         'paginator' => $paginator,
                     ];
@@ -192,9 +209,16 @@ final class SalesOrderController extends BaseController
      * @param SoAR $soaR
      * @param SOR $soR
      * @param SettingRepository $sR
+     * @param string|null $queryFilterClient
      * @return \Yiisoft\DataResponse\DataResponse
      */
-    public function index(CurrentRoute $currentRoute, CR $clientRepo, Request $request, SoAR $soaR, SoR $soR, SettingRepository $sR): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, CR $clientRepo,
+            Request $request, SoAR $soaR, SoR $soR, InvRepo $iR,
+                SettingRepository $sR,
+                #[Query('filterClient')]
+                ?string $queryFilterClient = null,
+                #[Query('groupBy')]
+                ?string $queryGroupBy = 'none'): \Yiisoft\DataResponse\DataResponse
     {
         // If the language dropdown changes
         $this->session->set('_language', $currentRoute->getArgument('_language'));
@@ -213,21 +237,29 @@ final class SalesOrderController extends BaseController
                     /** @psalm-suppress MixedArgument $sort_string */
                     ->withOrderString((string) $sort_string);
         $salesorders = $this->salesorders_status_with_sort($soR, $status, $sort);
-        $paginator = (new OffsetPaginator($salesorders))
-        ->withPageSize($sR->positiveListLimit())
-        ->withCurrentPage($currentPageNeverZero)
-        ->withToken(PageToken::next((string) $page));
+        if (isset($queryFilterClient) && !empty($queryFilterClient)) {
+            $salesorders = $soR->filterClient($queryFilterClient)->withSort($sort);
+        }
         $so_statuses = $soR->getStatuses($this->translator);
+        $visible = $sR->getSetting('columns_all_visible') === '1';
         $parameters = [
             'alert' => $this->alert(),
             'soaR' => $soaR,
             'soR' => $soR,
+            'iR' => $iR,
             'status' => $status,
-            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                         ? (int) $this->sR->getSetting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' =>
+                $this->sR->getSetting('default_list_limit')
+                    ? (int) $this->sR->getSetting('default_list_limit') : 1,
             'so_statuses' => $so_statuses,
-            'paginator' => $paginator,
+            'salesorders' => $salesorders,
             'client_count' => $clientRepo->count(),
+            'groupBy' => $queryGroupBy,
+            'visible' => $visible,
+            'optionsDataClientsDropdownFilter' =>
+                $this->optionsDataClientsFilter($soR),
+            'sortString' => $sort_string,
+            'page' => $currentPageNeverZero,
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -261,11 +293,13 @@ final class SalesOrderController extends BaseController
                      *  @var string $so_label
                      */
                     $so_label = $so_statuses[$status_id]['label'];
-                    return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+                    return $this->factory->createResponse(
+                        $this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/salesorder_successful',
                         [
                             'heading' => $so_label,
-                            'message' => $this->translator->translate('record.successfully.updated'),
+                            'message' => $this->translator->translate(
+                                'record.successfully.updated'),
                             'url' => 'salesorder/view','id' => $so_id,
                         ],
                     ));
@@ -296,8 +330,10 @@ final class SalesOrderController extends BaseController
                         $this->viewRenderer->renderPartialAsString(
                             '//invoice/setting/salesorder_successful',
                             [
-                                'heading' => $soR->getSpecificStatusArrayLabel((string) 9),
-                                'message' => $this->translator->translate('record.successfully.updated'),
+                                'heading' => $soR->getSpecificStatusArrayLabel(
+                                    (string) 9),
+                                'message' => $this->translator->translate(
+                                    'record.successfully.updated'),
                                 'url' => 'salesorder/view','id' => $so_id,
                             ],
                         ),
@@ -309,6 +345,121 @@ final class SalesOrderController extends BaseController
     }
 
     /**
+     * Guest client saves Peppol PO Item ID and Line ID for sales order items
+     * This is required before generating a Peppol electronic invoice
+     * Related logic: see form_peppol_guest.php
+     *
+     * @param Request $request
+     * @param CurrentRoute $currentRoute
+     * @param SoR $soR
+     * @param SoIR $soiR
+     * @param SoIS $soiS
+     *
+     * @return Response
+     */
+    public function url_key_guest_save_peppol(
+        Request $request,
+        CurrentRoute $currentRoute,
+        SoR $soR,
+        SoIR $soiR,
+        SoIS $soiS
+    ): Response {
+        /** @var array<string, mixed> $body */
+        $body = $request->getParsedBody();
+        /** @var string|null $url_key */
+        $url_key = $body['url_key'] ?? null;
+        
+        if (null === $url_key) {
+            return $this->factory->createResponse(
+                Json::encode([
+                    'success' => 0,
+                    'message' => $this->translator->translate('error.occurred')
+                ])
+            );
+        }
+        
+        // Verify the sales order exists and is accessible
+        if ($soR->repoUrl_key_guest_count($url_key) < 1) {
+            return $this->factory->createResponse(
+                Json::encode([
+                    'success' => 0,
+                    'message' => $this->translator->translate('salesorder.not.found')
+                ])
+            );
+        }
+        
+        $salesorder = $soR->repoUrl_key_guest_loaded($url_key);
+        if (!$salesorder) {
+            return $this->factory->createResponse(
+                Json::encode([
+                    'success' => 0,
+                    'message' => $this->translator->translate('salesorder.not.found')
+                ])
+            );
+        }
+        
+        // Only allow updates when status is 3 (Client Agreed to Terms) or 4 (Delivery/Completion)
+        if (!in_array($salesorder->getStatus_id(), [3, 4])) {
+            return $this->factory->createResponse(
+                Json::encode([
+                    'success' => 0,
+                    'message' => $this->translator->translate('salesorder.peppol.invalid.status')
+                ])
+            );
+        }
+        
+        /** @var array<string, string> $item_ids */
+        $item_ids = $body['item_id'] ?? [];
+        /** @var array<string, string> $peppol_po_itemids */
+        $peppol_po_itemids = $body['peppol_po_itemid'] ?? [];
+        /** @var array<string, string> $peppol_po_lineids */
+        $peppol_po_lineids = $body['peppol_po_lineid'] ?? [];
+        
+        $updated_count = 0;
+        
+        // Update each item
+        foreach ($item_ids as $item_id) {
+            $item = $soiR->repoSalesOrderItemquery($item_id);
+            if ($item && $item->getSales_order_id() === $salesorder->getId()) {
+                /** @var string $peppol_po_itemid */
+                $peppol_po_itemid = $peppol_po_itemids[$item_id] ?? '';
+                /** @var string $peppol_po_lineid */
+                $peppol_po_lineid = $peppol_po_lineids[$item_id] ?? '';
+                
+                // Update the item with Peppol data
+                $array = [
+                    'peppol_po_itemid' => trim($peppol_po_itemid),
+                    'peppol_po_lineid' => trim($peppol_po_lineid)
+                ];
+                
+                if ($soiS->savePeppol_po_itemid($item, $array)) {
+                    $updated_count++;
+                }
+                if ($soiS->savePeppol_po_lineid($item, $array)) {
+                    // Already counted above
+                }
+            }
+        }
+        
+        if ($updated_count > 0) {
+            return $this->factory->createResponse(
+                Json::encode([
+                    'success' => 1,
+                    'message' => $this->translator->translate('invoice.peppol.saved.successfully'),
+                    'updated_items' => $updated_count
+                ])
+            );
+        }
+        
+        return $this->factory->createResponse(
+            Json::encode([
+                'success' => 0,
+                'message' => $this->translator->translate('no.changes.made')
+            ])
+        );
+    }
+
+    /**
      * @param SalesOrderRepository $soRepo
      * @param int $status
      * @param Sort $sort
@@ -317,7 +468,8 @@ final class SalesOrderController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, SalesOrder>
      */
-    private function salesorders_status_with_sort(SoR $soRepo, int $status, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    private function salesorders_status_with_sort(SoR $soRepo, int $status,
+        Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $soRepo->findAllWithStatus($status)
                       ->withSort($sort);
@@ -384,7 +536,8 @@ final class SalesOrderController extends BaseController
             if (null !== $inv_id) {
                 $inv = $invRepo->repoInvUnloadedquery($inv_id);
             }
-            $inv_number = null !== $inv_id && null !== $inv ? (string) $inv->getNumber() : '';
+            $inv_number = null !== $inv_id
+                    && null !== $inv ? (string) $inv->getNumber() : '';
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'salesorder/edit',
@@ -395,7 +548,8 @@ final class SalesOrderController extends BaseController
                     'origin_id' => $so->getClient_id(),
                     'action' => 'edit',
                 ],
-                // Only make clients that have a user account available in the drop down list
+                // Only make clients that have a user account available in the
+                // drop down list
                 'optionsData' => $this->optionsData(
                     (int) $so->getClient_id(),
                     $clientRepo,
@@ -407,30 +561,44 @@ final class SalesOrderController extends BaseController
                 'errors' => [],
                 'form' => $form,
                 'invNumber' => $inv_number,
-                // if the delivery location is zero present the link to delivery locations add
+                // if the delivery location is zero present the link to delivery
+                // locations add
                 'delCount' => $delRepo->repoClientCount($so->getClient_id()),
                 'dels' => $dels,
-                'terms_and_conditions_file' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/terms_and_conditions_file'),
-                'terms_and_conditions' => $settingRepository->getTermsAndConditions(),
+                'terms_and_conditions_file' =>
+                    $this->viewRenderer->renderPartialAsString(
+                            '//invoice/salesorder/terms_and_conditions_file'),
+                'terms_and_conditions' =>
+                    $settingRepository->getTermsAndConditions(),
                 // if there are no delivery locations add a flash message
-                'no_delivery_locations' => $delRepo->repoClientCount($so->getClient_id()) > 0 ? '' : $this->flashMessage('warning', $this->translator->translate('quote.delivery.location.none')),
+                'no_delivery_locations' => $delRepo->repoClientCount(
+                    $so->getClient_id()) > 0 ? '' :
+                        $this->flashMessage(
+                                'warning', $this->translator->translate(
+                                    'quote.delivery.location.none')),
                 'alert' => $this->alert(),
                 'so' => $so,
                 'cfR' => $cfR,
                 'cvR' => $cvR,
-                'so_custom_values' => null !== $so_id ? $this->salesorder_custom_values($so_id, $socR) : null,
+                'so_custom_values' =>
+                    null !== $so_id ? $this->salesorder_custom_values(
+                        $so_id, $socR) : null,
                 'so_statuses' => $soR->getStatuses($this->translator),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody();
-                if ($formHydrator->populateFromPostAndValidate($form, $request)) {                   
+                if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->salesorderService->saveSo($so, $body);
-                        $this->flashMessage('success', $this->translator->translate('record.successfully.updated'));
-                        return $this->webService->getRedirectResponse('salesorder/index');
+                        $this->flashMessage(
+                            'success', $this->translator->translate(
+                                'record.successfully.updated'));
+                        return $this->webService->getRedirectResponse(
+                            'salesorder/index');
                     }
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                $parameters['errors'] =
+                    $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form_edit', $parameters);
@@ -466,8 +634,10 @@ final class SalesOrderController extends BaseController
         try {
             $so = $this->salesorder($currentRoute, $salesorderRepository);
             if ($so) {
-                $this->salesorderService->deleteSo($so, $socR, $socS, $soiR, $soiS, $sotrR, $sotrS, $soaR, $soaS);
-                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
+                $this->salesorderService->deleteSo($so, $socR, $socS, $soiR,
+                    $soiS, $sotrR, $sotrS, $soaR, $soaS);
+                $this->flashMessage('info', $this->translator->translate(
+                    'record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('salesorder/index');
             }
             return $this->webService->getRedirectResponse('salesorder/index');
@@ -482,10 +652,12 @@ final class SalesOrderController extends BaseController
      * @param SoCR $salesorder_customR
      * @return array
      */
-    public function salesorder_custom_values(string $so_id, SoCR $salesorder_customR): array
+    public function salesorder_custom_values(string $so_id,
+                                                SoCR $salesorder_customR): array
     {
-        // Get all the custom fields that have been registered with this salesorder on creation, retrieve existing values via repo, and populate
-        // custom_field_form_values array
+        // Get all the custom fields that have been registered with this
+        // salesorder on creation, retrieve existing values via repo,
+        // and populate custom_field_form_values array
         $custom_field_form_values = [];
         if ($salesorder_customR->repoSalesOrderCount($so_id) > 0) {
             $salesorder_custom_fields = $salesorder_customR->repoFields($so_id);
@@ -500,23 +672,36 @@ final class SalesOrderController extends BaseController
         return $custom_field_form_values;
     }
     
-    public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR, DR $dlR, SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR, SoR $soR, SoTRR $sotrR, SettingRepository $sR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+    public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR,
+        DR $dlR, SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR, SoR $soR,
+            SoTRR $sotrR, SettingRepository $sR, UIR $uiR):
+                \Yiisoft\DataResponse\DataResponse|Response
     {
-        // include is a value of 0 or 1 passed from quote.js function quote_to_pdf_with(out)_custom_fields indicating whether the user
+        // include is a value of 0 or 1 passed from quote.js function
+        // quote_to_pdf_with(out)_custom_fields indicating whether the user
         // wants custom fields included on the quote or not.
         $include = $currentRoute->getArgument('include');
         $so_id = (string) $this->session->get('so_id');
-        $salesorder_amount = (($soaR->repoSalesOrderAmountCount($so_id) > 0) ? $soaR->repoSalesOrderquery($so_id) : null);
+        $salesorder_amount = (($soaR->repoSalesOrderAmountCount($so_id) > 0) ?
+            $soaR->repoSalesOrderquery($so_id) : null);
         if ($salesorder_amount) {
             $custom = (($include === (string) 1) ? true : false);
-            $salesorder_custom_values = $this->salesorder_custom_values((string) $this->session->get('so_id'), $socR);
-            // session is passed to the pdfHelper and will be used for the locale ie. $session->get('_language') or the print_language ie $session->get('print_language')
+            $salesorder_custom_values = $this->salesorder_custom_values(
+                (string) $this->session->get('so_id'), $socR);
+            // session is passed to the pdfHelper and will be used for the
+            // locale ie. $session->get('_language') or the print_language
+            // ie $session->get('print_language')
             $pdfhelper = new PdfHelper($sR, $this->session, $this->translator);
-            // The salesorder will be streamed ie. shown in the browser, and not archived
+            // The salesorder will be streamed ie. shown in the browser, and
+            // not archived
             $stream = true;
             $so = $soR->repoSalesOrderUnloadedquery($so_id);
             if ($so) {
-                $pdfhelper->generate_salesorder_pdf($so_id, $so->getUser_id(), $stream, $custom, $salesorder_amount, $salesorder_custom_values, $cR, $cvR, $cfR, $dlR, $soiR, $soiaR, $soR, $sotrR, $uiR, $this->viewRenderer, $this->translator);
+                $pdfhelper->generate_salesorder_pdf($so_id, $so->getUser_id(),
+                    $stream, $custom, $salesorder_amount,
+                        $salesorder_custom_values, $cR, $cvR, $cfR, $dlR,
+                            $soiR, $soiaR, $soR, $sotrR, $uiR,
+                                $this->viewRenderer, $this->translator);
                 $parameters = ($include == '1'
                 ? [
                     'success' => 1,
@@ -585,7 +770,8 @@ final class SalesOrderController extends BaseController
             $so_id = $so->getId();
             // pdf => need session variable
             $this->session->set('so_id', $so_id);
-            $so_tax_rates = (($sotrR->repoCount((string) $so_id) > 0) ? $sotrR->repoSalesOrderquery((string) $so_id) : null);
+            $so_tax_rates = (($sotrR->repoCount((string) $so_id) > 0) ?
+                $sotrR->repoSalesOrderquery((string) $so_id) : null);
             $inv_id = $so->getInv_id();
             if (null !== $inv_id) {
                 $inv = $invRepo->repoInvUnloadedquery($inv_id);
@@ -593,38 +779,66 @@ final class SalesOrderController extends BaseController
             } else {
                 $invNumber = '';
             }
-            $so_amount = (($soaR->repoSalesOrderAmountCount((string) $so_id) > 0) ? $soaR->repoSalesOrderquery((string) $so_id) : null);
+            $quote_id = $so->getQuote_id();
+            if ($quote_id !== '' && $quote_id !== '0') {
+                $quote = $qR->repoQuoteUnLoadedQuery($quote_id);
+                $quoteNumber = ($quote ? $quote->getNumber() : '');
+            } else {
+                $quoteNumber = '';
+            }
+            $so_amount = (($soaR->repoSalesOrderAmountCount(
+                (string) $so_id) > 0) ? $soaR->repoSalesOrderquery(
+                    (string) $so_id) : null);
             if ($so_amount) {
-                $salesorder_custom_values = $this->salesorder_custom_values((string) $so_id, $socR);
+                $salesorder_custom_values = $this->salesorder_custom_values(
+                        (string) $so_id, $socR);
                 $form = new SalesOrderForm($so);
                 $parameters = [
                     'alert' => $this->alert(),
                     'title' => $this->translator->translate('view'),
-                    'invEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
+                    'invEdit' => $this->userService->hasPermission(
+                        Permissions::EDIT_INV) ? true : false,
                     'errors' => [],
                     'form' => $form,
                     'so' => $so,
                     'soItems' => $soiR->repoSalesOrderquery((string) $so_id),
                     'soR' => $soR,
                     'invNumber' => $invNumber,
-                    // Get all the fields that have been setup for this SPECIFIC salesorder in salesorder_custom.
-                    'fields' => $socR->repoFields((string) $this->session->get('quote_id')),
+                    'quoteNumber' => $quoteNumber,
+                    // Get all the fields that have been setup for this SPECIFIC
+                    // salesorder in salesorder_custom.
+                    'fields' => $socR->repoFields(
+                        (string) $this->session->get('quote_id')),
                     // Get the standard extra custom fields built for EVERY quote.
-                    'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'salesorder_custom')['customFields'],
-                    'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'salesorder_custom')['customValues'],
+                    'customFields' =>
+                        $this->fetchCustomFieldsAndValues($cfR, $cvR,
+                            'salesorder_custom')['customFields'],
+                    'customValues' =>
+                        $this->fetchCustomFieldsAndValues($cfR, $cvR,
+                            'salesorder_custom')['customValues'],
                     'cvH' => new CVH($settingRepository, $cvR),
-                    'terms_and_conditions' => $settingRepository->getTermsAndConditions(),
+                    'terms_and_conditions' =>
+                        $settingRepository->getTermsAndConditions(),
                     'soStatuses' => $soR->getStatuses($this->translator),
                     'salesOrderCustomValues' => $salesorder_custom_values,
-                    'partial_item_table' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/partial_item_table', [
+                    'partial_item_table' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/salesorder/partial_item_table', [
                         'acsoiR' => $acsoiR,
-                        'included' => $this->translator->translate('item.tax.included'),
-                        'excluded' => $this->translator->translate('item.tax.excluded'),
-                        'invEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
+                        'included' => $this->translator->translate(
+                                'item.tax.included'),
+                        'excluded' => $this->translator->translate(
+                                'item.tax.excluded'),
+                        'invEdit' => $this->userService->hasPermission(
+                                Permissions::EDIT_INV) ? true : false,
+                        'editClientPeppol' => $this->userService->hasPermission(
+                                Permissions::EDIT_CLIENT_PEPPOL) ? true : false,
                         'piR' => $piR,
-                        'invView' => $this->userService->hasPermission(Permissions::VIEW_INV) ? true : false,
+                        'invView' => $this->userService->hasPermission(
+                                Permissions::VIEW_INV) ? true : false,
                         'products' => $pR->findAllPreloaded(),
-                        'soItems' => $soiR->repoSalesOrderquery((string) $so_id),
+                        'soItems' => $soiR->repoSalesOrderquery(
+                                (string) $so_id),
                         'soiaR' => $soiaR,
                         'soTaxRates' => $so_tax_rates,
                         'soAmount' => $so_amount,
@@ -634,22 +848,34 @@ final class SalesOrderController extends BaseController
                         'tasks' => $taskR->findAllPreloaded(),
                         'units' => $uR->findAllPreloaded(),
                     ]),
-                    'modal_salesorder_to_pdf' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/modal_salesorder_to_pdf', [
+                    'modal_salesorder_to_pdf' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/salesorder/modal_salesorder_to_pdf', [
                         'so' => $so,
                     ]),
-                    'modal_so_to_invoice' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/modal_so_to_invoice', [
+                    'modal_so_to_invoice' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/salesorder/modal_so_to_invoice', [
                         'so' => $so,
                         'gR' => $gR,
                     ]),
-                    'view_custom_fields' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/view_custom_fields', [
-                        'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'salesorder_custom')['customFields'],
-                        'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'salesorder_custom')['customValues'],
+                    'view_custom_fields' =>
+                        $this->viewRenderer->renderPartialAsString(
+                            '//invoice/salesorder/view_custom_fields', [
+                        'customFields' => $this->fetchCustomFieldsAndValues(
+                            $cfR, $cvR, 'salesorder_custom')['customFields'],
+                        'customValues' => $this->fetchCustomFieldsAndValues(
+                            $cfR, $cvR, 'salesorder_custom')['customValues'],
                         'form' => $form,
                         'salesOrderCustomValues' => $salesorder_custom_values,
                         'cvH' => new CVH($settingRepository, $cvR),
                     ]),
-                    'partial_quote_delivery_location' => null!== ($quote = $qR->repoQuoteUnLoadedQuery($so->getQuote_id())) ? 
-                        $this->view_partial_delivery_location($_language, $dR, $quote->getDelivery_location_id()) : '',
+                    'partial_quote_delivery_location' => null!==
+                        ($quote = $qR->repoQuoteUnLoadedQuery(
+                            $so->getQuote_id())) ? 
+                        $this->view_partial_delivery_location(
+                            $_language, $dR, $quote->getDelivery_location_id())
+                                : '',
                 ];  
                 return $this->viewRenderer->render('view', $parameters);
             } // $so_amount
@@ -664,7 +890,8 @@ final class SalesOrderController extends BaseController
     * @param SalesOrderRepository $salesorderRepository
     * @return SalesOrder|null
     */
-    private function salesorder(CurrentRoute $currentRoute, SoR $salesorderRepository): ?SalesOrder
+    private function salesorder(CurrentRoute $currentRoute,
+                                        SoR $salesorderRepository): ?SalesOrder
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
@@ -685,19 +912,24 @@ final class SalesOrderController extends BaseController
         bool $unloaded = false,
     ): ?SalesOrder {
         if ($id) {
-            return $unloaded ? $soR->repoSalesOrderUnLoadedquery((string) $id) : $soR->repoSalesOrderLoadedquery((string) $id);
+            return $unloaded ? $soR->repoSalesOrderUnLoadedquery((string) $id)
+                : $soR->repoSalesOrderLoadedquery((string) $id);
         }
         return null;
     }
 
     /**
-     * This function will be done by the Admin as soon as the sales order has 'invoice generate' status
+     * This function will be done by the Admin as soon as the sales order has
+     * 'invoice generate' status
      * The Sales Order will have the status 'invoice generated' against it
      * The Invoice will have the status 'sent' against it
      * @param Request $request
      * @param FormHydrator $formHydrator
+     * @param ACSOIR $acsoiR
      * @param CFR $cfR
      * @param GR $gR
+     * @param InvRepo $iR
+     * @param IAR $iaR
      * @param IIAR $iiaR
      * @param IIAS $iiaS
      * @param PR $pR
@@ -715,18 +947,25 @@ final class SalesOrderController extends BaseController
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function so_to_invoice_confirm(
+        #[RouteArgument('id')] string $id = '',
         Request $request,
         FormHydrator $formHydrator,
+        ACIIR $aciiR,    
+        ACSOIR $acsoiR,
         CFR $cfR,
         GR $gR,
+        InvRepo $iR,    
+        IAR $iaR,
         IIAR $iiaR,
         IIAS $iiaS,
         PR $pR,
         SoAR $soaR,
         SoCR $socR,
+        SoIAR $soiaR,
         SoIR $soiR,
         SoR $soR,
         SoTRR $sotrR,
+        TASKR $taskR,
         TRR $trR,
         UNR $unR,
         SettingRepository $sR,
@@ -735,17 +974,25 @@ final class SalesOrderController extends BaseController
         UIR $uiR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $body = $request->getQueryParams();
-        $so_id = (string) $body['so_id'];
+        // Support both URL path parameter (/so_to_invoice/66) and query
+        // parameter (?so_id=66)
+        $so_id = $id !== '' ? $id : (string) ($body['so_id'] ?? '');
         $so = $soR->repoSalesOrderUnloadedquery($so_id);
         if ($so) {
+            // Get client_id from sales order entity or fallback to query params
+            $client_id = $so->getClient_id() ?:
+                (string) ($body['client_id'] ?? '');
+            // Use default invoice group, not the sales order group
+            $group_id = $sR->getSetting('default_invoice_group');
+            
             $inv_body = [
-                'client_id' => $body['client_id'],
-                'group_id' => $body['group_id'],
+                'client_id' => $client_id,
+                'group_id' => $group_id,
                 'quote_id' => $so->getQuote_id(),
                 'so_id' => $so->getId(),
                 'status_id' => 2,
                 'password' => $body['password'] ?? '',
-                'number' => $gR->generate_number((int) $body['group_id']),
+                'number' => $gR->generate_number((int) $group_id),
                 'discount_amount' => (float) $so->getDiscount_amount(),
                 'discount_percent' => (float) $so->getDiscount_percent(),
                 'url_key' => $so->getUrl_key(),
@@ -772,36 +1019,78 @@ final class SalesOrderController extends BaseController
                     if (null !== $user) {
                         $user_inv = $uiR->repoUserInvUserIdquery($user_id);
                         if (null !== $user_inv && $user_inv->getActive()) {
-                            $this->invService->saveInv($user, $inv, $inv_body, $sR, $gR);
+                            $this->invService->saveInv($user, $inv, $inv_body,
+                                                                    $sR, $gR);
                             $inv_id = $inv->getId();
                             if (null !== $inv_id) {
-                                // Transfer each so_item to inv_item and the corresponding so_item_amount to inv_item_amount for each item
-                                $this->so_to_invoice_so_items($so_id, $inv_id, $iiaR, $iiaS, $pR, $soiR, $trR, $formHydrator, $sR, $unR);
-                                $this->so_to_invoice_so_tax_rates($so_id, $inv_id, $sotrR, $formHydrator);
-                                $this->so_to_invoice_so_custom($so_id, $inv_id, $socR, $cfR, $formHydrator);
-                                $this->so_to_invoice_so_amount($so_id, $inv_id, $soaR, $formHydrator);
+                                // Transfer each so_item to inv_item and the
+                                // corresponding so_item_amount to
+                                // inv_item_amount for each item
+                                $this->so_to_invoice_so_items($so_id, $inv_id,
+                                        $aciiR, $acsoiR, $iiaR, $iiaS, $pR,
+                                        $taskR, $soiaR, $soiR, $trR,
+                                        $formHydrator, $sR, $unR);
+                                $this->so_to_invoice_so_tax_rates(
+                                    $so_id, $inv_id, $sotrR, $formHydrator);
+                                $this->so_to_invoice_so_custom(
+                                    $so_id, $inv_id, $socR, $cfR, $formHydrator);
+                                $this->so_to_invoice_so_amount($so, $inv, $iR);
                                 // Update the sos inv_id.
                                 $so->setInv_id($inv_id);
                                 // Set salesorder's status to invoice generated
                                 $so->setStatus_id(8);
-                                $this->flashMessage('info', $this->translator->translate('salesorder.invoice.generated'));
+                                $this->flashMessage('info',
+                                    $this->translator->translate(
+                                        'salesorder.invoice.generated'));
                                 $soR->save($so);
-                                $parameters = [
-                                    'success' => 1,
-                                    'flash_message' => $this->translator->translate('salesorder.copied.to.invoice'),
-                                ];
-                                return $this->factory->createResponse(Json::encode($parameters));
+                                
+                                // Check if this is an AJAX request
+                                $isAjax = $request->getHeaderLine(
+                                    'X-Requested-With') === 'XMLHttpRequest';
+                                
+                                if ($isAjax) {
+                                    // Return JSON for AJAX requests
+                                    $parameters = [
+                                        'success' => 1,
+                                        'flash_message' =>
+                                            $this->translator->translate(
+                                                'salesorder.copied.to.invoice'),
+                                        'inv_id' => $inv_id,
+                                    ];
+                                    return $this->factory->createResponse(
+                                        Json::encode($parameters));
+                                } else {
+                                    // Direct browser request - redirect to
+                                    // invoice view
+                                    return $this->webService->getRedirectResponse(
+                                        'inv/view', ['id' => $inv_id]);
+                                }
                             } // null!==$inv_id
                         } // null!==$user_inv && $user_inv->getActive()
                     } // null!==$user
                 }
             } else {
-                $parameters = [
-                    'success' => 0,
-                    'flash_message' => $this->translator->translate('salesorder.copied.to.invoice.not'),
-                ];
-                //return response to salesorder.js to reload page at location
-                return $this->factory->createResponse(Json::encode($parameters));
+                // Check if this is an AJAX request
+                $isAjax = $request->getHeaderLine(
+                    'X-Requested-With') === 'XMLHttpRequest';
+                
+                if ($isAjax) {
+                    // Return JSON for AJAX requests
+                    $parameters = [
+                        'success' => 0,
+                        'flash_message' => $this->translator->translate(
+                            'salesorder.copied.to.invoice.not'),
+                    ];
+                    return $this->factory->createResponse(Json::encode($parameters));
+                } else {
+                    // Direct browser request - redirect back to sales order
+                    // view
+                    $this->flashMessage('danger',
+                        $this->translator->translate(
+                            'salesorder.copied.to.invoice.not'));
+                    return $this->webService->getRedirectResponse(
+                        'salesorder/view', ['id' => $so_id]);
+                }
             }
         } // so
         return $this->webService->getNotFoundResponse();
@@ -810,56 +1099,103 @@ final class SalesOrderController extends BaseController
     /**
      * @param string $so_id
      * @param string $inv_id
+     * @param ACIIR $aciiR
+     * @param ACSOIR $acsoiR
      * @param IIAR $iiaR
      * @param IIAS $iiaS
      * @param PR $pR
+     * @param TASKR $taskR
      * @param SOIR $soiR
      * @param TRR $trR
      * @param FormHydrator $formHydrator
      * @param SettingRepository $sR
      * @param UNR $unR
      */
-    private function so_to_invoice_so_items(string $so_id, string $inv_id, IIAR $iiaR, IIAS $iiaS, PR $pR, SoIR $soiR, TRR $trR, FormHydrator $formHydrator, SettingRepository $sR, UNR $unR): void
+    private function so_to_invoice_so_items(string $so_id, string $new_inv_id,
+        ACIIR $aciiR, ACSOIR $acsoiR, IIAR $iiaR, IIAS $iiaS, PR $pR, TASKR $taskR,
+            SoIAR $soiaR, SoIR $soiR, TRR $trR, FormHydrator $formHydrator,
+                SettingRepository $sR, UNR $unR): void
     {
         // Get all items that belong to the salesorder
         $items = $soiR->repoSalesOrderItemIdquery($so_id);
         /** @var SalesOrderItem $so_item */
         foreach ($items as $so_item) {
+            $origSoItemId = $so_item->getId();
+            $newInvItem = new InvItem();
             $inv_item = [
-                'inv_id' => $inv_id,
-                'so_item_id' => $so_item->getId(),
+                'inv_id' => $new_inv_id,
+                'so_item_id' => $origSoItemId,
                 'tax_rate_id' => $so_item->getTax_rate_id(),
                 'product_id' => $so_item->getProduct_id(),
-                'task_id' => '',
+                'task_id' => $so_item->getTask_id(),
+                'product_unit' => $so_item->getProduct_unit(),
+                'product_unit_id' => $so_item->getProduct_unit_id(),
+                'peppol_po_itemid' => $so_item->getPeppol_po_itemid(),
+                'peppol_po_lineid' => $so_item->getPeppol_po_lineid(),
                 'name' => $so_item->getName(),
                 'description' => $so_item->getDescription(),
                 'quantity' => $so_item->getQuantity(),
                 'price' => $so_item->getPrice(),
                 'discount_amount' => $so_item->getDiscount_amount(),
-                'charge_amount' => $so_item->getCharge_amount(),
                 'order' => $so_item->getOrder(),
                 'is_recurring' => 0,
-                'product_unit' => $so_item->getProduct_unit(),
-                'product_unit_id' => $so_item->getProduct_unit_id(),
                 // Recurring date
                 'date' => '',
             ];
-            // Create an equivalent invoice item for the so item
-            $invItem = new InvItem();
-            $form = new InvItemForm($invItem, (int) $inv_id);
+            $form = new InvItemForm($newInvItem, (int) $new_inv_id);
             if ($formHydrator->populateAndValidate($form, $inv_item)) {
-                $this->invItemService->addInvItem_product($invItem, $inv_item, $inv_id, $pR, $trR, $iiaS, $iiaR, $sR, $unR);
+                $this->invItemService->addInvItemProductTask($newInvItem, $inv_item,
+                    $new_inv_id, $pR, $taskR, $iiaR, $iiaS, $unR, $trR,
+                        $this->translator, $sR);
+                $newInvItemId = $newInvItem->getId();
+                $this->copy_so_item_allowance_charges_to_inv($origSoItemId,
+                        $acsoiR, $new_inv_id, $newInvItem, $aciiR);
             }
         } // items
     }
-
+    
+    
+    private function copy_so_item_allowance_charges_to_inv(
+        string $origSoItemId, ACSOIR $acsoiR, string $new_inv_id,
+            InvItem $newInvItem, ACIIR $aciiR): void {
+         
+        $all = $acsoiR->repoSalesOrderItemquery($origSoItemId);
+        /**
+         * @var SalesOrderItemAllowanceCharge $salesOrderItemAllowanceCharge
+         */
+        foreach ($all as $salesOrderItemAllowanceCharge) {
+            $acInvItem = new InvItemAllowanceCharge();
+            
+            // CRITICAL: Set relationship objects to allow Cycle ORM to determine persistence order
+            // The Inv entity must be loaded and set, not just the FK ID
+            $acInvItem->setInv($newInvItem->getInv());
+            $acInvItem->setInvItem($newInvItem);
+            $acInvItem->setAllowanceCharge($salesOrderItemAllowanceCharge->getAllowanceCharge());
+            
+            // Also set FK IDs for consistency
+            $acInvItem->setInv_id((int) $new_inv_id);
+            $acInvItem->setInv_item_id((int) $newInvItem->getId());
+            $acInvItem->setAllowance_charge_id(
+                (int) $salesOrderItemAllowanceCharge->getAllowanceCharge()?->getId()
+            );
+            
+            // Set other properties
+            $acInvItem->setAmount((float) $salesOrderItemAllowanceCharge->getAmount());
+            $acInvItem->setVatOrTax((float) $salesOrderItemAllowanceCharge->getVatOrTax() ?: 0.00);
+            
+            // Save directly via repository - bypassing the service that calls nullifyRelationOnChange
+            $aciiR->save($acInvItem);
+        }
+    }
+    
     /**
      * @param string $so_id
      * @param string|null $inv_id
      * @param SOTRR $sotrR
      * @param FormHydrator $formHydrator
      */
-    private function so_to_invoice_so_tax_rates(string $so_id, ?string $inv_id, SoTRR $sotrR, FormHydrator $formHydrator): void
+    private function so_to_invoice_so_tax_rates(string $so_id, ?string $inv_id,
+        SoTRR $sotrR, FormHydrator $formHydrator): void
     {
         // Get all tax rates that have been setup for the salesorder
         $so_tax_rates = $sotrR->repoSalesOrderquery($so_id);
@@ -869,7 +1205,8 @@ final class SalesOrderController extends BaseController
                 'inv_id' => (string) $inv_id,
                 'tax_rate_id' => $so_tax_rate->getTax_rate_id(),
                 'include_item_tax' => $so_tax_rate->getInclude_item_tax(),
-                'inv_tax_rate_amount' => $so_tax_rate->getSales_order_tax_rate_amount(),
+                'inv_tax_rate_amount' =>
+                    $so_tax_rate->getSales_order_tax_rate_amount(),
             ];
             $entity = new InvTaxRate();
             $form = new InvTaxRateForm($entity);
@@ -894,21 +1231,29 @@ final class SalesOrderController extends BaseController
         FormHydrator $formHydrator,
     ): void {
         $so_customs = $socR->repoFields($so_id);
-        // For each salesorder custom field, build a new custom field for 'inv_custom' using the custom_field_id to find details
+        // For each salesorder custom field, build a new custom field for
+        // 'inv_custom' using the custom_field_id to find details
         /** @var SalesOrderCustom $so_custom */
         foreach ($so_customs as $so_custom) {
-            // For each so custom field, build a new custom field for 'inv_custom'
+            // For each so custom field, build a new custom field for
+            // 'inv_custom'
             // using the custom_field_id to find details
             /** @var CustomField $existing_custom_field */
-            $existing_custom_field = $cfR->repoCustomFieldquery($so_custom->getCustom_field_id());
-            if ($cfR->repoTableAndLabelCountquery('inv_custom', (string) $existing_custom_field->getLabel()) !== 0) {
+            $existing_custom_field = $cfR->repoCustomFieldquery(
+                $so_custom->getCustom_field_id());
+            if ($cfR->repoTableAndLabelCountquery('inv_custom',
+                (string) $existing_custom_field->getLabel()) !== 0) {
                 // Build an identitcal custom field for the invoice
                 $custom_field = new CustomField();
                 $custom_field->setTable('inv_custom');
-                $custom_field->setLabel((string) $existing_custom_field->getLabel());
-                $custom_field->setType($existing_custom_field->getType());
-                $custom_field->setLocation((int) $existing_custom_field->getLocation());
-                $custom_field->setOrder((int) $existing_custom_field->getOrder());
+                $custom_field->setLabel(
+                    (string) $existing_custom_field->getLabel());
+                $custom_field->setType(
+                    $existing_custom_field->getType());
+                $custom_field->setLocation(
+                    (int) $existing_custom_field->getLocation());
+                $custom_field->setOrder(
+                    (int) $existing_custom_field->getOrder());
                 $cfR->save($custom_field);
                 // Build the inv_custom field record
                 $inv_custom = [
@@ -919,39 +1264,42 @@ final class SalesOrderController extends BaseController
                 $entity = new InvCustom();
                 $form = new InvCustomForm($entity);
                 if ($formHydrator->populateAndValidate($form, $inv_custom)) {
-                    $this->inv_custom_service->saveInvCustom($entity, $inv_custom);
+                    $this->inv_custom_service->saveInvCustom(
+                        $entity, $inv_custom);
                 }
             } // existing_custom_field
         } // foreach
     }
 
     /**
-     * @param string $so_id
-     * @param string|null $inv_id
-     * @param SOAR $soaR
-     * @param FormHydrator $formHydrator
+     * @param SalesOrder $so
+     * @param Inv $inv
+     * @param InvRepo $iR
+     * @return void
      */
-    private function so_to_invoice_so_amount(string $so_id, ?string $inv_id, SoAR $soaR, FormHydrator $formHydrator): void
+    private function so_to_invoice_so_amount(SalesOrder $so, Inv $inv, InvRepo $iR): void
     {
-        $so_amount = $soaR->repoSalesOrderquery($so_id);
-        $inv_amount = [];
-        if ($so_amount) {
-            $inv_amount = [
-                'inv_id' => $inv_id,
-                'sign' => 1,
-                'item_subtotal' => $so_amount->getItem_subtotal(),
-                'item_tax_total' => $so_amount->getItem_tax_total(),
-                'tax_total' => $so_amount->getTax_total(),
-                'total' => $so_amount->getTotal(),
-                'paid' => 0.00,
-                'balance' => $so_amount->getTotal(),
-            ];
-        }
-        $entity = new InvAmount();
-        $form = new InvAmountForm($entity);
-        if ($formHydrator->populateAndValidate($form, $inv_amount)) {
-            $this->invAmountService->saveInvAmount($entity, $inv_amount);
-        }
+        /**
+         * @var SalesOrderAmount $soA
+         */
+        $soA = $so->getSales_order_amount();
+        /**
+         * @var InvAmount $iA
+         */
+        $iA = $inv->getInvAmount();
+        // hydrate
+        $iA->setInv_id((int) $inv->getId());
+        $iA->setItem_subtotal(
+            $soA->getItem_subtotal() ?? 0.00);
+        $iA->setItem_tax_total(
+            $soA->getItem_tax_total() ?? 0.00);
+        $iA->setPackhandleship_total(
+            $soA->getPackhandleship_total() ?: 0.00);
+        $iA->setPackhandleship_tax(
+            $soA->getPackhandleship_tax() ?: 0.00);
+        $iA->setTax_total($soA->getTax_total() ?? 0.00);
+        $iA->setTotal($soA->getTotal() ?? 0.00);
+        $iR->save($inv);
     }
 
     /**
@@ -967,7 +1315,9 @@ final class SalesOrderController extends BaseController
      * @param UCR $ucR
      * @return Response
      */
-    public function url_key(CurrentRoute $currentRoute, CurrentUser $currentUser, CFR $cfR, SoAR $soaR, SoIR $soiR, SoIAR $soiaR, SoR $soR, SoTRR $sotrR, UIR $uiR, UCR $ucR): Response
+    public function url_key(CurrentRoute $currentRoute, CurrentUser $currentUser,
+        CFR $cfR, SoAR $soaR, SoIR $soiR, SoIAR $soiaR, SoR $soR, SoTRR $sotrR,
+            UIR $uiR, UCR $ucR): Response
     {
         // Get the url key from the browser
         $url_key = $currentRoute->getArgument('key');
@@ -977,7 +1327,8 @@ final class SalesOrderController extends BaseController
             return $this->webService->getNotFoundResponse();
         }
 
-        // If there is a salesorder with the url key ... continue or else issue not found response
+        // If there is a salesorder with the url key ... continue or else issue
+        // not found response
         if ($soR->repoUrl_key_guest_count($url_key) < 1) {
             return $this->webService->getNotFoundResponse();
         }
@@ -987,7 +1338,8 @@ final class SalesOrderController extends BaseController
             $salesorder_id = $salesorder->getId();
             if (null !== $salesorder_id) {
                 if ($sotrR->repoCount($salesorder_id) > 0) {
-                    $salesorder_tax_rates = $sotrR->repoSalesOrderquery($salesorder_id);
+                    $salesorder_tax_rates = $sotrR->repoSalesOrderquery(
+                        $salesorder_id);
                 }
             }
             if (in_array($salesorder->getStatus_id(), [2,3,4,5,6,7,8,9,10])) {
@@ -995,13 +1347,20 @@ final class SalesOrderController extends BaseController
                 /**
                  * @psalm-suppress PossiblyNullArgument $this->userService->getUser()?->getId()
                  */
-                if ($uiR->repoUserInvUserIdcount($this->userService->getUser()?->getId()) === 1) {
-                    // After signup the user was included in the userinv using Settings...User Account...+
-                    $user_inv = $uiR->repoUserInvUserIdquery($this->userService->getUser()?->getId());
-                    // The client has been assigned to the user id using Setting...User Account...Assigned Clients
-                    $user_client = $ucR->repoUserClientqueryCount($this->userService->getUser()?->getId(), $salesorder->getClient_id()) === 1 ? true : false;
+                if ($uiR->repoUserInvUserIdcount(
+                        $this->userService->getUser()?->getId()) === 1) {
+                    // After signup the user was included in the userinv using
+                    // Settings...User Account...+
+                    $user_inv = $uiR->repoUserInvUserIdquery(
+                        $this->userService->getUser()?->getId());
+                    // The client has been assigned to the user id using Setting
+                    // ...User Account...Assigned Clients
+                    $user_client = $ucR->repoUserClientqueryCount(
+                        $this->userService->getUser()?->getId(),
+                            $salesorder->getClient_id()) === 1 ? true : false;
                     if ($user_inv && $user_client) {
-                        // If the userinv is a Guest => type = 1 ie. NOT an administrator =>type = 0
+                        // If the userinv is a Guest => type = 1 ie. NOT an
+                        // administrator =>type = 0
                         // So if the user has a type of 1 they are a guest.
                         if ($user_inv->getType() == 1) {
                             $soR->save($salesorder);
@@ -1011,27 +1370,49 @@ final class SalesOrderController extends BaseController
                                 'sales_order' => $cfR->repoTablequery('sales_order'),
                             ];
                             if (null !== $salesorder_id) {
-                                $salesorder_amount = (($soaR->repoSalesOrderAmountCount($salesorder_id) > 0) ? $soaR->repoSalesOrderquery($salesorder_id) : null);
+                                $salesorder_amount =
+                                    (($soaR->repoSalesOrderAmountCount(
+                                        $salesorder_id) > 0) ?
+                                            $soaR->repoSalesOrderquery(
+                                                $salesorder_id) : null);
                                 if ($salesorder_amount) {
                                     $parameters = [
-                                        'renderTemplate' => $this->viewRenderer->renderPartialAsString('//invoice/template/salesorder/public/' . ($this->sR->getSetting('public_salesorder_template') ?: 'SalesOrder_Web'), [
+                                        'renderTemplate' =>
+                                     $this->viewRenderer->renderPartialAsString(
+                                        '//invoice/template/salesorder/public/'
+                                             . ($this->sR->getSetting(
+                                                'public_salesorder_template')
+                                                        ?: 'SalesOrder_Web'), [
                                             'isGuest' => $currentUser->isGuest(),
-                                            'terms_and_conditions_file' => $this->viewRenderer->renderPartialAsString('//invoice/salesorder/terms_and_conditions_file'),
+                                            'terms_and_conditions_file' =>
+                                     $this->viewRenderer->renderPartialAsString(
+                              '//invoice/salesorder/terms_and_conditions_file'),
                                             'alert' => $this->alert(),
                                             'salesorder' => $salesorder,
                                             'soiaR' => $soiaR,
-                                            'salesorder_amount' => $salesorder_amount,
-                                            'items' => $soiR->repoSalesOrderquery($salesorder_id),
-                                            // Get all the salesorder tax rates that have been setup for this salesorder
-                                            'salesorder_tax_rates' => $salesorder_tax_rates,
+                                            'salesorder_amount' =>
+                                                            $salesorder_amount,
+                                            'items' =>
+                                    $soiR->repoSalesOrderquery($salesorder_id),
+                                            // Get all the salesorder tax rates
+                                            // that have been setup for this
+                                            // salesorder
+                                            'salesorder_tax_rates' =>
+                                                $salesorder_tax_rates,
                                             'salesorder_url_key' => $url_key,
                                             'custom_fields' => $custom_fields,
                                             'client' => $salesorder->getClient(),
-                                            // Get the details of the user of this quote
-                                            'userInv' => $uiR->repoUserInvUserIdcount($salesorder->getUser_id()) > 0 ? $uiR->repoUserInvUserIdquery($salesorder->getUser_id()) : null,
+                                            // Get the details of the user of
+                                            // this quote
+                                            'userInv' =>
+                                                $uiR->repoUserInvUserIdcount(
+                                                    $salesorder->getUser_id())
+                                            > 0 ? $uiR->repoUserInvUserIdquery(
+                                              $salesorder->getUser_id()) : null,
                                         ]),
                                     ];
-                                    return $this->viewRenderer->render('url_key', $parameters);
+                                    return $this->viewRenderer->render('url_key',
+                                        $parameters);
                                 } // if salesorder_amount
                             } // if there is a salesorder id
                         } // user_inv->getType
@@ -1058,7 +1439,11 @@ final class SalesOrderController extends BaseController
         foreach ($dLocs as $dLoc) {
             $dLocId = $dLoc->getId();
             if (null !== $dLocId) {
-                $optionsDataDeliveryLocations[$dLocId] = ($dLoc->getAddress_1() ?? '') . ', ' . ($dLoc->getAddress_2() ?? '') . ', ' . ($dLoc->getCity() ?? '') . ', ' . ($dLoc->getZip() ?? '');
+                $optionsDataDeliveryLocations[$dLocId] =
+                    ($dLoc->getAddress_1() ?? '')
+                        . ', ' . ($dLoc->getAddress_2() ?? '') . ', '
+                        . ($dLoc->getCity() ?? '') . ', '
+                        . ($dLoc->getZip() ?? '');
             }
         }
         $optionsDataGroup = [];
@@ -1074,7 +1459,8 @@ final class SalesOrderController extends BaseController
          * @var string $key
          * @var array $status
          */
-        foreach ($salesOrderRepo->getStatuses($this->translator) as $key => $status) {
+        foreach ($salesOrderRepo->getStatuses($this->translator) as
+            $key => $status) {
             $optionsDataSalesOrderStatus[$key] = (string) $status['label'];
         }
         return $optionsData = [
@@ -1083,5 +1469,26 @@ final class SalesOrderController extends BaseController
             'group' => $optionsDataGroup,
             'salesOrderStatus' => $optionsDataSalesOrderStatus,
         ];
+    }
+
+    public function optionsDataClientsFilter(SOR $soR): array
+    {
+        $optionsDataClients = [];
+        // Get all the sales orders that have been made for clients
+        $salesorders = $soR->findAllPreloaded();
+        /**
+         * @var SalesOrder $salesorder
+         */
+        foreach ($salesorders as $salesorder) {
+            $client = $salesorder->getClient();
+            if (null !== $client) {
+                if (strlen($client->getClient_full_name()) > 0) {
+                    $fullName = $client->getClient_full_name();
+                    $optionsDataClients[$client->getClient_full_name()] =
+                        !empty($fullName) ? $fullName : '';
+                }
+            }
+        }
+        return $optionsDataClients;
     }
 }

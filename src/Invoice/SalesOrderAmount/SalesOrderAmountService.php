@@ -35,35 +35,10 @@ final readonly class SalesOrderAmountService
     }
 
     /**
-     * Used in quote/quote_to_so_quote_amount
-     * @param SoAmount $model
-     * @param QAR $qaR
-     * @param SOAR $soaR
-     * @param string $basis_quote_id
-     * @param string $new_so_id
-     */
-    public function initializeCopyQuoteAmount(SoAmount $model, QAR $qaR,
-                   SOAR $soaR, string $basis_quote_id, string $new_so_id): void
-    {
-        $basis_quote = $qaR->repoQuotequery($basis_quote_id);
-        if ($basis_quote) {
-            $model->setSales_order_id((int) $new_so_id);
-            $model->setItem_subtotal($basis_quote->getItem_subtotal() ?? 0.00);
-            $model->setItem_tax_total($basis_quote->getItem_tax_total() ?? 0.00);
-            $model->setPackhandleship_total(0.00);
-            $model->setPackhandleship_tax(0.00);
-            $model->setTax_total($basis_quote->getTax_total() ?? 0.00);
-            $model->setTotal($basis_quote->getTotal() ?? 0.00);
-            $soaR->save($model);
-        }
-    }
-
-    /**
      * @param SoAmount $model
      * @param array $array
      */
-    public function saveSalesOrderAmountViaCalculations(SoAmount $model,
-        array $array): void
+    public function saveSalesOrderAmountViaCalculations(SoAmount $model, array $array): void
     {
         /**
          * @var int $array['sales_order_id']
@@ -84,7 +59,7 @@ final readonly class SalesOrderAmountService
     
     /**
      * Update the SalesOrder Amounts when a salesorder item allowance or charge
-     * is added to a salesorder item. Also update the Quote totals using
+     * is added to a salesorder item. Also update the SalesOrder totals using
      * Numberhelper calculate quote_taxes function
      * Related logic: see SalesOrderItemAllowanceChargeController functions
      * add & edit

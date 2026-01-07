@@ -6,6 +6,7 @@ namespace App\Invoice\ClientPeppol;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
+use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\ClientPeppol;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
@@ -41,21 +42,24 @@ final class ClientPeppolController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        $this->clientPeppolService = $clientPeppolService;
-        $this->factory = $factory;
+        parent::__construct($webService, $userService, $translator,
+            $viewRenderer, $session, $sR, $flash);
+            $this->clientPeppolService = $clientPeppolService;
+            $this->factory = $factory;
     }
 
     /**
      * @param CurrentRoute $currentRoute
      * @param Request $request
      * @param FormHydrator $formHydrator
+     * @param ClientRepository $clientRepository
      * @return Response
      */
     public function add(
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
+        ClientRepository $clientRepository,
     ): Response {
         $client_id = $currentRoute->getArgument('client_id');
         $client_peppol = new ClientPeppol();
@@ -71,36 +75,32 @@ final class ClientPeppolController extends BaseController
                 'form' => $form,
                 'pep' => $this->pep(),
                 'setting' => $this->sR->getSetting('enable_client_peppol_defaults'),
-                'defaults' => $this->sR->getSetting('enable_client_peppol_defaults') == '1' ? true : false,
+                'defaults' => 
+                    $this->sR->getSetting('enable_client_peppol_defaults')
+                        == '1' ? true : false,
                 'client_id' => $client_id,
-                'receiver_identifier_array' => StoreCoveArrays::store_cove_receiver_identifier_array(),
+                'receiver_identifier_array' =>
+                    StoreCoveArrays::store_cove_receiver_identifier_array(),
                 'electronic_address_scheme' => $electronic_address_scheme,
                 'iso_6523_array' => $peppolArrays->getIso_6523_icd(),
             ];
             if ($request->getMethod() === Method::POST) {
-                $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
-                        $this->clientPeppolService->saveClientPeppol($client_peppol, $body);
-                        return $this->factory->createResponse(
-                            $this->viewRenderer->renderPartialAsString(
-                                '//invoice/setting/clientpeppol_successful_guest',
-                                [
-                                    'url' => $this->userService->hasPermission(Permissions::EDIT_CLIENT_PEPPOL)
-                                             && $this->userService->hasPermission(Permissions::VIEW_INV)
-                                             && !$this->userService->hasPermission(Permissions::EDIT_INV)
-                                             ? 'client/guest'
-                                             : 'client/index',
-                                    'heading' => $this->translator->translate('client.peppol'),
-                                    'message' => $this->translator->translate('record.successfully.updated'),
-                                ],
-                            ),
-                        );
+                        $body['client_id'] = $client_id;
+                        $client = $clientRepository->repoClientquery($client_id);
+                        $client_peppol->setClient($client);
+                        $this->clientPeppolService->saveClientPeppol(
+                                $client_peppol, $body);
+                        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
+                        return $this->webService->getRedirectResponse('client/index');
                     }
+                } else {
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                $parameters['form'] = $form;
-            } // if
+            }
+            $parameters['form'] = $form;
             return $this->viewRenderer->render('_form', $parameters);
         } // null !== $client
         return $this->webService->getNotFoundResponse();
@@ -118,43 +118,45 @@ final class ClientPeppolController extends BaseController
             ],
             'endpointid_schemeid' => [
                 'eg' => '0192',
-                'url' => 'cac-AccountingSupplierParty/cac-Party/cbc-EndpointID/schemeID/',
+                'url' =>
+                'cac-AccountingSupplierParty/cac-Party/cbc-EndpointID/schemeID/',
             ],
             'identificationid' => [
                 'eg' => 'SE8765456787',
-                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyIdentification/cbc-ID/',
+                'url' =>
+        'cac-AccountingCustomerParty/cac-Party/cac-PartyIdentification/cbc-ID/',
             ],
             'identificationid_schemeid' => [
                 'eg' => '0088',
-                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyIdentification/cbc-ID/schemeID/',
+'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyIdentification/cbc-ID/schemeID/',
             ],
             'taxschemecompanyid' => [
                 'eg' => 'SE8765456787',
-                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyTaxScheme/cbc-CompanyID/',
+'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyTaxScheme/cbc-CompanyID/',
             ],
             'taxschemeid' => [
                 'eg' => 'VAT',
-                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyTaxScheme/cac-TaxScheme/cbc-ID/',
+'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyTaxScheme/cac-TaxScheme/cbc-ID/',
             ],
             'legal_entity_registration_name' => [
                 'eg' => 'Buyer Full Name AS',
-                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-RegistrationName/',
+'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-RegistrationName/',
             ],
             'legal_entity_companyid' => [
                 'eg' => '5560104525',
-                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyID/',
+'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyID/',
             ],
             'legal_entity_companyid_schemeid' => [
                 'eg' => '0007',
-                'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyID/schemeID/',
+'url' => 'cac-AccountingCustomerParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyID/schemeID/',
             ],
             'legal_entity_company_legal_form' => [
                 'eg' => 'Share Capital',
-                'url' => 'cac-AccountingSupplierParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyLegalForm/',
+'url' => 'cac-AccountingSupplierParty/cac-Party/cac-PartyLegalEntity/cbc-CompanyLegalForm/',
             ],
             'financial_institution_branchid' => [
                 'eg' => '9999',
-                'url' => 'cac-PaymentMeans/cac-PayeeFinancialAccount/cac-FinancialInstitutionBranch/',
+'url' => 'cac-PaymentMeans/cac-PayeeFinancialAccount/cac-FinancialInstitutionBranch/',
             ],
             'accounting_cost' => [
                 'eg' => '4217:2323:2323',
@@ -194,11 +196,14 @@ final class ClientPeppolController extends BaseController
         ClientPeppolRepository $clientpeppolRepository,
     ): Response {
         try {
-            $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
+            $clientpeppol =
+                $this->clientpeppol($currentRoute, $clientpeppolRepository);
             if ($clientpeppol) {
                 $this->clientPeppolService->deleteClientPeppol($clientpeppol);
-                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                return $this->webService->getRedirectResponse('clientpeppol/index');
+                $this->flashMessage('info', $this->translator->translate(
+                        'record.successfully.deleted'));
+                return $this->webService->getRedirectResponse(
+                        'clientpeppol/index');
             }
             return $this->webService->getRedirectResponse('clientpeppol/index');
         } catch (Exception $e) {
@@ -220,7 +225,8 @@ final class ClientPeppolController extends BaseController
         FormHydrator $formHydrator,
         ClientPeppolRepository $clientpeppolRepository,
     ): Response {
-        $clientpeppol = $this->clientpeppol($currentRoute, $clientpeppolRepository);
+        $clientpeppol = $this->clientpeppol(
+            $currentRoute, $clientpeppolRepository);
         $body = $request->getParsedBody() ?? [];
         if ($clientpeppol) {
             $peppolarrays = new PeppolArrays();
@@ -236,30 +242,53 @@ final class ClientPeppolController extends BaseController
                 'errors' => [],
                 'form' => $form,
                 'pep' => $this->pep(),
-                'setting' => $this->sR->getSetting('enable_client_peppol_defaults'),
-                'defaults' => $this->sR->getSetting('enable_client_peppol_defaults') == '1' ? true : false,
+                'setting' =>
+                    $this->sR->getSetting('enable_client_peppol_defaults'),
+                'defaults' =>
+                    $this->sR->getSetting('enable_client_peppol_defaults') == '1'
+                        ? true : false,
                 'client_id' => $clientpeppol->getClient_id(),
-                'receiver_identifier_array' => StoreCoveArrays::store_cove_receiver_identifier_array(),
-                'electronic_address_scheme' => PeppolArrays::electronic_address_scheme(),
+                'receiver_identifier_array' =>
+                    StoreCoveArrays::store_cove_receiver_identifier_array(),
+                'electronic_address_scheme' =>
+                    PeppolArrays::electronic_address_scheme(),
                 'iso_6523_array' => $peppolarrays->getIso_6523_icd(),
             ];
             if ($request->getMethod() === Method::POST) {
                 if (is_array($body)) {
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        $this->clientPeppolService->saveClientPeppol($clientpeppol, $body);
+                        $this->clientPeppolService->saveClientPeppol(
+                            $clientpeppol, $body);
                         // Guest user's return url to see user's clients
-                        if ($this->userService->hasPermission(Permissions::EDIT_CLIENT_PEPPOL) && $this->userService->hasPermission(Permissions::VIEW_INV) && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
-                            return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+                        if ($this->userService->hasPermission(
+                                Permissions::EDIT_CLIENT_PEPPOL)
+                                && $this->userService->hasPermission(
+                                    Permissions::VIEW_INV)
+                                        && !$this->userService->hasPermission(
+                                            Permissions::EDIT_INV)) {
+                            return $this->factory->createResponse(
+                                $this->viewRenderer->renderPartialAsString(
                                 '//invoice/setting/clientpeppol_successful_guest',
-                                ['url' => 'client/guest', 'heading' => $this->translator->translate('client.peppol'), 'message' => $this->translator->translate('record.successfully.updated')],
+                                ['url' => 'client/guest',
+                                    'heading' => $this->translator->translate(
+                                        'client.peppol'), 'message' =>
+                                            $this->translator->translate(
+                                                'record.successfully.updated')],
                             ));
                         }
                         // Administrator's return url to see all clients
-                        if ($this->userService->hasPermission(Permissions::EDIT_CLIENT_PEPPOL) && $this->userService->hasPermission(Permissions::VIEW_INV) && $this->userService->hasPermission(Permissions::EDIT_INV)) {
-                            return $this->webService->getRedirectResponse('client/index');
+                        if ($this->userService->hasPermission(
+                                Permissions::EDIT_CLIENT_PEPPOL)
+                                    && $this->userService->hasPermission(
+                                        Permissions::VIEW_INV)
+                                            && $this->userService->hasPermission(
+                                                Permissions::EDIT_INV)) {
+                            return $this->webService->getRedirectResponse(
+                                'client/index');
                         }
                     }
-                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                    $parameters['errors'] =
+              $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
                 }
             }
@@ -273,11 +302,13 @@ final class ClientPeppolController extends BaseController
      * @param ClientPeppolRepository $clientpeppolRepository
      * @return ClientPeppol|null
      */
-    private function clientpeppol(CurrentRoute $currentRoute, ClientPeppolRepository $clientpeppolRepository): ?ClientPeppol
+    private function clientpeppol(CurrentRoute $currentRoute,
+            ClientPeppolRepository $clientpeppolRepository): ?ClientPeppol
     {
         $client_id = $currentRoute->getArgument('client_id');
         if (null !== $client_id) {
-            return $clientpeppolRepository->repoClientPeppolLoadedquery($client_id);
+            return $clientpeppolRepository->repoClientPeppolLoadedquery(
+                $client_id);
         }
         return null;
     }
@@ -287,7 +318,8 @@ final class ClientPeppolController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function clientpeppols(ClientPeppolRepository $clientpeppolRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function clientpeppols(ClientPeppolRepository $clientpeppolRepository):
+        \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $clientpeppolRepository->findAllPreloaded();
     }

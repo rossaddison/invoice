@@ -39,7 +39,7 @@ final class SalesOrderRepository extends Select\Repository
     {
         if ($status_id > 0) {
             $query = $this->select()
-                    ->load(['client','group','user'])
+                    ->load(['client','group','user','quote'])
                     ->where(['status_id' => $status_id]);
             return $this->prepareDataReader($query);
         }
@@ -54,7 +54,19 @@ final class SalesOrderRepository extends Select\Repository
     public function findAllPreloaded(): EntityReader
     {
         $query = $this->select()
-                      ->load(['client','group','user']);
+                      ->load(['client','group','user','quote']);
+        return $this->prepareDataReader($query);
+    }
+
+    public function filterClient(string $fullName): EntityReader
+    {
+        $nameParts = explode(' ', $fullName);
+        $firstName = $nameParts[0];
+        $secondName = $nameParts[1] ?? '';
+        $query = $this->select()
+                       ->load(['client','group','user','quote'])
+                       ->where(['client.client_name' => $firstName])
+                       ->where(['client.client_surname' => $secondName]);
         return $this->prepareDataReader($query);
     }
 

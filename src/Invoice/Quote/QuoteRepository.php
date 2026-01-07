@@ -55,6 +55,18 @@ final class QuoteRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
+    public function filterClient(string $fullName): EntityReader
+    {
+        $nameParts = explode(' ', $fullName);
+        $firstName = $nameParts[0];
+        $secondName = $nameParts[1] ?? '';
+        $query = $this->select()
+                       ->load(['client'])
+                       ->where(['client.client_name' => $firstName])
+                       ->where(['client.client_surname' => $secondName]);
+        return $this->prepareDataReader($query);
+    }
+
     /**
      * Get Quotes with filter
      *

@@ -46,8 +46,6 @@ final class SalesOrderItemController extends BaseController
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
-        $this->salesorderitemService = $salesorderitemService;
-        $this->factory = $factory;
     }
 
     public function edit(

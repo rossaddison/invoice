@@ -75,7 +75,6 @@ final readonly class SalesOrderItemService
         isset($array['quantity']) ? $model->setQuantity((float) $array['quantity']) : $model->setQuantity(0);
         isset($array['price']) ? $model->setPrice((float) $array['price']) : $model->setPrice(0.00);
         isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : $model->setDiscount_amount(0.00);
-        isset($array['charge_amount']) ? $model->setCharge_amount((float) $array['charge_amount']) : $model->setCharge_amount(0.00);
         isset($array['order']) ? $model->setOrder((int) $array['order']) : $model->setOrder(0) ;
         // Product_unit is a string which we get from unit's name field using the unit_id
         $unit = $uR->repoUnitquery((string) $array['product_unit_id']);
@@ -87,7 +86,11 @@ final readonly class SalesOrderItemService
         $tax_rate_percentage = $this->taxrate_percentage((int) $tax_rate_id, $trr);
         $this->repository->save($model);
         if (isset($array['quantity'], $array['price'], $array['discount_amount']) && null !== $tax_rate_percentage) {
-            $this->saveSalesOrderItemAmount((int) $model->getId(), (float) $array['quantity'], (float) $array['price'], (float) $array['discount_amount'], $tax_rate_percentage, $soiar, $soias);
+            $this->saveSalesOrderItemAmount((int) $model->getId(),
+                    (float) $array['quantity'],
+                    (float) $array['price'],
+                    (float) $array['discount_amount'],
+                    $tax_rate_percentage, $soiar, $soias);
         }
     }
 
@@ -130,7 +133,6 @@ final readonly class SalesOrderItemService
         isset($array['quantity']) ? $model->setQuantity((int) $array['quantity']) : '';
         isset($array['price']) ? $model->setPrice((float) $array['price']) : '';
         isset($array['discount_amount']) ? $model->setDiscount_amount((float) $array['discount_amount']) : $model->setDiscount_amount(0.00);
-        isset($array['charge_amount']) ? $model->setCharge_amount((float) $array['charge_amount']) : $model->setCharge_amount(0.00);
         isset($array['peppol_po_itemid']) ? $model->setPeppol_po_itemid((string) $array['peppol_po_itemid']) : $model->setPeppol_po_itemid('');
         isset($array['peppol_po_lineid']) ? $model->setPeppol_po_lineid((string) $array['peppol_po_lineid']) : $model->setPeppol_po_lineid('');
         isset($array['order']) ? $model->setOrder((int) $array['order']) : '';
@@ -192,7 +194,9 @@ final readonly class SalesOrderItemService
      * @param SoIAR $soiar
      * @param SoIAS $soias
      */
-    public function saveSalesOrderItemAmount(int $sales_order_item_id, float $quantity, float $price, float $discount, ?float $tax_rate_percentage, SoIAR $soiar, SoIAS $soias): void
+    public function saveSalesOrderItemAmount(int $sales_order_item_id,
+        float $quantity, float $price, float $discount,
+            ?float $tax_rate_percentage, SoIAR $soiar, SoIAS $soias): void
     {
         $soias_array = [];
         $soias_array['sales_order_item_id'] = $sales_order_item_id;
@@ -208,11 +212,14 @@ final readonly class SalesOrderItemService
         $soias_array['taxtotal'] = $tax_total;
         $soias_array['total'] = $sub_total - $discount_total + $tax_total;
         if ($soiar->repoCount((string) $sales_order_item_id) === 0) {
-            $soias->saveSalesOrderItemAmountNoForm(new SalesOrderItemAmount(), $soias_array);
+            $soias->saveSalesOrderItemAmountNoForm(new SalesOrderItemAmount(),
+                $soias_array);
         } else {
-            $sales_order_item_amount = $soiar->repoSalesOrderItemAmountquery((string) $sales_order_item_id);
+            $sales_order_item_amount = $soiar->repoSalesOrderItemAmountquery(
+                (string) $sales_order_item_id);
             if ($sales_order_item_amount) {
-                $soias->saveSalesOrderItemAmountNoForm($sales_order_item_amount, $soias_array);
+                $soias->saveSalesOrderItemAmountNoForm(
+                        $sales_order_item_amount, $soias_array);
             }
         }
     }

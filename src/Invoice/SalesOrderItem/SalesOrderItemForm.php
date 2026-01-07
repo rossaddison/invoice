@@ -36,9 +36,6 @@ final class SalesOrderItemForm extends FormModel
     #[Required]
     private ?float $discount_amount = null;
 
-    #[Required]
-    private ?float $charge_amount = null;
-
     private ?int $order = null;
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $product_unit = '';
@@ -58,7 +55,6 @@ final class SalesOrderItemForm extends FormModel
         $this->quantity = $salesOrderItem->getQuantity();
         $this->price = $salesOrderItem->getPrice();
         $this->discount_amount = $salesOrderItem->getDiscount_amount();
-        $this->charge_amount = $salesOrderItem->getCharge_amount();
         $this->order = $salesOrderItem->getOrder();
         $this->product_unit = $salesOrderItem->getProduct_unit();  
         $this->tax_rate_id = $salesOrderItem->getTax_rate_id();
@@ -126,11 +122,6 @@ final class SalesOrderItemForm extends FormModel
     public function getDiscount_amount(): ?float
     {
         return $this->discount_amount;
-    }
-
-    public function getCharge_amount(): ?float
-    {
-        return $this->charge_amount;
     }
 
     public function getOrder(): ?int

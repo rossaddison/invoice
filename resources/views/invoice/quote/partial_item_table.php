@@ -633,7 +633,7 @@ parameters -->
                             </a>
                         <?php } ?>
                         <?= $translator->translate('tax'); ?>
-                        </b>    
+                        </b> 
                     </td>
                     <td>
 <?php if ($quoteTaxRates) {

@@ -592,8 +592,6 @@ final class ProductController extends BaseController
             'price' => $product->getProduct_price(),
             // Vat: Early Settlement Cash Discount subtracted before VAT is calculated
             'discount_amount' => (float) 0,
-            'charge_amount' => (float) 0,
-            'allowance_amount' => (float) 0,
             'order' => $order,
             // The default quantity is 1 so the singular name will be used.
             'product_unit' => $unR->singular_or_plural_name($product->getUnit_id(), 1),

@@ -53,7 +53,7 @@
         "httpsoft/http-message": "^1.1.6",
         "league/iso3166": "^4.3.3",
         "maglnet/composer-require-checker": ">=4.20",
-        "mollie/mollie-api-php": "^3.7",
+        "mollie/mollie-api-php": "^3.8",
         "mpdf/mpdf": "^8.2.7",
         "nyholm/psr7": "^1.8.2",
         "php-http/curl-client": "^2.4.0",
@@ -74,7 +74,7 @@
         "rossaddison/yii-gii": "*",
         "sabre/xml": "^4.0.6",
         "setasign/fpdf": "^1.8.6",
-        "spomky-labs/otphp": "^11.4",
+        "spomky-labs/otphp": "^11.4.1",
         "stripe/stripe-php": ">=19",
         "symfony/console": ">=7.4.3",
         "symfony/process": ">=7.4.3",
@@ -142,7 +142,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.3.1",
-        "zircote/swagger-php": "^4.11.1||^5.7.6"
+        "zircote/swagger-php": "^4.11.1||^5.7.7"
     },    
     "require-dev": {
         "codeception/c3": "^2.9",
@@ -150,7 +150,7 @@
         "codeception/module-asserts": "^3.3.0",
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^3.0.2",
-        "friendsofphp/php-cs-fixer": "^3.92.3",
+        "friendsofphp/php-cs-fixer": "^3.92.4",
         "guzzlehttp/promises": ">=2.3",
         "phpunit/phpunit": "^12.5.4",
         "rector/rector": "^2.3.0",
@@ -158,7 +158,7 @@
         "roave/infection-static-analysis-plugin": ">=1.43",
         "roave/security-advisories": "dev-latest",
         "shipmonk/composer-dependency-analyser": "^1.8.4",
-        "spatie/phpunit-watcher": ">=1.24.3",
+        "spatie/phpunit-watcher": ">=1.24.4",
         "vimeo/psalm": "^6.14.3",
         "yiisoft/translator-extractor": "^2.1.1"
     },      

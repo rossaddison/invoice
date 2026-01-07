@@ -944,13 +944,17 @@ $columns = [
     new DataColumn(
         'so_id',
         header: $translator->translate('salesorder.number.status'),
-        content: static function (Inv $model) use ($urlGenerator, $soR): string {
+        content: static function (Inv $model) use ($urlGenerator, $soR): string|A {
             $so_id = $model->getSo_id();
             $so = $soR->repoSalesOrderUnloadedquery($so_id);
             if (null !== $so) {
                 $statusId = $so->getStatus_id();
                 if (null !== $statusId) {
-                    return (string) Html::a(($so->getNumber() ?? '#') . ' ' . $soR->getSpecificStatusArrayLabel((string) $statusId), $urlGenerator->generate('salesorder/view', ['id' => $so_id]), ['style' => 'text-decoration:none', 'class' => 'label ' . $soR->getSpecificStatusArrayClass($statusId)]);
+                    return Html::a(($so->getNumber() ?? '#')
+                     . ' ' . $soR->getSpecificStatusArrayLabel((string) $statusId),
+                      $urlGenerator->generate('salesorder/view', ['id' => $so_id]),
+                       ['style' => 'text-decoration:none', 'class' => 'label '
+                        . $soR->getSpecificStatusArrayClass($statusId)]);
                 }
             } else {
                 return '';
@@ -1156,7 +1160,7 @@ if ($enableGrouping) {
     /**
      * @var App\Invoice\Entity\Inv $invoice
      */
-    foreach ($invs as $invoice) {
+    foreach ($sortedAndPagedPaginator->read() as $invoice) {
         $groupValue = $getGroupValue($invoice);
         if (!isset($groupTotals[$groupValue])) {
             $groupTotals[$groupValue] = [

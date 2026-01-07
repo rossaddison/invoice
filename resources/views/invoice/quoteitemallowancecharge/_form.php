@@ -31,17 +31,16 @@ use Yiisoft\Html\Tag\Form;
     ->open();
 ?> 
 
-<?= $button::backSave(); ?>
-
-<?= Html::openTag('div', ['class' => 'headerbar']); ?>
-        <?= Html::openTag('h4');?>
-            <?= Html::encode($title); ?>
-        <?=Html::closeTag('h1'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::openTag('div', ['id' => 'content']); ?>
-    <?= Html::openTag('div', ['class' => 'input-group']); ?>
-        <?php
-            $optionsDataAllowanceCharge = [];
+<?= Html::openTag('div', ['class' => 'row']); ?>
+    <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-8 col-lg-6 mx-auto']); ?>
+        <?= Html::openTag('div', ['class' => 'card border border-secondary']); ?>
+            <?= Html::openTag('div', ['class' => 'card-header']); ?>
+                <?= Html::openTag('h4');?>
+                    <?= Html::encode($title); ?>
+                <?=Html::closeTag('h4'); ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'card-body']); ?>
+            <?php $optionsDataAllowanceCharge = [];
 /**
  * @var App\Invoice\Entity\AllowanceCharge $allowance_charge
  */
@@ -71,7 +70,11 @@ foreach ($allowance_charges as $allowance_charge) {
     ->value($s->format_amount($form->getAmount() ?? 0.00))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div', ['class' => 'card-footer']); ?>
+                <?= $button::backSave(); ?>
+            <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Form::tag()->close(); ?>
-<?= Html::closeTag('div'); ?>

@@ -373,7 +373,7 @@ class PdfHelper
             $data = [
                 'aciiR' => $aciiR,
                 'inv' => $inv,
-                'inv_tax_rates' => (($itrR->repoCount((string) $this->session->get('inv_id')) > 0) ? $itrR->repoInvquery((string) $this->session->get('inv_id')) : null),
+                'inv_tax_rates' => (($itrR->repoCount((string) $this->session->get('inv_id')) > 0) ? $itrR->repoInvquery((string) $this->session->get('inv_id')) : []),
                 'items' => $items,
                 'iiaR' => $iiaR,
                 'output_type' => 'pdf',

@@ -7,6 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
+use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Span;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\GridView\GridView;
@@ -270,12 +271,26 @@ $columns = [
         },
     ),
     new DataColumn(
-        content: static function (Client $model) use ($urlGenerator, $translator, $cpR): A {
-            $addUrl = $urlGenerator->generate('clientpeppol/add', ['client_id' => $model->getClient_id()]);
-            $editUrl = $urlGenerator->generate('clientpeppol/edit', ['client_id' => $model->getClient_id(), 'origin' => 'edit']);
-            $equal = ($cpR->repoClientCount((string) $model->getClient_id()) === 0 ? true : false);
-            $heading = ($equal ? $translator->translate('client.peppol.add') : $translator->translate('client.peppol.edit'));
-            return Html::a(Html::tag('i', $heading, ['class' => 'fa fa-' . ($equal ? 'plus' : 'edit') . 'fa-margin']), ($equal ? $addUrl : $editUrl), []);
+        content: static function (Client $model) use ($urlGenerator,
+                                                        $translator, $cpR): A {
+            $addUrl = $urlGenerator->generate('clientpeppol/add',
+                    ['client_id' => $model->getClient_id()]);
+            $editUrl = $urlGenerator->generate('clientpeppol/edit',
+                    ['client_id' => $model->getClient_id(), 'origin' => 'edit']);
+            $equal = ($cpR->repoClientCount(
+                    (string) $model->getClient_id()) === 0 ? true : false);
+            $heading = ($equal ? $translator->translate('client.peppol.add') :
+                $translator->translate('client.peppol.edit'));
+            return Html::a(
+                    I::tag()
+                    ->content($equal ? '➕' : '🖉')
+                    ->addAttributes(
+                            [
+                                'data-bs-toggle' => 'tooltip',
+                                'title' => $heading, 
+                            ]),
+                    $equal ? $addUrl : $editUrl, [
+                        'style' => 'text-decoration:none']);
         },
         encodeContent: false,
     ),

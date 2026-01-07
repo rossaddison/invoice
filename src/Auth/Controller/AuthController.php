@@ -308,6 +308,7 @@ final class AuthController
             $email = $user->getEmail();
             if (strlen($email) > 0) {
                 $totp = TOTP::create();
+                /** @var non-empty-string $email */
                 $totp->setLabel($email);
                 $secret = $totp->getSecret();
                 $this->session->set('2fa_temp_secret', $secret);
@@ -408,7 +409,11 @@ final class AuthController
                         /** @var non-empty-string $safeSecret */
                         $totp = TOTP::create($safeSecret);
                         // Set the label again here!
-                        $totp->setLabel($user->getEmail());
+                        $userEmail = $user->getEmail();
+                        if ($userEmail !== '') {
+                            /** @var non-empty-string $userEmail */
+                            $totp->setLabel($userEmail);
+                        }
 
                         $qrContent = $totp->getProvisioningUri();
                         $qrDataUri = $this->generateQrDataUri($qrContent);

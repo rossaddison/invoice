@@ -1901,6 +1901,10 @@ return [
                 ->name('salesorder/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
                 ->action([SalesOrderController::class, 'view']),
+            Route::methods([$mG, $mP], '/salesorder/so_to_invoice/{id}')
+                ->name('salesorder/so_to_invoice')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([SalesOrderController::class, 'so_to_invoice_confirm']),
             Route::methods([$mG, $mP], '/salesorder/so_to_invoice_confirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SalesOrderController::class, 'so_to_invoice_confirm'])

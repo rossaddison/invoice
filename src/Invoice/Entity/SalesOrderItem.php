@@ -45,8 +45,6 @@ class SalesOrderItem
         private ?float $price = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: true, default: 0.00)]
         private ?float $discount_amount = 0.00,
-        #[Column(type: 'decimal(20,2)', nullable: true, default: 0.00)]
-        private ?float $charge_amount = 0.00,
         // the relative order of the item on the invoice.
         #[Column(type: 'integer(2)', nullable: true, default: 0)]
         private ?int $order = null,
@@ -54,6 +52,8 @@ class SalesOrderItem
         private ?string $product_unit = '',
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $sales_order_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $quote_item_id = null,    
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $tax_rate_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
@@ -127,6 +127,16 @@ class SalesOrderItem
     public function setSales_order_id(int $sales_order_id): void
     {
         $this->sales_order_id = $sales_order_id;
+    }
+    
+    public function getQuote_item_id(): string
+    {
+        return (string) $this->quote_item_id;
+    }
+
+    public function setQuote_item_id(int $quote_item_id): void
+    {
+        $this->quote_item_id = $quote_item_id;
     }
 
     public function getPeppol_po_itemid(): ?string
@@ -238,16 +248,6 @@ class SalesOrderItem
     public function setDiscount_amount(float $discount_amount): void
     {
         $this->discount_amount = $discount_amount;
-    }
-
-    public function getCharge_amount(): ?float
-    {
-        return $this->charge_amount;
-    }
-
-    public function setCharge_amount(float $charge_amount): void
-    {
-        $this->charge_amount = $charge_amount;
     }
     
     public function getOrder(): ?int

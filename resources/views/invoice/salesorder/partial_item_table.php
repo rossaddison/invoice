@@ -27,6 +27,7 @@ use Yiisoft\Html\Tag\A;
  * @var bool $draft
  * @var bool $invEdit
  * @var bool $invView
+ * @var bool $editClientPeppol
  * @var string $csrf
  * @var string $included
  * @var string $excluded
@@ -341,6 +342,15 @@ foreach ($soItems as $item) {
                                 </div>
                              </div>
                             <?php } ?>
+                        <?php } ?>
+                        <?php if ($editClientPeppol === true) { ?>
+                            <span data-bs-toggle="tooltip"
+                                  title="<?= $translator->translate('invoice.peppol.edit.item'); ?>">
+                                <a class="btn btn-primary fa fa-edit"
+                                   href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]); ?>"
+                                   style="text-decoration:none">
+                                </a>
+                            </span>
                         <?php } ?>
                     </td>
                 </tr>
