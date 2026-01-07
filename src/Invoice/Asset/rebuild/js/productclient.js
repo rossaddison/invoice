@@ -78,13 +78,41 @@
             // Create suggestion message
             const suggestionDiv = document.createElement('div');
             suggestionDiv.className = 'client-group-suggestion alert alert-info mt-2 small';
-            suggestionDiv.innerHTML = `
-                <i class="fa fa-lightbulb-o"></i>
-                <strong>Suggestion:</strong> Client group "${group}" will be used for remaining products.
-                <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="clearClientGroupSuggestion()">
-                    Clear Suggestion
-                </button>
-            `;
+
+            // Icon
+            const icon = document.createElement('i');
+            icon.className = 'fa fa-lightbulb-o';
+            suggestionDiv.appendChild(icon);
+
+            // Space between icon and text
+            suggestionDiv.appendChild(document.createTextNode(' '));
+
+            // "Suggestion:" label
+            const strong = document.createElement('strong');
+            strong.textContent = 'Suggestion:';
+            suggestionDiv.appendChild(strong);
+
+            // Space after label
+            suggestionDiv.appendChild(document.createTextNode(' '));
+
+            // Descriptive text with safe insertion of group name
+            const messagePrefix = 'Client group "';
+            const messageSuffix = '" will be used for remaining products.';
+            suggestionDiv.appendChild(document.createTextNode(messagePrefix));
+            suggestionDiv.appendChild(document.createTextNode(group));
+            suggestionDiv.appendChild(document.createTextNode(messageSuffix));
+
+            // Clear button
+            const clearButton = document.createElement('button');
+            clearButton.type = 'button';
+            clearButton.className = 'btn btn-sm btn-outline-secondary ms-2';
+            clearButton.textContent = 'Clear Suggestion';
+            clearButton.addEventListener('click', function () {
+                if (typeof clearClientGroupSuggestion === 'function') {
+                    clearClientGroupSuggestion();
+                }
+            });
+            suggestionDiv.appendChild(clearButton);
 
             // Insert after the client group input
             clientGroupInput.parentNode.insertBefore(suggestionDiv, clientGroupInput.nextSibling);
