@@ -216,7 +216,7 @@ final readonly class ButtonsToolbarFull
 
             // PEPPOL toggle
             $peppolStreamToggle = $this->settingRepository->getSetting(
-                'peppol_stream_toggle') === '1';
+                'peppol_xml_stream') === '1';
             $buttons[] = $this->createButton(
                 'peppol-toggle',
                 $this->urlGenerator->generate('inv/peppol_stream_toggle',

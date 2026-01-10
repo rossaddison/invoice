@@ -51,6 +51,11 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>10th January 2026</b></p>
+<p>Peppol stream toggle button reflects the dropdown button setting when changed</p>
+<p><b>7th January 2026</b></p>
+<p>NullifyRelationOnChange replaced with service side persist function</p>
+<p>public and pdf e.g.Quote_web.php templates upgraded to include ItemAllowanceCharges.</p>
 <p><b>6th January 2026</b></p>
 <p>quote to salesorder to invoice tested</p>
 <p>A json formatted peppol based electronic invoice can once again be produced</p>

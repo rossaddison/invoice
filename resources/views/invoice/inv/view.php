@@ -300,7 +300,7 @@ if ($showButtons && $invEdit) {
     ['id' => $inv->getId()]); ?>"
                                style="text-decoration:none">
                                 <i class="fa fa-window-restore"></i>
-                                <?= Html::encode($translator->translate('peppol')); ?>
+                        <?= Html::encode($translator->translate('peppol')); ?>
                             </a>
                         </li>
                         <li>
@@ -742,8 +742,8 @@ if (($inv->getStatus_id() === 1 ||
                                         <div class="input-group">
                                             <input id="date_created" disabled
                                                    class="form-control"
-                                                   value="
-                    <?= $inv->getDate_created()->format('Y-m-d');?>"/>
+                                                   value="<?=
+                                   $inv->getDate_created()->format('Y-m-d');?>">
                                             <span class="input-group-text">
                                                 <i class="fa fa-calendar fa-fw">
                                                 </i>
@@ -758,8 +758,8 @@ if (($inv->getStatus_id() === 1 ||
                                         <div class="input-group">
                                             <input id="date_supplied" disabled
                                                    class="form-control"
-                                                   value="
-                    <?= $inv->getDate_supplied()->format('Y-m-d'); ?>"/>
+                                                   value="<?=
+                                 $inv->getDate_supplied()->format('Y-m-d'); ?>">
                                             <span class="input-group-text">
                                                 <i class="fa fa-calendar fa-fw">
                                                 </i>
@@ -777,8 +777,8 @@ if (($inv->getStatus_id() === 1 ||
                                             <input id="date_tax_point"
                                                    disabled
                                                    class="form-control"
-                                                   value="
-<?= $inv->getDate_tax_point()->format('Y-m-d'); ?>"/>
+                                                   value="<?=
+                                $inv->getDate_tax_point()->format('Y-m-d'); ?>">
                                             <span class="input-group-text">
                                                 <i class="fa fa-calendar fa-fw">
                                                 </i>
@@ -797,9 +797,9 @@ if (($inv->getStatus_id() === 1 ||
                                                    id="inv_date_due"
                                                    disabled
                                                    class="form-control"
-                                                   value="
-    <?= !is_string($dateDue = $inv->getDate_due()) ?
-            $dateDue->format('Y-m-d') : ''; ?>">
+                                                   value="<?= !is_string(
+                                                $dateDue = $inv->getDate_due()) ?
+                                            $dateDue->format('Y-m-d') : ''; ?>">
                                             <span class="input-group-text">
                                                 <i class="fa fa-calendar fa-fw">
                                                 </i>

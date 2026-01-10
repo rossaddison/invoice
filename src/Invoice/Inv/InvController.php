@@ -311,7 +311,7 @@ final class InvController extends BaseController
                 $uPR->save($track_file);
                 return true;
             }
-                $this->flashMessage('warning', 
+                $this->flashMessage('warning',
                     $this->translator->translate('possible.file.upload.attack')
                         . $tmp);
             return false;
