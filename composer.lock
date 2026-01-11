@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ca0fbd8f64deb7e064bffa1068267c9e",
+    "content-hash": "440056f2bb96a2f6b36d1c54904ff5d2",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -4811,16 +4811,16 @@
         },
         {
             "name": "league/iso3166",
-            "version": "4.3.3",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alcohol/iso3166.git",
-                "reference": "3f692113a1c07859ec69303a0127b43da8a66768"
+                "reference": "928ac7ecc569db9123a83ef5b1c6efc279e7cb49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alcohol/iso3166/zipball/3f692113a1c07859ec69303a0127b43da8a66768",
-                "reference": "3f692113a1c07859ec69303a0127b43da8a66768",
+                "url": "https://api.github.com/repos/alcohol/iso3166/zipball/928ac7ecc569db9123a83ef5b1c6efc279e7cb49",
+                "reference": "928ac7ecc569db9123a83ef5b1c6efc279e7cb49",
                 "shasum": ""
             },
             "require": {
@@ -4874,7 +4874,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-06-05T08:06:30+00:00"
+            "time": "2026-01-02T09:49:36+00:00"
         },
         {
             "name": "league/uri",
@@ -24940,5 +24940,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
