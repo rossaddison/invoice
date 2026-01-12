@@ -51,7 +51,7 @@
         "guzzlehttp/guzzle": ">=7.10.0",
         "guzzlehttp/psr7": ">=2.8.0",
         "httpsoft/http-message": "^1.1.6",
-        "league/iso3166": "^4.3.3",
+        "league/iso3166": "^4.4.0",
         "maglnet/composer-require-checker": ">=4.20",
         "mollie/mollie-api-php": "^3.8",
         "mpdf/mpdf": "^8.2.7",
