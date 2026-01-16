@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e088dd24e18c100e0249d29f40cc79c2",
+    "content-hash": "1536ef304a7d9b0aa9ef41549ed186d5",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -3425,16 +3425,16 @@
         },
         {
             "name": "google/cloud-translate",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-translate.git",
-                "reference": "c45371e614d42b522a3382cdeff15e5b4bbb64a5"
+                "reference": "f1247e8a75843eed11bba1632c0425edcac93ed1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/c45371e614d42b522a3382cdeff15e5b4bbb64a5",
-                "reference": "c45371e614d42b522a3382cdeff15e5b4bbb64a5",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/f1247e8a75843eed11bba1632c0425edcac93ed1",
+                "reference": "f1247e8a75843eed11bba1632c0425edcac93ed1",
                 "shasum": ""
             },
             "require": {
@@ -3445,7 +3445,7 @@
             "require-dev": {
                 "erusev/parsedown": "^1.6",
                 "phpdocumentor/reflection": "^5.3.3||^6.0",
-                "phpdocumentor/reflection-docblock": "^5.3",
+                "phpdocumentor/reflection-docblock": "^5.3.3||^6.0",
                 "phpspec/prophecy-phpunit": "^2.0",
                 "phpunit/phpunit": "^9.0",
                 "squizlabs/php_codesniffer": "2.*"
@@ -3475,9 +3475,9 @@
             ],
             "description": "Cloud Translation Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.1.1"
+                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.1.2"
             },
-            "time": "2025-10-07T18:41:09+00:00"
+            "time": "2026-01-16T19:46:18+00:00"
         },
         {
             "name": "google/common-protos",
@@ -24946,5 +24946,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
