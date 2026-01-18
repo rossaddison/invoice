@@ -9,7 +9,14 @@ use Sabre\Xml\XmlSerializable;
 
 class Contact implements XmlSerializable
 {
-    public function __construct(private readonly ?string $name, private readonly ?string $firstname, private readonly ?string $lastname, private readonly ?string $telephone, private readonly ?string $telefax, private readonly ?string $electronicMail)
+    public function __construct(
+        private readonly ?string $name,
+        private readonly ?string $firstname,
+        private readonly ?string $lastname,
+        private readonly ?string $telephone,
+        private readonly ?string $telefax,
+        private readonly ?string $electronicMail,
+    )
     {
     }
 
@@ -59,9 +66,11 @@ class Contact implements XmlSerializable
             ]);
         }
 
-        if ($this->name == null && ($this->firstname !== null || $this->lastname !== null)) {
+        if ($this->name == null && ($this->firstname !== null ||
+                $this->lastname !== null)) {
             $writer->write([
-                Schema::CBC . 'Name' => ($this->firstname ?? '') . ' ' . ($this->lastname ?? ''),
+                Schema::CBC . 'Name' => ($this->firstname ?? '')
+                . ' ' . ($this->lastname ?? ''),
             ]);
         }
 

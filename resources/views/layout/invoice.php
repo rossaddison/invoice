@@ -9,6 +9,7 @@ use App\Invoice\Asset\NProgressAsset;
 use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
 use App\Invoice\Asset\pciAsset\amazon_pay_v2_7_Asset;
 use App\Invoice\Asset\pciAsset\braintree_dropin_1_33_7_Asset;
+use App\Invoice\Helpers\CurrencyHelper;
 use App\Asset\AppAsset;
 use App\Widget\PerformanceMetrics;
 use Yiisoft\Bootstrap5\ButtonSize;
@@ -551,17 +552,23 @@ if ((null !== $currentPath) && !$isGuest) {
                     'https://convertsimple.com/convert-html-to-markdown/'),
                 DropdownItem::divider(),
                 DropdownItem::link('European Invoicing',
-'https://ec.europa.eu/digital-building-blocks/wikis/display/DIGITAL/Compliance+with+eInvoicing+standard'),
+'https://ec.europa.eu/digital-building-blocks/'
+                        . 'wikis/display/'
+                        . 'DIGITAL/Compliance+with+eInvoicing+standard',
+                        itemAttributes: ['target' => '_blank']),
                 DropdownItem::link('European Digital Testing',
-'https://ec.europa.eu/digital-building-blocks/wikis/display/DIGITAL/eInvoicing+Conformance+Testing'),
+'https://ec.europa.eu/digital-building-blocks/wikis/display/DIGITAL/'
+                        . 'eInvoicing+Conformance+Testing'),
                 DropdownItem::link('What does a Peppol ID look like?',
 'https://ecosio.com/en/blog/how-peppol-ids-work/'),
                 DropdownItem::link('Peppol Accounting Requirements',
 'https://docs.peppol.eu/poacc/billing/3.0/bis/#accountingreq'),
                 DropdownItem::link('➡️ Peppol Billing 3.0 - Syntax',
-'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/'),
+'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/',
+                        itemAttributes: ['target' => '_blank']),
                 DropdownItem::link('➡️ Peppol Billing 3.0 - Tree',
-'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/tree/'),
+'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/tree/',
+                        itemAttributes: ['target' => '_blank']),
                 DropdownItem::link('Universal Business Language 2.1 (UBL)',
 'https://www.datypic.com/sc/ubl21/ss.html'),
                 DropdownItem::link('StoreCove Documentation',
@@ -571,11 +578,15 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link('ISO 3 letter currency codes - 4217 alpha-3',
 'https://www.iso.org/iso-4217-currency-codes.html'),
                 DropdownItem::link('Xml Example 2.1',
-'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/'),
-                DropdownItem::link('Xml Example 3.0',
-'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/rules/examples/base-example.xml'),
+            'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/',
+            itemAttributes: ['target' => '_blank']),
+                DropdownItem::link(content: 'Xml Example 3.0', url:
+'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/'
+                    . 'rules/examples/base-example.xml',
+            itemAttributes: ['target' => '_blank']),
                 DropdownItem::link('Ecosio Xml Validator',
-'https://ecosio.com/en/peppol-and-xml-document-validator/'),
+                    'https://ecosio.com/en/peppol-and-xml-document-validator/',
+                    itemAttributes: ['target' => '_blank']),
                 DropdownItem::link('Xml CodeLists',
 'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/structure/codelist'),
                 DropdownItem::link('Convert XML to PHP Array Online',
@@ -586,18 +597,25 @@ if ((null !== $currentPath) && !$isGuest) {
 'https://www.gov.scot/publications/einvoicing-guide/documents/'),
                 DropdownItem::divider(),
                 DropdownItem::link('Understanding Same Site Cookies',
-'https://andrewlock.net/understanding-samesite-cookies/#:~:text=SameSite%3DLax%20cookies%20are%20not,Lax%20(or%20Strict%20)%20cookies'),
+'https://andrewlock.net/understanding-samesite-cookies/'
+. '#:~:text=SameSite%3DLax%20cookies%20are%20not,Lax%20(or%20Strict%20)%20cookies'),
                 DropdownItem::divider(),
                 DropdownItem::link('HMRC Developer Hub',
 'https://developer.service.hmrc.gov.uk/developer/login'),
                 DropdownItem::link('HMRC Developer Hub - Web App Via Server',
-'https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server/'),
+'https://developer.service.hmrc.gov.uk/guides/fraud-prevention/'
+                        . 'connection-method/web-app-via-server/'),
                 DropdownItem::divider(),
-                DropdownItem::link('Cycle/orm HasOne Relation: Using the outerKey explicitly to avoid auto inserted CamelCase Foreign Keys',
+                DropdownItem::link('Cycle/orm HasOne Relation: Using the'
+         . ' outerKey explicitly to avoid auto inserted CamelCase Foreign Keys',
 'https://cycle-orm.dev/docs/relation-has-one/current/en#differences-from-belongsto'),
                 DropdownItem::divider(),
-                DropdownItem::link('German, and Swiss Law Amendments now prioritize Opensource in Public Sector',
-'https://interoperable-europe.ec.europa.eu/collection/open-source-observatory-osor/news/germanys-ozg-20-favors-open-source-solutions'),
+                DropdownItem::link('German, and Swiss Law Amendments now'
+                        . ' prioritize Opensource in Public Sector',
+'https://interoperable-europe.ec.europa.eu/collection/'
+                        . 'open-source-observatory-osor/'
+                        . 'news/'
+                        . 'germanys-ozg-20-favors-open-source-solutions'),
                 DropdownItem::link('Jsonld  Playground for flattening Jsonld files',
 'https://json-ld.org/playground/'),
                 DropdownItem::link('Converting flattened file to php array',
@@ -651,11 +669,18 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link('❌', 
                     'https://emojipedia.org/cross-mark', $debugMode,
                         false, ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('🛈', 
+                    'https://emojipedia.org/'
+                        . 'circled-information-source', $debugMode,
+                        false, ['style' => 'background-color: #ffcccb']),    
                 DropdownItem::link('⬅', 
                     'https://emojipedia.org/left-arrow', $debugMode,
                         false, ['style' => 'background-color: #ffcccb']),
                 DropdownItem::link('➡', 
                     'https://emojipedia.org/right-arrow', $debugMode,
+                        false, ['style' => 'background-color: #ffcccb']),
+                DropdownItem::link('↔️', 
+                    'https://emojipedia.org/left-right-arrow', $debugMode,
                         false, ['style' => 'background-color: #ffcccb']),
                 DropdownItem::link('🖉', 
                     'https://emojipedia.org/lower-left-pencil', $debugMode,

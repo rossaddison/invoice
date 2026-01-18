@@ -11,10 +11,23 @@
 ![Stats](https://github-readme-stats.vercel.app/api?username=rossaddison)
 ![Hosted by Vultr](https://img.shields.io/badge/hosting-vultr%20(209.250.232.212)-blue?logo=vultr&style=flat-square)
 
-(Place the contents of this download into the yii3-i invoice folder or run as a separate repository.)
+(Place the contents of this download into the yii3-i invoice folder or run as a
+ separate repository.)
 
-# yii3-i's invoice folder 
-Yii3 Invoice
+# Yii3-i (Rossaddison/Invoice)
+
+A professional Open Source E-Invoicing System for PHP (Yii3) with UBL 2.1 and
+ Peppol support.
+
+## Features
+
+### Vat Support
+
+### Multi-Currency Billing
+
+### Peppol UBL 2.1 E-Invoicing
+Automated generation and transmission of compliant UBL 2.1 documents via the
+ Peppol network.
 
 **Recent Implementations**
 
@@ -50,16 +63,17 @@ Yii3 Invoice
 
 [Cycle ORM Foreign Key Constraint Issue.](docs/CYCLE_ORM_FOREIGN_KEY_CONSTRAINT_ISSUE.md) (Jan 2026)
 
-[Netbeans IDE 25 Guide.](docs/NETBEANS_IDE25_GUIDE.md) (Dec 2025)
+[Netbeans IDE 25-28 Guide.](docs/NETBEANS_IDE25_GUIDE.md) (Dec 2025)
 
 [Tooltip Styles Configuration.](docs/TOOLTIP_STYLES_CONFIGURATION.md) (Jan 2026)
 
-**Features**
+**Feature Specifics**
 
 * Cycle ORM Interface using Invoiceplane type database schema. 
 * Generate VAT invoices using mPDF. 
 * Code Generator - Controller to views. 
-* PCI-compliant payment gateway interfaces – Braintree Sandbox, Stripe Sandbox, and Amazon Pay integration tested. 
+* PCI-compliant payment gateway interfaces – Braintree Sandbox, Stripe Sandbox,
+ and Amazon Pay integration tested. 
 * Generate OpenPeppol UBL 2.1 Invoice 3.0.15 XML invoices – validated with Ecosio. 
 * StoreCove API connector with JSON invoice. 
 * Invoice cycle – Quote to Sales Order (with client's purchase order details) to Invoice.     

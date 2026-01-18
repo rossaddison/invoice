@@ -4,24 +4,30 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItem;
 
-use App\Invoice\Entity\QuoteItemAmount;
-use App\Invoice\Entity\QuoteItem;
-use App\Invoice\Entity\Task;
-use App\Invoice\Product\ProductRepository as PR;
-use App\Invoice\Quote\QuoteRepository as QR;
-use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
-use App\Invoice\QuoteItemAmount\QuoteItemAmountService as QIAS;
-use App\Invoice\Task\TaskRepository as TaskR;
-use App\Invoice\TaxRate\TaxRateRepository as TRR;
-use App\Invoice\Unit\UnitRepository as UR;
+use App\Invoice\
+{
+    Entity\QuoteItemAmount,
+    Entity\QuoteItem,
+    Entity\Task,
+    Product\ProductRepository as PR,
+    Quote\QuoteRepository as QR,
+    QuoteItemAmount\QuoteItemAmountRepository as QIAR,
+    QuoteItemAmount\QuoteItemAmountService as QIAS,
+    Task\TaskRepository as TaskR,
+    TaxRate\TaxRateRepository as TRR,
+    Unit\UnitRepository as UR,
+    QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR,
+};
+
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR;
 
 final readonly class QuoteItemService
 {
     public function __construct(
         private QuoteItemRepository $repository,
-        private ACQIR $acqir,
+        // used to accumulate all the allowances and charges associated with the
+        // individual quote item
+        private ACQIR $acqiR,
         private QR $qR,
         private TRR $tRR,
         private PR $pR,
@@ -178,6 +184,12 @@ final readonly class QuoteItemService
             $array['discount_amount']) &&
             null !== $tax_rate_percentage) {
             $this->saveQuoteItemAmount(
+                /**
+                 * Note: Although, at first glance, the allowances and charges
+                 * do not appear to be here, they are in fact worked out with a
+                 * $this->acqiR in the function below which creates their
+                 * accumulative totals and saves it using the $qiar.
+                 */
                 (int) $model->getId(),
                 (float) $array['quantity'],
                 (float) $array['price'],
@@ -274,6 +286,12 @@ final readonly class QuoteItemService
             if (isset($array['quantity'], $array['price'],
                 $array['discount_amount']) &&
                 null !== $tax_rate_percentage) {
+                /**
+                 * Note: Although, at first glance, the allowances and charges
+                 * do not appear to be here, they are in fact worked out with a
+                 * $this->acqiR in the function below which creates their
+                 * accumulative totals and saves it using the $qiar.
+                 */
                 $this->saveQuoteItemAmount(
                     (int) $model->getId(),
                     (float) $array['quantity'],
@@ -354,6 +372,12 @@ final readonly class QuoteItemService
             if (isset($array['quantity'], $array['price'],
                 $array['discount_amount']) &&
                 null !== $tax_rate_percentage) {
+                /**
+                 * Note: Although, at first glance, the allowances and charges
+                 * do not appear to be here, they are in fact worked out with a
+                 * $this->acqiR in the function below which creates their
+                 * accumulative totals and saves it using the $qiar.
+                 */
                 $this->saveQuoteItemAmount(
                     (int) $model->getId(),
                     (float) $array['quantity'],
@@ -579,7 +603,7 @@ final readonly class QuoteItemService
         $all_charges_vat_or_tax = 0.00;
         $all_allowances = 0.00;
         $all_allowances_vat_or_tax = 0.00;
-        $acqis = $this->acqir->repoQuoteItemquery((string)$quote_item_id);
+        $acqis = $this->acqiR->repoQuoteItemquery((string)$quote_item_id);
         /** @var \App\Invoice\Entity\QuoteItemAllowanceCharge $acqi */
         foreach ($acqis as $acqi) {
             if ($acqi->getAllowanceCharge()?->getIdentifier() == '1') {
@@ -598,7 +622,9 @@ final readonly class QuoteItemService
         }
         $all_vat_or_tax = $all_charges_vat_or_tax - $all_allowances_vat_or_tax;
         $new_tax_total = $current_tax_total + $all_vat_or_tax;
-        $qias_array['discount'] = $discount_total;
+        $qias_array['discount'] = $discount_total; 
+        $qias_array['charge'] = $all_charges;
+        $qias_array['allowance'] = $all_allowances;
         $qias_array['subtotal'] = $qpIncAc;
         $qias_array['taxtotal'] = $new_tax_total;
         $qias_array['total'] = $qpIncAc - $discount_total + $new_tax_total;
@@ -610,6 +636,22 @@ final readonly class QuoteItemService
                 $qias->saveQuoteItemAmountNoForm($quote_item_amount, $qias_array);
             }
         }
+    }
+    
+    /**
+     * @param int $id
+     * @param TRR $trr
+     * @return float|null
+     */
+    public function taxratePercentage(
+        int $id,
+        TRR $trr
+    ): ?float {
+        $taxrate = $trr->repoTaxRatequery((string) $id);
+        if ($taxrate) {
+            return $taxrate->getTaxRatePercent();
+        }
+        return null;
     }
 
     /**

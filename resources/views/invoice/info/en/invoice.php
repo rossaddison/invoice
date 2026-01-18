@@ -51,6 +51,15 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>18th January 2026</b></p>
+<p>Document and Line Item Allowance Charges between Quote, SalesOrder, and Inv functional.</p>
+<p>Step 1: Quote sent, Step 2: Guest accepts terms, Step 3: SalesOrder sent, 
+   Step 4: Guest approves with Purchase Order number submission on line items, 
+   Step 5: Admin sets SalesOrder status to InvoiceGenerate after Delivery,
+   Step 6: Admin Generates Invoice, Step 7: Peppol Invoice creatable on Admin side.
+   Step 8: e-invoice validated via ecosio free validator.</p>
+<p>Peppol UBL 2.1 functional</p>
+<p>Next: Recipient Guest can generate e-invoice.</p>
 <p><b>10th January 2026</b></p>
 <p>Peppol stream toggle button reflects the dropdown button setting when changed</p>
 <p><b>7th January 2026</b></p>

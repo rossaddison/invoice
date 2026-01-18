@@ -37,16 +37,14 @@ final readonly class QuoteItemAmountService
         array $quoteitem
     ): void {
         $this->persist($model, $quoteitem);
-        /**
-         * @var float $quoteitem['subtotal']
-         * @var float $quoteitem['taxtotal']
-         * @var float $quoteitem['discount']
-         * @var float $quoteitem['total']
-         */
-        $model->setSubtotal($quoteitem['subtotal']);
-        $model->setTax_total($quoteitem['taxtotal']);
-        $model->setDiscount($quoteitem['discount']);
-        $model->setTotal($quoteitem['total']);
+        // The total of all the charges of the quote item
+        $model->setCharge((float) $quoteitem['charge']);
+        // The total of all the allowances of the quote item
+        $model->setAllowance((float) $quoteitem['allowance']);
+        $model->setSubtotal((float) $quoteitem['subtotal']);
+        $model->setTax_total((float) $quoteitem['taxtotal']);
+        $model->setDiscount((float) $quoteitem['discount']);
+        $model->setTotal((float) $quoteitem['total']);
         $this->repository->save($model);
     }
 

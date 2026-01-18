@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
+use App\Invoice\Setting\SettingRepository;
+
 class TaxSubTotal
 {
     private float $taxableAmounts = 0.00;
@@ -15,8 +17,10 @@ class TaxSubTotal
     // Used in src\Invoice\Ubl\Invoice.php function build_tax_sub_totals_array()
     // The array passed here is a sub-array ie. one of many subtotals
     // - a subtotal is generated for each tax category.
-    public function __construct(private readonly array $taxSubtotal)
-    {
+    public function __construct(
+        private readonly array $taxSubtotal,
+        public SettingRepository $s)
+    {        
     }
 
     public function load_values_from_array(): void
@@ -52,14 +56,16 @@ class TaxSubTotal
             'value' => [
                 [
                     'name' => Schema::CBC . 'TaxableAmount',
-                    'value' => number_format($this->taxableAmounts ?: 0.00, 2, '.', ''),
+                    'value' => $this->s->currency_converter(
+                      number_format($this->taxableAmounts ?: 0.00, 2, '.', '')),
                     'attributes' => [
                         'currencyID' => $this->documentCurrency,
                     ],
                 ],
                 [
                     'name' => Schema::CBC . 'TaxAmount',
-                    'value' => number_format($this->taxAmount ?: 0.00, 2, '.', ''),
+                    'value' => $this->s->currency_converter(
+                           number_format($this->taxAmount ?: 0.00, 2, '.', '')),
                     'attributes' => [
                         'currencyID' => $this->documentCurrency,
                     ],
@@ -75,7 +81,7 @@ class TaxSubTotal
                             'name' => Schema::CBC . 'Percent',
                             'value' => $this->taxCategoryPercent,
                         ],
-                        // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/cac-TaxSubtotal/cac-TaxCategory/cbc-TaxExemptionReasonCode/
+// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/cac-TaxSubtotal/cac-TaxCategory/cbc-TaxExemptionReasonCode/
                         $this->cbcTaxExemptionReasonCode($this->taxCategory),
                         $this->cbcTaxExemptionReason($this->taxCategory),
                         [

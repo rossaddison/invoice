@@ -373,8 +373,6 @@ foreach ($soItems as $item) {
                                 <?= Html::encode($item->getDescription()); ?>
                             </textarea>
                         </div>
-                    </td>    
-                    <td>    
                     </td>
                     <td class="td-amount">
                         <div class="input-group">
@@ -401,11 +399,27 @@ foreach ($soItems as $item) {
                             $finishDate = $item->getTask()?->getFinish_date()) ?
                                 $finishDate?->format('Y-m-d') : '';?>
                             </span>
-                        <?php } ?>    
+                        <?php } ?>
                         </div>
                     </td>
+                    <td class="td-amount">
+                        <?php if ($item->getProduct_id() > 0) { ?>
+                        <b>
+  <?= $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+                                  * ($item->getPrice() ?? 0.00)); ?>
+                        </b>
+                        <?php } ?>
+                    </td>
                     <td class="td-amount"></td>
-                    <td class="td-amount"></td>
+                    <td class="td-amount">
+                        <b>
+  <?= $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+                                 * ($item->getPrice() ?? 0.00)
+                                 * ($item->getTaxRate()?->getTaxRatePercent()
+                                                                        ?? 0.00)
+                                 / 100); ?>
+                        </b>
+                    </td>
                     <td class="td-amount"></td>
                 </tr>
 <?php
@@ -589,6 +603,39 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                             <?php echo $numberHelper->format_currency(
                                     $soAmount->getItem_tax_total() > 0 ?
                                     $soAmount->getItem_tax_total() : 0.00); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>
+<?= $translator->translate('allowance.or.charge.shipping.handling.packaging'); ?>
+                        </b>
+                    </td>
+                    <td class="amount"
+                        id="amount_sales_order_allowance_charge_total"
+                        data-bs-toggle = "tooltip"
+                        title="sales_order_amount->packhandleship_total">
+                        <b><?php echo $numberHelper->format_currency(
+                            $packHandleShipTotal['totalAmount'] ?? 0.00); ?>
+                        </b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>
+<?= $vat == '1' ? $translator->translate(
+                    'allowance.or.charge.shipping.handling.packaging.vat') :
+                        $translator->translate(
+                        'allowance.or.charge.shipping.handling.packaging.tax'); ?>
+                        </b>
+                    </td>
+                    <td class="amount"
+                        id="amount_sales_order_allowance_charge_tax"
+                        data-bs-toggle = "tooltip"
+                        title="sales_order_amount->packhandleship_tax">
+                        <b><?php echo $numberHelper->format_currency(
+                            $packHandleShipTotal['totalTax'] ?? 0.00); ?>
+                        </b>
                     </td>
                 </tr>
                 <?php if ($vat === '0') { ?>

@@ -5,139 +5,101 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use App\Auth\Permissions;
-use App\Invoice\BaseController;
-use App\Invoice\Inv\InvCustomFieldProcessor;
 use App\Widget\FormFields;
 use App\Widget\ButtonsToolbarFull;
-// Entity's
-use App\Invoice\Entity\Client;
-use App\Invoice\Entity\Contract;
-use App\Invoice\Entity\Delivery;
-use App\Invoice\Entity\DeliveryLocation;
-use App\Invoice\Entity\EmailTemplate;
-use App\Invoice\Entity\Group;
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvItemAllowanceCharge;
-use App\Invoice\Entity\InvAllowanceCharge;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvItemAmount;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvCustom;
-use App\Invoice\Entity\InvRecurring;
-use App\Invoice\Entity\InvSentLog;
-use App\Invoice\Entity\InvTaxRate;
-use App\Invoice\Entity\Payment;
-use App\Invoice\Entity\PaymentCustom;
-use App\Invoice\Entity\PaymentMethod;
-use App\Invoice\Entity\PostalAddress;
-use App\Invoice\Entity\Setting;
-use App\Invoice\Entity\Sumex;
-use App\Invoice\Entity\TaxRate;
-use App\Invoice\Entity\Upload;
+use App\Invoice\Entity\
+{
+    Client, Contract, Delivery, DeliveryLocation, EmailTemplate, Group,
+    Inv, InvItemAllowanceCharge, InvAllowanceCharge, InvItem, InvItemAmount,
+    InvAmount, InvCustom, InvRecurring, InvSentLog, InvTaxRate, Payment,
+    PaymentCustom, PaymentMethod, PostalAddress, Setting, Sumex, TaxRate, Upload
+};
 use App\Invoice\Inv\Exception\PdfNotFoundException;
-// Services
-// Inv
 use App\User\UserService;
 use App\User\User;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeService;
-use App\Invoice\InvItem\InvItemService;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeService;
-use App\Invoice\InvAmount\InvAmountService;
-use App\Invoice\InvItemAmount\InvItemAmountService as IIAS;
-use App\Invoice\InvTaxRate\InvTaxRateService;
-use App\Invoice\InvCustom\InvCustomService;
-use App\Invoice\PostalAddress\PostalAddressService as PAS;
-// Forms Inv
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeForm;
-use App\Invoice\InvCustom\InvCustomForm;
-use App\Invoice\InvItem\InvItemForm;
-use App\Invoice\InvTaxRate\InvTaxRateForm;
-// Repositories
-use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
-use App\Invoice\Client\ClientRepository as CR;
-use App\Invoice\ClientCustom\ClientCustomRepository as CCR;
-use App\Invoice\ClientPeppol\ClientPeppolRepository as cpR;
-use App\Invoice\Contract\ContractRepository as ContractRepo;
-use App\Invoice\CustomValue\CustomValueRepository as CVR;
-use App\Invoice\CustomField\CustomFieldRepository as CFR;
-use App\Invoice\Delivery\DeliveryRepository as DelRepo;
-use App\Invoice\DeliveryParty\DeliveryPartyRepository as DelPartyRepo;
-use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
-use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
-use App\Invoice\Family\FamilyRepository as FR;
-use App\Invoice\Group\GroupRepository as GR;
-use App\Invoice\Inv\InvRepository as IR;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
-use App\Invoice\InvCustom\InvCustomRepository as ICR;
-use App\Invoice\InvItem\InvItemRepository as IIR;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
-use App\Invoice\InvAmount\InvAmountRepository as IAR;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
-use App\Invoice\InvRecurring\InvRecurringRepository as IRR;
-use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
-use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
-use App\Invoice\Payment\PaymentRepository as PYMR;
-use App\Invoice\PaymentCustom\PaymentCustomRepository as PCR;
-use App\Invoice\PaymentMethod\PaymentMethodRepository as PMR;
-use App\Invoice\PostalAddress\PostalAddressRepository as paR;
-use App\Invoice\ProductImage\ProductImageRepository as PIR;
-use App\Invoice\ProductProperty\ProductPropertyRepository as ppR;
-use App\Invoice\Product\ProductRepository as PR;
-use App\Invoice\Project\ProjectRepository as PRJCTR;
-use App\Invoice\Quote\QuoteRepository as QR;
-use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
-use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
-use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
-use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
-use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
-use App\Invoice\Setting\SettingRepository as SR;
-use App\Invoice\Sumex\SumexRepository as SumexR;
-use App\Invoice\Task\TaskRepository as TASKR;
-use App\Invoice\TaxRate\TaxRateRepository as TRR;
-use App\Invoice\Unit\UnitRepository as UNR;
-use App\Invoice\UnitPeppol\UnitPeppolRepository as unpR;
-use App\Invoice\Upload\UploadRepository as UPR;
-use App\Invoice\UserClient\UserClientRepository as UCR;
-use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
-use App\Invoice\UserInv\UserInvRepository as UIR;
+
+use App\Invoice\{
+    BaseController, Inv\InvCustomFieldProcessor,
+    InvAllowanceCharge\InvAllowanceChargeService, InvItem\InvItemService,
+    InvItemAllowanceCharge\InvItemAllowanceChargeService,
+    InvAmount\InvAmountService, InvItemAmount\InvItemAmountService as IIAS,
+    InvTaxRate\InvTaxRateService, InvCustom\InvCustomService,
+    PostalAddress\PostalAddressService as PAS,
+    InvAllowanceCharge\InvAllowanceChargeForm, InvCustom\InvCustomForm,
+    InvItem\InvItemForm, InvTaxRate\InvTaxRateForm,
+    // Repositories
+    AllowanceCharge\AllowanceChargeRepository as ACR,
+    Client\ClientRepository as CR,
+    ClientCustom\ClientCustomRepository as CCR,
+    ClientPeppol\ClientPeppolRepository as cpR,
+    Contract\ContractRepository as ContractRepo,
+    CustomValue\CustomValueRepository as CVR,
+    CustomField\CustomFieldRepository as CFR,
+    Delivery\DeliveryRepository as DelRepo,
+    DeliveryParty\DeliveryPartyRepository as DelPartyRepo,
+    DeliveryLocation\DeliveryLocationRepository as DLR,
+    EmailTemplate\EmailTemplateRepository as ETR,
+    Family\FamilyRepository as FR,
+    Group\GroupRepository as GR,
+    Inv\InvRepository as IR,
+    InvAllowanceCharge\InvAllowanceChargeRepository as ACIR,
+    InvCustom\InvCustomRepository as ICR,
+    InvItem\InvItemRepository as IIR,
+    InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
+    InvAmount\InvAmountRepository as IAR,
+    InvItemAmount\InvItemAmountRepository as IIAR,
+    InvRecurring\InvRecurringRepository as IRR,
+    InvSentLog\InvSentLogRepository as ISLR,
+    InvTaxRate\InvTaxRateRepository as ITRR,
+    Payment\PaymentRepository as PYMR,
+    PaymentCustom\PaymentCustomRepository as PCR,
+    PaymentMethod\PaymentMethodRepository as PMR,
+    PostalAddress\PostalAddressRepository as paR,
+    ProductImage\ProductImageRepository as PIR,
+    ProductProperty\ProductPropertyRepository as ppR,
+    Product\ProductRepository as PR,
+    Project\ProjectRepository as PRJCTR,
+    Quote\QuoteRepository as QR,
+    QuoteAmount\QuoteAmountRepository as QAR,
+    QuoteCustom\QuoteCustomRepository as QCR,
+    SalesOrder\SalesOrderRepository as SOR,
+    SalesOrderItem\SalesOrderItemRepository as SOIR,
+    SalesOrderCustom\SalesOrderCustomRepository as SOCR,
+    Setting\SettingRepository as SR,
+    Sumex\SumexRepository as SumexR,
+    Task\TaskRepository as TASKR,
+    TaxRate\TaxRateRepository as TRR,
+    Unit\UnitRepository as UNR,
+    UnitPeppol\UnitPeppolRepository as unpR,
+    Upload\UploadRepository as UPR,
+    UserClient\UserClientRepository as UCR,
+    UserClient\Exception\NoClientsAssignedToUserException,
+    UserInv\UserInvRepository as UIR
+};
 use App\User\UserRepository as UR;
 use App\Service\WebControllerService;
-// App Helpers
-use App\Invoice\Helpers\CustomValuesHelper as CVH;
-use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Helpers\MailerHelper;
-use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Helpers\PdfHelper;
-use App\Invoice\Helpers\Peppol\PeppolHelper;
-use App\Invoice\Helpers\Peppol\PeppolArrays;
-use App\Invoice\Helpers\StoreCove\StoreCoveHelper;
-use App\Invoice\Helpers\TemplateHelper;
-// Widgets
-use App\Widget\Bootstrap5ModalInv;
-use App\Widget\Bootstrap5ModalPdf;
-use App\Widget\Bootstrap5ModalTranslatorMessageWithoutAction;
-// Yii
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Reader\Sort;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
-use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Http\Method;
-use Yiisoft\Html\Html;
-use Yiisoft\Input\Http\Attribute\Parameter\Query;
-use Yiisoft\Json\Json;
-use Yiisoft\Mailer\MailerInterface;
-use Yiisoft\Router\FastRoute\UrlGenerator;
-use Yiisoft\Router\HydratorAttribute\RouteArgument;
-use Yiisoft\Security\Random;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Session\SessionInterface;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\User\CurrentUser;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
-// Psr\Http
-use Psr\Log\LoggerInterface;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use App\Invoice\Helpers\{
+    CustomValuesHelper as CVH, DateHelper, MailerHelper, NumberHelper, PdfHelper,
+    Peppol\PeppolHelper, Peppol\PeppolArrays, StoreCove\StoreCoveHelper,
+    TemplateHelper,
+};
+use App\Widget\{
+    Bootstrap5ModalInv, Bootstrap5ModalPdf,
+    Bootstrap5ModalTranslatorMessageWithoutAction
+};
+use Yiisoft\{
+    Data\Paginator\OffsetPaginator, Data\Reader\Sort,
+    DataResponse\DataResponseFactoryInterface, FormModel\FormHydrator,
+    Http\Method, Html\Html, Input\Http\Attribute\Parameter\Query, Json\Json,
+    Mailer\MailerInterface, Router\FastRoute\UrlGenerator,
+    Router\HydratorAttribute\RouteArgument, Security\Random, Session\Flash\Flash,
+    Session\SessionInterface, Translator\TranslatorInterface, User\CurrentUser,
+    Yii\View\Renderer\ViewRenderer
+};
+use Psr\{
+    Log\LoggerInterface, Http\Message\ResponseInterface as Response,
+    Http\Message\ServerRequestInterface as Request,
+};
 
 final class InvController extends BaseController
 {
@@ -3439,8 +3401,6 @@ echo file_get_contents($temp_aliase, true);
                                     $invItem->getQuantity() ?? 0.00,
                                     $invItem->getPrice() ?? 0.00,
                                     $invItem->getDiscount_amount() ?? 0.00,
-                                    $accumulativeChargeTotal,
-                                    $accumulativeAllowanceTotal,
                                     $inv_item->getTaxRate()?->getTaxRatePercent()
                                         ?? 0.00,
                                     $iiaS,
@@ -3475,8 +3435,6 @@ echo file_get_contents($temp_aliase, true);
                                     $invItem->getQuantity() ?? 0.00,
                                     $invItem->getPrice() ?? 0.00,
                                     $invItem->getDiscount_amount() ?? 0.00,
-                                    $accumulativeChargeTotal,
-                                    $accumulativeAllowanceTotal,
                                     $inv_item->getTaxRate()?->getTaxRatePercent()
                                         ?? 0.00,
                                     $iiaS,
@@ -4228,19 +4186,19 @@ echo file_get_contents($temp_aliase, true);
             $invoice = $invRepo->repoInvLoadInvAmountquery((string) $id);
             if ($invoice) {
                 $client_id = $invoice->getClient()?->getClient_id();
+                $delLocId = $invoice->getDelivery_location_id();
                 if (null !== $client_id) {
                     if ($this->peppol_client_fully_setup(
                             (string) $client_id, $cpR)) {
-                        $delivery_location = $dlR->repoDeliveryLocationquery(
-                            (string) $client_id);
-                        if (null !== $delivery_location) {
+                        $delloc = $dlR->repoDeliveryLocationquery($delLocId);
+                        if (null !== $delloc) {
                             $inv_amount = $invoice->getInvAmount();
                             $peppolhelper = new PeppolHelper(
                                 $this->sR,
                                 $delRepo,
                                 $iiaR,
                                 $inv_amount,
-                                $delivery_location,
+                                $delloc,
                                 $this->translator,
                                 $this->sR->getSetting('currency_code_from'),
                                 $this->sR->getSetting('currency_code_to'),
@@ -4249,7 +4207,7 @@ echo file_get_contents($temp_aliase, true);
                                 $this->sR->getSetting('currency_from_to'),
                                 // one of 'to currency' converts to this
                                 // of 'from currency':
-                                $this->sR->getSetting('currency_to_from'),
+                                $this->sR->getSetting('currency_to_from'),  
                             );
                             $uploads_temp_peppol_absolute_path_dot_xml =
                         $peppolhelper->generate_invoice_peppol_ubl_xml_temp_file(
@@ -4288,7 +4246,14 @@ echo file_get_contents($temp_aliase, true);
                              * user. This may result in a Cross-Site Scripting
                              * attack (XSS). Courtesy of Snyk
                              */
-                            exit;
+                            $this->flashMessage('info', '📁 ' .
+                            $uploads_temp_peppol_absolute_path_dot_xml
+                            .   Html::a(' Ecosio Validator',
+                    'https://ecosio.com/en/peppol-and-xml-document-validator/',
+                                    ['target' => '_blank'])
+                            );
+                            return $this->webService->getRedirectResponse(
+                                'inv/view', ['id' => $id]);
                         } // null!== $delivery_location
                         $this->flashMessage('warning',
                             $this->translator->translate(
@@ -4302,7 +4267,64 @@ echo file_get_contents($temp_aliase, true);
         } // null !==id
         return $this->webService->getNotFoundResponse();
     }
-
+    
+    /**
+     * Purpose: Use the toggle button to convert the Ubl invoice's amounts
+     * either to the Sender's currency or the Recipient's currency
+     * Settings ... Peppol Electronic Invoicing ... Document Currency changes
+     * with each toggle on the View ... options
+     * View: resources/views/invoice/inv/view.php Options Dropdown
+     * @param int $id
+     * @param CurrentUser $currentUser
+     * @return Response
+     */
+    public function peppol_doc_currency_toggle(
+        #[RouteArgument('id')]
+        int $id,
+        CurrentUser $currentUser,
+    ): Response {
+        // Initialize the Peppol Document Currency according to config/common/
+        // params.php setting ... DocumentCurrencyCode
+        $documentCurrency = $this->sR->getDocumentCurrencyCodeFromPeppolDetails();
+        if ($currentUser->isGuest()) {
+            return $this->webService->getNotFoundResponse();
+        }
+        if ($this->sR->repoCount('peppol_doc_currency_toggle') > 0) {
+            $record = $this->sR->withKey('peppol_doc_currency_toggle');
+            if ($this->sR->getSetting('peppol_doc_currency_toggle') == '1') {
+                if ($record instanceof Setting) {
+                    $record->setSetting_value('0');
+                    $this->sR->save($record);
+                    $documentCurrency = $this->sR->getSetting('currency_code_to');
+                }
+            } else {
+                if ($record instanceof Setting) {
+                    $record->setSetting_value('1');
+                    $this->sR->save($record);
+                    $documentCurrency = $this->sR->getSetting('currency_code_from');
+                }
+            } // else
+        } // $this->sR->repoCount
+        if ($this->sR->repoCount('peppol_document_currency') > 0) {
+            $peppolDocCurrency = $this->sR->withKey('peppol_document_currency');
+            if (null !== $peppolDocCurrency) {
+                $peppolDocCurrency->setSetting_value($documentCurrency);
+                $this->sR->save($peppolDocCurrency);
+            }    
+        } else {
+            return $this->webService->getRedirectResponse(
+                'setting/tab_index',
+                ['_language' => 'en'],
+                ['active' => $this->translator->translate(
+                        'peppol.electronic.invoicing'),
+                    'settings[peppol_document_currency]']);
+        }
+        $this->flashMessage('info',
+            $this->translator->translate('peppol.doc.currency.toggle')
+                . ' ' . $documentCurrency);
+        return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
+    } // peppol document currency toggle
+    
     /**
      * Purpose: Use the toggle button to
      * stream Ubl invoice to screen or alternatively output to file
@@ -4337,7 +4359,7 @@ echo file_get_contents($temp_aliase, true);
         $this->flashMessage('info',
             $this->translator->translate('peppol.stream.toggle'));
         return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
-    } // peppol stream toggle
+    } // peppol stream toggle    
 
     /**
      * Related logic: see https://www.storecove.com/docs#_json_object
@@ -4637,6 +4659,8 @@ echo file_get_contents($temp_aliase, true);
                         (string) $this->session->get('inv_id')) > 0 ?
                             $pymR->repoInvquery(
                                 (string) $this->session->get('inv_id')) : null,
+                    'peppol_doc_currency_toggle' =>
+                        $this->sR->getSetting('peppol_doc_currency_toggle'),
                     'peppol_stream_toggle' =>
                         $this->sR->getSetting('peppol_xml_stream'),
                     'readOnly' => $read_only,

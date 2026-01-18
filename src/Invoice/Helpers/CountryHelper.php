@@ -18,9 +18,21 @@ class CountryHelper
      */
     public function get_country_list(string $cldr): mixed
     {
-        $new_aliases = new Aliases(['@helpers' => __DIR__, '@country_list' => '@helpers/Country-list']);
-        $file = $new_aliases->get('@country_list') . DIRECTORY_SEPARATOR . $cldr . DIRECTORY_SEPARATOR . 'country.php';
-        $default_english = $new_aliases->get('@country_list') . DIRECTORY_SEPARATOR . 'en' . DIRECTORY_SEPARATOR . 'country.php';
+        $new_aliases = new Aliases(
+            [
+                '@helpers' => __DIR__,
+                '@country_list' => '@helpers/Country-list'
+            ]);
+        $file = $new_aliases->get('@country_list')
+                . DIRECTORY_SEPARATOR
+                . $cldr
+                . DIRECTORY_SEPARATOR
+                . 'country.php';
+        $default_english = $new_aliases->get('@country_list')
+                . DIRECTORY_SEPARATOR
+                . 'en'
+                . DIRECTORY_SEPARATOR
+                . 'country.php';
         if (file_exists($file)) {
             /**
              * @psalm-suppress UnresolvableInclude
@@ -34,7 +46,8 @@ class CountryHelper
     }
 
     /**
-     * Returns the countryname of a given $countrycode, translated in the language $cldr.
+     * Returns the countryname of a given $countrycode, translated in the
+     * language $cldr.
      *
      * @param string $cldr
      * @param string $countrycode
@@ -53,7 +66,8 @@ class CountryHelper
      * @param string $country_name
      * @return string
      */
-    public function get_country_identification_code_with_country_list(string $cldr, string $country_name): string
+    public function get_country_identification_code_with_country_list(
+                                    string $cldr, string $country_name): string
     {
         /** @var array $countries */
         $countries = $this->get_country_list($cldr);
@@ -74,7 +88,8 @@ class CountryHelper
      * @param string $name
      * @return string
      */
-    public function get_country_identification_code_with_league(string $name): string
+    public function get_country_identification_code_with_league(
+        string $name): string
     {
         //https://github.com/thephpleague/iso3166
         $data = (new ISO3166())->name($name);

@@ -229,8 +229,7 @@ final readonly class ButtonsToolbarFull
             // External validators
             $buttons[] = $this->createWindowButton(
                 'ecosio-validator',
-                'https://ecosio.com/en/peppol-and-xml-document-validator'
-                . '-button/?pk_abe=EN_Peppol_XML_Validator_Page&pk_abv=With_CTA',
+                'https://ecosio.com/en/peppol-e-invoice-xml-document-validator/',
                 'fa-check',
                 'btn-outline-success',
                 $this->translator->translate('peppol.ecosio.validator'),

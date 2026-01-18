@@ -84,7 +84,7 @@ final class DeliveryLocationRepository extends Select\Repository
     public function repoDeliveryLocationquery(string $id): ?DeliveryLocation
     {
         // Delivery Location id defaults to 0 in the Entity Delivery Location
-        if ($id > 0) {
+        if (strlen($id) > 0) {
             $query = $this->select()->where(['id' => $id]);
             return  $query->fetchOne() ?: null;
         }

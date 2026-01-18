@@ -378,24 +378,7 @@ foreach ($invItems as $item) {
                     </td>
                 </tr>
 <?php // Buttons for line item end here?>
-                <tr>
-                    <td></td>   
-                    <td>    
-                        <div class="input-group">
-                            <span class="input-group-text"
-                                  data-bs-toggle = "tooltip"
-                                  title="inv_item->description">
-                                <b>
-                                <?= $translator->translate('description'); ?>
-                                </b>
-                            </span>
-                            <textarea disabled name="item_description"
-                                      class="form-control"
-                                      rows="1">
-                                <?= Html::encode($item->getDescription()); ?>
-                            </textarea>
-                        </div>
-                    </td>    
+                <tr>                        
                     <td>    
                         <div class="input-group">
                             <span class="input-group-text"
@@ -409,6 +392,22 @@ foreach ($invItems as $item) {
                                       class="form-control" 
                                       rows="1">
                                 <?= Html::encode($item->getNote()); ?>
+                            </textarea>
+                        </div>
+                    </td>
+                    <td>    
+                        <div class="input-group">
+                            <span class="input-group-text"
+                                  data-bs-toggle = "tooltip"
+                                  title="inv_item->description">
+                                <b>
+                                <?= $translator->translate('description'); ?>
+                                </b>
+                            </span>
+                            <textarea disabled name="item_description"
+                                      class="form-control"
+                                      rows="1">
+                                <?= Html::encode($item->getDescription()); ?>
                             </textarea>
                         </div>
                     </td>
@@ -439,9 +438,24 @@ foreach ($invItems as $item) {
                         <?php } ?>    
                         </div>
                     </td>
+                    <td class="td-amount">
+                        <?php if ($item->getProduct_id() > 0) { ?>
+                        <b>  
+  <?= $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+                                    * ($item->getPrice() ?? 0.00)); ?>
+                        </b>
+                        <?php } ?> 
+                    </td>
                     <td class="td-amount"></td>
-                    <td class="td-amount"></td>   
-                    <td class="td-amount"></td>   
+                    <td class="td-amount">
+                        <b>
+  <?= $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+                                 * ($item->getPrice() ?? 0.00)
+                                 * ($item->getTaxRate()?->getTaxRatePercent()
+                                 ?? 0.00) / 100); ?>
+                        </b>
+                    </td> 
+                    <td class="td-amount"></td>     
                 </tr>
                 <?php
                 if ($s->getSetting('enable_peppol') == '1') {
@@ -667,8 +681,8 @@ foreach ($invItems as $item) {
                         <?php if ($showButtons === true && $userCanEdit === true) { ?>
                             <a href="#add-inv-tax"
                                data-bs-toggle="modal"
-                               class="btn-xs">
-                                <i class="fa fa-plus-circle"></i>
+                               class="btn-xs"
+                               style="text-decoration:none">➕
                             </a>
                         <?php } ?>
                         <?= $translator->translate('tax'); ?>

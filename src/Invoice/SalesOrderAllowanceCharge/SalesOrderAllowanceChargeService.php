@@ -52,24 +52,20 @@ final readonly class SalesOrderAllowanceChargeService
         isset($array['amount'])
             ? $model->setAmount((float) $array['amount'])
             : 0.00;
-        $allowance_charge = $this->acR->repoAllowanceChargequery(
-            (string) $array['allowance_charge_id']
-        );
-        if (null !== $allowance_charge
-            && null !== $allowance_charge->getTaxRate()
+        $acId = (string) $array['allowance_charge_id'];
+        $ac = $this->acR->repoAllowanceChargequery($acId);
+        if (null !== $ac && null !== $ac->getTaxRate()
         ) {
-            $allowanceChargeTaxRate =
-                $allowance_charge->getTaxRate();
+            $allowanceChargeTaxRate = $ac->getTaxRate();
             if (null !== $allowanceChargeTaxRate) {
                 if ($array['amount'] == '') {
                     $amount = 0.00;
                 } else {
                     $amount = (float) $array['amount'];
                 }
-                $vatOrTax = $amount
-                    * ($allowanceChargeTaxRate->getTaxRatePercent()
-                    ?? 0.00) / 100.00;
-                $model->setVatOrTax($vatOrTax);
+    $taxation = $amount * ($allowanceChargeTaxRate->getTaxRatePercent() ?? 0.00)
+            / 100.00;
+                $model->setVatOrTax($taxation);
             }
         }
         $this->repository->save($model);

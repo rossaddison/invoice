@@ -11,7 +11,14 @@ use InvalidArgumentException;
 
 class AdditionalDocumentReference implements XmlSerializable
 {
-    public function __construct(private readonly Translator $translator, private readonly string $id, private readonly ?string $documentType, private readonly ?string $documentDescription, private readonly array $attachments, private readonly bool $ubl_cr_114 = false)
+    public function __construct(
+            private readonly Translator $translator,
+            private readonly string $id,
+            private readonly ?string $documentType,
+            private readonly ?string $documentDescription,
+            private readonly array $attachments,
+            private readonly bool $ubl_cr_114 = false
+    )
     {
     }
 
@@ -21,7 +28,8 @@ class AdditionalDocumentReference implements XmlSerializable
     public function validate(): void
     {
         if ($this->documentDescription === null) {
-            throw new InvalidArgumentException($this->translator->translate('peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription'));
+            throw new InvalidArgumentException($this->translator->translate(
+'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription'));
         }
     }
 

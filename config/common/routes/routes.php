@@ -2,91 +2,83 @@
 
 declare(strict_types=1);
 
-use App\Auth\Controller\AuthController;
-use App\Auth\Controller\ChangePasswordController;
-use App\Auth\Controller\ForgotPasswordController;
-use App\Auth\Controller\ResetPasswordController;
-use App\Auth\Controller\SignupController;
+use App\Auth\Controller\{
+    AuthController, ChangePasswordController, ForgotPasswordController,
+    ResetPasswordController, SignupController};
 use App\Auth\Permissions;
 use App\Contact\ContactController;
-use App\Controller\Actions\ApiInfo;
-use App\Controller\SiteController;
-use App\Invoice\AllowanceCharge\AllowanceChargeController;
-use App\Invoice\CategoryPrimary\CategoryPrimaryController;
-use App\Invoice\CategorySecondary\CategorySecondaryController;
-use App\Invoice\Client\ClientController;
-use App\Invoice\ClientNote\ClientNoteController;
-use App\Invoice\ClientPeppol\ClientPeppolController;
-use App\Invoice\Company\CompanyController;
-use App\Invoice\CompanyPrivate\CompanyPrivateController;
-use App\Invoice\Contract\ContractController;
-use App\Invoice\CustomField\CustomFieldController;
-use App\Invoice\CustomValue\CustomValueController;
-use App\Invoice\Delivery\DeliveryController;
-use App\Invoice\DeliveryLocation\DeliveryLocationController;
-use App\Invoice\DeliveryParty\DeliveryPartyController;
-use App\Invoice\EmailTemplate\EmailTemplateController;
-use App\Invoice\Family\FamilyController;
-use App\Invoice\FromDropDown\FromDropDownController;
-use App\Invoice\Generator\GeneratorController;
-use App\Invoice\GeneratorRelation\GeneratorRelationController;
-use App\Invoice\Group\GroupController;
-use App\Invoice\Import\ImportController;
-use App\Invoice\Inv\InvController;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeController;
-use App\Invoice\InvItem\InvItemController;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeController;
-use App\Invoice\InvoiceController as ICLR;
-use App\Invoice\InvRecurring\InvRecurringController;
-use App\Invoice\InvSentLog\InvSentLogController;
-use App\Invoice\ItemLookup\ItemLookupController;
-use App\Invoice\Merchant\MerchantController;
-use App\Invoice\Payment\PaymentController;
-use App\Invoice\PaymentInformation\PaymentInformationController as PICLR;
-use App\Invoice\PaymentMethod\PaymentMethodController;
-use App\Invoice\PaymentPeppol\PaymentPeppolController;
-use App\Invoice\PostalAddress\PostalAddressController;
-use App\Invoice\Product\ProductController;
-use App\Invoice\ProductClient\ProductClientController;
-use App\Invoice\ProductImage\ProductImageController;
-use App\Invoice\ProductProperty\ProductPropertyController;
-use App\Invoice\Prometheus\PrometheusController;
-use App\Invoice\Profile\ProfileController;
-use App\Invoice\Project\ProjectController;
-use App\Invoice\Quote\QuoteController;
-use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeController;
-use App\Invoice\QuoteItem\QuoteItemController;
-use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeController;
-use App\Invoice\Report\ReportController;
-use App\Invoice\SalesOrder\SalesOrderController;
-use App\Invoice\SalesOrderItem\SalesOrderItemController;
-use App\Invoice\Setting\SettingController;
-use App\Invoice\Sumex\SumexController;
-use App\Invoice\Task\TaskController;
-use App\Invoice\TaxRate\TaxRateController;
-use App\Invoice\Telegram\TelegramController;
-use App\Invoice\Unit\UnitController;
-use App\Invoice\UnitPeppol\UnitPeppolController;
-use App\Invoice\Upload\UploadController;
-use App\Invoice\UserClient\UserClientController;
-// Quote
-use App\Invoice\UserInv\UserInvController;
-use App\Middleware\AccessChecker as AC;
-use App\Middleware\ApiDataWrapper;
-use App\User\Controller\ApiUserController;
-use App\User\Controller\UserController;
+use App\Controller\{Actions\ApiInfo, SiteController};
+use App\Invoice\{
+    AllowanceCharge\AllowanceChargeController,
+    CategoryPrimary\CategoryPrimaryController,
+    CategorySecondary\CategorySecondaryController,
+    Client\ClientController,
+    ClientNote\ClientNoteController,
+    ClientPeppol\ClientPeppolController,
+    Company\CompanyController,
+    CompanyPrivate\CompanyPrivateController,
+    Contract\ContractController,
+    CustomField\CustomFieldController,
+    CustomValue\CustomValueController,
+    Delivery\DeliveryController,
+    DeliveryLocation\DeliveryLocationController,
+    DeliveryParty\DeliveryPartyController,
+    EmailTemplate\EmailTemplateController,
+    Family\FamilyController,
+    FromDropDown\FromDropDownController,
+    Generator\GeneratorController,
+    GeneratorRelation\GeneratorRelationController,
+    Group\GroupController,
+    Import\ImportController,
+    Inv\InvController,
+    InvAllowanceCharge\InvAllowanceChargeController,
+    InvItem\InvItemController,
+    InvItemAllowanceCharge\InvItemAllowanceChargeController,
+    InvoiceController as ICLR,
+    InvRecurring\InvRecurringController,
+    InvSentLog\InvSentLogController,
+    ItemLookup\ItemLookupController,
+    Merchant\MerchantController,
+    Payment\PaymentController,
+    PaymentInformation\PaymentInformationController as PICLR,
+    PaymentMethod\PaymentMethodController,
+    PaymentPeppol\PaymentPeppolController,
+    PostalAddress\PostalAddressController,
+    Product\ProductController,
+    ProductClient\ProductClientController,
+    ProductImage\ProductImageController,
+    ProductProperty\ProductPropertyController,
+    Prometheus\PrometheusController,
+    Profile\ProfileController,
+    Project\ProjectController,
+    Quote\QuoteController,
+    QuoteAllowanceCharge\QuoteAllowanceChargeController,
+    QuoteItem\QuoteItemController,
+    QuoteItemAllowanceCharge\QuoteItemAllowanceChargeController,
+    Report\ReportController,
+    SalesOrder\SalesOrderController,
+    SalesOrderItem\SalesOrderItemController,
+    Setting\SettingController,
+    Sumex\SumexController,
+    Task\TaskController,
+    TaxRate\TaxRateController,
+    Telegram\TelegramController,
+    Unit\UnitController,
+    UnitPeppol\UnitPeppolController,
+    Upload\UploadController,
+    UserClient\UserClientController,
+    // Quote
+    UserInv\UserInvController};
+use App\Middleware\{AccessChecker as AC, ApiDataWrapper};
+use App\User\Controller\{ApiUserController, UserController};
 use Psr\Http\Message\ResponseFactoryInterface;
-use Yiisoft\Auth\Middleware\Authentication;
-use Yiisoft\DataResponse\DataResponseFactoryInterface as DRFI;
-use Yiisoft\DataResponse\Middleware\FormatDataResponseAsJson;
-use Yiisoft\DataResponse\Middleware\FormatDataResponseAsXml;
-use Yiisoft\Http\Method;
-use Yiisoft\Router\Group;
-use Yiisoft\Router\Route;
-use Yiisoft\Yii\AuthClient\AuthAction;
-use Yiisoft\Yii\RateLimiter\Counter;
-use Yiisoft\Yii\RateLimiter\LimitRequestsMiddleware as LRM;
-use Yiisoft\Yii\RateLimiter\Storage\StorageInterface;
+use Yiisoft\{Auth\Middleware\Authentication,
+    DataResponse\DataResponseFactoryInterface as DRFI,
+    DataResponse\Middleware\FormatDataResponseAsJson,
+    DataResponse\Middleware\FormatDataResponseAsXml,
+    Http\Method, Router\Group, Router\Route, Yii\AuthClient\AuthAction,
+    Yii\RateLimiter\Counter, Yii\RateLimiter\LimitRequestsMiddleware as LRM,
+    Yii\RateLimiter\Storage\StorageInterface};
 
 $pEI = Permissions::EDIT_INV;
 $pVI = Permissions::VIEW_INV;
@@ -1030,6 +1022,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'peppol_stream_toggle'])
                 ->name('inv/peppol_stream_toggle'),
+            Route::methods([$mG, $mP], '/inv/peppol_doc_currency_toggle/{id}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([InvController::class, 'peppol_doc_currency_toggle'])
+                ->name('inv/peppol_doc_currency_toggle'),
             Route::methods([$mG, $mP], '/archive')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'archive'])

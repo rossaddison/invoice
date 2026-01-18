@@ -1077,7 +1077,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'item.allowance' => 'Item Allowance',
   'item.charge' => 'Item Charge',
   'item.date' => 'Item Date',
-  'item.discount' => 'Item Discount',
+  'item.discount' => 'Cash Discount',
   'item.lookup' => 'Item Lookup',
   'item.lookup.form' => 'Item Lookup Form',
   'item.lookups' => 'Item Lookups',
@@ -1634,14 +1634,17 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' (To change see '
     . 'config/common/params.php TaxCurrencyCode)',
   'peppol.currency.code.to' =>
-    'To Currency ie. Document Currency:'
+    'To Currency:'
     . ' see function get.setting(\'currency.code.to\')',
   'peppol.currency.from.to' =>
     'One of From Currency today'
     . ' converts to this of To Currency',
   'peppol.currency.to.from' =>
     'One of To Currency today converts to this of From Currency',
+  'peppol.debug.with.emojis' => 'Debug e-invoices with emojis',  
+  'peppol.doc.currency.toggle' => 'Peppol Toggle Doc Currency',  
   'peppol.document.reference.null' => 'inv-number-null-inv-id',
+  'peppol.document.currency' => 'Peppol Document Currency - toggle on View',
   'peppol.ecosio.validator' =>
     'Ecosio Validator for OpenPeppol'
     . ' UBL Invoice (3.15.0) (aka BIS Billing 3.0.14)',
@@ -1680,7 +1683,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' from clicking on green button World=>DE',
   'peppol.stream.toggle' => 'Peppol - \'Stream\''
     . ' or \'Save to File\''
-    . ' Toggle Button',
+    . ' Toggle Button On View',
   'peppol.tax.category.not.found' =>
     'Peppol Tax Category code'
     . ' (https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5305/)'

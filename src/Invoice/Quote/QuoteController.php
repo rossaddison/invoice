@@ -7,158 +7,131 @@ namespace App\Invoice\Quote;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Widget\FormFields;
-// Entity's
-use App\Invoice\Entity\AllowanceCharge;
-use App\Invoice\Entity\Contract;
-use App\Invoice\Entity\CustomField;
-use App\Invoice\Entity\DeliveryLocation;
-use App\Invoice\Entity\EmailTemplate;
-use App\Invoice\Entity\Group;
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAllowanceCharge;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvCustom;
-use App\Invoice\Entity\InvTaxRate;
-use App\Invoice\Entity\Quote;
-use App\Invoice\Entity\QuoteAmount;
-use App\Invoice\Entity\QuoteAllowanceCharge;
-use App\Invoice\Entity\QuoteItem;
-use App\Invoice\Entity\QuoteItemAllowanceCharge;
-use App\Invoice\Entity\QuoteCustom;
-use App\Invoice\Entity\QuoteTaxRate;
-use App\Invoice\Entity\SalesOrder as SoEntity;
-use App\Invoice\Entity\SalesOrderAmount as SoAmount;
-use App\Invoice\Entity\SalesOrderAllowanceCharge;
-use App\Invoice\Entity\SalesOrderItem as SoItem;
-use App\Invoice\Entity\SalesOrderItemAllowanceCharge;
-use App\Invoice\Entity\SalesOrderCustom as SoCustom;
-use App\Invoice\Entity\SalesOrderTaxRate as SoTaxRate;
-use App\Invoice\Entity\TaxRate;
-// Services
-// Inv
+use App\Invoice\Entity\{
+    AllowanceCharge, Contract, CustomField, DeliveryLocation, EmailTemplate,
+    Group, Inv, InvAllowanceCharge, InvItem, InvAmount, InvCustom, InvTaxRate,
+    Quote, QuoteAmount, QuoteAllowanceCharge, QuoteItem, QuoteItemAllowanceCharge,
+    QuoteCustom, QuoteTaxRate, SalesOrder as SoEntity,
+    SalesOrderAmount as SoAmount, SalesOrderAllowanceCharge,
+    SalesOrderItem as SoItem, SalesOrderItemAllowanceCharge,
+    SalesOrderCustom as SoCustom, SalesOrderTaxRate as SoTaxRate,
+    TaxRate,
+};
 use App\User\UserService;
 use App\User\User;
-use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
-use App\Invoice\Inv\InvService;
-use App\Invoice\InvItem\InvItemService;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeService;
-use App\Invoice\InvAmount\InvAmountService;
-use App\Invoice\InvItemAmount\InvItemAmountService;
-use App\Invoice\InvTaxRate\InvTaxRateService;
-use App\Invoice\InvCustom\InvCustomService;
-use App\Invoice\Project\ProjectRepository as PROJECTR;
-// PO
-use App\Invoice\SalesOrder\SalesOrderService as soS;
-use App\Invoice\SalesOrderAmount\SalesOrderAmountService as soAS;
-use App\Invoice\SalesOrderCustom\SalesOrderCustomService as soCS;
-use App\Invoice\SalesOrderItem\SalesOrderItemService as soIS;
-use App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeService
-    as soIACS;
-use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountService as soIAS;
-use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateService as soTRS;
-// Quote
-use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeService;
-use App\Invoice\QuoteAmount\QuoteAmountService;
-use App\Invoice\QuoteCustom\QuoteCustomService;
-use App\Invoice\QuoteItem\QuoteItemService;
-use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeService;
-use App\Invoice\QuoteItemAmount\QuoteItemAmountService as QIAS;
-use App\Invoice\QuoteTaxRate\QuoteTaxRateService;
+use App\Invoice\{
+    DeliveryLocation\DeliveryLocationRepository as DLR, Inv\InvService,
+    InvItem\InvItemService, InvAllowanceCharge\InvAllowanceChargeService,
+    InvAmount\InvAmountService, InvItemAmount\InvItemAmountService,
+    InvTaxRate\InvTaxRateService, InvCustom\InvCustomService,
+    Project\ProjectRepository as PROJECTR, SalesOrder\SalesOrderService as soS,
+    SalesOrderAllowanceCharge\SalesOrderAllowanceChargeService as soACS,
+    SalesOrderAmount\SalesOrderAmountService as soAS,
+    SalesOrderCustom\SalesOrderCustomService as soCS,
+    SalesOrderItem\SalesOrderItemService as soIS,
+    SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeService as soIACS,
+    SalesOrderItemAmount\SalesOrderItemAmountService as soIAS,
+    SalesOrderTaxRate\SalesOrderTaxRateService as soTRS,
+    QuoteAllowanceCharge\QuoteAllowanceChargeService,
+    QuoteAmount\QuoteAmountService, QuoteCustom\QuoteCustomService,
+    QuoteItem\QuoteItemService,
+    QuoteItemAllowanceCharge\QuoteItemAllowanceChargeService,
+    QuoteItemAmount\QuoteItemAmountService as QIAS,
+    QuoteTaxRate\QuoteTaxRateService,
+};
 use App\Service\WebControllerService;
 // Forms
-use App\Invoice\SalesOrderItem\SalesOrderItemForm as SoItemForm;
-use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateForm as SoTaxRateForm;
-use App\Invoice\SalesOrderCustom\SalesOrderCustomForm as SoCustomForm;
-use App\Invoice\SalesOrder\SalesOrderForm as SoForm;
-use App\Invoice\Inv\InvForm;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeForm;
-use App\Invoice\InvAmount\InvAmountForm;
-use App\Invoice\InvItem\InvItemForm;
-use App\Invoice\InvCustom\InvCustomForm;
-use App\Invoice\InvTaxRate\InvTaxRateForm;
-use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeForm;
-use App\Invoice\QuoteItem\QuoteItemForm;
-use App\Invoice\QuoteTaxRate\QuoteTaxRateForm;
-use App\Invoice\QuoteCustom\QuoteCustomForm;
-// Repositories
-use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
-use App\Invoice\Client\ClientRepository as CR;
-use App\Invoice\ClientCustom\ClientCustomRepository as CCR;
-use App\Invoice\Contract\ContractRepository as ContractRepo;
-use App\Invoice\CustomValue\CustomValueRepository as CVR;
-use App\Invoice\CustomField\CustomFieldRepository as CFR;
-use App\Invoice\EmailTemplate\EmailTemplateRepository as ETR;
-use App\Invoice\Family\FamilyRepository as FR;
-use App\Invoice\Group\GroupRepository as GR;
-use App\Invoice\Group\Exception\GroupException;
-use App\Invoice\InvCustom\InvCustomRepository as ICR;
-use App\Invoice\Inv\InvRepository as IR;
-use App\Invoice\InvAmount\InvAmountRepository as IAR;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
-use App\Invoice\PaymentCustom\PaymentCustomRepository as PCR;
-use App\Invoice\PaymentMethod\PaymentMethodRepository as PMR;
-use App\Invoice\Product\ProductRepository as PR;
-use App\Invoice\ProductImage\ProductImageRepository as PIR;
-use App\Invoice\Quote\QuoteRepository as QR;
-use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as ACQR;
-use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
-use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
-use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository
-    as ACQIR;
-use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
-use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
-use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTRR;
-use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as soAR;
-use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
-use App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR;
-use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as soIAR;
-use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
-use App\Invoice\Setting\SettingRepository as SR;
-use App\Invoice\TaxRate\TaxRateRepository as TRR;
-use App\Invoice\Task\TaskRepository as TASKR;
-use App\Invoice\Unit\UnitRepository as UNR;
-use App\Invoice\UserClient\UserClientRepository as UCR;
-use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
-use App\Invoice\UserInv\UserInvRepository as UIR;
+use App\Invoice\{
+    Quote\QuoteCustomFieldProcessor,
+    QuoteAllowanceCharge\QuoteAllowanceChargeForm,
+    QuoteItem\QuoteItemForm,
+    QuoteTaxRate\QuoteTaxRateForm,
+    QuoteCustom\QuoteCustomForm,
+    SalesOrderAllowanceCharge\SalesOrderAllowanceChargeForm,
+    SalesOrderItem\SalesOrderItemForm as SoItemForm,
+    SalesOrderTaxRate\SalesOrderTaxRateForm as SoTaxRateForm,
+    SalesOrderCustom\SalesOrderCustomForm as SoCustomForm,
+    SalesOrder\SalesOrderForm as SoForm,
+    Inv\InvForm,
+    InvAllowanceCharge\InvAllowanceChargeForm,
+    InvAmount\InvAmountForm,
+    InvItem\InvItemForm,
+    InvCustom\InvCustomForm,
+    InvTaxRate\InvTaxRateForm,
+    // Repositories
+    AllowanceCharge\AllowanceChargeRepository as ACR,
+    Client\ClientRepository as CR,
+    ClientCustom\ClientCustomRepository as CCR,
+    Contract\ContractRepository as ContractRepo,
+    CustomValue\CustomValueRepository as CVR,
+    CustomField\CustomFieldRepository as CFR,
+    EmailTemplate\EmailTemplateRepository as ETR,
+    Family\FamilyRepository as FR,
+    Group\GroupRepository as GR,
+    Group\Exception\GroupException,
+    InvCustom\InvCustomRepository as ICR,
+    Inv\InvRepository as IR,
+    InvAmount\InvAmountRepository as IAR,
+    InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
+    InvItemAmount\InvItemAmountRepository as IIAR,
+    PaymentCustom\PaymentCustomRepository as PCR,
+    PaymentMethod\PaymentMethodRepository as PMR,
+    Product\ProductRepository as PR,
+    ProductImage\ProductImageRepository as PIR,
+    Quote\QuoteRepository as QR,
+    QuoteAllowanceCharge\QuoteAllowanceChargeRepository as ACQR,
+    QuoteAmount\QuoteAmountRepository as QAR,
+    QuoteCustom\QuoteCustomRepository as QCR,
+    QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR,
+    QuoteItemAmount\QuoteItemAmountRepository as QIAR,
+    QuoteItem\QuoteItemRepository as QIR,
+    QuoteTaxRate\QuoteTaxRateRepository as QTRR,
+    SalesOrderAmount\SalesOrderAmountRepository as soAR,
+    SalesOrderCustom\SalesOrderCustomRepository as SOCR,
+    SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR,
+    SalesOrderItemAmount\SalesOrderItemAmountRepository as soIAR,
+    SalesOrder\SalesOrderRepository as SOR,
+    Setting\SettingRepository as SR,
+    TaxRate\TaxRateRepository as TRR,
+    Task\TaskRepository as TASKR,
+    Unit\UnitRepository as UNR,
+    UserClient\UserClientRepository as UCR,
+    UserClient\Exception\NoClientsAssignedToUserException,
+    UserInv\UserInvRepository as UIR,
+};
 use App\User\UserRepository as UR;
-// App Helpers
-use App\Invoice\Helpers\ClientHelper;
-use App\Invoice\Quote\QuoteCustomFieldProcessor;
-use App\Invoice\Helpers\CountryHelper;
-use App\Invoice\Helpers\CustomValuesHelper as CVH;
-use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Helpers\MailerHelper;
-use App\Invoice\Helpers\NumberHelper;
-use App\Invoice\Helpers\PdfHelper;
-use App\Invoice\Helpers\TemplateHelper;
+use App\Invoice\Helpers\{
+    ClientHelper, CountryHelper, CustomValuesHelper as CVH, DateHelper,
+    MailerHelper, NumberHelper, PdfHelper, TemplateHelper,
+};
 use App\Widget\Bootstrap5ModalQuote;
 use App\Widget\QuoteToolbar;
-// Yii
-use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
-use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Data\Reader\OrderHelper;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
-use Yiisoft\Html\Html;
-use Yiisoft\Http\Method;
-use Yiisoft\Input\Http\Attribute\Parameter\Query;
-use Yiisoft\Json\Json;
-use Yiisoft\Mailer\MailerInterface;
-use Yiisoft\Router\FastRoute\UrlGenerator;
-use Yiisoft\Router\HydratorAttribute\RouteArgument;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Session\SessionInterface as Session;
-use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\User\CurrentUser;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
-// Psr\Http
-use Psr\Log\LoggerInterface;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Yiisoft\{
+    Data\Paginator\OffsetPaginator as DataOffsetPaginator,
+    Data\Paginator\PageToken,
+    Data\Reader\Sort,
+    Data\Reader\OrderHelper,
+    DataResponse\DataResponseFactoryInterface,
+    Html\Html,
+    Http\Method,
+    Input\Http\Attribute\Parameter\Query,
+    Json\Json,
+    Mailer\MailerInterface,
+    Router\FastRoute\UrlGenerator,
+    Router\HydratorAttribute\RouteArgument,
+    Session\Flash\Flash,
+    Session\SessionInterface as Session,
+    FormModel\FormHydrator,
+    Translator\TranslatorInterface as Translator,
+    User\CurrentUser,
+    Yii\DataView\YiiRouter\UrlCreator,
+    Yii\View\Renderer\ViewRenderer,
+};
+use Psr\{
+    Log\LoggerInterface,
+    Http\Message\ResponseInterface as Response,
+    Http\Message\ServerRequestInterface as Request,
+};
 
 final class QuoteController extends BaseController
 {
@@ -214,6 +187,7 @@ final class QuoteController extends BaseController
         private readonly LoggerInterface $logger,
         private readonly MailerInterface $mailer,
         private readonly soAS $so_amount_service,
+        private readonly soACS $soac_service,    
         private readonly soCS $so_custom_service,
         private readonly soIS $so_item_service,
         private readonly soIACS $so_item_ac_service,    
@@ -2369,6 +2343,7 @@ final class QuoteController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         ACQIR $acqiR,
+        ACQR $acqR,
         ACSOIR $acsoiR,
         CFR $cfR,
         GR $gR,
@@ -2454,14 +2429,16 @@ final class QuoteController extends BaseController
                         // for each item
                         if (null !== $new_so_id) {
                             $this->quote_to_so_quote_items($quote_id,
-                                $new_so_id, $acqiR, $acsoiR, $soiaR, $soiaS, $pR, $taskR,
-                                    $qiR, $trR, $unR, $formHydrator);
+                                $new_so_id, $acqiR, $acsoiR, $soiaR, $soiaS, $pR,
+                                    $taskR, $qiR, $trR, $unR, $formHydrator);
                             $this->quote_to_so_quote_tax_rates($quote_id,
                                 $new_so_id, $qtrR, $formHydrator);
                             $this->quote_to_so_quote_custom($quote_id,
                                 $new_so_id, $qcR, $cfR, $formHydrator);
                             $this->quote_to_so_quote_amount($quote_id,
                                 $new_so_id, $qaR, $soaR, $soR);
+                            $this->quote_to_so_quote_allowance_charges($quote_id,
+                                $new_so_id, $acqR, $formHydrator);
                             // Set the quote's sales order id so that it
                             // cannot be copied in the future
                             $quote->setSo_id($new_so_id);
@@ -2862,7 +2839,7 @@ final class QuoteController extends BaseController
             $soA->setPackhandleship_total(
                 $basis_quote->getPackhandleship_total() ?: 0.00);
             $soA->setPackhandleship_tax(
-                $basis_quote->getPackhandleship_total() ?: 0.00);
+                $basis_quote->getPackhandleship_tax() ?: 0.00);
             $soA->setTax_total(
                 $basis_quote->getTax_total() ?? 0.00);
             $soA->setTotal(
@@ -3092,7 +3069,6 @@ final class QuoteController extends BaseController
         foreach ($all as $quoteItemAllowanceCharge) {
             $acqItem = new QuoteItemAllowanceCharge();
             
-            // CRITICAL: Set relationship objects to allow Cycle ORM to determine persistence order
             $acqItem->setQuote($newQuoteItem->getQuote());
             $acqItem->setQuoteItem($newQuoteItem);
             $acqItem->setAllowanceCharge($quoteItemAllowanceCharge->getAllowanceCharge());
@@ -3114,15 +3090,15 @@ final class QuoteController extends BaseController
     }
     
     private function quote_to_so_quote_items(string $quote_id, string $new_so_id,
-        ACQIR $acqiR, ACSOIR $acsoiR, soIAR $soiaR, soIAS $soiaS, PR $pR, TASKR $taskR, 
-        QIR $qiR, TRR $trR,
-        UNR $unR, FormHydrator $formHydrator): void
+        ACQIR $acqiR, ACSOIR $acsoiR, soIAR $soiaR, soIAS $soiaS, PR $pR,
+        TASKR $taskR, QIR $qiR, TRR $trR, UNR $unR, FormHydrator $formHydrator):
+        void
     {
         // Note: The $soiaR variable will be used to see if there are
         // pre-existing amounts later towards the end of this function
         // Get all items that belong to the original quote
         $items = $qiR->repoQuoteItemIdquery($quote_id);
-        /** @var QuoteItem $quote_item */        
+        /** @var QuoteItem $quote_item */
         foreach ($items as $quote_item) {
             $origQuoteItemId = $quote_item->getId();
             $newSoItem = new SoItem();
@@ -3145,11 +3121,36 @@ final class QuoteController extends BaseController
             ];
             $form = new SoItemForm($newSoItem, $new_so_id);
             if ($formHydrator->populateAndValidate($form, $so_item)) {
-                $this->so_item_service->addSoItemProductTask($newSoItem, $so_item,
-                    $new_so_id, $pR, $taskR, $soiaR, $soiaS, $unR, $trR,
-                        $this->translator);
-                $this->copy_quote_item_allowance_charges_to_so($origQuoteItemId,
-                    $acqiR, $new_so_id, $newSoItem, $acsoiR);
+                $savedSoItem  = $this->so_item_service->addSoItemProductTask(
+                        $newSoItem, $so_item, $new_so_id, $pR, $taskR, $soiaR,
+                        $soiaS, $unR, $trR, $this->translator);
+                $this->copy_quote_item_allowance_charges_to_so(
+                        $origQuoteItemId, $acqiR, $new_so_id,
+                        $savedSoItem, $acsoiR);
+                
+                $tax_rate_percentage = $this->so_item_service->taxrate_percentage(
+                        (int) $so_item['tax_rate_id'], $trR);
+                if (isset($so_item['quantity'], $so_item['price'],
+                    $so_item['discount_amount'])
+                    && null !== $tax_rate_percentage
+                ) {
+                   /**
+                    * Note: Although, at first glance, the allowances and charges
+                    * do not appear to be here, they are in fact worked out with a
+                    * $this->acsoiR in the function below which creates their
+                    * accumulative totals and saves it using the $soiaR which
+                    * is inherited from the so_item_service constructor
+                    */
+                    $this->so_item_service->saveSalesOrderItemAmount(
+                        (int) $savedSoItem->getId(),
+                        $so_item['quantity'],
+                        $so_item['price'],
+                        $so_item['discount_amount'],
+                        $tax_rate_percentage,
+                        $soiaR,
+                        $soiaS
+                    );
+                }
             }
         } // items as quote_item
     }
@@ -3165,24 +3166,21 @@ final class QuoteController extends BaseController
         foreach ($all as $quoteItemAllowanceCharge) {
             $acsoItem = new SalesOrderItemAllowanceCharge();
             
-            // CRITICAL: Set relationship objects to allow Cycle ORM to determine persistence order
-            // The SalesOrder entity must be loaded and set, not just the FK ID
             $acsoItem->setSalesOrder($newSalesOrderItem->getSales_order());
             $acsoItem->setSalesOrderItem($newSalesOrderItem);
-            $acsoItem->setAllowanceCharge($quoteItemAllowanceCharge->getAllowanceCharge());
+            $acsoItem->setAllowanceCharge(
+                    $quoteItemAllowanceCharge->getAllowanceCharge());
             
-            // Also set FK IDs for consistency
             $acsoItem->setSales_order_id((int) $new_so_id);
             $acsoItem->setSales_order_item_id((int) $newSalesOrderItem->getId());
             $acsoItem->setAllowance_charge_id(
                 (int) $quoteItemAllowanceCharge->getAllowanceCharge()?->getId()
             );
             
-            // Set other properties
             $acsoItem->setAmount((float) $quoteItemAllowanceCharge->getAmount());
-            $acsoItem->setVatOrTax((float) $quoteItemAllowanceCharge->getVatOrTax() ?: 0.00);
+            $acsoItem->setVatOrTax((float) $quoteItemAllowanceCharge->getVatOrTax()
+                    ?: 0.00);
             
-            // Save directly via repository - bypassing the service that calls nullifyRelationOnChange
             $acsoiR->save($acsoItem);
         }
     }
@@ -3240,6 +3238,32 @@ final class QuoteController extends BaseController
                     $copy_quote_allowance_charge)) {
                     $this->qac_Service->saveQuoteAllowanceCharge(
                     $quoteAllowanceCharge, $copy_quote_allowance_charge);
+            }
+        }
+    }
+    
+    private function quote_to_so_quote_allowance_charges(string $quote_id,
+        string $new_so_id, ACQR $acqR, FormHydrator $formHydrator): void
+    {
+        $quote_allowance_charges = $acqR->repoACQquery($quote_id);
+        /**
+         * @var QuoteAllowanceCharge $quote_allowance_charge
+         */
+        foreach ($quote_allowance_charges as $quote_allowance_charge) {
+            $new_so_ac = [
+                'sales_order_id' => $new_so_id,
+                'allowance_charge_id' =>
+                    $quote_allowance_charge->getAllowance_charge_id(),
+                'amount' => $quote_allowance_charge->getAmount(),
+            ];
+            $salesOrderAllowanceCharge = new SalesOrderAllowanceCharge();
+            $form = new SalesOrderAllowanceChargeForm($salesOrderAllowanceCharge,
+                (int) $new_so_id);
+            if ($formHydrator->populateAndValidate($form,
+                $new_so_ac)) {
+                $this->soac_service->saveSalesOrderAllowanceCharge(
+                    $salesOrderAllowanceCharge, $new_so_ac
+                );
             }
         }
     }

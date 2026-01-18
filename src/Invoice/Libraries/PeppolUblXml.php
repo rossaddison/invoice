@@ -8,22 +8,10 @@ use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
-use App\Invoice\Ubl\AdditionalDocumentReference;
-use App\Invoice\Ubl\Address;
-use App\Invoice\Ubl\Contact;
-use App\Invoice\Ubl\ContractDocumentReference;
-use App\Invoice\Ubl\Delivery;
-use App\Invoice\Ubl\Generator;
-use App\Invoice\Ubl\Invoice;
-use App\Invoice\Ubl\InvoicePeriod;
-use App\Invoice\Ubl\LegalMonetaryTotal;
-use App\Invoice\Ubl\OrderReference;
-use App\Invoice\Ubl\Party;
-use App\Invoice\Ubl\PartyLegalEntity;
-use App\Invoice\Ubl\PartyTaxScheme;
-use App\Invoice\Ubl\PayeeFinancialAccount;
-use App\Invoice\Ubl\PaymentTerms;
-use App\Invoice\Ubl\PaymentMeans;
+use App\Invoice\Ubl\{AdditionalDocumentReference, Address, Contact,
+    ContractDocumentReference, Delivery, Generator, Invoice, InvoicePeriod,
+    LegalMonetaryTotal, OrderReference, Party, PartyLegalEntity, PartyTaxScheme,
+    PayeeFinancialAccount, PaymentTerms, PaymentMeans};
 use Doctrine\Common\Collections\ArrayCollection;
 use Sabre\Xml\Writer;
 use Yiisoft\Translator\TranslatorInterface as Translator;
@@ -32,7 +20,6 @@ use DateTime;
 final readonly class PeppolUblXml
 {
     private ArrayCollection $items;
-    private string $currencyCode_to;
     private array $company;
 
     /**
@@ -41,10 +28,11 @@ final readonly class PeppolUblXml
      * @param iiaR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(private sR $sR, private Translator $t, private Inv $invoice, private iiaR $iiaR, private InvAmount $inv_amount)
+    public function __construct(private sR $sR, private Translator $t,
+            private Inv $invoice, private iiaR $iiaR,
+            private InvAmount $inv_amount)
     {
         $this->items = $this->invoice->getItems();
-        $this->currencyCode_to = $this->sR->getSetting('currency_to');
         $this->company = $this->sR->get_config_company_details();
     }
 
@@ -57,22 +45,20 @@ final readonly class PeppolUblXml
         DateTime $taxPointDate,
         ?string $accountingCostCode,
         ?string $buyerReference,
-
-        // IP
+        // InvoicePeriod
         string $start_date,
         string $end_date,
-        // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/cbc-DescriptionCode/
-        // The code of the date when the VAT becomes accountable
-        // for the Seller and for the Buyer.
+// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
+// cac-InvoicePeriod/cbc-DescriptionCode/
+// The code of the date when the VAT becomes accountable
+// for the Seller and for the Buyer.
         string $description_code,
-
-        // OR
+        // OrderReference
         ?string $order_id,
         ?string $sales_order_id,
         ?string $cdr_id,
         AdditionalDocumentReference $additionalDocumentReference,
-
-        // aSP
+        // AccountingSupplierParty
         ?string $supplier_name,
         ?string $supplier_partyIdentificationId,
         ?string $supplier_partyIdentificationSchemeId,
@@ -82,8 +68,7 @@ final readonly class PeppolUblXml
         ?PartyLegalEntity $supplier_partyLegalEntity,
         ?string $supplier_endpointID,
         string $supplier_endpointID_schemeID,
-
-        // cSP
+        // AccountingCustomerParty
         ?string $customer_name,
         ?string $customer_partyIdentificationId,
         ?string $customer_partyIdentificationSchemeId,
@@ -93,24 +78,22 @@ final readonly class PeppolUblXml
         ?PartyLegalEntity $customer_partyLegalEntity,
         ?string $customer_endpointID,
         string $customer_endpointID_schemeID,
-
-        // D
+        // Delivery
         ?DateTime $actualDeliveryDate,
         array $deliveryLocationID_scheme,
         ?Address $deliveryLocation,
         ?Party $deliveryParty,
-        // PM
+        // PaymentMeans
         ?PayeeFinancialAccount $payeeFinancialAccount,
         string $paymentId,
-        // PT
+        // PaymentTerms
         ?string $payment_terms,
         array $allowanceCharges,
-        // TT
+        // TaxTotal
         array $taxAmounts,
-        // TST
+        // TaxSubTotal
         array $taxSubtotal,
-
-        // LMT
+        // LegalMonetaryTotal
         float $lineExtensionAmount,
         float $taxExclusiveAmount,
         float $taxInclusiveAmount,
@@ -139,7 +122,7 @@ final readonly class PeppolUblXml
                 $order_id,
                 $sales_order_id,
             ),
-            new ContractDocumentReference($cdr_id),
+            null!== $cdr_id ? new ContractDocumentReference($cdr_id) : null,
             $additionalDocumentReference,
             // Accounting Supplier Party
             new Party(
@@ -148,13 +131,14 @@ final readonly class PeppolUblXml
                 $supplier_partyIdentificationId,
                 $supplier_partyIdentificationSchemeId,
                 $supplier_postalAddress,
-                /**
-                 * Supplier Physical Location must not be supplied => null
-                 * Location: invoice_sqKOvgahINV107_peppol
-                 * Element/context: /:Invoice[1]
-                 * XPath test: not(cac:AccountingSupplierParty/cac:Party/cac:PhysicalLocation)
-                 * Error message: [UBL-CR-168]-A UBL invoice should not include the AccountingSupplierParty Party PhysicalLocation
-                 */
+/**
+ * Supplier Physical Location must not be supplied => null
+ * Location: invoice_sqKOvgahINV107_peppol
+ * Element/context: /:Invoice[1]
+ * XPath test: not(cac:AccountingSupplierParty/cac:Party/cac:PhysicalLocation)
+ * Error message: [UBL-CR-168]-A UBL invoice should not include the
+      AccountingSupplierParty Party PhysicalLocation
+ */
                 null,
                 $supplier_contact,
                 $supplier_partyTaxScheme,
@@ -169,25 +153,26 @@ final readonly class PeppolUblXml
                 $customer_partyIdentificationId,
                 $customer_partyIdentificationSchemeId,
                 $customer_postalAddress,
-                /**
-                 * Customer Physical Location must not be included => null
-                 * Warning
-                 * Location: invoice_sqKOvgahINV107_peppol
-                 * Element/context: /:Invoice[1]
-                 * XPath test: not(cac:AccountingCustomerParty/cac:Party/cac:PhysicalLocation)
-                 * Error message: [UBL-CR-231]-A UBL invoice should not include the AccountingCustomerParty Party PhysicalLocation
-                 */
+/**
+ * Customer Physical Location must not be included => null
+ * Warning
+ * Location: invoice_sqKOvgahINV107_peppol
+ * Element/context: /:Invoice[1]
+ * XPath test: not(cac:AccountingCustomerParty/cac:Party/cac:PhysicalLocation)
+ * Error message: [UBL-CR-231]-A UBL invoice should not include the
+   AccountingCustomerParty Party PhysicalLocation
+ */
                 null,
                 $customer_contact,
                 $customer_partyTaxScheme,
                 $customer_partyLegalEntity,
-                /**
-                 * Error
-                 * Location: invoice_8x8vShcxINV111_peppol
-                 * Element/context: /:Invoice[1]/cac:AccountingCustomerParty[1]/cac:Party[1]
-                 * XPath test: cbc:EndpointID
-                 * Error message: Buyer electronic address MUST be provided
-                 */
+/**
+ * Error
+ * Location: invoice_8x8vShcxINV111_peppol
+ * Element/context: /:Invoice[1]/cac:AccountingCustomerParty[1]/cac:Party[1]
+ * XPath test: cbc:EndpointID
+ * Error message: Buyer electronic address MUST be provided
+ */
                 $customer_endpointID,
                 $customer_endpointID_schemeID,
             ),
@@ -211,8 +196,8 @@ final readonly class PeppolUblXml
                 $taxInclusiveAmount,
                 $allowanceTotalAmount,
                 $payableAmount,
-                $this->sR->getSetting('currency_code_to')
-        ?: $this->sR->getSetting('currency_code_from'),
+                $this->sR->getSetting('peppol_document_currency'),
+                $this->sR,
             ),
             $invoiceLines,
             $isCopyIndicator,
@@ -226,11 +211,12 @@ final readonly class PeppolUblXml
      */
     public function output(Invoice $ubl_invoice): string
     {
+        $ubl_invoice->setDocumentCurrencyCode();
         $writer = new Writer();
         $writer->openMemory();
         $writer->setIndent(true);
         //$writer->startDocument('1.0', 'UTF-8');
-        $writer->text(Generator::invoice($ubl_invoice, $this->currencyCode_to));
+        $writer->text(Generator::invoice($ubl_invoice, $ubl_invoice->getDocumentCurrencyCode()));
         $writer->endDocument();
         return $writer->outputMemory();
     }

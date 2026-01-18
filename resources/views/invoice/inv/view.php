@@ -57,6 +57,7 @@ use Yiisoft\Html\Tag\A;
  * @var string $partial_inv_delivery_location
  * @var string $partial_inv_attachments
  * @var string $partial_item_table
+ * @var string $peppol_doc_currency_toggle
  * @var string $peppol_stream_toggle
  * @var string $sales_order_number
  * @var string $title
@@ -315,6 +316,21 @@ if ($showButtons && $invEdit) {
 // Options ...  Peppol Stream Toggle
                                   Html::encode(
         $translator->translate('peppol.stream.toggle')); ?>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="
+<?= $urlGenerator->generate('inv/peppol_doc_currency_toggle',
+        ['id' => $inv->getId()]) ?>"
+                               style="text-decoration:none">
+                               <i class="fa 
+<?= $peppol_doc_currency_toggle === '1' ?
+        'fa-toggle-on' : 'fa-toggle-off'; ?> fa-margin" aria-hidden="true"></i>
+                               <?=
+// Options ...  Peppol Stream Toggle
+                                  Html::encode(
+        $translator->translate('peppol.doc.currency.toggle')
+            . '➡️' . $s->getSetting('peppol_document_currency')); ?>
                             </a>
                         </li>
                         <li>

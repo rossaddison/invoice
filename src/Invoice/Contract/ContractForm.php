@@ -14,7 +14,7 @@ final class ContractForm extends FormModel
     private ?int $id = null;
 
     #[Required]
-    private ?string $reference = '';
+    private ?string $reference = null;
 
     #[Required]
     private ?string $name = '';

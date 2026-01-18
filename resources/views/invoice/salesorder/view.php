@@ -292,7 +292,7 @@ $vat = $s->getSetting('enable_vat_registration');
             </div>
         </div>
     </div>
-   <div id="partial_item_table_parameters" quote_items="<?php $soItems; ?>" disabled>
+   <div id="partial_item_table_parameters" so_items="<?php $soItems; ?>" disabled>
     <?=
        $partial_item_table;
     ?>     

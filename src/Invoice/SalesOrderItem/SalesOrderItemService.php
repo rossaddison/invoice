@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItem;
 
-use App\Invoice\Entity\SalesOrderItemAmount;
-use App\Invoice\Entity\SalesOrderItem;
-use App\Invoice\Product\ProductRepository as PR;
-use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
-use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SoIAR;
-use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountService as SoIAS;
-use App\Invoice\Task\TaskRepository as taskR;
-use App\Invoice\TaxRate\TaxRateRepository as TRR;
-use App\Invoice\Unit\UnitRepository as UR;
+use App\Invoice\{
+Entity\SalesOrderItemAmount,
+Entity\SalesOrderItem,
+Product\ProductRepository as PR,
+SalesOrder\SalesOrderRepository as SOR,
+SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR,
+SalesOrderItemAmount\SalesOrderItemAmountRepository as SoIAR,
+SalesOrderItemAmount\SalesOrderItemAmountService as SoIAS,
+Task\TaskRepository as taskR,
+TaxRate\TaxRateRepository as TRR,
+Unit\UnitRepository as UR,
+};
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class SalesOrderItemService
 {
     public function __construct(
+        private ACSOIR $acsoiR,
         private SalesOrderItemRepository $repository,
         private SOR $soR,
         private TRR $trR,
@@ -102,7 +106,7 @@ final readonly class SalesOrderItemService
         UR $uR,
         TRR $trr,
         Translator $translator
-    ): void {
+    ): SalesOrderItem {
         // This function is used in product/save_product_lookup_item_PO
         // when adding a po using the modal
         $array['sales_order_id'] = $sales_order_id;
@@ -183,30 +187,8 @@ final readonly class SalesOrderItemService
             $model->setProduct_unit($unit->getUnit_name());
         }
         $model->setProduct_unit_id((int) $array['product_unit_id']);
-        // Users are required to enter a tax rate even if it is
-        // zero percent.
-        $tax_rate_id = ((isset($array['tax_rate_id']))
-            ? (int) $array['tax_rate_id']
-            : '');
-        $tax_rate_percentage = $this->taxrate_percentage(
-            (int) $tax_rate_id,
-            $trr
-        );
         $this->repository->save($model);
-        if (isset($array['quantity'], $array['price'],
-            $array['discount_amount'])
-            && null !== $tax_rate_percentage
-        ) {
-            $this->saveSalesOrderItemAmount(
-                (int) $model->getId(),
-                (float) $array['quantity'],
-                (float) $array['price'],
-                (float) $array['discount_amount'],
-                $tax_rate_percentage,
-                $soiar,
-                $soias
-            );
-        }
+        return $model;
     }
 
     /**
@@ -371,18 +353,39 @@ final readonly class SalesOrderItemService
         $soias_array = [];
         $soias_array['sales_order_item_id'] = $sales_order_item_id;
         $sub_total = $quantity * $price;
-        if (null !== $tax_rate_percentage) {
-            $tax_total = ($sub_total
-                * ($tax_rate_percentage / 100.00));
-        } else {
-            $tax_total = 0.00;
-        }
         $discount_total = $quantity * $discount;
+        // Fetch all allowance/charges for this item
+        $all_charges = 0.00;
+        $all_charges_vat_or_tax = 0.00;
+        $all_allowances = 0.00;
+        $all_allowances_vat_or_tax = 0.00;
+        $acsois = $this->acsoiR->repoSalesOrderItemquery(
+                                                (string)$sales_order_item_id);
+        /** @var \App\Invoice\Entity\SalesOrderItemAllowanceCharge $acsoi */
+        foreach ($acsois as $acsoi) {
+            if ($acsoi->getAllowanceCharge()?->getIdentifier() == '1') {
+                $all_charges += (float) $acsoi->getAmount();
+                $all_charges_vat_or_tax += (float) $acsoi->getVatOrTax();
+            } else {
+                $all_allowances += (float) $acsoi->getAmount();
+                $all_allowances_vat_or_tax += (float) $acsoi->getVatOrTax();
+            }
+        }
+        $sopInvAc = $sub_total + $all_charges - $all_allowances;
+        if (null !== $tax_rate_percentage) {
+            $current_tax_total =
+                ($sopInvAc - $discount_total) * ($tax_rate_percentage / 100.00);
+        } else {
+            $current_tax_total = 0.00;
+        }
+        $all_vat_or_tax = $all_charges_vat_or_tax - $all_allowances_vat_or_tax;
+        $new_tax_total = $current_tax_total + $all_vat_or_tax;
+        $soias_array['charge'] = $all_charges;
+        $soias_array['allowance'] = $all_allowances;
         $soias_array['discount'] = $discount_total;
-        $soias_array['subtotal'] = $sub_total;
-        $soias_array['taxtotal'] = $tax_total;
-        $soias_array['total'] = $sub_total - $discount_total
-            + $tax_total;
+        $soias_array['subtotal'] = $sopInvAc;
+        $soias_array['taxtotal'] = $new_tax_total;
+        $soias_array['total'] = $sopInvAc - $discount_total + $new_tax_total;
         if ($soiar->repoCount((string) $sales_order_item_id) === 0) {
             $soias->saveSalesOrderItemAmountNoForm(
                 new SalesOrderItemAmount(),

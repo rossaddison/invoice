@@ -82,6 +82,33 @@ final readonly class SalesOrderAmountService
     }
     
     /**
+     * @param SoAmount $model
+     * @param SalesOrderAmountForm $form
+     */
+    public function saveSalesOrderAmount(
+        SoAmount $model,
+        SalesOrderAmountForm $form
+    ): void {
+        null !== $form->getSales_order_id() ?
+            $model->setSales_order_id($form->getSales_order_id()) : '';
+        $model->setItem_subtotal(
+            $form->getItem_subtotal() ?? 0.00
+        );
+        $model->setItem_tax_total(
+            $form->getItem_tax_total() ?? 0.00
+        );
+        $model->setPackhandleship_total(
+            (float) $form->getPackhandleship_total()
+        );
+        $model->setPackhandleship_tax(
+            (float) $form->getPackhandleship_tax()
+        );
+        $model->setTax_total($form->getTax_total() ?? 0.00);
+        $model->setTotal($form->getTotal() ?? 0.00);
+        $this->repository->save($model);
+    }
+    
+    /**
      * Update the SalesOrder Amounts when a salesorder item
      * allowance or charge is added to a salesorder item. Also
      * update the SalesOrder totals using Numberhelper

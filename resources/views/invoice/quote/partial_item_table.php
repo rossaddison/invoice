@@ -372,15 +372,15 @@ parameters -->
                                   data-bs-toggle = "tooltip"
                                   title="quote_item->description">
                                     <b>
- <?= $translator->translate('description'); ?></b></span>
+ <?= $translator->translate('description'); ?>
+                                    </b>
+                            </span>
                             <textarea disabled name="item_description"
                                       class="form-control" 
                                       rows="1">
 <?= Html::encode($item->getDescription()); ?>
                             </textarea>
                         </div>
-                    </td>    
-                    <td>    
                     </td>
                     <td class="td-amount">
                         <div class="input-group">
@@ -407,8 +407,24 @@ parameters -->
                         <?php } ?>    
                         </div>
                     </td>
+                    <td class="td-amount">
+                        <?php if ($item->getProduct_id() > 0) { ?>
+                        <b>
+  <?= $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+                                  * ($item->getPrice() ?? 0.00)); ?>
+                        </b>
+                        <?php } ?>
+                    </td>
                     <td class="td-amount"></td>
-                    <td class="td-amount"></td>   
+                    <td class="td-amount">
+                        <b>
+  <?= $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+                                 * ($item->getPrice() ?? 0.00)
+                                 * ($item->getTaxRate()?->getTaxRatePercent()
+                                                                        ?? 0.00)
+                                 / 100); ?>
+                        </b>
+                    </td> 
                     <td class="td-amount"></td>   
                 </tr>
                 <?php
@@ -562,7 +578,7 @@ parameters -->
                         data-bs-toggle = "tooltip"
                         title="quote_amount->item_subtotal =  
                         quote_item(s)->subtotal - quote_item(s)->discount +
-                        quote_item(s)->charge">
+                        quote_item(s)->charge - quote_item(s)->allowance">
 <?php echo $numberHelper->format_currency(
     $quoteAmount->getItem_subtotal() > 0.00 ? $quoteAmount->getItem_subtotal() :
     0.00); ?>       </td>
@@ -628,8 +644,8 @@ parameters -->
                         <?php if ($invEdit === true) { ?>
                             <a href="#add-quote-tax"
                                data-bs-toggle="modal"
-                               class="btn-xs">
-                               <i class="fa fa-plus-circle"></i>
+                               class="btn-xs"
+                               style="text-decoration:none">➕
                             </a>
                         <?php } ?>
                         <?= $translator->translate('tax'); ?>

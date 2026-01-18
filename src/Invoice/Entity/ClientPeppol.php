@@ -15,22 +15,38 @@ class ClientPeppol
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $client_id = null, #[Column(type: 'string(100)', nullable: false)]
-        private string $endpointid = '', #[Column(type: 'string(4)', nullable: false)]
-        private string $endpointid_schemeid = '', #[Column(type: 'string(100)', nullable: false)]
-        private string $identificationid = '', #[Column(type: 'string(4)', nullable: false)]
-        private string $identificationid_schemeid = '', #[Column(type: 'string(100)', nullable: false)]
-        private string $taxschemecompanyid = '', #[Column(type: 'string(7)', nullable: false)]
-        private string $taxschemeid = '', #[Column(type: 'string(100)', nullable: false)]
-        private string $legal_entity_registration_name = '', #[Column(type: 'string(100)', nullable: false)]
-        private string $legal_entity_companyid = '', #[Column(type: 'string(5)', nullable: false)]
-        private string $legal_entity_companyid_schemeid = '', #[Column(type: 'string(50)', nullable: false)]
-        private string $legal_entity_company_legal_form = '', #[Column(type: 'string(20)', nullable: false)]
-        private string $financial_institution_branchid = '', #[Column(type: 'string(30)', nullable: false)]
-        private string $accounting_cost = '', #[Column(type: 'string(20)', nullable: false)]
-        private string $supplier_assigned_accountid = '', #[Column(type: 'string(20)', nullable: false)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $client_id = null,
+        #[Column(type: 'string(100)', nullable: false)]
+        private string $endpointid = '',
+        #[Column(type: 'string(4)', nullable: false)]
+        private string $endpointid_schemeid = '',
+        #[Column(type: 'string(100)', nullable: false)]
+        private string $identificationid = '',
+        #[Column(type: 'string(4)', nullable: false)]
+        private string $identificationid_schemeid = '',
+        #[Column(type: 'string(100)', nullable: false)]
+        private string $taxschemecompanyid = '',
+        #[Column(type: 'string(7)', nullable: false)]
+        private string $taxschemeid = '',
+        #[Column(type: 'string(100)', nullable: false)]
+        private string $legal_entity_registration_name = '',
+        #[Column(type: 'string(100)', nullable: false)]
+        private string $legal_entity_companyid = '',
+        #[Column(type: 'string(5)', nullable: false)]
+        private string $legal_entity_companyid_schemeid = '',
+        #[Column(type: 'string(50)', nullable: false)]
+        private string $legal_entity_company_legal_form = '',
+        #[Column(type: 'string(20)', nullable: false)]
+        private string $financial_institution_branchid = '',
+        #[Column(type: 'string(30)', nullable: false)]
+        private string $accounting_cost = '',
+        #[Column(type: 'string(20)', nullable: false)]
+        private string $supplier_assigned_accountid = '',
+        #[Column(type: 'string(20)', nullable: false)]
         private string $buyer_reference = '')
     {
     }
@@ -70,9 +86,9 @@ class ClientPeppol
         return $this->endpointid;
     }
 
-    public function setEndpointid(string $endpointid): void
+    public function setEndpointid(string $input): void
     {
-        $this->endpointid = $endpointid;
+        $this->endpointid = $input;
     }
 
     public function getEndpointid_schemeid(): string
@@ -80,9 +96,9 @@ class ClientPeppol
         return $this->endpointid_schemeid;
     }
 
-    public function setEndpointid_schemeid(string $endpointid_schemeid): void
+    public function setEndpointid_schemeid(string $input): void
     {
-        $this->endpointid_schemeid = $endpointid_schemeid;
+        $this->endpointid_schemeid = $input;
     }
 
     public function getIdentificationid(): string
@@ -90,9 +106,9 @@ class ClientPeppol
         return $this->identificationid;
     }
 
-    public function setIdentificationid(string $identificationid): void
+    public function setIdentificationid(string $input): void
     {
-        $this->identificationid = $identificationid;
+        $this->identificationid = $input;
     }
 
     public function getIdentificationid_schemeid(): string
@@ -100,9 +116,9 @@ class ClientPeppol
         return $this->identificationid_schemeid;
     }
 
-    public function setIdentificationid_schemeid(string $identificationid_schemeid): void
+    public function setIdentificationid_schemeid(string $input): void
     {
-        $this->identificationid_schemeid = $identificationid_schemeid;
+        $this->identificationid_schemeid = $input;
     }
 
     public function getTaxschemecompanyid(): string
@@ -110,9 +126,9 @@ class ClientPeppol
         return $this->taxschemecompanyid;
     }
 
-    public function setTaxschemecompanyid(string $taxschemecompanyid): void
+    public function setTaxschemecompanyid(string $input): void
     {
-        $this->taxschemecompanyid = $taxschemecompanyid;
+        $this->taxschemecompanyid = $input;
     }
 
     public function getTaxschemeid(): string
@@ -120,9 +136,9 @@ class ClientPeppol
         return $this->taxschemeid;
     }
 
-    public function setTaxschemeid(string $taxschemeid): void
+    public function setTaxschemeid(string $input): void
     {
-        $this->taxschemeid = $taxschemeid;
+        $this->taxschemeid = $input;
     }
 
     public function getLegal_entity_registration_name(): string
@@ -130,9 +146,9 @@ class ClientPeppol
         return $this->legal_entity_registration_name;
     }
 
-    public function setLegal_entity_registration_name(string $legal_entity_registration_name): void
+    public function setLegal_entity_registration_name(string $input): void
     {
-        $this->legal_entity_registration_name = $legal_entity_registration_name;
+        $this->legal_entity_registration_name = $input;
     }
 
     public function getLegal_entity_companyid(): string
@@ -140,9 +156,9 @@ class ClientPeppol
         return $this->legal_entity_companyid;
     }
 
-    public function setLegal_entity_companyid(string $legal_entity_companyid): void
+    public function setLegal_entity_companyid(string $input): void
     {
-        $this->legal_entity_companyid = $legal_entity_companyid;
+        $this->legal_entity_companyid = $input;
     }
 
     public function getLegal_entity_companyid_schemeid(): string
@@ -150,9 +166,9 @@ class ClientPeppol
         return $this->legal_entity_companyid_schemeid;
     }
 
-    public function setLegal_entity_companyid_schemeid(string $legal_entity_companyid_schemeid): void
+    public function setLegal_entity_companyid_schemeid(string $input): void
     {
-        $this->legal_entity_companyid_schemeid = $legal_entity_companyid_schemeid;
+        $this->legal_entity_companyid_schemeid = $input;
     }
 
     public function getLegal_entity_company_legal_form(): string
@@ -160,9 +176,9 @@ class ClientPeppol
         return $this->legal_entity_company_legal_form;
     }
 
-    public function setLegal_entity_company_legal_form(string $legal_entity_company_legal_form): void
+    public function setLegal_entity_company_legal_form(string $input): void
     {
-        $this->legal_entity_company_legal_form = $legal_entity_company_legal_form;
+        $this->legal_entity_company_legal_form = $input;
     }
 
     public function getFinancial_institution_branchid(): string
@@ -170,9 +186,9 @@ class ClientPeppol
         return $this->financial_institution_branchid;
     }
 
-    public function setFinancial_institution_branchid(string $financial_institution_branchid): void
+    public function setFinancial_institution_branchid(string $input): void
     {
-        $this->financial_institution_branchid = $financial_institution_branchid;
+        $this->financial_institution_branchid = $input;
     }
 
     public function getAccountingCost(): string
@@ -180,9 +196,9 @@ class ClientPeppol
         return $this->accounting_cost;
     }
 
-    public function setAccountingCost(string $accounting_cost): void
+    public function setAccountingCost(string $input): void
     {
-        $this->accounting_cost = $accounting_cost;
+        $this->accounting_cost = $input;
     }
 
     public function getSupplierAssignedAccountId(): string
@@ -190,9 +206,9 @@ class ClientPeppol
         return $this->supplier_assigned_accountid;
     }
 
-    public function setSupplierAssignedAccountId(string $supplier_assigned_accountid): void
+    public function setSupplierAssignedAccountId(string $input): void
     {
-        $this->supplier_assigned_accountid = $supplier_assigned_accountid;
+        $this->supplier_assigned_accountid = $input;
     }
 
     public function getBuyerReference(): string
@@ -200,8 +216,8 @@ class ClientPeppol
         return $this->buyer_reference;
     }
 
-    public function setBuyerReference(string $buyer_reference): void
+    public function setBuyerReference(string $input): void
     {
-        $this->buyer_reference = $buyer_reference;
+        $this->buyer_reference = $input;
     }
 }

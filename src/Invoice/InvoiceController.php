@@ -193,9 +193,11 @@ final class InvoiceController extends BaseController
             'pdf_invoice_template_overdue' => 'overdue',
             // Setting => filename ... under views/invoice/template/quote/pdf
             'pdf_quote_template' => 'quote',
+            // Peppol UBL2.1 Invoice: Sender or Recipients Currency Code
+            'peppol_doc_currency_toggle' => 0,
+            'peppol_xml_stream' => 1,
             // Templates used for processing online payments via
             // customers/clients login portal
-            'peppol_xml_stream' => 1,
             'public_invoice_template' => 'Invoice_Web',
             'public_quote_template' => 'Quote_Web',
             'qr_height_and_width' => 240,

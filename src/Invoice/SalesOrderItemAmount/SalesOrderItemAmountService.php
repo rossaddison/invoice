@@ -40,16 +40,12 @@ final readonly class SalesOrderItemAmountService
         array $soitem
     ): void {
         $this->persist($model, $soitem);
-        /**
-         * @var float $soitem['subtotal']
-         * @var float $soitem['taxtotal']
-         * @var float $soitem['discount']
-         * @var float $soitem['total']
-         */
-        $model->setSubtotal($soitem['subtotal']);
-        $model->setTax_total($soitem['taxtotal']);
-        $model->setDiscount($soitem['discount']);
-        $model->setTotal($soitem['total']);
+        $model->setCharge((float) $soitem['charge']);
+        $model->setAllowance((float) $soitem['allowance']);
+        $model->setSubtotal((float) $soitem['subtotal']);
+        $model->setTax_total((float) $soitem['taxtotal']);
+        $model->setDiscount((float) $soitem['discount']);
+        $model->setTotal((float) $soitem['total']);
         $this->repository->save($model);
     }
 
