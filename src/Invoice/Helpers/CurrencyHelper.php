@@ -257,7 +257,7 @@ class CurrencyHelper
     /**
      * Map of currency codes to their primary country codes
      */
-    private const CURRENCY_TO_COUNTRY = [
+    private const array CURRENCY_TO_COUNTRY = [
         'AED' => 'AE', // UAE Dirham
         'AFN' => 'AF', // Afghan Afghani
         'ALL' => 'AL', // Albanian Lek
