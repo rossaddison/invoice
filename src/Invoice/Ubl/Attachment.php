@@ -11,7 +11,10 @@ use InvalidArgumentException;
 
 class Attachment implements XmlSerializable
 {
-    public function __construct(private ?string $filePath, private ?string $externalReference)
+    public function __construct(
+        private ?string $filePath,
+        private ?string $externalReference
+    )
     {
     }
 
@@ -25,7 +28,8 @@ class Attachment implements XmlSerializable
             if (($mime_type = mime_content_type($this->filePath)) !== false) {
                 return $mime_type;
             }
-            throw new Exception('Could not determine mime_type of ' . $this->filePath);
+            throw new Exception('Could not determine mime_type of '
+                                                            . $this->filePath);
         }
         throw new Exception('Cannot determine MimeType. FilePath does not exist.');
     }
@@ -72,11 +76,13 @@ class Attachment implements XmlSerializable
     public function validate(): void
     {
         if ($this->filePath === null && $this->externalReference === null) {
-            throw new InvalidArgumentException('Attachment must have a filePath or an ExternalReference');
+            throw new InvalidArgumentException('Attachment must have a filePath'
+                    . ' or an ExternalReference');
         }
 
         if ($this->filePath !== null && !file_exists($this->filePath)) {
-            throw new InvalidArgumentException('Attachment at filePath does not exist');
+            throw new InvalidArgumentException('Attachment at filePath does not'
+                    . ' exist');
         }
     }
 

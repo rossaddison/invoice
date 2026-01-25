@@ -9,7 +9,6 @@ use App\Invoice\Asset\NProgressAsset;
 use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
 use App\Invoice\Asset\pciAsset\amazon_pay_v2_7_Asset;
 use App\Invoice\Asset\pciAsset\braintree_dropin_1_33_7_Asset;
-use App\Invoice\Helpers\CurrencyHelper;
 use App\Asset\AppAsset;
 use App\Widget\PerformanceMetrics;
 use Yiisoft\Bootstrap5\ButtonSize;
@@ -130,8 +129,7 @@ $this->beginPage();
         <?= Style::tag()->content('#nprogress .bar {
                     height: 2px !important; /* ~2mm */
                     background: #2196f3 !important;
-                }')->render();
-?>
+                }')->render(); ?>
         <title>
             <?= $s->getSetting('custom_title') ?: 'Yii-Invoice'; ?>
         </title>
@@ -335,7 +333,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 // ..resources/views/generator/templates_protected
                 // Your Json file must be located in src/Invoice/
                 // google_translate_unique folder
-                // Get your downloaded Json file from
+                // Get your downloaded Json file from 
                 DropdownItem::link(
                     $t->translate('generator.google.translate.app'),
                     $urlGenerator->generate('generator/google_translate_lang',
@@ -602,9 +600,11 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::divider(),
                 DropdownItem::link('HMRC Developer Hub',
 'https://developer.service.hmrc.gov.uk/developer/login'),
-                DropdownItem::link('HMRC Developer Hub - Web App Via Server',
-'https://developer.service.hmrc.gov.uk/guides/fraud-prevention/'
-                        . 'connection-method/web-app-via-server/'),
+                DropdownItem::link('E-Invoicing UK Compulsory from April 2029',
+'https://www.gov.uk/government/consultations/'
+. 'promoting-electronic-invoicing-across-uk-businesses-and-the-public-sector/'
+. 'outcome/promoting-electronic-invoicing-across-uk-businesses-and-the'
+                        . '-public-sector-consultation-response'),
                 DropdownItem::divider(),
                 DropdownItem::link('Cycle/orm HasOne Relation: Using the'
          . ' outerKey explicitly to avoid auto inserted CamelCase Foreign Keys',
@@ -616,6 +616,8 @@ if ((null !== $currentPath) && !$isGuest) {
                         . 'open-source-observatory-osor/'
                         . 'news/'
                         . 'germanys-ozg-20-favors-open-source-solutions'),
+                DropdownItem::link('StoreCove Whitepapers',
+'https://www.storecove.com/us/en/whitepapers'),   
                 DropdownItem::link('Jsonld  Playground for flattening Jsonld files',
 'https://json-ld.org/playground/'),
                 DropdownItem::link('Converting flattened file to php array',
@@ -1039,8 +1041,8 @@ echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
         </footer>
 
 
-        <?php
-            echo Html::script('NProgress.done();')->type('module');
+<?php
+echo Html::script('NProgress.done();')->type('module');
 $this->endBody();
 ?>
     </body>

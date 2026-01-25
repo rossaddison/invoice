@@ -1641,13 +1641,37 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' converts to this of To Currency',
   'peppol.currency.to.from' =>
     'One of To Currency today converts to this of From Currency',
-  'peppol.debug.with.emojis' => 'Debug e-invoices with emojis',  
-  'peppol.doc.currency.toggle' => 'Peppol Toggle Doc Currency',  
+  'peppol.debug.with.emojis' => 'Debug e-invoices with emojis',
+  'peppol.debug.with.internal.validator' => 'Debug e-invoices with'
+    . ' Internal Validator',  
+  'peppol.doc.currency.toggle' => 'Peppol Toggle Doc Currency',
   'peppol.document.reference.null' => 'inv-number-null-inv-id',
   'peppol.document.currency' => 'Peppol Document Currency - toggle on View',
   'peppol.ecosio.validator' =>
     'Ecosio Validator for OpenPeppol'
     . ' UBL Invoice (3.15.0) (aka BIS Billing 3.0.14)',
+  'PEPPOL.EN16931.R001' => 'Business process MUST be provided',
+  'PEPPOL.EN16931.R002' => 'Max one note allowed unless both parties are DE',
+  'PEPPOL.EN16931.R003' => 'Buyer reference or order reference required',
+  'PEPPOL.EN16931.R004.INVALID' => 'Invalid specification identifier format',
+  'PEPPOL.EN16931.R004.REQUIRED' => 'Specification identifier required',
+  'PEPPOL.EN16931.R005' => 'Tax currency must differ from document currency',
+  'PEPPOL.EN16931.R007' => 'Business process MUST be in format ',
+  'PEPPOL.EN16931.R008' => 'Empty element: ',
+  'PEPPOL.EN16931.R010' => 'Buyer electronic address required',
+  'PEPPOL.EN16931.R020' => 'Seller electronic address required',
+  'PEPPOL.EN16931.R040' => 'Amount must equal base * percentage/100',
+  'PEPPOL.EN16931.R041' => 'Base amount required when percentage provided',
+  'PEPPOL.EN16931.R042' => 'Percentage required when base amount provided',
+  'PEPPOL.EN16931.R043' => 'ChargeIndicator must be \'true\' or \'false\'',
+  'PEPPOL.EN16931.R044' => 'Price level charge not allowed',
+  'PEPPOL.EN16931.R046' => 'Item net price calculation error',
+  'PEPPOL.EN16931.R051' => 'All amounts must use document currency',
+  'PEPPOL.EN16931.R053' => 'One tax total with subtotals required',
+  'PEPPOL.EN16931.R054' => 'Invalid tax total without subtotals count',
+  'PEPPOL.EN16931.R055' => 'Tax amounts must have same sign',
+  'PEPPOL.EN16931.R061' => 'Mandate reference required for direct debit',
+  'PEPPOL.EN16931.R080' => 'Max one project reference allowed',
   'peppol.electronic.invoicing' =>
     'Peppol Electronic Invoicing',
   'peppol.enable' =>
@@ -1658,7 +1682,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'peppol.label.switch.off' => 'Peppol Defaults Enabled',
   'peppol.label.switch.on' => 'Peppol Defaults Disabled',
   'peppol.mandatory' => ' (Mandatory)',
-  'peppol.optional' => ' (Optional)',
+  'peppol.optional' => ' (Optional)',    
   'peppol.stand.in.code' =>
     'Description code -'
     . ' indicating what basis will be used'
@@ -1697,6 +1721,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'Only pdf files are currently'
     . ' being sent with Peppol Invoices',
   'peppol.unit' => 'Unit Classification using Peppol',
+  'peppol.unknown.document.type' => 'Unknown Document Type',  
   'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
     'Source: src/Invoice/Ubl/Invoice:'
     . ' Missing document description - Ecosio:'

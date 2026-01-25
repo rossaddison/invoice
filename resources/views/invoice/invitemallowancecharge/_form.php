@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
-
 /**
  * @var App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeForm $form
  * @var App\Invoice\Setting\SettingRepository $s
@@ -22,13 +21,17 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataAllowanceCharge
  */
 ?>
-
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'container py-5']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong'
+    . ' rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
+    <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center mb-0']); ?>
+        <?= Html::encode($title); ?>
+    <?= Html::closeTag('h1'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::openTag('div', ['class' => 'card-body']); ?>
 <?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
@@ -36,14 +39,6 @@ use Yiisoft\Html\Tag\Form;
     ->id('InvItemAllowanceChargeForm')
     ->open();
 ?>
-
-<?= Html::openTag('div', ['class' => 'headerbar']); ?>
-        <?= Html::openTag('h1');?>
-            <?= Html::encode($title); ?>
-        <?=Html::closeTag('h1'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::openTag('div', ['id' => 'content']); ?>
-    <?= Html::openTag('div', ['class' => 'input-group']); ?>
         <?php
             $optionsDataAllowanceCharge = [];
 /**
@@ -69,19 +64,17 @@ foreach ($allowance_charges as $allowance_charge) {
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
         <?= Field::text($form, 'amount')
-    ->label($translator->translate('amount.inv.item') . '(' . $s->getSetting('currency_symbol') . ')')
+    ->label($translator->translate('amount.inv.item')
+            . '(' . $s->getSetting('currency_symbol') . ')')
     ->addInputAttributes(['class' => 'form-control'])
     ->value($s->format_amount($form->getAmount() ?? 0.00))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?> 
-
-<?= $button::backSave(); ?>
+    <?= $button::backSave(); ?>
 <?= Form::tag()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
+

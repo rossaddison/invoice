@@ -247,7 +247,7 @@ echo(Html::encode(strlen($inv->getNumber() ?? '') > 0 ?
     $buttonsToolbarFull; 
 ?>
         
-        <div class="headerbar-item pull-right
+        <div class="headerbar-item pull-left
 <?php if ($inv->getIs_read_only() === false || $inv->getStatus_id() !== 4) { ?>
                     btn-group<?php } ?>">
             <div class="options btn-group">
@@ -334,22 +334,21 @@ if ($showButtons && $invEdit) {
                             </a>
                         </li>
                         <li>
-                            <a href=""
-                               onclick="window.open('
-https://ecosio.com/en/peppol-and-xml-document-validator-button/?pk_abe=EN_Peppol_XML_Validator_Page&pk_abv=With_CTA')"
+                            <a href="https"
+onclick="window.open('https://ecosio.com/en/peppol-e-invoice-xml-document-validator/')"
                                style="text-decoration:none">
                                <i class="fa fa-check fa-margin" aria-hidden="true"></i>
                                 <?=
 // Options ...  Ecosio Validator
     Html::encode($translator->translate('peppol.ecosio.validator')); ?>
                             </a>
-                        </li>                        
+                        </li>
                         <li>
-                             <a href="" 
-                                style="text-decoration:none" 
-                                onclick="window.open('
-<?= $urlGenerator->generate('inv/storecove', ['id' => $inv->getId()]) ?>')">
-                                <i class="fa fa-eye fa-margin"></i>
+                             <a href="<?= $urlGenerator->generate('inv/storecove',
+                                     ['id' => $inv->getId()]); ?>"
+                                style="text-decoration:none"
+                                target="_blank">
+                                 <i class="fa fa-eye fa-margin"></i>
                                 <?=
 // Options ...  Store Cove Json Encoded Invoice
                                 Html::encode(
@@ -358,10 +357,15 @@ https://ecosio.com/en/peppol-and-xml-document-validator-button/?pk_abe=EN_Peppol
                         </li>
                         <li>
                             <a href="
-<?= $urlGenerator->generate('del/add', ['client_id' => $inv->getClient_id()]) ?>"
+<?= $urlGenerator->generate('del/add', ['client_id' => $inv->getClient_id()],
+                                       ['origin' => 'inv',
+                                        'origin_id' => $inv->getId(),
+                                        'action' => 'view'],'') ?>"
                                style="text-decoration:none">
                                <i class="fa fa-plus fa-margin"></i>
-                               <?= Html::encode(
+                               <?=
+// Options ... Delivery Location Add                    
+                                Html::encode(
                         $translator->translate('delivery.location.add')); ?>
                             </a>
                         </li>

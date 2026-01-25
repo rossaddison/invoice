@@ -81,7 +81,8 @@ class TaxSubTotal
                             'name' => Schema::CBC . 'Percent',
                             'value' => $this->taxCategoryPercent,
                         ],
-// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/cac-TaxSubtotal/cac-TaxCategory/cbc-TaxExemptionReasonCode/
+// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
+// cac-TaxSubtotal/cac-TaxCategory/cbc-TaxExemptionReasonCode/
                         $this->cbcTaxExemptionReasonCode($this->taxCategory),
                         $this->cbcTaxExemptionReason($this->taxCategory),
                         [

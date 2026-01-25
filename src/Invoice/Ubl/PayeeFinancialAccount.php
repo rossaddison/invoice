@@ -9,7 +9,10 @@ use Sabre\Xml\XmlSerializable;
 
 class PayeeFinancialAccount implements XmlSerializable
 {
-    public function __construct(private readonly ?FinancialInstitutionBranch $financialInstitutionBranch, private readonly ?string $id, private readonly ?string $name)
+    public function __construct(
+        private readonly ?FinancialInstitutionBranch $financialInstitutionBranch,
+        private readonly ?string $id, private readonly ?string $name
+    )
     {
     }
 
@@ -32,7 +35,8 @@ class PayeeFinancialAccount implements XmlSerializable
 
         if ($this->financialInstitutionBranch !== null) {
             $writer->write([
-                Schema::CAC . 'FinancialInstitutionBranch' => $this->financialInstitutionBranch,
+                Schema::CAC
+            . 'FinancialInstitutionBranch' => $this->financialInstitutionBranch,
             ]);
         }
     }

@@ -9,7 +9,11 @@ use Sabre\Xml\XmlSerializable;
 
 class InvoicePeriod implements XmlSerializable
 {
-    public function __construct(private readonly string $startDate, private readonly string $endDate, private readonly string $descriptionCode)
+    public function __construct(
+        private readonly string $startDate,
+        private readonly string $endDate,
+        private readonly string $descriptionCode
+    )
     {
     }
 

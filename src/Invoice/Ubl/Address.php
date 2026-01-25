@@ -10,7 +10,18 @@ use Sabre\Xml\XmlSerializable;
 // Usage: Search 'new Address' under PeppolHelper
 class Address implements XmlSerializable
 {
-    public function __construct(private readonly ?string $streetName, private readonly ?string $additionalStreetName, private readonly ?string $buildingNumber, private readonly ?string $cityName, private readonly ?string $postalZone, private readonly ?string $countrySubentity, private readonly ?Country $country, private readonly bool $ubl_cr_155 = false, private readonly bool $ubl_cr_218 = false, private readonly bool $ubl_cr_367 = false)
+    public function __construct(
+        private readonly ?string $streetName,
+        private readonly ?string $additionalStreetName,
+        private readonly ?string $buildingNumber,
+        private readonly ?string $cityName,
+        private readonly ?string $postalZone,
+        private readonly ?string $countrySubentity,
+        private readonly ?Country $country,
+        private readonly bool $ubl_cr_155 = false,
+        private readonly bool $ubl_cr_218 = false,
+        private readonly bool $ubl_cr_367 = false
+    )
     {
     }
 
@@ -63,7 +74,8 @@ class Address implements XmlSerializable
         }
         if ($this->additionalStreetName !== null) {
             $writer->write([
-                Schema::CBC . 'AdditionalStreetName' => $this->additionalStreetName,
+                Schema::CBC
+                    . 'AdditionalStreetName' => $this->additionalStreetName,
             ]);
         }
         if ($this->buildingNumber !== null

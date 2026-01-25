@@ -1328,7 +1328,8 @@ $country_helper->get_country_identification_code_with_league(
                                             $this->s->currency_converter($price),
                                     'attributes' => [
                                         'currencyID' =>
-                                        $this->s->getSetting('peppol_document_currency')
+                                        $this->s->getSetting(
+                                                    'peppol_document_currency')
                                     ]
                                 ],
                                 [

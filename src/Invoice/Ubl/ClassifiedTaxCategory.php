@@ -10,7 +10,16 @@ use InvalidArgumentException;
 
 class ClassifiedTaxCategory implements XmlSerializable
 {
-    public function __construct(private readonly ?string $id, private readonly ?string $name, private readonly ?float $percent, private readonly ?TaxScheme $taxScheme, private readonly string $taxExemptionReason, private readonly ?string $taxExemptionReasonCode, private readonly ?string $schemeID, private readonly ?string $schemeName)
+    public function __construct(
+        private readonly ?string $id,
+        private readonly ?string $name,
+        private readonly ?float $percent,
+        private readonly ?TaxScheme $taxScheme,
+        private readonly string $taxExemptionReason,
+        private readonly ?string $taxExemptionReasonCode,
+        private readonly ?string $schemeID,
+        private readonly ?string $schemeName
+    )
     {
     }
 
@@ -81,13 +90,16 @@ class ClassifiedTaxCategory implements XmlSerializable
 
         // Exempt Tax category => 0% => 0 tax charged.
         $writer->write([
-            Schema::CBC . 'Percent' => number_format($this->percent ?? 0.00, 2, '.', ''),
+            Schema::CBC
+                . 'Percent' => number_format($this->percent ?? 0.00, 2, '.', ''),
         ]);
 
         if ($this->taxExemptionReasonCode !== null) {
             $writer->write([
-                Schema::CBC . 'TaxExemptionReasonCode' => $this->taxExemptionReasonCode,
-                Schema::CBC . 'TaxExemptionReason' => $this->taxExemptionReason,
+                Schema::CBC
+                    . 'TaxExemptionReasonCode' => $this->taxExemptionReasonCode,
+                Schema::CBC
+                    . 'TaxExemptionReason' => $this->taxExemptionReason,
             ]);
         }
 

@@ -41,7 +41,8 @@ echo [3]  Composer Outdated                         [5g]  Snyk Security Check (F
 echo [3a] Composer why-not                          [5h]  Snyk Security Dependencies
 echo [3b] Composer Cache with Lock                  [5i]  Snyk Security Code File Check
 echo [3c] Composer Validate                         [5j]  Snyk Security Summary (Issues Count)
-echo [3d] Composer Dump Autoload                    [5k]  Snyk Security JSON Output
+echo [3d] Composer Dump Autoload                    [5k]  Snyk Security JSON Output			
+echo [3e] Composer Audit      				                      
 echo [4]  Composer Update                           [6]   PHP Built-in 'serve'
 echo [4a] Node Modules Update                       [7]   user/create username password
 echo [4b] nvm-windows Install/Update                [8]   user/assignRole role userId
@@ -78,6 +79,7 @@ if "%choice%"=="3a" goto composer_whynot
 if "%choice%"=="3b" goto composer_clear_cache_and_resolve_lock_conflicts
 if "%choice%"=="3c" goto composer_validate
 if "%choice%"=="3d" goto composer_dumpautoload
+if "%choice%"=="3e" goto composer_audit
 if "%choice%"=="4" goto composer_update
 if "%choice%"=="4a" goto node_modules_update
 if "%choice%"=="4b" goto nvm_install_or_update
@@ -133,6 +135,12 @@ echo Invalid choice. Please try again.
 pause
 goto menu
 
+:composer_audit
+echo Validating composer.json and composer.lock...
+composer audit --ansi
+pause
+goto menu
+
 :composer_clear_cache_and_resolve_lock_conflicts
 echo Clearing Composer cache and resolving lock file conflicts...
 composer clear-cache
@@ -160,7 +168,7 @@ goto menu
 
 :composer_validate
 echo Validating composer.json and composer.lock...
-composer validate
+composer validate --ansi --strict
 pause
 goto menu
 

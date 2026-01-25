@@ -9,7 +9,11 @@ use Sabre\Xml\XmlSerializable;
 
 class PartyLegalEntity implements XmlSerializable
 {
-    public function __construct(private string $registrationName, private string $companyId, private array $companyIdAttributes, private readonly string $companyLegalForm)
+    public function __construct(
+        private string $registrationName,
+        private string $companyId,
+        private array $companyIdAttributes,
+        private readonly string $companyLegalForm)
     {
     }
 
@@ -53,7 +57,8 @@ class PartyLegalEntity implements XmlSerializable
      * @param array $companyIdAttributes
      * @return PartyLegalEntity
      */
-    public function setCompanyId(string $companyId, ?array $companyIdAttributes = null): self
+    public function setCompanyId(
+        string $companyId, ?array $companyIdAttributes = null): self
     {
         $this->companyId = $companyId;
         if (null !== $companyIdAttributes) {
@@ -76,7 +81,7 @@ class PartyLegalEntity implements XmlSerializable
                 [
                     'name' => Schema::CBC . 'CompanyID',
                     'value' => $this->companyId,
-                    /** Related logic: see https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=CompanyId */
+/** Related logic: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/search?q=CompanyId */
                     'attributes' => $this->companyIdAttributes,
                 ],
             ]);

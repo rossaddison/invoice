@@ -49,7 +49,8 @@ class Price implements XmlSerializable
             ],
             [
                 'name' => Schema::CBC . 'BaseQuantity',
-                'value' => number_format((float) $this->baseQuantity ?: 0, 2, '.', ''),
+                'value' =>
+                    number_format((float) $this->baseQuantity ?: 0, 2, '.', ''),
                 'attributes' => $baseQuantityAttributes,
             ],
         ]);

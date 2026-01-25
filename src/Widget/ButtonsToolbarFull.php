@@ -205,10 +205,33 @@ final readonly class ButtonsToolbarFull
             );
 
             // Delivery location
+            // Route: '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
+            // Related logic: src/Service/WebControllerService
             $buttons[] = $this->createButton(
                 'delivery-location',
                 $this->urlGenerator->generate('del/add',
-                    ['client_id' => $inv->getClient_id()]),
+                    // Arguments
+                    [
+                        'client_id' => $inv->getClient_id(),
+                    ],
+                    // QueryParameters
+                    [
+                        'origin' => 'inv',
+                        'origin_id' => $invId,
+                        'action' => 'view',
+                    ],
+                    // Hash e.g. If the peppol document currency is empty return
+                    // cursor to the actual input box
+                    // Related logic: e.g. $this->webService->getRedirectResponse(
+                    // 'setting/tab_index',
+                    // ARGUMENTS
+                    // ['_language' => 'en'],
+                    // QUERYPARAMETERS
+                    // ['active' => $this->translator->translate(
+                    //    'peppol.electronic.invoicing'),
+                    // HASH   
+                    //'settings[peppol_document_currency]']);     
+                    ''),
                 'fa-plus',
                 'btn-outline-info',
                 $this->translator->translate('delivery.location.add'),

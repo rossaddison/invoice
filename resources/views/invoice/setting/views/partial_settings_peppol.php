@@ -67,6 +67,30 @@ use Yiisoft\Html\Html;
                             </option>
                         </select>
                     </div>
+<!-- Use Helpers\Peppol\PeppolValidator to validate the e-invoice using 
+ https://docs.peppol.eu/poacc/billing/3.0/2025-Q4/rules/ubl-peppol/ rules
+     Defaults to Yes. Refer to -->                    
+                    <div class="form-group">
+                        <label for="settings[peppol_debug_with_internal_validator]"
+                      <?= $s->where('peppol_debug_with_internal_validator'); ?>>
+          <?= $translator->translate('peppol.debug.with.internal.validator'); ?>
+                        </label>
+                <?php $body['settings[peppol_debug_with_internal_validator]'] =
+                      $s->getSetting('peppol_debug_with_internal_validator'); ?>
+                        <select name="settings[peppol_debug_with_internal_validator]"
+                                id="settings[peppol_debug_with_internal_validator]"
+                                class="form-control">
+                            <option value="0">
+                                <?= $translator->translate('no'); ?>
+                            </option>
+                            <option value="1"
+                                <?php
+             $s->check_select($body['settings[peppol_debug_with_internal_validator]'], '1');
+                            ?>>
+                                <?= $translator->translate('yes'); ?>
+                            </option>
+                        </select>
+                    </div>
 <!-- Fill Client Peppol Form with OpenPeppol defaults for testing -->
                     <div class="col-xs-12 col-md-6">
                         <div class="form-group">

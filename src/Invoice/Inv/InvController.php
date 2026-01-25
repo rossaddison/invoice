@@ -80,8 +80,8 @@ use App\User\UserRepository as UR;
 use App\Service\WebControllerService;
 use App\Invoice\Helpers\{
     CustomValuesHelper as CVH, DateHelper, MailerHelper, NumberHelper, PdfHelper,
-    Peppol\PeppolHelper, Peppol\PeppolArrays, StoreCove\StoreCoveHelper,
-    TemplateHelper,
+    Peppol\PeppolHelper, Peppol\PeppolArrays, Peppol\PeppolValidator, 
+    StoreCove\StoreCoveHelper, TemplateHelper
 };
 use App\Widget\{
     Bootstrap5ModalInv, Bootstrap5ModalPdf,
@@ -4154,7 +4154,7 @@ echo file_get_contents($temp_aliase, true);
      * @param ACIIR $aciiR
      * @param SOIR $soiR
      * @param TRR $trR
-     * @return Response
+     * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function peppol(
         #[RouteArgument('id')]
@@ -4228,11 +4228,35 @@ echo file_get_contents($temp_aliase, true);
                                 $soiR,
                                 $trR,
                             );
-                            if ($this->sR->getSetting('peppol_xml_stream') == '1') {
-                                $xml = $this->peppol_output($upR,
+                            $xml = $this->peppol_output($upR,
                                     $uploads_temp_peppol_absolute_path_dot_xml);
-                                return $this->factory->createResponse('<pre>'
-                                    . Html::encode($xml) . '</pre>');
+                            $pVal = new PeppolValidator($this->translator);
+                            // Not saving to file. Showing in Browser
+                            if ($this->sR->getSetting('peppol_xml_stream') == '1') {
+                                if (($xml !==false) && (strlen($xml) > 0)) {
+                                    if ($this->sR->getSetting(
+                               'peppol_debug_with_internal_validator') == '1') {
+                                        $pVal->loadXML($xml);
+                                        // show the e-invoice if it passes
+                                        if ($pVal->validate()) {
+                                            return $this->factory->createResponse(
+                                           '<pre>'. Html::encode($xml) . '</pre>');
+                                        // display all the errors
+                                        } else {
+                                            $parameters = [
+                                                'xmlContent' => $xml,
+                                                'errors' =>
+                                                    $pVal->getErrors(),
+                                            ];
+                                            return $this->viewRenderer->render(
+                                                'peppolerrors', $parameters);
+                                        }
+                                    } else {
+                                        $pVal->loadXML($xml);
+                                        return $this->factory->createResponse(
+                                           '<pre>'. Html::encode($xml) . '</pre>');
+                                    }
+                                }
                             }
                             /**
                              * Previously: echo $this->peppol_output($upR,
@@ -4310,14 +4334,20 @@ echo file_get_contents($temp_aliase, true);
             if (null !== $peppolDocCurrency) {
                 $peppolDocCurrency->setSetting_value($documentCurrency);
                 $this->sR->save($peppolDocCurrency);
-            }    
+            }
         } else {
             return $this->webService->getRedirectResponse(
                 'setting/tab_index',
+                // Arguments
                 ['_language' => 'en'],
-                ['active' => $this->translator->translate(
-                        'peppol.electronic.invoicing'),
-                    'settings[peppol_document_currency]']);
+                // QueryParameters
+                [
+                    'active' => $this->translator->translate(
+                        'peppol.electronic.invoicing')
+                ],
+                // Hash String to return to tab_index peppol_document_currency
+                // input box for re-entry
+                'settings[peppol_document_currency]');
         }
         $this->flashMessage('info',
             $this->translator->translate('peppol.doc.currency.toggle')

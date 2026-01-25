@@ -9,7 +9,13 @@ use Sabre\Xml\XmlSerializable;
 
 class Item implements XmlSerializable
 {
-    public function __construct(private ?string $description, private string $name, private ?string $buyersItemIdentification, private ?string $sellersItemIdentification, private ?ClassifiedTaxCategory $classifiedTaxCategory)
+    public function __construct(
+        private ?string $description,
+        private string $name,
+        private ?string $buyersItemIdentification,
+        private ?string $sellersItemIdentification,
+        private ?ClassifiedTaxCategory $classifiedTaxCategory
+    )
     {
     }
 
@@ -58,12 +64,12 @@ class Item implements XmlSerializable
     }
 
     /**
-     * @param string|null $sellersItemIdentification
+     * @param string|null $input
      * @return Item
      */
-    public function setSellersItemIdentification(?string $sellersItemIdentification): self
+    public function setSellersItemIdentification(?string $input): self
     {
-        $this->sellersItemIdentification = $sellersItemIdentification;
+        $this->sellersItemIdentification = $input;
         return $this;
     }
 
@@ -76,12 +82,12 @@ class Item implements XmlSerializable
     }
 
     /**
-     * @param string|null $buyersItemIdentification
+     * @param string|null $input
      * @return Item
      */
-    public function setBuyersItemIdentification(?string $buyersItemIdentification): self
+    public function setBuyersItemIdentification(?string $input): self
     {
-        $this->buyersItemIdentification = $buyersItemIdentification;
+        $this->buyersItemIdentification = $input;
         return $this;
     }
 
@@ -94,12 +100,12 @@ class Item implements XmlSerializable
     }
 
     /**
-     * @param ClassifiedTaxCategory|null $classifiedTaxCategory
+     * @param ClassifiedTaxCategory|null $input
      * @return Item
      */
-    public function setClassifiedTaxCategory(?ClassifiedTaxCategory $classifiedTaxCategory): self
+    public function setClassifiedTaxCategory(?ClassifiedTaxCategory $input): self
     {
-        $this->classifiedTaxCategory = $classifiedTaxCategory;
+        $this->classifiedTaxCategory = $input;
         return $this;
     }
 
@@ -137,7 +143,8 @@ class Item implements XmlSerializable
 
         if ($this->classifiedTaxCategory !== null) {
             $writer->write([
-                Schema::CAC . 'ClassifiedTaxCategory' => $this->classifiedTaxCategory,
+                Schema::CAC
+                    . 'ClassifiedTaxCategory' => $this->classifiedTaxCategory,
             ]);
         }
     }

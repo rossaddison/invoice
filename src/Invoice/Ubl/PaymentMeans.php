@@ -14,7 +14,9 @@ class PaymentMeans implements XmlSerializable
         'name' => 'Credit Transfer',
     ];
 
-    public function __construct(private readonly ?PayeeFinancialAccount $payeeFinancialAccount, private readonly ?string $paymentId = '')
+    public function __construct(
+        private readonly ?PayeeFinancialAccount $payeeFinancialAccount,
+        private readonly ?string $paymentId = '')
     {
     }
 

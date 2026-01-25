@@ -10,7 +10,12 @@ use DateTime;
 
 class Delivery implements XmlSerializable
 {
-    public function __construct(private readonly ?DateTime $actualDeliveryDate, private array $deliveryLocationID_scheme, private readonly ?Address $deliveryLocation, private readonly ?Party $deliveryParty)
+    public function __construct(
+        private readonly ?DateTime $actualDeliveryDate,
+        private array $deliveryLocationID_scheme,
+        private readonly ?Address $deliveryLocation,
+        private readonly ?Party $deliveryParty
+    )
     {
     }
 
@@ -22,7 +27,9 @@ class Delivery implements XmlSerializable
     {
         if ($this->actualDeliveryDate !== null) {
             $writer->write([
-                Schema::CBC . 'ActualDeliveryDate' => $this->actualDeliveryDate->format('Y-m-d'),
+                Schema::CBC
+                    . 'ActualDeliveryDate' =>
+                                    $this->actualDeliveryDate->format('Y-m-d'),
             ]);
         }
         if ($this->deliveryLocation !== null) {
@@ -31,7 +38,8 @@ class Delivery implements XmlSerializable
                     'value' => [[
                         'name' => Schema::CBC . 'ID',
                         'value' => [$this->deliveryLocationID_scheme['ID']],
-                        'attributes' => $this->deliveryLocationID_scheme['attributes']],
+                        'attributes' =>
+                                $this->deliveryLocationID_scheme['attributes']],
                         ['name' => Schema::CAC . 'Address',
                             'value' => $this->deliveryLocation],
                     ],

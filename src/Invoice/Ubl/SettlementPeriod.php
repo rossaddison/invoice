@@ -10,7 +10,10 @@ use DateTime;
 
 class SettlementPeriod implements XmlSerializable
 {
-    private function __construct(private readonly DateTime $startDate, private readonly DateTime $endDate)
+    private function __construct(
+        private readonly DateTime $startDate,
+        private readonly DateTime $endDate
+    )
     {
     }
 

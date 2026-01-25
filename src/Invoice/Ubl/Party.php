@@ -11,7 +11,19 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 class Party implements XmlSerializable
 {
-    public function __construct(private readonly Translator $translator, private readonly ?string $name, private readonly ?string $partyIdentificationId, private readonly ?string $partyIdentificationSchemeId, private readonly ?Address $postalAddress, private readonly ?Address $physicalLocation, private readonly ?Contact $contact, private readonly ?PartyTaxScheme $partyTaxScheme, private readonly ?PartyLegalEntity $partyLegalEntity, private readonly ?string $endpointID, private readonly mixed $endpointID_schemeID)
+    public function __construct(
+        private readonly Translator $translator,
+        private readonly ?string $name,
+        private readonly ?string $partyIdentificationId,
+        private readonly ?string $partyIdentificationSchemeId,
+        private readonly ?Address $postalAddress,
+        private readonly ?Address $physicalLocation,
+        private readonly ?Contact $contact,
+        private readonly ?PartyTaxScheme $partyTaxScheme,
+        private readonly ?PartyLegalEntity $partyLegalEntity,
+        private readonly ?string $endpointID,
+        private readonly mixed $endpointID_schemeID
+    )
     {
     }
 
@@ -29,11 +41,13 @@ class Party implements XmlSerializable
             /**
              * Error
              * Location: invoice_8x8vShcxINV111_peppol
-             * Element/context: /:Invoice[1]/cac:AccountingCustomerParty[1]/cac:Party[1]
+             * Element/context: /:Invoice[1]/cac:AccountingCustomerParty[1]/
+             *  cac:Party[1]
              * XPath test: cbc:EndpointID
              * Error message: Buyer electronic address MUST be provided
              */
-            throw new InvalidArgumentException($this->translator->translate('peppol.validator.Invoice.cac.Party.cbc.EndPointID'));
+            throw new InvalidArgumentException($this->translator->translate(
+                            'peppol.validator.Invoice.cac.Party.cbc.EndPointID'));
         }
     }
 
@@ -50,7 +64,9 @@ class Party implements XmlSerializable
                     'name' => Schema::CBC . 'EndpointID',
                     'value' => $this->endpointID,
                     'attributes' => [
-                        'schemeID' => is_numeric($this->endpointID_schemeID) ? sprintf('%04d', +$this->endpointID_schemeID) : $this->endpointID_schemeID,
+                        'schemeID' => is_numeric($this->endpointID_schemeID) ?
+                                sprintf('%04d', +$this->endpointID_schemeID) :
+                                                $this->endpointID_schemeID,
                     ],
                 ],
             ]);
@@ -59,12 +75,16 @@ class Party implements XmlSerializable
         if ($this->partyIdentificationId !== null) {
             $partyIdentificationAttributes = [];
 
-            /**
-             * For Danish Suppliers it is mandatory to use schemeID when PartyIdentification/ID is used for AccountingCustomerParty or AccountingSupplierParty
-             * Related logic: see https://github.com/search?q=org%3AOpenPEPPOL+PartyIdentification&type=code
-             */
+/**
+ * For Danish Suppliers it is mandatory to use schemeID when
+ * PartyIdentification/ID is used for AccountingCustomerParty or
+ * AccountingSupplierParty
+ * Related logic: 
+ * https://github.com/search?q=org%3AOpenPEPPOL+PartyIdentification&type=code
+ */
             if (null !== $this->partyIdentificationSchemeId) {
-                $partyIdentificationAttributes['schemeID'] = $this->partyIdentificationSchemeId;
+                $partyIdentificationAttributes['schemeID'] =
+                                            $this->partyIdentificationSchemeId;
             }
 
             $writer->write([
@@ -92,7 +112,9 @@ class Party implements XmlSerializable
 
         if ($this->physicalLocation !== null) {
             $writer->write([
-                Schema::CAC . 'PhysicalLocation' => [Schema::CAC . 'Address' => $this->physicalLocation],
+                Schema::CAC
+                    . 'PhysicalLocation' => [Schema::CAC
+                    . 'Address' => $this->physicalLocation],
             ]);
         }
 

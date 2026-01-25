@@ -51,6 +51,14 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>25th January 2026</b></p>
+<p>Internal Peppol Document Validator Introduced which can be disabled in settings if Ecosio Validator is preferably used.</p>
+<p>src\Invoice\Helpers\Peppol\PeppolValidator.php</p>
+<p>An md file outlining the current credit note workflow introduced.</p>
+<p>This will be improved to accomodate Peppol.</p>
+<p>m.bat includes composer audit option now.</p>
+<p>xml files can be debugged with emojis to highlight cetain nodes e.g. doc
+   currency, and currency conversions.</p>
 <p><b>18th January 2026</b></p>
 <p>Document and Line Item Allowance Charges between Quote, SalesOrder, and Inv functional.</p>
 <p>Step 1: Quote sent, Step 2: Guest accepts terms, Step 3: SalesOrder sent, 

@@ -10,7 +10,9 @@ use InvalidArgumentException;
 
 class TaxTotal implements XmlSerializable
 {
-    public function __construct(private readonly array $doc_and_or_supp_currency_tax)
+    public function __construct(
+        private readonly array $doc_and_or_supp_currency_tax
+    )
     {
     }
 
@@ -57,7 +59,8 @@ class TaxTotal implements XmlSerializable
             $writer->write(
                 [
                     'name' => Schema::CBC . 'TaxAmount',
-                    'value' => number_format($supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
+                    'value' => number_format(
+                                    $supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
                     'attributes' => [
                         'currencyID' => $supp_cc,
                     ],
@@ -70,7 +73,8 @@ class TaxTotal implements XmlSerializable
             // Suppliers Tax Amount in Suppliers Currency without subtotal breakdown
             $writer->write([
                 'name' => Schema::CBC . 'TaxAmount',
-                'value' => number_format((float) (string) $supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
+                'value' => number_format(
+                  (float) (string) $supp_tax_cc_tax_amount ?: 0.00, 2, '.', ''),
                 'attributes' => [
                     'currencyID' => $supp_cc,
                 ],
@@ -79,7 +83,8 @@ class TaxTotal implements XmlSerializable
             $writer->write([
                 [
                     'name' => Schema::CBC . 'TaxAmount',
-                    'value' => number_format((float) (string) $doc_cc_tax_amount ?: 0.00, 2, '.', ''),
+                    'value' => number_format(
+                       (float) (string) $doc_cc_tax_amount ?: 0.00, 2, '.', ''),
                     'attributes' => [
                         'currencyID' => $doc_cc,
                     ],

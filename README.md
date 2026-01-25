@@ -31,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[CreditNote Integration.] (docs/CREDIT_NOTE_WORKFLOW.md) (Jan 2026)
+
 [VitePress Integration.](https://vitepress.dev/guide/getting-started) (Dec 2025)
 
 [Prometheus Integration.](docs/PROMETHEUS_INTEGRATION.md) (Dec 2025)

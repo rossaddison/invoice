@@ -196,6 +196,11 @@ final class InvoiceController extends BaseController
             // Peppol UBL2.1 Invoice: Sender or Recipients Currency Code
             'peppol_doc_currency_toggle' => 0,
             'peppol_xml_stream' => 1,
+            // emojis appear in the xml to highlight the document's currency
+            // and currency conversions
+            'peppol_debug_with_emojis' => 1,
+            // The internal PeppolValidator is used to validate the xml
+            'peppol_debug_with_internal_validator' => 1,
             // Templates used for processing online payments via
             // customers/clients login portal
             'public_invoice_template' => 'Invoice_Web',

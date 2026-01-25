@@ -9,7 +9,10 @@ use Sabre\Xml\XmlSerializable;
 
 class Country implements XmlSerializable
 {
-    public function __construct(private readonly string $identificationCode, private readonly ?string $listId)
+    public function __construct(
+        private readonly string $identificationCode,
+        private readonly ?string $listId
+    )
     {
     }
 
@@ -40,7 +43,8 @@ class Country implements XmlSerializable
              * Location: invoice_a-362E8wINV107_peppol
              * Element/context: /:Invoice[1]
              * XPath test: not(//cac:Country/cbc:IdentificationCode/@listID)
-             * Error message: [UBL-CR-660]-A UBL invoice should not include the Country Identification code listID
+             * Error message: [UBL-CR-660]-A UBL invoice should not include the
+                  Country Identification code listID
              */
             //'attributes' => $attributes
         ]);

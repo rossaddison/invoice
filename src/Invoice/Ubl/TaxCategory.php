@@ -21,7 +21,10 @@ class TaxCategory implements XmlSerializable
     private string $taxExemptionReasonCode = '';
     public const string UNCL5305 = 'UNCL5305';
 
-    public function __construct(array $array, private readonly TaxScheme $taxScheme)
+    public function __construct(
+        array $array,
+        private readonly TaxScheme $taxScheme
+    )
     {
         /**
          * @var string $array['TaxCategory']
@@ -81,10 +84,15 @@ class TaxCategory implements XmlSerializable
                 'attributes' => $this->idAttributes,
             ],
         ]);
-        $writer->write([Schema::CBC . 'Name' => $this->name]);
-        $writer->write([Schema::CBC . 'Percent' => number_format($this->percent, 2, '.', ''),]);
-        $writer->write([Schema::CBC . 'TaxExemptionReasonCode' => $this->taxExemptionReasonCode]);
-        $writer->write([Schema::CBC . 'TaxExemptionReason' => $this->taxExemptionReason]);
-        $writer->write([Schema::CAC . 'TaxScheme' => $this->taxScheme]);
+        $writer->write([Schema::CBC
+                . 'Name' => $this->name]);
+        $writer->write([Schema::CBC
+                . 'Percent' => number_format($this->percent, 2, '.', ''),]);
+        $writer->write([Schema::CBC
+                . 'TaxExemptionReasonCode' => $this->taxExemptionReasonCode]);
+        $writer->write([Schema::CBC
+                . 'TaxExemptionReason' => $this->taxExemptionReason]);
+        $writer->write([Schema::CAC
+                . 'TaxScheme' => $this->taxScheme]);
     }
 }
