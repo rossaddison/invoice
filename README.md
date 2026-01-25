@@ -30,8 +30,9 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
  Peppol network.
 
 **Recent Implementations**
+[PeppolValidator Integration.](docs/PEPPOL_VALIDATOR.md) (Jan 2026)
 
-[CreditNote Integration.] (docs/CREDIT_NOTE_WORKFLOW.md) (Jan 2026)
+[CreditNote Integration.](docs/CREDIT_NOTE_WORKFLOW.md) (Jan 2026)
 
 [VitePress Integration.](https://vitepress.dev/guide/getting-started) (Dec 2025)
 
