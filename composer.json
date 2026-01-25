@@ -78,7 +78,7 @@
         "stripe/stripe-php": ">=19",
         "symfony/console": ">=7.4.4",
         "symfony/process": ">=7.4.4",
-        "phptg/bot-api": "^0.12",
+        "phptg/bot-api": "^0.13",
         "vlucas/phpdotenv": "^5.6.3",
         "yiisoft/access": "^2.0.1",
         "yiisoft/aliases": "^3.1.1",

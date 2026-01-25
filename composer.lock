@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2bda99d6432f1795947b04d0551392bb",
+    "content-hash": "f713e9d8f0035326aaf5ce8926171764",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -7130,16 +7130,16 @@
         },
         {
             "name": "phptg/bot-api",
-            "version": "0.12",
+            "version": "0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phptg/bot-api.git",
-                "reference": "1464f58d1098568b5bec0dff4039e713b46e8b70"
+                "reference": "5874a6662c61f01ebf02c4e8f000656d6a07c5a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phptg/bot-api/zipball/1464f58d1098568b5bec0dff4039e713b46e8b70",
-                "reference": "1464f58d1098568b5bec0dff4039e713b46e8b70",
+                "url": "https://api.github.com/repos/phptg/bot-api/zipball/5874a6662c61f01ebf02c4e8f000656d6a07c5a0",
+                "reference": "5874a6662c61f01ebf02c4e8f000656d6a07c5a0",
                 "shasum": ""
             },
             "require": {
@@ -7156,6 +7156,7 @@
                 "php-http/curl-client": "^2.4.0",
                 "phpunit/phpunit": "^11.5.46",
                 "psr/log": "^3.0.2",
+                "rector/rector": "^2.3.0",
                 "yiisoft/files": "^2.1",
                 "yiisoft/test-support": "^3.1.0"
             },
@@ -7197,7 +7198,7 @@
                 "issues": "https://github.com/phptg/bot-api/issues?state=open",
                 "source": "https://github.com/phptg/bot-api"
             },
-            "time": "2026-01-01T08:26:19+00:00"
+            "time": "2026-01-18T17:58:15+00:00"
         },
         {
             "name": "promphp/prometheus_client_php",
@@ -24949,5 +24950,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
