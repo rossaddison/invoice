@@ -149,14 +149,6 @@ use Yiisoft\Html\Tag\Form;
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
-                                    <?= Field::hidden($form, 'discount_percent')
-    ->hideLabel(true)
-    ->label($translator->translate('discount.percent'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($s->format_amount(($form->getDiscount_percent() ?? 0.00))))
-?>
-                                <?= Html::closeTag('div'); ?>
-                                <?= Html::openTag('div'); ?>
                                     <?= Field::hidden($form, 'terms')
     ->hideLabel(true)
     ->label($translator->translate('terms'))

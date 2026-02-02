@@ -214,9 +214,6 @@ final class InvoiceController extends BaseController
             'signup_default_age_minimum_eighteen' => 1,
             'stop_logging_in' => false,
             'stop_signing_up' => false,
-            'sumex_canton' => 1,
-            'sumex_role' => 1,
-            'sumex_place' => 1,
             'tax_rate_decimal_places' => 2,
             'telegram_chat_id' => '',
             'telegram_payment_notifications' => 0,
@@ -1216,7 +1213,6 @@ final class InvoiceController extends BaseController
         $product->setTax_rate_id(2);
         $product->setUnit_id(1);
         $product->setFamily_id(1);
-        $product->setProduct_tariff(5);
         $pR->save($product);
     }
 
@@ -1238,7 +1234,6 @@ final class InvoiceController extends BaseController
         $service->setUnit_id(2);
         // Service => family_id 2; Product => family_id = 1
         $service->setFamily_id(2);
-        $service->setProduct_tariff(3);
         $pR->save($service);
     }
 

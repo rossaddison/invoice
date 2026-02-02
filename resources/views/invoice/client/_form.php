@@ -278,9 +278,6 @@ echo Field::date($form, 'client_birthdate')
     // private ?int $client_age = null;
     ->step(1);
 ?>
-            <?= $formFields->clientTextField($form, 'client_avs', 'sumex.ssn', false); ?>
-            <?= $formFields->clientTextField($form, 'client_insurednumber', 'sumex.insurednumber', false); ?>
-            <?= $formFields->clientTextField($form, 'client_veka', 'sumex.veka', false); ?>
             <?= Html::closeTag('div'); ?>    
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php

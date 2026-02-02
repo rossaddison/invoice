@@ -868,7 +868,6 @@ return [
 	'Generieren der Rechnungsnummer für Rechnungsentwürfe',
 'generate.quote.number.for.draft' =>
 	'Angebotsnummer für Angebotsentwürfe generieren',
-'generate.sumex' => 'Sumex PDF generieren',
 'generator' => 'Generator',
 'generator.add' => 'Generator hinzufügen',
 'generator.camelcase.capital.name' => 'Camelcase Capital Name, der in '
@@ -1068,8 +1067,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Hostname',
-'html.sumex.no' => 'HTML ohne Sumex',
-'html.sumex.yes' => 'HTML mit Sumex',
 'id' => 'AUSWEIS',
 'identifier.format' => 'Bezeichnerformatierung',
 'identifier.format.template.tags' => 'Vorlagen-Tags für den Bezeichner',
@@ -2669,63 +2666,6 @@ return [
 'subtotal' => 'Zwischensumme',
 'success' => 'Erfolg',
 'successful' => 'Erfolgreich',
-'sumex' => 'Sumex',
-'sumex.add' => 'Sumex Hinzufügen',
-'sumex.canton' => 'Kanton',
-'sumex.diagnosis' => 'Diagnose',
-'sumex.edit' => 'Sumex Bearbeiten',
-'sumex.help' => 'Diese Option fügt einen Menüeintrag '
-	. 'in Rechnungen hinzu, um eine '
-	. 'TARMED/SUMEX1-kompatible Rechnung zu erstellen.'
-	. 'TARMED/SUMEX1 ist ein Schweizer Standard '
-	. 'für das Gesundheitswesen.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Weitere Informationen</a>',
-'sumex.information' => 'Sumex-Informationen',
-'sumex.insurednumber' => 'Versichertennummer',
-'sumex.observations' => 'Beobachtungen',
-'sumex.place' => 'Sumex-Platz',
-'sumex.place.association' => 'Verein',
-'sumex.place.company' => 'Unternehmen',
-'sumex.place.hospital' => 'Krankenhaus',
-'sumex.place.lab' => 'Labor',
-'sumex.place.practice' => 'Üben',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Sumex-Rolle',
-'sumex.role.chiropractor' => 'Chiropraktiker',
-'sumex.role.dentaltechnician' => 'Zahntechniker',
-'sumex.role.dentist' => 'Zahnarzt',
-'sumex.role.druggist' => 'Apotheker',
-'sumex.role.ergotherapist' => 'Ergotherapeut',
-'sumex.role.hospital' => 'Krankenhaus',
-'sumex.role.labtechnician' => 'Labortechniker',
-'sumex.role.logotherapist' => 'Logotherapeut',
-'sumex.role.midwife' => 'Hebamme',
-'sumex.role.naturopathicdoctor' => 'Naturheilkundlicher Arzt',
-'sumex.role.naturopathictherapist' => 'Naturheiltherapeut',
-'sumex.role.nursingstaff' => 'Pflegepersonal',
-'sumex.role.nutritionist' => 'Ernährungsberaterin',
-'sumex.role.other' => 'Andere',
-'sumex.role.othertechnician' => 'Anderer Techniker',
-'sumex.role.pharmacist' => 'Apotheker',
-'sumex.role.physician' => 'Arzt',
-'sumex.role.physiotherapist' => 'Physiotherapeut',
-'sumex.role.psychologist' => 'Psychologe',
-'sumex.role.transport' => 'Transport',
-'sumex.role.wholesaler' => 'Großhändler',
-'sumex.settings' => 'Sumex-Einstellungen',
-'sumex.sliptype' => 'Sumex Slip-Typ',
-'sumex.sliptype-esr9' => 'ESR 9 (Orange Slip)',
-'sumex.sliptype-esrRed' => 'Roter Slip',
-'sumex.sliptype.help' => 'Mit dieser Option ändern Sie '
-	. 'den Belegtyp in Sumex.'
-	. 'Bitte beachten Sie, dass Sie '
-	. 'bei Auswahl des orangefarbenen Belegs '
-	. 'eine Teilnehmernummer benötigen, die mit '
-	. '„01-“ beginnt.',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'WOCHE',
 'sunday' => 'Sonntag',
 'system.settings' => 'Systemeinstellungen',
 'table' => 'Tisch',

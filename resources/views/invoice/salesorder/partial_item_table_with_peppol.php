@@ -324,7 +324,7 @@ foreach ($soItems as $item) { ?>
                     </td>                    
                 </tr>
                 <?php } ?>
-                <?php if ($vat == (string) 0) { ?>
+                <?php if (($so->getDiscount_amount() ?? 0.00) != 0.00) { ?>
                 <tr>
                     <td class="td-vert-middle"><?= $translator->translate('discount'); ?></td>
                     <td class="clearfix">
@@ -336,14 +336,6 @@ foreach ($soItems as $item) { ?>
                                 <div
                                     class="input-group-text"><?= $s->getSetting('currency_symbol'); ?>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="discount-field">
-                            <div class="input-group input-group-sm">
-                                <input id="quote_discount_percent" name="quote_discount_percent" data-bs-toggle = "tooltip" title="quote->discount_percent" disabled
-                                       value="<?= $numberHelper->format_amount($so->getDiscount_percent() != 0 ? $so->getDiscount_percent() : 0.00); ?>"
-                                       class="discount-option form-control amount">
-                                <div class="input-group-text">&percnt;</div>
                             </div>
                         </div>
                     </td>

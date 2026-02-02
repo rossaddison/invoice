@@ -1091,7 +1091,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Tạo số báo giá cho '
 	. 'bản báo giá nháp',
-'generate.sumex' => 'Tạo Sumex PDF',
 'generator' => 'Máy phát điện',
 'generator.add' => 'Thêm máy phát điện',
 'generator.camelcase.capital.name' => 'Tên viết hoa Camelcase được '
@@ -1350,8 +1349,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Tên máy chủ',
-'html.sumex.no' => 'Html không có Sumex',
-'html.sumex.yes' => 'Html với Sumex',
 'id' => 'NHẬN DẠNG',
 'identifier.format' => 'Định dạng định danh',
 'identifier.format.template.tags' => 'Thẻ mẫu cho Mã định '
@@ -3304,71 +3301,6 @@ return [
 'subtotal' => 'Tổng cộng',
 'success' => 'Thành công',
 'successful' => 'Thành công',
-'sumex' => 'Sumex',
-'sumex.add' => 'Sumex Thêm',
-'sumex.canton' => 'Quảng Châu',
-'sumex.diagnosis' => 'Chẩn đoán',
-'sumex.edit' => 'Sumex Chỉnh sửa',
-'sumex.help' => 'Tùy chọn này thêm mục '
-	. 'menu vào hóa đơn để '
-	. 'tạo hóa đơn tương thích '
-	. 'bán phần TARMED / SUMEX1.'
-	. 'TARMED / SUMEX1 là tiêu '
-	. 'chuẩn Thụy Sĩ dành cho '
-	. 'chăm sóc sức khỏe.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Thông tin thêm</a>',
-'sumex.information' => 'Thông tin Sumex',
-'sumex.insurednumber' => 'Số bảo hiểm',
-'sumex.observations' => 'Quan sát',
-'sumex.place' => 'Địa điểm Sumex',
-'sumex.place.association' => 'Sự kết hợp',
-'sumex.place.company' => 'Công ty',
-'sumex.place.hospital' => 'Bệnh viện',
-'sumex.place.lab' => 'Phòng thí nghiệm',
-'sumex.place.practice' => 'Luyện tập',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Vai trò Sumex',
-'sumex.role.chiropractor' => 'Bác sĩ nắn xương',
-'sumex.role.dentaltechnician' => 'Kỹ thuật viên nha khoa',
-'sumex.role.dentist' => 'Nha sĩ',
-'sumex.role.druggist' => 'Dược sĩ',
-'sumex.role.ergotherapist' => 'Chuyên gia trị liệu bằng '
-	. 'công thái học',
-'sumex.role.hospital' => 'Bệnh viện',
-'sumex.role.labtechnician' => 'Kỹ thuật viên phòng thí '
-	. 'nghiệm',
-'sumex.role.logotherapist' => 'Nhà trị liệu bằng ngôn '
-	. 'ngữ',
-'sumex.role.midwife' => 'Bà đỡ',
-'sumex.role.naturopathicdoctor' => 'Bác sĩ y học tự '
-	. 'nhiên',
-'sumex.role.naturopathictherapist' => 'Chuyên gia trị liệu thiên '
-	. 'nhiên',
-'sumex.role.nursingstaff' => 'Nhân viên điều dưỡng',
-'sumex.role.nutritionist' => 'Chuyên gia dinh dưỡng',
-'sumex.role.other' => 'Khác',
-'sumex.role.othertechnician' => 'Kỹ thuật viên khác',
-'sumex.role.pharmacist' => 'Dược sĩ',
-'sumex.role.physician' => 'Bác sĩ',
-'sumex.role.physiotherapist' => 'Chuyên gia vật lý trị '
-	. 'liệu',
-'sumex.role.psychologist' => 'Nhà tâm lý học',
-'sumex.role.transport' => 'Chuyên chở',
-'sumex.role.wholesaler' => 'Người bán buôn',
-'sumex.settings' => 'Cài đặt Sumex',
-'sumex.sliptype' => 'Loại trượt Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (Giấy cam)',
-'sumex.sliptype-esrRed' => 'Phiếu đỏ',
-'sumex.sliptype.help' => 'Tùy chọn này sẽ thay '
-	. 'đổi loại phiếu trong Sumex.'
-	. 'Xin lưu ý rằng nếu '
-	. 'bạn chọn phiếu màu cam,'
-	. 'bạn cần số thuê bao '
-	. 'bắt đầu bằng &quot;01-&quot;',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'TUẦN',
 'sunday' => 'Chủ nhật',
 'system.settings' => 'Cài đặt hệ thống',
 'table' => 'Bàn',

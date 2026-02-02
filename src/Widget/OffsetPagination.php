@@ -37,13 +37,16 @@ final class OffsetPagination extends Widget
 
     public function isPaginationRequired(): bool
     {
-        return $this->paginator !== null && $this->paginator->isPaginationRequired();
+        return $this->paginator !== null
+                && $this->paginator->isPaginationRequired();
     }
 
     /**
-     * The HTML attributes for the widget container tag. The following special options are recognized.
+     * The HTML attributes for the widget container tag. The following special
+     *  options are recognized.
      *
-     * {Related logic: see \Yiisoft\Html\Html::renderTagAttributes()} for details on how attributes are being rendered.
+     * {Related logic: see \Yiisoft\Html\Html::renderTagAttributes()} for
+     *  details on how attributes are being rendered.
      */
     public function options(array $value): self
     {
@@ -77,15 +80,23 @@ final class OffsetPagination extends Widget
             return;
         }
 
-        // Psalm Level 3: PossiblyNullReference: Cannot call method getTotalPages on possibly null value
         $this->pagesCount = $this->paginator?->getTotalPages() ?? 0;
         $this->currentPage = $this->paginator?->getCurrentPage() ?? 0;
 
         if ($this->pagesCount > 9) {
             if ($this->currentPage <= 4) {
-                $this->pages = [...range(1, 5), null, ...range($this->pagesCount - 2, $this->pagesCount)];
+                $this->pages = [
+                    ...range(1, 5),
+                    null,
+                    ...range($this->pagesCount - 2, $this->pagesCount)
+                ];
             } elseif ($this->pagesCount - $this->currentPage <= 4) {
-                $this->pages = [1, 2, null, ...range($this->pagesCount - 5, $this->pagesCount)];
+                $this->pages = [
+                    1,
+                    2,
+                    null,
+                    ...range($this->pagesCount - 5, $this->pagesCount)
+                ];
             } else {
                 $this->pages = [
                     1,
@@ -110,27 +121,35 @@ final class OffsetPagination extends Widget
         $result = '';
 
         // `Previous` page
-        $prevUrl = $this->paginator?->isOnFirstPage() ? null : $this->getPageLink($this->currentPage - 1);
-        $result .= Html::openTag('li', ['class' => $prevUrl === null ? 'page-item disabled' : 'page-item']);
-        $result .= (string) Html::a('Previous', $prevUrl, ['class' => 'page-link']);
+        $prevUrl = $this->paginator?->isOnFirstPage()
+                ? null : $this->getPageLink($this->currentPage - 1);
+        $result .= Html::openTag('li', [
+            'class' => $prevUrl === null ?
+                'page-item disabled' : 'page-item']);
+        $result .= (string) Html::a('Previous', $prevUrl, [
+            'class' => 'page-link']);
         $result .= Html::closeTag('li');
 
         // Numeric buttons
         /** @var int|null $page */
         foreach ($this->pages as $page) {
             $isDisabled = $this->currentPage === $page || $page === null;
-            $result .= Html::openTag('li', ['class' => $isDisabled ? 'page-item disabled' : 'page-item']);
+            $result .= Html::openTag('li', [
+                'class' => $isDisabled ? 'page-item disabled' : 'page-item']);
             if ($page === null) {
                 $result .= (string) Html::span('…', ['class' => 'page-link']);
             } else {
-                $result .= (string) Html::a((string) $page, $this->getPageLink($page), ['class' => 'page-link']);
+                $result .= (string) Html::a((string) $page,
+                        $this->getPageLink($page), ['class' => 'page-link']);
             }
             $result .= Html::closeTag('li');
         }
 
         // `Next` page
-        $nextUrl = $this->paginator?->isOnLastPage() ? null : $this->getPageLink($this->currentPage + 1);
-        $result .= Html::openTag('li', ['class' => $nextUrl === null ? 'page-item disabled' : 'page-item']);
+        $nextUrl = $this->paginator?->isOnLastPage()
+                ? null : $this->getPageLink($this->currentPage + 1);
+        $result .= Html::openTag('li', ['class' => $nextUrl === null
+                ? 'page-item disabled' : 'page-item']);
         $result .= (string) Html::a('Next', $nextUrl, ['class' => 'page-link']);
         $result .= Html::closeTag('li');
 
@@ -139,7 +158,8 @@ final class OffsetPagination extends Widget
 
     protected function getPageLink(int $page): ?string
     {
-        return $this->urlGenerator === null ? null : (string) ($this->urlGenerator)($page);
+        return $this->urlGenerator === null
+                ? null : (string) ($this->urlGenerator)($page);
     }
 
     protected function initOptions(): void

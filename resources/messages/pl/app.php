@@ -900,7 +900,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Wygeneruj numer oferty dla wersji '
 	. 'roboczych ofert',
-'generate.sumex' => 'Wygeneruj plik PDF Sumex',
 'generator' => 'Generator',
 'generator.add' => 'Dodaj generator',
 'generator.camelcase.capital.name' => 'Nazwa Camelcase Capital używana w '
@@ -1098,8 +1097,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Nazwa hosta',
-'html.sumex.no' => 'Html bez Sumex',
-'html.sumex.yes' => 'Html z Sumex',
 'id' => 'ID',
 'identifier.format' => 'Formatowanie identyfikatora',
 'identifier.format.template.tags' => 'Znaczniki szablonu dla identyfikatora',
@@ -2690,62 +2687,6 @@ return [
 'subtotal' => 'Podsumowanie',
 'success' => 'Sukces',
 'successful' => 'Udany',
-'sumex' => 'Sumeks',
-'sumex.add' => 'Dodaj Sumex',
-'sumex.canton' => 'Kanton',
-'sumex.diagnosis' => 'Diagnoza',
-'sumex.edit' => 'Sumex Edytuj',
-'sumex.help' => 'Ta opcja dodaje wpis menu '
-	. 'na fakturach, aby wygenerować fakturę '
-	. 'półkompatybilną z TARMED / SUMEX1.'
-	. 'TARMED / SUMEX1 to szwajcarski '
-	. 'standard dla opieki zdrowotnej.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Więcej informacji</a>',
-'sumex.information' => 'Informacje o Sumex',
-'sumex.insurednumber' => 'Numer Ubezpieczonego',
-'sumex.observations' => 'Obserwacje',
-'sumex.place' => 'Miejsce Sumex',
-'sumex.place.association' => 'Stowarzyszenie',
-'sumex.place.company' => 'Firma',
-'sumex.place.hospital' => 'Szpital',
-'sumex.place.lab' => 'Laboratorium',
-'sumex.place.practice' => 'Praktyka',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Rola Sumex',
-'sumex.role.chiropractor' => 'Kręgarz',
-'sumex.role.dentaltechnician' => 'Technik dentystyczny',
-'sumex.role.dentist' => 'Dentysta',
-'sumex.role.druggist' => 'Aptekarz',
-'sumex.role.ergotherapist' => 'Ergoterapeuta',
-'sumex.role.hospital' => 'Szpital',
-'sumex.role.labtechnician' => 'Technik laboratoryjny',
-'sumex.role.logotherapist' => 'Logoterapeuta',
-'sumex.role.midwife' => 'Położna',
-'sumex.role.naturopathicdoctor' => 'Lekarz naturopata',
-'sumex.role.naturopathictherapist' => 'Terapeuta naturopatyczny',
-'sumex.role.nursingstaff' => 'Personel pielęgniarski',
-'sumex.role.nutritionist' => 'Specjalista od żywienia',
-'sumex.role.other' => 'Inny',
-'sumex.role.othertechnician' => 'Inny technik',
-'sumex.role.pharmacist' => 'Farmaceuta',
-'sumex.role.physician' => 'Lekarz',
-'sumex.role.physiotherapist' => 'Fizjoterapeuta',
-'sumex.role.psychologist' => 'Psycholog',
-'sumex.role.transport' => 'Transport',
-'sumex.role.wholesaler' => 'Hurtownik',
-'sumex.settings' => 'Ustawienia Sumex',
-'sumex.sliptype' => 'Typ poślizgu Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (Pomarańczowy Poślizg)',
-'sumex.sliptype-esrRed' => 'Czerwony Poślizg',
-'sumex.sliptype.help' => 'Ta opcja zmieni typ kuponu '
-	. 'w Sumex.'
-	. 'Należy pamiętać, że jeśli wybierzesz '
-	. 'pomarańczowy kupon, potrzebujesz numeru abonenta '
-	. 'zaczynającego się od „01-”',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'TYDZIEŃ',
 'sunday' => 'Niedziela',
 'system.settings' => 'Ustawienia systemowe',
 'table' => 'Tabela',

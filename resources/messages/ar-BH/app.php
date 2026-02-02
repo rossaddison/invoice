@@ -854,7 +854,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'إنشاء رقم عرض الأسعار لمسودة '
 	. 'عروض الأسعار',
-'generate.sumex' => 'إنشاء ملف PDF Sumex',
 'generator' => 'مولد كهربائي',
 'generator.add' => 'إضافة المولد',
 'generator.camelcase.capital.name' => 'الاسم المستخدم في أسماء وحدات '
@@ -1046,8 +1045,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'اسم المضيف',
-'html.sumex.no' => 'HTML بدون Sumex',
-'html.sumex.yes' => 'HTML مع Sumex',
 'id' => 'بطاقة تعريف',
 'identifier.format' => 'تنسيق المعرف',
 'identifier.format.template.tags' => 'علامات القالب للمعرف',
@@ -2632,63 +2629,6 @@ return [
 'subtotal' => 'المجموع الفرعي',
 'success' => 'نجاح',
 'successful' => 'ناجح',
-'sumex' => 'سومكس',
-'sumex.add' => 'إضافة سومكس',
-'sumex.canton' => 'كانتون',
-'sumex.diagnosis' => 'تشخبص',
-'sumex.edit' => 'سومكس إديت',
-'sumex.help' => 'يُضيف هذا الخيار قائمةً في '
-	. 'الفواتير لإنشاء فاتورة شبه متوافقة '
-	. 'مع TARMED / SUMEX1.'
-	. 'TARMED / SUMEX1 هو معيار '
-	. 'سويسري للرعاية الصحية.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">لمزيد من المعلومات.'
-	. '</a>',
-'sumex.information' => 'معلومات سومكس',
-'sumex.insurednumber' => 'رقم المؤمن عليه',
-'sumex.observations' => 'الملاحظات',
-'sumex.place' => 'سومكس بليس',
-'sumex.place.association' => 'منظمة',
-'sumex.place.company' => 'شركة',
-'sumex.place.hospital' => 'مستشفى',
-'sumex.place.lab' => 'مختبر',
-'sumex.place.practice' => 'يمارس',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'دور سومكس',
-'sumex.role.chiropractor' => 'أخصائي تقويم العمود الفقري',
-'sumex.role.dentaltechnician' => 'فني أسنان',
-'sumex.role.dentist' => 'طبيب أسنان',
-'sumex.role.druggist' => 'صيدلاني',
-'sumex.role.ergotherapist' => 'أخصائي العلاج المهني',
-'sumex.role.hospital' => 'مستشفى',
-'sumex.role.labtechnician' => 'فني مختبر',
-'sumex.role.logotherapist' => 'المعالج بالشعارات',
-'sumex.role.midwife' => 'القابلة',
-'sumex.role.naturopathicdoctor' => 'طبيب العلاج الطبيعي',
-'sumex.role.naturopathictherapist' => 'معالج طبيعي',
-'sumex.role.nursingstaff' => 'طاقم التمريض',
-'sumex.role.nutritionist' => 'أخصائي تغذية',
-'sumex.role.other' => 'آخر',
-'sumex.role.othertechnician' => 'فني آخر',
-'sumex.role.pharmacist' => 'صيدلي',
-'sumex.role.physician' => 'طبيب',
-'sumex.role.physiotherapist' => 'أخصائي العلاج الطبيعي',
-'sumex.role.psychologist' => 'طبيب نفسي',
-'sumex.role.transport' => 'ينقل',
-'sumex.role.wholesaler' => 'تاجر جملة',
-'sumex.settings' => 'إعدادات سومكس',
-'sumex.sliptype' => 'نوع الانزلاق سومكس',
-'sumex.sliptype-esr9' => 'ESR 9 (الانزلاق البرتقالي)',
-'sumex.sliptype-esrRed' => 'انزلاق أحمر',
-'sumex.sliptype.help' => 'سيُغيّر هذا الخيار نوع القسيمة '
-	. 'في Sumex.'
-	. 'يُرجى العلم أنه في حال '
-	. 'اختيار القسيمة البرتقالية، ستحتاج إلى '
-	. 'رقم مشترك يبدأ بـ &quot;01-&quot;.',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'أسبوع',
 'sunday' => 'الأحد',
 'system.settings' => 'إعدادات النظام',
 'table' => 'طاولة',

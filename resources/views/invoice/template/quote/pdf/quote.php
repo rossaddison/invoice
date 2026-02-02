@@ -342,17 +342,7 @@ if ($items) {
             </tr>
         <?php endforeach ?>
         <?php } ?>
-        <?php if ($vat == '0') { ?>    
-        <?php if ($quote->getDiscount_percent() !== 0.00) : ?>
-            <tr>
-                <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?= Html::encode($translator->translate('discount')); ?>
-                </td>
-                <td class="text-right">
-                    <b><?php echo Html::encode($s->format_amount($quote->getDiscount_percent())); ?>%</b>
-                </td>
-            </tr>
-        <?php endif; ?>
+        <?php if ($vat == '0') { ?>
         <?php if ($quote->getDiscount_amount() !== 0.00) : ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">

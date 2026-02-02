@@ -897,7 +897,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Стварыць нумар прапановы для чарнавікоў '
 	. 'прапаноў',
-'generate.sumex' => 'Стварыць PDF-файл Sumex',
 'generator' => 'Генератар',
 'generator.add' => 'Дадаць генератар',
 'generator.camelcase.capital.name' => 'Назва з вялікай літары Camelcase,'
@@ -1088,8 +1087,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Імя хаста',
-'html.sumex.no' => 'Html без Sumex',
-'html.sumex.yes' => 'Html з Sumex',
 'id' => 'Ідэнтыфікатар',
 'identifier.format' => 'Фарматаванне ідэнтыфікатара',
 'identifier.format.template.tags' => 'Шаблонныя тэгі для ідэнтыфікатара',
@@ -2710,63 +2707,6 @@ return [
 'subtotal' => 'Прамежкавы вынік',
 'success' => 'Поспех',
 'successful' => 'Паспяховы',
-'sumex' => 'Сумекс',
-'sumex.add' => 'Сумекс Дадаць',
-'sumex.canton' => 'Кантон',
-'sumex.diagnosis' => 'Дыягназ',
-'sumex.edit' => 'Рэдагаваць Sumex',
-'sumex.help' => 'Гэтая опцыя дадае ў рахункі-фактуры '
-	. 'пункт меню для стварэння паўсумяшчальнага '
-	. 'рахунку-фактуры з TARMED / SUMEX1.'
-	. 'TARMED / SUMEX1 — гэта '
-	. 'швейцарскі стандарт для аховы здароўя.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Больш інфармацыі</a>',
-'sumex.information' => 'Інфармацыя пра Sumex',
-'sumex.insurednumber' => 'Застрахаваны нумар',
-'sumex.observations' => 'Назіранні',
-'sumex.place' => 'Сумекс Плэйс',
-'sumex.place.association' => 'Асацыяцыя',
-'sumex.place.company' => 'Кампанія',
-'sumex.place.hospital' => 'Шпіталь',
-'sumex.place.lab' => 'Лабараторыя',
-'sumex.place.practice' => 'Практыка',
-'sumex.rcc' => 'РКК',
-'sumex.role' => 'Роля Sumex',
-'sumex.role.chiropractor' => 'Хірапрактык',
-'sumex.role.dentaltechnician' => 'Зубны тэхнік',
-'sumex.role.dentist' => 'Стаматолаг',
-'sumex.role.druggist' => 'Аптэкар',
-'sumex.role.ergotherapist' => 'Эргатэрапеўт',
-'sumex.role.hospital' => 'Шпіталь',
-'sumex.role.labtechnician' => 'Лабарант',
-'sumex.role.logotherapist' => 'Логотэрапеўт',
-'sumex.role.midwife' => 'Акушэрка',
-'sumex.role.naturopathicdoctor' => 'Натуропат-доктар',
-'sumex.role.naturopathictherapist' => 'Натуропат-тэрапеўт',
-'sumex.role.nursingstaff' => 'Медперсанал',
-'sumex.role.nutritionist' => 'Дыетолаг',
-'sumex.role.other' => 'Іншае',
-'sumex.role.othertechnician' => 'Іншы тэхнік',
-'sumex.role.pharmacist' => 'Фармацэўт',
-'sumex.role.physician' => 'Лекар',
-'sumex.role.physiotherapist' => 'Фізіятэрапеўт',
-'sumex.role.psychologist' => 'Псіхолаг',
-'sumex.role.transport' => 'Транспарт',
-'sumex.role.wholesaler' => 'Аптавік',
-'sumex.settings' => 'Налады Sumex',
-'sumex.sliptype' => 'Тып слізгацення Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (аранжавы сліп)',
-'sumex.sliptype-esrRed' => 'Чырвоны сліп',
-'sumex.sliptype.help' => 'Гэтая опцыя зменіць тып квітанцыі '
-	. 'ў Sumex.'
-	. 'Звярніце ўвагу, што калі вы '
-	. 'выбіраеце аранжавую квітанцыю, вам патрэбен '
-	. 'нумар падпісчыка, які пачынаецца з '
-	. '&quot;01-&quot;.',
-'sumex.ssn' => 'АВС',
-'sumex.veka' => 'ТЫДЗЕНЬ',
 'sunday' => 'Нядзеля',
 'system.settings' => 'Сістэмныя налады',
 'table' => 'Табліца',

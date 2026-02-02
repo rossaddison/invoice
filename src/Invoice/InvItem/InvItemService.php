@@ -607,20 +607,18 @@ final readonly class InvItemService
         }
         $ipInvAc = $sub_total + $all_charges - $all_allowances;
         if ($tax_rate_percentage >= 0.00) {
-            $current_tax_total =
+            $tax_total =
                 // Cash Settlement discounts must be removed before tax worked    
                 ($ipInvAc - $discount_total) * ($tax_rate_percentage / 100.00);
         } else {
-            $current_tax_total = 0.00;
+            $tax_total = 0.00;
         }
-        $all_vat_or_tax = $all_charges_vat_or_tax - $all_allowances_vat_or_tax;
-        $new_tax_total = $current_tax_total + $all_vat_or_tax;
         $iias_array['charge'] = $all_charges;
         $iias_array['allowance'] = $all_allowances;
         $iias_array['discount'] = $discount_total;
         $iias_array['subtotal'] = $ipInvAc;
-        $iias_array['taxtotal'] = $new_tax_total;
-        $iias_array['total'] = $ipInvAc - $discount_total + $new_tax_total;
+        $iias_array['taxtotal'] = $tax_total;
+        $iias_array['total'] = $ipInvAc - $discount_total + $tax_total;
         // retrieve the existing InvItemAmount record
         $inv_item_amount = $iiar->repoInvItemAmountquery((string) $inv_item_id);
         if ($iiar->repoCount((string) $inv_item_id) === 0) {

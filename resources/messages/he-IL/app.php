@@ -862,7 +862,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'צור את מספר הצעת המחיר '
 	. 'עבור טיוטות הצעות מחיר',
-'generate.sumex' => 'צור PDF של Sumex',
 'generator' => 'גֵנֵרָטוֹר',
 'generator.add' => 'הוסף גנרטור',
 'generator.camelcase.capital.name' => 'שם גדול (Camelcase) המשמש בשמות '
@@ -1048,8 +1047,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'שם מארח',
-'html.sumex.no' => 'HTML ללא Sumex',
-'html.sumex.yes' => 'Html עם Sumex',
 'id' => 'תְעוּדַת זֶהוּת',
 'identifier.format' => 'עיצוב מזהה',
 'identifier.format.template.tags' => 'תגי תבנית עבור המזהה',
@@ -2627,62 +2624,6 @@ return [
 'subtotal' => 'סכום ביניים',
 'success' => 'הַצלָחָה',
 'successful' => 'מוּצלָח',
-'sumex' => 'סומקס',
-'sumex.add' => 'סומקס הוסף',
-'sumex.canton' => 'קנטון',
-'sumex.diagnosis' => 'אִבחוּן',
-'sumex.edit' => 'עריכת סומקס',
-'sumex.help' => 'אפשרות זו מוסיפה ערך תפריט '
-	. 'בחשבוניות כדי ליצור חשבונית תואמת '
-	. 'למחצה ל-TARMED / SUMEX1.'
-	. 'TARMED / SUMEX1 הוא תקן '
-	. 'שוויצרי לשירותי בריאות.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">מידע נוסף</a>',
-'sumex.information' => 'מידע על סומקס',
-'sumex.insurednumber' => 'מספר מבוטח',
-'sumex.observations' => 'תצפיות',
-'sumex.place' => 'מקום סומקס',
-'sumex.place.association' => 'אִרגוּן',
-'sumex.place.company' => 'חֶברָה',
-'sumex.place.hospital' => 'בֵּית חוֹלִים',
-'sumex.place.lab' => 'מַעבָּדָה',
-'sumex.place.practice' => 'לְתַרְגֵל',
-'sumex.rcc' => 'מרכז מסחרי',
-'sumex.role' => 'תפקיד סומקס',
-'sumex.role.chiropractor' => 'כירופרקט',
-'sumex.role.dentaltechnician' => 'טכנאי שיניים',
-'sumex.role.dentist' => 'רופא שיניים',
-'sumex.role.druggist' => 'רוֹקֵחַ',
-'sumex.role.ergotherapist' => 'ארגו-תרפיסט',
-'sumex.role.hospital' => 'בֵּית חוֹלִים',
-'sumex.role.labtechnician' => 'טכנאי מעבדה',
-'sumex.role.logotherapist' => 'לוגותרפיסט',
-'sumex.role.midwife' => 'מְיַלֶדֶת',
-'sumex.role.naturopathicdoctor' => 'נטורופת',
-'sumex.role.naturopathictherapist' => 'נטורופתמטפל',
-'sumex.role.nursingstaff' => 'צוות סיעודי',
-'sumex.role.nutritionist' => 'תְזוּנַאִי',
-'sumex.role.other' => 'אַחֵר',
-'sumex.role.othertechnician' => 'טכנאי אחר',
-'sumex.role.pharmacist' => 'רוֹקֵחַ',
-'sumex.role.physician' => 'רוֹפֵא',
-'sumex.role.physiotherapist' => 'פיזיותרפיסט',
-'sumex.role.psychologist' => 'פְּסִיכוֹלוֹג',
-'sumex.role.transport' => 'תַחְבּוּרָה',
-'sumex.role.wholesaler' => 'סִיטוֹנַאי',
-'sumex.settings' => 'הגדרות סומקס',
-'sumex.sliptype' => 'סוג החלקה של סומקס',
-'sumex.sliptype-esr9' => 'ESR 9 (תחתית כתומה)',
-'sumex.sliptype-esrRed' => 'סליפ אדום',
-'sumex.sliptype.help' => 'אפשרות זו תשנה את סוג '
-	. 'השובר ב-Sumex.'
-	. 'שימו לב שאם תבחרו בשובר '
-	. 'הכתום, תצטרכו מספר מנוי שמתחיל '
-	. 'ב-&quot;01-&quot;.',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'שָׁבוּעַ',
 'sunday' => 'יוֹם רִאשׁוֹן',
 'system.settings' => 'הגדרות מערכת',
 'table' => 'לוּחַ',

@@ -304,16 +304,6 @@ echo Field::select($form, 'language')
     ->value(Html::encode($form->getGln() ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'rcc')
-    ->label($translator->translate('sumex.rcc'))
-    ->addInputAttributes([
-        'class' => 'form-control',
-        'id' => 'rcc',
-    ])
-    ->value(Html::encode($form->getRcc() ?? ''))
-?>
-        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

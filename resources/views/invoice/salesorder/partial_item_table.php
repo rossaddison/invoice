@@ -345,9 +345,12 @@ foreach ($soItems as $item) {
                         <?php } ?>
                         <?php if ($editClientPeppol === true) { ?>
                             <span data-bs-toggle="tooltip"
-                                  title="<?= $translator->translate('invoice.peppol.edit.item'); ?>">
+                                  title="<?= $translator->translate(
+                                          'invoice.peppol.edit.item'); ?>">
                                 <a class="btn btn-primary fa fa-edit"
-                                   href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]); ?>"
+                                   href="<?= $urlGenerator->generate(
+                                           'salesorderitem/edit',
+                                           ['id' => $item->getId()]); ?>"
                                    style="text-decoration:none">
                                 </a>
                             </span>
@@ -684,7 +687,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                     </td>
                 </tr>
                 <?php } ?>
-                <?php if ($vat === '0') { ?>
+                <?php if (($so->getDiscount_amount() ?? 0.00) != 0.00) { ?>
                 <tr>
                     <td class="td-vert-middle">
                         <b>(<?= $translator->translate('discount'); ?>)</b>
@@ -692,35 +695,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                     <td class="clearfix">
                         <div class="discount-field">
                             <div class="input-group input-group">
-                                <input id="salesorder_discount_amount"
-                                       name="salesorder_discount_amount"
-                                       class="discount-option form-control amount"
-                                       data-bs-toggle="tooltip"
-                                       title="salesorder->discount_amount"
-                                       disabled
-                                       value="
-                                <?= $numberHelper->format_amount(
-                                        $so->getDiscount_amount() != 0 ?
-                                        $so->getDiscount_amount() : ''); ?>">
-                                <div
-                                    class="input-group-text">
-                                    <?= $s->getSetting('currency_symbol'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="discount-field">
-                            <div class="input-group input-group">
-                                <input id="salesorder_discount_percent"
-                                       name="salesorder_discount_percent"
-                                       data-bs-toggle = "tooltip"
-                                       title="salesorder->discount_percent"
-                                       disabled
-                                       value="
-                                <?= $numberHelper->format_amount(
-                                        $so->getDiscount_percent() != 0 ?
-                                        $so->getDiscount_percent() : ''); ?>"
-                                       class="discount-option form-control amount">
-                                <div class="input-group-text">&percnt;</div>
+      <?= $numberHelper->format_currency($so->getDiscount_amount() ?? 0.00); ?>
                             </div>
                         </div>
                     </td>
@@ -743,3 +718,4 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
             </table>
         </div>
     <hr>
+    

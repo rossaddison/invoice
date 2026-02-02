@@ -86,6 +86,7 @@ use App\Invoice\{
     QuoteItemAmount\QuoteItemAmountRepository as QIAR,
     QuoteItem\QuoteItemRepository as QIR,
     QuoteTaxRate\QuoteTaxRateRepository as QTRR,
+    SalesOrderAllowanceCharge\SalesOrderAllowanceChargeRepository as ACSOR,
     SalesOrderAmount\SalesOrderAmountRepository as soAR,
     SalesOrderCustom\SalesOrderCustomRepository as SOCR,
     SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR,
@@ -484,6 +485,8 @@ final class QuoteController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         ACQIR $acqiR,
+        ACQR $acqR,
+        ACSOR $acsoR,
         ACSOIR $acsoiR,
         CFR $cfR,
         GR $gR,
@@ -532,8 +535,6 @@ final class QuoteController extends BaseController
                             'number' => $number,
                             'discount_amount' =>
                                 (float) $quote->getDiscount_amount(),
-                            'discount_percent' =>
-                                (float) $quote->getDiscount_percent(),
                             // The quote's url will be the same for the 
                             // po allowing for a trace
                             'url_key' => $quote->getUrl_key(),
@@ -558,7 +559,7 @@ final class QuoteController extends BaseController
                                 // therefore cannot be copied again.
                                 $new_so_id = $new_so->getId();
                                 // Transfer each quote_item to so_item and the
-                                // corresponding so_item_amount to 
+                                // corresponding so_item_amount to
                                 // so_item_amount for each item
                                 if (null !== $new_so_id && null !== $quote_id) {
                                     $this->quote_to_so_quote_items(
@@ -572,6 +573,8 @@ final class QuoteController extends BaseController
                                         $new_so_id, $qcR, $cfR, $formHydrator);
                                     $this->quote_to_so_quote_amount($quote_id,
                                         $new_so_id, $qaR, $soaR, $soR);
+                                    $this->quote_to_so_quote_allowance_charges($quote_id,
+                                $new_so_id, $acqR, $formHydrator);
                                     // Set the quote's sales order id so that
                                     // it cannot be copied in the future
                                     $quote->setSo_id($new_so_id);
@@ -608,9 +611,12 @@ final class QuoteController extends BaseController
     /**
      * @param string $url_key
      * @param QR $qR
+     * @param UCR $ucR
+     * @param UIR $uiR
      * @return Response
      */
-    public function reject(#[RouteArgument('url_key')] string $url_key, QR $qR):
+    public function reject(#[RouteArgument('url_key')] string $url_key, QR $qR,
+            UCR $ucR, UIR $uiR):
         Response
     {
         if ($url_key) {
@@ -618,19 +624,19 @@ final class QuoteController extends BaseController
                 $quote = $qR->repoUrl_key_guest_loaded($url_key);
                 if ($quote) {
                     $quote_id = $quote->getId();
-                    $quote->setStatus_id(5);
-                    $qR->save($quote);
-                    return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString(
-                        '//invoice/setting/quote_successful',
-                        ['heading' => $this->translator->translate(
-                            'record.successfully.updated'),'url' =>
-                            'quote/view','id' => $quote_id],
-                    ));
+                    if ($this->rbacObserver($quote, $ucR, $uiR)) {
+                        $quote->setStatus_id(5);
+                        $qR->save($quote);
+                        return $this->factory->createResponse(
+                            $this->viewRenderer->renderPartialAsString(
+                            '//invoice/setting/quote_successful',
+                            ['heading' => $this->translator->translate(
+                                'record.successfully.updated'),'url' =>
+                                'quote/view','id' => $quote_id],
+                        ));
+                    }    
                 }
-                return $this->webService->getNotFoundResponse();
             }
-            return $this->webService->getNotFoundResponse();
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -659,7 +665,6 @@ final class QuoteController extends BaseController
             'status_id' => $quote->getStatus_id(),
 
             'discount_amount' => $quote->getDiscount_amount(),
-            'discount_percent' => $quote->getDiscount_percent(),
             'url_key' => $quote->getUrl_key(),
             'password' => $quote->getPassword(),
             'notes' => $quote->getNotes(),
@@ -1592,7 +1597,7 @@ final class QuoteController extends BaseController
                     (string) $user->getId()) > 0
                      ? $uiR->repoUserInvUserIdquery((string) $user->getId())
                      : null);
-            if ($userinv) {
+            if ($userinv && $userinv->getActive()) {
                 // Determine what clients have been allocated to this user
                 // (Related logic: see Settings...User Account)
                 // by looking at UserClient table
@@ -2238,7 +2243,6 @@ final class QuoteController extends BaseController
                 'password' => $body['password'] ?? '',
                 'number' => '',
                 'discount_amount' => (float) $quote->getDiscount_amount(),
-                'discount_percent' => (float) $quote->getDiscount_percent(),
                 'url_key' => $quote->getUrl_key(),
                 'payment_method' => 0,
                 'terms' => '',
@@ -2364,7 +2368,7 @@ final class QuoteController extends BaseController
         UCR $ucR,
         UR $uR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
-        // $body data received from user in 
+        // $body data received from user in
         // ...resources\views\invoice\quote\modal_quote_to_so
         // ...src\Invoice\Asset\rebuild-1.13\js\ $(document).on('click',
         // '#quote_to_so_confirm', function () {var url =
@@ -2395,7 +2399,6 @@ final class QuoteController extends BaseController
                 'status_id' => 1,
                 'number' => '',
                 'discount_amount' => (float) $quote->getDiscount_amount(),
-                'discount_percent' => (float) $quote->getDiscount_percent(),
                 // The quote's url will be the same for the so allowing
                 // for a trace
                 'url_key' => $quote->getUrl_key(),
@@ -2905,7 +2908,6 @@ final class QuoteController extends BaseController
                 'status_id' => 1,
                 'number' => $gR->generate_number((int) $group_id),
                 'discount_amount' => (float) $original->getDiscount_amount(),
-                'discount_percent' => (float) $original->getDiscount_percent(),
                 'url_key' => '',
                 'password' => '',
                 'notes' => '',
@@ -3121,28 +3123,25 @@ final class QuoteController extends BaseController
             ];
             $form = new SoItemForm($newSoItem, $new_so_id);
             if ($formHydrator->populateAndValidate($form, $so_item)) {
-                $savedSoItem  = $this->so_item_service->addSoItemProductTask(
+                // Save the SO item without calculating amounts yet
+                $this->so_item_service->addSoItemProductTask(
                         $newSoItem, $so_item, $new_so_id, $pR, $taskR, $soiaR,
                         $soiaS, $unR, $trR, $this->translator);
+                
+                // Copy allowances/charges from quote item to sales order item
                 $this->copy_quote_item_allowance_charges_to_so(
                         $origQuoteItemId, $acqiR, $new_so_id,
-                        $savedSoItem, $acsoiR);
+                        $newSoItem, $acsoiR);
                 
+                // Now calculate amounts INCLUDING the allowances/charges
                 $tax_rate_percentage = $this->so_item_service->taxrate_percentage(
                         (int) $so_item['tax_rate_id'], $trR);
                 if (isset($so_item['quantity'], $so_item['price'],
                     $so_item['discount_amount'])
                     && null !== $tax_rate_percentage
                 ) {
-                   /**
-                    * Note: Although, at first glance, the allowances and charges
-                    * do not appear to be here, they are in fact worked out with a
-                    * $this->acsoiR in the function below which creates their
-                    * accumulative totals and saves it using the $soiaR which
-                    * is inherited from the so_item_service constructor
-                    */
                     $this->so_item_service->saveSalesOrderItemAmount(
-                        (int) $savedSoItem->getId(),
+                        (int) $newSoItem->getId(),
                         $so_item['quantity'],
                         $so_item['price'],
                         $so_item['discount_amount'],
@@ -3410,7 +3409,7 @@ final class QuoteController extends BaseController
                     // Setting...User Account...Assigned Clients
                     $user_client = $ucR->repoUserClientqueryCount($user_id,
                         $quote->getClient_id()) === 1 ? true : false;
-                    if ($user_inv && $user_client) {
+                    if ($user_inv && $user_client && $user_inv->getActive()) {
                         // If the userinv is a Guest => type = 1 ie. NOT an
                         // administrator =>type = 0
                         // So if the user has a type of 1 they are a guest.
@@ -3424,7 +3423,6 @@ final class QuoteController extends BaseController
                             $custom_fields = [
                                 'invoice' => $cfR->repoTablequery('inv_custom'),
                                 'client' => $cfR->repoTablequery('client_custom'),
-                                //'user' => $cfR->repoTablequery('user_custom'),
                             ];
 
                             if (null !== $quote_id) {
@@ -3515,6 +3513,8 @@ final class QuoteController extends BaseController
      * @param GR $gR
      * @param QCR $qcR
      * @param SOR $soR
+     * @param UCR $ucR
+     * @param UIR $uiR
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
     public function view(
@@ -3544,6 +3544,8 @@ final class QuoteController extends BaseController
         GR $gR,
         QCR $qcR,
         SOR $soR,
+        UCR $ucR,
+        UIR $uiR
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $quote = $this->quote($id, $qR, false);
         if (null !== $quote) {
@@ -3840,14 +3842,76 @@ final class QuoteController extends BaseController
                         ]),
                         'partial_quote_delivery_location' =>
                         $this->view_partial_delivery_location(
-                            $_language, $dlR, $quote->getDelivery_location_id()),                        
+                            $_language, $dlR, $quote->getDelivery_location_id()),
                     ];
-                    return $this->viewRenderer->render('view', $parameters);
+                    if ($this->rbacObserver($quote, $ucR, $uiR)) {
+                        return $this->viewRenderer->render('view', $parameters);
+                    }
+                    if ($this->rbacAdmin()) {
+                        return $this->viewRenderer->render('view', $parameters);
+                    }
+                    if ($this->rbacAccountant()) {
+                        return $this->viewRenderer->render('view', $parameters);
+                    }
                 } // quote_amount
                 $this->flashMessage('info', 'no quote tax');
             } // null!= $quote_id
         } //quote
         return $this->webService->getNotFoundResponse();
+    }
+    
+    /**
+     * Purpose:
+     * Prevent browser manipulation and ensure that views are only accessible
+     * to users 1. with the observer role's VIEW_INV permission and 2. supervise a
+     * client requested quote and are an active current user for these client's
+     * invoices.
+     * @param Quote $quote
+     * @param UCR $ucR
+     * @param UIR $uiR
+     * @return bool
+     */
+    private function rbacObserver(Quote $quote, UCR $ucR, UIR $uiR) : bool {
+        $statusId = $quote->getStatus_id();
+        if (null!==$statusId) {
+            // has observer role
+            if ($this->userService->hasPermission(Permissions::VIEW_INV)
+                && !($this->userService->hasPermission(Permissions::EDIT_INV))
+                // the quote  is not a draft i.e. has been sent
+                && !($statusId === 1)
+                // the quote is intended for the current user
+                && ($quote->getUser_id() === $this->userService->getUser()?->getId())
+                // the quote client is associated with the above user
+                && ($ucR->repoUserClientqueryCount($quote->getUser_id(), $quote->getClient_id()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery($quote->getUser_id());
+                // the current observer user is active
+                if (null !== $userInv && $userInv->getActive()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private function rbacAccountant() : bool {
+        // has accountant role
+        if (($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
+            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT)))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private function rbacAdmin() : bool {
+        // has observer role
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::EDIT_INV))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

@@ -152,24 +152,6 @@ final readonly class TemplateHelper
                             $replace = $client->getClient()?->getClient_tax_code();
                         }
                         break;
-                    case 'client_avs':
-                        $client = $iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClient_avs();
-                        }
-                        break;
-                    case 'client_insurednumber':
-                        $client = $iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClient_insurednumber();
-                        }
-                        break;
-                    case 'client_veka':
-                        $client = $iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null;
-                        if ($client) {
-                            $replace = $client->getClient()?->getClient_veka();
-                        }
-                        break;
                         // user
                     case 'user_company':
                         $invoice = $iR->repoCount($pk) > 0 ? $iR->repoInvUnloadedquery($pk) : null;

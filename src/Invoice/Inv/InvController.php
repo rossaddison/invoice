@@ -12,7 +12,8 @@ use App\Invoice\Entity\
     Client, Contract, Delivery, DeliveryLocation, EmailTemplate, Group,
     Inv, InvItemAllowanceCharge, InvAllowanceCharge, InvItem, InvItemAmount,
     InvAmount, InvCustom, InvRecurring, InvSentLog, InvTaxRate, Payment,
-    PaymentCustom, PaymentMethod, PostalAddress, Setting, Sumex, TaxRate, Upload
+    PaymentCustom, PaymentMethod, PostalAddress, Setting, TaxRate, Upload,
+    UserClient
 };
 use App\Invoice\Inv\Exception\PdfNotFoundException;
 use App\User\UserService;
@@ -66,7 +67,6 @@ use App\Invoice\{
     SalesOrderItem\SalesOrderItemRepository as SOIR,
     SalesOrderCustom\SalesOrderCustomRepository as SOCR,
     Setting\SettingRepository as SR,
-    Sumex\SumexRepository as SumexR,
     Task\TaskRepository as TASKR,
     TaxRate\TaxRateRepository as TRR,
     Unit\UnitRepository as UNR,
@@ -419,7 +419,6 @@ $original_file_name = preg_replace(
             'is_read_only' => $inv->getIs_read_only(),
             'creditinvoice_parent_id' => $inv->getCreditinvoice_parent_id(),
             'discount_amount' => $inv->getDiscount_amount(),
-            'discount_percent' => $inv->getDiscount_percent(),
             'url_key' => $inv->getUrl_key(),
             'password' => $inv->getPassword(),
             'payment_method' => $inv->getPayment_method(),
@@ -430,12 +429,14 @@ $original_file_name = preg_replace(
     }
 
     /**
+     * Related logic: see config/common/routes.php search 'inv/add'
+     * Only the admin has the EDIT_INV permission and can add an invoice.
+     * 
      * @param Request $request
      * @param string $origin
      * @param FormHydrator $formHydrator
      * @param CR $clientRepository
      * @param GR $gR
-     * @param SumexR $sumexR
      * @param TRR $trR
      * @param UR $uR
      * @param UCR $ucR
@@ -449,7 +450,6 @@ $original_file_name = preg_replace(
         FormHydrator $formHydrator,
         CR $clientRepository,
         GR $gR,
-        SumexR $sumexR,
         TRR $trR,
         UR $uR,
         UCR $ucR,
@@ -557,11 +557,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                         $model_id = $saved_model->getId();
                         if (null !== $model_id) {
                             $this->default_taxes($inv, $trR, $formHydrator);
-                            // if Settings...Views...Invoices...Sumex...Yes =>
-                            // Generate sumex patient details extension table
-                            // This table can be filled in via Invoice...View...
-                            // Options...Edit...Sumex
-                            $this->sumex_add_record($sumexR, (int) $model_id);
                             // Inform the user of generated invoice number for
                             // draft setting
                             $this->flashMessage('info', $this->sR->getSetting(
@@ -659,7 +654,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param FormHydrator $formHydrator
      * @param CR $clientRepository
      * @param GR $gR
-     * @param SumexR $sumexR
      * @param TRR $trR
      * @param UR $uR
      * @param UCR $ucR
@@ -671,7 +665,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         FormHydrator $formHydrator,
         CR $clientRepository,
         GR $gR,
-        SumexR $sumexR,
         TRR $trR,
         UR $uR,
         UCR $ucR,
@@ -745,13 +738,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             $this->inv_amount_service->initializeInvAmount(
                                     $invAmount, $model_id);
                             $this->default_taxes($inv, $trR, $formHydrator);
-                            // if Settings...Views...Invoices...Sumex...Yes =>
-                            // Generate sumex patient details extension table
-                            // This table can be filled in via Invoice...View...
-                            // Options...Edit...Sumex
-                            $this->sumex_add_record($sumexR, (int) $model_id);
-                            // Inform the user of generated invoice number for
-                            // draft setting
                             $this->flashMessage('info', $this->sR->getSetting(
                                     'generate_invoice_number_for_draft') === '1'
                             ? $this->translator->translate(
@@ -816,7 +802,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 'is_read_only' => true,
                 'number' => $gR->generate_number(4, true),
                 'discount_amount' => $basis_inv->getDiscount_amount(),
-                'discount_percent' => $basis_inv->getDiscount_percent(),
                 'url_key' => '',
                 'password' => $body['password'],
                 'payment_method' => 0,
@@ -1061,21 +1046,33 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     /**
      * Use: Download an attached, and currently uploaded file
      * @param int $upload_id
+     * @param IR $iR,
+     * @param UCR $ucR
+     * @param UIR $uiR
      * @param UPR $upR
      *
      * @return never
      */
     public function download_file(#[RouteArgument('upload_id')] int $upload_id,
-        UPR $upR)
+        IR $iR, UCR $ucR, UIR $uiR, UPR $upR)
     {
         $cC = 'Cache-Control: public, must-revalidate, post-check=0, pre-check=0';
         if ($upload_id) {
             $upload = $upR->repoUploadquery((string) $upload_id);
             if (null !== $upload) {
+                $url_key = $upload->getUrl_key();
+                /**
+                 * @var Inv|null $inv
+                 */
+                $inv = $iR->repoUrl_key_guest_loaded($url_key);
+                if (null!==$inv) {
+                    if (!($this->rbacObserver($inv, $ucR, $uiR))) {
+                        exit;
+                    }
+                }
                 $aliases = $this->sR->get_customer_files_folder_aliases();
                 $targetPath = $aliases->get('@customer_files');
                 $original_file_name = $upload->getFile_name_original();
-                $url_key = $upload->getUrl_key();
                 $target_path_with_filename = $targetPath . '/' . $url_key
                     . '_' . $original_file_name;
                 $path_parts = pathinfo($target_path_with_filename);
@@ -1460,7 +1457,9 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 } //$body
                 return $this->webService->getRedirectResponse('inv/index');
             }
-            return $this->viewRenderer->render('_form_edit', $parameters);
+            if ($this->rbacAdmin()) {
+                return $this->viewRenderer->render('_form_edit', $parameters);
+            }    
         } // if $inv_id
         return $this->webService->getRedirectResponse('inv/index');
     }
@@ -1760,7 +1759,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         QCR $qcR,
         SOR $soR,
         UIR $uiR,
-        SumexR $sumexR,
         ViewRenderer $viewrenderer,
     ): bool {
         $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR,
@@ -1800,8 +1798,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 $pdf_template_target_path = $this->pdf_helper->generate_inv_pdf(
                     $inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount,
                         $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR,
-                            $aciiR, $iiaR, $iR, $itrR, $uiR, $sumexR,
-                                $viewrenderer);
+                            $aciiR, $iiaR, $iR, $itrR, $uiR, $viewrenderer);
                 if ($pdf_template_target_path) {
                     $mail_message = $template_helper->parse_template(
                         $inv_id, true, $email_body, $cR, $cvR, $iR, $iaR, $qR,
@@ -1873,7 +1870,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param QCR $qcR
      * @param SOR $soR
      * @param UIR $uiR
-     * @param SumexR $sumexR
      * @param ISLR $islR
      * @return Response
      */
@@ -1902,7 +1898,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         QCR $qcR,
         SOR $soR,
         UIR $uiR,
-        SumexR $sumexR,
         ISLR $islR,
     ): Response {
         if ($inv_id) {
@@ -1993,7 +1988,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     $qcR,
                     $soR,
                     $uiR,
-                    $sumexR,
                     $this->viewRenderer,
                 )) {
                     $invoice = $iR->repoInvUnloadedquery((string) $inv_id);
@@ -2078,8 +2072,10 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param string $status
      * @param string $queryPage
      * @param string $querySort
+     * @param string $queryFilterClient
      * @param string $queryFilterInvNumber
      * @param string $queryFilterInvAmountTotal
+     * @param string $queryFilterStatus
      * @throws NoClientsAssignedToUserException
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
@@ -2097,10 +2093,14 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ?string $queryPage = null,
         #[Query('sort')]
         ?string $querySort = null,
+        #[Query('filterClient')]
+        ?string $queryFilterClient = null,
         #[Query('filterInvNumber')]
         ?string $queryFilterInvNumber = null,
         #[Query('filterInvAmountTotal')]
         ?string $queryFilterInvAmountTotal = null,
+        #[Query('filterStatus')]
+        ?string $queryFilterStatus = null,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $page = $queryPage ?? $page;
         $sortString = $querySort ?? '-id';
@@ -2116,8 +2116,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             // UserInv ie. yii-invoice's list of users
             $userInv = ($uiR->repoUserInvUserIdcount((string) $user_id) > 0 ?
                 $uiR->repoUserInvUserIdquery((string) $user_id) : null);
-
-            if (null !== $userInv && null !== $user_id) {
+            if (null !== $userInv && null !== $user_id && $userInv->getActive()) {
                 $userInvListLimit = $userInv->getListLimit();
                 // Determine what clients have been allocated to this user
                 // (Related logic: see Settings...User Account) by looking at
@@ -2129,7 +2128,11 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 // make payment
                 $user_clients = $ucR->get_assigned_to_user($user_id);
                 if (!empty($user_clients)) {
-                    $invs = $this->invs_status_guest($iR, $status, $user_clients);
+                    $effectiveStatus = isset($queryFilterStatus)
+                        && !empty($queryFilterStatus) ?
+                            (int) $queryFilterStatus : (int) $status;
+                    $invs = $this->invs_status_guest($iR, $effectiveStatus,
+                            $user_clients);
                     $preFilterInvs = $invs;
                     if (isset($queryFilterInvNumber)
                             && !empty($queryFilterInvNumber)) {
@@ -2148,13 +2151,20 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             $queryFilterInvNumber,
                                 (float) $queryFilterInvAmountTotal);
                     }
+                    if (isset($queryFilterClient) && !empty($queryFilterClient)) {
+                        $invs = $iR->filterGuestClient($queryFilterClient);
+                    }
                     $inv_statuses = $iR->getStatuses($this->translator);
                     $label = $iR->getSpecificStatusArrayLabel($status);
                     $parameters = [
                         'alert' => $this->alert(),
                         'decimalPlaces' => (int) $this->sR->getSetting(
                             'tax_rate_decimal_places'),
-                        'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberGuestFilter($preFilterInvs),
+                        'optionsClientsDropDownFilter' =>
+                        $this->optionsDataUserClientsFilter($ucR, $user_id),
+                        'optionsInvNumberDropDownFilter' => $this->                                                         optionsDataInvNumberGuestFilter($preFilterInvs),
+                        'optionsStatusDropDownFilter' =>
+                                $this->optionsDataStatusFilter($iR),
                         'iaR' => $iaR,
                         'iR' => $iR,
                         'irR' => $irR,
@@ -2182,6 +2192,8 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 } // no clients assigned to this user
                 throw new NoClientsAssignedToUserException($this->translator);
             } // $user_inv
+            $this->flashMessage('info',
+                        $this->translator->translate('user.inv.active.not'));
             return $this->webService->getNotFoundResponse();
         } // $user
         return $this->webService->getNotFoundResponse();
@@ -2202,14 +2214,13 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
-     * @param SumexR $sumexR
      * @param UIR $uiR
      * @return \Yiisoft\DataResponse\DataResponse
      */
     public function html(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR,
             IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
-            SumexR $sumexR, UIR $uiR, SOR $soR):
+            UIR $uiR, SOR $soR):
         \Yiisoft\DataResponse\DataResponse
     {
         $inv_id = (string) $this->session->get('inv_id');
@@ -2240,7 +2251,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     $inv,
                     $itrR,
                     $uiR,
-                    $sumexR,
                     $this->viewRenderer,
                 );
                 return $this->factory->createResponse('<pre>'
@@ -2414,15 +2424,15 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 'irR' => $irR,
                 'islR' => $islR,
                 'label' => $label,
-                'optionsDataClientsDropdownFilter' =>
+                'optionsClientsDropDownFilter' =>
                     $this->optionsDataClientsFilter($invRepo),
-                'optionsDataClientGroupDropDownFilter' =>
+                'optionsClientGroupDropDownFilter' =>
                     $this->optionsDataClientGroupFilter($clientRepo),
-                'optionsDataInvNumberDropDownFilter' =>
+                'optionsInvNumberDropDownFilter' =>
                     $this->optionsDataInvNumberFilter($invRepo),
-                'optionsDataYearMonthDropDownFilter' =>
+                'optionsYearMonthDropDownFilter' =>
                     $this->optionsDataYearMonthFilter(),
-                'optionsDataStatusDropDownFilter' =>
+                'optionsStatusDropDownFilter' =>
                     $this->optionsDataStatusFilter($invRepo),
                 'modal_add_inv' =>
                     $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
@@ -2495,7 +2505,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
-     * @param SumexR $sumexR
      * @param UIR $uiR
      * @param Request $request
      * @throw
@@ -2503,7 +2512,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     public function pdf(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, SOR $soR, IAR $iaR,
             ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
-                SumexR $sumexR, UIR $uiR): \Yiisoft\DataResponse\DataResponse
+                UIR $uiR): \Yiisoft\DataResponse\DataResponse
     {
         try {
             // include is a value of 0 or 1 passed from inv.js function
@@ -2540,7 +2549,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     $pdfhelper->generate_inv_pdf($inv_id, $inv->getUser_id(),
                             $stream, $custom, $so, $inv_amount,
                             $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR,
-                            $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR, $sumexR,
+                            $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR,
                             $this->viewRenderer);
                     return $this->pdf_archive_message();
                 } // $inv
@@ -2589,16 +2598,23 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
+     * @param UCR $ucR
      * @param UIR $uiR
      * @param SOR $soR
-     * @param SumexR $sumexR
+     * @throw
      */
     public function pdf_dashboard_include_cf(
             #[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR,
             DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR,
-            ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR,
-            SumexR $sumexR): void
+            ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, UCR $ucR, UIR $uiR,
+            SOR $soR): void
     {
+        $inv = $iR->repoInvUnLoadedquery((string) $inv_id);
+        if (null!==$inv) {
+            if (!($this->rbacObserver($inv, $ucR, $uiR))) {
+               throw new PdfNotFoundException($this->translator);
+            }
+        }
         if ($inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
                     $iaR->repoInvquery($inv_id) : null);
@@ -2626,7 +2642,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                         (string) $inv_id, $inv->getUser_id(), $stream, true,
                             $so, $inv_amount, $inv_custom_values, $cR, $cvR,
                                 $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR,
-                                    $itrR, $uiR, $sumexR, $this->viewRenderer);
+                                    $itrR, $uiR, $this->viewRenderer);
                 } //inv
             } //$inv_amount
         } //$inv_id
@@ -2647,16 +2663,22 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
+     * @param UCR $ucR
      * @param UIR $uiR
      * @param SOR $soR
-     * @param SumexR $sumexR
      */
     public function pdf_dashboard_exclude_cf(
         #[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR,
             DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR,
-            ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, UIR $uiR, SOR $soR,
-            SumexR $sumexR): void
+            ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, UCR $ucR, UIR $uiR,
+            SOR $soR): void
     {
+        $inv = $iR->repoInvUnLoadedquery((string) $inv_id);
+        if (null!==$inv) {
+            if (!($this->rbacObserver($inv, $ucR, $uiR))) {
+               throw new PdfNotFoundException($this->translator);
+            }
+        }
         if ($inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
                     $iaR->repoInvquery($inv_id) : null);
@@ -2684,7 +2706,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                         (string) $inv_id, $inv->getUser_id(), $stream, false,
                             $so, $inv_amount, $inv_custom_values, $cR, $cvR,
                                 $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR,
-                                    $itrR, $uiR, $sumexR, $this->viewRenderer);
+                                    $itrR, $uiR, $this->viewRenderer);
                 } //inv
             } //inv_amount
         } // inv_id
@@ -2705,7 +2727,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
-     * @param SumexR $sumexR
+     * @param UCR $ucR
      * @param UIR $uiR
      * @param UPR $upR
      * @return mixed
@@ -2714,8 +2736,14 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         #[RouteArgument('url_key')] string $url_key, CR $cR, CVR $cvR, CFR $cfR,
             DLR $dlR, ACIR $aciR, GR $gR, SOR $soR, IAR $iaR, ICR $icR,
                 IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
-                    SumexR $sumexR, UIR $uiR, UPR $upR): mixed
+                    UCR $ucR, UIR $uiR, UPR $upR): mixed
     {
+        $inv = $iR->repoUrl_key_guest_loaded($url_key);
+        if (null!==$inv) {
+            if (!($this->rbacObserver($inv, $ucR, $uiR))) {
+                throw new PdfNotFoundException($this->translator);
+            }
+        }
         if ($url_key) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
             if ($iR->repoUrl_key_guest_count($url_key) < 1) {
@@ -2757,8 +2785,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             $inv_id, $inv->getUser_id(), $stream, $c_f, $so,
                                 $inv_amount, $inv_custom_values, $cR, $cvR,
                                     $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR,
-                                        $iR, $itrR, $uiR, $sumexR,
-                                            $this->viewRenderer);
+                                        $iR, $itrR, $uiR, $this->viewRenderer);
                         if ($temp_aliase) {
                             $path_parts = pathinfo($temp_aliase);
                             /**
@@ -2818,7 +2845,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IIAR $iiaR
      * @param IR $iR
      * @param ITRR $itrR
-     * @param SumexR $sumexR
+     * @param UCR $ucR
      * @param UIR $uiR
      * @param UPR $upR
      * @return mixed
@@ -2827,8 +2854,14 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         #[RouteArgument('url_key')] string $urlKey, CR $cR, CVR $cvR, CFR $cfR,
             DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR,
                 ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, SOR $soR,
-                    SumexR $sumexR, UIR $uiR, UPR $upR): mixed
+                    UCR $ucR, UIR $uiR, UPR $upR): mixed
     {
+        $inv = $iR->repoUrl_key_guest_loaded($urlKey);
+        if (null!==$inv) {
+            if (!($this->rbacObserver($inv, $ucR, $uiR))) {
+                exit;
+            }
+        }
         if ($urlKey) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
             if ($iR->repoUrl_key_guest_count($urlKey) < 1) {
@@ -2868,8 +2901,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             $inv_id, $inv->getUser_id(), $stream, $c_f, $so,
                                 $inv_amount, $inv_custom_values, $cR, $cvR,
                                     $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR,
-                                        $itrR, $uiR, $sumexR,
-                                            $this->viewRenderer);
+                                        $itrR, $uiR, $this->viewRenderer);
                         if ($temp_aliase) {
                             $path_parts = pathinfo($temp_aliase);
                             /**
@@ -3225,7 +3257,6 @@ echo file_get_contents($temp_aliase, true);
                 'number' => $gR->generate_number((int) $group_id),
                 'creditinvoice_parent_id' => null,
                 'discount_amount' => (float) $original->getDiscount_amount(),
-                'discount_percent' => (float) $original->getDiscount_percent(),
                 'url_key' => '',
                 'password' => '',
                 'payment_method' => 6,
@@ -3690,8 +3721,6 @@ echo file_get_contents($temp_aliase, true);
                                     (int) $original->getGroup_id(), true) : '',
                         'discount_amount' =>
                             (float) $original->getDiscount_amount(),
-                        'discount_percent' =>
-                            (float) $original->getDiscount_percent(),
                         'terms' => $original->getTerms(),
                         'note' => $original->getNote(),
                         'document_description' =>
@@ -3765,7 +3794,8 @@ echo file_get_contents($temp_aliase, true);
         return $files;
     }
 
-    // inv/view => '#btn_save_inv_custom_fields' => inv_custom_field.js => /invoice/inv/save_custom";
+    // inv/view => '#btn_save_inv_custom_fields' => inv_custom_field.js =>
+    //  /invoice/inv/save_custom";
 
     /**
      * @param FormHydrator $formHydrator
@@ -3789,9 +3819,7 @@ echo file_get_contents($temp_aliase, true);
         $parameters['success'] = 1;
         return $this->factory->createResponse(Json::encode($parameters));
     }
-
-
-
+    
     /**
      * Related logic: see src/Invoice/Asset/rebuild-1.13/js/inv.js
      * @param Request $request
@@ -3825,26 +3853,6 @@ echo file_get_contents($temp_aliase, true);
     }
 
     /**
-     * @param SumexR $sumexR
-     * @param int $inv_id
-     */
-    public function sumex_add_record(SumexR $sumexR, int $inv_id): void
-    {
-        $sumex_setting = $this->sR->getSetting('sumex');
-        if ((int) $sumex_setting === 1) {
-            $sumex = new Sumex();
-            $sumex->setInvoice($inv_id);
-            $sumex->setReason(0);
-            $sumex->setDiagnosis('');
-            $sumex->setObservations('');
-            $sumex->setTreatmentstart(new \DateTime());
-            $sumex->setTreatmentend(new \DateTime());
-            $sumex->setCasedate(new \DateTime());
-            $sumexR->save($sumex);
-        }
-    }
-
-    /**
      * @param string $urlKey
      * @param string $clientChosenGateway
      * @param string $_language
@@ -3859,7 +3867,6 @@ echo file_get_contents($temp_aliase, true);
      * @param UCR $ucR
      * @param UIR $uiR
      * @param PMR $pmR
-     * @param SumexR $sumexR
      * @param UPR $upR
      * @return Response
      */
@@ -3882,25 +3889,21 @@ echo file_get_contents($temp_aliase, true);
         UCR $ucR,
         UIR $uiR,
         PMR $pmR,
-        SumexR $sumexR,
         UPR $upR,
     ): Response {
         // if the current user is a guest it will return a null value
         if ($urlKey === '' || $currentUser->isGuest()) {
             return $this->webService->getNotFoundResponse();
         }
-
         if ($clientChosenGateway === '') {
             return $this->webService->getNotFoundResponse();
         }
-
         // If the status is sent 2, viewed 3, or paid 4 and the url key exists
         // accept otherwise not found response
         if (($iR->repoUrl_key_guest_count($urlKey) < 1)
                 && (!$currentUser->isGuest())) {
             return $this->webService->getNotFoundResponse();
         }
-
         $inv = $iR->repoUrl_key_guest_loaded($urlKey);
         if ($inv instanceof Inv) {
             $inv_id = $inv->getId();
@@ -3916,7 +3919,7 @@ echo file_get_contents($temp_aliase, true);
                     $user_inv = $uiR->repoUserInvUserIdquery($user_id);
                     // If the user is not an administrator and the status is
                     // sent 2, now mark it as viewed
-                    if (null !== $user_inv) {
+                    if (null !== $user_inv && $user_inv->getActive()) {
                         if ($uiR->repoUserInvUserIdcount($user_id) === 1
                                 && $user_inv->getType() !== 1 && $inv->getStatus_id() === 2) {
                             // Mark the invoice as viewed and check whether
@@ -3931,9 +3934,7 @@ echo file_get_contents($temp_aliase, true);
                         $custom_fields = [
                             'invoice' => $cfR->repoTablequery('inv_custom'),
                             'client' => $cfR->repoTablequery('client_custom'),
-                            // TODO 'user' => $cfR->repoTablequery('user_custom'),
                         ];
-
                         $attachments = $this->view_partial_inv_attachments(
                             $_language, $urlKey, (int) $client_id, $upR);
                         $inv_amount = ((
@@ -3980,9 +3981,6 @@ echo file_get_contents($temp_aliase, true);
                                     'paymentTermsArray' =>
                                         $this->sR->get_payment_term_array(
                                             $this->translator),
-                                    'sumex' => ($inv_id > 0) ?
-                                        $sumexR->repoSumexInvoicequery($inv_id)
-                                            : null,
                                     'userInv' =>
                                         $uiR->repoUserInvUserIdcount($user_id)
                                             > 0 ? $uiR->repoUserInvUserIdquery(
@@ -4538,9 +4536,9 @@ echo file_get_contents($temp_aliase, true);
         }
         return '';
     }
-
+    
     // The accesschecker in config/routes ensures that only users with viewInv
-    // permission can reach this
+    // permission can reach this 
 
     /**
      * @param ViewRenderer $head
@@ -4571,7 +4569,6 @@ echo file_get_contents($temp_aliase, true);
      * @param UIR $uiR
      * @param UCR $ucR
      * @param UPR $upR
-     * @param SumexR $sumexR
      * @param DLR $dlR
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
@@ -4608,7 +4605,6 @@ echo file_get_contents($temp_aliase, true);
         UCR $ucR,
         UPR $upR,
         SOR $soR,
-        SumexR $sumexR,
         DLR $dlR,
     ): \Yiisoft\DataResponse\DataResponse|Response {
         $inv = $this->inv($id, $iR, false);
@@ -4627,7 +4623,6 @@ echo file_get_contents($temp_aliase, true);
             $invAllowanceCharge = new InvAllowanceCharge();
             $invAllowanceChargeForm =
                 new InvAllowanceChargeForm($invAllowanceCharge, (int) $invoice);
-            $sumex = $sumexR->repoSumexInvoicequery((string) $invoice);
             $is_recurring = false;
             $read_only = $inv->getIs_read_only();
             $this->session->set('inv_id', $inv->getId());
@@ -4696,7 +4691,6 @@ echo file_get_contents($temp_aliase, true);
                     'readOnly' => $read_only,
                     'sales_order_number' => $sales_order_number,
                     'showButtons' => $show_buttons,
-                    'sumex' => $sumex,
                     'title' => $this->translator->translate('view'),
                     // Sits above options section of invoice allowing the
                     // adding of a new row to the invoice
@@ -4867,7 +4861,6 @@ echo file_get_contents($temp_aliase, true);
                     'buttonsToolbarFull' => $this->buttonsToolbarFull->render(
                         $inv,
                         $iaR,
-                        $sumex,
                         $this->userService->hasPermission(Permissions::EDIT_INV),
                         $this->userService->hasPermission(
                             Permissions::VIEW_PAYMENT),
@@ -4878,11 +4871,75 @@ echo file_get_contents($temp_aliase, true);
                         $cfR->repoTableCountquery('payment_custom') > 0,
                     ),
                 ];
-                return $this->viewRenderer->render('view', $parameters);
+                if ($this->rbacObserver($inv, $ucR, $uiR)) {
+                    return $this->viewRenderer->render('view', $parameters);
+                }
+                if ($this->rbacAdmin()) {
+                    return $this->viewRenderer->render('view', $parameters);
+                }
+                if ($this->rbacAccountant()) {
+                    return $this->viewRenderer->render('view', $parameters);
+                }
             } // if $inv_amount
             return $this->webService->getNotFoundResponse();
         } // if $inv
         return $this->webService->getNotFoundResponse();
+    }
+    
+    /**
+     * Purpose:
+     * Prevent browser manipulation and ensure that views are only accessible
+     * to users 1. with the observer role's VIEW_INV permission and 2. supervise a 
+     * client requested invoice and are an active current user for these client's
+     * invoices.
+     * @param Inv $inv
+     * @param UCR $ucR
+     * @param UIR $uiR
+     * @return bool
+     */
+    private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
+        $statusId = $inv->getStatus_id();
+        if (null!==$statusId) {
+            // has observer role
+            if ($this->userService->hasPermission(Permissions::VIEW_INV)
+                && !($this->userService->hasPermission(Permissions::EDIT_INV))
+                // the invoice  is not a draft i.e. has been sent
+                && !($statusId === 1)
+                // the invoice is intended for the current user        
+                && ($inv->getUser_id() === $this->userService->getUser()?->getId())
+                // the invoice client is associated with the above user
+                // the observer user may be paying for more than one client    
+                && ($ucR->repoUserClientqueryCount($inv->getUser_id(),
+                                                $inv->getClient_id()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
+                // the current observer user is active
+                if (null !== $userInv && $userInv->getActive()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private function rbacAccountant() : bool {
+        // has accountant role
+        if (($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
+            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT)))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private function rbacAdmin() : bool {
+        // has observer role
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::EDIT_INV))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -5198,7 +5255,7 @@ echo file_get_contents($temp_aliase, true);
           : '');
         $this->flashMessage($level, $message);
     }
-
+    
     /**
      * @param IR $iR
      * @return array
@@ -5214,6 +5271,32 @@ echo file_get_contents($temp_aliase, true);
          */
         foreach ($invs as $inv) {
             $client = $inv->getClient();
+            if (null !== $client) {
+                if (strlen($client->getClient_full_name()) > 0) {
+                    $fullName = $client->getClient_full_name();
+                    $optionsDataClients[$client->getClient_full_name()] =
+                        !empty($fullName) ? $fullName : '';
+                }
+            }
+        }
+        return $optionsDataClients;
+    }
+
+    /**
+     * If one user pays for more than one client, find all clients
+     * @param UCR $ucR
+     * @param string $userId
+     * @return array
+     */
+    public function optionsDataUserClientsFilter(UCR $ucR, string $userId): array
+    {
+        $optionsDataClients = [];
+        $userClients = $ucR->repoClientquery($userId);
+        /**
+         * @var UserClient userClient 
+         */
+        foreach ($userClients as $userClient) {
+            $client = $userClient->getClient();
             if (null !== $client) {
                 if (strlen($client->getClient_full_name()) > 0) {
                     $fullName = $client->getClient_full_name();
@@ -5326,7 +5409,8 @@ echo file_get_contents($temp_aliase, true);
             /** @var int $statusId */
             /** @var array<string, string> $statusData */
             $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
-            $optionsDataStatus[$statusId] = $emoji;
+            $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
+            $optionsDataStatus[$statusId] = $emoji . ' ' . $label;
         }
         
         return $optionsDataStatus;

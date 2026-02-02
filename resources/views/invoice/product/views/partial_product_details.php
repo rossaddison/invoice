@@ -165,17 +165,6 @@ use Yiisoft\Html\Tag\Form;
     ->placeholder($translator->translate('product.price.base.quantity'))
     ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
-            <?= Field::text($form, 'product_tariff')
-    ->label($translator->translate('product.tariff'))
-    ->required(true)
-    ->addInputAttributes([
-        'class' => 'form-control  alert alert-warning',
-    ])
-    ->disabled(true)
-    ->value($s->format_amount(($form->getProduct_tariff() >= 0.00
-                               ? $form->getProduct_tariff() : 0.00)))
-    ->placeholder($translator->translate('product.tariff'))
-    ->hint($translator->translate('hint.this.field.is.required')); ?>
         <?= Html::closeTag('div'); ?>
 
         <?= Html::openTag('div', ['id' => 'product-not-required', 'class' => 'tab-pane']); ?>

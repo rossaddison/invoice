@@ -702,7 +702,7 @@ parameters -->
                     </td>
                 </tr>
                 <?php } ?>
-                <?php if ($vat === '0') { ?>
+                <?php if (($quote->getDiscount_amount() ?? 0.00) != 0.00) { ?>
                 <tr>
                     <td class="td-vert-middle">
                         <b>
@@ -712,33 +712,7 @@ parameters -->
                     <td class="clearfix">
                         <div class="discount-field">
                             <div class="input-group input-group">
-                                <input id="quote_discount_amount"
-                                       name="quote_discount_amount"
-                                       class="discount-option form-control amount"
-                                       data-bs-toggle = "tooltip"
-                                       title="quote->discount_amount"
-                                       disabled
-                                       value="
-<?= $numberHelper->format_amount($quote->getDiscount_amount() != 0 ?
-        $quote->getDiscount_amount() : ''); ?>">
-                                <div class="input-group-text">
-                            <?= $s->getSetting('currency_symbol'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="discount-field">
-                            <div class="input-group input-group">
-                                <input
-                                    id="quote_discount_percent"
-                                    class="discount-option form-control amount"
-                                    name="quote_discount_percent"
-                                    data-bs-toggle = "tooltip"
-                                    title="quote->discount_percent"
-                                    disabled
-                                    value="
-<?= $numberHelper->format_amount($quote->getDiscount_percent() != 0 ?
-        $quote->getDiscount_percent() : ''); ?>">
-                                <div class="input-group-text">&percnt;</div>
+      <?= $numberHelper->format_currency($quote->getDiscount_amount() ?? 0.00); ?>
                             </div>
                         </div>
                     </td>
@@ -752,7 +726,7 @@ parameters -->
                         data-bs-toggle = "tooltip"
                         title="quote_amount->total">
                         <b>
-<?php echo $numberHelper->format_currency($quoteAmount->getTotal() ?? 0.00); ?>
+        <?= $numberHelper->format_currency($quoteAmount->getTotal() ?? 0.00); ?>
                         </b>
                     </td>
                 </tr>

@@ -237,17 +237,6 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Field::text($form, 'rcc')
-    ->label($translator->translate('sumex.rcc'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('sumex.rcc'),
-        'class' => 'form-control',
-        'id' => 'rcc',
-    ])
-    ->value(Html::encode($form->getRcc() ?? ''));
-?>
-        <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::text($form, 'listLimit')
     ->label($translator->translate('user.inv.list.limit'))
     ->addInputAttributes([

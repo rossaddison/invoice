@@ -35,21 +35,21 @@ final class ItemLookupController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+                                        $viewRenderer, $session, $sR, $flash);
         $this->itemlookupService = $itemlookupService;
     }
 
     /**
      * @param ItemLookupRepository $itemlookupRepository
      */
-    public function index(ItemLookupRepository $itemlookupRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(ItemLookupRepository $itemlookupRepository):
+                                            \Yiisoft\DataResponse\DataResponse
     {
-        $canEdit = $this->rbac();
         $itemLookups = $this->itemlookups($itemlookupRepository);
         $paginator = (new OffsetPaginator($itemLookups));
         $parameters = [
             'paginator' => $paginator,
-            'canEdit' => $canEdit,
             'alert' => $this->alert(),
         ];
         return $this->viewRenderer->render('index', $parameters);
@@ -78,10 +78,12 @@ final class ItemLookupController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
                     $this->itemlookupService->saveItemLookup($itemLookup, $body);
-                    return $this->webService->getRedirectResponse('itemlookup/index');
+                    return $this->webService->getRedirectResponse(
+                                                            'itemlookup/index');
                 }
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['errors'] =
+              $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -115,10 +117,12 @@ final class ItemLookupController extends BaseController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->itemlookupService->saveItemLookup($lookup, $body);
-                        return $this->webService->getRedirectResponse('itemlookup/index');
+                        return $this->webService->getRedirectResponse(
+                                                            'itemlookup/index');
                     }
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -165,26 +169,14 @@ final class ItemLookupController extends BaseController
         }
         return $this->webService->getNotFoundResponse();
     }
-
-    /**
-     * @return Response|true
-     */
-    private function rbac(): bool|Response
-    {
-        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
-        if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('permission'));
-            return $this->webService->getRedirectResponse('itemlookup/index');
-        }
-        return $canEdit;
-    }
-
+   
     /**
      * @param CurrentRoute $currentRoute
      * @param ItemLookupRepository $itemlookupRepository
      * @return ItemLookup|null
      */
-    private function itemlookup(CurrentRoute $currentRoute, ItemLookupRepository $itemlookupRepository): ?ItemLookup
+    private function itemlookup(CurrentRoute $currentRoute,
+                        ItemLookupRepository $itemlookupRepository): ?ItemLookup
     {
         $itemlookup = new ItemLookup();
         $id = $currentRoute->getArgument('id');

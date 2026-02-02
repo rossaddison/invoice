@@ -18,9 +18,12 @@ class UserClient
     #[BelongsTo(target: Client::class, nullable: false)]
     private ?Client $client = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $user_id = null, #[Column(type: 'integer(11)', nullable: false)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $user_id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
         private ?int $client_id = null)
     {
     }

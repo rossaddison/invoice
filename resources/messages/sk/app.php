@@ -911,7 +911,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Generovanie čísla cenovej ponuky pre '
 	. 'návrhy cenových ponúk',
-'generate.sumex' => 'Generovať Sumex PDF',
 'generator' => 'Generátor',
 'generator.add' => 'Pridať generátor',
 'generator.camelcase.capital.name' => 'Názov s veľkým písmenom Camelcase '
@@ -1107,8 +1106,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Názov hostiteľa',
-'html.sumex.no' => 'HTML bez Sumexu',
-'html.sumex.yes' => 'HTML so Sumexom',
 'id' => 'Identifikácia',
 'identifier.format' => 'Formátovanie identifikátora',
 'identifier.format.template.tags' => 'Šablónové značky pre identifikátor',
@@ -2700,63 +2697,6 @@ return [
 'subtotal' => 'Medzisúčet',
 'success' => 'Úspech',
 'successful' => 'Úspešné',
-'sumex' => 'Sumex',
-'sumex.add' => 'Sumex Pridať',
-'sumex.canton' => 'Kantón',
-'sumex.diagnosis' => 'Diagnóza',
-'sumex.edit' => 'Sumex Edit',
-'sumex.help' => 'Táto možnosť pridáva do faktúr '
-	. 'položku ponuky na generovanie čiastočne '
-	. 'kompatibilnej faktúry s TARMED / '
-	. 'SUMEX1.'
-	. 'TARMED / SUMEX1 je švajčiarsky '
-	. 'štandard pre zdravotnú starostlivosť.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Viac informácií</a>',
-'sumex.information' => 'Informácie o Sumexe',
-'sumex.insurednumber' => 'Poistené číslo',
-'sumex.observations' => 'Pozorovania',
-'sumex.place' => 'Sumex Place',
-'sumex.place.association' => 'Združenie',
-'sumex.place.company' => 'Spoločnosť',
-'sumex.place.hospital' => 'NEMOCNICA',
-'sumex.place.lab' => 'Laboratórium',
-'sumex.place.practice' => 'Prax',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Úloha Sumexu',
-'sumex.role.chiropractor' => 'Chiropraktik',
-'sumex.role.dentaltechnician' => 'Zubný technik',
-'sumex.role.dentist' => 'Zubár',
-'sumex.role.druggist' => 'Lekárnik',
-'sumex.role.ergotherapist' => 'Ergoterapeut',
-'sumex.role.hospital' => 'NEMOCNICA',
-'sumex.role.labtechnician' => 'Laboratórny technik',
-'sumex.role.logotherapist' => 'Logoterapeut',
-'sumex.role.midwife' => 'Pôrodná asistentka',
-'sumex.role.naturopathicdoctor' => 'Naturopathic doctor',
-'sumex.role.naturopathictherapist' => 'Naturopathic terapeut',
-'sumex.role.nursingstaff' => 'Ošetrovateľský personál',
-'sumex.role.nutritionist' => 'Výživový poradca',
-'sumex.role.other' => 'Iné',
-'sumex.role.othertechnician' => 'Iný technik',
-'sumex.role.pharmacist' => 'Lekárnik',
-'sumex.role.physician' => 'Lekár',
-'sumex.role.physiotherapist' => 'Fyzioterapeut',
-'sumex.role.psychologist' => 'Psychológ',
-'sumex.role.transport' => 'Doprava',
-'sumex.role.wholesaler' => 'Veľkoobchodník',
-'sumex.settings' => 'Nastavenia Sumexu',
-'sumex.sliptype' => 'Typ sklzu Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (Orange Slip)',
-'sumex.sliptype-esrRed' => 'Červený slip',
-'sumex.sliptype.help' => 'Táto možnosť zmení typ účtenky '
-	. 'v Sumexe.'
-	. 'Upozorňujeme, že ak vyberiete oranžovú '
-	. 'účtenku, potrebujete číslo predplatiteľa, ktoré '
-	. 'začína na „01-“.',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'TÝŽDEŇ',
 'sunday' => 'Nedeľa',
 'system.settings' => 'Nastavenia systému',
 'table' => 'Tabuľka',

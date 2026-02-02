@@ -30,6 +30,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
  Peppol network.
 
 **Recent Implementations**
+[UK e-invoicing B2B/B2G 2029](docs/UK-E-INVOICING-MANDATE.md) (Jan 2026)
+
 [PeppolValidator Integration.](docs/PEPPOL_VALIDATOR.md) (Jan 2026)
 
 [CreditNote Integration.](docs/CREDIT_NOTE_WORKFLOW.md) (Jan 2026)

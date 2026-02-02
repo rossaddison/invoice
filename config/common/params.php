@@ -569,10 +569,6 @@ return [
             'convertHtmlToText' => true,
         ],
     ],
-    // These parameters appear on ZugFerdXml produced invoice and also Sumex1
-    // semi-compatible invoice and is used in App/Invoice/Libraries/Sumex class
-    // see settingRepository->get_config_company_details() function
-    // see also src\Invoice\Helpers\PeppolHelper
     'company' => [
         'logopublicsource' => 'site',
         'logofilenamewithsuffix' => 'logo.png',

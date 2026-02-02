@@ -38,9 +38,11 @@ echo Form::tag()
 ?>
 
 <?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' =>
+    'row d-flex justify-content-center align-items-center h-100']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' =>
+    'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
@@ -50,7 +52,7 @@ echo Form::tag()
 <?= Html::openTag('div', ['id' => 'headerbar-modal-add-inv-form']); ?>
     <?= $button::save(); ?>
     <?= Html::openTag('div', ['class' => 'content']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>        
+        <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group' ]); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
@@ -86,7 +88,8 @@ echo Form::tag()
                 <?= Field::date($form, 'date_created')
     ->label($translator->translate('date.created'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_created()) && null !== $form->getDate_created()
+    ->value(Html::encode(!is_string($form->getDate_created())
+            && null !== $form->getDate_created()
                                     ? $form->getDate_created()->format('Y-m-d') : ''))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -96,7 +99,8 @@ echo Form::tag()
     ->hideLabel()
     ->label($translator->translate('date.modified'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_modified()) && null !== $form->getDate_modified()
+    ->value(Html::encode(!is_string($form->getDate_modified())
+            && null !== $form->getDate_modified()
                                     ? $form->getDate_modified()->format('Y-m-d') : ''))
 ?>
             <?= Html::closeTag('div'); ?>
@@ -116,8 +120,9 @@ echo Form::tag()
                 <?= Field::text($form, 'time_created')
     ->label($translator->translate('time.created'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(date('h:i:s', (!is_string($form->getTime_created()) && null !== $form->getTime_created()
-                                              ? $form->getTime_created()->getTimestamp() : null))))
+    ->value(Html::encode(date('h:i:s', (!is_string($form->getTime_created())
+                    && null !== $form->getTime_created()
+                    ? $form->getTime_created()->getTimestamp() : null))))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -125,8 +130,9 @@ echo Form::tag()
     ->hideLabel(true)
     ->label($translator->translate('tax.point'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_tax_point()) && null !== $form->getDate_tax_point()
-                                    ? $form->getDate_tax_point()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->getDate_tax_point())
+                    && null !== $form->getDate_tax_point()
+                    ? $form->getDate_tax_point()->format('Y-m-d') : ''));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -141,8 +147,9 @@ echo Form::tag()
     ->hideLabel(true)
     ->label($translator->translate('date.supplied'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_supplied()) && null !== $form->getDate_supplied()
-                                    ? $form->getDate_supplied()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->getDate_supplied())
+            && null !== $form->getDate_supplied()
+            ? $form->getDate_supplied()->format('Y-m-d') : ''));
 ?>    
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -150,8 +157,9 @@ echo Form::tag()
     ->hideLabel(true)
     ->label($translator->translate('date.due'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_due()) && null !== $form->getDate_due()
-                                    ? $form->getDate_due()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->getDate_due())
+            && null !== $form->getDate_due()
+            ? $form->getDate_due()->format('Y-m-d') : ''));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -171,19 +179,13 @@ echo Form::tag()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Field::hidden($form, 'discount_percent')
-    ->hideLabel(true)
-    ->label($translator->translate('discount.percent'))
-    ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($s->format_amount(($form->getDiscount_percent() ?? 0.00))))
-?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
                 <?= Field::hidden($form, 'terms')
     ->hideLabel(true)
     ->label($translator->translate('terms'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getTerms() ?? $s->getSetting('default_invoice_terms') ?: $translator->translate('payment.term.general')));
+    ->value(Html::encode($form->getTerms() ??
+            $s->getSetting('default_invoice_terms') ?:
+            $translator->translate('payment.term.general')));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -217,7 +219,8 @@ echo Form::tag()
     ->hideLabel(true)
     ->label($translator->translate('payment.method'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getPayment_method() ?? ($s->getSetting('invoice_default_payment_method') ?: 1)))
+    ->value(Html::encode($form->getPayment_method() ??
+            ($s->getSetting('invoice_default_payment_method') ?: 1)))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>

@@ -27,23 +27,22 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
-
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('delivery.add'); ?>
-<?= Html::closeTag('h1'); ?>
-
 <?= Form::tag()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('DeliveryForm')
     ->open()
-?> 
+?>
+<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
+<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' => 'card-header']); ?>
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
+<?= $translator->translate('delivery.add'); ?>
+<?= Html::closeTag('h1'); ?>
+
     <?= Field::buttonGroup()
     ->addContainerClass('btn-group btn-toolbar float-end')
     ->buttonsData([
@@ -61,68 +60,78 @@ use Yiisoft\Html\Tag\Form;
         ],
     ]) ?>
     
-    <?= Html::openTag('div', ['class' => 'headerbar']); ?>
-        <?= Html::openTag('div', ['id' => 'content']); ?>
-    <?= Html::closeTag('div'); ?>    
             <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
                     ->onlyProperties(...['date_created', 'date_modified'])
                     ->onlyCommonErrors()
-?>
+            ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
             <?php
 Field::hidden($form, 'date_created')
-->label($translator->translate('delivery.date.created') . ' (' . $dateHelper->display() . ')')
+->label($translator->translate('delivery.date.created')
+        . ' (' . $dateHelper->display() . ')')
 ->addInputAttributes([
-    'placeholder' => $translator->translate('delivery.date.created') . ' (' . $dateHelper->display() . ')',
+    'placeholder' => $translator->translate('delivery.date.created')
+        . ' (' . $dateHelper->display() . ')',
     'id' => 'date_created',
     'role' => 'presentation',
     'autocomplete' => 'off',
 ])
-->value(!is_string($createdDate = $form->getDate_created()) ? $createdDate->format('Y-m-d') : '')
+->value(!is_string($createdDate = $form->getDate_created()) ?
+        $createdDate->format('Y-m-d') : '')
 ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
                 <?php
         Field::hidden($form, 'date_modified')
-        ->label($translator->translate('delivery.date.modified') . ' (' . $dateHelper->display() . ')')
+        ->label($translator->translate('delivery.date.modified')
+                . ' (' . $dateHelper->display() . ')')
         ->addInputAttributes([
-            'placeholder' => $translator->translate('delivery.date.modified') . ' (' . $dateHelper->display() . ')',
+            'placeholder' => $translator->translate('delivery.date.modified')
+                . ' (' . $dateHelper->display() . ')',
             'id' => 'date_modified',
             'role' => 'presentation',
             'autocomplete' => 'off',
         ])
-        ->value(!is_string($modifiedDate = $form->getDate_modified()) ? $modifiedDate->format('Y-m-d') : '')
+        ->value(!is_string($modifiedDate = $form->getDate_modified()) ?
+                $modifiedDate->format('Y-m-d') : '')
         ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
                 <?php
     echo Field::date($form, 'start_date')
-    ->label($translator->translate('delivery.start.date') . ' (' . $dateHelper->display() . ')')
+    ->label($translator->translate('delivery.start.date')
+            . ' (' . $dateHelper->display() . ')')
     ->required(true)
-    ->value(!is_string($startDate = $form->getStart_date()) ? $startDate->format('Y-m-d') : '')
+    ->value(!is_string($startDate = $form->getStart_date()) ?
+            $startDate->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
                 <?php
     echo Field::date($form, 'actual_delivery_date')
-    ->label($translator->translate('delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')')
+    ->label($translator->translate('delivery.actual.delivery.date')
+            . ' (' . $dateHelper->display() . ')')
     ->required(true)
-    ->value(!is_string($actualDeliveryDate = $form->getActual_delivery_date()) ? $actualDeliveryDate->format('Y-m-d') : '')
+    ->value(!is_string($actualDeliveryDate = $form->getActual_delivery_date())
+            ? $actualDeliveryDate->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
                 <?php
     echo Field::date($form, 'end_date')
-    ->label($translator->translate('delivery.end.date') . ' (' . $dateHelper->display() . ')')
+    ->label($translator->translate('delivery.end.date')
+            . ' (' . $dateHelper->display() . ')')
     ->required(true)
-    ->value(!is_string($endDate = $form->getEnd_date()) ? $endDate->format('Y-m-d') : '')
+    ->value(!is_string($endDate = $form->getEnd_date()) ?
+            $endDate->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
@@ -135,7 +144,10 @@ Field::hidden($form, 'date_created')
          */
         foreach ($dels as $del) {
             if (null !== $delId = $del->getId()) {
-                $optionsDataDel[$delId] = ($del->getAddress_1() ?? '') . ', ' . ($del->getAddress_2() ?? '') . ', ' . ($del->getCity() ?? '') . ', ' . ($del->getZip() ?? '');
+                $optionsDataDel[$delId] = ($del->getAddress_1() ?? '')
+                        . ', ' . ($del->getAddress_2() ?? '')
+                        . ', ' . ($del->getCity() ?? '')
+                        . ', ' . ($del->getZip() ?? '');
             }
         }
         echo Field::select($form, 'delivery_location_id')
@@ -160,7 +172,11 @@ Field::hidden($form, 'date_created')
         );
     }
 ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
-    <?= Html::closeTag('div'); ?>
+        <?= Html::closeTag('div'); ?>
+   
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
+<?= Html::closeTag('div'); ?>
 <?= Html::closeTag('form'); ?>

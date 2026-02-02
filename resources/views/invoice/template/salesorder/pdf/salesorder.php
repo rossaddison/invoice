@@ -342,16 +342,6 @@ if ($items) {
         <?php endforeach ?>
         <?php } ?>
         <?php if ($vat == '0') { ?>    
-        <?php if ($salesorder->getDiscount_percent() !== 0.00) : ?>
-            <tr>
-                <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?> class="text-right">
-                    <?= Html::encode($translator->translate('discount')); ?>
-                </td>
-                <td class="text-right">
-                    <?php echo Html::encode($s->format_amount($salesorder->getDiscount_percent())); ?>%
-                </td>
-            </tr>
-        <?php endif; ?>
         <?php if ($salesorder->getDiscount_amount() !== 0.00) : ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?> class="text-right">

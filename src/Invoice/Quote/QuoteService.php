@@ -130,10 +130,6 @@ final readonly class QuoteService
             $model->setDelivery_location_id(
                 (int) $array['delivery_location_id']
             ) : '';
-        isset($array['discount_percent']) ?
-            $model->setDiscount_percent(
-                (float) $array['discount_percent']
-            ) : '';
         isset($array['discount_amount']) ?
             $model->setDiscount_amount(
                 (float) $array['discount_amount']

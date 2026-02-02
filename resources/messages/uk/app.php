@@ -921,7 +921,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Згенерувати номер котирування для чернеток '
 	. 'котирування',
-'generate.sumex' => 'Згенерувати PDF-файл Sumex',
 'generator' => 'Генератор',
 'generator.add' => 'Додати генератор',
 'generator.camelcase.capital.name' => 'Назва з великої літери Camelcase,'
@@ -1112,8 +1111,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Ім\'я хоста',
-'html.sumex.no' => 'HTML без Sumex',
-'html.sumex.yes' => 'HTML з Sumex',
 'id' => 'Ідентифікатор',
 'identifier.format' => 'Форматування ідентифікатора',
 'identifier.format.template.tags' => 'Теги шаблонів для ідентифікатора',
@@ -2693,63 +2690,6 @@ return [
 'subtotal' => 'Проміжний підсумок',
 'success' => 'Успіх',
 'successful' => 'Успішний',
-'sumex' => 'Сумекс',
-'sumex.add' => 'Сумекс Додати',
-'sumex.canton' => 'Кантон',
-'sumex.diagnosis' => 'Діагноз',
-'sumex.edit' => 'Sumex Edit',
-'sumex.help' => 'Ця опція додає пункт меню '
-	. 'до рахунків-фактур для створення напівсумісного '
-	. 'з TARMED / SUMEX1 рахунку-фактури.'
-	. 'TARMED / SUMEX1 – це '
-	. 'швейцарський стандарт для охорони здоров\'я.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Додаткова інформація</a>',
-'sumex.information' => 'Інформація про Sumex',
-'sumex.insurednumber' => 'Застрахований номер',
-'sumex.observations' => 'Спостереження',
-'sumex.place' => 'Сумекс Плейс',
-'sumex.place.association' => 'Асоціація',
-'sumex.place.company' => 'Компанія',
-'sumex.place.hospital' => 'Лікарня',
-'sumex.place.lab' => 'Лабораторія',
-'sumex.place.practice' => 'Практика',
-'sumex.rcc' => 'РСС',
-'sumex.role' => 'Роль Sumex',
-'sumex.role.chiropractor' => 'Хіропрактик',
-'sumex.role.dentaltechnician' => 'Зубний технік',
-'sumex.role.dentist' => 'Стоматолог',
-'sumex.role.druggist' => 'Аптекар',
-'sumex.role.ergotherapist' => 'Ерготерапевт',
-'sumex.role.hospital' => 'Лікарня',
-'sumex.role.labtechnician' => 'Лаборант',
-'sumex.role.logotherapist' => 'Логотерапевт',
-'sumex.role.midwife' => 'Акушерка',
-'sumex.role.naturopathicdoctor' => 'Лікар-натуропат',
-'sumex.role.naturopathictherapist' => 'Натуропат-терапевт',
-'sumex.role.nursingstaff' => 'Медсестринський персонал',
-'sumex.role.nutritionist' => 'Дієтолог',
-'sumex.role.other' => 'Інше',
-'sumex.role.othertechnician' => 'Інший технік',
-'sumex.role.pharmacist' => 'Фармацевт',
-'sumex.role.physician' => 'Лікар',
-'sumex.role.physiotherapist' => 'Фізіотерапевт',
-'sumex.role.psychologist' => 'Психолог',
-'sumex.role.transport' => 'Транспорт',
-'sumex.role.wholesaler' => 'Оптовий продавець',
-'sumex.settings' => 'Налаштування Sumex',
-'sumex.sliptype' => 'Тип ковзання Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (Помаранчевий ковзання)',
-'sumex.sliptype-esrRed' => 'Червоний ковзання',
-'sumex.sliptype.help' => 'Ця опція змінить тип квитанції '
-	. 'в Sumex.'
-	. 'Зверніть увагу, що якщо ви '
-	. 'оберете помаранчеву квитанцію, вам потрібен '
-	. 'номер абонента, який починається з '
-	. '&quot;01-&quot;.',
-'sumex.ssn' => 'АВС',
-'sumex.veka' => 'ТИЖДЕНЬ',
 'sunday' => 'Неділя',
 'system.settings' => 'Системні налаштування',
 'table' => 'Стіл',

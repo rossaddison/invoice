@@ -44,18 +44,31 @@ abstract class BaseController
      */
     protected function initializeViewRenderer(): void
     {
-        if (!$this->userService->hasPermission(Permissions::VIEW_INV) && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
-                                                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
-                                                     ->withLayout('@views/layout/templates/soletrader/main.php');
-        } elseif ($this->userService->hasPermission(Permissions::VIEW_INV) && !$this->userService->hasPermission(Permissions::EDIT_INV) && !$this->userService->hasPermission(Permissions::NO_ENTRY_TO_BASE_CONTROLLER) && $this->userService->hasPermission(Permissions::ENTRY_TO_BASE_CONTROLLER)) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
-                                                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
-                                                     ->withLayout('@views/layout/guest.php');
-        } elseif ($this->userService->hasPermission(Permissions::EDIT_INV) && !$this->userService->hasPermission(Permissions::NO_ENTRY_TO_BASE_CONTROLLER) && $this->userService->hasPermission(Permissions::ENTRY_TO_BASE_CONTROLLER)) {
-            $this->viewRenderer = $this->viewRenderer->withControllerName($this->controllerName)
-                                                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
-                                                     ->withLayout('@views/layout/invoice.php');
+        if (!$this->userService->hasPermission(Permissions::VIEW_INV)
+                && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
+            $this->viewRenderer =
+            $this->viewRenderer->withControllerName($this->controllerName)
+                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
+                     ->withLayout('@views/layout/templates/soletrader/main.php');
+        } elseif ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && !$this->userService->hasPermission(Permissions::EDIT_INV)
+            && !$this->userService->hasPermission(
+                    Permissions::NO_ENTRY_TO_BASE_CONTROLLER)
+            && $this->userService->hasPermission(
+                    Permissions::ENTRY_TO_BASE_CONTROLLER)) {
+            $this->viewRenderer =
+            $this->viewRenderer->withControllerName($this->controllerName)
+                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
+                     ->withLayout('@views/layout/guest.php');
+        } elseif ($this->userService->hasPermission(Permissions::EDIT_INV)
+            && !$this->userService->hasPermission(
+                    Permissions::NO_ENTRY_TO_BASE_CONTROLLER)
+            && $this->userService->hasPermission(
+                    Permissions::ENTRY_TO_BASE_CONTROLLER)) {
+            $this->viewRenderer =
+            $this->viewRenderer->withControllerName($this->controllerName)
+                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
+                     ->withLayout('@views/layout/invoice.php');
         }
     }
 
@@ -92,12 +105,15 @@ abstract class BaseController
      * This centralizes the common pattern used across multiple controllers so
      * they can reuse the same array shape without duplicating repository calls.
      *
-     * @param CustomFieldRepository $customFieldRepository Repository for fetching custom fields
-     * @param CustomValueRepository $customValueRepository Repository for fetching custom values
+     * @param CustomFieldRepository $customFieldRepository
+          Repository for fetching custom fields
+     * @param CustomValueRepository $customValueRepository
+          Repository for fetching custom values
      * @param string $tableName The custom table name (e.g. 'client_custom')
      * @return array{customFields: EntityReader, customValues: array<array-key, mixed>}
      */
-    protected function fetchCustomFieldsAndValues(CustomFieldRepository $customFieldRepository, CustomValueRepository $customValueRepository, string $tableName): array
+    protected function fetchCustomFieldsAndValues(
+        CustomFieldRepository $customFieldRepository, CustomValueRepository                                                       $customValueRepository, string $tableName): array
     {
         $customFields = $customFieldRepository->repoTablequery($tableName);
         $customValues = $customValueRepository->attach_hard_coded_custom_field_values_to_custom_field($customFields);
@@ -108,18 +124,19 @@ abstract class BaseController
         ];
     }
 
-    /**
-     * Process and validate custom fields for any entity type.
-     *
-     * This centralizes the common custom field validation pattern used across all controllers,
-     * eliminating code duplication while maintaining entity-specific behavior through callbacks.
-     *
-     * @param array|object|null $requestData The request data containing custom fields
-     * @param \Yiisoft\FormModel\FormHydrator $formHydrator Form hydrator for validation
-     * @param CustomFieldProcessor $processor Entity-specific processor for custom field operations
-     * @param string|int $entityId The ID of the parent entity (invoice, quote, etc.)
-     * @return void
-     */
+/**
+ * Process and validate custom fields for any entity type.
+ *
+ * This centralizes the common custom field validation pattern used across
+ * all controllers, eliminating code duplication while maintaining
+ * entity-specific behavior through callbacks.
+ *
+ * @param array|object|null $requestData The request data containing custom fields
+ * @param \Yiisoft\FormModel\FormHydrator $formHydrator Form hydrator for validation
+ * @param CustomFieldProcessor $processor Entity-specific processor for custom field        operations
+ * @param string|int $entityId The ID of the parent entity (invoice, quote, etc.)
+ * @return void
+ */
     protected function processCustomFields(
         array|object|null $requestData,
         \Yiisoft\FormModel\FormHydrator $formHydrator,
@@ -136,10 +153,10 @@ abstract class BaseController
         // Handle both direct array format and AJAX format
         $processedCustom = $this->normalizeCustomFieldData($custom);
 
-        /**
-         * @var string|int $custom_field_id (PHP may auto-convert numeric strings to int)
-         * @var mixed $value
-         */
+/**
+ * @var string|int $custom_field_id (PHP may auto-convert numeric strings to int)
+ * @var mixed $value
+ */
         foreach ($processedCustom as $custom_field_id => $value) {
             // Check if custom field record already exists
             $entityIdStr = (string) $entityId;
@@ -147,10 +164,11 @@ abstract class BaseController
 
             if ($processor->exists($entityIdStr, $customFieldIdStr)) {
                 // Update existing record
-                $existingRecord = $processor->findExisting($entityIdStr, $customFieldIdStr);
+                $existingRecord =
+                     $processor->findExisting($entityIdStr, $customFieldIdStr);
                 if ($existingRecord) {
                     $form = $processor->createForm($existingRecord);
-                    $inputData = $processor->prepareInputData((int) $entityId, (int) $customFieldIdStr, $value);
+                    $inputData = $processor->prepareInputData((int) $entityId, (int)                                                                    $customFieldIdStr, $value);
 
                     if ($formHydrator->populateAndValidate($form, $inputData)) {
                         $processor->save($existingRecord, $inputData);
@@ -160,7 +178,7 @@ abstract class BaseController
                 // Create new record
                 $newRecord = $processor->createEntity();
                 $form = $processor->createForm($newRecord);
-                $inputData = $processor->prepareInputData((int) $entityId, (int) $customFieldIdStr, $value);
+                $inputData = $processor->prepareInputData((int) $entityId, (int)                                                                        $customFieldIdStr, $value);
 
                 if ($formHydrator->populateAndValidate($form, $inputData)) {
                     $processor->save($newRecord, $inputData);
@@ -169,15 +187,16 @@ abstract class BaseController
         }
     }
 
-    /**
-     * Normalize custom field data to handle both direct array format and AJAX format.
-     *
-     * @param array<array-key, mixed> $custom Raw custom field data
-     * @return array<string, mixed> Normalized custom field data
-     */
+/**
+ * Normalize custom field data to handle both direct array format and AJAX format.
+ *
+ * @param array<array-key, mixed> $custom Raw custom field data
+ * @return array<string, mixed> Normalized custom field data
+ */
     private function normalizeCustomFieldData(array $custom): array
     {
-        // If the custom data is already in the format we expect (direct array with field_id => value)
+// If the custom data is already in the format we expect
+//  (direct array with field_id => value)
         if (!isset($custom[0]) || !is_array($custom[0])) {
             /** @var array<string, mixed> */
             return $custom;
@@ -189,7 +208,9 @@ abstract class BaseController
 
         foreach ($custom as $rawItem) {
             // Type guard: ensure $rawItem is an array with the expected structure
-            if (!is_array($rawItem) || !isset($rawItem['name']) || !isset($rawItem['value'])) {
+            if (!is_array($rawItem)
+                    || !isset($rawItem['name'])
+                        || !isset($rawItem['value'])) {
                 continue;
             }
 
@@ -253,7 +274,8 @@ abstract class BaseController
         if (!empty($delivery_location_id)) {
             $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
             if (null !== $del) {
-                return $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_delivery_location', [
+                return $this->viewRenderer->renderPartialAsString(
+                    '//invoice/inv/partial_inv_delivery_location', [
                     'actionName' => 'del/view',
                     'actionArguments' => ['_language' => $_language, 'id' => $delivery_location_id],
                     'title' => $this->translator->translate('delivery.location'),
@@ -270,5 +292,5 @@ abstract class BaseController
             return '';
         }
         return '';
-    }
+    }    
 }

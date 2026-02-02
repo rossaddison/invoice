@@ -736,16 +736,13 @@ final readonly class NumberHelper
         $discount_percent = 0.00;
         if ($quote) {
             $discount_amount = (float) $quote->getDiscount_amount();
-            $discount_percent = (float) $quote->getDiscount_percent();
         }
 // Subtract Quote Table's discount amount from Quote Amount Table's quote_total
 // Discount and Percent are mutually exclusive ie. if you use the one you
 // exclude the other. Discount amount is the user inputed amount on the quote
 // representing a cash discount. Discount percent is the user inputed 
 // percentage on the quote representing a cash percentage
-        $trimmed_total = $total - $discount_amount;
-        return $trimmed_total
-                - round($trimmed_total / 100.00 * $discount_percent, 2);
+        return $trimmed_total = $total - $discount_amount;
     }
     
     /**
@@ -760,14 +757,10 @@ final readonly class NumberHelper
         $salesorder = $soR->repoSalesOrderUnloadedquery($salesorder_id);
         $total = $salesorder_total;
         $discount_amount = 0.00;
-        $discount_percent = 0.00;
         if ($salesorder) {
             $discount_amount = (float) $salesorder->getDiscount_amount();
-            $discount_percent = (float) $salesorder->getDiscount_percent();
         }
-        $trimmed_total = $total - $discount_amount;
-        return $trimmed_total
-                - round($trimmed_total / 100.00 * $discount_percent, 2);
+        return $trimmed_total = $total - $discount_amount;
     }
 
     /**
@@ -781,11 +774,9 @@ final readonly class NumberHelper
     {
         $inv = $iR->repoInvUnloadedquery($inv_id);
         $discount_amount = 0.00;
-        $discount_percent = 0.00;
         $total = $inv_total;
         if ($inv) {
             $discount_amount = (float) $inv->getDiscount_amount();
-            $discount_percent = (float) $inv->getDiscount_percent();
         }
 // Subtract Invoice Table's discount amount from Invoice Amount Table's inv_total
 // Discount and Percent are mutually exclusive ie. if you use the one you
@@ -793,8 +784,7 @@ final readonly class NumberHelper
 // representing a cash discount. Discount percent is the user inputed
 // percentage on the invoice representing a cash percentage
         $trimmed_total = $total - $discount_amount;
-        return $trimmed_total - round(
-                                $trimmed_total / 100.00 * $discount_percent, 2);
+        return $trimmed_total;
     }
 
     /**

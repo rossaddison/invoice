@@ -373,19 +373,16 @@ final readonly class SalesOrderItemService
         }
         $sopInvAc = $sub_total + $all_charges - $all_allowances;
         if (null !== $tax_rate_percentage) {
-            $current_tax_total =
-                ($sopInvAc - $discount_total) * ($tax_rate_percentage / 100.00);
+            $tax_total = ($sopInvAc - $discount_total) * ($tax_rate_percentage / 100.00);
         } else {
-            $current_tax_total = 0.00;
+            $tax_total = 0.00;
         }
-        $all_vat_or_tax = $all_charges_vat_or_tax - $all_allowances_vat_or_tax;
-        $new_tax_total = $current_tax_total + $all_vat_or_tax;
         $soias_array['charge'] = $all_charges;
         $soias_array['allowance'] = $all_allowances;
         $soias_array['discount'] = $discount_total;
         $soias_array['subtotal'] = $sopInvAc;
-        $soias_array['taxtotal'] = $new_tax_total;
-        $soias_array['total'] = $sopInvAc - $discount_total + $new_tax_total;
+        $soias_array['taxtotal'] = $tax_total;
+        $soias_array['total'] = $sopInvAc - $discount_total + $tax_total;
         if ($soiar->repoCount((string) $sales_order_item_id) === 0) {
             $soias->saveSalesOrderItemAmountNoForm(
                 new SalesOrderItemAmount(),

@@ -60,7 +60,13 @@ $vat = $s->getSetting('enable_vat_registration');
             <div class="btn-group">
                 <?php
                     if (in_array($quote->getStatus_id(), [2, 3, 5]) && $quote->getSo_id() === '0') : ?>
-                    <?= $modal_purchase_order_number; ?>
+                    <?= 
+//  src/typescript/quote.ts#quote_with_purchase_order_number_confirm,
+//  .quote_with_purchase_order_number_confirm ...
+//  handleQuotePurchaseOrderConfirm ...
+//  'quote/approve'
+                        $modal_purchase_order_number;
+                    ?>
                     <a href="#purchase-order-number" data-bs-toggle="modal" 
                        class="btn btn-warning">
                         <i class="fa fa-check"></i><?= $translator->translate('quote.approve'); ?>
@@ -402,29 +408,22 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </tr>
                             <?php endforeach;
                             } ?>
-                        <?php if ($vat === '0') { ?>          
+                       
                         <tr>
                             <td class="no-bottom-border" colspan="4"></td>
                             <td class="text-right"><?= $translator->translate('discount'); ?>:</td>
                             <td class="amount">
-                                <b><?php
-                                    $percent = $quote->getDiscount_percent();
-                            if ($percent >= 0.00) {
-                                echo (string) $numberHelper->format_amount($percent) . ' %';
-                            } else {
-                                $discountAmount = $quote->getDiscount_amount();
-                                if ($discountAmount >= 0.00) {
-                                    echo $numberHelper->format_amount($discountAmount);
-                                }
-                            }
-                            ?></b>
+                                <b><?php echo $numberHelper->format_amount($quote->getDiscount_amount()); ?></b>
                             </td>
                         </tr>
-                        <?php } ?>
                         <tr>
                             <td class="no-bottom-border" colspan="4"></td>
                             <td class="text-right"><?= $translator->translate('total'); ?>:</td>
-                            <td class="amount"><b><?= $numberHelper->format_currency($quote_amount->getTotal()); ?></b></td>
+                            <td class="amount">
+                                <b>
+              <?= $numberHelper->format_currency($quote_amount->getTotal()); ?>
+                                </b>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Invoice\Entity\Inv;
-use App\Widget\Button;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
@@ -18,7 +17,6 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
-use Yiisoft\Html\Tag\Option;
 use Yiisoft\Html\Tag\Select;
 use Yiisoft\Html\Tag\Span;
 use Yiisoft\Bootstrap5\Breadcrumbs;
@@ -35,7 +33,8 @@ use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 
 /**
- * Related logic: see config/common/params.php 'yiisoft/view => ['gridComponents' => Reference::to(GridComponents::class)]',
+ * Related logic: see config/common/params.php
+ *  'yiisoft/view => ['gridComponents' => Reference::to(GridComponents::class)]',
  */
 
 /**
@@ -73,11 +72,11 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
  * @var string $sortString
  * @var string $status
  * @psalm-var positive-int $page
- * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataInvNumberDropDownFilter
- * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClientsDropdownFilter
- * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataClientGroupDropDownFilter
- * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataYearMonthDropDownFilter
- * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataStatusDropDownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsInvNumberDropDownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsClientsDropDownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsClientGroupDropDownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsYearMonthDropDownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsStatusDropDownFilter
  */
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
@@ -110,7 +109,8 @@ echo Breadcrumbs::widget()
          active: false,
          attributes: [
              'data-bs-toggle' => 'tooltip',
-             'title' => $s->getSetting('default_invoice_terms') ?: $translator->translate('not.set'),
+             'title' => $s->getSetting('default_invoice_terms')
+             ?: $translator->translate('not.set'),
          ],
          encodeLabel: false,
      ),
@@ -125,7 +125,8 @@ echo Breadcrumbs::widget()
          active: false,
          attributes: [
              'data-bs-toggle' => 'tooltip',
-             'title' => $defaultInvoicePaymentMethod ?? $translator->translate('not.set'),
+             'title' => $defaultInvoicePaymentMethod
+             ?? $translator->translate('not.set'),
          ],
          encodeLabel: false,
      ),
@@ -140,7 +141,8 @@ echo Breadcrumbs::widget()
          active: false,
          attributes: [
              'data-bs-toggle' => 'tooltip',
-             'title' => $s->getSetting('invoices_due_after') ?: $translator->translate('not.set'),
+             'title' => $s->getSetting('invoices_due_after')
+             ?: $translator->translate('not.set'),
          ],
          encodeLabel: false,
      ),
@@ -155,7 +157,8 @@ echo Breadcrumbs::widget()
          active: false,
          attributes: [
              'data-bs-toggle' => 'tooltip',
-             'title' => $s->getSetting('generate_invoice_number_for_draft') == '1' ? '✅' : '❌',
+             'title' => $s->getSetting('generate_invoice_number_for_draft')
+                == '1' ? '✅' : '❌',
          ],
          encodeLabel: false,
      ),
@@ -166,7 +169,8 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('set.to.read.only') 
              . ' ' 
-             . $iR->getSpecificStatusArrayEmoji((int) $s->getSetting('read_only_toggle')),
+             . $iR->getSpecificStatusArrayEmoji(
+                (int) $s->getSetting('read_only_toggle')),
          url: $urlGenerator->generate(
              'setting/tab_index',
              [],
@@ -183,7 +187,10 @@ echo Breadcrumbs::widget()
  */
 
 $copyInvoiceMultiple = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal', 'title' => Html::encode($translator->translate('copy.invoice'))])
+        ->addAttributes([
+            'type' => 'reset',
+            'data-bs-toggle' => 'modal',
+            'title' => Html::encode($translator->translate('copy.invoice'))])
         ->addClass('btn btn-success')
         /**
          * Purpose: Trigger modal_copy_inv_multiple.php to pop up
@@ -195,14 +202,22 @@ $copyInvoiceMultiple = A::tag()
         ->render();
 
 /**
- * Use with the checkbox column to mark invoices as sent. Note an email is not sent. The invoices appear on the client's guest index
- * NB: Only invoices marked as sent can appear on the client's side. i.e no 'draft' invoices can appear on the client guest index
- * Related logic: see \invoice\src\Invoice\Asset\rebuild\js\inv.js $(document).on('click', '#btn-mark-as-sent', function () {
+ * Use with the checkbox column to mark invoices as sent.
+ * Note an email is not sent. The invoices appear on the client's guest index
+ * NB: Only invoices marked as sent can appear on the client's side.
+ *  i.e no 'draft' invoices can appear on the client guest index
+ * Related logic:
+ *  see \invoice\src\Invoice\Asset\rebuild\js\inv.js
+ *  $(document).on('click', '#btn-mark-as-sent', function () {
  */
 $markAsSent = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('sent'))])
+        ->addAttributes([
+            'type' => 'reset',
+            'data-bs-toggle' => 'tooltip',
+            'title' => Html::encode($translator->translate('sent'))])
         ->addClass('btn btn-success')
-        ->content('☑️' . $translator->translate('sent') . $iR->getSpecificStatusArrayEmoji(2))
+        ->content('☑️' . $translator->translate('sent')
+                . $iR->getSpecificStatusArrayEmoji(2))
         // src/typescript/invoice.ts
         ->id('btn-mark-as-sent')
         ->render();
@@ -213,23 +228,32 @@ $markAsSent = A::tag()
  * Related logic: see src/typescript/invoice.ts
  */
 $disabledMarkSentAsDraft = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('security.disable.read.only.info'))])
+        ->addAttributes([
+            'type' => 'reset',
+            'data-bs-toggle' => 'tooltip',
+            'title' => Html::encode(
+                    $translator->translate('security.disable.read.only.info'))])
         ->addAttributes([
             'disabled' => 'disabled',
             'style' => 'text-decoration:none',
         ])
         ->addClass('btn btn-success')
-        ->content('☑️' . $translator->translate('draft') . $iR->getSpecificStatusArrayEmoji(1))
+        ->content('☑️' . $translator->translate('draft')
+                . $iR->getSpecificStatusArrayEmoji(1))
         ->id('btn-mark-sent-as-draft')
         ->render();
 
 $enabledMarkSentAsDraft = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => Html::encode($translator->translate('draft'))])
+        ->addAttributes([
+            'type' => 'reset',
+            'data-bs-toggle' => 'tooltip',
+            'title' => Html::encode($translator->translate('draft'))])
         ->addAttributes([
             'style' => 'text-decoration:none',
         ])
         ->addClass('btn btn-success')
-        ->content('☑️' . $translator->translate('draft') . $iR->getSpecificStatusArrayEmoji(1))
+        ->content('☑️' . $translator->translate('draft')
+                . $iR->getSpecificStatusArrayEmoji(1))
         ->id('btn-mark-sent-as-draft')
         ->render();
 
@@ -257,7 +281,10 @@ $toolbarReset = A::tag()
         ->render();
 
 $allVisible = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
+        ->addAttributes([
+            'type' => 'reset',
+            'data-bs-toggle' => 'tooltip',
+            'title' => $translator->translate('hide.or.unhide.columns')])
         ->addClass('btn btn-warning me-1 ajax-loader')
         ->content('↔️')
         ->href($urlGenerator->generate('setting/visible', ['origin' => 'inv']))
@@ -265,7 +292,10 @@ $allVisible = A::tag()
         ->render();
 
 $toggleColumnInvSentLog = A::tag()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
+        ->addAttributes([
+            'type' => 'reset',
+            'data-bs-toggle' => 'tooltip',
+            'title' => $translator->translate('hide.or.unhide.columns')])
         ->addClass('btn btn-info me-1 ajax-loader')
         ->content('↔️')
         ->href($urlGenerator->generate('setting/toggleinvsentlogcolumn'))
@@ -308,9 +338,12 @@ $totalBalance = 0.0;
  * @var Inv $invoice
  */
 foreach ($invs as $invoice) {
-    $totalAmount += null!== ($total = $invoice->getInvAmount()->getTotal()) ? $total : 0.00;
-    $totalPaid += null!== ($paid = $invoice->getInvAmount()->getPaid()) ? $paid : 0.00;
-    $totalBalance += null!== ($balance = $invoice->getInvAmount()->getBalance()) ? $balance : 0.00;
+    $totalAmount += null!== ($total = $invoice->getInvAmount()->getTotal())
+            ? $total : 0.00;
+    $totalPaid += null!== ($paid = $invoice->getInvAmount()->getPaid())
+            ? $paid : 0.00;
+    $totalBalance += null!== ($balance = $invoice->getInvAmount()->getBalance())
+            ? $balance : 0.00;
 }
 
 /**
@@ -321,7 +354,8 @@ $columns = [
         /**
          * Related logic: see header checkbox: name: 'checkbox-selection-all'
          */
-        content: static function (Checkbox $input, DataContext $context) use ($translator): string {
+        content: static function (Checkbox $input, DataContext $context)
+            use ($translator): string {
             $inv = $context->data;
             if (($inv instanceof Inv) && (null !== ($id = $inv->getId()))) {
                 return Input::tag()
@@ -331,9 +365,11 @@ $columns = [
                            'name' => 'checkbox[]',
                            'data-bs-toggle' => 'tooltip',
                            'title' => $inv->getInvAmount()->getTotal() == 0
-                               ? $translator->translate('index.checkbox.add.some.items.to.enable') : ''])
+                               ? $translator->translate(
+                               'index.checkbox.add.some.items.to.enable') : ''])
                        ->value($id)
-                       ->disabled($inv->getInvAmount()->getTotal() > 0 ? false : true)
+                       ->disabled($inv->getInvAmount()->getTotal() > 0 ?
+                               false : true)
                        ->render();
             }
             return '';
@@ -346,10 +382,10 @@ $columns = [
         after: Html::closeTag('div'),
         buttons: [
             new ActionButton(
-                // is_read_only false, disable_read_only 0, status draft1 => ✎, not disabled
-                // is_read_only false, disable_read_only 1, status draft1 => ❗✎, not disabled
-                // is_read_only true, disable_read_only 0, status  sent2 => 🚫, disabled
-                // is_read_only true, disable_read_only 1, status sent2 => ❗, not disabled
+// is_read_only false, disable_read_only 0, status draft1 => ✎, not disabled
+// is_read_only false, disable_read_only 1, status draft1 => ❗✎, not disabled
+// is_read_only true, disable_read_only 0, status  sent2 => 🚫, disabled
+// is_read_only true, disable_read_only 1, status sent2 => ❗, not disabled
                 content: static function (Inv $inv) use ($s): string {
                     $iRO = $inv->getIs_read_only();
                     $dRO = $s->getSetting('disable_read_only');
@@ -365,7 +401,7 @@ $columns = [
                             ],
                             /** protection is off */
                             '1' => [
-                                /** warning: editing a draft with protection off */
+                            /** warning: editing a draft with protection off */
                                 '1' => '❗✎',
                             ],
                         ],
@@ -373,12 +409,12 @@ $columns = [
                         'true' => [
                             /** protection is on */
                             '0' => [
-                                /** an invoice marked as sent cannot be edited */
+                            /** an invoice marked as sent cannot be edited */
                                 '2' => '🚫',
                             ],
                             /** protection is off */
                             '1' => [
-                                /** warning: you are editing an invoice whilst protection is off */
+          /** warning: you are editing an invoice whilst protection is off */
                                 '2' => '❗',
                             ],
                         ],
@@ -409,7 +445,7 @@ $columns = [
                             ],
                             /** protection is off */
                             '1' => [
-                                /** Allow editing of draft, even though protection is off */
+                    /** Allow editing of draft, even though protection is off */
                                 '1' => $urlGenerator->generate(
                                     'inv/edit',
                                     ['id' => $inv->getId()],
@@ -420,12 +456,12 @@ $columns = [
                         'true' => [
                             /** protection is on */
                             '0' => [
-                                /** Invoice cannot be edited whilst protection is on */
+                         /** Invoice cannot be edited whilst protection is on */
                                 '2' => '',
                             ],
                             /** protection is off */
                             '1' => [
-                                /** Allow the editing of invoice whilst protection is off */
+                    /** Allow the editing of invoice whilst protection is off */
                                 '2' => $urlGenerator->generate(
                                     'inv/edit',
                                     ['id' => $inv->getId()],
@@ -461,7 +497,8 @@ $columns = [
                             '1' => [
                                 '1' => [
                                     'data-bs-toggle' => 'tooltip',
-                                    'title' => $translator->translate('security.disable.read.only.true.draft.check.and.mark'),
+                                    'title' => $translator->translate(
+                        'security.disable.read.only.true.draft.check.and.mark'),
                                     'class' => 'btn btn-warning btn-sm',
                                 ],
                             ],
@@ -470,7 +507,7 @@ $columns = [
                         'true' => [
                             /** protection is on */
                             '0' => [
-                                /** Invoice cannot be edited whilst protection is on */
+                         /** Invoice cannot be edited whilst protection is on */
                                 '2' => [
                                     'data-bs-toggle' => 'tooltip',
                                     'title' => $translator->translate('sent'),
@@ -481,10 +518,11 @@ $columns = [
                             ],
                             /** protection is off */
                             '1' => [
-                                /** Allow the editing of invoice whilst protection is off */
+                    /** Allow the editing of invoice whilst protection is off */
                                 '2' => [
                                     'data-bs-toggle' => 'tooltip',
-                                    'title' => $translator->translate('security.disable.read.only.true.sent.check.and.mark'),
+                                    'title' => $translator->translate(
+                         'security.disable.read.only.true.sent.check.and.mark'),
                                     'class' => 'btn btn-outline-danger btn-sm'],
                             ],
                         ],
@@ -521,25 +559,32 @@ $columns = [
                 ['class' => 'btn-group', 'role' => 'group']),
         buttons: [
             new ActionButton(
-                url: static function (Inv $inv) use ($translator, $urlGenerator): string {
-                    return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf', ['id' => $inv->getId()]);
+                url: static function (Inv $inv)
+                                    use ($translator, $urlGenerator): string {
+                    return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf',
+                            ['id' => $inv->getId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'target' => '_blank',
                     'title' => $translator->translate('download.pdf'),
-                    'class' => 'bi bi-file-pdf btn btn-outline-danger btn-sm dropdown-item',
+                    'class' => 'bi bi-file-pdf btn btn-outline-danger btn-sm'
+                    . ' dropdown-item',
                 ],
             ),
             new ActionButton(
-                url: static function (Inv $inv) use ($translator, $urlGenerator): string {
-                    return $urlGenerator->generate('inv/pdf_dashboard_include_cf', ['id' => $inv->getId()]);
+                url: static function (Inv $inv) use ($translator, $urlGenerator):
+                string {
+                    return $urlGenerator->generate('inv/pdf_dashboard_include_cf',
+                            ['id' => $inv->getId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'target' => '_blank',
-                    'title' => $translator->translate('download.pdf') . '➡️' . $translator->translate('custom.field'),
-                    'class' => 'bi bi-file-pdf-fill btn btn-danger btn-sm dropdown-item',
+                    'title' => $translator->translate('download.pdf')
+                        . '➡️' . $translator->translate('custom.field'),
+                    'class' => 'bi bi-file-pdf-fill btn btn-danger btn-sm'
+                    . ' dropdown-item',
                 ],
             ),
             new ActionButton(
@@ -547,7 +592,8 @@ $columns = [
                 url: static function (Inv $inv) use ($urlGenerator): string {
                     // draft invoices cannot be emailed
                     if ($inv->getStatus_id() !== 1) {
-                        return $urlGenerator->generate('inv/email_stage_0', ['id' => $inv->getId()]);
+                        return $urlGenerator->generate('inv/email_stage_0',
+                                                        ['id' => $inv->getId()]);
                     }
                     return '';
                 },
@@ -569,7 +615,8 @@ $columns = [
             return  A::tag()
                     ->addAttributes(['style' => 'text-decoration:none'])
                     ->content(($model->getNumber() ?? '#') . ' 🔍')
-                    ->href($urlGenerator->generate('inv/view', ['id' => $model->getId()]));
+                    ->href($urlGenerator->generate('inv/view',
+                                                    ['id' => $model->getId()]));
         },
         encodeContent: false,
         filter: DropdownFilter::widget()
@@ -577,29 +624,46 @@ $columns = [
                     'name' => 'number',
                     'class' => 'native-reset',
                 ])
-                ->optionsData($optionsDataInvNumberDropDownFilter),
+                ->optionsData($optionsInvNumberDropDownFilter),
         withSorting: false,
     ),
     new DataColumn(
         property: 'filterDateCreatedYearMonth',
-        header: $translator->translate('datetime.immutable.date.created.mySql.format.year.month.filter'),
-        content: static fn (Inv $model): string => ($model->getDate_created())->format('Y-m-d'),
+        header: $translator->translate(
+            'datetime.immutable.date.created.mySql.format.year.month.filter'),
+        content: static fn (Inv $model):
+                        string => ($model->getDate_created())->format('Y-m-d'),
         filter: DropdownFilter::widget()
             ->addAttributes([
                 'name' => 'number',
                 'class' => 'native-reset',
             ])
-            ->optionsData($optionsDataYearMonthDropDownFilter),
+            ->optionsData($optionsYearMonthDropDownFilter),
         withSorting: false,
         visible: $visible,
     ),
     new DataColumn(
         property: 'filterStatus',
         header: '<span data-bs-toggle="tooltip" data-bs-html="true" title="' . 
-                Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 ' . $translator->translate('draft') . '<br/>📨 ' . $translator->translate('sent') . '<br/>👀 ' . $translator->translate('viewed') . '<br/>😀 ' . $translator->translate('paid') . '<br/>🏦 ' . $translator->translate('overdue') . '<br/>📋 ' . $translator->translate('unpaid') . '<br/>📃 ' . $translator->translate('reminder') . '<br/>📄 ' . $translator->translate('letter') . '<br/>⚖️ ' . $translator->translate('claim') . '<br/>🏛️ ' . $translator->translate('judgement') . '<br/>👮 ' . $translator->translate('enforcement') . '<br/>🛑️ ' . $translator->translate('credit.invoice.for.invoice') . '<br/>❎ ' . $translator->translate('loss')) . 
-                '">📊 ' . $translator->translate('status') . '</span>',
+                Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 '
+                        . $translator->translate('draft')
+                        . '<br/>📨 ' . $translator->translate('sent')
+                        . '<br/>👀 ' . $translator->translate('viewed')
+                        . '<br/>😀 ' . $translator->translate('paid')
+                        . '<br/>🏦 ' . $translator->translate('overdue')
+                        . '<br/>📋 ' . $translator->translate('unpaid')
+                        . '<br/>📃 ' . $translator->translate('reminder')
+                        . '<br/>📄 ' . $translator->translate('letter')
+                        . '<br/>⚖️ ' . $translator->translate('claim')
+                        . '<br/>🏛️ ' . $translator->translate('judgement')
+                        . '<br/>👮 ' . $translator->translate('enforcement')
+                        . '<br/>🛑️ ' . $translator->translate(
+                                                    'credit.invoice.for.invoice')
+                        . '<br/>❎ ' . $translator->translate('loss'))
+                        . '">📊 ' . $translator->translate('status') . '</span>',
         encodeHeader: false,
-        content: static function (Inv $model) use ($iR, $s, $irR, $translator): string {
+        content: static function (Inv $model) use ($iR, $s, $irR, $translator):
+                                                                        string {
             $statusId = $model->getStatus_id();
             if ($statusId === null) {
                 return '<span class="label label-default">N/A</span>';
@@ -608,7 +672,8 @@ $columns = [
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
             
             // Add read-only indicator
-            if (($model->getIs_read_only()) && $s->getSetting('disable_read_only') == '0') {
+            if (($model->getIs_read_only())
+                                && $s->getSetting('disable_read_only') == '0') {
                 $label .= ' 🚫';
             }
             // Add recurring indicator
@@ -616,14 +681,17 @@ $columns = [
                 $label .= ' ' . $translator->translate('recurring') . ' 🔄';
             }
             
-            return '<span data-bs-toggle="tooltip" title="' . Html::encode($label) . '" class="label label-' . $iR->getSpecificStatusArrayClass($statusId) . '">' . $emoji . '</span>';
+            return '<span data-bs-toggle="tooltip" title="'
+            . Html::encode($label) . '" class="label label-'
+            . $iR->getSpecificStatusArrayClass($statusId) . '">'
+            . $emoji . '</span>';
         },
         filter: DropdownFilter::widget()
             ->addAttributes([
                 'name' => 'status',
                 'class' => 'native-reset',
             ])
-            ->optionsData($optionsDataStatusDropDownFilter),
+            ->optionsData($optionsStatusDropDownFilter),
         encodeContent: false,
         withSorting: false,
         visible: $visible,
@@ -643,7 +711,8 @@ $columns = [
                     'style' => 'text-decoration:none',                            
                 ])    
                 ->href($urlGenerator->generate('client/edit',
-                    ['id' => $model->getClient()?->getClient_id(), 'origin' => 'inv']))
+                    ['id' => $model->getClient()?->getClient_id(),
+                        'origin' => 'inv']))
                 ->content($model->getClient()?->getClient_active() ? '✅' : '❌'
             );
         },
@@ -658,13 +727,15 @@ $columns = [
         encodeHeader: false,    
         property: 'creditinvoice_parent_id',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
-            $visible = $iR->repoInvUnLoadedquery($model->getCreditinvoice_parent_id());
+            $visible = $iR->repoInvUnLoadedquery(
+                                        $model->getCreditinvoice_parent_id());
             if (null !== $visible) {
                 $url = ($visible->getNumber() ?? '#') . '💳';
                 return  A::tag()
                         ->addAttributes(['style' => 'text-decoration:none'])
                         ->content($url)
-                        ->href($urlGenerator->generate('inv/view', ['id' => $model->getCreditinvoice_parent_id()]));
+                        ->href($urlGenerator->generate('inv/view',
+                                ['id' => $model->getCreditinvoice_parent_id()]));
             }
             return A::tag()->content('')->href('');
         },
@@ -683,10 +754,11 @@ $columns = [
                 'title' => 'toggle',
             ])->render(),
         encodeHeader: false,
-        content: static function (Inv $model) use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
+        content: static function (Inv $model)
+    use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
             $modelId = $model->getId();
             if (null !== $modelId) {
-                $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
+             $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
                 if ($count > 0) {
                     return $toggleColumnInvSentLog;
                 } else {
@@ -706,16 +778,23 @@ $columns = [
                 'title' => $translator->translate('email.logs.with.filter')
             ])->render(),
         encodeHeader: false,
-        content: static function (Inv $model) use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
+        content: static function (Inv $model) use
+        ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
             $modelId = $model->getId();
             if (null !== $modelId) {
                 $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
                 if ($count > 0) {
                     $linkToInvSentLogWithFilterInv = A::tag()
-                    ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('email.logs')])
+                    ->addAttributes([
+                        'type' => 'reset',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $translator->translate('email.logs')])
                     ->addClass('btn btn-success me-1')
                     ->content((string) $count)
-                    ->href($urlGenerator->generate('invsentlog/index', [], ['filterInvNumber' => $model->getNumber()]))
+                    ->href($urlGenerator->generate(
+                            'invsentlog/index',
+                            [],
+                            ['filterInvNumber' => $model->getNumber()]))
                     ->id('btn-all-visible');
                     return $linkToInvSentLogWithFilterInv;
                 }
@@ -733,7 +812,8 @@ $columns = [
                 'title' => $translator->translate('email.logs.table')
             ])->render(),
         encodeHeader: false,
-        content: static function (Inv $model) use ($islR, $urlGenerator, $gridComponents): string {
+        content: static function (Inv $model)
+                            use ($islR, $urlGenerator, $gridComponents): string {
             $modelId = $model->getId();
             if (null !== $modelId) {
                 $invSentLogs = $islR->repoInvSentLogForEachInvoice($modelId);
@@ -765,51 +845,57 @@ $columns = [
     new DataColumn(
         property: 'filterClient',
         header: $translator->translate('client'),
-        content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_full_name()),
+        content: static fn (Inv $model):
+            string => Html::encode($model->getClient()?->getClient_full_name()),
         encodeContent: false,
         filter: DropdownFilter::widget()
                 ->addAttributes([
                     'name' => 'client_id',
                     'class' => 'native-reset',
                 ])
-                ->optionsData($optionsDataClientsDropdownFilter),
+                ->optionsData($optionsClientsDropDownFilter),
         withSorting: false,
     ),
     new DataColumn(
         'client_number',
         header: $translator->translate('client.number'),
-        content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_number()),
+        content: static fn (Inv $model):
+                string => Html::encode($model->getClient()?->getClient_number()),
         encodeContent: false,
     ),
     new DataColumn(
         'client_address_1',
         header: $translator->translate('street.address'),
-        content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_address_1()),
+        content: static fn (Inv $model):
+            string => Html::encode($model->getClient()?->getClient_address_1()),
         encodeContent: false,
     ),
     new DataColumn(
         'client_address_2',
         header: $translator->translate('street.address.2'),
-        content: static fn (Inv $model): string => Html::encode($model->getClient()?->getClient_address_2()),
+        content: static fn (Inv $model):
+            string => Html::encode($model->getClient()?->getClient_address_2()),
         encodeContent: false,
     ),
         new DataColumn(
         property: 'filterClientGroup',
         header: $translator->translate('client.group'),
-        content: static fn (Inv $model): string => $model->getClient()?->getClient_group() ?? '',
+        content: static fn (Inv $model):
+                        string => $model->getClient()?->getClient_group() ?? '',
         filter: DropdownFilter::widget()
             ->addAttributes([
                 'name' => 'number',
                 'class' => 'native-reset',
             ])
-            ->optionsData($optionsDataClientGroupDropDownFilter),
+            ->optionsData($optionsClientGroupDropDownFilter),
         withSorting: false,
     ),
     new DataColumn(
         'time_created',
         header: $translator->translate('datetime.immutable.time.created'),
         // Show only the time of the DateTimeImmutable
-        content: static fn (Inv $model): string => ($model->getTime_created())->format('H:i:s'),
+        content: static fn (Inv $model):
+                        string => ($model->getTime_created())->format('H:i:s'),
         visible: $visible,
     ),
     new DataColumn(
@@ -819,11 +905,13 @@ $columns = [
             if ($model->getDate_modified() <> $model->getDate_created()) {
                 return Label::tag()
                        ->attributes(['class' => 'label label-danger'])
-                       ->content(Html::encode($model->getDate_modified()->format('Y-m-d')));
+                       ->content(
+                    Html::encode($model->getDate_modified()->format('Y-m-d')));
             } else {
                 return Label::tag()
                        ->attributes(['class' => 'label label-success'])
-                       ->content(Html::encode($model->getDate_modified()->format('Y-m-d')));
+                       ->content(
+                    Html::encode($model->getDate_modified()->format('Y-m-d')));
             }
         },
         encodeContent: false,
@@ -835,8 +923,13 @@ $columns = [
         content: static function (Inv $model) use ($dateHelper): Label {
             $now = new \DateTimeImmutable('now');
             return Label::tag()
-                    ->attributes(['class' => $model->getDate_due() > $now ? 'label label-success' : 'label label-warning'])
-                    ->content(Html::encode(!is_string($dateDue = $model->getDate_due()) ? $dateDue->format('Y-m-d') : ''));
+                    ->attributes(
+                        [
+                            'class' => $model->getDate_due() > $now
+                            ? 'label label-success' : 'label label-warning'])
+                    ->content(Html::encode(
+                            !is_string($dateDue = $model->getDate_due())
+                            ? $dateDue->format('Y-m-d') : ''));
         },
         encodeContent: false,
         withSorting: true,
@@ -844,12 +937,15 @@ $columns = [
     ),
     new DataColumn(
         property: 'filterInvAmountTotal',
-        header: $translator->translate('total') . '➡️' . $s->getSetting('currency_symbol'),
+        header: $translator->translate('total')
+            . '➡️' . $s->getSetting('currency_symbol'),
         content: static function (Inv $model) use ($decimalPlaces): Label {
             $invAmountTotal = $model->getInvAmount()->getTotal();
             return
                 Label::tag()
-                    ->attributes(['class' => $invAmountTotal > 0.00 ? 'label label-success' : 'label label-warning'])
+                    ->attributes([
+                        'class' => $invAmountTotal > 0.00
+                            ? 'label label-success' : 'label label-warning'])
                     ->content(Html::encode(null !== $invAmountTotal
                             ? number_format($invAmountTotal, $decimalPlaces)
                             : number_format(0, $decimalPlaces)));
@@ -861,49 +957,66 @@ $columns = [
                     'class' => 'native-reset',
                 ]),
         withSorting: false,
-        footer: Span::tag()->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])->content(number_format($totalAmount, $decimalPlaces))->render(),
+        footer: Span::tag()->addAttributes([
+                'style' => 'text-align: right; display: block; width: 100%;'
+            ])->content(number_format($totalAmount, $decimalPlaces))->render(),
     ),
     new DataColumn(
         'id',
-        header: $translator->translate('paid') . '➡️' . $s->getSetting('currency_symbol'),
+        header: $translator->translate('paid')
+                                    . '➡️' . $s->getSetting('currency_symbol'),
         content: static function (Inv $model) use ($decimalPlaces): Label {
             $invAmountPaid = $model->getInvAmount()->getPaid();
             return Label::tag()
-                    ->attributes(['class' => $model->getInvAmount()->getPaid() < $model->getInvAmount()->getTotal() ? 'label label-danger' : 'label label-success'])
+                    ->attributes([
+                        'class' =>
+        $model->getInvAmount()->getPaid() < $model->getInvAmount()->getTotal()
+                            ? 'label label-danger' : 'label label-success'])
                     ->content(Html::encode(null !== $invAmountPaid
-                            ? number_format($invAmountPaid > 0.00 ? $invAmountPaid : 0.00, $decimalPlaces)
+                            ? number_format($invAmountPaid > 0.00 ?
+                                    $invAmountPaid : 0.00, $decimalPlaces)
                             : number_format(0, $decimalPlaces)));
         },
         encodeContent: false,
         withSorting: false,
-        footer: Span::tag()->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])->content(number_format($totalPaid, $decimalPlaces))->render(),
+        footer: Span::tag()->addAttributes([
+                'style' => 'text-align: right; display: block; width: 100%;'
+            ])->content(number_format($totalPaid, $decimalPlaces))->render(),
     ),
     new DataColumn(
         'id',
-        header: $translator->translate('balance') . '➡️' . $s->getSetting('currency_symbol'),
+        header: $translator->translate('balance')
+                                    . '➡️' . $s->getSetting('currency_symbol'),
         content: static function (Inv $model) use ($decimalPlaces): Label {
             $invAmountBalance = $model->getInvAmount()->getBalance();
             return  Label::tag()
-                    ->attributes(['class' => $invAmountBalance > 0.00 ? 'label label-success' : 'label label-warning'])
+                    ->attributes([
+                         'class' => $invAmountBalance > 0.00 ?
+                                'label label-success' : 'label label-warning'])
                     ->content(Html::encode(null !== $invAmountBalance
-                            ? number_format($invAmountBalance > 0.00 ? $invAmountBalance : 0.00, $decimalPlaces)
+                            ? number_format($invAmountBalance > 0.00
+                                    ? $invAmountBalance : 0.00, $decimalPlaces)
                             : number_format(0, $decimalPlaces)));
         },
         encodeContent: false,
         withSorting: false,
-        footer: Span::tag()->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])->content(number_format($totalBalance, $decimalPlaces))->render(),
+        footer: Span::tag()->addAttributes([
+                'style' => 'text-align: right; display: block; width: 100%;'
+            ])->content(number_format($totalBalance, $decimalPlaces))->render(),
     ),
     new DataColumn(
         header: '🚚',
         content: static function (Inv $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-plus fa-margin']), $urlGenerator->generate(
+            return Html::a(Html::tag('i', '', [
+                'class' => 'fa fa-plus fa-margin']), $urlGenerator->generate(
                 'del/add',
                 [
-                    /**
-                 *
-                 * Related logic: see DeliveryLocation add function getRedirectResponse
-                 * Related logic: see config/common/routes/routes.php Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
-                 */
+/**
+ *
+ * Related logic: see DeliveryLocation add function getRedirectResponse
+ * Related logic: see config/common/routes/routes.php Route::methods([Method::GET,
+ *  Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
+ */
                     'client_id' => $model->getClient_id(),
                 ],
                 [
@@ -927,11 +1040,14 @@ $columns = [
                 $statusId = $quote->getStatus_id();
                 if (null !== $statusId) {
                     return Html::a(
-                        ($quote->getNumber() ?? '#') . ' ' . $qR->getSpecificStatusArrayLabel((string) $statusId),
+                        ($quote->getNumber() ?? '#')
+                        . ' '
+                        . $qR->getSpecificStatusArrayLabel((string) $statusId),
                         $urlGenerator->generate('quote/view', ['id' => $quote_id]),
                         [
                             'style' => 'text-decoration:none',
-                            'class' => 'label ' . $qR->getSpecificStatusArrayClass((string) $statusId),
+                            'class' => 'label '
+                            . $qR->getSpecificStatusArrayClass((string) $statusId),
                         ],
                     );
                 }
@@ -984,17 +1100,28 @@ $columns = [
             new ActionButton(
                 content: '🗑️',
                 url: static function (Inv $model) use ($s, $urlGenerator): string {
-                    return $model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0'
-                        ? $urlGenerator->generate('inv/delete', ['id' => $model->getId()])
+                    return $model->getIs_read_only() === false
+                            && $s->getSetting('disable_read_only')
+                            === (string) 0
+                            && $model->getSo_id() === '0'
+                            && $model->getQuote_id() === '0'
+                        ? $urlGenerator->generate('inv/delete', [
+                            'id' => $model->getId()])
                         : '';
                 },
-                attributes: static function (Inv $model) use ($s, $translator): array {
-                    if ($model->getIs_read_only() === false && $s->getSetting('disable_read_only') === (string) 0 && $model->getSo_id() === '0' && $model->getQuote_id() === '0') {
+                attributes: static function (Inv $model)
+                                                    use ($s, $translator): array {
+                    if ($model->getIs_read_only() === false
+                            && $s->getSetting('disable_read_only') === (string) 0
+                            && $model->getSo_id() === '0'
+                            && $model->getQuote_id() === '0') {
                         return [
                             'data-bs-toggle' => 'tooltip',
                             'title' => $translator->translate('delete'),
                             'class' => 'btn btn-outline-danger btn-sm',
-                            'onclick' => "return confirm('" . $translator->translate('delete.record.warning') . "');"
+                            'onclick' => "return confirm('"
+                            . $translator->translate('delete.record.warning')
+                            . "');"
                         ];
                     } else {
                         return [
@@ -1037,7 +1164,8 @@ $toolbarString
             ->addAttributes(['role' => 'group'])
             ->content(
                 Label::tag()
-                    ->addClass('btn btn-outline-secondary active bi bi-collection me-1')
+                    ->addClass(
+                        'btn btn-outline-secondary active bi bi-collection me-1')
                     ->content(' ' . $translator->translate('group.by') . ':')
                 .
                 Select::tag()
@@ -1138,8 +1266,10 @@ $previousGroupValue = '';
 // Function to get group value based on selected field
 $getGroupValue = static function (Inv $invoice) use ($groupBy, $iR): string {
     return match ($groupBy) {
-        'client' => $invoice->getClient()?->getClient_full_name() ?? 'Unknown Client',
-        'status' => $iR->getSpecificStatusArrayLabel((string) $invoice->getStatus_id()),
+        'client' => $invoice->getClient()?->getClient_full_name()
+                                                            ?? 'Unknown Client',
+        'status' => $iR->getSpecificStatusArrayLabel(
+                                             (string) $invoice->getStatus_id()),
         'month' => $invoice->getDate_created()->format('Y-m'),
         'year' => $invoice->getDate_created()->format('Y'),
         'date' => $invoice->getDate_created()->format('Y-m-d'),
@@ -1171,22 +1301,27 @@ if ($enableGrouping) {
             ];
         }
         $groupTotals[$groupValue]['count']++;
-        $groupTotals[$groupValue]['total'] += $invoice->getInvAmount()->getTotal() ?? 0.00;
-        $groupTotals[$groupValue]['paid'] += $invoice->getInvAmount()->getPaid() ?? 0.00;
-        $groupTotals[$groupValue]['balance'] += $invoice->getInvAmount()->getBalance() ?? 0.00;
+        $groupTotals[$groupValue]['total'] += $invoice->getInvAmount()->getTotal()
+                                                                        ?? 0.00;
+        $groupTotals[$groupValue]['paid'] += $invoice->getInvAmount()->getPaid()
+                                                                        ?? 0.00;
+        $groupTotals[$groupValue]['balance'] += $invoice->getInvAmount()->getBalance()
+                                                                        ?? 0.00;
     }
 }
 
 $gridView = GridView::widget()
 // unpack the contents within the array using the three dot splat operator
 ->bodyRowAttributes(['class' => 'align-left'])
-->tableAttributes(['class' => $tableOrTableResponsive . ' table-bordered table-striped h-75', 'id' => 'table-invoice'])
+->tableAttributes(['class' => $tableOrTableResponsive
+            . ' table-bordered table-striped h-75', 'id' => 'table-invoice'])
 ->columns(...$columns)
 ->columnGrouping(true); // Enable HTML column grouping for better styling
 
 // Apply grouping only if enabled
 if ($enableGrouping) {
-    $gridView = $gridView->beforeRow(static function (array|object $invoice, $key, int $index) use (
+    $gridView = $gridView->beforeRow(
+                static function (array|object $invoice, $key, int $index) use (
         &$previousGroupValue,
         $getGroupValue,
         $groupTotals,
@@ -1207,26 +1342,37 @@ if ($enableGrouping) {
             $columnCount = 15; // Approximate column count, adjust as needed
             
             return \Yiisoft\Html\Html::tr()
-                ->addClass('group-header bg-secondary text-white fw-bold group-collapsible')
+                ->addClass(
+               'group-header bg-secondary text-white fw-bold group-collapsible')
                 ->addAttributes(['onclick' => 'toggleGroupRows(this)'])
                 ->cells(
                     \Yiisoft\Html\Html::td()
                         ->addAttributes(['colspan' => (string) $columnCount])
                         ->addClass('p-3')
                         ->content(
-                            '<div class="d-flex justify-content-between align-items-center">' .
-                            '<div>' .
-                            '<i class="bi bi-chevron-down me-2 group-toggle-icon"></i>' .
-                            '<i class="bi bi-folder2-open me-2"></i>' .
-                            '<span class="fs-5">' . Html::encode(ucfirst($groupBy)) . ': ' . Html::encode($currentGroupValue) . '</span>' .
-                            '<span class="badge bg-primary ms-2">' . $groupData['count'] . ' invoice' . ($groupData['count'] === 1 ? '' : 's') . '</span>' .
-                            '</div>' .
-                            '<div class="text-end">' .
-                            '<small class="d-block">Total: <strong>' . number_format($groupData['total'], $decimalPlaces) . ' ' . $currencySymbol . '</strong></small>' .
-                            '<small class="d-block">Paid: <strong>' . number_format($groupData['paid'], $decimalPlaces) . ' ' . $currencySymbol . '</strong></small>' .
-                            '<small class="d-block">Balance: <strong>' . number_format($groupData['balance'], $decimalPlaces) . ' ' . $currencySymbol . '</strong></small>' .
-                            '</div>' .
-                            '</div>'
+'<div class="d-flex justify-content-between align-items-center">' .
+'<div>' .
+'<i class="bi bi-chevron-down me-2 group-toggle-icon"></i>' .
+'<i class="bi bi-folder2-open me-2"></i>' .
+'<span class="fs-5">' . Html::encode(ucfirst($groupBy))
+                      . ': ' . Html::encode($currentGroupValue) . '</span>' .
+'<span class="badge bg-primary ms-2">'
+                             . $groupData['count']
+                             . ' invoice'
+                             . ($groupData['count'] === 1 ? '' : 's') . '</span>' .
+'</div>' .
+'<div class="text-end">' .
+'<small class="d-block">Total: <strong>'
+                             . number_format($groupData['total'],
+                                     $decimalPlaces) . ' ' . $currencySymbol . '</strong></small>' .
+'<small class="d-block">Paid: <strong>'
+                             . number_format($groupData['paid'], $decimalPlaces)
+                             . ' ' . $currencySymbol . '</strong></small>' .
+'<small class="d-block">Balance: <strong>'
+                             . number_format($groupData['balance'],
+                                     $decimalPlaces) . ' ' . $currencySymbol . '</strong></small>' .
+'</div>' .
+'</div>'
                         )
                         ->encode(false)
                 );
@@ -1239,8 +1385,8 @@ if ($enableGrouping) {
 echo $gridView
 ->dataReader($sortedAndPagedPaginator)
 ->urlCreator($urlCreator)
-// the up and down symbol will appear at first indicating that the column can be sorted
-// Ir also appears in this state if another column has been sorted
+// the up and down symbol will appear at first indicating that the column can be
+// sorted. It also appears in this state if another column has been sorted
 ->sortableHeaderPrepend('<div class="float-end text-secondary text-opacity-50">⭥</div>')
 // the up arrow will appear if column values are ascending
 ->sortableHeaderAscPrepend('<div class="float-end fw-bold">⭡</div>')
@@ -1252,8 +1398,12 @@ echo $gridView
 ->emptyCell($translator->translate('not.set'))
 ->emptyCellAttributes(['style' => 'color:red'])
 ->id('w3-grid')
-->summaryAttributes(['class' => 'mt-3 me-3 summary d-flex justify-content-between align-items-center'])
-->summaryTemplate('<div class="d-flex align-items-center">' . $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'inv') . ' ' . $grid_summary . '</div>')
+->summaryAttributes([
+  'class' => 'mt-3 me-3 summary d-flex justify-content-between align-items-center'])
+->summaryTemplate('<div class="d-flex align-items-center">'
+        . $pageSizeLimiter::buttons(
+            $currentRoute, $s, $translator, $urlGenerator, 'inv')
+        . ' ' . $grid_summary . '</div>')
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);
@@ -1292,14 +1442,15 @@ document.addEventListener('DOMContentLoaded', function() {
         attachMagnifiersToAmounts() {
             const amountSelectors = [
                 '.label.label-success',
-                '.label.label-warning', 
+                '.label.label-warning',
                 '.label.label-danger'
             ];
 
             amountSelectors.forEach(selector => {
                 const elements = document.querySelectorAll(selector);
                 elements.forEach((element) => {
-                    if (this.isAmountElement(element) && !element.hasAttribute('data-magnifier-initialized')) {
+                    if (this.isAmountElement(element)
+                        && !element.hasAttribute('data-magnifier-initialized')) {
                         this.addMagnificationBehavior(element);
                         element.setAttribute('data-magnifier-initialized', 'true');
                     }
@@ -1351,7 +1502,8 @@ document.addEventListener('DOMContentLoaded', function() {
             element.addEventListener('mouseenter', () => {
                 if (!isHovered) {
                     isHovered = true;
-                    this.applyMagnification(element, originalStyles, borderColor, bgColor);
+                    this.applyMagnification(element, originalStyles, borderColor,
+                        bgColor);
                 }
             });
 
@@ -1368,7 +1520,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.removeMagnification(element, originalStyles);
                     isHovered = false;
                 } else {
-                    this.applyMagnification(element, originalStyles, borderColor, bgColor);
+                    this.applyMagnification(element, originalStyles, borderColor,
+                        bgColor);
                     isHovered = true;
                 }
             });
@@ -1399,7 +1552,8 @@ document.addEventListener('DOMContentLoaded', function() {
         setupMutationObserver() {
             this.observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
-                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    if (mutation.type === 'childList'
+                            && mutation.addedNodes.length > 0) {
                         setTimeout(() => {
                             this.attachMagnifiersToAmounts();
                         }, 100);
@@ -1407,7 +1561,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            const tableContainer = document.querySelector('.table-responsive') || document.body;
+            const tableContainer = document.querySelector('.table-responsive')
+                    || document.body;
             this.observer.observe(tableContainer, {
                 childList: true,
                 subtree: true
@@ -1449,7 +1604,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const groupHeaders = document.querySelectorAll('.group-header');
         groupHeaders.forEach(header => {
             const toggleIcon = header.querySelector('.group-toggle-icon');
-            const isCurrentlyCollapsed = toggleIcon.classList.contains('bi-chevron-right');
+            const isCurrentlyCollapsed =
+                            toggleIcon.classList.contains('bi-chevron-right');
             
             if (expand === null) {
                 // Toggle current state

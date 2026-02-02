@@ -530,8 +530,12 @@ if ((null !== $currentPath) && !$isGuest) {
                         . ' ' . PHP_VERSION),
                 DropdownItem::link($t->translate('platform.PhpSupport'),
                     'https://php.net/supported-versions'),
+                DropdownItem::link($t->translate('Psalm\'s Daniil Gentilli\'s Blog'),
+                    'https://https://blog.daniil.it/'),    
                 DropdownItem::link($t->translate('platform.update'),
-                    'https://wampserver.aviatechno.net/'),                
+                    'https://wampserver.aviatechno.net/'),
+                DropdownItem::link('Packages Microsoft Com',
+                    'https://packages.microsoft.com/'),    
                 DropdownItem::link(
 'Microsoft Typescript-Go Development Site for Typescript Version 7 (10x faster):'
 . ' Superceding Typescript 5.95',

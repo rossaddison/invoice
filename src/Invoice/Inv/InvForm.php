@@ -79,7 +79,6 @@ final class InvForm extends FormModel
         $this->date_due = $inv->getDate_due();
         $this->number = $inv->getNumber();
         $this->discount_amount = $inv->getDiscount_amount();
-        $this->discount_percent = $inv->getDiscount_percent();
         $this->terms = $inv->getTerms();
         $this->note = $inv->getNote();
         $this->document_description = $inv->getDocumentDescription();
@@ -223,11 +222,6 @@ final class InvForm extends FormModel
     public function getDiscount_amount(): ?float
     {
         return $this->discount_amount;
-    }
-
-    public function getDiscount_percent(): ?float
-    {
-        return $this->discount_percent;
     }
 
     public function getUrl_key(): ?string

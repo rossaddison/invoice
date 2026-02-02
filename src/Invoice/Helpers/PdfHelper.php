@@ -15,7 +15,6 @@ use App\Invoice\Entity\SalesOrderItem;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
 use App\Invoice\Setting\SettingRepository as SR;
-use App\Invoice\Sumex\SumexRepository;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
@@ -323,7 +322,6 @@ class PdfHelper
      * @param Inv $inv
      * @param \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR
      * @param \App\Invoice\UserInv\UserInvRepository $uiR
-     * @param SumexRepository $sumexR
      * @param \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
      * @return string
      */
@@ -345,7 +343,6 @@ class PdfHelper
         Inv $inv,
         \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR,
         \App\Invoice\UserInv\UserInvRepository $uiR,
-        SumexRepository $sumexR,
         \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer,
     ): string {
         if (null !== $inv_id) {
@@ -355,8 +352,6 @@ class PdfHelper
             $inv_template = $this->generate_inv_pdf_template_normal_paid_overdue_watermark($inv->getStatus_id() ?? 1);
             // Determine if discounts should be displayed if there are items on the invoice
             $items = ($iiR->repoCount($inv_id) > 0 ? $iiR->repoInvItemIdquery($inv_id) : null);
-            /** @var \App\Invoice\Entity\Sumex $sumex */
-            $sumex = $sumexR->repoSumexInvoicequery($inv_id);
             // e-invoicing requirement
             //$client_number = $inv->getClient()?->getClient_number();
             $client_purchase_order_number = ($so ? $so->getClient_po_number() : '');
@@ -402,7 +397,6 @@ class PdfHelper
                     'inv_custom_values' => $inv_custom_values,
                     'cvH' => new CVH($this->s, $cvR),
                 ]),
-                'sumex' => $sumex,
                 'userinv' => $userinv,
                 'company_logo_and_address' => $viewrenderer->renderPartialAsString(
                     '//invoice/setting/company_logo_and_address.php',
@@ -474,13 +468,12 @@ class PdfHelper
         \App\Invoice\Inv\InvRepository $iR,
         \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR,
         \App\Invoice\UserInv\UserInvRepository $uiR,
-        SumexRepository $sumexR,
         \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer,
     ): string {
         if (null !== $inv_id) {
             $inv = $iR->repoCount($inv_id) > 0 ? $iR->repoInvLoadedquery($inv_id) : null;
             if ($inv) {
-                $html = $this->generate_inv_html($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $inv, $itrR, $uiR, $sumexR, $viewrenderer);
+                $html = $this->generate_inv_html($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $inv, $itrR, $uiR, $viewrenderer);
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();

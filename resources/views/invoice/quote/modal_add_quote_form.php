@@ -97,14 +97,12 @@ echo Form::tag()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Field::hidden($form, 'discount_amount')
-    ->hideLabel(true);
-?>
+                <?= Field::text($form, 'discount_amount')
+                    ->disabled(false)
+                    ->addInputAttributes(['class' => 'form-control'])
+                    ->value(Html::encode($form->getDiscount_amount()));
+                ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::hidden($form, 'discount_percent')
-    ->hideLabel(true);
-?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::textarea($form, 'notes')

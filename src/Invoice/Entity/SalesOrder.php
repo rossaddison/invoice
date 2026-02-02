@@ -97,8 +97,6 @@ class SalesOrder
         private ?string $client_po_person = '',
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount_amount = 0.00,
-        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $discount_percent = 0.00,
         #[Column(type: 'string(32)', nullable: true)]
         private string $url_key = '',
         #[Column(type: 'string(90)', nullable: true)]
@@ -335,16 +333,6 @@ class SalesOrder
     public function setDiscount_amount(float $discount_amount): void
     {
         $this->discount_amount = $discount_amount;
-    }
-
-    public function getDiscount_percent(): ?float
-    {
-        return $this->discount_percent;
-    }
-
-    public function setDiscount_percent(float $discount_percent): void
-    {
-        $this->discount_percent = $discount_percent;
     }
 
     public function getUrl_key(): string

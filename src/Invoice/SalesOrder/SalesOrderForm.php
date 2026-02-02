@@ -47,9 +47,6 @@ final class SalesOrderForm extends FormModel
     #[Number(min: 0, max: 999999999999999999)]
     private ?float $discount_amount = 0;
 
-    #[Number(min: 0, max: 100)]
-    private ?float $discount_percent = 0;
-
     #[Length(min: 0, max: 32, skipOnEmpty: true)]
     private ?string $url_key = '';
 
@@ -73,7 +70,6 @@ final class SalesOrderForm extends FormModel
         $this->client_po_person = $salesOrder->getClient_po_person();
         $this->status_id = $salesOrder->getStatus_id();
         $this->discount_amount = $salesOrder->getDiscount_amount();
-        $this->discount_percent = $salesOrder->getDiscount_percent();
         $this->url_key = $salesOrder->getUrl_key();
         $this->password = $salesOrder->getPassword();
         $this->notes = $salesOrder->getNotes();
@@ -139,11 +135,6 @@ final class SalesOrderForm extends FormModel
     public function getDiscount_amount(): ?float
     {
         return $this->discount_amount;
-    }
-
-    public function getDiscount_percent(): ?float
-    {
-        return $this->discount_percent;
     }
 
     public function getUrl_key(): ?string

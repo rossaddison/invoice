@@ -962,7 +962,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Ƙirƙirar lambar ƙididdiga don daftarin '
 	. 'ƙididdiga',
-'generate.sumex' => 'Ƙirƙirar Sumex PDF',
 'generator' => 'Generator',
 'generator.add' => 'Ƙara Generator',
 'generator.camelcase.capital.name' => 'Babban Sunan Rakumi da aka '
@@ -1189,8 +1188,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Sunan mai watsa shiri',
-'html.sumex.no' => 'Html babu Sumex',
-'html.sumex.yes' => 'Html tare da Sumex',
 'id' => 'ID',
 'identifier.format' => 'Tsara mai ganowa',
 'identifier.format.template.tags' => 'Alamun Samfura don Mai Gano',
@@ -2967,65 +2964,6 @@ return [
 'subtotal' => 'Ƙarfafawa',
 'success' => 'Nasara',
 'successful' => 'Nasara',
-'sumex' => 'Sumex',
-'sumex.add' => 'Sumex Add',
-'sumex.canton' => 'Canton',
-'sumex.diagnosis' => 'Bincike',
-'sumex.edit' => 'Sumex Edita',
-'sumex.help' => 'Wannan zaɓin yana ƙara shigarwar '
-	. 'menu a cikin daftari don '
-	. 'samar da daftari mai dacewa '
-	. 'na TARMED/SUMEX1.'
-	. 'TARMED / SUMEX1 mizanin Swiss '
-	. 'ne don kula da lafiya.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Karin Bayani</a>',
-'sumex.information' => 'Bayanan Bayani na Sumex',
-'sumex.insurednumber' => 'Lambar Inshora',
-'sumex.observations' => 'Abun lura',
-'sumex.place' => 'Sumex Wuri',
-'sumex.place.association' => 'Ƙungiya',
-'sumex.place.company' => 'Kamfanin',
-'sumex.place.hospital' => 'Asibiti',
-'sumex.place.lab' => 'Lab',
-'sumex.place.practice' => 'Yi aiki',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Matsayin Sumex',
-'sumex.role.chiropractor' => 'Chiropractor',
-'sumex.role.dentaltechnician' => 'Masanin ilimin hakori',
-'sumex.role.dentist' => 'Likitan hakori',
-'sumex.role.druggist' => 'Likitan kwayoyi',
-'sumex.role.ergotherapist' => 'Ergotherapist',
-'sumex.role.hospital' => 'Asibiti',
-'sumex.role.labtechnician' => 'Injiniyan Lab',
-'sumex.role.logotherapist' => 'Logotherapist',
-'sumex.role.midwife' => 'Ungozoma',
-'sumex.role.naturopathicdoctor' => 'Likitan naturopathic',
-'sumex.role.naturopathictherapist' => 'Naturopathictherapist',
-'sumex.role.nursingstaff' => 'Ma\'aikatan jinya',
-'sumex.role.nutritionist' => 'Masanin abinci mai gina jiki',
-'sumex.role.other' => 'Sauran',
-'sumex.role.othertechnician' => 'Wani Masanin Fasaha',
-'sumex.role.pharmacist' => 'Mai harhada magunguna',
-'sumex.role.physician' => 'Likita',
-'sumex.role.physiotherapist' => 'Likitan Physiotherapist',
-'sumex.role.psychologist' => 'Masanin ilimin halayyar dan adam',
-'sumex.role.transport' => 'Sufuri',
-'sumex.role.wholesaler' => 'Dillali',
-'sumex.settings' => 'Saitunan Sumex',
-'sumex.sliptype' => 'Nau\'in Slip Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (Orange Slip)',
-'sumex.sliptype-esrRed' => 'Ja Zama',
-'sumex.sliptype.help' => 'Wannan zaɓin zai canza nau\'in '
-	. 'zamewa a cikin Sumex.'
-	. 'Da fatan za a lura '
-	. 'cewa idan kun zaɓi zaɓen '
-	. 'Orange kuna buƙatar lambar biyan '
-	. 'kuɗi wacce ta fara da '
-	. '&quot;01-&quot;',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'SATI',
 'sunday' => 'Lahadi',
 'system.settings' => 'Saitunan Tsari',
 'table' => 'Tebur',

@@ -543,18 +543,12 @@ $vat = $s->getSetting('enable_vat_registration');
                             </td>
                             <td class="amount">
                             <b><?php
-                                $percent = $salesorder->getDiscount_percent();
-                            if ($percent >= 0.00) {
-                                echo (string) $numberHelper->format_amount(
-                                        $percent) . ' %';
-                            } else {
                                 $discountAmount =
                                         $salesorder->getDiscount_amount();
                                 if ($discountAmount >= 0.00) {
                                     echo $numberHelper->format_amount(
                                             $discountAmount);
                                 }
-                            }
                             ?></b>
                             </td>
                         </tr>

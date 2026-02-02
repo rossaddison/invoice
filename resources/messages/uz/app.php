@@ -835,7 +835,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Qoralama tirnoqlari uchun kotirovka raqamini '
 	. 'yarating',
-'generate.sumex' => 'Sumex PDF yaratish',
 'generator' => 'Generator',
 'generator.add' => 'Generator qo\'shish',
 'generator.camelcase.capital.name' => 'Controller va Repository nomlarida ishlatiladigan '
@@ -1026,8 +1025,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Xost nomi',
-'html.sumex.no' => 'Sumex holda html',
-'html.sumex.yes' => 'Sumex bilan HTML',
 'id' => 'ID',
 'identifier.format' => 'Identifikatorni formatlash',
 'identifier.format.template.tags' => 'Identifikator uchun shablon teglari',
@@ -2546,62 +2543,6 @@ return [
 'subtotal' => 'Oraliq jami',
 'success' => 'Muvaffaqiyat',
 'successful' => 'Muvaffaqiyatli',
-'sumex' => 'Sumeks',
-'sumex.add' => 'Sumex qo\'shish',
-'sumex.canton' => 'Kanton',
-'sumex.diagnosis' => 'Diagnostika',
-'sumex.edit' => 'Sumex tahrirlash',
-'sumex.help' => 'Ushbu parametr TARMED / SUMEX1 '
-	. 'yarim mos keladigan hisob-fakturani yaratish '
-	. 'uchun hisob-fakturalarga menyu yozuvini qo\'shadi.'
-	. 'TARMED / SUMEX1 sog\'liqni saqlash '
-	. 'uchun Shveytsariya standartidir.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Batafsil ma\'lumot</a>',
-'sumex.information' => 'Sumex haqida ma\'lumot',
-'sumex.insurednumber' => 'Sug\'urta raqami',
-'sumex.observations' => 'Kuzatishlar',
-'sumex.place' => 'Sumex joy',
-'sumex.place.association' => 'Uyushma',
-'sumex.place.company' => 'Kompaniya',
-'sumex.place.hospital' => 'Kasalxona',
-'sumex.place.lab' => 'Laboratoriya',
-'sumex.place.practice' => 'Amaliyot',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Sumex roli',
-'sumex.role.chiropractor' => 'Chiropraktor',
-'sumex.role.dentaltechnician' => 'Stomatologiya bo\'yicha mutaxassis',
-'sumex.role.dentist' => 'Tish shifokori',
-'sumex.role.druggist' => 'Narkolog',
-'sumex.role.ergotherapist' => 'Ergoterapist',
-'sumex.role.hospital' => 'Kasalxona',
-'sumex.role.labtechnician' => 'Laboratoriya mutaxassisi',
-'sumex.role.logotherapist' => 'Logoterapevt',
-'sumex.role.midwife' => 'Doya',
-'sumex.role.naturopathicdoctor' => 'Naturopatik shifokor',
-'sumex.role.naturopathictherapist' => 'Naturopatik-terapevt',
-'sumex.role.nursingstaff' => 'Hamshiralik xodimlari',
-'sumex.role.nutritionist' => 'Dietolog',
-'sumex.role.other' => 'Boshqa',
-'sumex.role.othertechnician' => 'Boshqa texnik',
-'sumex.role.pharmacist' => 'Farmatsevt',
-'sumex.role.physician' => 'Shifokor',
-'sumex.role.physiotherapist' => 'Fizioterapevt',
-'sumex.role.psychologist' => 'Psixolog',
-'sumex.role.transport' => 'Transport',
-'sumex.role.wholesaler' => 'Ulgurji sotuvchi',
-'sumex.settings' => 'Sumex sozlamalari',
-'sumex.sliptype' => 'Sumex slip turi',
-'sumex.sliptype-esr9' => 'ESR 9 (to\'q sariq rang)',
-'sumex.sliptype-esrRed' => 'Qizil slip',
-'sumex.sliptype.help' => 'Ushbu parametr Sumex-dagi slip turini '
-	. 'o\'zgartiradi.'
-	. 'E\'tibor bering, agar siz apelsin '
-	. 'slipini tanlasangiz, sizga &quot;01-&quot; bilan '
-	. 'boshlanadigan abonent raqami kerak bo\'ladi.',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'HAFTA',
 'sunday' => 'yakshanba',
 'system.settings' => 'Tizim sozlamalari',
 'table' => 'Jadval',
