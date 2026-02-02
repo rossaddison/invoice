@@ -59,8 +59,6 @@ class Product
         private float $product_price_base_quantity = 1.00,
         #[Column(type: 'text', nullable: true)]
         private ?string $provider_name = '',
-        #[Column(type: 'decimal(20,2)', nullable: true)]
-        private ?float $product_tariff = 0.00,
         #[Column(type: 'text', nullable: true)]
         private ?string $product_additional_item_property_name = '',
         #[Column(type: 'text', nullable: true)]
@@ -337,15 +335,5 @@ class Product
     public function getUnit_peppol_id(): string
     {
         return (string) $this->unit_peppol_id;
-    }
-
-    public function getProduct_tariff(): ?float
-    {
-        return $this->product_tariff;
-    }
-
-    public function setProduct_tariff(float $product_tariff): void
-    {
-        $this->product_tariff = $product_tariff;
     }
 }

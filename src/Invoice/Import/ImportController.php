@@ -226,9 +226,6 @@ final class ImportController extends BaseController
                 'client_tax_code',
                 'client_language',
                 'client_active',
-                'client_avs',
-                'client_insurednumber',
-                'client_veka',
                 'client_birthdate',
                 'client_gender',
             ])
@@ -328,9 +325,6 @@ final class ImportController extends BaseController
             $newClient->setClient_tax_code((string) $client['client_tax_code']);
             $newClient->setClient_language((string) $client['client_language']);
             $newClient->setClient_active($client['client_active'] === '1' ? true : false);
-            $newClient->setClient_avs((string) $client['client_avs']);
-            $newClient->setClient_insurednumber((string) $client['client_insurednumber']);
-            $newClient->setClient_veka((string) $client['client_veka']);
             $newClient->setClient_birthdate(new \DateTime((string) $client['client_birthdate']));
             $newClient->setClient_gender((int) $client['client_gender']);
             $this->cR->save($newClient);
@@ -354,7 +348,6 @@ final class ImportController extends BaseController
             $newProduct->setProvider_name((string) $product['provider_name']);
             $newProduct->setTax_rate_id((int) $product['tax_rate_id']);
             $newProduct->setUnit_id((int) $product['unit_id']);
-            $newProduct->setProduct_tariff((float) $product['product_tariff']);
             $this->pR->save($newProduct);
         }
         $this->flashMessage('info', $this->translator->translate('invoiceplane.products'));

@@ -6,9 +6,11 @@ namespace App\Invoice\InvSentLog;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
+use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvSentLog;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserService;
 use App\User\User;
@@ -37,7 +39,8 @@ final class InvSentLogController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+                                        $viewRenderer, $session, $sR, $flash);
         $this->invsentlogService = $invsentlogService;
     }
 
@@ -65,9 +68,11 @@ final class InvSentLogController extends BaseController
         $user = $this->userService->getUser();
         if ($user instanceof User && null !== $user->getId()) {
             $userId = $user->getId();
-            // Use this user's id to see whether a user has been setup under UserInv ie. yii-invoice's list of users
-            $userinv = ($uiR->repoUserInvUserIdcount((string) $userId) > 0 ? $uiR->repoUserInvUserIdquery((string) $userId) : null);
-            if (null !== $userinv && null !== $userId) {
+            // Use this user's id to see whether a user has been setup under
+            //  UserInv ie. yii-invoice's list of users
+            $userinv = ($uiR->repoUserInvUserIdcount((string) $userId) > 0 ?
+                    $uiR->repoUserInvUserIdquery((string) $userId) : null);
+            if (null !== $userinv && null !== $userId && $userinv->getActive()) {
                 $userInvListLimit = $userinv->getListLimit();
                 $invsentlogs = $islR->withUser($userId);
                 $finalPage = $queryPage ?? $page;
@@ -81,7 +86,8 @@ final class InvSentLogController extends BaseController
                 }
                 if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
                 && (isset($queryFilterClient) && !empty($queryFilterClient))) {
-                    $invsentlogs = $islR->filterInvNumberWithClient($queryFilterInvNumber, $queryFilterClient);
+                    $invsentlogs = $islR->filterInvNumberWithClient(
+                                    $queryFilterInvNumber, $queryFilterClient);
                 }
                 $paginator = (new OffsetPaginator($invsentlogs))
                 ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
@@ -90,15 +96,22 @@ final class InvSentLogController extends BaseController
                 $parameters = [
                     'paginator' => $paginator,
                     'alert' => $this->alert(),
-                    'viewInv' => $this->userService->hasPermission(Permissions::VIEW_INV),
+                    'viewInv' =>
+                        $this->userService->hasPermission(Permissions::VIEW_INV),
                     'userInv' => $userinv,
-                    'defaultPageSizeOffsetPaginator' => $userinv->getListLimit() ?? 10,
-                    'optionsDataGuestInvNumberDropDownFilter' => $this->optionsDataGuestInvNumberFilter($islR, (int) $userId),
+                    'defaultPageSizeOffsetPaginator' =>
+                                                $userinv->getListLimit() ?? 10,
+                    'optionsDataGuestInvNumberDropDownFilter' =>
+                    $this->optionsDataGuestInvNumberFilter($islR, (int) $userId),
                     // Get all the clients that have been assigned to this user
-                    'optionsDataGuestClientDropDownFilter' => $this->optionsDataGuestClientsFilter($islR, $userId),
+                    'optionsDataGuestClientDropDownFilter' =>
+                            $this->optionsDataGuestClientsFilter($islR, $userId),
                 ];
                 return $this->viewRenderer->render('guest', $parameters);
             }
+            $this->flashMessage('info',
+                        $this->translator->translate('user.inv.active.not'));
+            return $this->webService->getNotFoundResponse();
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -134,7 +147,9 @@ final class InvSentLogController extends BaseController
         }
         if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
         && (isset($queryFilterClientId) && !empty($queryFilterClientId))) {
-            $invsentlogs = $islR->filterInvNumberWithClient($queryFilterInvNumber, $queryFilterClientId);
+            $invsentlogs =
+            $islR->filterInvNumberWithClient(
+                                    $queryFilterInvNumber, $queryFilterClientId);
         }
         $paginator = (new OffsetPaginator($invsentlogs))
         ->withPageSize($this->sR->positiveListLimit())
@@ -143,10 +158,13 @@ final class InvSentLogController extends BaseController
         $parameters = [
             'paginator' => $paginator,
             'alert' => $this->alert(),
-            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                    ? (int) $this->sR->getSetting('default_list_limit') : 1,
-            'optionsDataInvNumberDropDownFilter' => $this->optionsDataInvNumberFilter($islR),
-            'optionsDataClientsDropDownFilter' => $this->optionsDataClientsFilter($islR),
+            'defaultPageSizeOffsetPaginator' =>
+                $this->sR->getSetting('default_list_limit') ?
+                (int) $this->sR->getSetting('default_list_limit') : 1,
+            'optionsDataInvNumberDropDownFilter' =>
+                                        $this->optionsDataInvNumberFilter($islR),
+            'optionsDataClientsDropDownFilter' =>
+                                        $this->optionsDataClientsFilter($islR),
         ];
         return $this->viewRenderer->render('index', $parameters);
     }
@@ -168,11 +186,14 @@ final class InvSentLogController extends BaseController
     }
 
     /**
-     * @param ISLR $islR
      * @param int id
+     * @param ISLR $islR
+     * @param UCR $ucR
+     * @param UIR $uiR
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function view(ISLR $islR, #[RouteArgument('id')] int $id): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(#[RouteArgument('id')] int $id, ISLR $islR,
+        UCR $ucR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
     {
         $invsentlog = $this->invsentlog($islR, $id);
         if ($invsentlog) {
@@ -183,9 +204,76 @@ final class InvSentLogController extends BaseController
                 'actionArguments' => ['id' => $id],
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('view', $parameters);
+            $inv = $invsentlog->getInv();
+            if (null!==$inv) {
+                if ($this->rbacObserver($inv, $ucR, $uiR)) {
+                    return $this->viewRenderer->render('view', $parameters);
+                }
+                if ($this->rbacAdmin()) {
+                    return $this->viewRenderer->render('view', $parameters);
+                }
+                if ($this->rbacAccountant()) {
+                    return $this->viewRenderer->render('view', $parameters);
+                }
+            }    
         }
         return $this->webService->getRedirectResponse('invsentlog/index');
+    }
+    
+    private function rbacAccountant() : bool {
+        // has accountant role
+        if (($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
+            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT)))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private function rbacAdmin() : bool {
+        // has observer role
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::EDIT_INV))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Purpose:
+     * Prevent browser manipulation and ensure that views are only accessible
+     * to users 1. with the observer role's VIEW_INV permission and 2. supervise a 
+     * client requested invoice and are an active current user for these client's
+     * invoices.
+     * @param Inv $inv
+     * @param UCR $ucR
+     * @param UIR $uiR
+     * @return bool
+     */
+    private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
+        $statusId = $inv->getStatus_id();
+        if (null!==$statusId) {
+            // has observer role
+            if ($this->userService->hasPermission(Permissions::VIEW_INV)
+                && !($this->userService->hasPermission(Permissions::EDIT_INV))
+                // the invoice  is not a draft i.e. has been sent
+                && !($statusId === 1)
+                // the invoice is intended for the current user        
+                && ($inv->getUser_id() === $this->userService->getUser()?->getId())
+                // the invoice client is associated with the above user
+                // the observer user may be paying for more than one client    
+                && ($ucR->repoUserClientqueryCount($inv->getUser_id(),
+                                                $inv->getClient_id()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
+                // the current observer user is active
+                if (null !== $userInv && $userInv->getActive()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -224,7 +312,8 @@ final class InvSentLogController extends BaseController
          * @var InvSentLog $invsentlog
          */
         foreach ($invsentlogs as $invsentlog) {
-            $clientFullName = $invsentlog->getInv()?->getClient()?->getClient_full_name();
+            $clientFullName =
+                    $invsentlog->getInv()?->getClient()?->getClient_full_name();
             $clientId = $invsentlog->getInv()?->getClient()?->getClient_id();
             if (null !== $clientFullName && null !== $clientId) {
                 if (!in_array($clientFullName, $optionsDataClients)) {
@@ -240,7 +329,8 @@ final class InvSentLogController extends BaseController
      * @param ISLR $islR
      * @return array
      */
-    public function optionsDataGuestInvNumberFilter(ISLR $islR, int $user_id): array
+    public function optionsDataGuestInvNumberFilter(
+                                                ISLR $islR, int $user_id): array
     {
         $optionsDataGuestInvNumbers = [];
         // Get all the invoices sent to this user
@@ -280,13 +370,17 @@ final class InvSentLogController extends BaseController
          * @var InvSentLog $invSentLog
          */
         foreach ($invsentlogs as $invSentLog) {
-            $invClientFullName = $invSentLog->getInv()?->getClient()?->getClient_full_name();
+            $invClientFullName =
+                    $invSentLog->getInv()?->getClient()?->getClient_full_name();
             $invClientId = $invSentLog->getInv()?->getClient()?->getClient_id();
             $invUserId = $invSentLog->getInv()?->getUser()?->getId();
             if (null !== $invUserId && null !== $invClientId) {
-                if ((null !== $invClientFullName) && ($userId == (int) $invUserId)) {
-                    if (!in_array($invClientFullName, $optionsDataGuestClientsOfUser)) {
-                        $optionsDataGuestClientsOfUser[$invClientId] = $invClientFullName;
+                if ((null !== $invClientFullName)
+                        && ($userId == (int) $invUserId)) {
+                    if (!in_array($invClientFullName,
+                            $optionsDataGuestClientsOfUser)) {
+                        $optionsDataGuestClientsOfUser[$invClientId] =
+                                $invClientFullName;
                     }
                 }
             }

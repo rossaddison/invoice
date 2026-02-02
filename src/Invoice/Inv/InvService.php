@@ -63,14 +63,16 @@ final readonly class InvService
          * 2. Has no invoice number
          * 3. Has a status of 'sent'
          */
-        if ((!$model->isNewRecord()) && (strlen($model->getNumber() ?? '') == 0)  && ($array['status_id'] == 2)) {
+        if ((!$model->isNewRecord()) && (strlen($model->getNumber() ?? '') == 0)
+                && ($array['status_id'] == 2)) {
             $model->setNumber(
                 (string) $gR->generate_number(
                     (int) $array['group_id'], true));
         }
 
         /**
-         * The following fields are not set on the form but are calculated automatically
+         * The following fields are not set on the form but are calculated
+         *  automatically
          */
 
         $datetime_created = new DateTimeImmutable();
@@ -78,23 +80,29 @@ final readonly class InvService
         /**
          * @var string $array['date_created']
          */
-        $date_created = $array['date_created'] ?? (new DateTimeImmutable('now'))->format('Y-m-d');
+        $date_created = $array['date_created'] ??
+                (new DateTimeImmutable('now'))->format('Y-m-d');
         $model->setDate_created($date_created);
 
         $datetime_supplied = new DateTimeImmutable();
         /**
          * @var string $array['date_supplied']
          */
-        $date_supplied = $array['date_supplied'] ?? (new DateTimeImmutable('now'))->format('Y-m-d');
-        $model->setDate_supplied($datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new DateTimeImmutable('1901/01/01'));
+        $date_supplied = $array['date_supplied'] ??
+                (new DateTimeImmutable('now'))->format('Y-m-d');
+        $model->setDate_supplied($datetime_supplied::createFromFormat('Y-m-d',
+                $date_supplied) ?: new DateTimeImmutable('1901/01/01'));
 
 
         $datetimeimmutable_tax_point = $this->set_tax_point(
             $model,
-            $datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?: new DateTimeImmutable('1901/01/01'),
-            $datetime_created::createFromFormat('Y-m-d', $date_created) ?: new DateTimeImmutable('1901/01/01'),
+            $datetime_supplied::createFromFormat('Y-m-d', $date_supplied) ?:
+                new DateTimeImmutable('1901/01/01'),
+            $datetime_created::createFromFormat('Y-m-d', $date_created) ?:
+                new DateTimeImmutable('1901/01/01'),
         );
-        null !== $datetimeimmutable_tax_point ? $model->setDate_tax_point($datetimeimmutable_tax_point) : '';
+        null !== $datetimeimmutable_tax_point ?
+                $model->setDate_tax_point($datetimeimmutable_tax_point) : '';
 
         $model->setDate_due($s);
 
@@ -125,9 +133,6 @@ final readonly class InvService
         isset($array['postal_address_id']) ? 
             $model->setPostal_address_id(
                 (int) $array['postal_address_id']) : '';
-        isset($array['discount_percent']) ? 
-            $model->setDiscount_percent(
-                (float) $array['discount_percent']) : '';
         isset($array['discount_amount']) ? 
             $model->setDiscount_amount(
                 (float) $array['discount_amount']) : '';
@@ -152,24 +157,29 @@ final readonly class InvService
 
         if ($model->isNewRecord()) {
             if ($s->getSetting('mark_invoices_sent_copy') === '1') {
-                // mark the copy as sent and make it read-only
+// mark the copy as sent and make it read-only
                 $model->setStatus_id(2);
                 $model->setIs_read_only(true);
             } else {
-                // mark the invoice as a draft copy and make it editable i.e. not is read only
+// mark the invoice as a draft copy and make it editable i.e. not is read only
                 $model->setStatus_id(1);
                 $model->setIs_read_only(false);
             }
-            // if draft invoices must get invoice numbers
+// if draft invoices must get invoice numbers
             if ($s->getSetting('generate_invoice_number_for_draft') === '1') {
-                $model->setNumber((string) $gR->generate_number((int) $array['group_id'], true));
+                $model->setNumber(
+                 (string) $gR->generate_number((int) $array['group_id'], true));
             } else {
                 $model->setNumber('');
             }
             $model->setUser_id((int) $user->getId());
-            $model->setTime_created((new DateTimeImmutable('now'))->format('H:i:s'));
-            $model->setPayment_method((int) $s->getSetting('invoice_default_payment_method') ?: 4);
-            $model->setDiscount_amount(0.00);
+            $model->setTime_created(
+                                (new DateTimeImmutable('now'))->format('H:i:s'));
+            $model->setPayment_method(
+                    (int) $s->getSetting('invoice_default_payment_method') ?: 4);
+            if (!isset($array['discount_amount'])) {
+                $model->setDiscount_amount(0.00);
+            }
         }
         $this->repository->save($model);
         return $model;
@@ -227,8 +237,6 @@ final readonly class InvService
         $model->setNumber((string) $array['number']);
         $model->setDiscount_amount(
             (float) $array['discount_amount']);
-        $model->setDiscount_percent(
-            (float) $array['discount_percent']);
         $model->setTerms(
             (string) $array['terms'] ?: 
                 $this->translator->translate(
@@ -277,7 +285,8 @@ final readonly class InvService
                     // date supplied more than 14 days before invoice date
                     return $date_supplied;
                 }
-                // if the issue date (created) is within 14 days after the supply (basic) date then use the issue/created date.
+// if the issue date (created) is within 14 days after the supply (basic) date
+// then use the issue/created date.
                 return $date_created;
             }
             if ($date_created < $date_supplied) {
@@ -399,7 +408,6 @@ final readonly class InvService
         $model->setClient_id((int) $details['client_id']);
         $model->setGroup_id((int) $details['group_id']);
         $model->setStatus_id((int) $details['status_id']);
-        $model->setDiscount_percent((float) $details['discount_percent']);
         $model->setDiscount_amount((float) $details['discount_amount']);
         $model->setUrl_key((string) $details['url_key']);
         $model->setPassword((string) $details['password']);

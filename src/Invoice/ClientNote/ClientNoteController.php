@@ -10,6 +10,8 @@ use App\Invoice\Entity\ClientNote;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Helpers\DateHelper;
+use App\Invoice\UserClient\UserClientRepository as UCR;
+use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -37,7 +39,8 @@ final class ClientNoteController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $viewRenderer,
+                $session, $sR, $flash);
         $this->clientNoteService = $clientNoteService;
     }
 
@@ -49,7 +52,6 @@ final class ClientNoteController extends BaseController
      */
     public function index(ClientNoteRepository $clientnoteRepository, Request $request): \Yiisoft\DataResponse\DataResponse
     {
-        $this->rbac();
         $paginator = (new OffsetPaginator($clientnoteRepository->findAllPreloaded()));
         $parameters = [
             'alert' => $this->alert(),
@@ -88,7 +90,8 @@ final class ClientNoteController extends BaseController
                     return $this->webService->getRedirectResponse('clientnote/index');
                 }
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -124,12 +127,16 @@ final class ClientNoteController extends BaseController
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        $this->clientNoteService->saveClientNote($client_note, $body);
-                        return $this->webService->getRedirectResponse('clientnote/index');
+                    if ($formHydrator->populateFromPostAndValidate(
+                                                             $form, $request)) {
+                        $this->clientNoteService->saveClientNote(
+                                                            $client_note, $body);
+                        return $this->webService->getRedirectResponse(
+                                                            'clientnote/index');
                     }
                     $parameters['form'] = $form;
-                    $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                    $parameters['error'] =
+                    $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 }
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -158,47 +165,55 @@ final class ClientNoteController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param ClientNoteRepository $clientnoteRepository
      * @param ClientRepository $clientRepository
+     * @param UCR $ucR
+     * @param UIR $uiR
      * @return Response
      */
     public function view(
         CurrentRoute $currentRoute,
         ClientNoteRepository $clientnoteRepository,
         ClientRepository $clientRepository,
+        UCR $ucR,
+        UIR $uiR    
     ): Response {
-        $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
-        if ($client_note) {
-            $form = new ClientNoteForm($client_note);
+        $clientNote = $this->clientnote($currentRoute, $clientnoteRepository);
+        if ($clientNote) {
+            $form = new ClientNoteForm($clientNote);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'clientnote/edit',
-                'actionArguments' => ['id' => $client_note->getId()],
+                'actionArguments' => ['id' => $clientNote->getId()],
                 'form' => $form,
                 'clients' => $clientRepository->findAllPreloaded(),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            if ($this->rbacObserver(
+                                    $clientNote->getClient_id(), $ucR, $uiR)) {
+                return $this->viewRenderer->render('_view', $parameters);
+            }
         }
         return $this->webService->getRedirectResponse('clientnote/index');
     }
-
-    /**
-     * @return Response|true
-     */
-    private function rbac(): bool|Response
-    {
-        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
-        if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('permission'));
-            return $this->webService->getRedirectResponse('clientnote/index');
+    
+    private function rbacObserver(
+                                    string $clientId, UCR $ucR, UIR $uiR): bool {
+        $userClient = $ucR->repoUserquery($clientId);
+        if (null!==$userClient) {
+            $userId = $userClient->getUser_id();
+            $userInv = $uiR->repoUserInvUserIdquery($userId);
+            if (null !== $userInv && $userInv->getActive()) {
+                return true;
+            }
         }
-        return $canEdit;
+        return false;
     }
-
+    
     /**
      * @param CurrentRoute $currentRoute
      * @param ClientNoteRepository $clientnoteRepository
      * @return ClientNote|null
      */
-    private function clientnote(CurrentRoute $currentRoute, ClientNoteRepository $clientnoteRepository): ?ClientNote
+    private function clientnote(CurrentRoute $currentRoute,
+                        ClientNoteRepository $clientnoteRepository): ?ClientNote
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {

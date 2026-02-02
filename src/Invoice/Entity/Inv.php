@@ -101,8 +101,6 @@ class Inv
         private ?string $number = '',
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $discount_amount = 0.00,
-        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $discount_percent = 0.00,
         #[Column(type: 'longText', nullable: false)]
         private string $terms = '',
         // src/Invoice/Ubl/Invoice - A UBL invoice must have a note
@@ -417,16 +415,6 @@ class Inv
     public function setDiscount_amount(float $discount_amount): void
     {
         $this->discount_amount = $discount_amount;
-    }
-
-    public function getDiscount_percent(): ?float
-    {
-        return $this->discount_percent;
-    }
-
-    public function setDiscount_percent(float $discount_percent): void
-    {
-        $this->discount_percent = $discount_percent;
     }
 
     public function getTerms(): string

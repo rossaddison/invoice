@@ -1,9 +1,8 @@
 <h6 id="invoice">Development Summary: (...resources/views/invoice/info/invoice.php)</h6>
 
-<p><b>Aim: To develop a similar invoicing system to InvoicePlane with <s>integrating with the latest Jquery, and</s> the security features of Yii3, Snyk, CodeQl using wampserver 
-        as a test platform for WAMP and also lightweight Alpine / heavier Ubuntu 22.04 LTS for LAMP.</b>
+<p><b>Aim: To develop a similar invoicing system to InvoicePlane integrating with Microsoft's Latest Typescript Go V7 initiative <s>integrating with the latest Jquery, and</s> the security features of Yii3, Snyk, CodeQl using wampserver as a test platform for WAMP and also lightweight Alpine / heavier Ubuntu 22.04 LTS for LAMP and the production of e-invoices in compliance with the April 6th 2029 Mandate by the HMRC for all businesses to use e-invoicing<a href="https://www.gov.uk/government/consultations/promoting-electronic-invoicing-across-uk-businesses-and-the-public-sector/outcome/promoting-electronic-invoicing-across-uk-businesses-and-the-public-sector-consultation-response"></a></b>
 </p>
-<p>Less emphasis has been placed on using javascript due to security vulnerabilities with jQuery. More emphasis is being placed on using php forms instead of javascript. </p> 
+<p>Less emphasis has been placed on using javascript due to security vulnerabilities with jQuery. More emphasis is being placed on using php forms instead of javascript. Typescript is replacing jQuery because it is more secure and like the Yii3 Framework solidly type strict. Yii3 has been chosen because it relies heavily on psalm static analysis level 1 standards which exposes even the most robust AI solutions. All credit to psalm.dev</p>
 <p>Free sponsorship has been provided by vultr.com in Frankfurt on yii3i.online for testing.<p>
 <p><b>To Do's - Longer Term Goals</b></p>
 <p>1. <s>Integration of Payment Gateways</s>PCI Compliant Stripe, Amazon Pay, Braintree, and Mollie have been introduced.</p>
@@ -51,6 +50,18 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>30th January 2026</b></p>
+<p>Sorted config/common/routes.php according to permission $pVI and $pEI.</p>
+<p>Added rbac to those $pVI routes which were susceptible to browser 
+   manipulation.</p>
+<p>A client cannot be unassigned or removed from a registered user if there is 
+pre-existing documentation i.e. quote, salesorders, invoices, credit notes. 
+type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
+'userclient/delete'</p>
+<p>Removed discount percent </p>
+<p>Remove Sumex. Backup branch created pre-sumex-removal</p>
+<p><b>27th January 2026</b></p>
+<p>Improve client side</p>
 <p><b>25th January 2026</b></p>
 <p>Internal Peppol Document Validator Introduced which can be disabled in settings if Ecosio Validator is preferably used.</p>
 <p>src\Invoice\Helpers\Peppol\PeppolValidator.php</p>
@@ -61,13 +72,13 @@
    currency, and currency conversions.</p>
 <p><b>18th January 2026</b></p>
 <p>Document and Line Item Allowance Charges between Quote, SalesOrder, and Inv functional.</p>
-<p>Step 1: Quote sent, Step 2: Guest accepts terms, Step 3: SalesOrder sent, 
-   Step 4: Guest approves with Purchase Order number submission on line items, 
+<p>Step 1: Quote sent, Step 2: Observer User accepts terms, Step 3: SalesOrder sent, 
+   Step 4: Observer User approves with Purchase Order number submission on line items, 
    Step 5: Admin sets SalesOrder status to InvoiceGenerate after Delivery,
    Step 6: Admin Generates Invoice, Step 7: Peppol Invoice creatable on Admin side.
-   Step 8: e-invoice validated via ecosio free validator.</p>
+   Step 8: e-invoice validated via ecosio free validator or above Peppol Validator.</p>
 <p>Peppol UBL 2.1 functional</p>
-<p>Next: Recipient Guest can generate e-invoice.</p>
+<p>Next: Recipient Observer User/Guest can generate e-invoice.</p>
 <p><b>10th January 2026</b></p>
 <p>Peppol stream toggle button reflects the dropdown button setting when changed</p>
 <p><b>7th January 2026</b></p>
@@ -1482,7 +1493,6 @@ p>Further integration of the entity into the form constructs for the rest of the
 <p>Html of invoice can be created - modal_inv_to_html - under View...Options</p>
 <p>Logo introduced on invoices</p>
 <p>A common company logo and address template created under invoice/setting/views.</p>
-<p>A sumex extension table of table Invoice created. - Generating a sumex pdf is in its infancy.</p>
 <p>Removed extensions causing DOM errors. F12 not carrying any errors.</p>
 <p>Simplified Introductory Slider</p>
 <p>Created 3 additional 'Yes/No' settings for 1. Stream (G Icon) 2. Archive (folder icon) 3. Html code (code icon) under Pdf Settings</p>
@@ -1897,7 +1907,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>Move invoice/index schema code to Generator...Schema</p>
 <p>Setting...UserAccount functional. Payment...Enter functional.</p>
 <p>Invoices cannot be edited once paid. The read only flag is used on the invoice and buttons are disabled.</p>
-<p><b>5th August 2022</b> - The Dashboard has been put up. Once Sumex is further developed it will be added to the dashboard. Accessible by menu: Dashboard </p>
+<p><b>5th August 2022</b> - The Dashboard has been put up.</p>
 <p>To avoid issues concerning psr3 and unvoided return types in mpdf/mpdf I have forked the latest mpdf/mpdf development repo and made adjustments to the relevant files. </p>
 <p>The fork rossaddison/mpdf has been included in the composer.json file. Although at this stage it will run using version mpdf/mpdf 8.016, using psr 2, I have the reassurance that these errors concerning void will not show up in Yii</p> 
 <p><b>29th July 2022</b> - Psalm testing using 'php ./vendor/bin/psalm' at command prompt - static errors removed. Info issues reduced from 2800 to 2000.</p>
@@ -2037,7 +2047,7 @@ to be done everytime you edit a file with 'special letters'. So edit the file wi
 <p>Redundant functions generated by the Generator have to be deleted.</p>
 <b>Work in progress</b>
 <p>The client/view has been developed but the index under the Client View has to be rebuilt using the code similar to the new Invoice index.</p>
-<p>The dashboard is being developed with Sumex still to be incorporated.</p>
+<p>The dashboard is being developed.</p>
 <p>All the settings in the setting view,  still have to be linked to their specific purpose by consulting with the Original Invoiceplane code. Progress on this has been made especially with the Email tab.</p>
 <p>All forms have to be modified from Html to Yii3's php based form structure.
 <p>Email Template</p>

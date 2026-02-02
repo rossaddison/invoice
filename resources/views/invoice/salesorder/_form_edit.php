@@ -114,17 +114,18 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                                     /**
                                                      * @var App\Invoice\Entity\DeliveryLocation $del
                                                      */
-                                                    foreach ($dels as $del) { ?>
-                                                    <option value="<?php echo $del->getId(); ?>"
-                                                        <?php $s->check_select(Html::encode($del->getId() ?? $del->getId()), $del->getId()); ?>>
-                                                        <?php $delAddress1 =  $del->getAddress_1();
-                                                        $delAddress2 = $del->getAddress_2();
-                                                        $delCity = $del->getCity();
-                                                        $delZip = $del->getZip();
-                                                        echo (null !== $delAddress1 ? $delAddress1 : '') . ', '
-                                                             . (null !== $delAddress2 ? $delAddress2 : '') . ', '
-                                                             . (null !== $delCity ? $delCity : '') . ', '
-                                                             . (null !== $delZip ? $delZip : ''); ?>
+                                                        foreach ($dels as $del) { ?>
+    <option value="<?php echo $del->getId(); ?>"
+        <?php $s->check_select(Html::encode($del->getId() ?? $del->getId()),
+                $del->getId()); ?>>
+        <?php $delAddress1 =  $del->getAddress_1();
+        $delAddress2 = $del->getAddress_2();
+        $delCity = $del->getCity();
+        $delZip = $del->getZip();
+        echo (null !== $delAddress1 ? $delAddress1 : '') . ', '
+             . (null !== $delAddress2 ? $delAddress2 : '') . ', '
+             . (null !== $delCity ? $delCity : '') . ', '
+             . (null !== $delZip ? $delZip : ''); ?>
                                                     </option>
                                                 <?php } ?>
                                             </select>
@@ -184,18 +185,12 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('div'); ?>
                             <?= Field::text($form, 'discount_amount')
                                 ->hideLabel(false)
-                                ->label($translator->translate('discount') . ' ' . $s->getSetting('currency_symbol'))
+                                ->label($translator->translate('discount')
+                                    . ' ' . $s->getSetting('currency_symbol'))
                                 ->addInputAttributes(['class' => 'form-control'])
-                                ->value($s->format_amount(($form->getDiscount_amount() ?? 0.00)))
+                                ->value($s->format_amount(
+                                    ($form->getDiscount_amount() ?? 0.00)))
                                 ->placeholder($translator->translate('discount'));
-                        ?>
-                        <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::text($form, 'discount_percent')
-                            ->label($translator->translate('discount.percentage'))
-                            ->addInputAttributes(['class' => 'form-control'])
-                            ->value(Html::encode($s->format_amount(($form->getDiscount_percent() ?? 0.00))))
-                            ->placeholder($translator->translate('discount.percentage'));
                         ?>
                         <?= Html::closeTag('div'); ?>
                     <?php } ?>
@@ -204,13 +199,15 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             ->hideLabel(); ?>
                         <?= Html::closeTag('div'); ?>
                     <?php
-                        /**
-                         * @var App\Invoice\Entity\CustomField $customField
-                         */
-                        foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
-                            $custom_values = $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom'));
-                            $cvH->print_field_for_form($customField, $salesOrderCustomForm, $translator, $urlGenerator, $so_custom_values, $custom_values);
-                        }
+/**
+ * @var App\Invoice\Entity\CustomField $customField
+ */
+foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
+    $custom_values = $cvR->attach_hard_coded_custom_field_values_to_custom_field(
+            $cfR->repoTablequery('salesorder_custom'));
+    $cvH->print_field_for_form($customField, $salesOrderCustomForm, $translator,
+            $urlGenerator, $so_custom_values, $custom_values);
+}
 ?>
                         <?= Html::openTag('div'); ?>
                             <div class="row">

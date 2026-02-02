@@ -202,7 +202,7 @@ final class SettingRepository extends Select\Repository
         if ($a !== $b) {
             $money = Money::of($from, $a);
             // see https://github.com/brick/money#Using an ORM
-            $int = $converter->convert($money, $b, null, RoundingMode::DOWN)
+            $int = $converter->convert($money, $b, null, RoundingMode::Down)
                 // convert to cents in order to use the int
                 ->getMinorAmount()
                 ->toInt();

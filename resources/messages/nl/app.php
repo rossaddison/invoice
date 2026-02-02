@@ -850,7 +850,6 @@ return [
 	'Factuurnummer genereren voor conceptfacturen',
 'generate.quote.number.for.draft' =>
 	'Genereer het offertenummer voor conceptoffertes',
-'generate.sumex' => 'Genereer Sumex PDF',
 'generator' => 'Generator',
 'generator.add' => 'Generator toevoegen',
 'generator.camelcase.capital.name' => 'Camelcase Capital Naam gebruikt in '
@@ -1045,8 +1044,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Hostnaam',
-'html.sumex.no' => 'Html zonder Sumex',
-'html.sumex.yes' => 'HTML met Sumex',
 'id' => 'ID',
 'identifier.format' => 'Identificatie-opmaak',
 'identifier.format.template.tags' => 'Sjabloontags voor de identificatie',
@@ -2654,63 +2651,6 @@ return [
 'subtotal' => 'Subtotaal',
 'success' => 'Succes',
 'successful' => 'Succesvol',
-'sumex' => 'Sumex',
-'sumex.add' => 'Sumex toevoegen',
-'sumex.canton' => 'Kanton',
-'sumex.diagnosis' => 'Diagnose',
-'sumex.edit' => 'Sumex Bewerken',
-'sumex.help' => 'Deze optie voegt een menu-item '
-	. 'toe aan facturen om een '
-	. '​​semi-compatibele TARMED/SUMEX1-factuur te genereren.'
-	. 'TARMED/SUMEX1 is een Zwitserse standaard '
-	. 'voor de gezondheidszorg.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Meer informatie</a>',
-'sumex.information' => 'Sumex-informatie',
-'sumex.insurednumber' => 'Verzekerd nummer',
-'sumex.observations' => 'Observaties',
-'sumex.place' => 'Sumex Place',
-'sumex.place.association' => 'Vereniging',
-'sumex.place.company' => 'Bedrijf',
-'sumex.place.hospital' => 'Ziekenhuis',
-'sumex.place.lab' => 'Laboratorium',
-'sumex.place.practice' => 'Oefening',
-'sumex.rcc' => 'RK-kerk',
-'sumex.role' => 'Sumex-rol',
-'sumex.role.chiropractor' => 'Chiropractor',
-'sumex.role.dentaltechnician' => 'Tandtechnicus',
-'sumex.role.dentist' => 'Tandarts',
-'sumex.role.druggist' => 'Drogist',
-'sumex.role.ergotherapist' => 'Ergotherapeut',
-'sumex.role.hospital' => 'Ziekenhuis',
-'sumex.role.labtechnician' => 'Laborant',
-'sumex.role.logotherapist' => 'Logopedist',
-'sumex.role.midwife' => 'Verloskundige',
-'sumex.role.naturopathicdoctor' => 'Natuurgeneeskundig arts',
-'sumex.role.naturopathictherapist' => 'Natuurgeneeskundig therapeut',
-'sumex.role.nursingstaff' => 'Verplegend personeel',
-'sumex.role.nutritionist' => 'Voedingsdeskundige',
-'sumex.role.other' => 'Ander',
-'sumex.role.othertechnician' => 'Andere technicus',
-'sumex.role.pharmacist' => 'Apotheker',
-'sumex.role.physician' => 'Arts',
-'sumex.role.physiotherapist' => 'Fysiotherapeut',
-'sumex.role.psychologist' => 'Psycholoog',
-'sumex.role.transport' => 'Vervoer',
-'sumex.role.wholesaler' => 'Groothandelaar',
-'sumex.settings' => 'Sumex-instellingen',
-'sumex.sliptype' => 'Sumex Slip Type',
-'sumex.sliptype-esr9' => 'ESR 9 (Oranje Slip)',
-'sumex.sliptype-esrRed' => 'Rode slip',
-'sumex.sliptype.help' => 'Met deze optie wijzigt u '
-	. 'het type slip in Sumex.'
-	. 'Let op:'
-	. 'als u de oranje slip '
-	. 'selecteert, heeft u een abonneenummer '
-	. 'nodig dat begint met &quot;01-&quot;.',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'WEEK',
 'sunday' => 'Zondag',
 'system.settings' => 'Systeeminstellingen',
 'table' => 'Tafel',

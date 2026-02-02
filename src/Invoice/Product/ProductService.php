@@ -73,9 +73,6 @@ final readonly class ProductService
         isset($apf['provider_name']) ? 
             $model->setProvider_name(
                 (string) $apf['provider_name']) : '';
-        isset($apf['product_tariff']) ? 
-            $model->setProduct_tariff(
-                (float) $apf['product_tariff']) : '';
         isset($apf['product_additional_item_property_name']) ? 
             $model->setProduct_additional_item_property_name(
                 (string) $apf[

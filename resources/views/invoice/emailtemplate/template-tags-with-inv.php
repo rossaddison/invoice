@@ -67,15 +67,6 @@ declare(strict_types=1);
                     <option value="{{{client_tax_code}}}">
                         <?= $translator->translate('tax.code'); ?>
                     </option>
-                    <option value="{{{client_avs}}}">
-                        <?= $translator->translate('sumex.ssn'); ?>
-                    </option>
-                    <option value="{{{client_insurednumber}}}">
-                        <?= $translator->translate('sumex.insurednumber'); ?>
-                    </option>
-                    <option value="{{{client_weka}}}">
-                        <?= $translator->translate('sumex.veka'); ?>
-                    </option>
                 </optgroup>
                 <optgroup label="<?= $translator->translate('custom.fields'); ?>">
                     <?php
@@ -136,20 +127,6 @@ declare(strict_types=1);
                         <?= $translator->translate('web.address'); ?>
                     </option>
                 </optgroup>
-                <optgroup label="<?= $translator->translate('sumex.information'); ?>">
-                    <option value="{{{user_subscribernumber}}}">
-                        <?= $translator->translate('user.subscriber.number'); ?>
-                    </option>
-                    <option value="{{{user_iban}}}">
-                        <?= $translator->translate('user.iban'); ?>
-                    </option>
-                    <option value="{{{user_gln}}}">
-                        <?= $translator->translate('gln'); ?>
-                    </option>
-                    <option value="{{{user_rcc}}}">
-                        <?= $translator->translate('sumex.rcc'); ?>
-                    </option>
-                </optgroup>
                 <!--
                 <optgroup label="<//?//= $translator->translate('custom.fields'); ?>">
                     <//?php// foreach ($custom_fields['user_custom'] as $custom) { ?>
@@ -162,32 +139,5 @@ declare(strict_types=1);
             </select>
         </div>
         <?= $template_tags_inv; ?>
-        <div class="form-group">
-            <label for="tags_sumex"><?= $translator->translate('sumex'); ?></label>
-            <select id="tags_sumex" class="taginv-select form-control">
-                <option value="{{{sumex_reason}}}">
-                    <?= $translator->translate('reason'); ?>
-                </option>
-                <option value="{{{sumex_diagnosis}}}">
-                    <?= $translator->translate('sumex.diagnosis'); ?>
-                </option>
-                <option value="{{{sumex_observations}}}">
-                    <?= $translator->translate('sumex.observations'); ?>
-                </option>
-                <option value="{{{sumex_treatmentstart}}}">
-                    <?= $translator->translate('treatment.start'); ?>
-                </option>
-                <option value="{{{sumex_treatmentend}}}">
-                    <?= $translator->translate('treatment.end'); ?>
-                </option>
-                <option value="{{{sumex_casedate}}}">
-                    <?= $translator->translate('case.date'); ?>
-                </option>
-                <option value="{{{sumex_casenumber}}}">
-                    <?= $translator->translate('case.number'); ?>
-                </option>
-            </select>
-        </div>
-
     </div>
 </div>

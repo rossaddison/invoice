@@ -35,9 +35,10 @@ final readonly class FormFields
         string $labelKey = 'client',
         bool $required = true,
     ): string {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
 
-        /** @var array<array-key, array<array-key, string>|string> $clientOptions */
+/** @var array<array-key, array<array-key, string>|string> $clientOptions */
         $clientOptions = $optionsData['client'] ?? [];
 
         return Html::openTag('div')
@@ -62,9 +63,10 @@ final readonly class FormFields
         int $defaultValue = 2,
         bool $required = true,
     ): string {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
 
-        /** @var array<array-key, array<array-key, string>|string> $groupOptions */
+/** @var array<array-key, array<array-key, string>|string> $groupOptions */
         $groupOptions = $optionsData['group'] ?? [];
 
         return Html::openTag('div')
@@ -89,9 +91,10 @@ final readonly class FormFields
         string $statusKey,
         bool $required = false,
     ): string {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
 
-        /** @var array<array-key, array<array-key, string>|string> $statusOptions */
+/** @var array<array-key, array<array-key, string>|string> $statusOptions */
         $statusOptions = $optionsData[$statusKey] ?? [];
 
         return Html::openTag('div')
@@ -114,20 +117,14 @@ final readonly class FormFields
         return Html::openTag('div')
             . Field::text($form, 'discount_amount')
                 ->hideLabel(false)
-                ->disabled($form->getDiscount_percent() > 0.00 && $form->getDiscount_amount() == 0.00)
-                ->label($this->translator->translate('discount.amount') . ' ' . $this->settingRepository->getSetting('currency_symbol'))
-                ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_amount'])
+                ->label($this->translator->translate('discount.amount')
+                        . ' '
+                        . $this->settingRepository->getSetting('currency_symbol'))
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'id' => 'inv_discount_amount'])
                 ->value(Html::encode($this->settingRepository->format_amount($form->getDiscount_amount() ?? 0.00)))
                 ->placeholder($this->translator->translate('discount.amount'))
-                ->render()
-            . Html::closeTag('div')
-            . Html::openTag('div')
-            . Field::text($form, 'discount_percent')
-                ->label($this->translator->translate('discount.percent'))
-                ->disabled(($form->getDiscount_amount() > 0.00 && $form->getDiscount_percent() == 0.00))
-                ->addInputAttributes(['class' => 'form-control', 'id' => 'inv_discount_percent'])
-                ->value(Html::encode($this->settingRepository->format_amount($form->getDiscount_percent() ?? 0.00)))
-                ->placeholder($this->translator->translate('discount.percent'))
                 ->render()
             . Html::closeTag('div');
     }
@@ -135,10 +132,12 @@ final readonly class FormFields
     /**
      * Date created field
      */
-    public function dateCreatedField(InvForm|QuoteForm|SalesOrderForm $form, string $labelKey = 'date.issued'): string
+    public function dateCreatedField(InvForm|QuoteForm|SalesOrderForm $form,
+            string $labelKey = 'date.issued'): string
     {
         $value = $form->getDate_created();
-        $dateValue = $value instanceof \DateTimeImmutable ? $value->format('Y-m-d') : '';
+        $dateValue = $value instanceof \DateTimeImmutable ?
+                $value->format('Y-m-d') : '';
 
         return Html::openTag('div')
             . Field::date($form, 'date_created')
@@ -157,10 +156,13 @@ final readonly class FormFields
         return Html::openTag('div')
             . Field::password($form, 'password')
                 ->label($this->translator->translate('password'))
-                ->addInputAttributes(['class' => 'form-control', 'autocomplete' => 'current-password'])
+                ->addInputAttributes([
+                    'class' => 'form-control',
+                    'autocomplete' => 'current-password'])
                 ->value(Html::encode($form->getPassword()))
                 ->placeholder($this->translator->translate('password'))
-                ->hint($this->translator->translate('hint.this.field.is.not.required'))
+                ->hint(
+                $this->translator->translate('hint.this.field.is.not.required'))
                 ->render()
             . Html::closeTag('div');
     }
@@ -180,7 +182,8 @@ final readonly class FormFields
                 ->addInputAttributes(['class' => 'form-control'])
                 ->value(Html::encode($value ?? ''))
                 ->placeholder($this->translator->translate('note'))
-                ->hint($this->translator->translate('hint.this.field.is.not.required'))
+                ->hint(
+                $this->translator->translate('hint.this.field.is.not.required'))
                 ->render()
             . Html::closeTag('div');
     }
@@ -189,10 +192,13 @@ final readonly class FormFields
      * Family selection dropdown field for products
      * @param array<array-key, array<array-key, string>|string> $familiesData
      */
-    public function familySelect(ProductForm $form, array $familiesData, bool $required = true): string
+    public function familySelect(ProductForm $form, array $familiesData,
+                                                bool $required = true): string
     {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control alert alert-warning' : 'form-control alert alert-success';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
+        $cssClass = $required ? 'form-control alert alert-warning' :
+                'form-control alert alert-success';
 
         return Field::select($form, 'family_id')
             ->label($this->translator->translate('family'))
@@ -208,10 +214,13 @@ final readonly class FormFields
      * Unit selection dropdown field for products
      * @param array<array-key, array<array-key, string>|string> $unitsData
      */
-    public function unitSelect(ProductForm $form, array $unitsData, bool $required = true): string
+    public function unitSelect(ProductForm $form, array $unitsData,
+            bool $required = true): string
     {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control alert alert-warning' : 'form-control alert alert-success';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
+        $cssClass = $required ? 'form-control alert alert-warning' :
+                'form-control alert alert-success';
 
         return Field::select($form, 'unit_id')
             ->label($this->translator->translate('unit'))
@@ -227,10 +236,13 @@ final readonly class FormFields
      * Tax rate selection dropdown field for products
      * @param array<array-key, array<array-key, string>|string> $taxRatesData
      */
-    public function taxRateSelect(ProductForm $form, array $taxRatesData, bool $required = true): string
+    public function taxRateSelect(ProductForm $form, array $taxRatesData,
+            bool $required = true): string
     {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control alert alert-warning' : 'form-control alert alert-success';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
+        $cssClass = $required ? 'form-control alert alert-warning' :
+                'form-control alert alert-success';
 
         return Field::select($form, 'tax_rate_id')
             ->label($this->translator->translate('tax.rate'))
@@ -252,8 +264,10 @@ final readonly class FormFields
         bool $required = true,
         bool $isPrice = false,
     ): string {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control alert alert-warning' : 'form-control alert alert-success';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
+        $cssClass = $required ? 'form-control alert alert-warning' :
+                'form-control alert alert-success';
 
         // Handle specific field name mappings for ProductForm
         $value = match ($fieldName) {
@@ -262,16 +276,19 @@ final readonly class FormFields
             'product_sku' => $form->getProduct_sku(),
             'purchase_price' => $form->getPurchase_price(),
             'product_price' => $form->getProduct_price(),
-            'product_price_base_quantity' => $form->getProduct_price_base_quantity(),
-            'product_tariff' => $form->getProduct_tariff(),
+            'product_price_base_quantity' =>
+                    $form->getProduct_price_base_quantity(),
             'product_sii_id' => $form->getProduct_sii_id(),
             'product_sii_schemeid' => $form->getProduct_sii_schemeid(),
             'product_icc_listid' => $form->getProduct_icc_listid(),
             'product_icc_listversionid' => $form->getProduct_icc_listversionid(),
             'product_icc_id' => $form->getProduct_icc_id(),
-            'product_country_of_origin_code' => $form->getProduct_country_of_origin_code(),
-            'product_additional_item_property_name' => $form->getProduct_additional_item_property_name(),
-            'product_additional_item_property_value' => $form->getProduct_additional_item_property_value(),
+            'product_country_of_origin_code' =>
+                    $form->getProduct_country_of_origin_code(),
+            'product_additional_item_property_name' =>
+                    $form->getProduct_additional_item_property_name(),
+            'product_additional_item_property_value' =>
+                    $form->getProduct_additional_item_property_value(),
             'provider_name' => $form->getProvider_name(),
             default => null,
         };
@@ -279,7 +296,8 @@ final readonly class FormFields
         // Format price values using SettingRepository
         if ($isPrice && is_numeric($value)) {
             $numericValue = is_float($value) ? $value : (float) $value;
-            $value = $this->settingRepository->format_amount($numericValue >= 0.00 ? $numericValue : 0.00);
+            $value = $this->settingRepository->format_amount(
+                    $numericValue >= 0.00 ? $numericValue : 0.00);
         }
 
         $field = Field::text($form, $fieldName)
@@ -299,19 +317,24 @@ final readonly class FormFields
     /**
      * Product price field with proper formatting
      */
-    public function productPriceField(ProductForm $form, string $fieldName, string $labelKey, bool $required = true): string
+    public function productPriceField(ProductForm $form, string $fieldName,
+            string $labelKey, bool $required = true): string
     {
-        return $this->productTextField($form, $fieldName, $labelKey, $required, true);
+        return $this->productTextField($form, $fieldName, $labelKey,
+                $required, true);
     }
 
     /**
      * Unit Peppol selection dropdown field for products
      * @param array<array-key, array<array-key, string>|string> $unitPeppolsData
      */
-    public function unitPeppolSelect(ProductForm $form, array $unitPeppolsData, bool $required = false): string
+    public function unitPeppolSelect(ProductForm $form, array $unitPeppolsData,
+            bool $required = false): string
     {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control alert alert-warning' : 'form-control alert alert-success';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
+        $cssClass = $required ? 'form-control alert alert-warning' :
+                'form-control alert alert-success';
 
         return Field::select($form, 'unit_peppol_id')
             ->label($this->translator->translate('product.peppol.unit'))
@@ -332,7 +355,8 @@ final readonly class FormFields
         string $labelKey,
         bool $required = false,
     ): string {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
         $cssClass = 'form-control';
 
         // Handle specific field name mappings for ClientForm
@@ -349,9 +373,6 @@ final readonly class FormFields
             'client_zip' => $form->getClient_zip(),
             'client_vat_id' => $form->getClient_vat_id(),
             'client_tax_code' => $form->getClient_tax_code(),
-            'client_avs' => $form->getClient_avs(),
-            'client_insurednumber' => $form->getClient_insurednumber(),
-            'client_veka' => $form->getClient_veka(),
             default => null,
         };
 
@@ -364,7 +385,8 @@ final readonly class FormFields
             ]);
 
         if ($required) {
-            $field = $field->required(true)->hint($this->translator->translate($hintKey));
+            $field =
+            $field->required(true)->hint($this->translator->translate($hintKey));
         } else {
             $field = $field->required(false);
         }
@@ -392,7 +414,8 @@ final readonly class FormFields
     /**
      * Client telephone field
      */
-    public function clientTelephoneField(ClientForm $form, string $fieldName, string $labelKey): string
+    public function clientTelephoneField(ClientForm $form, string $fieldName,
+            string $labelKey): string
     {
         $value = match ($fieldName) {
             'client_mobile' => $form->getClient_mobile(),
@@ -450,12 +473,15 @@ final readonly class FormFields
      * Client language selection dropdown
      * @param array<string, string> $languageOptions
      */
-    public function clientLanguageSelect(ClientForm $form, array $languageOptions, string $selectedLanguage): string
+    public function clientLanguageSelect(ClientForm $form,
+            array $languageOptions, string $selectedLanguage): string
     {
         return Field::select($form, 'client_language')
             ->label($this->translator->translate('language'))
-            ->addInputAttributes(['class' => 'form-control', 'id' => 'client_language'])
-            ->value(strlen($form->getClient_language() ?? '') > 0 ? $form->getClient_language() : $selectedLanguage)
+            ->addInputAttributes(['class' => 'form-control',
+                'id' => 'client_language'])
+            ->value(strlen($form->getClient_language() ?? '') > 0 ?
+                    $form->getClient_language() : $selectedLanguage)
             ->optionsData($languageOptions)
             ->required(false)
             ->render();
@@ -465,7 +491,8 @@ final readonly class FormFields
      * Client country select dropdown
      * @param array<string, string> $countryOptions
      */
-    public function clientCountrySelect(ClientForm $form, array $countryOptions, string $selectedCountry): string
+    public function clientCountrySelect(ClientForm $form,
+            array $countryOptions, string $selectedCountry): string
     {
         return Field::select($form, 'client_country')
             ->label($this->translator->translate('country'))
@@ -488,7 +515,8 @@ final readonly class FormFields
         string $labelKey,
         bool $required = false,
     ): string {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
         $cssClass = 'form-control';
 
         // Handle specific field name mappings for UserInvForm
@@ -523,7 +551,8 @@ final readonly class FormFields
             ]);
 
         if ($required) {
-            $field = $field->required(true)->hint($this->translator->translate($hintKey));
+            $field = $field->required(true)->hint(
+                    $this->translator->translate($hintKey));
         } else {
             $field = $field->required(false);
         }
@@ -535,7 +564,8 @@ final readonly class FormFields
      * UserInv user selection dropdown (for add form)
      * @param array<array-key, string> $userOptions
      */
-    public function userInvUserSelect(UserInvForm $form, array $userOptions): string
+    public function userInvUserSelect(UserInvForm $form,
+            array $userOptions): string
     {
         return Field::select($form, 'user_id')
             ->label($this->translator->translate('users'))
@@ -605,7 +635,8 @@ final readonly class FormFields
     /**
      * UserInv checkbox field with consistent styling
      */
-    public function userInvCheckboxField(UserInvForm $form, string $fieldName, string $labelKey): string
+    public function userInvCheckboxField(UserInvForm $form, string $fieldName,
+            string $labelKey): string
     {
         return Field::checkbox($form, $fieldName)
             ->inputLabelAttributes(['class' => 'form-check-label'])
@@ -617,9 +648,11 @@ final readonly class FormFields
     /**
      * UserInv number field (for GLN and listLimit)
      */
-    public function userInvNumberField(UserInvForm $form, string $fieldName, string $labelKey, bool $required = false): string
+    public function userInvNumberField(UserInvForm $form, string $fieldName,
+            string $labelKey, bool $required = false): string
     {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
 
         $value = match ($fieldName) {
             'gln' => $form->getGln(),
@@ -637,7 +670,7 @@ final readonly class FormFields
             ]);
 
         if ($required) {
-            $field = $field->required(true)->hint($this->translator->translate($hintKey));
+    $field = $field->required(true)->hint($this->translator->translate($hintKey));
         } else {
             $field = $field->required(false);
         }
@@ -654,7 +687,8 @@ final readonly class FormFields
         string $labelKey,
         bool $required = false,
     ): string {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+            'hint.this.field.is.not.required';
         $cssClass = 'form-control';
 
         // Handle specific field name mappings for CompanyForm
@@ -681,7 +715,8 @@ final readonly class FormFields
             ]);
 
         if ($required) {
-            $field = $field->required(true)->hint($this->translator->translate($hintKey));
+            $field = $field->required(true)->hint(
+                    $this->translator->translate($hintKey));
         } else {
             $field = $field->required(false);
         }
@@ -709,7 +744,8 @@ final readonly class FormFields
     /**
      * Company telephone field
      */
-    public function companyTelephoneField(CompanyForm $form, string $fieldName, string $labelKey): string
+    public function companyTelephoneField(CompanyForm $form, string $fieldName,
+            string $labelKey): string
     {
         $value = match ($fieldName) {
             'phone' => $form->getPhone(),
@@ -731,7 +767,8 @@ final readonly class FormFields
     /**
      * Company checkbox field with consistent styling
      */
-    public function companyCheckboxField(CompanyForm $form, string $fieldName, string $labelKey): string
+    public function companyCheckboxField(CompanyForm $form, string $fieldName,
+            string $labelKey): string
     {
         return Field::checkbox($form, $fieldName)
             ->inputLabelAttributes(['class' => 'form-check-label'])
@@ -768,7 +805,8 @@ final readonly class FormFields
         string $labelKey,
         bool $required = false,
     ): string {
-        $hintKey = $required ? 'hint.this.field.is.required' : 'hint.this.field.is.not.required';
+        $hintKey = $required ? 'hint.this.field.is.required' :
+                'hint.this.field.is.not.required';
         $cssClass = 'form-control';
 
         // Handle specific field name mappings for CompanyPrivateForm
@@ -792,7 +830,8 @@ final readonly class FormFields
             ]);
 
         if ($required) {
-            $field = $field->required(true)->hint($this->translator->translate($hintKey));
+            $field =
+            $field->required(true)->hint($this->translator->translate($hintKey));
         } else {
             $field = $field->required(false);
         }
@@ -804,7 +843,8 @@ final readonly class FormFields
      * CompanyPrivate company selection dropdown
      * @param array<string, string> $companyOptions
      */
-    public function companyPrivateCompanySelect(CompanyPrivateForm $form, array $companyOptions, string $labelKey): string
+    public function companyPrivateCompanySelect(CompanyPrivateForm $form,
+            array $companyOptions, string $labelKey): string
     {
         return Field::select($form, 'company_id')
             ->label($labelKey)
@@ -821,7 +861,8 @@ final readonly class FormFields
     /**
      * CompanyPrivate hidden field
      */
-    public function companyPrivateHiddenField(CompanyPrivateForm $form, string $fieldName): string
+    public function companyPrivateHiddenField(CompanyPrivateForm $form,
+        string $fieldName): string
     {
         $value = match ($fieldName) {
             'id' => $form->getId(),
@@ -840,7 +881,8 @@ final readonly class FormFields
     /**
      * CompanyPrivate file field
      */
-    public function companyPrivateFileField(CompanyPrivateForm $form, string $fieldName): string
+    public function companyPrivateFileField(CompanyPrivateForm $form,
+        string $fieldName): string
     {
         $value = match ($fieldName) {
             'logo_filename' => $form->getLogo_filename(),

@@ -17,11 +17,9 @@ use App\Invoice\Helpers\CurrencyHelper;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
-use App\Invoice\Libraries\Sumex;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\TaxRate\TaxRateRepository as TR;
-//use App\Invoice\Libraries\Sumex;
 use App\Service\WebControllerService;
 use App\User\UserService;
 use Ramsey\Uuid\Uuid;
@@ -180,9 +178,6 @@ final class SettingController extends BaseController
                 'public_invoice_templates' => $this->sR->get_invoice_templates('public'),
                 'pdf_invoice_templates' => $this->sR->get_invoice_templates('pdf'),
                 'email_templates_invoice' => $eR->repoEmailTemplateType('invoice'),
-                'roles' => Sumex::ROLES,
-                'places' => Sumex::PLACES,
-                'cantons' => Sumex::CANTONS,
             ]),
             'quotes' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_quotes', [
                 'invoice_groups' => $gR->findAllPreloaded(),

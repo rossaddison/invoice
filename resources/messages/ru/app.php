@@ -865,7 +865,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Сгенерировать номер предложения для черновиков '
 	. 'предложений',
-'generate.sumex' => 'Создать Sumex PDF',
 'generator' => 'Генератор',
 'generator.add' => 'Генератор Добавить',
 'generator.camelcase.capital.name' => 'Название Camelcase с заглавными буквами '
@@ -1056,8 +1055,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Имя хоста',
-'html.sumex.no' => 'Html без Sumex',
-'html.sumex.yes' => 'HTML с Sumex',
 'id' => 'ИДЕНТИФИКАТОР',
 'identifier.format' => 'Форматирование идентификатора',
 'identifier.format.template.tags' => 'Шаблоны тегов для идентификатора',
@@ -2645,62 +2642,6 @@ return [
 'subtotal' => 'Промежуточный итог',
 'success' => 'Успех',
 'successful' => 'Успешный',
-'sumex' => 'Сумекс',
-'sumex.add' => 'Sumex Добавить',
-'sumex.canton' => 'Кантон',
-'sumex.diagnosis' => 'Диагноз',
-'sumex.edit' => 'Sumex Редактировать',
-'sumex.help' => 'Эта опция добавляет запись меню '
-	. 'в счетах для создания полусовместимого '
-	. 'счета TARMED / SUMEX1.'
-	. 'TARMED / SUMEX1 — это '
-	. 'швейцарский стандарт для здравоохранения.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Дополнительная информация</a>',
-'sumex.information' => 'Информация о Sumex',
-'sumex.insurednumber' => 'Застрахованный номер',
-'sumex.observations' => 'Наблюдения',
-'sumex.place' => 'Sumex Место',
-'sumex.place.association' => 'Ассоциация',
-'sumex.place.company' => 'Компания',
-'sumex.place.hospital' => 'Больница',
-'sumex.place.lab' => 'Лаборатория',
-'sumex.place.practice' => 'Упражняться',
-'sumex.rcc' => 'РСС',
-'sumex.role' => 'Роль Sumex',
-'sumex.role.chiropractor' => 'Хиропрактик',
-'sumex.role.dentaltechnician' => 'Зубной техник',
-'sumex.role.dentist' => 'Стоматолог',
-'sumex.role.druggist' => 'Аптекарь',
-'sumex.role.ergotherapist' => 'Эрготерапевт',
-'sumex.role.hospital' => 'Больница',
-'sumex.role.labtechnician' => 'Лаборант',
-'sumex.role.logotherapist' => 'Логотерапевт',
-'sumex.role.midwife' => 'Акушерка',
-'sumex.role.naturopathicdoctor' => 'врач-натуропат',
-'sumex.role.naturopathictherapist' => 'натуропаттерапевт',
-'sumex.role.nursingstaff' => 'Медицинский персонал',
-'sumex.role.nutritionist' => 'Диетолог',
-'sumex.role.other' => 'Другой',
-'sumex.role.othertechnician' => 'Другой техник',
-'sumex.role.pharmacist' => 'Фармацевт',
-'sumex.role.physician' => 'Врач',
-'sumex.role.physiotherapist' => 'Физиотерапевт',
-'sumex.role.psychologist' => 'Психолог',
-'sumex.role.transport' => 'Транспорт',
-'sumex.role.wholesaler' => 'Оптовик',
-'sumex.settings' => 'Настройки Sumex',
-'sumex.sliptype' => 'Тип скольжения Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (оранжевый слип)',
-'sumex.sliptype-esrRed' => 'Красный Слип',
-'sumex.sliptype.help' => 'Эта опция изменит тип квитанции '
-	. 'в Sumex.'
-	. 'Обратите внимание, что если вы '
-	. 'выберете Orange slip, вам понадобится '
-	. 'номер абонента, начинающийся с &quot;01-&quot;',
-'sumex.ssn' => 'АВС',
-'sumex.veka' => 'НЕДЕЛЯ',
 'sunday' => 'Воскресенье',
 'system.settings' => 'Системные настройки',
 'table' => 'Стол',

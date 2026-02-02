@@ -742,7 +742,7 @@ if ($taxRatePercent >= 0.00 && null !== $taxRateName && $numberPercent >= 0.00
                     </td>
                 </tr>
                 <?php } ?>
-                <?php if ($vat === '0') { ?>
+                <?php if (($inv->getDiscount_amount() ?? 0.00) != 0.00) { ?>
                 <tr>
                     <td class="td-vert-middle">
                         <b>(<?= $translator->translate('discount'); ?>)</b>
@@ -750,38 +750,12 @@ if ($taxRatePercent >= 0.00 && null !== $taxRateName && $numberPercent >= 0.00
                     <td class="clearfix">
                         <div class="discount-field">
                             <div class="input-group input-group">
-                                <input id="inv_discount_amount"
-                                       name="inv_discount_amount"
-                                       class="discount-option form-control amount"
-                                       data-bs-toggle = "tooltip"
-                                       title="inv->discount_amount"
-                                       disabled
-                                       value="
-<?= $numberHelper->format_amount($inv->getDiscount_amount() != 0 ?
-    $inv->getDiscount_amount() : ''); ?>">
-                                <div
-                                    class="input-group-text">
-                        <?= $s->getSetting('currency_symbol'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="discount-field">
-                            <div class="input-group input-group">
-                                <input id="inv_discount_percent"
-                                       name="inv_discount_percent"
-                                       data-bs-toggle = "tooltip"
-                                       title="inv->discount_percent"
-                                       disabled
-                                       value="
-<?= $numberHelper->format_amount($inv->getDiscount_percent() != 0 ?
-        $inv->getDiscount_percent() : ''); ?>"
-                                       class="discount-option form-control amount">
-                                <div class="input-group-text">&percnt;</div>
+      <?= $numberHelper->format_currency($inv->getDiscount_amount() ?? 0.00); ?>
                             </div>
                         </div>
                     </td>
                 </tr>
-                <?php } ?>               
+                <?php } ?>
                 <tr>
                     <td>
                         <b><?= $translator->translate('total'); ?></b>
@@ -792,7 +766,7 @@ if ($taxRatePercent >= 0.00 && null !== $taxRateName && $numberPercent >= 0.00
                         data-bs-toggle = "tooltip"
                         title="inv_amount->total">
                         <b>
-<?= $numberHelper->format_currency($invAmount->getTotal() ?? 0.00); ?>
+          <?= $numberHelper->format_currency($invAmount->getTotal() ?? 0.00); ?>
                         </b>
                     </td>
                 </tr>

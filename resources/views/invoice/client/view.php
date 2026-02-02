@@ -370,21 +370,6 @@ endforeach; ?>
                                         <td><?= null !== ($clientGender = $client->getClient_gender())
                     ? $clientHelper->format_gender($clientGender, $translator) : ''; ?></td>
                                     </tr>
-                                    <?php if ($s->getSetting('sumex') == '1'): ?>
-                                        <tr>
-                                            <th><?= $translator->translate('sumex.ssn'); ?></th>
-                                            <td><?= null !== ($clientAvs = $client->getClient_avs()) ? $cvH->format_avs($clientAvs) : ''; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th><?= $translator->translate('sumex.insurednumber'); ?></th>
-                                            <td><?= Html::encode($client->getClient_insurednumber()) ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th><?= $translator->translate('sumex.veka'); ?></th>
-                                            <td><?= Html::encode($client->getClient_veka()) ?></td>
-                                        </tr>
-                                    <?php endif; ?>
-
                                     <?php
                                             /**
                                              * @var App\Invoice\Entity\CustomField $custom_field

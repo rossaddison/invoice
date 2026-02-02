@@ -11,7 +11,6 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Entity\InvAmount $inv_amount
  * @var App\Invoice\Entity\Inv $inv
  * @var App\Invoice\Entity\InvTaxRate $inv_tax_rate
- * @var App\Invoice\Entity\Sumex|null $sumex
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR
@@ -286,17 +285,7 @@ if (strlen($inv->getClient()?->getClient_phone() ?? '') > 0) {
         <?php endforeach ?>
         <?php } ?>   
         <?php if ($vat == '0') { ?>    
-            <?php if ($inv->getDiscount_percent() !== 0.00) { ?>
-                <tr>
-                    <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                        <?= Html::encode($translator->translate('discount')); ?>
-                    </td>
-                    <td class="text-right"></td>
-                    <td class="text-right">
-                        <?php echo Html::encode($s->format_amount($inv->getDiscount_percent())); ?>%
-                    </td>
-                </tr>
-            <?php } elseif ($inv->getDiscount_amount() !== 0.00) { ?>
+           <?php if ($inv->getDiscount_amount() !== 0.00) { ?>
                 <tr>
                     <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
                         <?= Html::encode($translator->translate('discount')); ?>
@@ -368,39 +357,6 @@ echo $total != 0 ? number_format(100 * ($tax / $total), 2) : '0.00';
     <div>
     <?= $show_custom_fields ? $view_custom_fields : ''; ?>
     </div>    
-    <?php if ($s->getSetting('sumex') == '1') { ?>
-    <div>
-        <?php
-                        $reason = ['disease','accident','maternity','prevention','birthdefect','unknown'];
-        ?>
-        <b><?= Html::encode($translator->translate('reason')); ?></b><br>
-        <p><?= Html::encode($translator->translate('reason.' . $reason[is_int($sumexReason = $sumex?->getReason()) ? $sumexReason : 5])); ?></p>       
-    </div>
-    <div>            
-        <b><?= Html::encode($translator->translate('sumex.observations')); ?></b><br>
-        <p><?= $sumex?->getObservations() ?? ''; ?></p>
-    </div>    
-    <div>            
-        <b><?= Html::encode($translator->translate('sumex.diagnosis')); ?></b><br>
-        <p><?= $sumex?->getDiagnosis() ?? ''; ?></p>
-    </div>
-    <div>            
-        <b><?= Html::encode($translator->translate('case.date')); ?></b><br>
-        <p><?= !is_string($caseDate = $sumex?->getCasedate()) ? $caseDate?->format('Y-m-d') : ''; ?></p>
-    </div>
-    <div>            
-        <b><?= Html::encode($translator->translate('case.number')); ?></b><br>
-        <p><?= strlen($sumex?->getCasenumber() ?? '') > 0 ? $sumex?->getCaseNumber() : ''; ?></p>
-    </div>
-    <div>
-        <b><?= Html::encode($translator->translate('treatment.start')); ?></b><br>
-        <p><?= !is_string($treatmentStart = $sumex?->getTreatmentstart()) ? $treatmentStart?->format('Y-m-d') : ''; ?></p>
-    </div> 
-    <div>    
-        <b><?= Html::encode($translator->translate('treatment.end')); ?></b><br>
-        <p><?= !is_string($treatmentEnd = $sumex?->getTreatmentend()) ? $treatmentEnd?->format('Y-m-d') : ''; ?></p>
-    </div>
-    <?php } ?>
 </footer>
 </body>
 </html>

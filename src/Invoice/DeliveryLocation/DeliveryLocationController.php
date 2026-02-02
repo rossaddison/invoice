@@ -10,6 +10,8 @@ use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\Setting\SettingRepository as sR;
+use App\Invoice\UserClient\UserClientRepository as UCR;
+use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -41,7 +43,8 @@ final class DeliveryLocationController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+                                        $viewRenderer, $session, $sR, $flash);
         $this->delService = $delService;
         $this->factory = $factory;
     }
@@ -75,7 +78,8 @@ final class DeliveryLocationController extends BaseController
             'dels' => $this->dels($delRepository),
             'iR' => $iR,
             'page' => $currentPageNeverZero,
-            // Use the invoice Repository to locate all the invoices relevant to this location
+            // Use the invoice Repository to locate all the invoices
+            //  relevant to this location
             'qR' => $qR,
             'sortString' => $querySort ?? '-id',
         ];
@@ -84,7 +88,8 @@ final class DeliveryLocationController extends BaseController
 
     public function add_in_invoice_flash(): void
     {
-        $this->flashMessage('info', $this->translator->translate('delivery.location.add.in.invoice'));
+        $this->flashMessage('info',
+                $this->translator->translate('delivery.location.add.in.invoice'));
     }
 
     /**
@@ -101,10 +106,15 @@ final class DeliveryLocationController extends BaseController
         $client_id = $currentRoute->getArgument('client_id');
         /**
          * Query parameters are between the square brackets in the example below
-         * Related logic: see config/common/routes/routes/routes.php Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
-         * Related logic: see vendor/yiisoft/router/src/UrlGeneratorInterface Query parameters
-         * Delivery locations can be added from either the quote form or the invoice form
-         * Origin allows us to return to either the quote form or invoice form on completion
+         * Related logic: see config/common/routes/routes/routes.php
+         *  Route::methods([Method::GET, Method::POST],
+         *  '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
+         * Related logic: see vendor/yiisoft/router/src/UrlGeneratorInterface
+         *  Query parameters
+         * Delivery locations can be added from either the quote form or the
+         *  invoice form
+         * Origin allows us to return to either the quote form or invoice
+         *  form on completion
          * of creating the delivery location by creating a return $url
          */
         $queryParams = $request->getQueryParams();
@@ -140,11 +150,13 @@ final class DeliveryLocationController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
                     $this->delService->saveDeliveryLocation($delivery_location, $body);
-                    $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
+                    $this->flashMessage('success',
+                    $this->translator->translate('record.successfully.created'));
                     $url = $origin . '/' . $action;
-                    // Route::methods([Method::GET, Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
+// Route::methods([Method::GET, Method::POST], '/del/add/{client_id}
+// [/{origin}/{origin_id}/{action}]')
                     if ($origin_id) {
-                        // Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
+// Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
                         /**
                          * @psalm-suppress MixedArgumentTypeCoercion
                          */
@@ -157,7 +169,8 @@ final class DeliveryLocationController extends BaseController
                     return $this->webService->getRedirectResponse($url);
                 }
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
         return $this->viewRenderer->render('_form', $parameters);
@@ -192,21 +205,29 @@ final class DeliveryLocationController extends BaseController
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'del/edit',
                 'actionArguments' => ['id' => $del->getId()],
-                'actionQueryParameters' => ['origin' => $origin, 'origin_id' => $origin_id, 'action' => $action],
+                'actionQueryParameters' => [
+                    'origin' => $origin,
+                    'origin_id' => $origin_id,
+                    'action' => $action
+                ],
                 'errors' => [],
                 'form' => $form,
-                'electronic_address_scheme' => PeppolArrays::electronic_address_scheme(),
+                'electronic_address_scheme' =>
+                                      PeppolArrays::electronic_address_scheme(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                    if ($formHydrator->populateFromPostAndValidate($form,
+                                                                    $request)) {
                         $this->delService->saveDeliveryLocation($del, $body);
-                        $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
+                        $this->flashMessage('success',
+                        $this->translator->translate('record.successfully.created'));
                         $url = $origin . '/' . $action;
-                        // Route::methods([Method::GET, Method::POST], '/del/edit/{client_id}[/{origin}/{origin_id}/{action}]')
+// Route::methods([Method::GET, Method::POST],
+//  '/del/edit/{client_id}[/{origin}/{origin_id}/{action}]')
                         if ($origin_id) {
-                            // Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
+// Redirect to client/view: invoice.myhost/invoice/del/add/25/client/25/view
                             /**
                              * @psalm-suppress MixedArgumentTypeCoercion
                              */
@@ -218,7 +239,8 @@ final class DeliveryLocationController extends BaseController
                         return $this->webService->getRedirectResponse($url);
                     }
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -239,7 +261,8 @@ final class DeliveryLocationController extends BaseController
             $del = $this->del($currentRoute, $delRepository);
             if ($del) {
                 $this->delService->deleteDeliveryLocation($del);
-                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
+                $this->flashMessage('info',
+                    $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('del/index');
             }
             return $this->webService->getRedirectResponse('del/index');
@@ -252,9 +275,15 @@ final class DeliveryLocationController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryLocationRepository $delRepository
+     * @param UCR $ucR
+     * @param UIR $uiR
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function view(CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(
+        CurrentRoute $currentRoute,
+        DeliveryLocationRepository $delRepository,
+        UCR $ucR,
+        UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
     {
         $del = $this->del($currentRoute, $delRepository);
         if ($del) {
@@ -264,12 +293,33 @@ final class DeliveryLocationController extends BaseController
                 'actionName' => 'del/view',
                 'actionArguments' => ['id' => $del->getId()],
                 'form' => $form,
-                'del' => $delRepository->repoDeliveryLocationquery((string) $del->getId()),
-                'electronic_address_scheme' => PeppolArrays::electronic_address_scheme(),
+                'del' =>
+                $delRepository->repoDeliveryLocationquery((string) $del->getId()),
+                'electronic_address_scheme' =>
+                PeppolArrays::electronic_address_scheme(),
             ];
             return $this->viewRenderer->render('_view', $parameters);
+            
+            if ($this->rbacObserver(
+                                        $del->getClient_id(), $ucR, $uiR)) {
+                return $this->viewRenderer->render('_view', $parameters);
+            }
+            
         }
         return $this->webService->getRedirectResponse('delivery_location/index');
+    }
+    
+    private function rbacObserver(
+                                    string $clientId, UCR $ucR, UIR $uiR): bool {
+        $userClient = $ucR->repoUserquery($clientId);
+        if (null!==$userClient) {
+            $userId = $userClient->getUser_id();
+            $userInv = $uiR->repoUserInvUserIdquery($userId);
+            if (null !== $userInv && $userInv->getActive()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //For rbac refer to AccessChecker
@@ -279,7 +329,8 @@ final class DeliveryLocationController extends BaseController
      * @param DeliveryLocationRepository $delRepository
      * @return DeliveryLocation|null
      */
-    private function del(CurrentRoute $currentRoute, DeliveryLocationRepository $delRepository): ?DeliveryLocation
+    private function del(CurrentRoute $currentRoute,
+            DeliveryLocationRepository $delRepository): ?DeliveryLocation
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
@@ -293,7 +344,8 @@ final class DeliveryLocationController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function dels(DeliveryLocationRepository $delRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function dels(DeliveryLocationRepository $delRepository):
+                                        \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $delRepository->findAllPreloaded();
     }

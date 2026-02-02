@@ -107,12 +107,16 @@ final class PaymentInformationController
         $this->userService               = $userService;
         $this->translator                = $translator;
         $this->viewRenderer              = $viewRenderer;
-        if ($this->userService->hasPermission(Permissions::VIEW_INV) && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/paymentinformation')
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+                && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
+            $this->viewRenderer =
+                $viewRenderer->withControllerName('invoice/paymentinformation')
                 ->withLayout('@views/layout/guest.php');
         }
-        if ($this->userService->hasPermission(Permissions::VIEW_INV) && $this->userService->hasPermission(Permissions::EDIT_INV)) {
-            $this->viewRenderer = $viewRenderer->withControllerName('invoice/paymentinformation')
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+                && $this->userService->hasPermission(Permissions::EDIT_INV)) {
+            $this->viewRenderer =
+                $viewRenderer->withControllerName('invoice/paymentinformation')
                 ->withLayout('@views/layout/invoice.php');
         }
         $this->webService    = $webService;
@@ -161,9 +165,13 @@ final class PaymentInformationController
         float $total,
     ): Response {
         $provider = $this->extractProviderLower($client_chosen_gateway);
-        $providerConfig = (null !== $provider) ? $this->getOpenBankingProviderConfig($provider) : null;
-        // Determine if provider is 'wonderful' by examining if the apiToken is filled
-        $isWonderful = ($client_chosen_gateway == 'Open_Banking_With_Wonderful') && (strlen($this->sR->getSetting('gateway_open_banking_with_wonderful_apiToken')) > 0);
+        $providerConfig = (null !== $provider) ?
+                           $this->getOpenBankingProviderConfig($provider) : null;
+        // Determine if provider is 'wonderful' by examining if the apiToken
+        //  is filled
+        $isWonderful = ($client_chosen_gateway == 'Open_Banking_With_Wonderful')
+                && (strlen($this->sR->getSetting(
+                           'gateway_open_banking_with_wonderful_apiToken')) > 0);
         $isTink = ($client_chosen_gateway == 'Open_Banking_With_Tink');
         // Prepare view data
         $viewData = [
@@ -171,20 +179,23 @@ final class PaymentInformationController
             'authUrl'                => '',
             'balance'                => $balance,
             'client_chosen_gateway'  => $client_chosen_gateway,
-            'client_on_invoice'      => $cR->repoClientquery($invoice->getClient_id()),
+            'client_on_invoice'      =>
+                                 $cR->repoClientquery($invoice->getClient_id()),
             'disable_form'           => $disable_form,
             'invoice'                => $invoice,
             'inv_url_key'            => $url_key,
             'is_overdue'             => $is_overdue,
             'json_encoded_items'     => Json::encode($items_array),
             'companyLogo'            => $this->renderPartialAsStringCompanyLogo(),
-            'partial_client_address' => $this->viewRenderer->renderPartialAsString(
+            'partial_client_address' =>
+                                     $this->viewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address',
                 ['client' => $cR->repoClientquery($invoice->getClient_id())],
             ),
             'payment_method' => $payment_method_for_this_invoice,
             'provider'       => $provider,
-            'title'          => 'Open Banking with ' . ucfirst($provider ?? 'Not Provided') . ' is enabled',
+            'title'          => 'Open Banking with '
+                        . ucfirst($provider ?? 'Not Provided') . ' is enabled',
             'total'          => $total,
         ];
         $amount = ((($balance > 0) && ($total > 0)) ? $balance : 0);
@@ -198,7 +209,9 @@ final class PaymentInformationController
         switch ($providerType) {
             case 'wonderful':
                 // The default currency is GBP so yii_invoice_array not used
-                $details = $this->openBankingPaymentService->paymentStatusAndDetails($url_key, $amount, $invoice, $items_array);
+                $details =
+                    $this->openBankingPaymentService->paymentStatusAndDetails(
+                                      $url_key, $amount, $invoice, $items_array);
                 $singleKeyArray = (array) ($details['data'] ?? []);
                 $data = (array) ($singleKeyArray['data'] ?? []);
                 $viewData['wonderfulId'] = (string) ($data['id'] ?? '');
@@ -207,50 +220,75 @@ final class PaymentInformationController
                 $viewData['createdAt'] = (string) ($data['created_at'] ?? '');
                 $viewData['updatedAt'] = (string) ($data['updated_at'] ?? '');
                 $viewData['status'] = (string) ($data['status'] ?? '');
-                // Wonderful requires an authToken, not an authUrl because it is not oauth linked
+                // Wonderful requires an authToken, not an authUrl because it is
+                // not oauth linked
                 $viewData['authToken'] = true;
                 $viewData['paymentLink'] = (string) ($data['pay_link'] ?? '');
                 break;
 
             case 'tink':
-                $recipientName = ((null !== ($company = $this->compR->repoCompanyActivequery())) ? $company->getName() : 'Unknown');
+                $recipientName = ((null !== ($company =
+                    $this->compR->repoCompanyActivequery())) ?
+                        $company->getName() : 'Unknown');
                 if (null !== $company && null !== $company->getName()) {
-                    $clientId = $this->sR->getSetting('gateway_open_banking_with_tink_client_id');
-                    $clientSecret = $this->sR->getSetting('gateway_open_banking_with_tink_client_secret');
+                    $clientId = $this->sR->getSetting(
+                                    'gateway_open_banking_with_tink_client_id');
+                    $clientSecret = $this->sR->getSetting(
+                                'gateway_open_banking_with_tink_client_secret');
                     if (strlen($clientId) > 0 && strlen($clientSecret) > 0) {
-                        if (in_array((string) $inv['currency'], ['SEK', 'EUR', 'NOK', 'DKK', 'GBP'])) {
+                        if (in_array((string) $inv['currency'], [
+                                          'SEK', 'EUR', 'NOK', 'DKK', 'GBP'])) {
                             $invCurrency = strtoupper((string) $inv['currency']);
-                            $details = $this->openBankingPaymentService->initiateTinkPayment($amount, $invoice, $company, $invCurrency, (string) $recipientName, (int) $clientId, (int) $clientSecret);
+                            $details =
+                            $this->openBankingPaymentService->initiateTinkPayment(
+                                $amount, $invoice, $company, $invCurrency,
+                                (string) $recipientName, (int) $clientId,
+                                    (int) $clientSecret);
                             $singleKeyArray = (array) ($details['data'] ?? []);
                             $data = (array) ($singleKeyArray['data'] ?? []);
                             $paymentRequestId = (string) ($data['id'] ?? '');
                             $viewData['authToken'] = false;
                             $market = (string) ($data['market'] ?? '');
                             $locale = 'en_GB';
-                            $redirectUri = urlencode($this->urlGenerator->generate('paymentinformation/tink_complete', ['url_key' => $url_key, 'payment_request_id' => $paymentRequestId]));
-                            $viewData['authUrl'] = "https://link.tink.com/1.0/pay/direct/?client_id={$clientId}&redirect_uri={$redirectUri}&market={$market}&locale={$locale}&payment_request_id={$paymentRequestId}";
+                            $redirectUri = urlencode(
+                                $this->urlGenerator->generate(
+                                    'paymentinformation/tink_complete',
+                                    ['url_key' => $url_key,
+                                     'payment_request_id' => $paymentRequestId]));
+                            $viewData['authUrl'] =
+                                "https://link.tink.com/1.0/pay/direct"
+                                    . "/?client_id={$clientId}&redirect"
+                                    . "_uri={$redirectUri}&market={$market}"
+                                    . "&locale={$locale}"
+                                    . "&payment_request_id={$paymentRequestId}";
                         } else {
                             $viewData['alert'] = 'Currency not supported.';
                         }
                     } else {
-                        $viewData['alert'] = 'Missing Credentials Client Id and Client Secret';
+                        $viewData['alert']
+                            = 'Missing Credentials Client Id and Client Secret';
                     }
                 }
                 break;
 
             default:
-                // Other open banking providers use authUrl since they are oauth2.0 linked
-                $authUrl               = $this->openBankingPaymentService->getAuthUrlForProvider($providerConfig, $url_key);
+     // Other open banking providers use authUrl since they are oauth2.0 linked
+                $authUrl = $this->openBankingPaymentService->getAuthUrlForProvider(
+                                                    $providerConfig, $url_key);
                 $viewData['authUrl']   = $authUrl;
-                $viewData['returnUrl'] = ['paymentinformation/paymentinformation_openbanking', ['url_key' => $url_key, '_language' => 'en'], [], null];
+                $viewData['returnUrl'] = [
+                    'paymentinformation/paymentinformation_openbanking',
+                    ['url_key' => $url_key, '_language' => 'en'], [], null];
                 break;
         }
-        return $this->viewRenderer->render('//invoice/paymentinformation/payment_information_openbanking', $viewData);
+        return $this->viewRenderer->render(
+        '//invoice/paymentinformation/payment_information_openbanking', $viewData);
     }
 
-    /**
-     * Related logic: see https://developer.amazon.com/docs/amazon-pay-api-v2/checkout-session.html#create-checkout-session.
-     */
+/**
+ * Related logic: https://developer.amazon.com/docs/amazon-pay-api-v2/
+ * checkout-session.html#create-checkout-session.
+ */
     public function amazon_complete(Request $request, CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
     {
         $invoice_url_key = $currentRoute->getArgument('url_key');
@@ -279,7 +317,8 @@ final class PaymentInformationController
         // Use service to check completion status and handle invoice updates
         $result = $this->amazonPayPaymentService->handleCallback([
             'amazonCheckoutSessionId' => $checkout_session_id,
-            'invoice'                 => $invoice, // Pass the entity if needed in service
+            // Pass the entity if needed in service
+            'invoice'                 => $invoice,
             'iR'                      => $this->iR,
             'iaR'                     => $this->iaR,
         ]);
@@ -290,8 +329,12 @@ final class PaymentInformationController
                 'render' => $this->viewRenderer->renderPartialAsString(
                     '//invoice/setting/payment_message',
                     [
-                        'heading'     => $this->translator->translate('payment.information.amazon.payment.session.complete') . $checkout_session_id,
-                        'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
+                        'heading'     =>
+                            $this->translator->translate(
+                        'payment.information.amazon.payment.session.complete')
+                            . $checkout_session_id,
+                        'message'     => $this->translator->translate('payment')
+                            . ':' . $this->translator->translate('complete'),
                         'url'         => 'inv/url_key',
                         'url_key'     => $invoice_url_key,
                         'gateway'     => 'Amazon_Pay',
@@ -304,8 +347,11 @@ final class PaymentInformationController
                 'render' => $this->viewRenderer->renderPartialAsString(
                     '//invoice/setting/payment_message',
                     [
-                        'heading'     => $this->translator->translate('payment.information.amazon.payment.session.incomplete'),
-                        'message'     => $result['message'] ?? ($this->translator->translate('payment') . ':' . $this->translator->translate('incomplete')),
+                        'heading'     => $this->translator->translate(
+                        'payment.information.amazon.payment.session.incomplete'),
+                        'message'     => $result['message'] ??
+                            ($this->translator->translate('payment')
+                            . ':' . $this->translator->translate('incomplete')),
                         'url'         => 'inv/url_key',
                         'url_key'     => $invoice_url_key,
                         'gateway'     => 'Amazon_Pay',
@@ -318,7 +364,8 @@ final class PaymentInformationController
         return $this->viewRenderer->render('payment_completion_page', $view_data);
     }
 
-    public function openbanking_oauth_complete(Request $request, CurrentRoute $currentRoute): Response
+    public function openbanking_oauth_complete(Request $request,
+            CurrentRoute $currentRoute): Response
     {
         $url_key        = $currentRoute->getArgument('url_key');
         $query_params   = $request->getQueryParams();
@@ -326,12 +373,20 @@ final class PaymentInformationController
         $state          = (string) $query_params['state'];
         $codeVerifier   = (string) $this->session->get('code_verifier');
         $provider       = $this->sR->getSetting('open_banking_provider');
-        $providerConfig = $provider ? $this->getOpenBankingProviderConfig($provider) : null;
+        $providerConfig = $provider ?
+                $this->getOpenBankingProviderConfig($provider) : null;
 
-        if (null !== $providerConfig && (strlen($code) > 0) && (strlen($url_key ?? '') > 0) && $codeVerifier) {
-            $this->openBankingOauthClient->setAuthUrl((string) $providerConfig['authUrl']);
-            $this->openBankingOauthClient->setTokenUrl((string) $providerConfig['tokenUrl']);
-            $this->openBankingOauthClient->setScope(isset($providerConfig['scope']) ? (string) $providerConfig['scope'] : null);
+        if (null !== $providerConfig
+                && (strlen($code) > 0)
+                && (strlen($url_key ?? '') > 0)
+                && $codeVerifier) {
+            $this->openBankingOauthClient->setAuthUrl(
+                                            (string) $providerConfig['authUrl']);
+            $this->openBankingOauthClient->setTokenUrl(
+                                            (string) $providerConfig['tokenUrl']);
+            $this->openBankingOauthClient->setScope(
+                                        isset($providerConfig['scope']) ?
+                                        (string) $providerConfig['scope'] : null);
 
             // Exchange code for token
             try {
@@ -339,27 +394,32 @@ final class PaymentInformationController
                     $request,
                     $code,
                     [
-                        'redirect_uri'  => $this->urlGenerator->generateAbsolute('paymentinformation/openbanking_oauth_complete', ['url_key' => $url_key]),
+                        'redirect_uri'  =>
+                        $this->urlGenerator->generateAbsolute(
+                                'paymentinformation/openbanking_oauth_complete',
+                                ['url_key' => $url_key]),
                         'code_verifier' => $codeVerifier,
                     ],
                 );
-                // You now have $token, proceed with further Open Banking API calls (e.g., to initiate payment)
+                // You now have $token, proceed with further Open Banking API
+                //  calls (e.g., to initiate payment)
 
                 $this->flashMessage('success', 'Open Banking authentication successful.');
-                // TODO: Implement actual payment initiation here
-
+                
                 return $this->viewRenderer->render('payment_completion_page', [
                     'render' => '<h2>Open Banking payment authorized.</h2>',
                 ]);
             } catch (\Throwable $e) {
-                $this->flashMessage('error', 'Open Banking authentication failed: ' . $e->getMessage());
+                $this->flashMessage('error', 'Open Banking authentication failed: '
+                        . $e->getMessage());
             }
         }
 
         return $this->webService->getNotFoundResponse();
     }
 
-    public function tink_complete(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
+    public function tink_complete(CurrentRoute $currentRoute):
+                                    \Yiisoft\DataResponse\DataResponse|Response
     {
         $urlKey = $currentRoute->getArgument('url_key');
         $ref = $currentRoute->getArgument('ref');
@@ -367,7 +427,10 @@ final class PaymentInformationController
             'render' => $this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/payment_message',
                 [
-                    'heading'     => sprintf($this->translator->translate('online.payment.payment.successful'), $ref ?? 'No ref provided'),
+                    'heading'     =>
+                    sprintf($this->translator->translate(
+                            'online.payment.payment.successful'), $ref ??
+                                'No ref provided'),
                     'message'     => 'Ref: ' . ($ref ?? 'No ref provided'),
                     'url'         => 'inv/url_key',
                     'url_key'     => $urlKey,
@@ -387,7 +450,10 @@ final class PaymentInformationController
             'render' => $this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/payment_message',
                 [
-                    'heading'     => sprintf($this->translator->translate('online.payment.payment.successful'), $ref ?? 'No ref provided'),
+                    'heading'     => sprintf(
+                            $this->translator->translate(
+                                    'online.payment.payment.successful'),
+                                                $ref ?? 'No ref provided'),
                     'message'     => 'Ref: ' . ($ref ?? 'No ref provided'),
                     'url'         => 'inv/url_key',
                     'url_key'     => $urlKey,
@@ -399,7 +465,8 @@ final class PaymentInformationController
         return $this->viewRenderer->render('payment_completion_page', $view_data);
     }
 
-    public function inform(Request $request, CurrentRoute $currentRoute, cR $cR, iiR $iiR, pmR $pmR): Response
+    public function inform(Request $request, CurrentRoute $currentRoute,
+                                        cR $cR, iiR $iiR, pmR $pmR): Response
     {
         $client_chosen_gateway = $currentRoute->getArgument('gateway');
         if (null !== $client_chosen_gateway) {
@@ -421,7 +488,8 @@ final class PaymentInformationController
                 $items_array = [];
                 /** @var InvItem $item */
                 foreach ($items as $item) {
-                    $items_array[] = (string) $item->getId() . ' ' . ($item->getName() ?? '');
+                    $items_array[] = (string) $item->getId()
+                                                . ' ' . ($item->getName() ?? '');
                 }
                 $invoice_amount_record = $this->iaR->repoInvquery((int) $invoice_id);
                 if (null !== $invoice_amount_record) {
@@ -431,9 +499,14 @@ final class PaymentInformationController
                         'id'          => $invoice_id,
                         'balance'     => $balance,
                         'customer_id' => $invoice->getClient_id(),
-                        'customer'    => ($invoice->getClient()?->getClient_name() ?? '') . ' ' . ($invoice->getClient()?->getClient_surname() ?? ''),
+                        'customer'    =>
+                        ($invoice->getClient()?->getClient_name() ?? '')
+                        . ' ' . ($invoice->getClient()?->getClient_surname() ?? ''),
                         // Default currency is needed to generate a payment intent
-                        'currency'       => !empty($this->sR->getSetting('currency_code')) ? strtolower($this->sR->getSetting('currency_code')) : 'gbp',
+                        'currency'       =>
+                        !empty($this->sR->getSetting('currency_code')) ?
+                        strtolower($this->sR->getSetting('currency_code'))
+                            : 'gbp',
                         'customer_email' => $invoice->getClient()?->getClient_email(),
                         // Keep a record of the invoice items in description
                         'description' => Json::encode($items_array),
@@ -442,17 +515,25 @@ final class PaymentInformationController
                     ];
                     // Check if the invoice is payable
                     if (0.00 == $balance) {
-                        $this->flashMessage('warning', $this->translator->translate('already.paid'));
+                        $this->flashMessage('warning',
+                                $this->translator->translate('already.paid'));
                         $disable_form = true;
                     }
                     // Get additional invoice information
-                    $payment_method_for_this_invoice = $pmR->repoPaymentMethodquery((string) $invoice->getPayment_method());
+                    $payment_method_for_this_invoice =
+                        $pmR->repoPaymentMethodquery(
+                                        (string) $invoice->getPayment_method());
                     if (null !== $payment_method_for_this_invoice) {
-                        $is_overdue = ($balance > 0.00 && strtotime($invoice->getDate_due()->format('Y-m-d')) < time() ? true : false);
+                        $is_overdue = ($balance > 0.00
+                                && strtotime(
+                                        $invoice->getDate_due()->format('Y-m-d'))
+                                                        < time() ? true : false);
                         if ($balance > 0 && $total > 0) {
-                            $payment_method_name = $payment_method_for_this_invoice->getName();
+                            $payment_method_name =
+                                    $payment_method_for_this_invoice->getName();
                             if (null !== $payment_method_name) {
-                                $payment_method = $this->sR->mollieSupportedPaymentMethodArray();
+                                $payment_method =
+                                    $this->sR->mollieSupportedPaymentMethodArray();
                                 return $this->pciCompliantGatewayInForms(
                                     $d,
                                     $request,
@@ -566,7 +647,8 @@ final class PaymentInformationController
                         );
                     case 'Mollie':
                         // locale is in the format en_GB as opposed to default en
-                        $mollie_locale = $this->sR->getSetting('gateway_mollie_locale');
+                        $mollie_locale =
+                            $this->sR->getSetting('gateway_mollie_locale');
 
                         return $this->mollieInForm(
                             $client_chosen_gateway,
@@ -586,7 +668,8 @@ final class PaymentInformationController
                 }
             }
         } else {
-            $this->flashMessage('danger', $this->translator->translate('number.no'));
+            $this->flashMessage('danger',
+                                    $this->translator->translate('number.no'));
         }
 
         return $this->webService->getNotFoundResponse();
@@ -613,7 +696,8 @@ final class PaymentInformationController
                 '//invoice/setting/payment_message',
                 [
                     'heading' => '',
-                    'message' => 'Amazon_Pay private.pem File Not Downloaded from Amazon and saved in Pem_unique_folder as private.pem',
+                    'message' => 'Amazon_Pay private.pem File Not Downloaded'
+                    . ' from Amazon and saved in Pem_unique_folder as private.pem',
                     'url'     => 'inv/url_key',
                     'url_key' => $url_key,
                     'gateway' => 'Amazon_Pay',
@@ -622,7 +706,8 @@ final class PaymentInformationController
         }
 
         // Get Amazon Pay button data from the service
-        $amazonPayButton = $this->amazonPayPaymentService->getButtonData($invoice, $url_key, $balance);
+        $amazonPayButton = $this->amazonPayPaymentService->getButtonData($invoice,
+                $url_key, $balance);
 
         $amazon_pci_view_data = [
             'alert'                  => $this->alert(),
@@ -643,12 +728,14 @@ final class PaymentInformationController
                     ['client' => $cR->repoClientquery($invoice->getClient_id())],
                 ),
             'payment_method' => $payment_method_for_this_invoice,
-            'return_url'     => ['paymentinformation/amazon_complete', ['url_key' => $url_key]],
+            'return_url'     => ['paymentinformation/amazon_complete',
+                                                        ['url_key' => $url_key]],
             'title'          => 'Amazon Pay is enabled',
             'total'          => $total,
         ];
 
-        return $this->viewRenderer->render('payment_information_amazon_pci', $amazon_pci_view_data);
+        return $this->viewRenderer->render('payment_information_amazon_pci',
+                                                        $amazon_pci_view_data);
     }
 
     public function braintreeInForm(
@@ -668,20 +755,23 @@ final class PaymentInformationController
     ): Response {
         // Check if Braintree is properly configured
         if (!$this->braintreePaymentService->isConfigured()) {
-            $this->flashMessage('warning', 'Braintree payment gateway is not properly configured.');
+            $this->flashMessage('warning',
+                    'Braintree payment gateway is not properly configured.');
 
             return $this->webService->getNotFoundResponse();
         }
 
         // Create or find customer
         if (!$this->braintreePaymentService->findOrCreateCustomer($invoice)) {
-            $this->flashMessage('warning', 'Unable to create or find customer in Braintree.');
+            $this->flashMessage('warning',
+                    'Unable to create or find customer in Braintree.');
         }
 
         // Generate client token
         $clientToken = $this->braintreePaymentService->generateClientToken();
         if (empty($clientToken)) {
-            $this->flashMessage('warning', 'Unable to generate Braintree client token.');
+            $this->flashMessage('warning',
+                    'Unable to generate Braintree client token.');
 
             return $this->webService->getNotFoundResponse();
         }
@@ -691,7 +781,8 @@ final class PaymentInformationController
         // Return the view
         $braintree_pci_view_data = [
             'alert'                  => $this->alert(),
-            'return_url'             => ['paymentinformation/braintree_complete', ['url_key' => $url_key]],
+            'return_url'             => 
+            ['paymentinformation/braintree_complete', ['url_key' => $url_key]],
             'balance'                => $balance,
             'body'                   => $request->getParsedBody() ?? [],
             'client_on_invoice'      => $cR->repoClientquery($invoice->getClient_id()),
@@ -709,10 +800,14 @@ final class PaymentInformationController
                 ),
             'payment_method' => $payment_method_for_this_invoice,
             'total'          => $total,
-            'action'         => ['paymentinformation/form', ['url_key' => $url_key, 'gateway' => 'Braintree']],
+            'action'         => 
+            ['paymentinformation/form', [
+                'url_key' => $url_key,
+                'gateway' => 'Braintree']],
             'companyLogo'    => $this->renderPartialAsStringCompanyLogo(),
             'braintreeLogo'  => $this->renderPartialAsStringBrainTreeLogo($merchantId),
-            'title'          => 'Braintree - PCI Compliant - Version' . $this->braintreePaymentService->getVersion() . ' - is enabled. ',
+            'title'          => 'Braintree - PCI Compliant - Version'
+            . $this->braintreePaymentService->getVersion() . ' - is enabled. ',
         ];
 
         if (Method::POST === $request->getMethod()) {
@@ -720,7 +815,9 @@ final class PaymentInformationController
             $paymentMethodNonce = (string) ($body['payment_method_nonce'] ?? '');
 
             // Process transaction using service
-            $transactionResult = $this->braintreePaymentService->processTransaction($balance, $paymentMethodNonce);
+            $transactionResult =
+                    $this->braintreePaymentService->processTransaction(
+                            $balance, $paymentMethodNonce);
 
             if ($transactionResult['success']) {
                 $payment_method = 4;
@@ -728,19 +825,24 @@ final class PaymentInformationController
                 $invoice->setStatus_id(4);
 
                 /** @var InvAmount $invoice_amount_record */
-                $invoice_amount_record = $this->iaR->repoInvquery((int) $invoice->getId());
+                $invoice_amount_record =
+                        $this->iaR->repoInvquery((int) $invoice->getId());
                 if (null !== $invoice_amount_record->getTotal()) {
-                    // The invoice amount has been paid => balance on the invoice is zero and the paid amount is full
+                    // The invoice amount has been paid => balance on the
+                    //  invoice is zero and the paid amount is full
                     $invoice_amount_record->setBalance(0.00);
-                    $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
+                    $invoice_amount_record->setPaid(
+                                    $invoice_amount_record->getTotal() ?? 0.00);
                     $this->iaR->save($invoice_amount_record);
                     $this->record_online_payments_and_merchant(
                         // Reference
-                        $invoice->getNumber() ?? $this->translator->translate('number.no'),
+                        $invoice->getNumber() ??
+                            $this->translator->translate('number.no'),
                         (string) $invoice_id,
                         $balance ?: 0.00,
                         $payment_method,
-                        $invoice->getNumber() ?? $this->translator->translate('number.no'),
+                        $invoice->getNumber() ??
+                            $this->translator->translate('number.no'),
                         'Braintree',
                         'braintree',
                         $url_key,
@@ -751,11 +853,16 @@ final class PaymentInformationController
             }
 
             $view_data = [
-                'render' => $this->viewRenderer->renderPartialAsString('//invoice/setting/payment_message', ['heading' => '',
+                'render' => $this->viewRenderer->renderPartialAsString(
+                        '//invoice/setting/payment_message', ['heading' => '',
                     // https://developer.paypal.com/braintree/docs/reference/general/result-objects
                     'message' => $transactionResult['success']
-                        ? sprintf($this->translator->translate('online.payment.payment.successful'), $invoice->getNumber() ?? '')
-                        : sprintf($this->translator->translate('online.payment.payment.failed'), $invoice->getNumber() ?? ''),
+                        ? sprintf($this->translator->translate(
+                            'online.payment.payment.successful'),
+                                $invoice->getNumber() ?? '')
+                        : sprintf($this->translator->translate(
+                            'online.payment.payment.failed'),
+                                $invoice->getNumber() ?? ''),
                     'url'         => 'inv/url_key',
                     'url_key'     => $url_key,
                     'gateway'     => 'Braintree',
@@ -764,18 +871,22 @@ final class PaymentInformationController
             ];
             $this->iR->save($invoice);
 
-            return $this->viewRenderer->render('payment_completion_page', $view_data);
+            return $this->viewRenderer->render('payment_completion_page',
+                    $view_data);
         } // request->getMethod Braintree
 
-        return $this->viewRenderer->render('payment_information_braintree_pci', $braintree_pci_view_data);
+        return $this->viewRenderer->render('payment_information_braintree_pci',
+                $braintree_pci_view_data);
     }
 
-    /**
-     * Handles Braintree payment completion
-     * Note: Braintree payments are typically processed directly in braintreeInForm method,
-     * but this endpoint exists for consistency and potential webhook handling.
-     */
-    public function braintree_complete(Request $request, CurrentRoute $currentRoute): Response
+/**
+ * Handles Braintree payment completion
+ * Note: Braintree payments are typically processed directly in braintreeInForm
+ *  method,
+ * but this endpoint exists for consistency and potential webhook handling.
+ */
+    public function braintree_complete(Request $request,
+        CurrentRoute $currentRoute): Response
     {
         $invoice_url_key = $currentRoute->getArgument('url_key');
         if (null !== $invoice_url_key) {
@@ -791,14 +902,19 @@ final class PaymentInformationController
             if ($invoice) {
                 $invoiceNumber = $invoice->getNumber() ?? 'Unknown';
 
-                // For Braintree, transactions are typically completed directly in the form POST
-                // This completion handler is primarily for consistency with other payment methods
+// For Braintree, transactions are typically completed directly in the form POST
+// This completion handler is primarily for consistency with other payment methods
                 $view_data = [
                     'render' => $this->viewRenderer->renderPartialAsString(
                         '//invoice/setting/payment_message',
                         [
-                            'heading'     => sprintf($this->translator->translate('online.payment.payment.successful'), $invoiceNumber),
-                            'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
+                            'heading'     => sprintf(
+                                    $this->translator->translate(
+                                            'online.payment.payment.successful'), $invoiceNumber),
+                            'message'     =>
+                                    $this->translator->translate(
+                                            'payment')
+                                . ':' . $this->translator->translate('complete'),
                             'url'         => 'inv/url_key',
                             'url_key'     => $invoice_url_key,
                             'gateway'     => 'Braintree',
@@ -807,7 +923,8 @@ final class PaymentInformationController
                     ),
                 ];
 
-                return $this->viewRenderer->render('payment_completion_page', $view_data);
+                return $this->viewRenderer->render('payment_completion_page',
+                        $view_data);
             }
         }
 
@@ -837,13 +954,19 @@ final class PaymentInformationController
          */
         $mollieClient = new MollieClient();
         // Return the view
-        if ('1' === $this->sR->getSetting('gateway_mollie_enabled') && (false == $this->mollieSetTestOrLiveApiKey($mollieClient))) {
-            $this->flashMessage('warning', $this->translator->translate('payment.gateway.mollie.api.key.needs.to.be.setup'));
+        if ('1' === $this->sR->getSetting('gateway_mollie_enabled')
+                && (false == $this->mollieSetTestOrLiveApiKey($mollieClient))) {
+            $this->flashMessage('warning',
+                    $this->translator->translate(
+                            'payment.gateway.mollie.api.key.needs.to.be.setup'));
 
             return $this->webService->getNotFoundResponse();
         }
-        if ('1' === $this->sR->getSetting('gateway_mollie_enabled') && (true == $this->mollieSetTestOrLiveApiKey($mollieClient))) {
-            $this->flashMessage('success', $this->translator->translate('payment.gateway.mollie.api.key.has.been.setup'));
+        if ('1' === $this->sR->getSetting('gateway_mollie_enabled')
+                && (true == $this->mollieSetTestOrLiveApiKey($mollieClient))) {
+            $this->flashMessage('success',
+                    $this->translator->translate(
+                            'payment.gateway.mollie.api.key.has.been.setup'));
         }
         $payment = $this->mollieApiClientCreatePayment(
             $mollieClient,
@@ -856,8 +979,11 @@ final class PaymentInformationController
             'alert'                      => $this->alert(),
             'return_url'                 => ['inv/url_key', ['url_key' => $url_key]],
             'balance'                    => $balance,
-            'client_on_invoice'          => $cR->repoClientquery($invoice->getClient_id()),
-            'pci_client_publishable_key' => $this->sR->decode($this->sR->getSetting('gateway_mollie_publishableKey')),
+            'client_on_invoice'          =>
+                $cR->repoClientquery($invoice->getClient_id()),
+            'pci_client_publishable_key' =>
+                $this->sR->decode($this->sR->getSetting(
+                        'gateway_mollie_publishableKey')),
             'json_encoded_items'         => Json::encode($items_array),
             'disable_form'               => $disable_form,
             'client_chosen_gateway'      => $client_chosen_gateway,
@@ -865,31 +991,40 @@ final class PaymentInformationController
             'payment'                    => $payment,
             'inv_url_key'                => $url_key,
             'is_overdue'                 => $is_overdue,
-            'partial_client_address'     => $this->viewRenderer->renderPartialAsString(
+            'partial_client_address'     =>
+                $this->viewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address',
                 [
                     'client' => $cR->repoClientquery($invoice->getClient_id()),
                 ],
             ),
             'payment_methods'        => $mollieClient->methods->allEnabled(),
-            'invoice_payment_method' => $payment_method_for_this_invoice ?: $this->translator->translate('none'),
+            'invoice_payment_method' => $payment_method_for_this_invoice ?:
+                $this->translator->translate('none'),
             'total'                  => $total,
             'companyLogo'            => $this->renderPartialAsStringCompanyLogo(),
             'mollieLogo'             => $this->renderPartialAsStringMollieLogo(),
-            'title'                  => $this->mollieClientVersionString() . ' - PCI Compliant - is enabled. ',
+            'title'                  => $this->mollieClientVersionString()
+                . ' - PCI Compliant - is enabled. ',
         ];
 
-        return $this->viewRenderer->render('payment_information_mollie_pci', $mollie_pci_view_data);
+        return $this->viewRenderer->render('payment_information_mollie_pci',
+            $mollie_pci_view_data);
     }
 
     private function mollieSetTestOrLiveApiKey(MollieClient $mollieClient): bool
     {
         /** @var string $testOrLiveApiKey */
-        $testOrLiveApiKey = !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ? $this->sR->decode($this->sR->getSetting('gateway_mollie_testOrLiveApiKey'))
+        $testOrLiveApiKey = !empty($this->sR->getSetting(
+                'gateway_mollie_testOrLiveApiKey')) ?
+                $this->sR->decode($this->sR->getSetting(
+                        'gateway_mollie_testOrLiveApiKey'))
                        : '';
-        !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ? $mollieClient->setApiKey($testOrLiveApiKey) : '';
+        !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ?
+                $mollieClient->setApiKey($testOrLiveApiKey) : '';
 
-        return !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ? true : false;
+        return !empty($this->sR->getSetting('gateway_mollie_testOrLiveApiKey')) ?
+                true : false;
     }
 
     private function mollieClientVersionString(): string
@@ -912,13 +1047,13 @@ final class PaymentInformationController
          * @var string $yii_invoice['id']
          */
         try {
-            /**
-             * Visa Card Number: 4543 4740 0224 9996.
-             *
-             * @see https://docs.mollie.com/overview/testing#testing-card-payments
-             * @see https://docs.mollie.com/overview/testing#testing-different-types-of-cards
-             * @see https://github.com/mollie/mollie-api-php
-             */
+/**
+ * Visa Card Number: 4543 4740 0224 9996.
+ *
+ * @see https://docs.mollie.com/overview/testing#testing-card-payments
+ * @see https://docs.mollie.com/overview/testing#testing-different-types-of-cards
+ * @see https://github.com/mollie/mollie-api-php
+ */
             $amount = (float) $yii_invoice['balance'];
 
             return $mollieClient->payments->create([
@@ -931,10 +1066,15 @@ final class PaymentInformationController
                 'locale'      => $locale,
                 'method'      => $paymentMethod,
                 'description' => $yii_invoice['description'],
-                // When the customer clicks on the pay Now button in payment_information_mollie_pci.php
-                // with url from $payment->getCheckOutUrl() they will be redirected to e.g.
-                // https://www.mollie.com/checkout/credit-card/embedded/x2ieJoYgPQ
-                'redirectUrl' => $this->urlGenerator->generateAbsolute('paymentinformation/mollie_complete', ['url_key' => $urlKey, '_language' => (string) $this->session->get('_language')]),
+// When the customer clicks on the pay Now button in payment_information_mollie_pci.php
+// with url from $payment->getCheckOutUrl() they will be redirected to e.g.
+// https://www.mollie.com/checkout/credit-card/embedded/x2ieJoYgPQ
+                'redirectUrl' =>
+                    $this->urlGenerator->generateAbsolute(
+                            'paymentinformation/mollie_complete',
+                            ['url_key' => $urlKey,
+                                '_language' =>
+                                    (string) $this->session->get('_language')]),
                 // 'webhookUrl' => 'optional'
                 // 'cancelUrl' => 'optional',
                 // 'restrictPaymentMethodsToCountry' => 'optional'
@@ -947,24 +1087,27 @@ final class PaymentInformationController
                     'order_id'            => time(),
                 ],
             ]);
-            // return to MollieForm and build url for paynow button i.e. $payment->getCheckOutUrl()
-            // which will direct the customer to Mollie's payment site => pci Compliant ... no credit
-            // card details touch our site. Once the customer makes payment on the Mollie website
-            // they will be redirected to the redirectUrl above
+// return to MollieForm and build url for paynow button i.e.
+// $payment->getCheckOutUrl() which will direct the customer to Mollie's
+// payment site => pci Compliant ... no credit card details touch our site.
+// Once the customer makes payment on the Mollie website they will be redirected
+// to the redirectUrl above
         } catch (MollieException) {
-            /*
-             * Previously: echo "API call failed here in function paymentinformation/mollieApiClientCreatePayment ". htmlspecialchars($e->getMessage());
-             * Related logic: see https://cwe.mitre.org/data/definitions/200.html
-             * An exception object flows to the echo statement and is leaked to the attacker.
-             * This may disclose important information about the application to an attacker.
-             * Courtesy of Snyk
-             */
+/*
+ * Previously: echo "API call failed here in function
+ * paymentinformation/mollieApiClientCreatePayment ". htmlspecialchars($e->getMessage());
+ * Related logic: see https://cwe.mitre.org/data/definitions/200.html
+ * An exception object flows to the echo statement and is leaked to the attacker.
+ * This may disclose important information about the application to an attacker.
+ * Courtesy of Snyk
+ */
         }
 
         return $this->webService->getNotFoundResponse();
     }
 
-    public function mollie_complete(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
+    public function mollie_complete(CurrentRoute $currentRoute):
+        \Yiisoft\DataResponse\DataResponse|Response
     {
         // Redirect to the invoice using the url key
         $url_key               = $currentRoute->getArgument('url_key');
@@ -988,12 +1131,12 @@ final class PaymentInformationController
                  * @var MolliePayment $payment
                  */
                 foreach ($payments as $payment) {
-                    /**
-                     * Related logic: see https://www.php.net/manual/en/class.stdclass.php
-                     * Related logic: see .\vendor\mollie\mollie-api-php\src\Resources\Payment.php.
-                     *
-                     * @var \stdClass $payment->metadata
-                     */
+/**
+ * Related logic: see https://www.php.net/manual/en/class.stdclass.php
+ * Related logic: see .\vendor\mollie\mollie-api-php\src\Resources\Payment.php.
+ *
+ * @var \stdClass $payment->metadata
+ */
                     $metaData = $payment->metadata;
 
                     $metadataInvoiceUrlKey = (string) $metaData->invoice_url_key;
@@ -1005,24 +1148,34 @@ final class PaymentInformationController
 
                 $paymentId = $lastPayment->id;
 
-                /*
-                 * Related logic: see vendor\mollie\mollie-api-php\examples\payments\webhook.php
-                 */
+/*
+ * Related logic: see vendor\mollie\mollie-api-php\examples\payments\webhook.php
+ */
                 if ($lastPayment->isPaid() && !$lastPayment->hasRefunds() && !$lastPayment->hasChargebacks()) {
                     $invoice->setStatus_id(4);
-                    // 1 None, 2 Cash, 3 Cheque, 4 Card / Direct-debit - Succeeded, 5 Card / Direct-debit - Processing, 6 Card / Direct-debit - Customer Ready
+// 1 None,
+//  2 Cash,
+//   3 Cheque,
+//    4 Card / Direct-debit - Succeeded,
+//     5 Card / Direct-debit - Processing,
+//      6 Card / Direct-debit - Customer Ready
                     $payment_method = 4;
                     $invoice->setPayment_method(4);
-                    $heading = sprintf($this->translator->translate('online.payment.payment.successful'), (string) $invoiceNumber);
+                    $heading = sprintf($this->translator->translate(
+                            'online.payment.payment.successful'),
+                                (string) $invoiceNumber);
                     $this->iR->save($invoice);
                     /** @var int $invoice->getId() */
-                    $invoice_amount_record = $this->iaR->repoInvquery((int) $invoice->getId());
+                    $invoice_amount_record = $this->iaR->repoInvquery(
+                                                        (int) $invoice->getId());
                     /** @var InvAmount $invoice_amount_record */
                     $balance = $invoice_amount_record->getBalance();
                     if (null !== $balance) {
-                        // The invoice amount has been paid => balance on the invoice is zero and the paid amount is full
+// The invoice amount has been paid => balance on the invoice is zero and the
+//  paid amount is full
                         $invoice_amount_record->setBalance(0);
-                        $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
+                        $invoice_amount_record->setPaid(
+                                $invoice_amount_record->getTotal() ?? 0.00);
                         $this->iaR->save($invoice_amount_record);
                         $this->record_online_payments_and_merchant(
                             // Reference
@@ -1044,33 +1197,46 @@ final class PaymentInformationController
                                 '//invoice/paymentinformation/payment_message',
                                 [
                                     'heading'     => $heading,
-                                    'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete') . 'Payment Id: ' . $paymentId,
+                                    'message'     => 
+                                        $this->translator->translate('payment')
+                                        . ':'
+                                        . $this->translator->translate('complete')
+                                        . 'Payment Id: ' . $paymentId,
                                     'url'         => 'inv/url_key',
-                                    'url_key'     => $metadataInvoiceUrlKey, 'gateway' => 'Mollie',
+                                    'url_key'     => $metadataInvoiceUrlKey,
+                                    'gateway' => 'Mollie',
                                     'sandbox_url' => $sandbox_url_array['mollie'],
                                 ],
                             ),
                         ];
 
-                        return $this->viewRenderer->render('payment_completion_page', $view_data);
+                        return $this->viewRenderer->render(
+                                'payment_completion_page', $view_data);
                     } // null!==$balance
                 } else {
-                    /*
-                     * all-0, draft-1, sent-2, viewed-3, paid-4, overdue-5, unpaid-6, reminder-7, letter-8,
-                     * claim-9, judgement-10, enforcement-11, write-off-12
-                     * Related logic: see src\Invoice\Inv\InvRepository
-                     */
+/*
+ * all-0, draft-1, sent-2, viewed-3, paid-4, overdue-5, unpaid-6, reminder-7,
+ * letter-8, claim-9, judgement-10, enforcement-11, write-off-12
+ * Related logic: see src\Invoice\Inv\InvRepository
+ */
                     $invoice->setStatus_id(6);
 
-                    // 1 None, 2 Cash, 3 Cheque, 4 Card / Direct-debit - Succeeded, 5 Card / Direct-debit - Processing, 6 Card / Direct-debit - Customer Ready
+// 1 None,
+//  2 Cash,
+//   3 Cheque,
+//    4 Card / Direct-debit - Succeeded,
+//     5 Card / Direct-debit - Processing,
+//      6 Card / Direct-debit - Customer Ready
                     $payment_method = 5;
                     $invoice->setPayment_method(5);
                     $heading = sprintf(
-                        $this->translator->translate('online.payment.payment.failed'),
+                        $this->translator->translate(
+                                'online.payment.payment.failed'),
                         (string) $invoiceNumber
-                                       . ' '
-                                       . $this->translator->translate('payment.gateway.mollie.api.payment.id')
-                                       . $paymentId,
+                        . ' '
+                        . $this->translator->translate(
+                                'payment.gateway.mollie.api.payment.id')
+                        . $paymentId,
                     );
                     $this->iR->save($invoice);
                     $view_data = [
@@ -1078,15 +1244,20 @@ final class PaymentInformationController
                             '//invoice/paymentinformation/payment_message',
                             [
                                 'heading'     => $heading,
-                                'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
+                                'message'     =>
+                                    $this->translator->translate('payment')
+                                    . ':'
+                                    . $this->translator->translate('complete'),
                                 'url'         => 'inv/url_key',
-                                'url_key'     => $metadataInvoiceUrlKey, 'gateway' => 'Mollie',
+                                'url_key'     => $metadataInvoiceUrlKey,
+                                'gateway' => 'Mollie',
                                 'sandbox_url' => $sandbox_url_array['mollie'],
                             ],
                         ),
                     ];
 
-                    return $this->viewRenderer->render('payment_completion_page', $view_data);
+                    return $this->viewRenderer->render('payment_completion_page',
+                            $view_data);
                 }
             }
         } // null!==$metadataInvoiceUrlKey
@@ -1109,13 +1280,16 @@ final class PaymentInformationController
     ): Response {
         // Get Stripe keys and client secret from service
         $publishableKey = $this->stripePaymentService->getPublishableKey();
-        $clientSecret   = $this->stripePaymentService->createPaymentIntent($yii_invoice_array);
+        $clientSecret   = $this->stripePaymentService->createPaymentIntent(
+            $yii_invoice_array);
 
         $stripe_pci_view_data = [
             'alert'                      => $this->alert(),
-            'return_url'                 => ['paymentinformation/stripe_complete', ['url_key' => $url_key]],
+            'return_url'                 =>
+                ['paymentinformation/stripe_complete', ['url_key' => $url_key]],
             'balance'                    => $balance,
-            'client_on_invoice'          => $cR->repoClientquery($invoice->getClient_id()),
+            'client_on_invoice'          =>
+                $cR->repoClientquery($invoice->getClient_id()),
             'pci_client_publishable_key' => $publishableKey,
             'json_encoded_items'         => Json::encode($items_array),
             'client_secret'              => $clientSecret,
@@ -1132,25 +1306,33 @@ final class PaymentInformationController
             'payment_method' => $payment_method_for_this_invoice ?: 'None',
             'total'          => $total,
             'companyLogo'    => $this->renderPartialAsStringCompanyLogo(),
-            'title'          => Stripe::getApiVersion() . ' - PCI Compliant - is enabled. ',
+            'title'          => Stripe::getApiVersion()
+                                    . ' - PCI Compliant - is enabled. ',
         ];
 
-        return $this->viewRenderer->render('payment_information_stripe_pci', $stripe_pci_view_data);
+        return $this->viewRenderer->render('payment_information_stripe_pci',
+                $stripe_pci_view_data);
     }
 
-    public function stripe_complete(Request $request, CurrentRoute $currentRoute): Response
+    public function stripe_complete(
+                        Request $request, CurrentRoute $currentRoute): Response
     {
         $invoice_url_key = $currentRoute->getArgument('url_key');
         if (null !== $invoice_url_key) {
             $sandbox_url_array = $this->sR->sandbox_url_array();
-            $invoice           = $this->iR->repoUrl_key_guest_loaded($invoice_url_key);
+            $invoice           =
+                        $this->iR->repoUrl_key_guest_loaded($invoice_url_key);
             if (null === $invoice) {
                 return $this->webService->getNotFoundResponse();
             }
-            $invoiceNumber               = (null !== $invoice->getNumber()) ?: 'unknown';
+            $invoiceNumber               = (null !== $invoice->getNumber()) ?:
+                                                                        'unknown';
             $query_params                = $request->getQueryParams();
-            $redirect_status_from_stripe = (string) ($query_params['redirect_status'] ?? '');
-            $result                      = $this->stripePaymentService->handleCompletion($invoice, $redirect_status_from_stripe);
+            $redirect_status_from_stripe =
+                                (string) ($query_params['redirect_status'] ?? '');
+            $result                      =
+                    $this->stripePaymentService->handleCompletion(
+                                        $invoice, $redirect_status_from_stripe);
             $invoice->setStatus_id((int) $result['status_id']);
             $invoice->setPayment_method((int) $result['payment_method']);
             $this->iR->save($invoice);
@@ -1159,9 +1341,11 @@ final class PaymentInformationController
             /** @var InvAmount $invoice_amount_record */
             $balance = $invoice_amount_record->getBalance();
             if (null !== $balance) {
-                // The invoice amount has been paid => balance on the invoice is zero and the paid amount is full
+// The invoice amount has been paid => balance on the invoice is zero and the
+// paid amount is full
                 $invoice_amount_record->setBalance(0);
-                $invoice_amount_record->setPaid($invoice_amount_record->getTotal() ?? 0.00);
+                $invoice_amount_record->setPaid(
+                                    $invoice_amount_record->getTotal() ?? 0.00);
                 $this->iaR->save($invoice_amount_record);
                 $this->record_online_payments_and_merchant(
                     // Reference
@@ -1178,22 +1362,34 @@ final class PaymentInformationController
                     $sandbox_url_array,
                 );
                 $heading = 'succeeded' == $redirect_status_from_stripe
-                  ? sprintf($this->translator->translate('online.payment.payment.successful'), (string) $invoiceNumber)
-                  : sprintf($this->translator->translate('online.payment.payment.failed'), (string) $invoiceNumber . ' ' . ((string) $result['message'] ?: ''));
+                  ? sprintf(
+                        $this->translator->translate(
+                                'online.payment.payment.successful'),
+                                    (string) $invoiceNumber)
+                  : sprintf($this->translator->translate(
+                                'online.payment.payment.failed'),
+                                    (string) $invoiceNumber
+                                        . ' '
+                                        . ((string) $result['message'] ?: ''));
                 $view_data = [
                     'render' => $this->viewRenderer->renderPartialAsString(
                         '//invoice/paymentinformation/payment_message',
                         [
                             'heading'     => $heading,
-                            'message'     => $this->translator->translate('payment') . ':' . $this->translator->translate('complete'),
+                            'message'     =>
+                                $this->translator->translate('payment')
+                                    . ':'
+                                    . $this->translator->translate('complete'),
                             'url'         => 'inv/url_key',
-                            'url_key'     => $invoice_url_key, 'gateway' => 'Stripe',
+                            'url_key'     => $invoice_url_key,
+                            'gateway' => 'Stripe',
                             'sandbox_url' => $sandbox_url_array['stripe'],
                         ],
                     ),
                 ];
 
-                return $this->viewRenderer->render('payment_completion_page', $view_data);
+                return $this->viewRenderer->render('payment_completion_page',
+                    $view_data);
             } // null!==$balance
 
             return $this->webService->getNotFoundResponse();
@@ -1208,7 +1404,8 @@ final class PaymentInformationController
             // convert the float amount to cents
             'amount'   => (int) round(((float) $yii_invoice['balance'] ?: 0.00) * 100),
             'currency' => (string) $yii_invoice['currency'],
-            // include the payment methods you have chosen listed in dashboard.stripe.com eg. card, bacs direct debit,
+// include the payment methods you have chosen listed in dashboard.stripe.com eg.
+// card, bacs direct debit,
             // googlepay etc.
             'automatic_payment_methods' => [
                 'enabled' => true,
@@ -1241,28 +1438,34 @@ final class PaymentInformationController
         array $sandbox_url_array,
     ): \Yiisoft\DataResponse\DataResponse {
         if ($response) {
-            $payment_note = $this->translator->translate('transaction.reference') . ': ' . $reference . "\n";
-            $payment_note .= $this->translator->translate('payment.provider') . ': ' . ucwords(str_replace('_', ' ', $d));
+            $payment_note = $this->translator->translate('transaction.reference')
+                    . ': ' . $reference . "\n";
+            $payment_note .= $this->translator->translate('payment.provider')
+                    . ': ' . ucwords(str_replace('_', ' ', $d));
 
             // Set invoice to paid
             $payment_array = [
                 'inv_id'            => $invoice_id,
-                'payment_date'      => \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
+                'payment_date'      =>
+                    \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
                 'amount'            => $balance,
                 'payment_method_id' => $invoice_payment_method,
                 'note'              => $payment_note,
             ];
 
             $payment = new Payment();
-            $this->paymentService->addPayment_via_payment_handler($payment, $payment_array);
+            $this->paymentService->addPayment_via_payment_handler(
+                                                    $payment, $payment_array);
 
-            $payment_success_msg = sprintf($this->translator->translate('online.payment.payment.successful'), $invoice_number);
+            $payment_success_msg = sprintf($this->translator->translate(
+                        'online.payment.payment.successful'), $invoice_number);
 
             // Save gateway response
             $successful_merchant_response_array = [
                 'inv_id'                       => $invoice_id,
                 'merchant_response_successful' => true,
-                'merchant_response_date'       => \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
+                'merchant_response_date'       =>
+                    \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
                 'merchant_response_driver'     => $driver,
                 'merchant_response'            => $payment_success_msg,
                 'merchant_response_reference'  => $reference,
@@ -1270,7 +1473,8 @@ final class PaymentInformationController
 
             $merchant_response = new Merchant();
             $this->merchantService
-                ->saveMerchant_via_payment_handler($merchant_response, $successful_merchant_response_array);
+                ->saveMerchant_via_payment_handler(
+                        $merchant_response, $successful_merchant_response_array);
 
             // Redirect user and display the success message
             $this->flashMessage('success', $payment_success_msg);
@@ -1281,7 +1485,8 @@ final class PaymentInformationController
                     [
                         'heading'     => '',
                         'message'     => $payment_success_msg,
-                        'url'         => 'inv/url_key', 'url_key' => $invoice_url_key,
+                        'url'         => 'inv/url_key',
+                        'url_key'     => $invoice_url_key,
                         'gateway'     => $driver,
                         'sandbox_url' => $sandbox_url_array[$d],
                     ],
@@ -1290,12 +1495,15 @@ final class PaymentInformationController
         }
         // Payment failed
         // Save the response in the database
-        $payment_failure_msg = sprintf($this->translator->translate('online.payment.payment.failed'), $invoice_number);
+        $payment_failure_msg = sprintf(
+            $this->translator->translate(
+                'online.payment.payment.failed'), $invoice_number);
 
         $unsuccessful_merchant_response_array = [
             'inv_id'                       => $invoice_id,
             'merchant_response_successful' => false,
-            'merchant_response_date'       => \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
+            'merchant_response_date'       =>
+                \DateTime::createFromImmutable(new \DateTimeImmutable('now')),
             'merchant_response_driver'     => $driver,
             'merchant_response'            => $payment_failure_msg,
             'merchant_response_reference'  => $reference,
@@ -1350,9 +1558,12 @@ final class PaymentInformationController
             }
             break;
         }
-        $src = (null !== $companyLogoFileName ? '/logo/' . $companyLogoFileName : '/site/logo.png');
+        $src = (null !== $companyLogoFileName ? '/logo/'
+                . $companyLogoFileName : '/site/logo.png');
 
-        return $this->viewRenderer->renderPartialAsString('//invoice/paymentinformation/logo/companyLogo', [
+        return $this->viewRenderer->renderPartialAsString(
+                '//invoice/paymentinformation/logo/companyLogo',
+        [
             'src' => $src,
             // if debug_mode == '1' => reveal the source in the tooltip
             'tooltipTitle' => '1' == $this->sR->getSetting('debug_mode') ? $src : '',
@@ -1364,14 +1575,17 @@ final class PaymentInformationController
 
     public function renderPartialAsStringBraintreeLogo(string $merchantId): string
     {
-        return $this->viewRenderer->renderPartialAsString('//invoice/paymentinformation/logo/braintreeLogo', [
+        return $this->viewRenderer->renderPartialAsString(
+                '//invoice/paymentinformation/logo/braintreeLogo',
+        [
             'merchantId' => $merchantId,
         ]);
     }
 
     public function renderPartialAsStringMollieLogo(): string
     {
-        return $this->viewRenderer->renderPartialAsString('//invoice/paymentinformation/logo/mollieLogo');
+        return $this->viewRenderer->renderPartialAsString(
+                '//invoice/paymentinformation/logo/mollieLogo');
     }
 
     /*

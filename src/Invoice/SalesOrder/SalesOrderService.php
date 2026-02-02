@@ -109,11 +109,6 @@ final readonly class SalesOrderService
                 (float) $array['discount_amount']
             )
             : '';
-        isset($array['discount_percent'])
-            ? $model->setDiscount_percent(
-                (float) $array['discount_percent']
-            )
-            : '';
         isset($array['url_key'])
             ? $model->setUrl_key((string) $array['url_key'])
             : Random::string(32);
@@ -130,7 +125,6 @@ final readonly class SalesOrderService
         if ($model->isNewRecord()) {
             $model->setStatus_id(1);
             $model->setDate_created(new \DateTimeImmutable('now'));
-            $model->setDiscount_amount(0.00);
         }
         $this->repository->save($model);
         return $model;
@@ -159,11 +153,6 @@ final readonly class SalesOrderService
             : '';
         isset($array['status_id'])
             ? $model->setStatus_id((int) $array['status_id'])
-            : '';
-        isset($array['discount_percent'])
-            ? $model->setDiscount_percent(
-                (float) $array['discount_percent']
-            )
             : '';
         isset($array['discount_amount'])
             ? $model->setDiscount_amount(

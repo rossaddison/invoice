@@ -884,7 +884,6 @@ return [
     'Cruthaich àireamh a’ chunntais airson dreachd nan cunntasan',
 'generate.quote.number.for.draft' =>
     'Cruthaich an àireamh luachan airson dreachd luachan',
-'generate.sumex' => 'Cruthaich PDF Sumex',
 'generator' => 'Gineadair',
 'generator.add' => 'Cuir ris an gineadair',
 'generator.camelcase.capital.name' =>
@@ -1064,8 +1063,6 @@ return [
     . ' ./resources/views/layout/. ... agus àite sleamhnag'
     . ' an eadar-theangachaidh ./resources/messages/app.php',
 'hostname' => 'Ainm-aoigheachd',
-'html.sumex.no' => 'Html às aonais Sumex',
-'html.sumex.yes' => 'Html le Sumex',
 'id' => 'ID',
 'identifier.format' => 'Cruthachadh an aithnichear',
 'identifier.format.template.tags' =>
@@ -2627,59 +2624,6 @@ return [
 'subtotal' => 'Fo-iomlan',
 'success' => 'Soirbheachas',
 'successful' => 'Soirbheachail',
-'sumex' => 'Sumex',
-'sumex.add' => 'Cuir ris Sumex',
-'sumex.canton' => 'Canton',
-'sumex.diagnosis' => 'Breithneachadh',
-'sumex.edit' => 'Deasaich Sumex',
-'sumex.help' => 'Cuiridh an roghainn seo inntrigeadh'
-    . ' clàr-taice ris na cunntasan gus cunntas leth-cho-chòrdail'
-    . ' TARMED / SUMEX1 a chruthachadh. \'S e inbhe'
-    . ' Eilbheiseach airson cùram slàinte a th\' ann'
-    . ' an TARMED / SUMEX1.'
-    . ' <a href="http://sumex1.net/">Barrachd fiosrachaidh</a>',
-'sumex.information' => 'Fiosrachadh Sumex',
-'sumex.insurednumber' => 'Àireamh Àrachais',
-'sumex.observations' => 'Beachdan',
-'sumex.place' => 'Àite Sumex',
-'sumex.place.association' => 'Comann',
-'sumex.place.company' => 'Companaidh',
-'sumex.place.hospital' => 'Ospadal',
-'sumex.place.lab' => 'Obair-lann',
-'sumex.place.practice' => 'Cleachdadh',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Dreuchd Sumex',
-'sumex.role.chiropractor' => 'Cairopractor',
-'sumex.role.dentaltechnician' => 'Teicneòlaiche Fiaclaireachd',
-'sumex.role.dentist' => 'Fiaclair',
-'sumex.role.druggist' => 'Cungaidh-leighis',
-'sumex.role.ergotherapist' => 'Leasaiche-inntinn',
-'sumex.role.hospital' => 'Ospadal',
-'sumex.role.labtechnician' => 'Teicneòlaiche Lab',
-'sumex.role.logotherapist' => 'Leasaiche-logo',
-'sumex.role.midwife' => 'Bean-ghlùine',
-'sumex.role.naturopathicdoctor' => 'Dotair-nàdair',
-'sumex.role.naturopathictherapist' => 'Leasaiche-nàdair',
-'sumex.role.nursingstaff' => 'Luchd-obrach Altraim',
-'sumex.role.nutritionist' => 'Neach-beathachaidh',
-'sumex.role.other' => 'Eile',
-'sumex.role.othertechnician' => 'Teicneòlaiche Eile',
-'sumex.role.pharmacist' => 'Cungaidhear',
-'sumex.role.physician' => 'Dotair',
-'sumex.role.physiotherapist' => 'Leasaiche-cuirp',
-'sumex.role.psychologist' => 'Eòlaiche-inntinn',
-'sumex.role.transport' => 'Còmhdhail',
-'sumex.role.wholesaler' => 'Mòr-reiceadair',
-'sumex.settings' => 'Roghainnean Sumex',
-'sumex.sliptype' => 'Seòrsa Sleamhnag Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (Slip Orains)',
-'sumex.sliptype-esrRed' => 'Sleamhnag Ruadh',
-'sumex.sliptype.help' => 'Atharraichidh an roghainn'
-    . ' seo an seòrsa sliop ann an Sumex. Thoir'
-    . ' an aire ma thaghas tu an sliop Orains feumaidh'
-    . ' tu àireamh fo-sgrìobhaiche a thòisicheas le &quot;01-&quot;.',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'SEACHDAIN',
 'sunday' => 'Didòmhnaich',
 'system.settings' => 'Roghainnean an t-Siostaim',
 'table' => 'Clàr',

@@ -23,7 +23,6 @@ final class QuoteForm extends FormModel
 
     private ?int $status_id = 1;
     private ?float $discount_amount = 0;
-    private ?float $discount_percent = 0;
     private ?string $url_key = '';
     private ?string $password = '';
     private ?string $notes = '';
@@ -40,7 +39,6 @@ final class QuoteForm extends FormModel
         $this->client_id = (int) $quote->getClient_id();
         $this->status_id = $quote->getStatus_id();
         $this->discount_amount = $quote->getDiscount_amount();
-        $this->discount_percent = $quote->getDiscount_percent();
         $this->url_key = $quote->getUrl_key();
         $this->password = $quote->getPassword();
         $this->notes = $quote->getNotes();
@@ -95,11 +93,6 @@ final class QuoteForm extends FormModel
     public function getDiscount_amount(): ?float
     {
         return $this->discount_amount;
-    }
-
-    public function getDiscount_percent(): ?float
-    {
-        return $this->discount_percent;
     }
 
     public function getUrl_key(): ?string

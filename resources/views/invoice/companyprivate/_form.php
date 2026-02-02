@@ -80,9 +80,6 @@ foreach ($companies as $company) {
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= $formFields->companyPrivateTextField($form, 'gln', 'gln'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= $formFields->companyPrivateTextField($form, 'rcc', 'sumex.rcc'); ?>
-                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?> 
                     <?= Html::openTag('label'); ?>
                         <?= Html::encode($form->getLogo_filename()); ?>

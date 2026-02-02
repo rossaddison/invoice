@@ -93,12 +93,6 @@ class Client
         private ?string $client_language = '',
         #[Column(type: 'bool', default: false)]
         private bool $client_active = false,
-        #[Column(type: 'string(16)', nullable: true)]
-        private ?string $client_avs = '',
-        #[Column(type: 'string(151)', nullable: true)]
-        private ?string $client_insurednumber = '',
-        #[Column(type: 'string(30)', nullable: true)]
-        private ?string $client_veka = '',
         #[Column(type: 'date', nullable: true)]
         private mixed $client_birthdate = null,
         #[Column(type: 'integer', nullable: false, default: 0)]
@@ -372,37 +366,7 @@ class Client
     {
         $this->client_active = $client_active;
     }
-
-    public function getClient_avs(): ?string
-    {
-        return $this->client_avs;
-    }
-
-    public function setClient_avs(string $client_avs): void
-    {
-        $this->client_avs = $client_avs;
-    }
-
-    public function getClient_insurednumber(): ?string
-    {
-        return $this->client_insurednumber;
-    }
-
-    public function setClient_insurednumber(string $client_insurednumber): void
-    {
-        $this->client_insurednumber = $client_insurednumber;
-    }
-
-    public function getClient_veka(): ?string
-    {
-        return $this->client_veka;
-    }
-
-    public function setClient_veka(string $client_veka): void
-    {
-        $this->client_veka = $client_veka;
-    }
-
+    
     //cycle
     public function getClient_birthdate(): DateTimeImmutable|string|null
     {

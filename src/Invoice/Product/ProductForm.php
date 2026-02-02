@@ -69,10 +69,7 @@ final class ProductForm extends FormModel
     public ?string $unit_id = '';
 
     public ?string $unit_peppol_id = '';
-
-    #[Number(min: 0, max: 999999999999999999)]
-    public ?float $product_tariff = 0.00;
-
+    
     public function __construct(Product $product)
     {
         $this->product_sku = $product->getProduct_sku();
@@ -88,7 +85,6 @@ final class ProductForm extends FormModel
         $this->product_price_base_quantity = $product->getProduct_price_base_quantity();
         $this->purchase_price = $product->getPurchase_price();
         $this->provider_name = $product->getProvider_name();
-        $this->product_tariff = $product->getProduct_tariff();
         $this->product_additional_item_property_name = $product->getProduct_additional_item_property_name();
         $this->product_additional_item_property_value = $product->getProduct_additional_item_property_value();
         $this->tax_rate_id = $product->getTax_rate_id();
@@ -190,11 +186,6 @@ final class ProductForm extends FormModel
     public function getUnit_peppol_id(): ?string
     {
         return $this->unit_peppol_id;
-    }
-
-    public function getProduct_tariff(): ?float
-    {
-        return $this->product_tariff;
     }
 
     /**

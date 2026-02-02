@@ -932,7 +932,6 @@ return [
 	'Sukurti sąskaitos faktūros numerį juodraščiams',
 'generate.quote.number.for.draft' =>
 	'Sukurti pasiūlymo numerį juodraščių pasiūlymams',
-'generate.sumex' => 'Sukurti Sumex PDF',
 'generator' => 'Generatorius',
 'generator.add' => 'Generatoriaus pridėjimas',
 'generator.camelcase.capital.name' => '„Camelcase“ didžiosios raidės pavadinimas, naudojamas '
@@ -1134,8 +1133,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Pagrindinio kompiuterio pavadinimas',
-'html.sumex.no' => 'HTML be Sumex',
-'html.sumex.yes' => 'HTML su „Sumex“',
 'id' => 'ID',
 'identifier.format' => 'Identifikatoriaus formatavimas',
 'identifier.format.template.tags' => 'Identifikatoriaus šablono žymės',
@@ -2761,63 +2758,6 @@ return [
 'subtotal' => 'Tarpinė suma',
 'success' => 'Sėkmė',
 'successful' => 'Sėkmingas',
-'sumex' => 'Sumex',
-'sumex.add' => 'Sumex Pridėti',
-'sumex.canton' => 'Kantonas',
-'sumex.diagnosis' => 'Diagnozė',
-'sumex.edit' => '„Sumex“ redagavimas',
-'sumex.help' => 'Ši parinktis sąskaitoms faktūroms prideda '
-	. 'meniu įrašą, skirtą sugeneruoti su '
-	. 'TARMED / SUMEX1 pusiau suderinamą '
-	. 'sąskaitą faktūrą.'
-	. 'TARMED / SUMEX1 yra Šveicarijos '
-	. 'standartas sveikatos priežiūros įstaigoms.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Daugiau informacijos</a>',
-'sumex.information' => '„Sumex“ informacija',
-'sumex.insurednumber' => 'Apdraustojo numeris',
-'sumex.observations' => 'Stebėjimai',
-'sumex.place' => 'Sumex Place',
-'sumex.place.association' => 'Asociacija',
-'sumex.place.company' => 'Įmonė',
-'sumex.place.hospital' => 'Ligoninė',
-'sumex.place.lab' => 'Laboratorija',
-'sumex.place.practice' => 'Praktika',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Sumex vaidmuo',
-'sumex.role.chiropractor' => 'Chiropraktikas',
-'sumex.role.dentaltechnician' => 'Dantų technikas',
-'sumex.role.dentist' => 'Stomatologas',
-'sumex.role.druggist' => 'Vaistininkas',
-'sumex.role.ergotherapist' => 'Ergoterapeutas',
-'sumex.role.hospital' => 'Ligoninė',
-'sumex.role.labtechnician' => 'Laboratorijos technikas',
-'sumex.role.logotherapist' => 'Logoterapeutas',
-'sumex.role.midwife' => 'Akušerė',
-'sumex.role.naturopathicdoctor' => 'Natūropatinis gydytojas',
-'sumex.role.naturopathictherapist' => 'Natūropatinis terapeutas',
-'sumex.role.nursingstaff' => 'Slaugos personalas',
-'sumex.role.nutritionist' => 'Mitybos specialistas',
-'sumex.role.other' => 'Kita',
-'sumex.role.othertechnician' => 'Kitas technikas',
-'sumex.role.pharmacist' => 'Vaistininkas',
-'sumex.role.physician' => 'Gydytojas',
-'sumex.role.physiotherapist' => 'Kineziterapeutas',
-'sumex.role.psychologist' => 'psichologas',
-'sumex.role.transport' => 'Transportas',
-'sumex.role.wholesaler' => 'Didmenininkas',
-'sumex.settings' => '„Sumex“ nustatymai',
-'sumex.sliptype' => '„Sumex“ slydimo tipas',
-'sumex.sliptype-esr9' => 'ESR 9 (oranžinis slydimas)',
-'sumex.sliptype-esrRed' => 'Raudonasis slydimas',
-'sumex.sliptype.help' => 'Ši parinktis pakeis kvito tipą '
-	. '„Sumex“ sistemoje.'
-	. 'Atkreipkite dėmesį, kad jei pasirinksite '
-	. 'oranžinį kvitą, jums reikės abonento '
-	. 'numerio, prasidedančio „01-“.',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'SAVAITĖ',
 'sunday' => 'sekmadienį',
 'system.settings' => 'Sistemos nustatymai',
 'table' => 'Lentelė',

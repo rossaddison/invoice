@@ -931,7 +931,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Gerar o número da cotação '
 	. 'para rascunhos de cotações',
-'generate.sumex' => 'Gerar Sumex PDF',
 'generator' => 'Gerador',
 'generator.add' => 'Gerador Adicionar',
 'generator.camelcase.capital.name' => 'Nome em letras maiúsculas Camelcase '
@@ -1139,8 +1138,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Nome do host',
-'html.sumex.no' => 'HTML sem Sumex',
-'html.sumex.yes' => 'HTML com Sumex',
 'id' => 'EU IA',
 'identifier.format' => 'Formatação de identificador',
 'identifier.format.template.tags' => 'Tags de modelo para o '
@@ -2861,64 +2858,6 @@ return [
 'subtotal' => 'Subtotal',
 'success' => 'Sucesso',
 'successful' => 'Bem-sucedido',
-'sumex' => 'Sumex',
-'sumex.add' => 'Sumex Adicionar',
-'sumex.canton' => 'Cantão',
-'sumex.diagnosis' => 'Diagnóstico',
-'sumex.edit' => 'Sumex Editar',
-'sumex.help' => 'Esta opção adiciona uma entrada '
-	. 'de menu nas faturas para '
-	. 'gerar uma fatura semicompatível com '
-	. 'TARMED/SUMEX1.'
-	. 'TARMED/SUMEX1 é um padrão suíço '
-	. 'para a área da saúde.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Mais informações</a>',
-'sumex.information' => 'Informações Sumex',
-'sumex.insurednumber' => 'Número Segurado',
-'sumex.observations' => 'Observações',
-'sumex.place' => 'Sumex Place',
-'sumex.place.association' => 'Associação',
-'sumex.place.company' => 'Empresa',
-'sumex.place.hospital' => 'Hospital',
-'sumex.place.lab' => 'Laboratório',
-'sumex.place.practice' => 'Prática',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Função Sumex',
-'sumex.role.chiropractor' => 'Quiroprático',
-'sumex.role.dentaltechnician' => 'Técnico em Prótese Dentária',
-'sumex.role.dentist' => 'Dentista',
-'sumex.role.druggist' => 'Farmacêutico',
-'sumex.role.ergotherapist' => 'Ergoterapeuta',
-'sumex.role.hospital' => 'Hospital',
-'sumex.role.labtechnician' => 'Técnico de Laboratório',
-'sumex.role.logotherapist' => 'Logoterapeuta',
-'sumex.role.midwife' => 'Parteira',
-'sumex.role.naturopathicdoctor' => 'Médico Naturopata',
-'sumex.role.naturopathictherapist' => 'Terapeuta Naturopata',
-'sumex.role.nursingstaff' => 'Equipe de Enfermagem',
-'sumex.role.nutritionist' => 'Nutricionista',
-'sumex.role.other' => 'Outro',
-'sumex.role.othertechnician' => 'Outro Técnico',
-'sumex.role.pharmacist' => 'Farmacêutico',
-'sumex.role.physician' => 'Médico',
-'sumex.role.physiotherapist' => 'Fisioterapeuta',
-'sumex.role.psychologist' => 'Psicólogo',
-'sumex.role.transport' => 'Transporte',
-'sumex.role.wholesaler' => 'Atacadista',
-'sumex.settings' => 'Configurações Sumex',
-'sumex.sliptype' => 'Tipo de deslizamento Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (Escorrega Laranja)',
-'sumex.sliptype-esrRed' => 'Red Slip',
-'sumex.sliptype.help' => 'Esta opção alterará o tipo '
-	. 'de comprovante no Sumex.'
-	. 'Observe que, se você selecionar '
-	. 'o comprovante Laranja, precisará de '
-	. 'um número de assinante que '
-	. 'comece com &quot;01-&quot;.',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'SEMANA',
 'sunday' => 'Domingo',
 'system.settings' => 'Configurações do sistema',
 'table' => 'Mesa',

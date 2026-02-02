@@ -155,14 +155,6 @@ $columns = [
         withSorting: true,
     ),
     new DataColumn(
-        property: 'product_tariff',
-        header: $s->getSetting('sumex') ? $translator->translate('product.tariff') . '(' . $s->getSetting('currency_symbol') . ')' : '',
-        content: static fn (Product $model): string => ($s->getSetting('sumex')
-                    ? Html::encode($model->getProduct_tariff())
-                    : Html::encode($translator->translate('none'))),
-        visible: $s->getSetting('sumex') ? true : false,
-    ),
-    new DataColumn(
         header: $translator->translate('product.property.add'),
         content: static function (Product $model) use ($urlGenerator): A {
             return Html::a(

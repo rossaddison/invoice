@@ -60,12 +60,6 @@ final class ClientForm extends FormModel
     private ?bool $client_active = false;
     #[Length(min: 0, max: 151, skipOnEmpty: true)]
     private ?string $client_surname = '';
-    #[Length(min: 0, max: 16, skipOnEmpty: true)]
-    private ?string $client_avs = '';
-    #[Length(min: 0, max: 151, skipOnEmpty: true)]
-    private ?string $client_insurednumber = '';
-    #[Length(min: 0, max: 30, skipOnEmpty: true)]
-    private ?string $client_veka = '';
     private readonly mixed $client_birthdate;
 
     #[Required]
@@ -99,9 +93,6 @@ final class ClientForm extends FormModel
         $this->client_language = $client->getClient_language();
         $this->client_active = $client->getClient_active();
         $this->client_surname = $client->getClient_surname();
-        $this->client_avs = $client->getClient_avs();
-        $this->client_insurednumber = $client->getClient_insurednumber();
-        $this->client_veka = $client->getClient_veka();
         $this->client_birthdate = $client->getClient_birthdate();
         $this->client_age = $client->getClient_age();
         $this->client_gender = $client->getClient_gender();
@@ -227,22 +218,7 @@ final class ClientForm extends FormModel
     {
         return $this->client_surname;
     }
-
-    public function getClient_avs(): ?string
-    {
-        return $this->client_avs;
-    }
-
-    public function getClient_insurednumber(): ?string
-    {
-        return $this->client_insurednumber;
-    }
-
-    public function getClient_veka(): ?string
-    {
-        return $this->client_veka;
-    }
-
+    
     public function getClient_birthdate(): string|DateTimeImmutable|null
     {
         /**

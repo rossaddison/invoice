@@ -865,7 +865,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Ustvari številko ponudbe za osnutke '
 	. 'ponudb',
-'generate.sumex' => 'Ustvari Sumex PDF',
 'generator' => 'Generator',
 'generator.add' => 'Generator Dodaj',
 'generator.camelcase.capital.name' => 'Ime z veliko začetnico, ki '
@@ -1059,8 +1058,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Ime gostitelja',
-'html.sumex.no' => 'Html brez Sumexa',
-'html.sumex.yes' => 'Html s Sumexom',
 'id' => 'Osebna izkaznica',
 'identifier.format' => 'Oblikovanje identifikatorja',
 'identifier.format.template.tags' => 'Oznake predlog za identifikator',
@@ -2660,62 +2657,6 @@ return [
 'subtotal' => 'Vmesni seštevek',
 'success' => 'Uspeh',
 'successful' => 'Uspešno',
-'sumex' => 'Sumex',
-'sumex.add' => 'Sumex Dodaj',
-'sumex.canton' => 'Kanton',
-'sumex.diagnosis' => 'Diagnoza',
-'sumex.edit' => 'Sumex Uredi',
-'sumex.help' => 'Ta možnost doda v račune '
-	. 'vnos v meni za ustvarjanje '
-	. 'pol-združljivega računa TARMED / SUMEX1.'
-	. 'TARMED / SUMEX1 je švicarski '
-	. 'standard za zdravstvo.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Več informacij</a>',
-'sumex.information' => 'Informacije o Sumexu',
-'sumex.insurednumber' => 'Zavarovana številka',
-'sumex.observations' => 'Opažanja',
-'sumex.place' => 'Sumex Place',
-'sumex.place.association' => 'Združenje',
-'sumex.place.company' => 'Podjetje',
-'sumex.place.hospital' => 'Bolnišnica',
-'sumex.place.lab' => 'Laboratorij',
-'sumex.place.practice' => 'Vaja',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Vloga Sumexa',
-'sumex.role.chiropractor' => 'Kiropraktik',
-'sumex.role.dentaltechnician' => 'Zobotehnik',
-'sumex.role.dentist' => 'Zobozdravnik',
-'sumex.role.druggist' => 'Lekarnar',
-'sumex.role.ergotherapist' => 'Ergoterapevt',
-'sumex.role.hospital' => 'Bolnišnica',
-'sumex.role.labtechnician' => 'Laboratorijski tehnik',
-'sumex.role.logotherapist' => 'Logoterapevt',
-'sumex.role.midwife' => 'Babica',
-'sumex.role.naturopathicdoctor' => 'Naturopatski zdravnik',
-'sumex.role.naturopathictherapist' => 'Naturopatski terapevt',
-'sumex.role.nursingstaff' => 'Zdravstveno osebje',
-'sumex.role.nutritionist' => 'Nutricionist',
-'sumex.role.other' => 'Drugo',
-'sumex.role.othertechnician' => 'Drugi tehnik',
-'sumex.role.pharmacist' => 'Farmacevt',
-'sumex.role.physician' => 'Zdravnik',
-'sumex.role.physiotherapist' => 'Fizioterapevt',
-'sumex.role.psychologist' => 'Psiholog',
-'sumex.role.transport' => 'Prevoz',
-'sumex.role.wholesaler' => 'Veletrgovec',
-'sumex.settings' => 'Nastavitve Sumexa',
-'sumex.sliptype' => 'Vrsta zdrsa Sumex',
-'sumex.sliptype-esr9' => 'ESR 9 (oranžni zdrs)',
-'sumex.sliptype-esrRed' => 'Rdeči zdrs',
-'sumex.sliptype.help' => 'Ta možnost bo spremenila vrsto '
-	. 'potrdila v Sumexu.'
-	. 'Upoštevajte, da če izberete oranžno '
-	. 'potrdilo, potrebujete številko naročnika, ki '
-	. 'se začne z &quot;01-&quot;.',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'TEDEN',
 'sunday' => 'Nedelja',
 'system.settings' => 'Sistemske nastavitve',
 'table' => 'Tabela',

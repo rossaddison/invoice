@@ -808,7 +808,6 @@ return [
 	'Dala inombolo ye-invoyisi yama-invoyisi asalungiswa',
 'generate.quote.number.for.draft' =>
 	'Dala inombolo yekhwothi yezingcaphuno ezisalungiswa',
-'generate.sumex' => 'Khiqiza i-Sumex PDF',
 'generator' => 'Ijeneretha',
 'generator.add' => 'Ijeneretha Engeza',
 'generator.camelcase.capital.name' =>
@@ -997,8 +996,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Igama lomethuleli',
-'html.sumex.no' => 'Html ngaphandle kwe-Sumex',
-'html.sumex.yes' => 'Html nge-Sumex',
 'id' => 'I-ID',
 'identifier.format' => 'Ukufometha kwesihlonzi',
 'identifier.format.template.tags' => 'Omaka besifanekiso sesikhombi',
@@ -2483,62 +2480,6 @@ return [
 'subtotal' => 'Isamba esingaphansi',
 'success' => 'Impumelelo',
 'successful' => 'Iphumelele',
-'sumex' => 'I-Sumex',
-'sumex.add' => 'Sumex Engeza',
-'sumex.canton' => 'I-Canton',
-'sumex.diagnosis' => 'Ukuxilongwa',
-'sumex.edit' => 'Sumex Hlela',
-'sumex.help' => 'Lokhu okukhethwa kukho kwengeza okufakiwe '
-	. 'kwemenyu kuma-invoyisi ukuze kukhiqizwe i-invoyisi '
-	. 'ehambisanayo ethi TARMED / SUMEX1.'
-	. 'I-TARMED / SUMEX1 iyindinganiso yaseSwitzerland '
-	. 'yokunakekelwa kwezempilo.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Ulwazi Olwengeziwe</a>',
-'sumex.information' => 'Sumex Ulwazi',
-'sumex.insurednumber' => 'Inombolo Enomshwalense',
-'sumex.observations' => 'Okubhekwayo',
-'sumex.place' => 'Le yindawo ka Sumex',
-'sumex.place.association' => 'Ukuhlangana',
-'sumex.place.company' => 'Inkampani',
-'sumex.place.hospital' => 'Isibhedlela',
-'sumex.place.lab' => 'Ilebhu',
-'sumex.place.practice' => 'Prakthiza',
-'sumex.rcc' => 'I-RCC',
-'sumex.role' => 'Indima ye-Sumex',
-'sumex.role.chiropractor' => 'Udokotela weChiropractor',
-'sumex.role.dentaltechnician' => 'Uchwepheshe Wamazinyo',
-'sumex.role.dentist' => 'Udokotela wamazinyo',
-'sumex.role.druggist' => 'Udokotela wezidakamizwa',
-'sumex.role.ergotherapist' => 'I-Ergotherapist',
-'sumex.role.hospital' => 'Isibhedlela',
-'sumex.role.labtechnician' => 'I-Lab Technician',
-'sumex.role.logotherapist' => 'I-Logotherapist',
-'sumex.role.midwife' => 'Umbelethisi',
-'sumex.role.naturopathicdoctor' => 'Udokotela weNaturopathic',
-'sumex.role.naturopathictherapist' => 'I-naturopathictherapist',
-'sumex.role.nursingstaff' => 'Abasebenzi Abahlengikazi',
-'sumex.role.nutritionist' => 'Isazi sokudla okunempilo',
-'sumex.role.other' => 'Okunye',
-'sumex.role.othertechnician' => 'Omunye uchwepheshe',
-'sumex.role.pharmacist' => 'Usokhemisi',
-'sumex.role.physician' => 'Udokotela',
-'sumex.role.physiotherapist' => 'Udokotela womzimba',
-'sumex.role.psychologist' => 'Isazi sokusebenza kwengqondo',
-'sumex.role.transport' => 'Ezokuthutha',
-'sumex.role.wholesaler' => 'Umthengisi',
-'sumex.settings' => 'Izilungiselelo ze-Sumex',
-'sumex.sliptype' => 'Uhlobo lwe-Sumex Slip',
-'sumex.sliptype-esr9' => 'I-ESR 9 (Isiliphu Esiwolintshi)',
-'sumex.sliptype-esrRed' => 'I-Red Slip',
-'sumex.sliptype.help' => 'Le nketho izoshintsha uhlobo lwesiliphu '
-	. 'ku-Sumex.'
-	. 'Sicela uqaphele ukuthi uma ukhetha '
-	. 'isiliphu sase-Orange udinga inombolo yokubhalisa '
-	. 'eqala ngo-&quot;01-&quot;',
-'sumex.ssn' => 'I-AVS',
-'sumex.veka' => 'IVIKI',
 'sunday' => 'NgeSonto',
 'system.settings' => 'Izilungiselelo Zesistimu',
 'table' => 'Ithebula',

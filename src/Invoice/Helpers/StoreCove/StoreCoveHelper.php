@@ -1311,7 +1311,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         $converter = new CurrencyConverter($provider);
         $money = Money::of($from, $a);
         // see https://github.com/brick/money#Using an ORM
-        $float = (float) $converter->convert($money, $b, null, RoundingMode::DOWN)
+        $float = (float) $converter->convert($money, $b, null, RoundingMode::Down)
                         // convert to cents in order to use the int
                         ->getMinorAmount()
                         ->toInt();

@@ -27,7 +27,6 @@ use App\Invoice\Entity\ProductImage;
 use App\Invoice\Entity\ProductProperty;
 use App\Invoice\Entity\Profile;
 use App\Invoice\Entity\Project;
-use App\Invoice\Entity\Sumex;
 use App\Invoice\Entity\Task;
 use App\Invoice\Entity\TaxRate;
 use App\Invoice\Entity\Unit;
@@ -57,7 +56,7 @@ final class NonUserRelatedTruncate4Command extends Command
             ->setDescription('Truncates, i.e removes all records, in the tables not related to the user.')
             ->setHelp('product_custom, product_image, product_property, product, task, tax_rate, unit_peppol, unit, family, group, '
                     . 'profile, company_private, company, client_note, contract, email_template, from_drop_down, delivery_party, '
-                    . 'delivery, delivery_location, project, upload, postal_address, sumex, client_custom, client_peppol, client tables will be truncated until there are no records left in them.');
+                    . 'delivery, delivery_location, project, upload, postal_address, client_custom, client_peppol, client tables will be truncated until there are no records left in them.');
     }
 
     #[\Override]
@@ -70,7 +69,7 @@ final class NonUserRelatedTruncate4Command extends Command
         $tables = [
             'product_custom', 'product_image', 'product_property', 'product', 'task', 'tax_rate', 'unit_peppol', 'unit', 'family', 'group',
             'profile', 'company_private', 'company', 'client_note', 'contract', 'email_template', 'from_drop_down', 'delivery_party', 'delivery', 'delivery_location',
-            'project', 'upload', 'postal_address', 'sumex', 'client_custom', 'client_peppol', 'client',
+            'project', 'upload', 'postal_address', 'client_custom', 'client_peppol', 'client',
             'custom_value', 'custom_field',
         ];
 
@@ -151,9 +150,6 @@ final class NonUserRelatedTruncate4Command extends Command
             + count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(PostalAddress::class)->findAll()) ? $findAll : iterator_to_array($findAll))
-            + count(is_array($findAll = $this->promise
-                ->getORM()
-                ->getRepository(Sumex::class)->findAll()) ? $findAll : iterator_to_array($findAll))
             + count(is_array($findAll = $this->promise
                 ->getORM()
                 ->getRepository(ClientCustom::class)->findAll()) ? $findAll : iterator_to_array($findAll))

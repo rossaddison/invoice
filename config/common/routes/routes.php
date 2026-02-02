@@ -59,7 +59,6 @@ use App\Invoice\{
     SalesOrder\SalesOrderController,
     SalesOrderItem\SalesOrderItemController,
     Setting\SettingController,
-    Sumex\SumexController,
     Task\TaskController,
     TaxRate\TaxRateController,
     Telegram\TelegramController,
@@ -90,6 +89,10 @@ $pNETBC = Permissions::NO_ENTRY_TO_BASE_CONTROLLER;
 $pETBC = Permissions::ENTRY_TO_BASE_CONTROLLER;
 $mG = Method::GET;
 $mP = Method::POST;
+
+/**
+ * Note: If middleware is used, it must always be inserted before the action
+ */
 
 return [
     // Prometheus monitoring endpoints
@@ -324,6 +327,154 @@ return [
         ->middleware(Authentication::class)
         ->middleware(fn (AC $checker) => $checker->withPermission($pETBC))
         ->routes(
+// ************************************ pVI's *********************************
+            Route::methods([$mG, $mP], '/clientnote/view/{id}')
+                ->name('clientnote/view')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([ClientNoteController::class, 'view']),
+            Route::methods([$mG, $mP], '/contract/view/{id}')
+                ->name('contract/view')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([ContractController::class, 'view']),
+            Route::methods([$mG, $mP], '/del/view/{id}')
+                ->name('del/view')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([DeliveryLocationController::class, 'view']),
+            Route::methods([$mG, $mP], '/inv/pdf_dashboard_include_cf/{id}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvController::class, 'pdf_dashboard_include_cf'])
+                ->name('inv/pdf_dashboard_include_cf'),
+            Route::methods([$mG, $mP], '/inv/pdf_dashboard_exclude_cf/{id}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvController::class, 'pdf_dashboard_exclude_cf'])
+                ->name('inv/pdf_dashboard_exclude_cf'),
+            Route::methods([$mG, $mP], '/inv/pdf_download_include_cf/{url_key}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvController::class, 'pdf_download_include_cf'])
+                ->name('inv/pdf_download_include_cf'),
+            Route::methods([$mG, $mP], '/inv/pdf_download_exclude_cf/{url_key}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvController::class, 'pdf_download_exclude_cf'])
+                ->name('inv/pdf_download_exclude_cf'),
+            Route::methods([$mG, $mP], '/download_file/{upload_id}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvController::class, 'download_file'])
+                ->name('inv/download_file'),
+            // Because the inv/view is accessible to the observer and the admin
+            // the inv/view function is further refined with rbac
+            Route::methods([$mG, $mP], '/inv/view/{id}')
+                ->name('inv/view')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvController::class, 'view']),
+            // id acquired by session
+            Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvController::class, 'guest'])
+                ->name('inv/guest'),
+            Route::methods([$mG, $mP], '/inv/url_key/{url_key}/{gateway}')
+                ->name('inv/url_key')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvController::class, 'url_key']),
+            // id acquired by session
+            Route::methods([$mG, $mP], '/inv/pdf/{include}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvController::class, 'pdf'])
+                ->name('inv/pdf'),
+            // {invoice} is a complete string
+            Route::methods([$mG, $mP], '/inv/download/{invoice}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvController::class, 'download'])
+                ->name('inv/download'),
+            Route::get('/invsentlog/guest')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvSentLogController::class, 'guest'])
+                ->name('invsentlog/guest'),
+            Route::methods([$mG, $mP], '/invsentlog/view/{id}')
+                ->name('invsentlog/view')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvSentLogController::class, 'view']),
+            Route::methods([$mG, $mP], '/invitem/view/{id}')
+                ->name('invitem/view')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([InvItemController::class, 'view']),
+            // Add
+            Route::methods([$mG, $mP], '/paymentpeppol/add/{inv_id}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([PaymentPeppolController::class, 'add'])
+                ->name('paymentpeppol/add'),
+            Route::get('/client_quotes[/page/{page:\d+}[/status/{status:\d+}]]')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([QuoteController::class, 'guest'])
+                ->name('quote/guest'),
+            Route::methods([$mG, $mP], '/quote/pdf/{include}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([QuoteController::class, 'pdf'])
+                ->name('quote/pdf'),
+            Route::methods([$mG, $mP], '/quote/quote_to_so_confirm')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([QuoteController::class, 'quote_to_so_confirm'])
+                ->name('quote/quote_to_so_confirm'),
+            Route::methods([$mG, $mP], '/quote/view/{id}')
+                ->name('quote/view')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([QuoteController::class, 'view']),
+// The individual must have been give the url on the email sent and also
+// have been assigned the observer role under resources/rbac/items by using
+// assignRole command at command prompt
+            Route::methods([$mG, $mP], '/quote/url_key/{url_key}')
+                ->name('quote/url_key')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([QuoteController::class, 'url_key']),
+// The individual that is sent the quote approves with/without a purchase
+// order number
+            Route::methods([$mG, $mP], '/quote/approve')
+                ->name('quote/approve')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([QuoteController::class, 'approve']),
+// The individual that is sent the quote rejects it.
+            Route::methods([$mG, $mP], '/quote/reject/{url_key}')
+                ->name('quote/reject')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([QuoteController::class, 'reject']),
+            Route::get(
+                  '/client_salesorders[/page/{page:\d+}[/status/{status:\d+}]]')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([SalesOrderController::class, 'guest'])
+                ->name('salesorder/guest'),
+            Route::methods([$mG, $mP], '/salesorder/agree_to_terms/{url_key}')
+                ->name('salesorder/agree_to_terms')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([SalesOrderController::class, 'agree_to_terms']),
+            Route::methods([$mG, $mP], '/salesorder/edit/{id}')
+                ->name('salesorder/edit')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([SalesOrderController::class, 'edit']),
+            Route::methods([$mG, $mP], '/salesorder/pdf/{include}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([SalesOrderController::class, 'pdf'])
+                ->name('salesorder/pdf'),
+            Route::methods([$mG, $mP], '/salesorder/reject/{url_key}')
+                ->name('salesorder/reject')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([SalesOrderController::class, 'reject']),
+            Route::methods([$mG, $mP], '/salesorder/view/{id}')
+                ->name('salesorder/view')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([SalesOrderController::class, 'view']),
+            Route::methods([$mG, $mP], '/salesorder/url_key/{key}')
+                ->name('salesorder/url_key')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([SalesOrderController::class, 'url_key']),
+            Route::methods([$mG, $mP], '/salesorderitem/edit/{id}')
+                ->name('salesorderitem/edit')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([SalesOrderItemController::class, 'edit']),
+            Route::methods([$mG, $mP],
+                    '/setting/listlimit/{setting_id}/{limit}/{origin}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->action([SettingController::class, 'listlimit'])
+                ->name('setting/listlimit'),
+// *********************************** pEI's *********************************                
             Route::get('')
                 ->action([ICLR::class, 'index'])
                 ->name('invoice/index'),
@@ -333,7 +484,7 @@ return [
                 ->action([InvItemAllowanceChargeController::class, 'index'])
                 ->name('invitemallowancecharge/index'),
             // Add
-            Route::methods([$mG, $mP], 
+            Route::methods([$mG, $mP],
                     '/invitemallowancecharge/add/{inv_item_id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvItemAllowanceChargeController::class, 'add'])
@@ -583,8 +734,9 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([CompanyPrivateController::class, 'view']),
             Route::get('/customfield[/page/{page:\d+}]')
-                ->action([CustomFieldController::class, 'index'])
-                ->name('customfield/index'),
+                ->name('customfield/index')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([CustomFieldController::class, 'index']),
             Route::methods([$mG, $mP], '/customfield/add')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([CustomFieldController::class, 'add'])
@@ -599,14 +751,14 @@ return [
                 ->action([CustomFieldController::class, 'delete']),
             Route::methods([$mG, $mP], '/customfield/view/{id}')
                 ->name('customfield/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([CustomFieldController::class, 'view']),
             Route::get('/customvalue')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([CustomValueController::class, 'index'])
                 ->name('customvalue/index'),
             Route::methods([$mG, $mP], '/customvalue/field/{id}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([CustomValueController::class, 'field'])
                 ->name('customvalue/field'),
             Route::methods([$mG, $mP], '/customvalue/new/{id}')
@@ -627,10 +779,10 @@ return [
                 ->action([CustomValueController::class, 'delete']),
             Route::methods([$mG, $mP], '/customvalue/view/{id}')
                 ->name('customvalue/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([CustomValueController::class, 'view']),
             Route::get('/clientnote')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ClientNoteController::class, 'index'])
                 ->name('clientnote/index'),
             Route::methods([$mG, $mP], '/clientnote/add')
@@ -645,30 +797,22 @@ return [
                 ->name('clientnote/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ClientNoteController::class, 'delete']),
-            Route::methods([$mG, $mP], '/clientnote/view/{id}')
-                ->name('clientnote/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([ClientNoteController::class, 'view']),
             Route::get('/contract')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ContractController::class, 'index'])
                 ->name('contract/index'),
             Route::methods([$mG, $mP], '/contract/add/{client_id}')
                 ->name('contract/add')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ContractController::class, 'add']),
             Route::methods([$mG, $mP], '/contract/edit/{id}')
                 ->name('contract/edit')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ContractController::class, 'edit']),
             Route::methods([$mG, $mP], '/contract/delete/{id}')
                 ->name('contract/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ContractController::class, 'delete']),
-            Route::methods([$mG, $mP], '/contract/view/{id}')
-                ->name('contract/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([ContractController::class, 'view']),
             Route::get('/del[/page/{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([DeliveryLocationController::class, 'index'])
@@ -689,17 +833,13 @@ return [
                 ->name('del/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([DeliveryLocationController::class, 'delete']),
-            Route::methods([$mG, $mP], '/del/view/{id}')
-                ->name('del/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([DeliveryLocationController::class, 'view']),
             Route::get('/delivery')
-                ->middleware(Authentication::class)
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([DeliveryController::class, 'index'])
                 ->name('delivery/index'),
             // Add
             Route::methods([$mG, $mP], '/delivery/add/{inv_id}')
-                ->middleware(Authentication::class)
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([DeliveryController::class, 'add'])
                 ->name('delivery/add'),
             // Edit
@@ -1002,22 +1142,6 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'indexMark'])
                 ->name('inv/indexmark'),
-            Route::methods([$mG, $mP], '/inv/pdf_dashboard_include_cf/{id}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'pdf_dashboard_include_cf'])
-                ->name('inv/pdf_dashboard_include_cf'),
-            Route::methods([$mG, $mP], '/inv/pdf_dashboard_exclude_cf/{id}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'pdf_dashboard_exclude_cf'])
-                ->name('inv/pdf_dashboard_exclude_cf'),
-            Route::methods([$mG, $mP], '/inv/pdf_download_include_cf/{url_key}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'pdf_download_include_cf'])
-                ->name('inv/pdf_download_include_cf'),
-            Route::methods([$mG, $mP], '/inv/pdf_download_exclude_cf/{url_key}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'pdf_download_exclude_cf'])
-                ->name('inv/pdf_download_exclude_cf'),
             Route::methods([$mG, $mP], '/inv/peppol_stream_toggle/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'peppol_stream_toggle'])
@@ -1030,10 +1154,6 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'archive'])
                 ->name('inv/archive'),
-            Route::methods([$mG, $mP], '/download_file/{upload_id}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'download_file'])
-                ->name('inv/download_file'),
             Route::methods([$mG, $mP], '/inv/save_custom')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'save_custom'])
@@ -1106,26 +1226,6 @@ return [
                 ->name('inv/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'delete']),
-            Route::methods([$mG, $mP], '/inv/view/{id}')
-                ->name('inv/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'view']),
-            Route::methods([$mG, $mP], '/inv/generate_sumex_pdf/{inv_id}')
-                ->name('inv/generate_sumex_pdf')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'generate_sumex_pdf']),
-            Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'guest'])
-                ->name('inv/guest'),
-            Route::methods([$mG, $mP], '/inv/url_key/{url_key}/{gateway}')
-                ->name('inv/url_key')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'url_key']),
-            Route::methods([$mG, $mP], '/inv/pdf/{include}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'pdf'])
-                ->name('inv/pdf'),
             Route::methods([$mG, $mP], '/inv/html/{include}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'html'])
@@ -1158,10 +1258,6 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'create_credit_confirm'])
                 ->name('inv/create_credit_confirm'),
-            Route::methods([$mG, $mP], '/inv/download/{invoice}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'download'])
-                ->name('inv/download'),
             Route::methods([$mG, $mP], '/inv/inv_to_inv_confirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'inv_to_inv_confirm'])
@@ -1173,6 +1269,7 @@ return [
                 ->name('invallowancecharge/index'),
             // Add
             Route::methods([$mG, $mP], '/invallowancecharge/add/{inv_id}')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvAllowanceChargeController::class, 'add'])
                 ->name('invallowancecharge/add'),
             // Edit
@@ -1224,18 +1321,10 @@ return [
                 ->name('invrecurring/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvRecurringController::class, 'view']),
-            Route::get('/invsentlog/guest')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvSentLogController::class, 'guest'])
-                ->name('invsentlog/guest'),
             Route::get('/invsentlog')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvSentLogController::class, 'index'])
                 ->name('invsentlog/index'),
-            Route::methods([$mG, $mP], '/invsentlog/view/{id}')
-                ->name('invsentlog/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvSentLogController::class, 'view']),
             Route::methods([$mP], '/invitem/add_product')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvItemController::class, 'add_product'])
@@ -1260,12 +1349,8 @@ return [
                 ->name('invitem/multiple')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvItemController::class, 'multiple']),
-            Route::methods([$mG, $mP], '/invitem/view/{id}')
-                ->name('invitem/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvItemController::class, 'view']),
             Route::get('/itemlookup')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ItemLookupController::class, 'index'])
                 ->name('itemlookup/index'),
             Route::methods([$mG, $mP], '/itemlookup/add')
@@ -1339,12 +1424,9 @@ return [
                 ->action([PICLR::class, 'inform'])
                 ->name('paymentinformation/inform'),
             Route::get('/paymentpeppol')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([PaymentPeppolController::class, 'index'])
                 ->name('paymentpeppol/index'),
-            // Add
-            Route::methods([$mG, $mP], '/paymentpeppol/add')
-                ->action([PaymentPeppolController::class, 'add'])
-                ->name('paymentpeppol/add'),
             // Edit
             Route::methods([$mG, $mP], '/paymentpeppol/edit/{id}')
                 ->name('paymentpeppol/edit')
@@ -1360,8 +1442,9 @@ return [
                 ->action([PaymentPeppolController::class, 'view']),
             // PostalAddress
             Route::get('/postaladdress')
-                ->action([PostalAddressController::class, 'index'])
-                ->name('postaladdress/index'),
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->name('postaladdress/index')
+                ->action([PostalAddressController::class, 'index']),
             // Add
             Route::methods([$mG, $mP],
                 '/postaladdress/add/{client_id}[/{origin}/{origin_id}/{action}]')
@@ -1431,8 +1514,7 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ProductController::class, 'image_attachment'])
                 ->name('product/image_attachment'),
-            
-            // ProductClient           
+            // ProductClient
             Route::methods([$mG, $mP], '/productclient/add')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ProductClientController::class, 'add'])
@@ -1476,12 +1558,14 @@ return [
                 ->action([ProductImageController::class, 'view']),
             // ProductProperty
             Route::get('/productproperty')
-                ->action([ProductPropertyController::class, 'index'])
-                ->name('productproperty/index'),
+                ->name('productproperty/index')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([ProductPropertyController::class, 'index']),
             // Add
             Route::methods([$mG, $mP], '/productproperty/add/{product_id}')
-                ->action([ProductPropertyController::class, 'add'])
-                ->name('productproperty/add'),
+                ->name('productproperty/add')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([ProductPropertyController::class, 'add']),
             // Edit
             Route::methods([$mG, $mP], '/productproperty/edit/{id}')
                 ->name('productproperty/edit')
@@ -1496,13 +1580,13 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ProductPropertyController::class, 'view']),
             Route::get('/profile')
+                ->name('profile/index')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ProfileController::class, 'index'])
-                ->name('profile/index'),
+                ->action([ProfileController::class, 'index']),
             Route::methods([$mG, $mP], '/profile/add')
+                ->name('profile/add')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ProfileController::class, 'add'])
-                ->name('profile/add'),
+                ->action([ProfileController::class, 'add']),
             Route::methods([$mG, $mP], '/profile/edit/{id}')
                 ->name('profile/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1516,13 +1600,13 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ProfileController::class, 'view']),
             Route::get('/project[/page/{page:\d+}]')
+                ->name('project/index')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ProjectController::class, 'index'])
-                ->name('project/index'),
+                ->action([ProjectController::class, 'index']),
             Route::methods([$mG, $mP], '/project/add')
+                ->name('project/add')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ProjectController::class, 'add'])
-                ->name('project/add'),
+                ->action([ProjectController::class, 'add']),
             Route::methods([$mG, $mP], '/project/edit/{id}')
                 ->name('project/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1556,9 +1640,9 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([MerchantController::class, 'view']),
             Route::methods([$mG, $mP], '/payment/add')
+                ->name('payment/add')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([PaymentController::class, 'add'])
-                ->name('payment/add'),
+                ->action([PaymentController::class, 'add']),
             Route::methods([$mG, $mP], '/payment/edit/{id}')
                 ->name('payment/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1592,9 +1676,9 @@ return [
                 ->action([PaymentMethodController::class, 'index'])
                 ->name('paymentmethod/index'),
             Route::methods([$mG, $mP], '/paymentmethod/add')
+                ->name('paymentmethod/add')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([PaymentMethodController::class, 'add'])
-                ->name('paymentmethod/add'),
+                ->action([PaymentMethodController::class, 'add']),
             Route::methods([$mG, $mP], '/paymentmethod/edit/{id}')
                 ->name('paymentmethod/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1623,10 +1707,6 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'index'])
                 ->name('quote/index'),
-            Route::get('/client_quotes[/page/{page:\d+}[/status/{status:\d+}]]')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'guest'])
-                ->name('quote/guest'),
             Route::methods([$mG, $mP], '/quote/save_custom')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'save_custom'])
@@ -1643,10 +1723,6 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'delete_quote_item'])
                 ->name('quote/delete_quote_item'),
-            Route::methods([$mG, $mP], '/quote/pdf/{include}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'pdf'])
-                ->name('quote/pdf'),
             Route::methods([$mG, $mP], '/quote/pdf_dashboard_include_cf/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'pdf_dashboard_include_cf'])
@@ -1671,11 +1747,6 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'quote_to_invoice_confirm'])
                 ->name('quote/quote_to_invoice_confirm'),
-            // The client is responsible for issuing the Purchase Order
-            Route::methods([$mG, $mP], '/quote/quote_to_so_confirm')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'quote_to_so_confirm'])
-                ->name('quote/quote_to_so_confirm'),
             Route::methods([$mG, $mP], '/quote/quote_to_quote_confirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'quote_to_quote_confirm'])
@@ -1700,33 +1771,10 @@ return [
                 ->name('quote/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'delete']),
-            Route::methods([$mG, $mP], '/quote/view/{id}')
-                ->name('quote/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'view']),
-// The individual must have been give the url on the email sent and also
-// have been assigned the observer role under resources/rbac/items by using
-// assignRole command at command prompt
-            Route::methods([$mG, $mP], '/quote/url_key/{url_key}')
-                ->name('quote/url_key')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'url_key']),
-// The individual that is sent the quote approves with/without a purchase
-// order number
-            Route::methods([$mG, $mP], '/quote/approve')
-                ->name('quote/approve')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'approve']),
-// The individual that is sent the quote rejects it.
-            Route::methods([$mG, $mP], '/quote/reject/{url_key}')
-                ->name('quote/reject')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'reject']),
             Route::methods([$mG, $mP], '/quote/generate_quote_pdf/{url_key}')
                 ->name('quote/generate_quote_pdf')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'generate_quote_pdf']),
-            
             // QuoteAllowanceCharge
             Route::get('/quoteallowancecharge[/page/{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1748,8 +1796,7 @@ return [
             Route::methods([$mG, $mP], '/quoteallowancecharge/view/{id}')
                 ->name('quoteallowancecharge/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteAllowanceChargeController::class, 'view']),    
-                
+                ->action([QuoteAllowanceChargeController::class, 'view']),
             Route::get('/quoteitem')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteItemController::class, 'index'])
@@ -1806,8 +1853,7 @@ return [
             Route::methods([$mG, $mP], '/quoteitemallowancecharge/view/{id}')
                 ->name('quoteitemallowancecharge/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteItemAllowanceChargeController::class, 'view']),
-                
+                ->action([QuoteItemAllowanceChargeController::class, 'view']),                
             Route::get('/report')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ReportController::class, 'index'])
@@ -1836,67 +1882,18 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ReportController::class, 'payment_history_index'])
                 ->name('report/payment_history_index'),
+            Route::get('/salesorder[/page/{page:\d+}[/status/{status:\d+}]]')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([SalesOrderController::class, 'index'])
+                ->name('salesorder/index'),
             Route::methods([$mG, $mP], '/sales_by_year')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ReportController::class, 'sales_by_year'])
                 ->name('report/sales_by_year'),
-            Route::get('/sumex')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SumexController::class, 'index'])
-                ->name('sumex/index'),
-            Route::methods([$mG, $mP], '/sumex/add/{inv_id}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SumexController::class, 'add'])
-                ->name('sumex/add'),
-            Route::methods([$mG, $mP], '/sumex/delete/{id}')
-                ->name('sumex/delete')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SumexController::class, 'delete']),
-            Route::methods([$mG, $mP], '/sumex/edit/{id}')
-                ->name('sumex/edit')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SumexController::class, 'edit']),
-            Route::methods([$mG, $mP], '/sumex/view/{id}')
-                ->name('sumex/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SumexController::class, 'view']),
-            Route::get(
-                  '/client_salesorders[/page/{page:\d+}[/status/{status:\d+}]]')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'guest'])
-                ->name('salesorder/guest'),
-            Route::get('/salesorder[/page/{page:\d+}[/status/{status:\d+}]]')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'index'])
-                ->name('salesorder/index'),
-            Route::methods([$mG, $mP], '/salesorder/add/{client_id}')
-                ->name('salesorder/add')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'add']),
-            Route::methods([$mG, $mP], '/salesorder/agree_to_terms/{url_key}')
-                ->name('salesorder/agree_to_terms')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'agree_to_terms']),
-            Route::methods([$mG, $mP], '/salesorder/edit/{id}')
-                ->name('salesorder/edit')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'edit']),
             Route::methods([$mG, $mP], '/salesorder/delete/{id}')
                 ->name('salesorder/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SalesOrderController::class, 'delete']),
-            Route::methods([$mG, $mP], '/salesorder/pdf/{include}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'pdf'])
-                ->name('salesorder/pdf'),
-            Route::methods([$mG, $mP], '/salesorder/reject/{url_key}')
-                ->name('salesorder/reject')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'reject']),
-            Route::methods([$mG, $mP], '/salesorder/view/{id}')
-                ->name('salesorder/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'view']),
             Route::methods([$mG, $mP], '/salesorder/so_to_invoice/{id}')
                 ->name('salesorder/so_to_invoice')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1905,14 +1902,6 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SalesOrderController::class, 'so_to_invoice_confirm'])
                 ->name('salesorder/so_to_invoice_confirm'),
-            Route::methods([$mG, $mP], '/salesorder/url_key/{key}')
-                ->name('salesorder/url_key')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'url_key']),
-            Route::methods([$mG, $mP], '/salesorderitem/edit/{id}')
-                ->name('salesorderitem/edit')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderItemController::class, 'edit']),
             Route::get('/setting/debug_index[/page{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SettingController::class, 'debug_index'])
@@ -1970,11 +1959,6 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SettingController::class, 'clear'])
                 ->name('setting/clear'),
-            Route::methods([$mG, $mP],
-                    '/setting/listlimit/{setting_id}/{limit}/{origin}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SettingController::class, 'listlimit'])
-                ->name('setting/listlimit'),
             Route::methods([$mG, $mP], '/setting/toggleinvsentlogcolumn')
                 ->name('setting/toggleinvsentlogcolumn')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -2123,33 +2107,14 @@ return [
                 ->name('upload/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([UploadController::class, 'view']),
-            // UserClient
-            Route::get('/userclient')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([UserClientController::class, 'index'])
-                ->name('userclient/index'),
-            // Add
-            Route::methods([$mG, $mP], '/userclient/add')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([UserClientController::class, 'add'])
-                ->name('userclient/add'),
             Route::methods([$mG, $mP], '/userclient/new/{user_id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([UserClientController::class, 'new'])
-                ->name('userclient/new'),
-            // Edit
-            Route::methods([$mG, $mP], '/userclient/edit/{id}')
-                ->name('userclient/edit')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([UserClientController::class, 'edit']),
+                ->name('userclient/new'),            
             Route::methods([$mG, $mP], '/userclient/delete/{id}')
                 ->name('userclient/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([UserClientController::class, 'delete']),
-            Route::methods([$mG, $mP], '/userclient/view/{id}')
-                ->name('userclient/view')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([UserClientController::class, 'view']),
             // UserInv
             Route::get('/userinv[/page/{page:\d+}[/active/{active}]]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))

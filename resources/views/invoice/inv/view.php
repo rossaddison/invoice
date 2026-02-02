@@ -8,7 +8,6 @@ use Yiisoft\Html\Tag\A;
 
 /**
  * @var App\Invoice\Entity\Inv $inv
- * @var App\Invoice\Entity\Sumex|null $sumex
  * @var App\Invoice\Inv\InvForm $form
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
@@ -470,17 +469,10 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
 <!-- null!==$sumex There is a sumex extension record linked to the current
     invoice_id and the sumex setting under View...Settings...Invoice...Sumex
     Settings is set at Yes. -->
-<?php if ($s->getSetting('sumex') === '1') { ?>
-                            <a href="#inv-to-pdf"
-                               data-bs-toggle="modal"
-                               style="text-decoration:none">
-                                <i class="fa fa-print fa-margin"></i>
-<?= Html::encode($translator->translate('generate.sumex')); ?>
-                            </a>
+
     <?php
 // Options ... Download PDF
-                            } else {
-                                ?>
+    ?>                       
                             <a href="#inv-to-pdf"
                                data-bs-toggle="modal"
                                style="text-decoration:none">
@@ -508,7 +500,7 @@ if ($invAmountBalance >= 0.00 && $inv->getStatus_id() !== 1 && $invEdit) :
                             </a>
                             <?php } ?>
                         
-<?php } ?>
+
 <!--
     views/invoice/inv/modal_inv_to_pdf   ... include custom fields or not on pdf
     src/Invoice/Inv/InvController/pdf ... calls the src/Invoice/Helpers/PdfHelper
@@ -534,28 +526,6 @@ if ($invEdit) {
                         </a>
                     </li>
                         <li>
-<?php
-// If Settings...View...Invoices...Sumex Settings...Sumex is Yes
-// the basic Sumex details will be available to edit
-// since the basic details would have been added when the Invoice was added
-// by means of the inv modal ie. inv/create_confirm
-// The sumex->getInvoice function can return null since not all invoices will
-// require Sumex details. If a Sumex Invoice has been been created due to 'Yes'
-// it will be
- 
-// Options ... Generate Sumex
-
-                            if (null !== $sumex) {
-                                if (null !== $sumex->getInvoice()) {
-                                    ?>
-                                <a href="
-    <?= $urlGenerator->generate('sumex/edit', ['id' => $inv->getId()]); ?>"
-                                   style="text-decoration:none">
-                                   <i class="fa fa-edit fa-margin"></i>
-                                   <?= $translator->translate('sumex.edit'); ?>
-                                </a>
-                            <?php } ?>
-                        <?php } ?>
                         </li>
                         <li>
                             <a href="

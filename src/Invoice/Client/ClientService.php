@@ -46,10 +46,6 @@ final readonly class ClientService
         isset($body['client_tax_code']) ? $model->setClient_tax_code((string) $body['client_tax_code']) : '';
         isset($body['client_language']) ? $model->setClient_language((string) $body['client_language']) : '';
         $model->setClient_active($body['client_active'] === '1' ? true : false);
-        isset($body['client_avs']) ? $model->setClient_avs((string) $body['client_avs']) : '';
-        isset($body['client_insurednumber']) ? $model->setClient_insurednumber((string) $body['client_insurednumber']) : '';
-        isset($body['client_veka']) ? $model->setClient_veka((string) $body['client_veka']) : '';
-
         $datetime = new \DateTime();
         isset($body['client_birthdate']) ? $model->setClient_birthdate($datetime::createFromFormat('Y-m-d', (string) $body['client_birthdate']) ?: $datetime) : '';
 

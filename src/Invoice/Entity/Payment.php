@@ -22,11 +22,16 @@ class Payment
     #[Column(type: 'date', nullable: false)]
     private mixed $payment_date = '';
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $payment_method_id = null, #[Column(type: 'decimal(20,2)', nullable: true, default: 0.00)]
-        private ?float $amount = 0.00, #[Column(type: 'longText', nullable: false)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $inv_id = null,
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $payment_method_id = null,
+        #[Column(type: 'decimal(20,2)', nullable: true, default: 0.00)]
+        private ?float $amount = 0.00,
+        #[Column(type: 'longText', nullable: false)]
         private string $note = '')
     {
     }

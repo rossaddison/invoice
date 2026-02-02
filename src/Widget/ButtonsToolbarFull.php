@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Widget;
 
 use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\Sumex;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Html\Html;
@@ -33,7 +32,6 @@ final readonly class ButtonsToolbarFull
     public function render(
         Inv $inv,
         InvAmountRepository $iaR,
-        ?Sumex $sumex = null,
         bool $invEdit = true,
         bool $paymentView = true,
         bool $read_only = false,
@@ -72,9 +70,7 @@ final readonly class ButtonsToolbarFull
         }
 
         // PDF Generation
-        $pdfTitle = $this->settingRepository->getSetting('sumex') === '1'
-            ? $this->translator->translate('generate.sumex')
-            : $this->translator->translate('download.pdf');
+        $pdfTitle = $this->translator->translate('download.pdf');
 
         $primaryButtons[] = $this->createModalButton(
             'pdf',
@@ -158,14 +154,13 @@ final readonly class ButtonsToolbarFull
 
         // Get advanced buttons
         $advancedButtons = $this->getAdvancedButtons(
-            $inv, $sumex, $invEdit, $enabledGateways, $vat);
+            $inv, $invEdit, $enabledGateways, $vat);
 
         return $this->renderFullToolbar($primaryButtons, $advancedButtons, $inv);
     }
 
     private function getAdvancedButtons(
         Inv $inv,
-        ?Sumex $sumex,
         bool $invEdit,
         array $enabledGateways,
         string $vat,
@@ -292,9 +287,7 @@ final readonly class ButtonsToolbarFull
         }
 
         // HTML Preview
-        $htmlTitle = $this->settingRepository->getSetting('sumex') === '1'
-            ? $this->translator->translate('html.sumex.yes')
-            : $this->translator->translate('html.sumex.no');
+        $htmlTitle = 'Html Preview';
 
         $buttons[] = $this->createModalButton(
             'html-preview',
@@ -303,17 +296,6 @@ final readonly class ButtonsToolbarFull
             'btn-outline-secondary',
             $htmlTitle,
         );
-
-        // Sumex editing
-        if ($sumex && (null !== $sumex->getInvoice())) {
-            $buttons[] = $this->createButton(
-                'sumex-edit',
-                $this->urlGenerator->generate('sumex/edit', ['id' => $invId]),
-                'fa-edit',
-                'btn-outline-info',
-                $this->translator->translate('sumex.edit'),
-            );
-        }
 
         // Delete buttons (if allowed)
         if ($this->canDeleteInvoice($inv, $invEdit)) {

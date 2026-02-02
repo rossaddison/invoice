@@ -822,7 +822,6 @@ return [
     'Generate the invoice number for draft invoices',
   'generate.quote.number.for.draft' =>
     'Generate the quote number for draft quotes',
-  'generate.sumex' => 'Generate Sumex PDF',
   'generator' => 'Generator',
   'generator.add' => 'Generator Add',
   'generator.camelcase.capital.name' =>
@@ -984,8 +983,6 @@ return [
     . ' within ./resources/views/layout/.  ... and'
     . ' translation slide location ./resources/messages/app.php',
   'hostname' => 'Hostname',
-  'html.sumex.no' => 'Html without Sumex',
-  'html.sumex.yes' => 'Html with Sumex',
   'id' => 'ID',
   'identifier.format' => 'Identifier formatting',
   'identifier.format.template.tags' =>
@@ -2373,60 +2370,6 @@ prior to importing and no existing documents e.g. Invoices.',
   'success' => 'Success',
   'successful' => 'Successful',
   'suggested.from.previous.selection' => 'Suggested from previous selection',
-  'sumex' => 'Sumex',
-  'sumex.add' => 'Sumex Add',
-  'sumex.canton' => 'Canton',
-  'sumex.diagnosis' => 'Diagnosis',
-  'sumex.edit' => 'Sumex Edit',
-  'sumex.help' => 'This options adds a menu entry'
-    . ' in invoices to generate a'
-    . ' TARMED / SUMEX1 semi compatible invoice.'
-    . ' TARMED / SUMEX1 is a swiss standard for healthcares.'
-    . ' <a href="http://sumex1.net/">More Info</a>',
-  'sumex.information' => 'Sumex Information',
-  'sumex.insurednumber' => 'Insured Number',
-  'sumex.observations' => 'Observations',
-  'sumex.place' => 'Sumex Place',
-  'sumex.place.association' => 'Association',
-  'sumex.place.company' => 'Company',
-  'sumex.place.hospital' => 'Hospital',
-  'sumex.place.lab' => 'Lab',
-  'sumex.place.practice' => 'Practice',
-  'sumex.rcc' => 'RCC',
-  'sumex.role' => 'Sumex Role',
-  'sumex.role.chiropractor' => 'Chiropractor',
-  'sumex.role.dentaltechnician' => 'Dental Technician',
-  'sumex.role.dentist' => 'Dentist',
-  'sumex.role.druggist' => 'Druggist',
-  'sumex.role.ergotherapist' => 'Ergotherapist',
-  'sumex.role.hospital' => 'Hospital',
-  'sumex.role.labtechnician' => 'Lab Technician',
-  'sumex.role.logotherapist' => 'Logotherapist',
-  'sumex.role.midwife' => 'Midwife',
-  'sumex.role.naturopathicdoctor' => 'Naturopathicdoctor',
-  'sumex.role.naturopathictherapist' => 'Naturopathictherapist',
-  'sumex.role.nursingstaff' => 'Nursing Staff',
-  'sumex.role.nutritionist' => 'Nutritionist',
-  'sumex.role.other' => 'Other',
-  'sumex.role.othertechnician' => 'Other Technician',
-  'sumex.role.pharmacist' => 'Pharmacist',
-  'sumex.role.physician' => 'Physician',
-  'sumex.role.physiotherapist' => 'Physiotherapist',
-  'sumex.role.psychologist' => 'Psychologist',
-  'sumex.role.transport' => 'Transport',
-  'sumex.role.wholesaler' => 'Wholesaler',
-  'sumex.settings' => 'Sumex Settings',
-  'sumex.sliptype' => 'Sumex Slip Type',
-  'sumex.sliptype-esr9' => 'ESR 9 (Orange Slip)',
-  'sumex.sliptype-esrRed' => 'Red Slip',
-  'sumex.sliptype.help' => 'This option will change'
-    . ' the slip type in Sumex.'
-    . ' Please note that'
-    . ' if you select the Orange slip'
-    . ' you need a subscriber number'
-    . ' that starts with "01-"',
-  'sumex.ssn' => 'AVS',
-  'sumex.veka' => 'VEKA',
   'sunday' => 'Sunday',
   'system.settings' => 'System Settings',
   'table' => 'Table',
@@ -2701,6 +2644,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'This client'
     . ' has no user account associated with it'
     . ' and therefore this document cannot be created.',
+  'user.client.delete.not' => 'Cannot delete! Client has pre-existing documents',
   'user.clients.assigned.not' => 'This user has no Clients assigned to it.',
   'user.form' => 'User Form',
   'user.iban' => 'IBAN',
@@ -2829,21 +2773,30 @@ prior to importing and no existing documents e.g. Invoices.',
   'validation.currency.supported' => 'Currency {currency} is not supported',
   
   // === BUSINESS LOGIC ERRORS ===
-  'business.error.invoice.already_paid' => 'Invoice #{invoice_number} is already marked as paid',
-  'business.error.insufficient_stock' => 'Insufficient stock for product {product_name}. Available: {available}, Required: {required}',
-  'business.error.client.credit_limit' => 'Client {client_name} has exceeded credit limit of {limit}',
-  'business.error.payment.gateway_failed' => 'Payment processing failed: {error_message}',
+  'business.error.invoice.already_paid' =>
+    'Invoice #{invoice_number} is already marked as paid',
+  'business.error.insufficient_stock' =>
+    'Insufficient stock for product {product_name}. Available: {available},'
+    . ' Required: {required}',
+  'business.error.client.credit_limit' => 'Client {client_name} has exceeded'
+    . ' credit limit of {limit}',
+  'business.error.payment.gateway_failed' => 'Payment processing failed:'
+    . ' {error_message}',
   
   // === SUCCESS MESSAGES ===
   'success.create.invoice' => 'Invoice #{invoice_number} created successfully',
   'success.update.client' => 'Client {client_name} updated successfully',
   'success.send.invoice' => 'Invoice #{invoice_number} sent to {client_email}',
-  'success.payment.received' => 'Payment of {amount} received for invoice #{invoice_number}',
+  'success.payment.received' => 'Payment of {amount} received for invoice'
+    . ' #{invoice_number}',
   
   // === EMAIL TEMPLATES ===
-  'email.invoice.created.subject' => 'New Invoice #{invoice_number} from {company_name}',
-  'email.invoice.reminder.subject' => 'Payment Reminder - Invoice #{invoice_number}',
-  'email.invoice.overdue.subject' => 'OVERDUE: Invoice #{invoice_number} - Immediate Attention Required',
+  'email.invoice.created.subject' => 'New Invoice #{invoice_number} from'
+    . ' {company_name}',
+  'email.invoice.reminder.subject' => 'Payment Reminder - Invoice'
+    . ' #{invoice_number}',
+  'email.invoice.overdue.subject' => 'OVERDUE: Invoice #{invoice_number}'
+    . ' - Immediate Attention Required',
   
   'email.invoice.created.body' => '
         <h2>Dear {client_name},</h2>
@@ -2854,7 +2807,8 @@ prior to importing and no existing documents e.g. Invoices.',
             <li><strong>Due Date:</strong> {due_date}</li>
             <li><strong>Amount:</strong> {amount}</li>
         </ul>
-        <p><a href="{view_link}">View Invoice</a> | <a href="{payment_link}">Pay Now</a></p>
+        <p><a href="{view_link}">View Invoice</a> | <a href="{payment_link}">
+        Pay Now</a></p>
         <p>Payment Terms: {payment_terms}</p>
         <p>Best regards,<br>{company_name}</p>
     ',

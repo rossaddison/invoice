@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentPeppol;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
+use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\PaymentPeppol;
+use App\Invoice\Inv\InvRepository as IR;
+use App\Invoice\UserClient\UserClientRepository as UCR;
+use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -15,6 +20,7 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -36,20 +42,27 @@ final class PaymentPeppolController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+                $viewRenderer, $session, $sR, $flash);
         $this->paymentpeppolService = $paymentpeppolService;
     }
 
     /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @return Response
+     * 
      */
     public function add(
+        #[RouteArgument('inv_id')]
+        string $inv_id,
+        #[RouteArgument('_language')]
+        string $_language,
+        IR $iR,
+        UCR $ucR,
+        UIR $uiR,
         Request $request,
         FormHydrator $formHydrator,
     ): Response {
         $paymentPeppol = new PaymentPeppol();
+        $inv = $iR->repoInvUnLoadedquery($inv_id);
         $form = new PaymentPeppolForm($paymentPeppol);
         $parameters = [
             'title' => $this->translator->translate('add'),
@@ -64,19 +77,26 @@ final class PaymentPeppolController extends BaseController
                 ],
             ),
         ];
-
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                    $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
-                    return $this->webService->getRedirectResponse('paymentpeppol/index');
+                    $this->paymentpeppolService->savePaymentPeppol(
+                            $paymentPeppol, $body);
+                    return $this->webService->getRedirectResponse(
+                        'paymentpeppol/index');
                 }
             }
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        if (null!==$inv) {
+            if ($this->rbacObserver($inv, $ucR, $uiR)) {
+                return $this->viewRenderer->render('_form', $parameters);
+            }
+        }
+        return $this->webService->getRedirectResponse('paymentpeppol/index');
     }
 
     /**
@@ -84,7 +104,9 @@ final class PaymentPeppolController extends BaseController
      * @param PaymentPeppolRepository $paymentpeppolRepository
      * @return Response
      */
-    public function index(CurrentRoute $routeCurrent, PaymentPeppolRepository $paymentpeppolRepository): Response
+    public function index(
+            CurrentRoute $routeCurrent,
+            PaymentPeppolRepository $paymentpeppolRepository): Response
     {
         $page = (int) $routeCurrent->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -100,7 +122,7 @@ final class PaymentPeppolController extends BaseController
             'alert' => $this->alert(),
             'routeCurrent' => $routeCurrent,
         ];
-        return $this->viewRenderer->render('paymentpeppol/index', $parameters);
+        return $this->viewRenderer->render('index', $parameters);
     }
 
     /**
@@ -108,13 +130,15 @@ final class PaymentPeppolController extends BaseController
      * @param PaymentPeppolRepository $paymentpeppolRepository
      * @return Response
      */
-    public function delete(CurrentRoute $currentRoute, PaymentPeppolRepository $paymentpeppolRepository): Response
+    public function delete(CurrentRoute $currentRoute,
+                    PaymentPeppolRepository $paymentpeppolRepository): Response
     {
         try {
             $paymentpeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository);
             if (null !== $paymentpeppol) {
                 $this->paymentpeppolService->deletePaymentPeppol($paymentpeppol);
-                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
+                $this->flashMessage('info',
+                    $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('paymentpeppol/index');
             }
             return $this->webService->getRedirectResponse('paymentpeppol/index');
@@ -158,11 +182,14 @@ final class PaymentPeppolController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
-                        $this->paymentpeppolService->savePaymentPeppol($paymentPeppol, $body);
-                        return $this->webService->getRedirectResponse('paymentpeppol/index');
+                        $this->paymentpeppolService->savePaymentPeppol(
+                                                        $paymentPeppol, $body);
+                        return $this->webService->getRedirectResponse(
+                                                        'paymentpeppol/index');
                     }
                 }
-                $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
             return $this->viewRenderer->render('_form', $parameters);
@@ -175,7 +202,9 @@ final class PaymentPeppolController extends BaseController
      * @param PaymentPeppolRepository $paymentpeppolRepository
      * @return PaymentPeppol|null
      */
-    private function paymentpeppol(CurrentRoute $currentRoute, PaymentPeppolRepository $paymentpeppolRepository): ?PaymentPeppol
+    private function paymentpeppol(
+            CurrentRoute $currentRoute,
+            PaymentPeppolRepository $paymentpeppolRepository): ?PaymentPeppol
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
@@ -189,7 +218,9 @@ final class PaymentPeppolController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function paymentpeppols(PaymentPeppolRepository $paymentpeppolRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function paymentpeppols(
+            PaymentPeppolRepository $paymentpeppolRepository):
+                                        \Yiisoft\Data\Cycle\Reader\EntityReader
     {
         return $paymentpeppolRepository->findAllPreloaded();
     }
@@ -197,11 +228,19 @@ final class PaymentPeppolController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param PaymentPeppolRepository $paymentpeppolRepository
+     * @param UCR $ucR
+     * @param UIR $uiR
      * @return Response|\Yiisoft\DataResponse\DataResponse
      */
-    public function view(CurrentRoute $currentRoute, PaymentPeppolRepository $paymentpeppolRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(
+        CurrentRoute $currentRoute,
+        PaymentPeppolRepository $paymentpeppolRepository,
+        UCR $ucR,
+        UIR $uiR
+    ): \Yiisoft\DataResponse\DataResponse|Response
     {
-        $paymentPeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository);
+        $paymentPeppol = $this->paymentpeppol(
+                                        $currentRoute, $paymentpeppolRepository);
         if ($paymentPeppol) {
             $form = new PaymentPeppolForm($paymentPeppol);
             $parameters = [
@@ -218,8 +257,76 @@ final class PaymentPeppolController extends BaseController
                     ],
                 ),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            $inv = $paymentPeppol->getInv();
+            if (null!==$inv) {
+                if ($this->rbacObserver($inv, $ucR, $uiR)) {
+                    return $this->viewRenderer->render('_view', $parameters);
+                }
+                if ($this->rbacAdmin()) {
+                    return $this->viewRenderer->render('_view', $parameters);
+                }
+                if ($this->rbacAccountant()) {
+                    return $this->viewRenderer->render('_view', $parameters);
+                }
+            }
         }
         return $this->webService->getRedirectResponse('paymentpeppol/index');
+    }
+    
+    /**
+     * Purpose:
+     * Prevent browser manipulation and ensure that views are only accessible
+     * to users 1. with the observer role's VIEW_INV permission and 2. supervise a 
+     * client requested invoice and are an active current user for these client's
+     * invoices.
+     * @param Inv $inv
+     * @param UCR $ucR
+     * @param UIR $uiR
+     * @return bool
+     */
+    private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
+        $statusId = $inv->getStatus_id();
+        if (null!==$statusId) {
+            // has observer role
+            if ($this->userService->hasPermission(Permissions::VIEW_INV)
+                && !($this->userService->hasPermission(Permissions::EDIT_INV))
+                // the invoice  is not a draft i.e. has been sent
+                && !($statusId === 1)
+                // the invoice is intended for the current user        
+                && ($inv->getUser_id() ===
+                                        $this->userService->getUser()?->getId())
+                // the invoice client is associated with the above user
+                // the observer user may be paying for more than one client    
+                && ($ucR->repoUserClientqueryCount($inv->getUser_id(),
+                                                $inv->getClient_id()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
+                // the current observer user is active
+                if (null !== $userInv && $userInv->getActive()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private function rbacAccountant() : bool {
+        // has accountant role
+        if (($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
+            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT)))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private function rbacAdmin() : bool {
+        // has observer role
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::EDIT_INV))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -11,12 +11,15 @@ CustomField\CustomFieldRepository as CFR,
 CustomValue\CustomValueRepository as CVR,
 DeliveryLocation\DeliveryLocationRepository as DR,
 Entity\CustomField, Entity\DeliveryLocation, Entity\Group, Entity\Inv,
-Entity\InvAmount, Entity\InvCustom, Entity\InvItem, Entity\InvItemAllowanceCharge,
-Entity\InvTaxRate, Entity\SalesOrder, Entity\SalesOrderAmount,
-Entity\SalesOrderCustom, Entity\SalesOrderItem, Entity\SalesOrderTaxRate,
-Entity\SalesOrderItemAllowanceCharge, Group\GroupRepository as GR,
+Entity\InvAllowanceCharge, Entity\InvAmount, Entity\InvCustom, Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrder,
+Entity\SalesOrderAmount, Entity\SalesOrderCustom, Entity\SalesOrderItem,
+Entity\SalesOrderTaxRate, Entity\SalesOrderItemAllowanceCharge, 
+Group\GroupRepository as GR, Entity\SalesOrderAllowanceCharge,
 Helpers\CustomValuesHelper as CVH, Helpers\PdfHelper, Inv\InvForm,
-Inv\InvRepository as InvRepo, Inv\InvService, InvAmount\InvAmountForm,
+Inv\InvRepository as InvRepo, Inv\InvService,
+InvAllowanceCharge\InvAllowanceChargeForm,
+InvAllowanceCharge\InvAllowanceChargeService,
+InvAmount\InvAmountForm,
 InvAmount\InvAmountService, InvCustom\InvCustomForm, InvCustom\InvCustomService,
 InvItem\InvItemForm, InvItem\InvItemService,
 InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
@@ -74,6 +77,7 @@ final class SalesOrderController extends BaseController
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
         private readonly InvService $invService,
+        private readonly InvAllowanceChargeService $inv_allowance_charge_service,
         private readonly InvCustomService $inv_custom_service,
         private readonly InvAmountService $invAmountService,
         private readonly InvItemService $invItemService,
@@ -250,15 +254,18 @@ final class SalesOrderController extends BaseController
      * Related logic: see SalesOrderRepository getStatuses function
      * @param CurrentRoute $currentRoute
      * @param SOR $soR
+     * @param UCR $ucR
+     * @param UIR $uiR
      * @return Response
      */
-    public function agree_to_terms(CurrentRoute $currentRoute, SoR $soR): Response
+    public function agree_to_terms(CurrentRoute $currentRoute, SoR $soR, UCR $ucR,
+                                                            UIR $uiR): Response
     {
         $url_key = $currentRoute->getArgument('url_key');
         if (null !== $url_key) {
             if ($soR->repoUrl_key_guest_count($url_key) > 0) {
                 $so = $soR->repoUrl_key_guest_loaded($url_key);
-                if ($so) {
+                if ($so && $this->rbacObserver($so, $ucR, $uiR)) {
                     $so_id = $so->getId();
                     $so->setStatus_id(3);
                     $soR->save($so);
@@ -293,31 +300,39 @@ final class SalesOrderController extends BaseController
      * Related logic: see SalesOrderRepository getStatuses function
      * @param CurrentRoute $currentRoute
      * @param SOR $soR
+     * @param UCR $ucR
+     * @param UIR $uiR
      * @return Response
      */
-    public function reject(CurrentRoute $currentRoute, SoR $soR): Response
+    public function reject(CurrentRoute $currentRoute, SoR $soR,
+                                                    UCR $ucR, UIR $uiR): Response
     {
         $url_key = $currentRoute->getArgument('url_key');
         if (null !== $url_key) {
             if ($soR->repoUrl_key_guest_count($url_key) > 0) {
                 $so = $soR->repoUrl_key_guest_loaded($url_key);
                 if ($so) {
-                    $so_id = $so->getId();
-                    // see SalesOrderRepository getStatuses function
-                    $so->setStatus_id(9);
-                    $soR->save($so);
-                    return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString(
-                            '//invoice/setting/salesorder_successful',
-                            [
-                                'heading' => $soR->getSpecificStatusArrayLabel(
-                                    (string) 9),
-                                'message' => $this->translator->translate(
-                                    'record.successfully.updated'),
-                                'url' => 'salesorder/view','id' => $so_id,
-                            ],
-                        ),
-                    );
+                    // Only the observer user can reject the salesorder
+                    // so check that the salesorder being rejected is linked to
+                    // the current user
+                    if ($this->rbacObserver($so, $ucR, $uiR)) {
+                        $so_id = $so->getId();
+                        // see SalesOrderRepository getStatuses function
+                        $so->setStatus_id(9);
+                        $soR->save($so);
+                        return $this->factory->createResponse(
+                            $this->viewRenderer->renderPartialAsString(
+                                '//invoice/setting/salesorder_successful',
+                                [
+                                    'heading' => $soR->getSpecificStatusArrayLabel(
+                                        (string) 9),
+                                    'message' => $this->translator->translate(
+                                        'record.successfully.updated'),
+                                    'url' => 'salesorder/view','id' => $so_id,
+                                ],
+                            ),
+                        );
+                    }
                 }
             }
         }
@@ -490,6 +505,7 @@ final class SalesOrderController extends BaseController
      * @param SoCR $socR
      * @param SettingRepository $settingRepository
      * @param UCR $ucR
+     * @param UIR $uiR
      * @param CFR $cfR
      * @param CVR $cvR
      * @return Response
@@ -507,11 +523,16 @@ final class SalesOrderController extends BaseController
         SoCR $socR,
         SettingRepository $settingRepository,
         UCR $ucR,
+        UIR $uiR,
         CFR $cfR,
         CVR $cvR,
     ): Response {
         $so = $this->salesorder($currentRoute, $salesorderRepository);
-        if ($so) {
+        // Ensure that, even though the observer user has Permission editInv,
+        // they edit and input the correct sales order with their purchase order
+        // line numbers i.e. no browser manipulation
+        if ($so && ($this->rbacObserver($so, $ucR, $uiR) || $this->rbacAdmin()
+                                                || $this->rbacAccountant())) {
             $form = new SalesOrderForm($so);
             $dels = $delRepo->repoClientquery($so->getClient_id());
             $so_id = $so->getId();
@@ -748,6 +769,8 @@ final class SalesOrderController extends BaseController
         SoR $soR,
         SoTRR $sotrR,
         TRR $trR,
+        UCR $ucR,
+        UIR $uiR,    
         UNR $uR,
         SoCR $socR,
         InvRepo $invRepo,
@@ -867,10 +890,74 @@ final class SalesOrderController extends BaseController
                             $_language, $dR, $quote->getDelivery_location_id())
                                 : '',
                 ];
-                return $this->viewRenderer->render('view', $parameters);
+                if ($this->rbacObserver($so, $ucR, $uiR)) {
+                    return $this->viewRenderer->render('view', $parameters);
+                }
+                if ($this->rbacAdmin()) {
+                    return $this->viewRenderer->render('view', $parameters);
+                }
+                if ($this->rbacAccountant()) {
+                    return $this->viewRenderer->render('view', $parameters);
+                }
             } // $so_amount
         } // $so->getId()
         return $this->webService->getNotFoundResponse();
+    }
+    
+    /**
+     * Purpose:
+     * Prevent browser manipulation and ensure that views are only accessible
+     * to users 1. with the observer role's VIEW_INV permission and 2. supervise a
+     * client requested salesorder and are an active current user for these
+     * client's salesorders.
+     * @param SalesOrder $so
+     * @param UCR $ucR
+     * @param UIR $uiR
+     * @return bool
+     */
+    private function rbacObserver(SalesOrder $so, UCR $ucR, UIR $uiR) : bool {
+        $statusId = $so->getStatus_id();
+        if (null!==$statusId) {
+            // has observer role
+            if ($this->userService->hasPermission(Permissions::VIEW_INV)
+                && !($this->userService->hasPermission(Permissions::EDIT_INV))
+                // the salesorder has passed the 'draft' stage i.e sent / appears
+                // in the observer user's guest index
+                && !($statusId === 1)
+                // the salesorder is intended for the current user
+                && ($so->getUser_id() === $this->userService->getUser()?->getId())
+                // the salesorder client is associated with the above user
+                && ($ucR->repoUserClientqueryCount($so->getUser_id(),
+                                                $so->getClient_id()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery($so->getUser_id());
+                // the current observer user is active
+                if (null !== $userInv && $userInv->getActive()) {
+                    return true;
+                }
+            }
+        }    
+        return false;
+    }
+    
+    private function rbacAccountant() : bool {
+        // has accountant role
+        if (($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
+            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT)))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private function rbacAdmin() : bool {
+        // has observer role
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::EDIT_INV))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //For rbac refer to AccessChecker
@@ -941,6 +1028,7 @@ final class SalesOrderController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
         ACIIR $aciiR,
+        ACSOR $acsoR,
         ACSOIR $acsoiR,
         CFR $cfR,
         GR $gR,
@@ -984,7 +1072,6 @@ final class SalesOrderController extends BaseController
                 'password' => $body['password'] ?? '',
                 'number' => $gR->generate_number((int) $group_id),
                 'discount_amount' => (float) $so->getDiscount_amount(),
-                'discount_percent' => (float) $so->getDiscount_percent(),
                 'url_key' => $so->getUrl_key(),
                 'payment_method' => 0,
                 'terms' => '',
@@ -1025,6 +1112,8 @@ final class SalesOrderController extends BaseController
                                 $this->so_to_invoice_so_custom(
                                     $so_id, $inv_id, $socR, $cfR, $formHydrator);
                                 $this->so_to_invoice_so_amount($so, $inv, $iR);
+                                $this->so_to_invoice_so_allowance_charges(
+                                    $so_id, $inv_id, $acsoR, $formHydrator);
                                 // Update the sos inv_id.
                                 $so->setInv_id($inv_id);
                                 // Set salesorder's status to invoice generated
@@ -1315,6 +1404,34 @@ final class SalesOrderController extends BaseController
         $iR->save($inv);
     }
 
+    private function so_to_invoice_so_allowance_charges(
+        string $so_id,
+        string $new_inv_id,
+        ACSOR $acsoR,
+        FormHydrator $formHydrator
+    ): void {
+        $so_allowance_charges = $acsoR->repoACSOquery($so_id);
+        /**
+         * @var SalesOrderAllowanceCharge $so_allowance_charge
+         */
+        foreach ($so_allowance_charges as $so_allowance_charge) {
+            $new_inv_ac = [
+                'inv_id' => $new_inv_id,
+                'allowance_charge_id' =>
+                    $so_allowance_charge->getAllowance_charge_id(),
+                'amount' => $so_allowance_charge->getAmount(),
+            ];
+            $invAllowanceCharge = new InvAllowanceCharge();
+            $form = new InvAllowanceChargeForm($invAllowanceCharge,
+                (int) $new_inv_id);
+            if ($formHydrator->populateAndValidate($form, $new_inv_ac)) {
+                $this->inv_allowance_charge_service->saveInvAllowanceCharge(
+                    $invAllowanceCharge, $new_inv_ac
+                );
+            }
+        }
+    }
+
     /**
      * @param CurrentRoute $currentRoute
      * @param CurrentUser $currentUser
@@ -1371,9 +1488,9 @@ final class SalesOrderController extends BaseController
                     $user_client = $ucR->repoUserClientqueryCount(
                         $this->userService->getUser()?->getId(),
                             $salesorder->getClient_id()) === 1 ? true : false;
-                    if ($user_inv && $user_client) {
+                    if ($user_inv && $user_client && $user_inv->getActive()) {
                         // If the userinv is a Guest => type = 1 ie. NOT an
-                        // administrator =>type = 0
+                        // administrator =>type = 0 and they are active
                         // So if the user has a type of 1 they are a guest.
                         if ($user_inv->getType() == 1) {
                             $soR->save($salesorder);

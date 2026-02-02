@@ -93,6 +93,20 @@ final class QuoteRepository extends Select\Repository
                       ->where(['delivery_location_id' => $delivery_location_id]);
         return $this->prepareDataReader($query);
     }
+    
+    /**
+     * @param int $user_id
+     * @param int $client_id
+     * @return int
+     */
+    public function countAllWithUserClient(int $user_id, int $client_id): int
+    {
+        return $query = $this->select()
+                ->load(['user', 'client'])
+                ->where(['user.id' => $user_id])
+                ->andWhere(['client.id' => $client_id])
+                ->count();
+    }
 
     /**
      * Get quotes  without filter

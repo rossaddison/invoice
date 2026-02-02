@@ -1007,7 +1007,6 @@ return [
 'generate.quote.number.for.draft' =>
 	'Ṣe ina nọmba agbasọ fun '
 	. 'awọn agbasọ asọye',
-'generate.sumex' => 'Ṣe ipilẹṣẹ Sumex PDF',
 'generator' => 'monomono',
 'generator.add' => 'monomono Fikun',
 'generator.camelcase.capital.name' => 'Orukọ Olu Camelcase ti a '
@@ -1218,8 +1217,6 @@ return [
 	. '/resources/messages/app.'
 	. 'php',
 'hostname' => 'Orukọ ogun',
-'html.sumex.no' => 'Html laisi Sumex',
-'html.sumex.yes' => 'Html pẹlu Sumex',
 'id' => 'ID',
 'identifier.format' => 'Tito idamo',
 'identifier.format.template.tags' => 'Awoṣe afi fun idanimọ',
@@ -2984,64 +2981,6 @@ return [
 'subtotal' => 'Lapapọ',
 'success' => 'Aseyori',
 'successful' => 'Aseyori',
-'sumex' => 'Sumex',
-'sumex.add' => 'Sumex Fi kun',
-'sumex.canton' => 'Canton',
-'sumex.diagnosis' => 'Aisan ayẹwo',
-'sumex.edit' => 'Sumex Ṣatunkọ',
-'sumex.help' => 'Awọn aṣayan yi ṣafikun titẹsi '
-	. 'akojọ aṣayan ni awọn iwe-owo '
-	. 'lati ṣe agbekalẹ iwe-owo ibaramu '
-	. 'ologbele TARMED / SUMEX1 kan.'
-	. 'TARMED / SUMEX1 jẹ boṣewa '
-	. 'Swiss fun awọn itọju ilera.'
-	. '<a href="http:'
-	. '//sumex1.'
-	. 'net/">Alaye diẹ sii</a>',
-'sumex.information' => 'Sumex Alaye',
-'sumex.insurednumber' => 'Nọmba idaniloju',
-'sumex.observations' => 'Awọn akiyesi',
-'sumex.place' => 'Ibi Sumex',
-'sumex.place.association' => 'Ẹgbẹ',
-'sumex.place.company' => 'Ile-iṣẹ',
-'sumex.place.hospital' => 'Ile-iwosan',
-'sumex.place.lab' => 'Lab',
-'sumex.place.practice' => 'Iwaṣe',
-'sumex.rcc' => 'RCC',
-'sumex.role' => 'Sumex Ipa',
-'sumex.role.chiropractor' => 'Chiropractor',
-'sumex.role.dentaltechnician' => 'Onimọn ẹrọ ehín',
-'sumex.role.dentist' => 'Dọkita ehin',
-'sumex.role.druggist' => 'Onisegun oogun',
-'sumex.role.ergotherapist' => 'Ergotherapist',
-'sumex.role.hospital' => 'Ile-iwosan',
-'sumex.role.labtechnician' => 'Lab Onimọn ẹrọ',
-'sumex.role.logotherapist' => 'Logotherapist',
-'sumex.role.midwife' => 'Agbẹbi',
-'sumex.role.naturopathicdoctor' => 'Onisegun adayeba',
-'sumex.role.naturopathictherapist' => 'Naturopathictherapist',
-'sumex.role.nursingstaff' => 'Nọọsi Oṣiṣẹ',
-'sumex.role.nutritionist' => 'Oniwosan ounjẹ',
-'sumex.role.other' => 'Omiiran',
-'sumex.role.othertechnician' => 'miiran Onimọn ẹrọ',
-'sumex.role.pharmacist' => 'Oloogun',
-'sumex.role.physician' => 'Onisegun',
-'sumex.role.physiotherapist' => 'Oniwosan ara',
-'sumex.role.psychologist' => 'Onimọ-jinlẹ',
-'sumex.role.transport' => 'Gbigbe',
-'sumex.role.wholesaler' => 'Alataja',
-'sumex.settings' => 'Awọn eto Sumex',
-'sumex.sliptype' => 'Sumex isokuso Iru',
-'sumex.sliptype-esr9' => 'ESR 9 (Isokuso Orange)',
-'sumex.sliptype-esrRed' => 'Isokuso pupa',
-'sumex.sliptype.help' => 'Aṣayan yii yoo yi iru '
-	. 'isokuso pada ni Sumex.'
-	. 'Jọwọ ṣe akiyesi pe ti '
-	. 'o ba yan isokuso Orange '
-	. 'o nilo nọmba alabapin ti '
-	. 'o bẹrẹ pẹlu “01-”',
-'sumex.ssn' => 'AVS',
-'sumex.veka' => 'OSE',
 'sunday' => 'Sunday',
 'system.settings' => 'Eto Eto',
 'table' => 'Tabili',
