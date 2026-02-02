@@ -35,7 +35,7 @@
     "npm-check-updates": "^19.3.2",
     "prettier": "^4.0.0-alpha.13",
     "typedoc": "^0.28.16",
-    "typescript": "^5.9.3",
+    "typescript": "5.9.3",
     "vitepress": "^2.0.0-alpha.15"
   },
   "scripts": {
@@ -43,7 +43,7 @@
     "//preinstall": "⚠️  WARNING: Do not run 'npm install' without reviewing Angular setup! This may conflict with legacy TypeScript configuration.",
     "//info": "📝 Use 'npx ng new' for fresh Angular projects or 'npx ng add' to add Angular to existing projects",
     "//migration": "🔄 This setup integrates Angular with existing Yii3 TypeScript. Review tsconfig.json and angular.json before installing.",
-    "//dependency-note": "⚠️ Angular packages use exact versions (no ^) to prevent peer dependency conflicts. Run 'npm cache clean --force && rm -rf node_modules package-lock.json && npm install' if you encounter ERESOLVE errors.",
+    "//dependency-note": "⚠️ Angular packages use exact versions (no ^) to prevent peer dependency conflicts. The .npmrc file handles this automatically. If issues persist, run: 'npm cache clean --force && rm -rf node_modules package-lock.json && npm install'",
     "build": "npm run build:all",
     "build:all": "npm run build:typescript && npm run build:angular",
     "build:typescript": "npm run build:typescript:prod",
