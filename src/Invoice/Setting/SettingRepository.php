@@ -200,7 +200,7 @@ final class SettingRepository extends Select\Repository
         $provider->setExchangeRate($b, $a, $one_of_b_converts_to_this_of_a);
         $converter = new CurrencyConverter($provider);
         if ($a !== $b) {
-            $money = Money::of($from, $a);
+            $money = Money::of((string) $from, $a);
             // see https://github.com/brick/money#Using an ORM
             $int = $converter->convert($money, $b, null, RoundingMode::Down)
                 // convert to cents in order to use the int
