@@ -34,7 +34,7 @@
         "ext-zend-opcache": "*",
         "azjezz/psl": "4.2",
         "amzn/amazon-pay-api-sdk-php": "^2.7.0",
-        "braintree/braintree_php": "^6.31",
+        "braintree/braintree_php": "^6.32",
         "brick/math": "^0.14.4",
         "brick/money": "^0.11.0",
         "cebe/markdown": "^1.2.1@dev",
