@@ -45,7 +45,7 @@
         "cycle/orm": "^2.13.1",
         "cycle/schema-provider": "^1.0",
         "digitalbazaar/json-ld": "^0.4.8",
-        "doctrine/collections": "^2.6.0",
+        "doctrine/collections": "^3.0.0",
         "doctrine/inflector": "^2.2.0||^3.0",
         "fakerphp/faker": "^1.24.1",
         "google/cloud-translate": "^2.1.2",
@@ -143,7 +143,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.3.1",
-        "zircote/swagger-php": "^4.11.1||^5.8.1"
+        "zircote/swagger-php": ">=6.0.4"
     },    
     "require-dev": {
         "codeception/c3": "^2.9",
