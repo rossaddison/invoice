@@ -32,7 +32,7 @@
         "ext-pdo": "*",
         "ext-sodium": "*",
         "ext-zend-opcache": "*",
-        "azjezz/psl": "4.2",
+        "azjezz/psl": "4.2.1",
         "amzn/amazon-pay-api-sdk-php": "^2.7.0",
         "braintree/braintree_php": "^6.32",
         "brick/math": "^0.14.7",
