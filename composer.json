@@ -150,7 +150,7 @@
         "codeception/codeception": "^5.3.4",
         "codeception/module-asserts": "^3.3.0",
         "codeception/module-cli": "^2.0.1",
-        "codeception/module-phpbrowser": "^3.0.2",
+        "codeception/module-phpbrowser": "^4.0.0",
         "friendsofphp/php-cs-fixer": "^3.93.1",
         "guzzlehttp/promises": ">=2.3",
         "phpunit/phpunit": "^12.5.9",
