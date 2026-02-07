@@ -50,6 +50,9 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>7th February 2026</b></p>
+<p>Using BootstrapCdn via rossaddison/bootstrap5 dev-bootstrap538</p>
+<p>Revert 8.5 testing to 8.4 in composer.json</p>
 <p><b>30th January 2026</b></p>
 <p>Sorted config/common/routes.php according to permission $pVI and $pEI.</p>
 <p>Added rbac to those $pVI routes which were susceptible to browser 

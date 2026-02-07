@@ -19,10 +19,6 @@ class InvoiceAsset extends AssetBundle
         'invoice/css/style.css',
         'yii3i/yii3i.css',
 
-        // bootstrapicons
-        '//cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css',
-        '//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css',
-
         // Automatic asterisk * for required form fields
         'rebuild/css/form.css',
 

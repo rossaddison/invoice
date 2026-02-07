@@ -582,6 +582,7 @@ return [
         'vat_id' => 'GB123456789',
         'tax_code' => 'GBP',
         'tax_currency' => 'GBP',
+        'document_currency' => 'GBP',
         'phone' => '02000000000',
         'fax' => '0200000000',
         'iso_3166_country_identification_code' => 'GB',

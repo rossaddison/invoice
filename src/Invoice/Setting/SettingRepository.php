@@ -778,6 +778,7 @@ final class SettingRepository extends Select\Repository
  * @var string $params['company']['vat_id']
  * @var string $params['company']['tax_code']
  * @var string $params['company']['tax_currency'],
+ * @var string $params['company']['document_currency'],
  * @var string $params['company']['phone']
  * @var string $params['company']['fax']
  * @var string $params['company']['iso_3166_country_identification_code']
@@ -795,6 +796,7 @@ final class SettingRepository extends Select\Repository
             'vat_id' => $params['company']['vat_id'],
             'tax_code' => $params['company']['tax_code'],
             'tax_currency' => $params['company']['tax_currency'],
+            'document_currency' => $params['company']['document_currency'],
             'phone' => $params['company']['phone'],
             'fax' => $params['company']['fax'],
             'iso_3166_country_identification_code' =>
