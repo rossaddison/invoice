@@ -26,7 +26,7 @@ services:
       
       
   db:
-    image: mysql:9.5
+    image: mysql:9.6
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
