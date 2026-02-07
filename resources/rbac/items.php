@@ -13,7 +13,6 @@ return [
             'edit.payment',
             'edit.user.inv',
             'edit.client.peppol',
-            'entry.to.base.controller',
         ],
     ],
     [
