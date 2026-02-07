@@ -8256,12 +8256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rossaddison/yii-auth-client.git",
-                "reference": "1a87f668c386bd1f2c7fe7be1359c08ea376f88c"
+                "reference": "40ccf3ee85b2d1ebe264bac3548a18f98db71cc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/1a87f668c386bd1f2c7fe7be1359c08ea376f88c",
-                "reference": "1a87f668c386bd1f2c7fe7be1359c08ea376f88c",
+                "url": "https://api.github.com/repos/rossaddison/yii-auth-client/zipball/40ccf3ee85b2d1ebe264bac3548a18f98db71cc1",
+                "reference": "40ccf3ee85b2d1ebe264bac3548a18f98db71cc1",
                 "shasum": ""
             },
             "require": {
@@ -8358,7 +8358,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-02-07T13:26:48+00:00"
+            "time": "2026-02-07T19:46:41+00:00"
         },
         {
             "name": "rossaddison/yii-bootstrap5",
