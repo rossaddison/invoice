@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3da01922ad20a08e900806037b8e7c0c",
+    "content-hash": "21140ee284f26f2c4916facc972542b6",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -918,16 +918,16 @@
         },
         {
             "name": "azjezz/psl",
-            "version": "4.2.0",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azjezz/psl.git",
-                "reference": "15153a64c9824335ce11654522e7d88de762d39e"
+                "reference": "28c6752857597a1bb6fa8be16678c144b9097ab8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azjezz/psl/zipball/15153a64c9824335ce11654522e7d88de762d39e",
-                "reference": "15153a64c9824335ce11654522e7d88de762d39e",
+                "url": "https://api.github.com/repos/azjezz/psl/zipball/28c6752857597a1bb6fa8be16678c144b9097ab8",
+                "reference": "28c6752857597a1bb6fa8be16678c144b9097ab8",
                 "shasum": ""
             },
             "require": {
@@ -940,7 +940,7 @@
                 "revolt/event-loop": "^1.0.7"
             },
             "require-dev": {
-                "carthage-software/mago": "^1.0.0-beta.32",
+                "carthage-software/mago": "^1.3.0",
                 "infection/infection": "^0.31.2",
                 "php-coveralls/php-coveralls": "^2.7.0",
                 "phpbench/phpbench": "^1.4.0",
@@ -978,7 +978,7 @@
             "description": "PHP Standard Library",
             "support": {
                 "issues": "https://github.com/azjezz/psl/issues",
-                "source": "https://github.com/azjezz/psl/tree/4.2.0"
+                "source": "https://github.com/azjezz/psl/tree/4.2.1"
             },
             "funding": [
                 {
@@ -990,7 +990,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-25T08:31:40+00:00"
+            "time": "2026-01-29T12:38:33+00:00"
         },
         {
             "name": "braintree/braintree_php",
@@ -7130,16 +7130,16 @@
         },
         {
             "name": "phptg/bot-api",
-            "version": "0.13",
+            "version": "0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phptg/bot-api.git",
-                "reference": "5874a6662c61f01ebf02c4e8f000656d6a07c5a0"
+                "reference": "3dd0589f116ddd288bcd3abc0c312486ed62eb0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phptg/bot-api/zipball/5874a6662c61f01ebf02c4e8f000656d6a07c5a0",
-                "reference": "5874a6662c61f01ebf02c4e8f000656d6a07c5a0",
+                "url": "https://api.github.com/repos/phptg/bot-api/zipball/3dd0589f116ddd288bcd3abc0c312486ed62eb0e",
+                "reference": "3dd0589f116ddd288bcd3abc0c312486ed62eb0e",
                 "shasum": ""
             },
             "require": {
@@ -7156,7 +7156,6 @@
                 "php-http/curl-client": "^2.4.0",
                 "phpunit/phpunit": "^11.5.46",
                 "psr/log": "^3.0.2",
-                "rector/rector": "^2.3.0",
                 "yiisoft/files": "^2.1",
                 "yiisoft/test-support": "^3.1.0"
             },
@@ -7198,7 +7197,17 @@
                 "issues": "https://github.com/phptg/bot-api/issues?state=open",
                 "source": "https://github.com/phptg/bot-api"
             },
-            "time": "2026-01-18T17:58:15+00:00"
+            "funding": [
+                {
+                    "url": "https://boosty.to/vjik",
+                    "type": "boosty"
+                },
+                {
+                    "url": "https://pay.cloudtips.ru/p/192ce69b",
+                    "type": "cloudtips"
+                }
+            ],
+            "time": "2026-02-07T08:23:49+00:00"
         },
         {
             "name": "promphp/prometheus_client_php",
@@ -24960,7 +24969,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "8.3 - 8.4",
+        "php": "8.3 - 8.5",
         "ext-apcu": "*",
         "ext-curl": "*",
         "ext-dom": "*",
