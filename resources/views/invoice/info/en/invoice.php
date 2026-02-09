@@ -50,6 +50,8 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>9th February 2026</b></p>
+<p>Bootstrap 5.3.8: Options buttons on salesorder and inv views: Replace 'options btn-group' with 'dropdown'</p>
 <p><b>7th February 2026</b></p>
 <p>Using BootstrapCdn via rossaddison/bootstrap5 dev-bootstrap538</p>
 <p>Revert 8.5 testing to 8.4 in composer.json</p>

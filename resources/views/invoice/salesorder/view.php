@@ -73,12 +73,16 @@ $vat = $s->getSetting('enable_vat_registration');
     ?>
     </h1>
         <div class="headerbar-item pull-right btn-group">
-        <div class="options btn-group">
-            <a class="btn btn-default" data-bs-toggle="dropdown" href="#">
-                <i class="fa fa-chevron-down"></i><?= $translator->translate('options'); ?>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-right">
-                <?php
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                <?= $translator->translate('options'); ?>
+                </button>
+                <ul class="dropdown-menu dropdown-menu">
+            
+<?php
             if ($invEdit) { ?> 
                 <li>
                     <a href="<?= $urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]) ?>" style="text-decoration:none">
@@ -93,19 +97,19 @@ $vat = $s->getSetting('enable_vat_registration');
                         <?= $translator->translate('download.pdf'); ?>
                     </a>
                 </li>
-                <?php
-            // if there is a sales order number do not show button
-            // if the status is draft do not show button
-            // only show the button if the sales order has reached invoice generate stage ie 6
-            if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
+<?php
+// if there is a sales order number do not show button
+// if the status is draft do not show button
+// only show the button if the sales order has reached invoice generate stage ie 6
+if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
             } else {?> 
                     <?php if ($invEdit) { ?> 
-                        <li>
+                <li>
                             <a href="#so-to-invoice" data-bs-toggle="modal"  style="text-decoration:none">
-                                <i class="fa fa-refresh fa-margin"></i>
-                                <?= $translator->translate('salesorder.to.invoice'); ?>
-                            </a>
-                        </li>
+                        <i class="fa fa-refresh fa-margin"></i>
+                        <?= $translator->translate('salesorder.to.invoice'); ?>
+                    </a>
+                </li>
                     <?php } ?>    
                 <?php } ?>
             </ul>
@@ -121,7 +125,7 @@ $vat = $s->getSetting('enable_vat_registration');
                 <div class="col-xs-12 col-sm-6 col-md-5">
                     <h3>
                         <a href="<?= $urlGenerator->generate('client/view', ['id' => $so->getClient()?->getClient_id()]); ?>">
-                            <?= Html::encode($clienthelper->format_client($so->getClient())); ?>
+            <?= Html::encode($clienthelper->format_client($so->getClient())); ?>
                         </a>
                     </h3>
                     <br>
@@ -150,20 +154,20 @@ $vat = $s->getSetting('enable_vat_registration');
                     <hr>
                     <?php if (null !== $so->getClient()?->getClient_phone()): ?>
                         <div class="client-phone">
-                            <?= $translator->translate('phone'); ?>:&nbsp;
-                            <?= Html::encode($so->getClient()?->getClient_phone()); ?>
+                        <?= $translator->translate('phone'); ?>:&nbsp;
+                        <?= Html::encode($so->getClient()?->getClient_phone()); ?>
                         </div>
                     <?php endif; ?>
                     <?php if (null !== $so->getClient()?->getClient_mobile()): ?>
                         <div class="client-mobile">
-                            <?= $translator->translate('mobile'); ?>:&nbsp;
-                            <?= Html::encode($so->getClient()?->getClient_mobile()); ?>
+                        <?= $translator->translate('mobile'); ?>:&nbsp;
+                        <?= Html::encode($so->getClient()?->getClient_mobile()); ?>
                         </div>
                     <?php endif; ?>
                     <?php if (null !== $so->getClient()?->getClient_email()): ?>
                         <div class='client-email'>
-                            <?= $translator->translate('email'); ?>:&nbsp;
-                            <?= Html::encode($so->getClient()?->getClient_email()); ?>
+                        <?= $translator->translate('email'); ?>:&nbsp;
+                        <?= Html::encode($so->getClient()?->getClient_email()); ?>
                         </div>
                     <?php endif; ?>
                     <br>
@@ -179,11 +183,11 @@ $vat = $s->getSetting('enable_vat_registration');
 
                                 <div>
                                     <label for="salesorder_number">
-                                        <?= $translator->translate('salesorder'); ?> #
+                                    <?= $translator->translate('salesorder'); ?> #
                                     </label>
                                     <input type="text" id="salesorder_number" class="form-control" readonly
-                                        <?php if (null !== $so->getNumber()) : ?> value="<?= $so->getNumber(); ?>"
-                                        <?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
+<?php if (null !== $so->getNumber()) : ?> value="<?= $so->getNumber(); ?>"
+<?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
                                         <?php endif; ?>>
                                 </div>                                
                                 <div has-feedback">
@@ -220,16 +224,16 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </div>
                                 <?php } ?>
                                 <div>
-                                    <?php
-                                        /**
-                                         * @var App\Invoice\Entity\CustomField $customField
-                                         */
-                                        foreach ($customFields as $customField): ?>
-                                        <?php if ($customField->getLocation() !== 1) {
-                                            continue;
-                                        } ?>
+<?php
+    /**
+     * @var App\Invoice\Entity\CustomField $customField
+     */
+    foreach ($customFields as $customField): ?>
+    <?php if ($customField->getLocation() !== 1) {
+        continue;
+    } ?>
                                         <?php  $cvH->print_field_for_view($customField, $form, $salesOrderCustomValues, $customValues); ?>                                   
-                                    <?php endforeach; ?>
+<?php endforeach; ?>
                                 </div>    
                             </div>
                             <div class="col-xs-12 col-md-6">
@@ -240,43 +244,43 @@ $vat = $s->getSetting('enable_vat_registration');
                                     </label>
                                     <select name="status_id" id="status_id" disabled
                                             class="form-control">
-                                        <?php
-                                            /**
-                                             * @var string $key
-                                             * @var array $status
-                                             * @var string $status['label']
-                                             */
-                                            foreach ($soStatuses as $key => $status) { ?>
+<?php
+    /**
+     * @var string $key
+     * @var array $status
+     * @var string $status['label']
+     */
+    foreach ($soStatuses as $key => $status) { ?>
                                             <option value="<?php echo $key; ?>" <?php if ($key == $so->getStatus_id()) {
-                                                $s->check_select(Html::encode($so->getStatus_id() ?? ''), $key);
+    $s->check_select(Html::encode($so->getStatus_id() ?? ''), $key);
                                             } ?>>
-                                                <?= Html::encode($status['label']); ?> 
+                                        <?= Html::encode($status['label']); ?> 
                                             </option>
                                         <?php } ?>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="salesorder_password" hidden>
-                                        <?= $translator->translate('salesorder.password'); ?>
+                           <?= $translator->translate('salesorder.password'); ?>
                                     </label>
                                     <input type="text" id="salesorder_password" class="form-control" disabled value="<?= Html::encode($so->getPassword() ?? ''); ?>" hidden>
                                 </div>
                                 <div>
                                     <label for="salesorder_client_purchase_order_number">
-                                        <?= $translator->translate('salesorder.clients.purchase.order.number'); ?>
+      <?= $translator->translate('salesorder.clients.purchase.order.number'); ?>
                                     </label>
                                     <input type="text" id="salesorder_client_purchase_order_number" class="form-control" disabled value="<?= Html::encode($so->getClient_po_number() ?? ''); ?>">
                                 </div>
                                 <div>
                                     <label for="salesorder_client_purchase_order_person">
-                                        <?= $translator->translate('salesorder.clients.purchase.order.person'); ?>
+      <?= $translator->translate('salesorder.clients.purchase.order.person'); ?>
                                     </label>
                                     <input type="text" id="salesorder_client_purchase_order_number" class="form-control" disabled value="<?= Html::encode($so->getClient_po_person() ?? ''); ?>">
                                 </div>
                                
                                     <?php
-                                        // 2 => Terms Agreement Required 8=> Rejected
-                                        if (in_array($so->getStatus_id(), [2,8]) && !$invEdit) { ?>
+                                   // 2 => Terms Agreement Required 8=> Rejected
+                     if (in_array($so->getStatus_id(), [2,8]) && !$invEdit) { ?>
                                         <div>
                                             <br>
                                             <a href="<?= $urlGenerator->generate('salesorder/url_key', ['key' => $so->getUrl_key()]); ?>" class="btn btn-success">  
@@ -295,7 +299,7 @@ $vat = $s->getSetting('enable_vat_registration');
    <div id="partial_item_table_parameters" so_items="<?php $soItems; ?>" disabled>
     <?=
        $partial_item_table;
-    ?>     
+    ?>
    </div>
     
    <div class = 'row'>
@@ -313,14 +317,14 @@ $vat = $s->getSetting('enable_vat_registration');
                 <div class="col-xs-12 visible-xs visible-sm"><br></div>
             </div>
             <div id="view_partial_inv_delivery_location" class="col-xs-12 col-md-6">
-                <?= $partial_quote_delivery_location; ?>                
-            </div> 
+                <?= $partial_quote_delivery_location; ?>
+            </div>
             <div id="view_custom_fields" class="col-xs-12 col-md-6">
                  <?php echo $view_custom_fields; ?>
             </div>
     </div>
 </div>
-</div>    
-<div>  
+</div>
+<div>
 </div>
        

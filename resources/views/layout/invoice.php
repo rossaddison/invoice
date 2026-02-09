@@ -24,6 +24,7 @@ use Yiisoft\Bootstrap5\OffcanvasPlacement;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\Img;
 use Yiisoft\Html\Tag\Style;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Meta;
@@ -124,7 +125,7 @@ $this->beginPage();
         <?= Meta::pragmaDirective('X-UA-Compatible', 'IE=edge') ?>
         <?=
             // Bootstrap5's Responsive Metatag
-            Meta::data('viewport', 'width=device-width, initial-scale=1') 
+            Meta::data('viewport', 'width=device-width, initial-scale=1')
         ?>
         <?= Style::tag()->content('#nprogress .bar {
                     height: 2px !important; /* ~2mm */
@@ -287,6 +288,68 @@ if ((null !== $currentPath) && !$isGuest) {
                     $urlGenerator->generate($ifaq,
                         [$tpc => 'ai_callback_session', $sel => ''])),
             ),
+            // E-Invoicing
+            Dropdown::widget()
+            ->addClass('navbar fs-4')
+            ->attributes([
+                'style' => 'background-color: #ffcccb',
+            ])
+            ->togglerVariant(ButtonVariant::INFO)
+            ->togglerContent(Img::tag()
+                         ->width(40)
+                         ->height(30)
+                         ->src('/site/e-invoice-emoji.png'))
+            ->togglerSize(ButtonSize::SMALL)
+            ->items(
+                DropdownItem::link('European Invoicing',
+'https://ec.europa.eu/digital-building-blocks/'
+                        . 'wikis/display/'
+                        . 'DIGITAL/Compliance+with+eInvoicing+standard',
+                        itemAttributes: ['target' => '_blank']),
+                DropdownItem::link('European Digital Testing',
+'https://ec.europa.eu/digital-building-blocks/wikis/display/DIGITAL/'
+                        . 'eInvoicing+Conformance+Testing'),
+                DropdownItem::link('What does a Peppol ID look like?',
+'https://ecosio.com/en/blog/how-peppol-ids-work/'),
+                DropdownItem::link('Peppol Accounting Requirements',
+'https://docs.peppol.eu/poacc/billing/3.0/bis/#accountingreq'),
+                DropdownItem::link('➡️ Peppol Billing 3.0 - Syntax',
+'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/',
+                        itemAttributes: ['target' => '_blank']),
+                DropdownItem::link('➡️ Peppol Billing 3.0 - Tree',
+'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/tree/',
+                        itemAttributes: ['target' => '_blank']),
+                DropdownItem::link('Universal Business Language 2.1 (UBL)',
+'https://www.datypic.com/sc/ubl21/ss.html'),
+                DropdownItem::link('StoreCove Documentation',
+'https://www.storecove.com/docs'),
+                DropdownItem::link('Peppol Company Search',
+'https://directory.peppol.eu/public'),
+                DropdownItem::link('ISO 3 letter currency codes - 4217 alpha-3',
+'https://www.iso.org/iso-4217-currency-codes.html'),
+                DropdownItem::link('Xml Example 2.1',
+            'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/',
+            itemAttributes: ['target' => '_blank']),
+                DropdownItem::link(content: 'Xml Example 3.0', url:
+'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/'
+                    . 'rules/examples/base-example.xml',
+            itemAttributes: ['target' => '_blank']),
+                DropdownItem::link('Ecosio Xml Validator',
+                    'https://ecosio.com/en/peppol-and-xml-document-validator/',
+                    itemAttributes: ['target' => '_blank']),
+                DropdownItem::link('Xml CodeLists',
+'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/structure/codelist'),
+                DropdownItem::link('Convert XML to PHP Array Online',
+'https://wtools.io/convert-xml-to-php-array'),
+                DropdownItem::link('Writing XML using Sabre',
+'https://sabre.io/xml/writing/'),
+                DropdownItem::link('Scotland - e-invoice Template - Lessons Learned',
+'https://www.gov.scot/publications/einvoicing-guide/documents/'),
+                DropdownItem::divider(),
+                DropdownItem::link('Understanding Same Site Cookies',
+'https://andrewlock.net/understanding-samesite-cookies/'
+. '#:~:text=SameSite%3DLax%20cookies%20are%20not,Lax%20(or%20Strict%20)%20cookies'),
+            ),
             // Generator
             Dropdown::widget()
             ->addClass('navbar fs-4')
@@ -360,7 +423,8 @@ if ((null !== $currentPath) && !$isGuest) {
                     false,
                     false,
                     ['data-bs-toggle' => 'tooltip',
-                        'title' => 'Translate resources/views/invoice/info/en/invoice.php',
+                        'title' => 'Translate resources/views/invoice/info/en/'
+                        . 'invoice.php',
                             'hidden' => !$debugMode],
                 ),
                 DropdownItem::link(
@@ -552,55 +616,6 @@ if ((null !== $currentPath) && !$isGuest) {
 'https://bootstrapbrain.com/template/free-bootstrap-5-multipurpose-one-page-template-wave/'),
                 DropdownItem::link('Html to Markdown',
                     'https://convertsimple.com/convert-html-to-markdown/'),
-                DropdownItem::divider(),
-                DropdownItem::link('European Invoicing',
-'https://ec.europa.eu/digital-building-blocks/'
-                        . 'wikis/display/'
-                        . 'DIGITAL/Compliance+with+eInvoicing+standard',
-                        itemAttributes: ['target' => '_blank']),
-                DropdownItem::link('European Digital Testing',
-'https://ec.europa.eu/digital-building-blocks/wikis/display/DIGITAL/'
-                        . 'eInvoicing+Conformance+Testing'),
-                DropdownItem::link('What does a Peppol ID look like?',
-'https://ecosio.com/en/blog/how-peppol-ids-work/'),
-                DropdownItem::link('Peppol Accounting Requirements',
-'https://docs.peppol.eu/poacc/billing/3.0/bis/#accountingreq'),
-                DropdownItem::link('➡️ Peppol Billing 3.0 - Syntax',
-'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/',
-                        itemAttributes: ['target' => '_blank']),
-                DropdownItem::link('➡️ Peppol Billing 3.0 - Tree',
-'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/tree/',
-                        itemAttributes: ['target' => '_blank']),
-                DropdownItem::link('Universal Business Language 2.1 (UBL)',
-'https://www.datypic.com/sc/ubl21/ss.html'),
-                DropdownItem::link('StoreCove Documentation',
-'https://www.storecove.com/docs'),
-                DropdownItem::link('Peppol Company Search',
-'https://directory.peppol.eu/public'),
-                DropdownItem::link('ISO 3 letter currency codes - 4217 alpha-3',
-'https://www.iso.org/iso-4217-currency-codes.html'),
-                DropdownItem::link('Xml Example 2.1',
-            'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/',
-            itemAttributes: ['target' => '_blank']),
-                DropdownItem::link(content: 'Xml Example 3.0', url:
-'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/'
-                    . 'rules/examples/base-example.xml',
-            itemAttributes: ['target' => '_blank']),
-                DropdownItem::link('Ecosio Xml Validator',
-                    'https://ecosio.com/en/peppol-and-xml-document-validator/',
-                    itemAttributes: ['target' => '_blank']),
-                DropdownItem::link('Xml CodeLists',
-'https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/structure/codelist'),
-                DropdownItem::link('Convert XML to PHP Array Online',
-'https://wtools.io/convert-xml-to-php-array'),
-                DropdownItem::link('Writing XML using Sabre',
-'https://sabre.io/xml/writing/'),
-                DropdownItem::link('Scotland - e-invoice Template - Lessons Learned',
-'https://www.gov.scot/publications/einvoicing-guide/documents/'),
-                DropdownItem::divider(),
-                DropdownItem::link('Understanding Same Site Cookies',
-'https://andrewlock.net/understanding-samesite-cookies/'
-. '#:~:text=SameSite%3DLax%20cookies%20are%20not,Lax%20(or%20Strict%20)%20cookies'),
                 DropdownItem::divider(),
                 DropdownItem::link('HMRC Developer Hub',
 'https://developer.service.hmrc.gov.uk/developer/login'),

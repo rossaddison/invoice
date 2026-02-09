@@ -47,11 +47,9 @@ final class PrometheusController extends BaseController
      * This endpoint is scraped by Prometheus server to collect metrics.
      * Compatible with Grafana dashboards and integrates with node_exporter
      * and windows_exporter metrics.
-     * 
-     * @param Request $request
      * @return Response
      */
-    public function metrics(Request $request): Response
+    public function metrics(): Response
     {
         try {
             // Update system metrics before rendering
@@ -81,14 +79,11 @@ final class PrometheusController extends BaseController
 
     /**
      * Health check endpoint for monitoring
-     * 
      * Returns detailed health information in JSON format.
      * Can be used by monitoring systems to check application status.
-     * 
-     * @param Request $request
      * @return Response
      */
-    public function health(Request $request): Response
+    public function health(): Response
     {
         try {
             $healthData = $this->prometheusService->performHealthCheck();
@@ -127,11 +122,9 @@ final class PrometheusController extends BaseController
      *
      * Provides a simple web interface to view current metrics.
      * Useful for development and debugging.
-     *
-     * @param Request $request
      * @return Response
      */
-    public function dashboard(Request $request): Response
+    public function dashboard(): Response
     {
         $healthData = $this->prometheusService->performHealthCheck();
         $metricsOutput = $this->prometheusService->renderMetrics();

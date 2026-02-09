@@ -718,7 +718,7 @@ final class QuoteController extends BaseController
             $user_client = $ucR->repoUserquery((string) $client_id);
             // Ensure that the client has only one (paying) user account
             // otherwise reject this quote
-            // Related logic: see UserClientRepository 
+            // Related logic: see UserClientRepository
             // function get_not_assigned_to_user which ensures that only
             // clients that have   NOT   been assigned to a user account are
             // presented in the dropdown box for available clients

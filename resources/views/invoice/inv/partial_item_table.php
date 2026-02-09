@@ -164,7 +164,8 @@ foreach ($invItems as $item) {
                                     <?= $translator->translate('quantity'); ?>
                                 </b>
                             </span>
-                            <input disabled type="text"
+                            <input disabled
+                                   type="text"
                                    maxlength="4"
                                    size="4"
                                    name="item_quantity"
@@ -180,7 +181,8 @@ foreach ($invItems as $item) {
                           <span class="input-group-text">
                             <b><?= $translator->translate('price'); ?></b>
                           </span>
-                          <input disabled type="text"
+                          <input disabled
+                                 type="text"
                                  maxlength="4"
                                  size="4"
                                  name="item_price"
@@ -199,7 +201,8 @@ foreach ($invItems as $item) {
                                         $translator->translate('cash.discount'); ?>
                                 </b>
                             </span>
-                            <input disabled type="text"
+                            <input disabled
+                                   type="text"
                                    maxlength="4"
                                    size="4"
                                    name="item_discount_amount"
@@ -224,7 +227,8 @@ foreach ($invItems as $item) {
                                     $translator->translate('vat.rate') ?>
                                 </b>
                             </span>
-                            <select disabled name="item_tax_rate_id"
+                            <select disabled
+                                    name="item_tax_rate_id"
                                     class="form-control"
                                     data-bs-toggle = "tooltip"
                                     title="inv_item->tax_rate_id">
@@ -573,7 +577,7 @@ foreach ($invItems as $item) {
                         <br/>
                         <span name="item_total"
                               class="amount"
-                              data-bs-toggle = "tooltip"
+                              data-bs-toggle="tooltip"
                               title="inv_item_amount->total">
     <?= $numberHelper->format_currency(
             $invItemAmountR->repoInvItemAmountquery(

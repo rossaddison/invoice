@@ -97,14 +97,6 @@ echo Form::tag()
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'discount_amount')
-                    ->disabled(false)
-                    ->addInputAttributes(['class' => 'form-control'])
-                    ->value(Html::encode($form->getDiscount_amount()));
-                ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
                 <?= Field::textarea($form, 'notes')
     ->label($translator->translate('note'))
     ->addInputAttributes(['class' => 'form-control'])

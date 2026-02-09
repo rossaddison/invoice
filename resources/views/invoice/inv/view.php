@@ -239,7 +239,7 @@ echo Html::encode($translator->translate('invoice')) . ' ';
 echo(Html::encode(strlen($inv->getNumber() ?? '') > 0 ?
         ' #' . ($inv->getNumber() ?? ' #') : $inv->getId()));
 ?>
-        </h1>        
+        </h1>
         
 <?=
 // Toolbar
@@ -249,14 +249,14 @@ echo(Html::encode(strlen($inv->getNumber() ?? '') > 0 ?
         <div class="headerbar-item pull-left
 <?php if ($inv->getIs_read_only() === false || $inv->getStatus_id() !== 4) { ?>
                     btn-group<?php } ?>">
-            <div class="options btn-group">
-                <a class="btn btn-default"
-                   data-bs-toggle="dropdown"
-                   href="#">
-                    <i class="fa fa-chevron-down"></i>
-                    <?= $translator->translate('options'); ?>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                <?= $translator->translate('options'); ?>
+                </button>
+                <ul class="dropdown-menu dropdown-menu">
 <?php
 // Options...Edit
 if ($showButtons && $invEdit) {

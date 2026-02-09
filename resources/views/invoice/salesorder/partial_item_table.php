@@ -344,15 +344,11 @@ foreach ($soItems as $item) {
                             <?php } ?>
                         <?php } ?>
                         <?php if ($editClientPeppol === true) { ?>
-                            <span data-bs-toggle="tooltip"
-                                  title="<?= $translator->translate(
-                                          'invoice.peppol.edit.item'); ?>">
-                                <a class="btn btn-primary fa fa-edit"
-                                   href="<?= $urlGenerator->generate(
-                                           'salesorderitem/edit',
-                                           ['id' => $item->getId()]); ?>"
-                                   style="text-decoration:none">
-                                </a>
+                            <span>
+                                <a class="btn btn-primary"
+                                   href="
+<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]); ?>"
+                                   style="text-decoration:none"><?= '🖉'; ?></a>
                             </span>
                         <?php } ?>
                     </td>

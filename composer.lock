@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6bd1e066a7f673d2ad6a50aeae7ce4ee",
+    "content-hash": "16d4cb3e2115ebdebc1bd69cb53ff5b4",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -5146,16 +5146,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v3.8.0",
+            "version": "v3.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "4a319d1c779fd9a1108402950482b009e681bb9e"
+                "reference": "e3c09fa114f5e2c3f6761830752d7450bf1c2546"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/4a319d1c779fd9a1108402950482b009e681bb9e",
-                "reference": "4a319d1c779fd9a1108402950482b009e681bb9e",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/e3c09fa114f5e2c3f6761830752d7450bf1c2546",
+                "reference": "e3c09fa114f5e2c3f6761830752d7450bf1c2546",
                 "shasum": ""
             },
             "require": {
@@ -5236,9 +5236,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v3.8.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v3.9.0"
             },
-            "time": "2026-01-06T18:53:26+00:00"
+            "time": "2026-02-09T08:55:10+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -5629,16 +5629,16 @@
         },
         {
             "name": "nette/php-generator",
-            "version": "v4.2.0",
+            "version": "v4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/php-generator.git",
-                "reference": "4707546a1f11badd72f5d82af4f8a6bc64bd56ac"
+                "reference": "52aff4d9b12f20ca9f3e31a559b646d2fd21dd61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/php-generator/zipball/4707546a1f11badd72f5d82af4f8a6bc64bd56ac",
-                "reference": "4707546a1f11badd72f5d82af4f8a6bc64bd56ac",
+                "url": "https://api.github.com/repos/nette/php-generator/zipball/52aff4d9b12f20ca9f3e31a559b646d2fd21dd61",
+                "reference": "52aff4d9b12f20ca9f3e31a559b646d2fd21dd61",
                 "shasum": ""
             },
             "require": {
@@ -5647,9 +5647,9 @@
             },
             "require-dev": {
                 "jetbrains/phpstorm-attributes": "^1.2",
-                "nette/tester": "^2.4",
+                "nette/tester": "^2.6",
                 "nikic/php-parser": "^5.0",
-                "phpstan/phpstan-nette": "^2.0@stable",
+                "phpstan/phpstan": "^2.0@stable",
                 "tracy/tracy": "^2.8"
             },
             "suggest": {
@@ -5695,9 +5695,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/php-generator/issues",
-                "source": "https://github.com/nette/php-generator/tree/v4.2.0"
+                "source": "https://github.com/nette/php-generator/tree/v4.2.1"
             },
-            "time": "2025-08-06T18:24:31+00:00"
+            "time": "2026-02-09T05:43:31+00:00"
         },
         {
             "name": "nette/utils",
@@ -8420,65 +8420,6 @@
                 }
             ],
             "time": "2026-02-07T19:46:41+00:00"
-        },
-        {
-            "name": "rossaddison/yii-bootstrap5",
-            "version": "dev-bootstrap538",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rossaddison/yii-bootstrap5.git",
-                "reference": "7ad9714ab71763f10ff34f3f870305669a5ee01a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rossaddison/yii-bootstrap5/zipball/7ad9714ab71763f10ff34f3f870305669a5ee01a",
-                "reference": "7ad9714ab71763f10ff34f3f870305669a5ee01a",
-                "shasum": ""
-            },
-            "require": {
-                "php": "8.1 - 8.5",
-                "yiisoft/html": "^3.0",
-                "yiisoft/widget": "^2.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.92.5",
-                "maglnet/composer-require-checker": "^4.1",
-                "phpunit/phpunit": "^10.5",
-                "rector/rector": "^2.0",
-                "roave/infection-static-analysis-plugin": "^1.35",
-                "spatie/phpunit-watcher": "^1.23",
-                "vimeo/psalm": "^5.26.1|^6.4.1",
-                "yiisoft/aliases": "^3.0",
-                "yiisoft/di": "^1.0"
-            },
-            "suggest": {
-                "yiisoft/assets": "Register assets with Yiisoft\\Assets\\AssetManager",
-                "yiisoft/files": "Use PathMatcher to filter assets"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Yiisoft\\Bootstrap5\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Yii Framework Twitter Bootstrap 5 Extension",
-            "keywords": [
-                "bootstrap5",
-                "yii"
-            ],
-            "support": {
-                "chat": "https://t.me/yii3en",
-                "forum": "https://www.yiiframework.com/forum/",
-                "irc": "ircs://irc.libera.chat:6697/yii",
-                "issues": "https://github.com/yiisoft/bootstrap5/issues?state=open",
-                "source": "https://github.com/yiisoft/bootstrap5",
-                "wiki": "https://www.yiiframework.com/wiki/"
-            },
-            "time": "2026-02-07T16:39:17+00:00"
         },
         {
             "name": "rossaddison/yii-gii",
@@ -12946,16 +12887,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "6.15.0",
+            "version": "6.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "204d06619833a297b402cbc66be7f2df74437db4"
+                "reference": "28dc127af1b5aecd52314f6f645bafc10d0e11f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/204d06619833a297b402cbc66be7f2df74437db4",
-                "reference": "204d06619833a297b402cbc66be7f2df74437db4",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/28dc127af1b5aecd52314f6f645bafc10d0e11f9",
+                "reference": "28dc127af1b5aecd52314f6f645bafc10d0e11f9",
                 "shasum": ""
             },
             "require": {
@@ -12979,7 +12920,7 @@
                 "netresearch/jsonmapper": "^5.0",
                 "nikic/php-parser": "^5.0.0",
                 "php": "~8.1.31 || ~8.2.27 || ~8.3.16 || ~8.4.3 || ~8.5.0",
-                "sebastian/diff": "^4.0 || ^5.0 || ^6.0 || ^7.0",
+                "sebastian/diff": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0",
                 "spatie/array-to-xml": "^2.17.0 || ^3.0",
                 "symfony/console": "^6.0 || ^7.0 || ^8.0",
                 "symfony/filesystem": "~6.3.12 || ~6.4.3 || ^7.0.3 || ^8.0",
@@ -13060,7 +13001,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm"
             },
-            "time": "2026-01-30T13:53:17+00:00"
+            "time": "2026-02-07T19:27:16+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -13838,6 +13779,74 @@
                 }
             ],
             "time": "2025-12-17T13:13:44+00:00"
+        },
+        {
+            "name": "yiisoft/bootstrap5",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/bootstrap5.git",
+                "reference": "f8770e4281b7dbbb33c7b695e64a52d360795fc7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/bootstrap5/zipball/f8770e4281b7dbbb33c7b695e64a52d360795fc7",
+                "reference": "f8770e4281b7dbbb33c7b695e64a52d360795fc7",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "yiisoft/html": "^3.0",
+                "yiisoft/widget": "^2.0"
+            },
+            "require-dev": {
+                "maglnet/composer-require-checker": "^4.1",
+                "phpunit/phpunit": "^10.5",
+                "rector/rector": "^2.0",
+                "roave/infection-static-analysis-plugin": "^1.35",
+                "spatie/phpunit-watcher": "^1.23",
+                "vimeo/psalm": "^5.26.1|^6.4.1",
+                "yiisoft/aliases": "^3.0",
+                "yiisoft/di": "^1.0"
+            },
+            "suggest": {
+                "yiisoft/assets": "Register assets with Yiisoft\\Assets\\AssetManager",
+                "yiisoft/files": "Use PathMatcher to filter assets"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Yiisoft\\Bootstrap5\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Yii Framework Twitter Bootstrap 5 Extension",
+            "keywords": [
+                "bootstrap5",
+                "yii"
+            ],
+            "support": {
+                "chat": "https://t.me/yii3en",
+                "forum": "https://www.yiiframework.com/forum/",
+                "irc": "ircs://irc.libera.chat:6697/yii",
+                "issues": "https://github.com/yiisoft/bootstrap5/issues?state=open",
+                "source": "https://github.com/yiisoft/bootstrap5",
+                "wiki": "https://www.yiiframework.com/wiki/"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/yiisoft",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/yiisoft",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2025-04-13T19:55:03+00:00"
         },
         {
             "name": "yiisoft/cache",
@@ -21258,16 +21267,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.5.9",
+            "version": "12.5.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "83d4c158526c879b4c5cf7149d27958b6d912373"
+                "reference": "1686e30f6b32d35592f878a7f56fd0421d7d56c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/83d4c158526c879b4c5cf7149d27958b6d912373",
-                "reference": "83d4c158526c879b4c5cf7149d27958b6d912373",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1686e30f6b32d35592f878a7f56fd0421d7d56c5",
+                "reference": "1686e30f6b32d35592f878a7f56fd0421d7d56c5",
                 "shasum": ""
             },
             "require": {
@@ -21281,7 +21290,7 @@
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.3",
-                "phpunit/php-code-coverage": "^12.5.2",
+                "phpunit/php-code-coverage": "^12.5.3",
                 "phpunit/php-file-iterator": "^6.0.1",
                 "phpunit/php-invoker": "^6.0.0",
                 "phpunit/php-text-template": "^5.0.0",
@@ -21336,7 +21345,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.9"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.10"
             },
             "funding": [
                 {
@@ -21360,7 +21369,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-05T08:01:09+00:00"
+            "time": "2026-02-08T07:06:48+00:00"
         },
         {
             "name": "psy/psysh",
@@ -22158,12 +22167,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "7ea2d110787f6807213e27a1255c6b858ad99d89"
+                "reference": "c9bc175c224c05354a704903e6f38c31776d40e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/7ea2d110787f6807213e27a1255c6b858ad99d89",
-                "reference": "7ea2d110787f6807213e27a1255c6b858ad99d89",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c9bc175c224c05354a704903e6f38c31776d40e3",
+                "reference": "c9bc175c224c05354a704903e6f38c31776d40e3",
                 "shasum": ""
             },
             "conflict": {
@@ -22194,6 +22203,7 @@
                 "amphp/artax": "<1.0.6|>=2,<2.0.6",
                 "amphp/http": "<=1.7.2|>=2,<=2.1",
                 "amphp/http-client": ">=4,<4.4",
+                "amphp/http-server": ">=2.0.0.0-RC1-dev,<2.1.10|>=3.0.0.0-beta1,<3.4.4",
                 "anchorcms/anchor-cms": "<=0.12.7",
                 "andreapollastri/cipi": "<=3.1.15",
                 "andrewhaine/silverstripe-form-capture": ">=0.2,<=0.2.3|>=1,<1.0.2|>=2,<2.2.5",
@@ -23169,7 +23179,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-05T22:08:29+00:00"
+            "time": "2026-02-09T09:24:23+00:00"
         },
         {
             "name": "sanmai/di-container",
@@ -25092,7 +25102,6 @@
         "cebe/markdown": 20,
         "roave/security-advisories": 20,
         "rossaddison/yii-auth-client": 20,
-        "rossaddison/yii-bootstrap5": 20,
         "yiisoft/data-cycle": 20,
         "yiisoft/rate-limiter": 20,
         "yiisoft/requirements": 20
