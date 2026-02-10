@@ -55,6 +55,10 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make sq                - Snyk Security Check (Quick - High Severity Only)"
 	@echo "make sf                - Snyk Security Check (Full - Code + Dependencies)"
 	@echo "make sd                - Snyk Security Check (Dependencies Only)"
+	@echo "make pcs               - PHP CodeSniffer: Check 85-char line length"
+	@echo "make pcsf FILE=src/Foo.php - PHP CodeSniffer: Check specific file"
+	@echo "make pcsd DIR=src/         - PHP CodeSniffer: Check specific directory"
+	@echo "make pcsr              - PHP CodeSniffer: Full report with details"
 	@echo "make sc FILE=path/to/file      - Snyk Security Code Check on Specific File"
 	@echo "make ss                - Snyk Security Summary (Total Issues Count Only)"
 	@echo "make sj                - Snyk Security JSON Output (Machine Readable)"
@@ -506,4 +510,40 @@ info: ## System Info / Diagnostics
 	npm list --depth=0
 endif
 
-.PHONY: menu help install p pf pd pc pi cas co cwn ccl cv cda cu nu nco nsu nmu nma nes2024 nvm na crc ct cb rdr rmc csd csf sq sf sd sc ss sj sh serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb
+#
+# PHP CodeSniffer Line Length Checking (85 characters)
+#
+
+ifeq ($(PRIMARY_GOAL),pcs)
+pcs: ## Run PHP CodeSniffer to check 85-character line length
+	@echo "Checking PHP files for 85-character line length limit..."
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist
+endif
+
+ifeq ($(PRIMARY_GOAL),pcsf)
+pcsf: ## Run PHP CodeSniffer on specific file (usage: make pcsf FILE=src/Invoice.php)
+ifndef FILE
+	$(error Please provide FILE, e.g. 'make pcsf FILE=src/Invoice/Invoice.php')
+endif
+	@echo "Checking $(FILE) for 85-character line length..."
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=Generic --sniffs=Generic.Files.LineLength \
+		--runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 $(FILE)
+endif
+
+ifeq ($(PRIMARY_GOAL),pcsd)
+pcsd: ## Run PHP CodeSniffer on specific directory (usage: make pcsd DIR=src/)
+ifndef DIR
+	$(error Please provide DIR, e.g. 'make pcsd DIR=src/')
+endif
+	@echo "Checking $(DIR) for 85-character line length..."
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=Generic --sniffs=Generic.Files.LineLength \
+		--runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 $(DIR)
+endif
+
+ifeq ($(PRIMARY_GOAL),pcsr)
+pcsr: ## Run PHP CodeSniffer with detailed report
+	@echo "Running detailed line length report..."
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-width=120
+endif
+
+.PHONY: menu help install p pf pd pc pi cas co cwn ccl cv cda cu nu nco nsu nmu nma nes2024 nvm na crc ct cb rdr rmc csd csf sq sf sd sc ss sj sh serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb pcs pcsf pcsd pcsr
