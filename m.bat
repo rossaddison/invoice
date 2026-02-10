@@ -666,27 +666,27 @@ goto menu
 
 :phpcs_check
 echo PHP CodeSniffer: Checking 85-character line length...
-php vendor/bin/phpcs --standard=phpcs.xml.dist
+php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist
 pause
 goto menu
 
 :phpcs_file
 set /p filepath="Enter file path (e.g., src/Invoice/Invoice.php): "
 echo Checking %filepath% for 85-character line length...
-php vendor/bin/phpcs --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %filepath%
+php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %filepath%
 pause
 goto menu
 
 :phpcs_dir
 set /p dirpath="Enter directory path (e.g., src/Invoice/): "
 echo Checking %dirpath% for 85-character line length...
-php vendor/bin/phpcs --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %dirpath%
+php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %dirpath%
 pause
 goto menu
 
 :phpcs_report
 echo Running detailed PHPCS line length report...
-php vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-width=120
+php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --report=full --report-width=120
 pause
 goto menu
 
