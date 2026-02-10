@@ -442,7 +442,9 @@ ifeq ($(PRIMARY_GOAL),ghc)
 ghc: ## GitHub CLI Copilot Version Check
 	@command -v gh >/dev/null 2>&1 || (echo "[ERROR] GitHub CLI not installed. Run 'make ghi' first." && exit 1)
 	@echo "Checking Copilot access..."
-	@gh api user/copilot_seat_details 2>/dev/null && echo "✓ Copilot access confirmed" || echo "✗ No Copilot access found. Ensure you are authenticated with 'gh auth login' and have an active subscription."
+	@gh api user/copilot_seat_details 2>/dev/null && \
+		echo "✓ Copilot access confirmed" || \
+		echo "✗ No Copilot access found. Ensure you are authenticated with 'gh auth login' and have an active subscription."
 	@echo ""
 	@gh --version
 endif
