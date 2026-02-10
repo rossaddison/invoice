@@ -764,11 +764,9 @@ where gh >nul 2>nul || (
 )
 echo.
 echo Checking Copilot seat details...
-gh api user/copilot_seat_details 2>nul && (
-    echo.
+gh api user/copilot_seat_details >nul 2>nul && (
     echo [SUCCESS] You have GitHub Copilot access!
 ) || (
-    echo.
     echo [INFO] No active Copilot subscription found.
     echo Visit https://github.com/settings/copilot to check your access.
 )
