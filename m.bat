@@ -62,10 +62,13 @@ echo [4o] npm run build                             [18]  invoice/userrelated/tr
 echo [4p] Angular: Install Dependencies             [19]  invoice/autoincrementsettooneafter/truncate6
 echo [4q] Angular: Serve Development                [4r]  Angular: Build Production
 echo [4s] Angular: Generate Component               [4t]  Angular: Lint Check
-echo [5]  Require Checker                           [20]  Exit
-echo [99] System Info / Diagnostics                 [21]  Exit to Current Directory
+echo [5]  Require Checker                           [20]  GitHub CLI: Install
+echo [99] System Info / Diagnostics                 [21]  GitHub CLI: Auth Status
+echo                                                [22]  GitHub CLI: Copilot Version
+echo                                                [23]  Exit
+echo                                                [24]  Exit to Current Directory
 echo =================================                     
-set /p choice="Enter your choice [0-21,99]: "
+set /p choice="Enter your choice [0-24,99]: "
 
 REM ======== MENU COMMAND ROUTING ========
 if "%choice%"=="0" goto installation_menu 
@@ -133,8 +136,11 @@ if "%choice%"=="16" goto confirm_warning_16
 if "%choice%"=="17" goto confirm_warning_17
 if "%choice%"=="18" goto confirm_warning_18
 if "%choice%"=="19" goto confirm_warning_19
-if "%choice%"=="20" goto exit
-if "%choice%"=="21" goto exit_to_directory
+if "%choice%"=="20" goto gh_cli_install
+if "%choice%"=="21" goto gh_auth_status
+if "%choice%"=="22" goto gh_copilot_version
+if "%choice%"=="23" goto exit
+if "%choice%"=="24" goto exit_to_directory
 if "%choice%"=="99" goto diagnostics
 echo Invalid choice. Please try again.
 pause
@@ -687,6 +693,96 @@ goto menu
 :phpcs_report
 echo Running detailed PHPCS line length report...
 php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --report=full --report-width=120
+pause
+goto menu
+
+:gh_cli_install
+echo Installing GitHub CLI via winget...
+echo Checking if GitHub CLI is already installed...
+where gh >nul 2>nul && (
+    echo [INFO] GitHub CLI is already installed.
+    gh --version
+    echo.
+    set /p reinstall="Reinstall anyway? (Y/N): "
+    if /i not "%reinstall%"=="Y" (
+        echo Installation cancelled.
+        pause
+        goto menu
+    )
+)
+echo.
+echo Installing GitHub CLI using winget...
+winget install --id GitHub.cli
+echo.
+echo Adding GitHub CLI to PATH for current session...
+REM Add common GitHub CLI installation paths to current session PATH
+REM winget creates links in WinGet\Links, also check standard install locations
+set "PATH=%PATH%;%LOCALAPPDATA%\Microsoft\WinGet\Links;%ProgramFiles%\GitHub CLI;%LOCALAPPDATA%\Programs\GitHub CLI"
+echo.
+echo Installation complete!
+echo Verifying installation...
+where gh >nul 2>nul && (
+    echo [SUCCESS] GitHub CLI is now available.
+    gh --version
+    echo.
+    echo You can now run option [21] to authenticate with GitHub.
+) || (
+    echo [WARNING] GitHub CLI installed but not yet available in current session.
+    echo Please restart your terminal and run option [21] to authenticate.
+)
+pause
+goto menu
+
+:gh_auth_status
+echo Checking GitHub CLI authentication status...
+where gh >nul 2>nul || (
+    echo [ERROR] GitHub CLI not found in PATH.
+    echo.
+    echo If you just installed it, please close and reopen this terminal.
+    echo.
+    echo Otherwise, please install it first using option [20].
+    pause
+    goto menu
+)
+echo.
+gh auth status
+echo.
+echo [INFO] If not authenticated, run: gh auth login
+pause
+goto menu
+
+:gh_copilot_version
+echo Checking GitHub Copilot access...
+where gh >nul 2>nul || (
+    echo [ERROR] GitHub CLI not found in PATH.
+    echo.
+    echo If you just installed it, please close and reopen this terminal.
+    echo.
+    echo Otherwise, please install it first using option [20].
+    pause
+    goto menu
+)
+echo.
+echo Checking Copilot seat details...
+gh api user/copilot_seat_details >nul 2>nul && (
+    echo [SUCCESS] You have GitHub Copilot access!
+    echo.
+    echo Manage your subscription: https://github.com/settings/copilot
+) || (
+    echo [INFO] No active Copilot subscription found via API.
+    echo.
+    echo If you have a subscription but it's not detected:
+    echo 1. Check your authenticated account with: gh auth status
+    echo 2. Verify subscription at: https://github.com/settings/copilot
+    echo 3. Try re-authenticating with: gh auth login
+    echo.
+    echo If you need Copilot access:
+    echo - Individual: https://github.com/features/copilot
+    echo - Organization: Contact your GitHub admin
+)
+echo.
+echo Checking GitHub CLI version...
+gh --version
 pause
 goto menu
 

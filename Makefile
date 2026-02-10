@@ -63,6 +63,9 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make ss                - Snyk Security Summary (Total Issues Count Only)"
 	@echo "make sj                - Snyk Security JSON Output (Machine Readable)"
 	@echo "make sh                - Snyk Security High Severity Only"
+	@echo "make ghi               - Install GitHub CLI"
+	@echo "make gha               - GitHub CLI Auth Status"
+	@echo "make ghc               - GitHub CLI Copilot Version Check"
 	@echo "make serve             - PHP Built-in serve"
 	@echo "make ucr USERNAME= user PASSWORD= pass      - user/create"
 	@echo "make uar ROLE=admin USERID=1                - user/assignRole"
@@ -401,6 +404,63 @@ sh: ## Snyk Security High Severity Only
 endif
 
 #
+# GitHub CLI
+#
+
+ifeq ($(PRIMARY_GOAL),ghi)
+ghi: ## Install GitHub CLI
+	@echo "Installing GitHub CLI..."
+	@if command -v gh >/dev/null 2>&1; then \
+		echo "[INFO] GitHub CLI is already installed."; \
+		gh --version; \
+	else \
+		if command -v winget >/dev/null 2>&1; then \
+			winget install --id GitHub.cli; \
+		elif command -v brew >/dev/null 2>&1; then \
+			brew install gh; \
+		elif command -v apt-get >/dev/null 2>&1; then \
+			echo "Installing GitHub CLI via official script..."; \
+			curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+			sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+			echo "deb [arch=$$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+			sudo apt-get update && \
+			sudo apt-get install gh -y; \
+		else \
+			echo "[ERROR] No supported package manager found."; \
+			echo "Please install manually from https://cli.github.com/"; \
+		fi; \
+	fi
+endif
+
+ifeq ($(PRIMARY_GOAL),gha)
+gha: ## GitHub CLI Auth Status
+	@command -v gh >/dev/null 2>&1 || (echo "[ERROR] GitHub CLI not installed. Run 'make ghi' first." && exit 1)
+	@gh auth status
+endif
+
+ifeq ($(PRIMARY_GOAL),ghc)
+ghc: ## GitHub CLI Copilot Version Check
+	@command -v gh >/dev/null 2>&1 || (echo "[ERROR] GitHub CLI not installed. Run 'make ghi' first." && exit 1)
+	@echo "Checking Copilot access..."
+	@gh api user/copilot_seat_details 2>/dev/null && \
+		(echo "✓ Copilot access confirmed" && \
+		 echo "" && \
+		 echo "Manage subscription: https://github.com/settings/copilot") || \
+		(echo "✗ No Copilot subscription found via API" && \
+		 echo "" && \
+		 echo "If you have a subscription but it's not detected:" && \
+		 echo "  1. Check authenticated account: gh auth status" && \
+		 echo "  2. Verify subscription: https://github.com/settings/copilot" && \
+		 echo "  3. Try re-authenticating: gh auth login" && \
+		 echo "" && \
+		 echo "If you need Copilot access:" && \
+		 echo "  - Individual: https://github.com/features/copilot" && \
+		 echo "  - Organization: Contact your GitHub admin")
+	@echo ""
+	@gh --version
+endif
+
+#
 # Yii Console Commands
 #
 
@@ -546,4 +606,4 @@ pcsr: ## Run PHP CodeSniffer with detailed report
 	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-width=120
 endif
 
-.PHONY: menu help install p pf pd pc pi cas co cwn ccl cv cda cu nu nco nsu nmu nma nes2024 nvm na crc ct cb rdr rmc csd csf sq sf sd sc ss sj sh serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb pcs pcsf pcsd pcsr
+.PHONY: menu help install p pf pd pc pi cas co cwn ccl cv cda cu nu nco nsu nmu nma nes2024 nvm na crc ct cb rdr rmc csd csf sq sf sd sc ss sj sh ghi gha ghc serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb pcs pcsf pcsd pcsr
