@@ -1,9 +1,1 @@
-{
-    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-        "config:recommended"
-    ],
-    "major": {
-        "dependencyDashboardApproval": true
-    }
-}
+{\n    "$schema": "https://docs.renovatebot.com/renovate-schema.json",\n    "extends": [\n        "config:recommended"\n    ],\n    "automergeType": "branch",\n    "major": {\n        "dependencyDashboardApproval": true\n    }\n}
