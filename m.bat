@@ -714,15 +714,36 @@ echo.
 echo Installing GitHub CLI using winget...
 winget install --id GitHub.cli
 echo.
-echo Installation complete! Please restart your terminal.
-echo Then run option [21] to authenticate with GitHub.
+echo Refreshing environment variables...
+REM Refresh PATH from registry to pick up newly installed gh
+for /f "tokens=2*" %%a in ('reg query "HKCU\Environment" /v Path 2^>nul') do set "UserPath=%%b"
+for /f "tokens=2*" %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path 2^>nul') do set "SystemPath=%%b"
+set "PATH=%UserPath%;%SystemPath%"
+echo.
+echo Installation complete!
+echo Verifying installation...
+where gh >nul 2>nul && (
+    echo [SUCCESS] GitHub CLI is now available.
+    gh --version
+    echo.
+    echo You can now run option [21] to authenticate with GitHub.
+) || (
+    echo [WARNING] GitHub CLI installed but not yet available in current session.
+    echo Please restart your terminal and run option [21] to authenticate.
+)
 pause
 goto menu
 
 :gh_auth_status
 echo Checking GitHub CLI authentication status...
 where gh >nul 2>nul || (
-    echo [ERROR] GitHub CLI not found. Please install it first using option [20].
+    echo [ERROR] GitHub CLI not found in PATH.
+    echo.
+    echo If you just installed it, please restart your terminal or run:
+    echo   refreshenv   (if using Chocolatey)
+    echo or close and reopen this terminal.
+    echo.
+    echo Otherwise, please install it first using option [20].
     pause
     goto menu
 )
@@ -736,7 +757,13 @@ goto menu
 :gh_copilot_version
 echo Checking GitHub Copilot access...
 where gh >nul 2>nul || (
-    echo [ERROR] GitHub CLI not found. Please install it first using option [20].
+    echo [ERROR] GitHub CLI not found in PATH.
+    echo.
+    echo If you just installed it, please restart your terminal or run:
+    echo   refreshenv   (if using Chocolatey)
+    echo or close and reopen this terminal.
+    echo.
+    echo Otherwise, please install it first using option [20].
     pause
     goto menu
 )
