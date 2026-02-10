@@ -64,9 +64,9 @@ echo [4q] Angular: Serve Development                [4r]  Angular: Build Product
 echo [4s] Angular: Generate Component               [4t]  Angular: Lint Check
 echo [5]  Require Checker                           [20]  GitHub CLI: Install
 echo [99] System Info / Diagnostics                 [21]  GitHub CLI: Auth Status
-echo                                                 [22]  GitHub CLI: Copilot Version
-echo                                                 [23]  Exit
-echo                                                 [24]  Exit to Current Directory
+echo                                                [22]  GitHub CLI: Copilot Version
+echo                                                [23]  Exit
+echo                                                [24]  Exit to Current Directory
 echo =================================                     
 set /p choice="Enter your choice [0-24,99]: "
 
