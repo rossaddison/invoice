@@ -47,7 +47,13 @@ export class FamilyHandler {
     }
 
     private bindEventListeners(): void {
-        document.addEventListener('DOMContentLoaded', this.initializeSelectors.bind(this));
+        // Check if DOM is already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', this.initializeSelectors.bind(this));
+        } else {
+            // DOM is already loaded, initialize immediately
+            this.initializeSelectors();
+        }
         document.addEventListener('click', this.handleClick.bind(this), true);
     }
 

@@ -80,12 +80,14 @@ export class ClientHandler {
                 form.addEventListener('submit', handler.bind(this));
             } else {
                 // If form not found immediately, try again after DOM loads
-                document.addEventListener('DOMContentLoaded', () => {
-                    const laterForm = document.getElementById(formId) as HTMLFormElement;
-                    if (laterForm) {
-                        laterForm.addEventListener('submit', handler.bind(this));
-                    }
-                });
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const laterForm = document.getElementById(formId) as HTMLFormElement;
+                        if (laterForm) {
+                            laterForm.addEventListener('submit', handler.bind(this));
+                        }
+                    });
+                }
             }
         };
 

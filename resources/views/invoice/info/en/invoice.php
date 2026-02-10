@@ -50,6 +50,8 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>10th February 2026</b></p>
+<p>Fraud Prevention Headers Bugfix md</p>
 <p><b>9th February 2026</b></p>
 <p>Bootstrap 5.3.8: Options buttons on salesorder and inv views: Replace 'options btn-group' with 'dropdown'</p>
 <p><b>7th February 2026</b></p>

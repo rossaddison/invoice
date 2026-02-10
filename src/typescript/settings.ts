@@ -40,7 +40,13 @@ export class SettingsHandler {
     }
 
     private bindEventListeners(): void {
-        document.addEventListener('DOMContentLoaded', this.initialize.bind(this));
+        // Check if DOM is already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', this.initialize.bind(this));
+        } else {
+            // DOM is already loaded, initialize immediately
+            this.initialize();
+        }
     }
 
     private initialize(): void {

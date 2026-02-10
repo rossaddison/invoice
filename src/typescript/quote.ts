@@ -676,10 +676,17 @@ export class QuoteHandler {
     }
 
     private initializeComponents(): void {
-        document.addEventListener('DOMContentLoaded', () => {
+        // Check if DOM is already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.initializeTooltips();
+                this.initializeTagSelect();
+            });
+        } else {
+            // DOM is already loaded, initialize immediately
             this.initializeTooltips();
             this.initializeTagSelect();
-        });
+        }
     }
 
     private initializeTooltips(): void {
