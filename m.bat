@@ -766,9 +766,19 @@ echo.
 echo Checking Copilot seat details...
 gh api user/copilot_seat_details >nul 2>nul && (
     echo [SUCCESS] You have GitHub Copilot access!
+    echo.
+    echo Manage your subscription: https://github.com/settings/copilot
 ) || (
-    echo [INFO] No active Copilot subscription found.
-    echo Visit https://github.com/settings/copilot to check your access.
+    echo [INFO] No active Copilot subscription found via API.
+    echo.
+    echo If you have a subscription but it's not detected:
+    echo 1. Check your authenticated account with: gh auth status
+    echo 2. Verify subscription at: https://github.com/settings/copilot
+    echo 3. Try re-authenticating with: gh auth login
+    echo.
+    echo If you need Copilot access:
+    echo - Individual: https://github.com/features/copilot
+    echo - Organization: Contact your GitHub admin
 )
 echo.
 echo Checking GitHub CLI version...
