@@ -716,7 +716,8 @@ winget install --id GitHub.cli
 echo.
 echo Adding GitHub CLI to PATH for current session...
 REM Add common GitHub CLI installation paths to current session PATH
-set "PATH=%PATH%;%ProgramFiles%\GitHub CLI;%LOCALAPPDATA%\Programs\GitHub CLI"
+REM winget creates links in WinGet\Links, also check standard install locations
+set "PATH=%PATH%;%LOCALAPPDATA%\Microsoft\WinGet\Links;%ProgramFiles%\GitHub CLI;%LOCALAPPDATA%\Programs\GitHub CLI"
 echo.
 echo Installation complete!
 echo Verifying installation...
