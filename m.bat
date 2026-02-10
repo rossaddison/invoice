@@ -717,13 +717,24 @@ echo.
 echo Refreshing environment variables...
 REM Refresh PATH from registry to pick up newly installed gh
 REM Preserve current PATH as fallback
-set "OldPath=%PATH%"
+set "CurrentPath=%PATH%"
+set "NewPath="
 for /f "tokens=2*" %%a in ('reg query "HKCU\Environment" /v Path 2^>nul') do set "UserPath=%%b"
 for /f "tokens=2*" %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path 2^>nul') do set "SystemPath=%%b"
-if defined UserPath if defined SystemPath (
-    set "PATH=%UserPath%;%SystemPath%"
+REM Build new PATH from registry values
+if defined SystemPath set "NewPath=%SystemPath%"
+if defined UserPath (
+    if defined NewPath (
+        set "NewPath=%NewPath%;%UserPath%"
+    ) else (
+        set "NewPath=%UserPath%"
+    )
+)
+REM Use new PATH if we got anything from registry, otherwise keep current
+if defined NewPath (
+    set "PATH=%NewPath%"
 ) else (
-    set "PATH=%OldPath%"
+    set "PATH=%CurrentPath%"
     echo [INFO] Could not refresh PATH from registry, keeping current PATH.
 )
 echo.
