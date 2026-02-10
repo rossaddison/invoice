@@ -52,7 +52,6 @@ echo [4e] npm: Safe Update (patch only)             [8]   user/assignRole role u
 echo [4f] npm: Minor Update (minor versions)        [9]   router/list
 echo [4g] npm: Major Update (interactive)           [10]  translator/translate
 echo [4h] npm: ES2024 Feature Verification          [11]  invoice/items
-echo [4h] npm: ES2024 Feature Verification          [11]  invoice/items
 echo [4i] TypeScript Build (Production)             [12]  invoice/setting/truncate
 echo [4j] TypeScript Build (Development)            [13]  invoice/generator/truncate
 echo [4k] TypeScript Watch Mode                     [14]  invoice/inv/truncate1
