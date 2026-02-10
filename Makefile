@@ -419,7 +419,12 @@ ghi: ## Install GitHub CLI
 		elif command -v brew >/dev/null 2>&1; then \
 			brew install gh; \
 		elif command -v apt-get >/dev/null 2>&1; then \
-			sudo apt-get update && sudo apt-get install gh; \
+			echo "Installing GitHub CLI via official script..."; \
+			curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+			sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+			echo "deb [arch=$$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+			sudo apt-get update && \
+			sudo apt-get install gh -y; \
 		else \
 			echo "[ERROR] No supported package manager found."; \
 			echo "Please install manually from https://cli.github.com/"; \
@@ -437,7 +442,7 @@ ifeq ($(PRIMARY_GOAL),ghc)
 ghc: ## GitHub CLI Copilot Version Check
 	@command -v gh >/dev/null 2>&1 || (echo "[ERROR] GitHub CLI not installed. Run 'make ghi' first." && exit 1)
 	@echo "Checking Copilot access..."
-	@gh api user/copilot_seat_details 2>/dev/null && echo "✓ Copilot access confirmed" || echo "✗ No Copilot access found"
+	@gh api user/copilot_seat_details 2>/dev/null && echo "✓ Copilot access confirmed" || echo "✗ No Copilot access found. Ensure you are authenticated with 'gh auth login' and have an active subscription."
 	@echo ""
 	@gh --version
 endif
