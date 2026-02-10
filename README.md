@@ -30,6 +30,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
  Peppol network.
 
 **Recent Implementations**
+[Automerge Renovate's dependency updates if tests pass](docs/RENOVATE_AUTOMERGE.md) (Feb 2026)
+
 [Fraud Prevention Headers Bugfix](docs/FPH_BUTTON_EVENT_BINDING_BUG_REPORT.md) (Feb 2026)
 
 [UK e-invoicing B2B/B2G 2029](docs/UK-E-INVOICING-MANDATE.md) (Jan 2026)
