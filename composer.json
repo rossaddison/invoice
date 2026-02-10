@@ -42,7 +42,7 @@
         "cycle/annotated": "^4.4.0",
         "cycle/database": "^2.15.1",
         "cycle/entity-behavior": "^1.7.1",
-        "cycle/orm": "^2.13.1",
+        "cycle/orm": "^2.13.2",
         "cycle/schema-provider": "^1.0",
         "digitalbazaar/json-ld": "^0.4.8",
         "doctrine/collections": ">2.6.0",
@@ -160,6 +160,7 @@
         "roave/security-advisories": "dev-latest",
         "shipmonk/composer-dependency-analyser": "^1.8.4",
         "spatie/phpunit-watcher": ">=1.24.4",
+        "squizlabs/php_codesniffer": "^3.13.5",
         "vimeo/psalm": "^6.15.1||^7.0.0",
         "yiisoft/translator-extractor": "^2.1.1"
     },      

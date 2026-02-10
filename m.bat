@@ -42,23 +42,24 @@ echo [3a] Composer why-not                          [5h]  Snyk Security Dependen
 echo [3b] Composer Cache with Lock                  [5i]  Snyk Security Code File Check
 echo [3c] Composer Validate                         [5j]  Snyk Security Summary (Issues Count)
 echo [3d] Composer Dump Autoload                    [5k]  Snyk Security JSON Output			
-echo [3e] Composer Audit      				                      
-echo [4]  Composer Update                           [6]   PHP Built-in 'serve'
-echo [4a] Node Modules Update                       [7]   user/create username password
-echo [4b] nvm-windows Install/Update                [8]   user/assignRole role userId
-echo [4c] Node: Audit, Clean, List                  [9]   router/list
-echo [4d] npm: Check Outdated                       [10]  translator/translate
-echo [4e] npm: Safe Update (patch only)             [11]  invoice/items
-echo [4f] npm: Minor Update (minor versions)        [12]  invoice/setting/truncate
-echo [4g] npm: Major Update (interactive)           [13]  invoice/generator/truncate
-echo [4h] npm: ES2024 Feature Verification          [13]  invoice/generator/truncate
-echo [4i] TypeScript Build (Production)             [14]  invoice/inv/truncate1
-echo [4j] TypeScript Build (Development)            [15]  invoice/quote/truncate2
-echo [4k] TypeScript Watch Mode                     [16]  invoice/salesorder/truncate3
-echo [4l] TypeScript Type Check                     [17]  invoice/nonuserrelated/truncate4
-echo [4m] TypeScript Lint                           [18]  invoice/userrelated/truncate5
-echo [4n] TypeScript Format                         [19]  invoice/autoincrementsettooneafter/truncate6
-echo [4o] npm run build                             [4p]  Angular: Install Dependencies
+echo [3e] Composer Audit                            [5l]  PHPCS: Check 85-char line length
+echo [4]  Composer Update                           [5m]  PHPCS: Check specific file
+echo [4a] Node Modules Update                       [5n]  PHPCS: Check specific directory
+echo [4b] nvm-windows Install/Update                [5o]  PHPCS: Detailed report
+echo [4c] Node: Audit, Clean, List                  [6]   PHP Built-in 'serve'
+echo [4d] npm: Check Outdated                       [7]   user/create username password
+echo [4e] npm: Safe Update (patch only)             [8]   user/assignRole role userId
+echo [4f] npm: Minor Update (minor versions)        [9]   router/list
+echo [4g] npm: Major Update (interactive)           [10]  translator/translate
+echo [4h] npm: ES2024 Feature Verification          [11]  invoice/items
+echo [4i] TypeScript Build (Production)             [12]  invoice/setting/truncate
+echo [4j] TypeScript Build (Development)            [13]  invoice/generator/truncate
+echo [4k] TypeScript Watch Mode                     [14]  invoice/inv/truncate1
+echo [4l] TypeScript Type Check                     [15]  invoice/quote/truncate2
+echo [4m] TypeScript Lint                           [16]  invoice/salesorder/truncate3
+echo [4n] TypeScript Format                         [17]  invoice/nonuserrelated/truncate4
+echo [4o] npm run build                             [18]  invoice/userrelated/truncate5
+echo [4p] Angular: Install Dependencies             [19]  invoice/autoincrementsettooneafter/truncate6
 echo [4q] Angular: Serve Development                [4r]  Angular: Build Production
 echo [4s] Angular: Generate Component               [4t]  Angular: Lint Check
 echo [5]  Require Checker                           [20]  Exit
@@ -114,6 +115,10 @@ if "%choice%"=="5h" goto security_deps
 if "%choice%"=="5i" goto security_code_file
 if "%choice%"=="5j" goto security_summary
 if "%choice%"=="5k" goto security_json
+if "%choice%"=="5l" goto phpcs_check
+if "%choice%"=="5m" goto phpcs_file
+if "%choice%"=="5n" goto phpcs_dir
+if "%choice%"=="5o" goto phpcs_report
 if "%choice%"=="6" goto serve
 if "%choice%"=="7" goto user_create
 if "%choice%"=="8" goto user_assignRole
@@ -656,6 +661,32 @@ goto menu
 
 :invoice_autoincrementsettooneafter_truncate6
 php yii invoice/autoincrementsettooneafter/truncate6
+pause
+goto menu
+
+:phpcs_check
+echo PHP CodeSniffer: Checking 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist
+pause
+goto menu
+
+:phpcs_file
+set /p filepath="Enter file path (e.g., src/Invoice/Invoice.php): "
+echo Checking %filepath% for 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %filepath%
+pause
+goto menu
+
+:phpcs_dir
+set /p dirpath="Enter directory path (e.g., src/Invoice/): "
+echo Checking %dirpath% for 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %dirpath%
+pause
+goto menu
+
+:phpcs_report
+echo Running detailed PHPCS line length report...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --report=full --report-width=120
 pause
 goto menu
 
