@@ -716,9 +716,16 @@ winget install --id GitHub.cli
 echo.
 echo Refreshing environment variables...
 REM Refresh PATH from registry to pick up newly installed gh
+REM Preserve current PATH as fallback
+set "OldPath=%PATH%"
 for /f "tokens=2*" %%a in ('reg query "HKCU\Environment" /v Path 2^>nul') do set "UserPath=%%b"
 for /f "tokens=2*" %%a in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path 2^>nul') do set "SystemPath=%%b"
-set "PATH=%UserPath%;%SystemPath%"
+if defined UserPath if defined SystemPath (
+    set "PATH=%UserPath%;%SystemPath%"
+) else (
+    set "PATH=%OldPath%"
+    echo [INFO] Could not refresh PATH from registry, keeping current PATH.
+)
 echo.
 echo Installation complete!
 echo Verifying installation...
@@ -739,9 +746,7 @@ echo Checking GitHub CLI authentication status...
 where gh >nul 2>nul || (
     echo [ERROR] GitHub CLI not found in PATH.
     echo.
-    echo If you just installed it, please restart your terminal or run:
-    echo   refreshenv   (if using Chocolatey)
-    echo or close and reopen this terminal.
+    echo If you just installed it, please close and reopen this terminal.
     echo.
     echo Otherwise, please install it first using option [20].
     pause
@@ -759,9 +764,7 @@ echo Checking GitHub Copilot access...
 where gh >nul 2>nul || (
     echo [ERROR] GitHub CLI not found in PATH.
     echo.
-    echo If you just installed it, please restart your terminal or run:
-    echo   refreshenv   (if using Chocolatey)
-    echo or close and reopen this terminal.
+    echo If you just installed it, please close and reopen this terminal.
     echo.
     echo Otherwise, please install it first using option [20].
     pause
