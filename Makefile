@@ -517,7 +517,7 @@ endif
 ifeq ($(PRIMARY_GOAL),pcs)
 pcs: ## Run PHP CodeSniffer to check 85-character line length
 	@echo "Checking PHP files for 85-character line length limit..."
-	php vendor/bin/phpcs --standard=phpcs.xml.dist
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist
 endif
 
 ifeq ($(PRIMARY_GOAL),pcsf)
@@ -526,7 +526,7 @@ ifndef FILE
 	$(error Please provide FILE, e.g. 'make pcsf FILE=src/Invoice/Invoice.php')
 endif
 	@echo "Checking $(FILE) for 85-character line length..."
-	php vendor/bin/phpcs --standard=Generic --sniffs=Generic.Files.LineLength \
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=Generic --sniffs=Generic.Files.LineLength \
 		--runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 $(FILE)
 endif
 
@@ -536,14 +536,14 @@ ifndef DIR
 	$(error Please provide DIR, e.g. 'make pcsd DIR=src/')
 endif
 	@echo "Checking $(DIR) for 85-character line length..."
-	php vendor/bin/phpcs --standard=Generic --sniffs=Generic.Files.LineLength \
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=Generic --sniffs=Generic.Files.LineLength \
 		--runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 $(DIR)
 endif
 
 ifeq ($(PRIMARY_GOAL),pcsr)
 pcsr: ## Run PHP CodeSniffer with detailed report
 	@echo "Running detailed line length report..."
-	php vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-width=120
+	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-width=120
 endif
 
 .PHONY: menu help install p pf pd pc pi cas co cwn ccl cv cda cu nu nco nsu nmu nma nes2024 nvm na crc ct cb rdr rmc csd csf sq sf sd sc ss sj sh serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb pcs pcsf pcsd pcsr
