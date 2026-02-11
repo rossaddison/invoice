@@ -29,6 +29,7 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make ccl               - Composer clear-cache & update --lock"
 	@echo "make cv                - Composer validate"
 	@echo "make cda               - Composer dump-autoload"
+	@echo "make ca                - Composer audit"
 	@echo "make cu                - Composer update"
 	@echo "make nu                - Update Node modules"
 	@echo "make nco               - npm: Check Outdated"
@@ -45,7 +46,13 @@ menu: ## Show the Invoice SYSTEM MENU (Make targets)
 	@echo "make tsl               - TypeScript Lint"
 	@echo "make tsf               - TypeScript Format"
 	@echo "make nb                - npm run build"
+	@echo "make ai                - Angular: Install Dependencies"
+	@echo "make as                - Angular: Serve Development"
+	@echo "make ab                - Angular: Build Production"
+	@echo "make ag COMPONENT=name - Angular: Generate Component"
+	@echo "make al                - Angular: Lint Check"
 	@echo "make crc               - Composer Require Checker"
+	@echo "make sda               - Shipmonk Composer Dependency Analyser"
 	@echo "make ct                - Codeception Tests"
 	@echo "make cb                - Codeception Build"
 	@echo "make rdr               - Rector Dry Run"
@@ -221,6 +228,11 @@ cda: ## Composer dump-autoload
 	composer dump-autoload -o
 endif
 
+ifeq ($(PRIMARY_GOAL),ca)
+ca: ## Composer audit
+	composer audit --ansi
+endif
+
 ifeq ($(PRIMARY_GOAL),cu)
 cu: ## Composer update
 	composer update
@@ -315,12 +327,73 @@ nb: ## npm run build
 endif
 
 #
+# Angular Commands
+#
+
+ifeq ($(PRIMARY_GOAL),ai)
+ai: ## Angular: Install Dependencies
+	@echo "======== ANGULAR DEPENDENCY INSTALLATION WARNING ========"
+	@echo "⚠️  WARNING: This will install Angular dependencies!"
+	@echo "📝 This may modify existing TypeScript/ESLint configuration"
+	@echo "🔄 Ensure you have reviewed package.json and tsconfig files"
+	@echo "🚨 BACKUP your current setup before proceeding!"
+	@echo "========================================================="
+	@read -p "Continue with Angular dependency installation? (Y/N): " confirm; \
+	if [ "$$confirm" = "Y" ] || [ "$$confirm" = "y" ]; then \
+		echo "Installing Angular dependencies..."; \
+		npm install; \
+		echo "Angular dependencies installed. Check for any conflicts."; \
+	else \
+		echo "Angular installation cancelled."; \
+	fi
+endif
+
+ifeq ($(PRIMARY_GOAL),as)
+as: ## Angular: Serve Development
+	@echo "Starting Angular development server..."
+	@echo "⚠️  This runs Angular in development mode"
+	@echo "📝 Angular components will be available at http://localhost:4200"
+	@echo "🔄 In production, Angular integrates with Yii3 PHP layout"
+	npm run ng:serve
+endif
+
+ifeq ($(PRIMARY_GOAL),ab)
+ab: ## Angular: Build Production
+	@echo "Building Angular for production..."
+	@echo "📝 This builds Angular components for integration with Yii3"
+	npm run ng:build
+endif
+
+ifeq ($(PRIMARY_GOAL),ag)
+ag: ## Angular: Generate Component (usage: make ag COMPONENT=dashboard)
+ifndef COMPONENT
+	$(error Please provide COMPONENT, e.g. 'make ag COMPONENT=user-profile')
+endif
+	@echo "Generating Angular component: $(COMPONENT)"
+	npm run angular:generate-component $(COMPONENT)
+endif
+
+ifeq ($(PRIMARY_GOAL),al)
+al: ## Angular: Lint Check
+	@echo "Running Angular-specific linting..."
+	@echo "📝 This checks Angular components and templates"
+	npm run lint:angular
+endif
+
+#
 # Composer Tools
 #
 
 ifeq ($(PRIMARY_GOAL),crc)
 crc: ## Composer Require Checker
 	php -d memory_limit=512M vendor/bin/composer-require-checker
+endif
+
+ifeq ($(PRIMARY_GOAL),sda)
+sda: ## Shipmonk Composer Dependency Analyser
+	@echo "Running Shipmonk Composer Dependency Analyser..."
+	@echo "(https://github.com/shipmonk-rnd/composer-dependency-analyser)"
+	php vendor/bin/composer-dependency-analyser
 endif
 
 #
@@ -606,4 +679,4 @@ pcsr: ## Run PHP CodeSniffer with detailed report
 	php -d memory_limit=1024M vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-width=120
 endif
 
-.PHONY: menu help install p pf pd pc pi cas co cwn ccl cv cda cu nu nco nsu nmu nma nes2024 nvm na crc ct cb rdr rmc csd csf sq sf sd sc ss sj sh ghi gha ghc serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb pcs pcsf pcsd pcsr
+.PHONY: menu help install ext-check ext-json ext-silent p pf pd pc pi cas co cwn ccl cv cda ca cu nu nco nsu nmu nma nes2024 nvm na crc sda ct cb rdr rmc csd csf sq sf sd sc ss sj sh ghi gha ghc serve ucr uar rl tt ii ist igt iit1 iqt2 ist3 int4 iut5 iait6 info tsb tsd tsw tst tsl tsf nb ai as ab ag al pcs pcsf pcsd pcsr

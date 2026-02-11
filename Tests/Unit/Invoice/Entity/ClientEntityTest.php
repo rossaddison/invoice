@@ -41,9 +41,6 @@ final class ClientEntityTest extends TestCase
         $this->assertSame('', $client->getClient_tax_code());
         $this->assertSame('', $client->getClient_language());
         $this->assertFalse($client->getClient_active());
-        $this->assertSame('', $client->getClient_avs());
-        $this->assertSame('', $client->getClient_insurednumber());
-        $this->assertSame('', $client->getClient_veka());
         $this->assertNull($client->getClient_birthdate());
         $this->assertSame(0, $client->getClient_age());
         $this->assertSame(0, $client->getClient_gender());
@@ -80,9 +77,6 @@ final class ClientEntityTest extends TestCase
             client_tax_code: 'TAX789',
             client_language: 'en-US',
             client_active: true,
-            client_avs: 'AVS123456789',
-            client_insurednumber: 'INS987654321',
-            client_veka: 'VEKA001',
             client_birthdate: null,
             client_age: 35,
             client_gender: 1,
@@ -111,9 +105,6 @@ final class ClientEntityTest extends TestCase
         $this->assertSame('TAX789', $client->getClient_tax_code());
         $this->assertSame('en-US', $client->getClient_language());
         $this->assertTrue($client->getClient_active());
-        $this->assertSame('AVS123456789', $client->getClient_avs());
-        $this->assertSame('INS987654321', $client->getClient_insurednumber());
-        $this->assertSame('VEKA001', $client->getClient_veka());
         $this->assertSame(35, $client->getClient_age());
         $this->assertSame(1, $client->getClient_gender());
         $this->assertSame(1001, $client->getPostaladdress_id());
@@ -363,40 +354,7 @@ final class ClientEntityTest extends TestCase
         $client->setClient_active(false);
         $this->assertFalse($client->getClient_active());
     }
-
-    public function testClientAvsSetterAndGetter(): void
-    {
-        $client = new Client();
-        
-        $client->setClient_avs('AVS-999888777');
-        $this->assertSame('AVS-999888777', $client->getClient_avs());
-        
-        $client->setClient_avs('');
-        $this->assertSame('', $client->getClient_avs());
-    }
-
-    public function testClientInsurednumberSetterAndGetter(): void
-    {
-        $client = new Client();
-        
-        $client->setClient_insurednumber('INS-123456789');
-        $this->assertSame('INS-123456789', $client->getClient_insurednumber());
-        
-        $client->setClient_insurednumber('');
-        $this->assertSame('', $client->getClient_insurednumber());
-    }
-
-    public function testClientVekaSetterAndGetter(): void
-    {
-        $client = new Client();
-        
-        $client->setClient_veka('VEKA-555');
-        $this->assertSame('VEKA-555', $client->getClient_veka());
-        
-        $client->setClient_veka('');
-        $this->assertSame('', $client->getClient_veka());
-    }
-
+    
     public function testClientBirthdateNullHandling(): void
     {
         $client = new Client();

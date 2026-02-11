@@ -280,7 +280,6 @@ final class InvFormTest extends TestCase
         $inv->method('getPostal_address_id')->willReturn('0');
         $inv->method('getContract_id')->willReturn('0');
         $inv->method('getDiscount_amount')->willReturn(0.00);
-        $inv->method('getDiscount_percent')->willReturn(0.00);
         $inv->method('getUrl_key')->willReturn('test-key');
         $inv->method('getPassword')->willReturn('password');
         $inv->method('getPayment_method')->willReturn(0);

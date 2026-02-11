@@ -115,7 +115,6 @@ final class QuoteFormTest extends TestCase
             'password' => '', // Empty optional field
             'notes' => '', // Empty longText field
             'discount_amount' => 0.0,
-            'discount_percent' => 0.0
         ]);
         
         $result = $this->validator->validate($form);
@@ -132,7 +131,6 @@ final class QuoteFormTest extends TestCase
             'group_id' => 1,
             'status_id' => 2,
             'discount_amount' => 123.45,
-            'discount_percent' => 15.5,
             'delivery_location_id' => 5
         ]);
         
@@ -153,7 +151,6 @@ final class QuoteFormTest extends TestCase
         $this->assertEquals(1, $form->getGroup_id());
         $this->assertEquals(1, $form->getStatus_id());
         $this->assertEquals(100.50, $form->getDiscount_amount());
-        $this->assertEquals(10.0, $form->getDiscount_percent());
         $this->assertEquals('test-quote-key', $form->getUrl_key());
         $this->assertEquals('quote-password', $form->getPassword());
     }
@@ -171,7 +168,6 @@ final class QuoteFormTest extends TestCase
         $this->assertIsInt($form->getGroup_id());
         $this->assertIsInt($form->getStatus_id());
         $this->assertIsFloat($form->getDiscount_amount());
-        $this->assertIsFloat($form->getDiscount_percent());
         $this->assertIsString($form->getUrl_key());
         $this->assertIsString($form->getPassword());
     }
@@ -213,7 +209,6 @@ final class QuoteFormTest extends TestCase
         $quote->method('getClient_id')->willReturn('1');
         $quote->method('getStatus_id')->willReturn(1);
         $quote->method('getDiscount_amount')->willReturn(100.50);
-        $quote->method('getDiscount_percent')->willReturn(10.0);
         $quote->method('getUrl_key')->willReturn('test-quote-key');
         $quote->method('getPassword')->willReturn('quote-password');
         $quote->method('getNotes')->willReturn('Test quote notes');

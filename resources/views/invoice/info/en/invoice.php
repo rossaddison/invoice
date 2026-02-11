@@ -50,6 +50,12 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>11th February 2026</b></p>
+<p>Test m.bat with the recent changes</p>
+<p>Update the Makefile to reflect m.bat and to facilitate alpine ubuntu integration.</p>
+<p>Codeception updates: Correct the failing tests due to (1) Removing discount_percent (2) Bugfixing the quote to salesorder to invoice functions.</p>
+<p>Include InvItemAllowanceCharges and InvAllowanceCharges in tests to improve code coverage. Run yii invoice/items at command prompt which accesses src/Command/Invoice/ItemsCommand.php</p>
+<p>Rate limit increased to 20. Refer to update.</p> 
 <p><b>10th February 2026</b></p>
 <p>Fraud Prevention Headers Bugfix md</p>
 <p><b>9th February 2026</b></p>

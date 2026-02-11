@@ -221,7 +221,6 @@ final class SalesOrderFormTest extends TestCase
         $form = $this->createFormWithData([
             'status_id' => 5, // Valid range
             'discount_amount' => 999.99, // Valid amount
-            'discount_percent' => 25.5, // Valid percentage
             'client_id' => 1,
             'group_id' => 1,
             'quote_id' => '1'
@@ -240,17 +239,6 @@ final class SalesOrderFormTest extends TestCase
         
         $result = $this->validator->validate($form);
         $this->assertFalse($result->isValid(), 'status_id should fail validation outside range 1-9');
-        
-        // Test invalid discount_percent (over 100)
-        $form = $this->createFormWithData([
-            'discount_percent' => 101.0, // Over 100%
-            'client_id' => 1,
-            'group_id' => 1,
-            'quote_id' => '1'
-        ]);
-        
-        $result = $this->validator->validate($form);
-        $this->assertFalse($result->isValid(), 'discount_percent should fail validation over 100%');
     }
 
     /**
@@ -335,7 +323,6 @@ final class SalesOrderFormTest extends TestCase
         $salesOrder->method('getClient_po_person')->willReturn('John Doe');
         $salesOrder->method('getStatus_id')->willReturn(1);
         $salesOrder->method('getDiscount_amount')->willReturn(50.0);
-        $salesOrder->method('getDiscount_percent')->willReturn(5.0);
         $salesOrder->method('getUrl_key')->willReturn('test-so-key');
         $salesOrder->method('getPassword')->willReturn('so-password');
         $salesOrder->method('getNotes')->willReturn('Test sales order notes');

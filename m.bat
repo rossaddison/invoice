@@ -630,71 +630,6 @@ echo Cancelled.
 pause
 goto menu
 
-:invoice_setting_truncate
-php yii invoice/setting/truncate
-pause
-goto menu
-
-:invoice_generator_truncate
-php yii invoice/generator/truncate
-pause
-goto menu
-
-:invoice_inv_truncate1
-php yii invoice/inv/truncate1
-pause
-goto menu
-
-:invoice_quote_truncate2
-php yii invoice/quote/truncate2
-pause
-goto menu
-
-:invoice_salesorder_truncate3
-php yii invoice/salesorder/truncate3
-pause
-goto menu
-
-:invoice_nonuserrelated_truncate4
-php yii invoice/nonuserrelated/truncate4
-pause
-goto menu
-
-:invoice_userrelated_truncate5
-php yii invoice/userrelated/truncate5
-pause
-goto menu
-
-:invoice_autoincrementsettooneafter_truncate6
-php yii invoice/autoincrementsettooneafter/truncate6
-pause
-goto menu
-
-:phpcs_check
-echo PHP CodeSniffer: Checking 85-character line length...
-php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist
-pause
-goto menu
-
-:phpcs_file
-set /p filepath="Enter file path (e.g., src/Invoice/Invoice.php): "
-echo Checking %filepath% for 85-character line length...
-php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %filepath%
-pause
-goto menu
-
-:phpcs_dir
-set /p dirpath="Enter directory path (e.g., src/Invoice/): "
-echo Checking %dirpath% for 85-character line length...
-php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %dirpath%
-pause
-goto menu
-
-:phpcs_report
-echo Running detailed PHPCS line length report...
-php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --report=full --report-width=120
-pause
-goto menu
 
 :gh_cli_install
 echo Installing GitHub CLI via winget...
@@ -783,6 +718,72 @@ gh api user/copilot_seat_details >nul 2>nul && (
 echo.
 echo Checking GitHub CLI version...
 gh --version
+pause
+goto menu
+
+:invoice_setting_truncate
+php yii invoice/setting/truncate
+pause
+goto menu
+
+:invoice_generator_truncate
+php yii invoice/generator/truncate
+pause
+goto menu
+
+:invoice_inv_truncate1
+php yii invoice/inv/truncate1
+pause
+goto menu
+
+:invoice_quote_truncate2
+php yii invoice/quote/truncate2
+pause
+goto menu
+
+:invoice_salesorder_truncate3
+php yii invoice/salesorder/truncate3
+pause
+goto menu
+
+:invoice_nonuserrelated_truncate4
+php yii invoice/nonuserrelated/truncate4
+pause
+goto menu
+
+:invoice_userrelated_truncate5
+php yii invoice/userrelated/truncate5
+pause
+goto menu
+
+:invoice_autoincrementsettooneafter_truncate6
+php yii invoice/autoincrementsettooneafter/truncate6
+pause
+goto
+
+:phpcs_check
+echo PHP CodeSniffer: Checking 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist
+pause
+goto menu
+
+:phpcs_file
+set /p filepath="Enter file path (e.g., src/Invoice/Invoice.php): "
+echo Checking %filepath% for 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %filepath%
+pause
+goto menu
+
+:phpcs_dir
+set /p dirpath="Enter directory path (e.g., src/Invoice/): "
+echo Checking %dirpath% for 85-character line length...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=Generic --sniffs=Generic.Files.LineLength --runtime-set lineLimit 85 --runtime-set absoluteLineLimit 85 %dirpath%
+pause
+goto menu
+
+:phpcs_report
+echo Running detailed PHPCS line length report...
+php vendor/bin/phpcs -d memory_limit=1024M --standard=phpcs.xml.dist --report=full --report-width=120
 pause
 goto menu
 
