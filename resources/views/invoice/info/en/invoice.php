@@ -50,6 +50,9 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>14th February 2026</b></p>
+<p>Lint AuthController and SignupController. ClassList Trait created for divs in 
+the login and signup view.</p>
 <p><b>11th February 2026</b></p>
 <p>Test m.bat with the recent changes</p>
 <p>Update the Makefile to reflect m.bat and to facilitate alpine ubuntu integration.</p>

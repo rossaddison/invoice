@@ -105,18 +105,21 @@ abstract class BaseController
      * This centralizes the common pattern used across multiple controllers so
      * they can reuse the same array shape without duplicating repository calls.
      *
-     * @param CustomFieldRepository $customFieldRepository
+     * @param CustomFieldRepository $cfR
           Repository for fetching custom fields
-     * @param CustomValueRepository $customValueRepository
+     * @param CustomValueRepository $cvR
           Repository for fetching custom values
      * @param string $tableName The custom table name (e.g. 'client_custom')
      * @return array{customFields: EntityReader, customValues: array<array-key, mixed>}
      */
     protected function fetchCustomFieldsAndValues(
-        CustomFieldRepository $customFieldRepository, CustomValueRepository                                                       $customValueRepository, string $tableName): array
+        CustomFieldRepository $cfR,
+        CustomValueRepository $cvR,
+        string $tableName): array
     {
-        $customFields = $customFieldRepository->repoTablequery($tableName);
-        $customValues = $customValueRepository->attach_hard_coded_custom_field_values_to_custom_field($customFields);
+        $customFields = $cfR->repoTablequery($tableName);
+        $customValues =
+        $cvR->attach_hard_coded_custom_field_values_to_custom_field($customFields);
 
         return [
             'customFields' => $customFields,
@@ -131,10 +134,10 @@ abstract class BaseController
  * all controllers, eliminating code duplication while maintaining
  * entity-specific behavior through callbacks.
  *
- * @param array|object|null $requestData The request data containing custom fields
- * @param \Yiisoft\FormModel\FormHydrator $formHydrator Form hydrator for validation
- * @param CustomFieldProcessor $processor Entity-specific processor for custom field        operations
- * @param string|int $entityId The ID of the parent entity (invoice, quote, etc.)
+ * @param array|object|null $requestData
+ * @param \Yiisoft\FormModel\FormHydrator $formHydrator
+ * @param CustomFieldProcessor $processor
+ * @param string|int $entityId
  * @return void
  */
     protected function processCustomFields(
@@ -277,7 +280,10 @@ abstract class BaseController
                 return $this->viewRenderer->renderPartialAsString(
                     '//invoice/inv/partial_inv_delivery_location', [
                     'actionName' => 'del/view',
-                    'actionArguments' => ['_language' => $_language, 'id' => $delivery_location_id],
+                    'actionArguments' => [
+                        '_language' => $_language,
+                        'id' => $delivery_location_id
+                    ],
                     'title' => $this->translator->translate('delivery.location'),
                     'building_number' => $del->getBuildingNumber(),
                     'address_1' => $del->getAddress_1(),

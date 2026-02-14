@@ -74,8 +74,9 @@ trait Oauth2
             $developerSandboxHmrc->setEnvironment('prod');
         }
     }
-
-    private function selectedIdentityProviders(string $codeChallenge): array
+    
+    // IdentityProviderList
+    private function idpList(string $codeChallenge): array
     {
         $noDeveloperSandboxHmrcContinueButton = $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button') == '1' ? true : false;
         $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
