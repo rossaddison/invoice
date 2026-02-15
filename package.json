@@ -29,7 +29,7 @@
     "@types/node": "^25.2.3",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
     "@typescript-eslint/parser": "^8.55.0",
-    "@typescript/native-preview": "^7.0.0-dev.20260214.1",
+    "@typescript/native-preview": "^7.0.0-dev.20260215.1",
     "esbuild": "^0.27.3",
     "eslint": "^10.0.0",
     "npm-check-updates": "^19.3.2",
