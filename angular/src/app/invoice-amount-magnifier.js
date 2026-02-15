@@ -120,7 +120,7 @@ class InvoiceAmountMagnifier {
   }
 
   private applyMagnification(element: HTMLElement, originalStyles: any, borderColor: string, bgColor: string) {
-    const currentFontSize = parseFloat(originalStyles.fontSize);
+    const currentFontSize = Number.parseFloat(originalStyles.fontSize);
     const newFontSize = currentFontSize * this.magnificationFactor;
     
     element.style.fontSize = `${newFontSize}px`;

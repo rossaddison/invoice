@@ -9,21 +9,23 @@ declare(strict_types=1);
  *   'key' => 'very long value .. .',
  *
  * Additional rule:
- *   - If the key contains more than 4 segments (segments are pieces split by '.' or ':'
- *     and the delimiter is kept with the segment), then the value will be placed on the
- *     next line after the " => " (the arrow is left on the key line).
+ *   - If the key contains more than 4 segments (segments are pieces split by
+ *  '.' or ':' and the delimiter is kept with the segment), then the value will
+ *  be placed on the  next line after the " => " (the arrow is left on the key
+ *  line).
  *
  * Priority rules for splitting values (applied in order):
  *   1) Split on colon ':' first (':' kept attached to the fragment)
  *   2) Then split each fragment on full stop '.' ('.' kept attached)
- *   3) Any fragment still longer than allowed is split into chunks of up to N words
- *      (default N=5)
+ *   3) Any fragment still longer than allowed is split into chunks of up to N
+ *   words (default N=5)
  *
  * Continuation formatting:
- *   - The arrow spacing is normalized to " => " (one space either side of =>). 
- *   - Continuation lines start with a single TAB character before the concatenation operator,
- *     e.g. "\t. 'rest... '" (and the first value line for "value-on-next-line" case starts with
- *     a single tab then the quoted fragment, no leading dot).
+ *   - The arrow spacing is normalized to " => " (one space either side of =>).
+ *   - Continuation lines start with a single TAB character before the
+ *  concatenation operator, e.g. "\t. 'rest... '" (and the first value line for
+ *  "value-on-next-line" case starts with  a single tab then the quoted fragment,
+ *  no leading dot).
  *
  * Usage:
  *   php run.php [--words=N] [--dry-run] [--fix] file1.php [...]
@@ -35,7 +37,8 @@ declare(strict_types=1);
  *
  * Notes:
  *  - Only handles simple single-line "'key' => 'value'," entries. 
- *  - Keys are not modified except for normalizing the spacing around => to a single space.
+ *  - Keys are not modified except for normalizing the spacing around => to a
+ *  single space.
  */
 
 if (PHP_SAPI !== 'cli') {
@@ -181,9 +184,11 @@ function process_file(string $path, int $words, bool $fix, bool $dry_run): void
  */
 function process_line_values_only(string $line, int $maxWords)
 {
-    // Capture lhs exactly (key + arrow + spacing) and the quoted value and trailing bits. 
+    // Capture lhs exactly (key + arrow + spacing) and the quoted value and
+    // trailing bits.
     // 1: indent (optional)
-    // 2: full lhs up to the value opening quote (we preserve keys exactly except spacing normalization)
+    // 2: full lhs up to the value opening quote (we preserve keys exactly
+    // except spacing normalization)
     // 3: value quote char
     // 4: raw value content (inside quotes)
     // 5: suffix (comma/spaces)
@@ -195,13 +200,15 @@ function process_line_values_only(string $line, int $maxWords)
     }
 
     $indent = $m[1];
-    $lhs = $m[2];               // preserve key text content; we'll normalize spacing around the arrow
+    $lhs = $m[2]; // preserve key text content; we'll normalize spacing around
+                  // the arrow
     $valQuote = $m[3];
     $rawValue = $m['value'];
     $suffix = $m[5];
     $trail = $m[6];
 
-    // Extract key content to count segments (without changing the original key text)
+    // Extract key content to count segments
+    // (without changing the original key text)
     // Match the key inside the lhs (quoted)
     $km = [];
     if (preg_match('/^[\s]*([\'"])(?P<key>.*)\1\s*=>\s*$/u', $lhs, $km) !== 1) {
@@ -227,7 +234,8 @@ function process_line_values_only(string $line, int $maxWords)
     /** @var array $frags */
     $frags = split_value_priority($value, $maxWords);
 
-    // If key has more than 4 segments (split on '.' or ':' keeping delimiter attached),
+    // If key has more than 4 segments (split on '.' or ':' keeping delimiter
+    //  attached),
     // force value-on-next-line behavior
     $force_next_line = false;
     if ($keyUn !== '') {
@@ -262,14 +270,20 @@ function process_line_values_only(string $line, int $maxWords)
         }
     }
 
-    // If only one fragment and not forcing break, and original line already had " => " spacing, keep original line
+// If only one fragment and not forcing break, and original line already had
+//  " => " spacing, keep original line
     if (! $force_next_line && count($frags) === 1) {
         // if spacing around arrow is already " => " no change
         if (preg_match('/=>\s/', $lhs) === 1) {
             return $line;
         }
         // otherwise return a reconstructed single line with normalized spacing
-        $reconstructed = rtrim($lhs_normalized) .  $valQuote . $rawValue . $valQuote .  $suffix . $trail;
+        $reconstructed = rtrim($lhs_normalized)
+                .  $valQuote
+                . $rawValue
+                . $valQuote
+                .  $suffix
+                . $trail;
         return $reconstructed;
     }
 
@@ -289,11 +303,13 @@ function process_line_values_only(string $line, int $maxWords)
     $out = [];
 
     if ($force_next_line) {
-        // Put only the lhs (key =>) on the first line (normalized spacing), then value lines starting with a TAB
+        // Put only the lhs (key =>) on the first line (normalized spacing),
+        // then value lines starting with a TAB
         $lhs_line = rtrim($lhs_normalized);
         $out[] = $lhs_line; // ends with ' => '
 
-        // First value line: start with one tab then the quoted first fragment (no leading dot)
+        // First value line: start with one tab then the quoted first fragment
+        // (no leading dot)
         $out[] = "\t" . $valQuote . $escaped[0] . $valQuote;
 
         // Subsequent fragments: tab then concatenation
@@ -305,13 +321,15 @@ function process_line_values_only(string $line, int $maxWords)
             $out[] = $lineOut;
         }
 
-        // If only one fragment, suffix/trail must be appended to the first value line (index 1)
+        // If only one fragment, suffix/trail must be appended to the first
+        // value line (index 1)
         if (count($escaped) === 1) {
             $lastIdx = count($out) - 1;
             $out[$lastIdx] .= $suffix . $trail;
         }
     } else {
-        // Default behavior: place first fragment on same line as lhs, continuations with tab + ".  'fragment'"
+        // Default behavior: place first fragment on same line as lhs,
+        // continuations with tab + ".  'fragment'"
         $lhs_for_first = rtrim($lhs_normalized);
         $firstLine = $lhs_for_first . ' ' . $valQuote . $escaped[0] . $valQuote;
         $out[] = $firstLine;
@@ -329,8 +347,9 @@ function process_line_values_only(string $line, int $maxWords)
     }
 
     return $out;
+}
     
-    /**
+ /**
  * @return array<int,string>
  */
 function split_value_priority(string $text, int $maxWords): array
@@ -419,19 +438,20 @@ function ends_with_punctuation(string $text): bool
     return in_array($lastChar, [':', '. ', '! ', '?', ';', ','], true);
 }
     
-   /**
-    * split on delimiter and keep it attached to the segment; trims segments
-    * @return array<int,string>
-    */
-   function split_and_keep_delim(string $text, string $delim): array
-   {
-       $regex = '/[^' .  preg_quote($delim, '/') . ']+' . preg_quote($delim, '/') . '? /u';
-       $m = [];
-       preg_match_all($regex, $text, $m);
-       $segments = array_map('strval', $m[0]);
-       return array_map(function (string $s): string {
-           return trim($s);
-       }, $segments);
-   }
+/**
+ * split on delimiter and keep it attached to the segment; trims segments
+ * @return array<int,string>
+ */
+function split_and_keep_delim(string $text, string $delim): array
+{
+    $regex = '/[^'
+            .  preg_quote($delim, '/')
+            . ']+' . preg_quote($delim, '/')
+            . '? /u';
+    $m = [];
+    preg_match_all($regex, $text, $m);
+    $segments = array_map('strval', $m[0]);
+    return array_map(function (string $s): string {
+        return trim($s);
+    }, $segments);
 }
- 

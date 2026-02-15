@@ -127,7 +127,7 @@ foreach ($orm_schema->getColumns() as $column) {
             $ab = '    #[Column(type:'
                   . "'bool'"
                   . ',default:false'
-                  . ($column->isNullable() ? ',nullable: false' : ',nullable: false')
+                  . ($column->isNullable() ? ',nullable: true' : ',nullable: false')
                   . ')]'
                   . "\n";
             $ate_or_lic = 'private ';

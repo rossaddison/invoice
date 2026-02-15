@@ -30,8 +30,8 @@ export class FamilyCommalistComponent implements OnInit, OnDestroy {
       // Parse existing comma-separated values
       const existingNumbers = this.initialValue
         .split(',')
-        .map(n => parseInt(n.trim()))
-        .filter(n => !isNaN(n) && n >= 1 && n <= 200);
+        .map(n => Number.parseInt(n.trim()))
+        .filter(n => !Number.isNaN(n) && n >= 1 && n <= 200);
       
       this.selectedNumbers = new Set(existingNumbers);
     }

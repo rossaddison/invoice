@@ -354,6 +354,13 @@ $this->setTitle('JavaScript Analysis - FAQ');
                                     <div class="card-body">
                                         <div class="table-responsive">
                                             <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Command</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
                                                 <tr>
                                                     <td><code>npm run build:prod</code></td>
                                                     <td>Production build (minified)</td>
@@ -366,7 +373,8 @@ $this->setTitle('JavaScript Analysis - FAQ');
                                                     <td><code>npm run build:watch</code></td>
                                                     <td>Watch mode for development</td>
                                                 </tr>
-                                            </table>
+                                            </tbody>
+                                        </table>
                                         </div>
                                     </div>
                                 </div>

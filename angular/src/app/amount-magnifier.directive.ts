@@ -78,7 +78,7 @@ export class AmountMagnifierDirective implements OnInit {
     const element = this.elementRef.nativeElement;
     
     // Calculate new font size
-    const currentFontSize = parseFloat(this.originalStyles.fontSize);
+    const currentFontSize = Number.parseFloat(this.originalStyles.fontSize);
     const newFontSize = currentFontSize * this.magnificationFactor;
     
     // Apply magnified styles

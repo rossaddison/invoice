@@ -6,8 +6,17 @@
  * URL: http://localhost/invoice/public/check-web-extensions.php
  */
 
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+$allowed_origins = [
+    'https://asdfaq3423rqaefadfe234123fasfasd.com',
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if (in_array($origin, $allowed_origins)) {
+    header('Content-Type: application/json');
+    header("Access-Control-Allow-Origin: $origin");
+    header('Access-Control-Allow-Credentials: true');
+}
 
 try {
     $data = [

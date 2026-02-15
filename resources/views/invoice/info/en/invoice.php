@@ -430,7 +430,7 @@ Next: Include some Codeception Tests which will secure these concepts if bugs cr
 <p><b>Step 2:</b> Goto wonderful.co.uk and get your authToken a.k.a apiToken</p>
 <p><b>Step 3:</b> Fill in and enable the OpenBanking Form on the same page.</p>
 <p><b>Step 4:</b> If you are not using Wonderful as a third party provider, leave the apiToken blank.</p>
-<p><img src="/img/wonderful.jpg" height="300" width="450"/></p>
+<p><img src="/img/wonderful.jpg" alt="Wonderful" height="300" width="450"/></p>
 <p><b>29th July 2025</b></p>
 <p>Payment Gateways: AmazonPay, Braintree, Stripe, Mollie tested</p>
 <p><b>27th July 2025</b></p>
@@ -1314,7 +1314,7 @@ evaluated as a string first and then as true. YII_DEBUG= equates to false wherea
 
 <p><b>3rd August 2024</b></p>
 <p>Psalm Level 1 Testing Completed using below file format.</p>
-<p><pre><xmp>
+<p><pre>
     <plugins><pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/></plugins>    
     <projectFiles>
         <directory name="config" />
@@ -1482,8 +1482,8 @@ p>Further integration of the entity into the form constructs for the rest of the
 <p><b>20 August 2023</b></p>
 <p>Each Product has an additional field called Additional Item Property Name and Value. These product properties can be added from the product view.
 <p>A number of Additional Properties can be added to a product now by means of the Product Property Entity.</p>
-<p><img src="/site/options.png" height="300" width="500"></p>
-<p><img src="/site/ecosio_openpeppol_ubl_invoice_3_15_0.png" height="300" width="600"></p>
+<p><img src="/site/options.png" alt="Options" height="300" width="500"></p>
+<p><img src="/site/ecosio_openpeppol_ubl_invoice_3_15_0.png" alt="Ecosio Open Peppol" height="300" width="600"></p>
 <p>Introduce Peppol (src\Invoice\Helpers\Peppol\PeppolHelper)</p>
 <p><a href="https://ecosio.com/en/peppol-and-xml-document-validator-button/?pk_abe=EN_Peppol_XML_Validator_Page&pk_abv=With_CTA"> An Ecosio validated 0 error xml e-invoice</a> can be generated. 
 <p>Introduce StoreCove (src\Invoice\Helpers\StoreCove\StoreCoveHelper) </p>

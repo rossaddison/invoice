@@ -129,7 +129,7 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
   }
 
   private applyMagnification(element: HTMLElement, originalStyles: CSSStyleDeclaration, borderColor: string, bgColor: string): void {
-    const currentFontSize = parseFloat(originalStyles.fontSize);
+    const currentFontSize = Number.parseFloat(originalStyles.fontSize);
     const newFontSize = currentFontSize * this.magnificationFactor;
     
     element.style.fontSize = `${newFontSize}px`;
