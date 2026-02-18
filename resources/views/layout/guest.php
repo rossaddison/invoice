@@ -353,7 +353,7 @@ echo NavBar::end();
     </main>
 </div>
 <footer class="container py-4">
-    <?= PerformanceMetrics::widget() ?>
+    <?= PerformanceMetrics::widget(); ?>
 </footer> 
     <?php
         $this->endBody();

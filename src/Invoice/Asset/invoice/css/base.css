@@ -147,11 +147,11 @@ code, kbd, pre, samp {
 
 /* Form Elements Base - From style.css */
 input, button, select, textarea {
+  font: inherit;  
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
   color: inherit;
-  font: inherit;
   margin: 0;
 }
 

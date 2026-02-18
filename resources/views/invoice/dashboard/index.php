@@ -155,7 +155,7 @@ use Yiisoft\Html\Html;
                          */
                         foreach ($quote_status_totals as $total) { ?>
                         <tr>
-                             <td>
+                            <td>
                                 <a href="<?= $urlGenerator->generate('quote/index',
                                         ['page' => 1,
                                             'status' => (int) $total['href']]); ?>">

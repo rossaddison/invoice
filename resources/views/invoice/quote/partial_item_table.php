@@ -664,14 +664,24 @@ parameters -->
                                            name="_csrf"
                                            value="<?= $csrf ?>">
                                     <?php if ($invEdit === true) { ?>
-                                    <span  class="btn btn-xs btn-link"
-                                           onclick="return confirm('
-<?= $translator->translate('delete.tax.warning'); ?>');">
-                                        <a  href="
-<?= $urlGenerator->generate('quote/delete_quote_tax_rate', [
-            '_language' => $currentRoute->getArgument('_language'),
-            'id' => $quoteTaxRate->getId()],) ?>">
-                                        <i class="fa fa-trash"></i></a>
+                                    
+                                    
+
+                                    <span>
+<?= A::tag()
+    ->addAttributes([
+        'class' => 'btn btn-secondary',
+        'style' => 'text-decoration:none',
+        'data-bs-toggle' => 'tooltip',
+        'title' => $translator->translate('delete'),
+     ])
+    ->content('❌')
+    ->href($urlGenerator->generate('quote/delete_quote_tax_rate', [
+             '_language' => $currentRoute->getArgument('_language'),
+             'id'        => $quoteTaxRate->getId()
+         ])
+    );
+?>
                                     </span>
                                     <?php } ?>
                                     <span class="text-muted">

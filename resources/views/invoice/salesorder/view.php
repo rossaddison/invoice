@@ -63,7 +63,10 @@ $vat = $s->getSetting('enable_vat_registration');
 <br>
 <br>
 </div> 
-<input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">   
+<input type="hidden"
+       id="_csrf"
+       name="_csrf"
+       value="<?= $csrf ?>">   
 <div id="headerbar">
     <h1 class="headerbar-title">
     <?php
@@ -83,16 +86,20 @@ $vat = $s->getSetting('enable_vat_registration');
                 <ul class="dropdown-menu dropdown-menu">
             
 <?php
-            if ($invEdit) { ?> 
+            if ($invEdit) { ?>
                 <li>
-                    <a href="<?= $urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]) ?>" style="text-decoration:none">
+                    <a href="<?= 
+$urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]) ?>"
+                       style="text-decoration:none">
                         <i class="fa fa-edit fa-margin"></i>
                         <?= $translator->translate('edit'); ?>
                     </a>
                 </li>
                 <?php } ?>
                 <li>
-                    <a href="#so-to-pdf"  data-bs-toggle="modal" style="text-decoration:none">
+                    <a href="#so-to-pdf"
+                       data-bs-toggle="modal"
+                       style="text-decoration:none">
                         <i class="fa fa-print fa-margin"></i>
                         <?= $translator->translate('download.pdf'); ?>
                     </a>
@@ -105,7 +112,9 @@ if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
             } else {?> 
                     <?php if ($invEdit) { ?> 
                 <li>
-                            <a href="#so-to-invoice" data-bs-toggle="modal"  style="text-decoration:none">
+                            <a href="#so-to-invoice"
+                               data-bs-toggle="modal"
+                               style="text-decoration:none">
                         <i class="fa fa-refresh fa-margin"></i>
                         <?= $translator->translate('salesorder.to.invoice'); ?>
                     </a>
@@ -124,30 +133,37 @@ if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
             <div class = 'row'>
                 <div class="col-xs-12 col-sm-6 col-md-5">
                     <h3>
-                        <a href="<?= $urlGenerator->generate('client/view', ['id' => $so->getClient()?->getClient_id()]); ?>">
+                        <a href="<?= $urlGenerator->generate('client/view',
+                                ['id' => $so->getClient()?->getClient_id()]); ?>">
             <?= Html::encode($clienthelper->format_client($so->getClient())); ?>
                         </a>
                     </h3>
                     <br>
-                    <div id="pre_save_client_id" value="<?php echo $so->getClient()?->getClient_id(); ?>" hidden></div>
+                    <div id="pre_save_client_id"
+                         value="<?php echo $so->getClient()?->getClient_id(); ?>"
+                         hidden></div>
                     <div class="client-address">
                         <span class="client-address-street-line-1">
-                            <?php echo null !== ($so->getClient()?->getClient_address_1()) ? Html::encode($so->getClient()?->getClient_address_1()) . '<br>' : ''; ?>
+<?php echo null !== ($so->getClient()?->getClient_address_1()) ?
+Html::encode($so->getClient()?->getClient_address_1()) . '<br>' : ''; ?>
                         </span>
                         <span class="client-address-street-line-2">
-                            <?php echo null !== $so->getClient()?->getClient_address_2() ? Html::encode($so->getClient()?->getClient_address_2()) . '<br>' : ''; ?>
+<?php echo null !== $so->getClient()?->getClient_address_2() ?
+        Html::encode($so->getClient()?->getClient_address_2()) . '<br>' : ''; ?>
                         </span>
                         <span class="client-address-town-line">
-                            <?php echo null !== $so->getClient()?->getClient_city() ? Html::encode($so->getClient()?->getClient_city()) . '<br>' : ''; ?>
-                            <?php echo null !== $so->getClient()?->getClient_state() ? Html::encode($so->getClient()?->getClient_state()) . '<br>' : ''; ?>
-                            <?php echo null !== $so->getClient()?->getClient_zip() ? Html::encode($so->getClient()?->getClient_zip()) : ''; ?>
+<?php echo null !== $so->getClient()?->getClient_city() ?
+        Html::encode($so->getClient()?->getClient_city()) . '<br>' : ''; ?>
+<?php echo null !== $so->getClient()?->getClient_state() ?
+        Html::encode($so->getClient()?->getClient_state()) . '<br>' : ''; ?>
+<?php echo null !== $so->getClient()?->getClient_zip() ?
+        Html::encode($so->getClient()?->getClient_zip()) : ''; ?>
                         </span>
                         <span class="client-address-country-line">
-                            <?php
-                            $soCountry = $so->getClient()?->getClient_country();
-                            echo null !== $soCountry ?
-                            '<br>' . $countryhelper->get_country_name($translator->translate('cldr'),
-                                     $soCountry) :
+<?php $soCountry = $so->getClient()?->getClient_country();
+    echo null !== $soCountry ?
+    '<br>' . $countryhelper->get_country_name($translator->translate('cldr'),
+    $soCountry) :
                             ''; ?>
                         </span>
                     </div>
@@ -185,41 +201,52 @@ if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
                                     <label for="salesorder_number">
                                     <?= $translator->translate('salesorder'); ?> #
                                     </label>
-                                    <input type="text" id="salesorder_number" class="form-control" readonly
-<?php if (null !== $so->getNumber()) : ?> value="<?= $so->getNumber(); ?>"
+                                    <input type="text"
+                                           id="salesorder_number"
+                                           class="form-control"
+                                           readonly
+ <?php if (null !== $so->getNumber()) : ?> value="<?= $so->getNumber(); ?>"
 <?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
                                         <?php endif; ?>>
                                 </div>                                
                                 <div has-feedback">
                                     <label for="salesorder_date_created">
-                                        <?= $vat == '0' ? $translator->translate('date.issued') : $translator->translate('salesorder.date.created'); ?>
+<?= $vat == '0' ? $translator->translate('date.issued') :
+                           $translator->translate('salesorder.date.created'); ?>
                                     </label>
                                     <div class="input-group">
-                                        <input name="salesorder_date_created" id="salesorder_date_created" disabled
+                                        <input name="salesorder_date_created"
+                                               id="salesorder_date_created"
+                                               disabled
                                                class="form-control"
-                                               value="<?= Html::encode($so->getDate_created() instanceof \DateTimeImmutable
-                                       ? $so->getDate_created()->format('Y-m-d') : (is_string(
-                                           $so->getDate_created(),
-                                       )
-                                       ? $so->getDate_created() : '')); ?>"/>
+                                               value="<?=Html::encode(
+$so->getDate_created() instanceof \DateTimeImmutable ?
+        $so->getDate_created()->format('Y-m-d') :
+    (is_string($so->getDate_created()) ? $so->getDate_created() : '')); ?>"/>
                                         <span class="input-group-text">
                                             <i class="fa fa-calendar fa-fw"></i>
                                         </span>
                                     </div>
                                 </div>
-                                <?php if ($quoteNumber) { ?>  
+                                <?php if ($quoteNumber) { ?>
                                 <div has-feedback">
-                                    <label for="salesorder_to_quote"><?= $translator->translate('salesorder.quote'); ?></label>
+                                    <label for="salesorder_to_quote">
+                             <?= $translator->translate('salesorder.quote'); ?>
+                                    </label>
                                     <div class="input-group">
-                                        <?= Html::a($quoteNumber, $urlGenerator->generate('quote/view', ['id' => $so->getQuote_id()]), ['class' => 'btn btn-info']); ?>
+<?= Html::a($quoteNumber, $urlGenerator->generate('quote/view',
+        ['id' => $so->getQuote_id()]), ['class' => 'btn btn-info']); ?>
                                     </div>
                                 </div>
                                 <?php } ?>
-                                <?php if ($invNumber) { ?>  
+                                <?php if ($invNumber) { ?>
                                 <div has-feedback">
-                                    <label for="salesorder_to_url"><?= $translator->translate('salesorder.invoice'); ?></label>
+                                    <label for="salesorder_to_url">
+                            <?= $translator->translate('salesorder.invoice'); ?>
+                                    </label>
                                     <div class="input-group">
-                                        <?= Html::a($invNumber, $urlGenerator->generate('inv/view', ['id' => $so->getInv_id()]), ['class' => 'btn btn-success']); ?>
+<?= Html::a($invNumber, $urlGenerator->generate('inv/view',
+        ['id' => $so->getInv_id()]), ['class' => 'btn btn-success']); ?>
                                     </div>
                                 </div>
                                 <?php } ?>
@@ -232,7 +259,8 @@ if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
     <?php if ($customField->getLocation() !== 1) {
         continue;
     } ?>
-                                        <?php  $cvH->print_field_for_view($customField, $form, $salesOrderCustomValues, $customValues); ?>                                   
+<?php  $cvH->print_field_for_view($customField, $form, $salesOrderCustomValues,
+        $customValues); ?>                                   
 <?php endforeach; ?>
                                 </div>    
                             </div>
@@ -242,7 +270,9 @@ if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
                                     <label for="status_id">
                                         <?= $translator->translate('status'); ?>
                                     </label>
-                                    <select name="status_id" id="status_id" disabled
+                                    <select name="status_id"
+                                            id="status_id"
+                                            disabled
                                             class="form-control">
 <?php
     /**
@@ -251,7 +281,8 @@ if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
      * @var string $status['label']
      */
     foreach ($soStatuses as $key => $status) { ?>
-                                            <option value="<?php echo $key; ?>" <?php if ($key == $so->getStatus_id()) {
+                                            <option value="<?php echo $key; ?>"
+ <?php if ($key == $so->getStatus_id()) {
     $s->check_select(Html::encode($so->getStatus_id() ?? ''), $key);
                                             } ?>>
                                         <?= Html::encode($status['label']); ?> 
@@ -260,22 +291,39 @@ if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="salesorder_password" hidden>
+                                    <label for="salesorder_password"
+                                           hidden>
                            <?= $translator->translate('salesorder.password'); ?>
                                     </label>
-                                    <input type="text" id="salesorder_password" class="form-control" disabled value="<?= Html::encode($so->getPassword() ?? ''); ?>" hidden>
+                                    <input type="text"
+                                           id="salesorder_password"
+                                           class="form-control"
+                                           disabled
+                                           value="<?=
+                                    Html::encode($so->getPassword() ?? ''); ?>"
+                                           hidden>
                                 </div>
                                 <div>
                                     <label for="salesorder_client_purchase_order_number">
       <?= $translator->translate('salesorder.clients.purchase.order.number'); ?>
                                     </label>
-                                    <input type="text" id="salesorder_client_purchase_order_number" class="form-control" disabled value="<?= Html::encode($so->getClient_po_number() ?? ''); ?>">
+                                    <input type="text"
+                                           id="salesorder_client_purchase_order_number"
+                                           class="form-control"
+                                           disabled
+                                           value="<?= 
+                            Html::encode($so->getClient_po_number() ?? ''); ?>">
                                 </div>
                                 <div>
                                     <label for="salesorder_client_purchase_order_person">
       <?= $translator->translate('salesorder.clients.purchase.order.person'); ?>
                                     </label>
-                                    <input type="text" id="salesorder_client_purchase_order_number" class="form-control" disabled value="<?= Html::encode($so->getClient_po_person() ?? ''); ?>">
+                                    <input type="text"
+                                           id="salesorder_client_purchase_order_person"
+                                           class="form-control"
+                                           disabled
+                                           value="<?= 
+                            Html::encode($so->getClient_po_person() ?? ''); ?>">
                                 </div>
                                
                                     <?php
@@ -283,12 +331,22 @@ if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
                      if (in_array($so->getStatus_id(), [2,8]) && !$invEdit) { ?>
                                         <div>
                                             <br>
-                                            <a href="<?= $urlGenerator->generate('salesorder/url_key', ['key' => $so->getUrl_key()]); ?>" class="btn btn-success">  
-                                                <?= $translator->translate('salesorder.agree.to.terms') . '/' . $translator->translate('salesorder.reject'); ?>    
+                                            <a href="<?= 
+                         $urlGenerator->generate('salesorder/url_key',
+                                 ['key' => $so->getUrl_key()]); ?>"
+                                               class="btn btn-success">
+<?= $translator->translate('salesorder.agree.to.terms')
+    . '/' . $translator->translate('salesorder.reject'); ?>
                                             </a>
                                         </div>
                                     <?php } ?>
-                                <input type="text" id="dropzone_client_id" readonly  hidden class="form-control" value="<?= $so->getClient()?->getClient_id(); ?>">
+                                <input type="text"
+                                       id="dropzone_client_id"
+                                       readonly
+                                       hidden
+                                       class="form-control"
+                                       value="<?=
+                                        $so->getClient()?->getClient_id(); ?>">
                             </div>
                         </div>
                     </div>
@@ -296,7 +354,9 @@ if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
             </div>
         </div>
     </div>
-   <div id="partial_item_table_parameters" so_items="<?php $soItems; ?>" disabled>
+   <div id="partial_item_table_parameters"
+        so_items="<?php $soItems; ?>"
+        disabled>
     <?=
        $partial_item_table;
     ?>
@@ -309,22 +369,26 @@ if (null !== $so->getInv_id() || (in_array($so->getStatus_id(), [1,2,3,4,5]))) {
                         <?= $translator->translate('notes'); ?>
                     </div>
                     <div class="panel-body">
-                        <textarea name="notes" id="notes" rows="3" disabled
-                                  class="input-sm form-control"><?= Html::encode($so->getNotes() ?? ''); ?></textarea>
+                        <textarea name="notes"
+                                  id="notes"
+                                  rows="3"
+                                  disabled
+                                  class="input-sm form-control">
+                                    <?= Html::encode($so->getNotes() ?? ''); ?>
+                        </textarea>
                     </div>
                 </div>
                 <br>
                 <div class="col-xs-12 visible-xs visible-sm"><br></div>
             </div>
-            <div id="view_partial_inv_delivery_location" class="col-xs-12 col-md-6">
-                <?= $partial_quote_delivery_location; ?>
+            <div id="view_partial_inv_delivery_location"
+                 class="col-xs-12 col-md-6">
+                 <?= $partial_quote_delivery_location; ?>
             </div>
-            <div id="view_custom_fields" class="col-xs-12 col-md-6">
+            <div id="view_custom_fields"
+                 class="col-xs-12 col-md-6">
                  <?php echo $view_custom_fields; ?>
             </div>
     </div>
 </div>
 </div>
-<div>
-</div>
-       

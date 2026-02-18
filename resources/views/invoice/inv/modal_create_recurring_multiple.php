@@ -60,7 +60,6 @@ declare(strict_types=1);
                                    id="recur_start_date"
                                    class="form-control"
                                    type="date"
-                                   role="presentation"
                                    autocomplete="off">
                         </div>
                     </div>
@@ -85,7 +84,6 @@ declare(strict_types=1);
                                    id="recur_end_date"
                                    class="form-control"
                                    type="date"
-                                   role="presentation"
                                    autocomplete="off">
                         </div>
                     </div>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\I;
 
@@ -48,89 +48,109 @@ use Yiisoft\Html\Tag\I;
 $this->setTitle($translator->translate('quote'));
 
 $vat = $s->getSetting('enable_vat_registration');
-?>
-<div class="panel panel-default">
-<div class="panel-heading">
-    <?= Html::encode($this->getTitle()); ?>
-</div>
-<?php
-    echo $modal_delete_quote;
-    if ($vat === '0') {
-        echo $modal_add_quote_tax;
-    }
-    // modal_product_lookups is performed using below $modal_choose_products
-    echo $modal_choose_products;
-    echo $modal_choose_tasks;
-    echo $modal_quote_to_invoice;
-    echo $modal_quote_to_so;
-    echo $modal_quote_to_pdf;
-    echo $modal_copy_quote;
-    echo $modal_delete_items;
-    echo $view_product_task_tabs;
-?>
-<input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">   
-<div id="headerbar">
-    <h1 class="headerbar-title">
-    <?php echo $view_quote_number; ?>
-    </h1>
-        <div class="headerbar-item pull-right">
-        <?php
-            echo $view_quote_vat_enabled_switch;
-        ?>    
-        <?= $quoteToolbar; ?>        
-    </div>
-</div>
 
-<div id="content">    
-    <?= $alert; ?>  
-    <div id="quote_form">
-        <div class="quote">
-            <div class = "row">
-                <?= $view_quote_client_details; ?>
-                <div class="col-xs-12 visible-xs"><br></div>
-                <div class="col-xs-12 col-sm-6 col-md-7">
-                    <div class="details-box">
-                        <div class = "row">
-                        	<?= $view_details_box_with_custom_field; ?>                            
-                            <div class="col-xs-12 col-md-6">
-                                <?= $view_quote_approve_reject; ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-   <div id="partial_item_table_parameters" disabled>
-    <?=
-       $partial_item_table;
-    ?>     
-   </div>
-    
-   <?= Html::openTag('div', ['class' => 'row']); ?>
-            <div class="col-xs-12 col-md-6">
-                <div class="panel panel-default no-margin">
-                    <div class="panel-heading">
-                        <?= $translator->translate('notes'); ?>
-                    </div>
-                    <div class="panel-body">
-                        <textarea name="notes" 
-                                  id="notes" 
-                                  rows="3" disabled
-                            	  class="input-sm form-control">
-                                    <?= Html::encode($body['notes'] ?? ''); ?>
-                        </textarea>
-                    </div>
-                </div>
-                <div class="col-xs-12 visible-xs visible-sm"><br></div>
-            </div> 
-            <div id="view_partial_inv_delivery_location"
-                 class="col-xs-12 col-md-6">
-                <?= $partial_quote_delivery_location; ?>
-            </div> 
-            <div id="view_custom_fields" class="col-xs-12 col-md-6">
-                <?= $view_custom_fields; ?>
-            </div>
-    </div>
-</div>
-<?php echo $modal_add_allowance_charge; ?>
+echo H::openTag('div', ['class' => 'panel panel-default']);
+ echo H::openTag('div', ['class' => 'panel-heading']);
+  echo H::encode($this->getTitle());
+ echo H::closeTag('div');
+ 
+echo $modal_delete_quote;
+if ($vat === '0') {
+    echo $modal_add_quote_tax;
+}
+// modal_product_lookups is performed using below $modal_choose_products
+echo $modal_choose_products;
+echo $modal_choose_tasks;
+echo $modal_quote_to_invoice;
+echo $modal_quote_to_so;
+echo $modal_quote_to_pdf;
+echo $modal_copy_quote;
+echo $modal_delete_items;
+echo $view_product_task_tabs;
+
+echo H::openTag('input', [
+    'type' => 'hidden',
+    'id' => '_csrf',
+    'name' => '_csrf',
+    'value' => $csrf
+]);
+echo H::closeTag('input');
+
+echo H::openTag('div', ['id' => 'headerbar']);
+ echo H::openTag('h1', ['class' => 'headerbar-title']);
+  echo $view_quote_number;
+ echo H::closeTag('h1');
+ echo H::openTag('div', ['class' => 'headerbar-item pull-right']);
+  echo $view_quote_vat_enabled_switch;
+  echo $quoteToolbar;
+ echo H::closeTag('div');
+echo H::closeTag('div');
+
+echo H::openTag('div', ['id' => 'content']);
+ echo $alert;
+ echo H::openTag('div', ['id' => 'quote_form']);
+  echo H::openTag('div', ['class' => 'quote']);
+   echo H::openTag('div', ['class' => 'row']);
+    echo $view_quote_client_details;
+    echo H::openTag('div', ['class' => 'col-xs-12 visible-xs']);
+     echo '<br>';
+    echo H::closeTag('div');
+    echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-7']);
+     echo H::openTag('div', ['class' => 'details-box']);
+      echo H::openTag('div', ['class' => 'row']);
+       echo $view_details_box_with_custom_field;
+       echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']);
+        echo $view_quote_approve_reject;
+       echo H::closeTag('div');
+      echo H::closeTag('div');
+     echo H::closeTag('div');
+    echo H::closeTag('div');
+   echo H::closeTag('div');
+  echo H::closeTag('div');
+ echo H::closeTag('div');
+ 
+ echo H::openTag('div', [
+     'id' => 'partial_item_table_parameters',
+     'disabled' => true
+ ]);
+  echo $partial_item_table;
+ echo H::closeTag('div');
+ 
+ echo H::openTag('div', ['class' => 'row']);
+  echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']);
+   echo H::openTag('div', ['class' => 'panel panel-default no-margin']);
+    echo H::openTag('div', ['class' => 'panel-heading']);
+     echo $translator->translate('notes');
+    echo H::closeTag('div');
+    echo H::openTag('div', ['class' => 'panel-body']);
+     echo H::openTag('textarea', [
+         'name' => 'notes',
+         'id' => 'notes',
+         'rows' => '3',
+         'disabled' => true,
+         'class' => 'input-sm form-control'
+     ]);
+      echo H::encode($body['notes'] ?? '');
+     echo H::closeTag('textarea');
+    echo H::closeTag('div');
+   echo H::closeTag('div');
+   echo H::openTag('div', ['class' => 'col-xs-12 visible-xs visible-sm']);
+    echo '<br>';
+   echo H::closeTag('div');
+  echo H::closeTag('div');
+  echo H::openTag('div', [
+      'id' => 'view_partial_inv_delivery_location',
+      'class' => 'col-xs-12 col-md-6'
+  ]);
+   echo $partial_quote_delivery_location;
+  echo H::closeTag('div');
+  echo H::openTag('div', [
+      'id' => 'view_custom_fields',
+      'class' => 'col-xs-12 col-md-6'
+  ]);
+   echo $view_custom_fields;
+  echo H::closeTag('div');
+ echo H::closeTag('div');
+echo H::closeTag('div');
+echo H::closeTag('div');
+echo $modal_add_allowance_charge;

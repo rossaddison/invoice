@@ -7,7 +7,7 @@ echo "=== NetBeans VS Code Sync Check ==="
 VSCODE_FILE="$1"
 NETBEANS_PROJECT="/c/wamp64/www/invoice"
 
-if [ -f "$VSCODE_FILE" ]; then
+if [[ -f "$VSCODE_FILE" ]]; then
     echo "File exists in VS Code environment: $VSCODE_FILE"
     echo "File size: $(stat -c%s "$VSCODE_FILE") bytes"
     echo "Last modified: $(stat -c%y "$VSCODE_FILE")"
