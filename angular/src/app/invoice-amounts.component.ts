@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { InvoiceAmountMagnifierService } from './invoice-amount-magnifier.service';
 
 @Component({
@@ -40,22 +40,14 @@ import { InvoiceAmountMagnifierService } from './invoice-amount-magnifier.servic
     }
   `]
 })
-export class InvoiceAmountsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class InvoiceAmountsComponent implements AfterViewInit {
 
   constructor(private magnifierService: InvoiceAmountMagnifierService) {}
-
-  ngOnInit() {
-    // Service automatically initializes
-  }
 
   ngAfterViewInit() {
     // Reinitialize after view is ready
     setTimeout(() => {
       this.magnifierService.reinitialize();
     }, 200);
-  }
-
-  ngOnDestroy() {
-    // Service handles its own cleanup
   }
 }

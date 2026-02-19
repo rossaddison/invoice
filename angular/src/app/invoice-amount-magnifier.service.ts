@@ -46,9 +46,9 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
       elements.forEach((element: Element) => {
         const htmlElement = element as HTMLElement;
         
-        if (this.isAmountElement(htmlElement) && !htmlElement.hasAttribute('data-magnifier-initialized')) {
+        if (this.isAmountElement(htmlElement) && !htmlElement.dataset.magnifierInitialized) {
           this.addMagnificationBehavior(htmlElement);
-          htmlElement.setAttribute('data-magnifier-initialized', 'true');
+          htmlElement.dataset.magnifierInitialized = 'true';
         }
       });
     });
@@ -78,7 +78,7 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
     }
 
     // Store original styles
-    const computedStyle = window.getComputedStyle(element);
+    const computedStyle = globalThis.getComputedStyle(element);
     const originalStyles = {
       fontSize: computedStyle.fontSize,
       fontWeight: computedStyle.fontWeight,

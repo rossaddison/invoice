@@ -38,9 +38,9 @@ class InvoiceAmountMagnifier {
       elements.forEach((element: Element) => {
         const htmlElement = element as HTMLElement;
         
-        if (this.isAmountElement(htmlElement) && !htmlElement.hasAttribute('data-magnifier-initialized')) {
+        if (this.isAmountElement(htmlElement) && !htmlElement.dataset.magnifierInitialized) {
           this.addMagnificationBehavior(htmlElement);
-          htmlElement.setAttribute('data-magnifier-initialized', 'true');
+          htmlElement.dataset.magnifierInitialized = 'true';
         }
       });
     });
@@ -70,17 +70,18 @@ class InvoiceAmountMagnifier {
     }
 
     // Store original styles
+    const computedStyle = globalThis.getComputedStyle(element);
     const originalStyles = {
-      fontSize: window.getComputedStyle(element).fontSize,
-      fontWeight: window.getComputedStyle(element).fontWeight,
-      backgroundColor: window.getComputedStyle(element).backgroundColor,
-      border: window.getComputedStyle(element).border,
-      borderRadius: window.getComputedStyle(element).borderRadius,
-      padding: window.getComputedStyle(element).padding,
-      zIndex: window.getComputedStyle(element).zIndex,
-      position: window.getComputedStyle(element).position,
-      transform: window.getComputedStyle(element).transform,
-      boxShadow: window.getComputedStyle(element).boxShadow
+      fontSize:        computedStyle.fontSize,
+      fontWeight:      computedStyle.fontWeight,
+      backgroundColor: computedStyle.backgroundColor,
+      border:          computedStyle.border,
+      borderRadius:    computedStyle.borderRadius,
+      padding:         computedStyle.padding,
+      zIndex:          computedStyle.zIndex,
+      position:        computedStyle.position,
+      transform:       computedStyle.transform,
+      boxShadow:       computedStyle.boxShadow
     };
 
     // Set base styles
@@ -172,6 +173,4 @@ class InvoiceAmountMagnifier {
 const invoiceAmountMagnifier = new InvoiceAmountMagnifier();
 
 // Export for manual control if needed
-if (typeof window !== 'undefined') {
-  (window as any).InvoiceAmountMagnifier = InvoiceAmountMagnifier;
-}
+(globalThis as any).InvoiceAmountMagnifier = InvoiceAmountMagnifier;

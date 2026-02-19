@@ -28,14 +28,16 @@ return [
             'config' => [
                 'storage' => [
                     // Storage type: 'memory', 'redis', or 'apcu'
-                    // For production, use 'redis' or 'apcu' for persistence across requests
+                    // For production, use 'redis' or 'apcu' for persistence
+                    // across requests
                     'type' => $_ENV['PROMETHEUS_STORAGE_TYPE'] ?? 'memory',
                     'redis' => [
                         'host' => $_ENV['REDIS_HOST'] ?? '127.0.0.1',
                         'port' => (int) ($_ENV['REDIS_PORT'] ?? 6379),
                         'timeout' => (float) ($_ENV['REDIS_TIMEOUT'] ?? 0.1),
                         'read_timeout' => (int) ($_ENV['REDIS_READ_TIMEOUT'] ?? 10),
-                        'persistent_connections' => (bool) ($_ENV['REDIS_PERSISTENT'] ?? false),
+                        'persistent_connections' => (bool)
+                            ($_ENV['REDIS_PERSISTENT'] ?? false),
                     ]
                 ],
                 'namespace_prefix' => 'yii3_invoice',
@@ -81,10 +83,12 @@ return [
                     'port' => (int) ($_ENV['REDIS_PORT'] ?? 6379),
                     'timeout' => (float) ($_ENV['REDIS_TIMEOUT'] ?? 0.1),
                     'read_timeout' => (int) ($_ENV['REDIS_READ_TIMEOUT'] ?? 10),
-                    'persistent_connections' => (bool) ($_ENV['REDIS_PERSISTENT'] ?? false),
+                    'persistent_connections' => (bool) ($_ENV['REDIS_PERSISTENT']
+                        ?? false),
                 ])
             ),
-            'apcu' => extension_loaded('apcu') && class_exists('Prometheus\Storage\APC') 
+            'apcu' => extension_loaded('apcu')
+                    && class_exists('Prometheus\Storage\APC')
                 ? new CollectorRegistry(new \Prometheus\Storage\APC())
                 : new CollectorRegistry(new InMemory()),
             default => new CollectorRegistry(new InMemory())
@@ -107,3 +111,4 @@ return [
         ->name('prometheus/dashboard'),
     */
 ];
+    

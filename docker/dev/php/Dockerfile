@@ -1,6 +1,6 @@
 FROM php:8.5.2-fpm-alpine
 
-# Install system dependencies and PHP build tools
+# Install system dependencies, PHP build tools, PECL extensions, then clean up
 RUN apk add --no-cache \
       acl \
       fcgi \
@@ -20,14 +20,10 @@ RUN apk add --no-cache \
       oniguruma-dev \
       postgresql-dev \
       rabbitmq-c-dev \
-      $PHPIZE_DEPS
-
-# Install and enable PECL extension (amqp)
-RUN pecl install amqp-1.11.0 \
-    && docker-php-ext-enable amqp
-
-# Clean up build dependencies and pear cache for a smaller image
-RUN apk del --purge $PHPIZE_DEPS \
+      $PHPIZE_DEPS \
+    && pecl install amqp-1.11.0 \
+    && docker-php-ext-enable amqp \
+    && apk del --purge $PHPIZE_DEPS \
     && pecl clear-cache \
     && rm -rf /tmp/pear \
     && docker-php-source delete \
@@ -44,7 +40,7 @@ RUN ln -sf $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 # Set the working directory
 WORKDIR /app
 
-# Copy configuration files (remove if not needed)
+# Copy configuration files
 COPY docker/dev/php/conf.d/ $PHP_INI_DIR/conf.d/
 COPY docker/dev/php/php-fpm.d/ /usr/local/etc/php-fpm.d/
 

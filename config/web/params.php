@@ -31,7 +31,7 @@ return [
             'fr' => 'fr-FR',
             'gd-GB' => 'gd-GB',
             'ha-NG' => 'ha-NG',
-            'he-IL' => 'he-IL', 
+            'he-IL' => 'he-IL',
             'ig-NG' => 'ig-NG',
             'id' => 'id-ID',
             'it' => 'it-IT',

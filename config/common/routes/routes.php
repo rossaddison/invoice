@@ -474,7 +474,7 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
                 ->action([SettingController::class, 'listlimit'])
                 ->name('setting/listlimit'),
-// *********************************** pEI's *********************************                
+// *********************************** pEI's *********************************
             Route::get('')
                 ->action([ICLR::class, 'index'])
                 ->name('invoice/index'),
@@ -1853,7 +1853,7 @@ return [
             Route::methods([$mG, $mP], '/quoteitemallowancecharge/view/{id}')
                 ->name('quoteitemallowancecharge/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteItemAllowanceChargeController::class, 'view']),                
+                ->action([QuoteItemAllowanceChargeController::class, 'view']),
             Route::get('/report')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ReportController::class, 'index'])
@@ -2110,7 +2110,7 @@ return [
             Route::methods([$mG, $mP], '/userclient/new/{user_id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([UserClientController::class, 'new'])
-                ->name('userclient/new'),            
+                ->name('userclient/new'),
             Route::methods([$mG, $mP], '/userclient/delete/{id}')
                 ->name('userclient/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))

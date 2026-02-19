@@ -9,6 +9,9 @@
 
 declare(strict_types=1);
 
+use App\Exception\ConfigurationFileNotFoundException;
+use App\Exception\ConfigurationFileReadException;
+
 // Check if we're in the right directory
 if (!file_exists('config/common/params.php')) {
     echo "Error: Please run this installer from the project root directory.\n";
@@ -34,13 +37,15 @@ $allPassed = true;
 $phpVersion = PHP_VERSION;
 $requiredPhp = '8.3';
 $phpOk = version_compare($phpVersion, $requiredPhp, '>=');
-echo sprintf("   PHP version (%s): %s\n", $phpVersion, $phpOk ? '✅ OK' : '❌ FAIL');
+echo sprintf("   PHP version (%s): %s\n", $phpVersion,
+        $phpOk ? '✅ OK' : '❌ FAIL');
 if (!$phpOk) {
     $allPassed = false;
 }
 
 // Required extensions
-$requiredExtensions = ['curl', 'dom', 'fileinfo', 'filter', 'gd', 'intl', 'json', 'mbstring', 'openssl', 'pdo', 'pdo_mysql'];
+$requiredExtensions = ['curl', 'dom', 'fileinfo', 'filter', 'gd', 'intl', 'json',
+    'mbstring', 'openssl', 'pdo', 'pdo_mysql'];
 foreach ($requiredExtensions as $ext) {
     $loaded = extension_loaded($ext);
     echo sprintf("   Extension %s: %s\n", $ext, $loaded ? '✅ OK' : '❌ MISSING');
@@ -57,7 +62,8 @@ $composerCmds = [
     'composer',
     'composer.bat', // for Windows
     'composer.phar',
-    'C:\ProgramData\ComposerSetup\bin\composer.bat', // default Windows global install path
+    // default Windows global install path
+    'C:\ProgramData\ComposerSetup\bin\composer.bat',
 ];
 
 foreach ($composerCmds as $cmd) {
@@ -65,7 +71,8 @@ foreach ($composerCmds as $cmd) {
     $returnCode = 0;
     $nul = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'NUL' : '/dev/null';
     exec("$cmd --version 2>$nul", $output, $returnCode);
-    if ($returnCode === 0 && isset($output[0]) && stripos((string)$output[0], 'Composer') !== false) {
+    if ($returnCode === 0 && isset($output[0])
+            && stripos((string)$output[0], 'Composer') !== false) {
         $composerInstalled = true;
         $composerCmdFound = $cmd;
         $composerFoundMsg = $cmd;
@@ -73,7 +80,8 @@ foreach ($composerCmds as $cmd) {
     }
 }
 
-echo sprintf("   Composer: %s\n", $composerInstalled ? "✅ OK ($composerFoundMsg)" : '❌ NOT FOUND');
+echo sprintf("   Composer: %s\n",
+        $composerInstalled ? "✅ OK ($composerFoundMsg)" : '❌ NOT FOUND');
 if (!$composerInstalled) {
     $allPassed = false;
 }
@@ -114,11 +122,14 @@ if (is_dir(__DIR__ . '/vendor') && file_exists(__DIR__ . '/vendor/autoload.php')
         // Pass output directly to terminal
         passthru($command, $returnCode);
 
-        if ($returnCode === 0 && is_dir('vendor') && file_exists('vendor/autoload.php')) {
+        if ($returnCode === 0
+                && is_dir('vendor')
+                && file_exists('vendor/autoload.php')) {
             echo "   ✅ Dependencies installed successfully!\n\n";
         } else {
             echo "   ❌ Composer install failed.\n";
-            echo "   💡 You can run '$composerCmdFound install' manually and then re-run this installer.\n\n";
+            echo "   💡 You can run '$composerCmdFound install' manually and"
+                    . " then re-run this installer.\n\n";
             exit(1);
         }
     } else {
@@ -133,15 +144,17 @@ echo "🗄️ Database setup...\n";
 function parseDatabaseConfig(): array
 {
     $paramsFile = 'config/common/params.php';
-
+    
     if (!file_exists($paramsFile)) {
-        throw new Exception('Configuration file not found: ' . $paramsFile);
+        throw new ConfigurationFileNotFoundException($paramsFile);
     }
-
+    
     $content = file_get_contents($paramsFile);
+    
     if ($content === false) {
-        throw new Exception('Failed to read configuration file: ' . $paramsFile);
+        throw new ConfigurationFileReadException($paramsFile);
     }
+    
     $env = $_ENV['APP_ENV'] ?? 'local';
 
     // Default values
@@ -151,16 +164,20 @@ function parseDatabaseConfig(): array
     $dbName = 'yii3_i';
 
     // Parse switch statement
-    if (preg_match('/case\s+[\'"]' . preg_quote($env) . '[\'"]:\s*(.*?)break;/s', $content, $matches)) {
+    if (preg_match('/case\s+[\'"]' . preg_quote($env)
+            . '[\'"]:\s*(.*?)break;/s', $content, $matches)) {
         $caseContent = $matches[1];
 
-        if (preg_match('/\$dbHost\s*=\s*[\'"]([^\'"]+)[\'"]/', $caseContent, $hostMatch)) {
+        if (preg_match('/\$dbHost\s*=\s*[\'"]([^\'"]+)[\'"]/',
+                $caseContent, $hostMatch)) {
             $dbHost = $hostMatch[1];
         }
-        if (preg_match('/\$dbUser\s*=\s*[\'"]([^\'"]+)[\'"]/', $caseContent, $userMatch)) {
+        if (preg_match('/\$dbUser\s*=\s*[\'"]([^\'"]+)[\'"]/',
+                $caseContent, $userMatch)) {
             $dbUser = $userMatch[1];
         }
-        if (preg_match('/\$dbPassword\s*=\s*[\'"]([^\'"]+)[\'"]/', $caseContent, $passMatch)) {
+        if (preg_match('/\$dbPassword\s*=\s*[\'"]([^\'"]+)[\'"]/',
+                $caseContent, $passMatch)) {
             $dbPassword = $passMatch[1];
         }
     }
@@ -207,20 +224,24 @@ try {
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Check if database exists
-            $stmt = $pdo->prepare('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?');
+            $stmt = $pdo->prepare('SELECT SCHEMA_NAME FROM'
+                    . ' INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?');
             $stmt->execute([$database]);
 
             if ($stmt->fetch()) {
                 echo "   ✅ Database '{$database}' already exists.\n\n";
             } else {
                 // Create database
-                $sql = sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $database);
+                $sql = sprintf('CREATE DATABASE `%s` CHARACTER'
+                        . ' SET utf8mb4 COLLATE utf8mb4_unicode_ci', $database);
                 $pdo->exec($sql);
                 echo "   ✅ Database '{$database}' created successfully!\n\n";
             }
         } catch (PDOException $e) {
-            echo "   ❌ Database operation failed: Connection or permission error\n";
-            echo "   💡 Please ensure MySQL is running and credentials are correct.\n\n";
+            echo "   ❌ Database operation failed: Connection"
+            . " or permission error\n";
+            echo "   💡 Please ensure MySQL is running and"
+            . " credentials are correct.\n\n";
             // Log detailed error for debugging (not exposed to user)
             error_log('Database setup error: ' . $e->getMessage());
         }

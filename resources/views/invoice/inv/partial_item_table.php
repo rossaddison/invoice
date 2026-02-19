@@ -551,7 +551,7 @@ foreach ($invItems as $item) {
               echo H::openTag('td', ['class' => 'td-amount']);
                echo H::openTag('b');
                 echo ($isCharge ? '' : '(') . $numberHelper->format_currency(
-                    $invItemAllowanceCharge->getAmount()) . ($isCharge ? '' : '');
+                    $invItemAllowanceCharge->getAmount()) . ($isCharge ? '' : ')');
                echo H::closeTag('b');
               echo H::closeTag('td');
               echo H::openTag('td', ['class' => 'td-amount']);

@@ -145,13 +145,13 @@ export class FlashMessageService {
    */
   private getFlashTimer(): any {
     // Try to get from window first
-    if (window.flashMessageTimer) {
-      return window.flashMessageTimer;
+    if (globalThis.flashMessageTimer) {
+      return globalThis.flashMessageTimer;
     }
 
     // Try to find in DOM through window object
-    if ((window as any).flashMessageTimerInstance) {
-      return (window as any).flashMessageTimerInstance;
+    if ((globalThis as any).flashMessageTimerInstance) {
+      return (globalThis as any).flashMessageTimerInstance;
     }
 
     return null;
