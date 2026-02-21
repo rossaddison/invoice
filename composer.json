@@ -35,7 +35,7 @@
         "amzn/amazon-pay-api-sdk-php": "^2.7.0",
         "azjezz/psl": "4.2.1",
         "braintree/braintree_php": "^6.32",
-        "brick/math": "^0.14.8",
+        "brick/math": "^0.15.0",
         "brick/money": "^0.11.1",
         "cebe/markdown": "^1.2.1@dev",
         "chillerlan/php-qrcode": "^5.0.5",
