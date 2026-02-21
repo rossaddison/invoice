@@ -21,11 +21,13 @@ final class ItemLookupEntityTest extends Unit
 
     public function testConstructorWithAllParameters(): void
     {
-        $itemLookup = new ItemLookup(1, 'Web Development', 'Custom website development service', 1500.50);
+        $itemLookup = new ItemLookup(1, 'Web Development',
+                'Custom website development service', 1500.50);
         
         $this->assertSame('1', $itemLookup->getId());
         $this->assertSame('Web Development', $itemLookup->getName());
-        $this->assertSame('Custom website development service', $itemLookup->getDescription());
+        $this->assertSame('Custom website development service',
+                $itemLookup->getDescription());
         $this->assertSame(1500.50, $itemLookup->getPrice());
     }
 
@@ -50,7 +52,8 @@ final class ItemLookupEntityTest extends Unit
         $itemLookup = new ItemLookup();
         $itemLookup->setDescription('Professional business consulting services');
         
-        $this->assertSame('Professional business consulting services', $itemLookup->getDescription());
+        $this->assertSame('Professional business consulting services',
+                $itemLookup->getDescription());
     }
 
     public function testPriceSetterAndGetter(): void
@@ -63,22 +66,26 @@ final class ItemLookupEntityTest extends Unit
 
     public function testCommonServiceTypes(): void
     {
-        $development = new ItemLookup(1, 'Software Development', 'Custom software development', 2000.00);
+        $development = new ItemLookup(1, 'Software Development',
+                'Custom software development', 2000.00);
         $this->assertSame('Software Development', $development->getName());
         $this->assertSame(2000.00, $development->getPrice());
 
-        $design = new ItemLookup(2, 'Graphic Design', 'Logo and branding design', 500.00);
+        $design = new ItemLookup(2, 'Graphic Design',
+                'Logo and branding design', 500.00);
         $this->assertSame('Graphic Design', $design->getName());
         $this->assertSame(500.00, $design->getPrice());
 
-        $consulting = new ItemLookup(3, 'Business Consulting', 'Strategic business advice', 150.00);
+        $consulting = new ItemLookup(3, 'Business Consulting',
+                'Strategic business advice', 150.00);
         $this->assertSame('Business Consulting', $consulting->getName());
         $this->assertSame(150.00, $consulting->getPrice());
     }
 
     public function testLongItemNames(): void
     {
-        $longName = 'Very Long Service Name That Could Potentially Exceed Normal Database Field Limits But Should Still Work';
+        $longName = 'Very Long Service Name That Could Potentially Exceed Normal'
+                . ' Database Field Limits But Should Still Work';
         $itemLookup = new ItemLookup(1, $longName, 'Description', 100.00);
         
         $this->assertSame($longName, $itemLookup->getName());
@@ -86,7 +93,8 @@ final class ItemLookupEntityTest extends Unit
 
     public function testLongDescriptions(): void
     {
-        $longDescription = str_repeat('This is a very detailed description of the service item. ', 10);
+        $longDescription = str_repeat('This is a very detailed description of'
+                . ' the service item. ', 10);
         $itemLookup = new ItemLookup(1, 'Service', $longDescription, 100.00);
         
         $this->assertSame($longDescription, $itemLookup->getDescription());
@@ -94,18 +102,22 @@ final class ItemLookupEntityTest extends Unit
 
     public function testSpecialCharactersInContent(): void
     {
-        $itemLookup = new ItemLookup(1, 'Web Development & Design', 'HTML/CSS/JS development @ $75/hour', 75.50);
+        $itemLookup = new ItemLookup(1, 'Web Development & Design',
+                'HTML/CSS/JS development @ $75/hour', 75.50);
         
         $this->assertSame('Web Development & Design', $itemLookup->getName());
-        $this->assertSame('HTML/CSS/JS development @ $75/hour', $itemLookup->getDescription());
+        $this->assertSame('HTML/CSS/JS development @ $75/hour',
+                $itemLookup->getDescription());
     }
 
     public function testUnicodeInContent(): void
     {
-        $itemLookup = new ItemLookup(1, 'Développement Web', 'Création de sites web professionnels 网站开发', 100.00);
+        $itemLookup = new ItemLookup(1, 'Développement Web',
+                'Création de sites web professionnels 网站开发', 100.00);
         
         $this->assertSame('Développement Web', $itemLookup->getName());
-        $this->assertSame('Création de sites web professionnels 网站开发', $itemLookup->getDescription());
+        $this->assertSame('Création de sites web professionnels 网站开发',
+                $itemLookup->getDescription());
     }
 
     public function testPricePrecision(): void
@@ -122,14 +134,16 @@ final class ItemLookupEntityTest extends Unit
 
     public function testZeroPrice(): void
     {
-        $itemLookup = new ItemLookup(1, 'Free Service', 'Complimentary service', 0.00);
+        $itemLookup = new ItemLookup(1, 'Free Service',
+                'Complimentary service', 0.00);
         
         $this->assertSame(0.00, $itemLookup->getPrice());
     }
 
     public function testLargePrices(): void
     {
-        $itemLookup = new ItemLookup(1, 'Enterprise Service', 'Large scale implementation', 50000.00);
+        $itemLookup = new ItemLookup(1, 'Enterprise Service',
+                'Large scale implementation', 50000.00);
         
         $this->assertSame(50000.00, $itemLookup->getPrice());
     }
@@ -159,10 +173,12 @@ final class ItemLookupEntityTest extends Unit
 
     public function testZeroAndLargeIds(): void
     {
-        $zeroId = new ItemLookup(0, 'Zero ID Service', 'Service with zero ID', 50.00);
+        $zeroId = new ItemLookup(0, 'Zero ID Service',
+                'Service with zero ID', 50.00);
         $this->assertSame('0', $zeroId->getId());
 
-        $largeId = new ItemLookup(999999, 'Large ID Service', 'Service with large ID', 75.00);
+        $largeId = new ItemLookup(999999, 'Large ID Service',
+                'Service with large ID', 75.00);
         $this->assertSame('999999', $largeId->getId());
     }
 
@@ -188,12 +204,14 @@ final class ItemLookupEntityTest extends Unit
         $itemLookup = new ItemLookup();
         $itemLookup->setId(999);
         $itemLookup->setName('Complete Setup Service');
-        $itemLookup->setDescription('This is a complete item lookup setup with all properties configured properly.');
+        $itemLookup->setDescription('This is a complete item lookup setup with'
+                . ' all properties configured properly.');
         $itemLookup->setPrice(999.99);
         
         $this->assertSame('999', $itemLookup->getId());
         $this->assertSame('Complete Setup Service', $itemLookup->getName());
-        $this->assertSame('This is a complete item lookup setup with all properties configured properly.', $itemLookup->getDescription());
+        $this->assertSame('This is a complete item lookup setup with all'
+                . ' properties configured properly.', $itemLookup->getDescription());
         $this->assertSame(999.99, $itemLookup->getPrice());
     }
 
@@ -215,15 +233,18 @@ final class ItemLookupEntityTest extends Unit
     public function testServiceCategories(): void
     {
         // Professional Services
-        $legal = new ItemLookup(1, 'Legal Consultation', 'Legal advice and document review', 250.00);
+        $legal = new ItemLookup(1, 'Legal Consultation',
+                'Legal advice and document review', 250.00);
         $this->assertSame('Legal Consultation', $legal->getName());
 
-        // Technical Services  
-        $tech = new ItemLookup(2, 'System Administration', 'Server setup and maintenance', 100.00);
+        // Technical Services
+        $tech = new ItemLookup(2, 'System Administration',
+                'Server setup and maintenance', 100.00);
         $this->assertSame('System Administration', $tech->getName());
 
         // Creative Services
-        $creative = new ItemLookup(3, 'Video Production', 'Professional video editing and production', 500.00);
+        $creative = new ItemLookup(3, 'Video Production',
+                'Professional video editing and production', 500.00);
         $this->assertSame('Video Production', $creative->getName());
     }
 

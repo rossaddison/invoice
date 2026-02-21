@@ -17,11 +17,19 @@ class ClientHelper
     public function format_client(array|object|null $client): string
     {
         if ($client instanceof Client) {
-            if (null !== $client->getClient_surname()) {
-                return rtrim($client->getClient_name() . ' ' . ($client->getClient_surname() ?? ''));
-            }
-            return $client->getClient_name();
+            $trimmedName = trim($client->getClient_name());
+            $trimmedSurname = trim($client->getClient_surname() ?? '');
+            $ln = strlen($trimmedName);
+            $ls = strlen($trimmedSurname);
+            $ns = trim($trimmedName . ' ' . $trimmedSurname);
+
+            return match(true) {
+                $ls > 0              => $ns,
+                $ls == 0 && $ln > 0  => $trimmedName,
+                default              => '',
+            };
         }
+
         return '';
     }
 

@@ -142,7 +142,7 @@ final class PrometheusExporterIntegrationTest extends TestCase
             $httpRequestsCounter->inc([$method, $status, $endpoint]);
             $duration = match($status) {
                 '200' => rand(10, 500) / 1000,  // 0.01 to 0.5 seconds
-                '404' => rand(5, 50) / 1000,    // 0.005 to 0.05 seconds  
+                '404' => rand(5, 50) / 1000,    // 0.005 to 0.05 seconds
                 '422' => rand(100, 1000) / 1000, // 0.1 to 1 second
                 default => rand(10, 100) / 1000
             };
@@ -169,10 +169,15 @@ final class PrometheusExporterIntegrationTest extends TestCase
         $output = $this->getMetricsOutput($registry);
         
         // Verify Grafana-friendly metrics format
-        $this->assertStringContainsString('yii3_invoice_http_requests_total{method="GET",status="200",endpoint="/invoice/index"} 1', $output);
-        $this->assertStringContainsString('yii3_invoice_http_request_duration_seconds_bucket', $output);
-        $this->assertStringContainsString('yii3_invoice_business_revenue_total{currency="USD",period="monthly"} 50000', $output);
-        $this->assertStringContainsString('yii3_invoice_users_active_sessions 12', $output);
+        $this->assertStringContainsString('yii3_invoice_http_requests'
+            . '_total{method="GET",status="200",endpoint="/invoice/index"} 1',
+                $output);
+        $this->assertStringContainsString('yii3_invoice_http_request_duration'
+                . '_seconds_bucket', $output);
+        $this->assertStringContainsString('yii3_invoice_business_revenue'
+                . '_total{currency="USD",period="monthly"} 50000', $output);
+        $this->assertStringContainsString('yii3_invoice_users_active_sessions'
+                . ' 12', $output);
         
         // Check histogram buckets are properly formatted
         $this->assertStringContainsString('le="0.001"', $output);

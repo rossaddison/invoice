@@ -126,7 +126,8 @@ export class FlashMessageService {
   /**
    * Add event listener for flash message events
    */
-  onFlashMessageUpdate(callback: (event: { activeCount: number, pausedCount: number }) => void): void {
+  onFlashMessageUpdate(callback: (event: { activeCount: number,
+   pausedCount: number }) => void): void {
     // Set up a polling mechanism to check for changes
     const checkInterval = setInterval(() => {
       const activeCount = this.getActiveCount();
@@ -174,7 +175,7 @@ export class FlashMessageService {
     setTimeout(() => {
       const flashTimer = this.findFlashTimerInstance();
       if (flashTimer) {
-        window.flashMessageTimer = flashTimer;
+        globalThis.window.flashMessageTimer = flashTimer;
       }
     }, 200);
   }
@@ -185,7 +186,7 @@ export class FlashMessageService {
     if (alerts.length > 0) {
       // The flash timer should be accessible through the global scope
       // when the FlashMessageTimer class is instantiated
-      return (window as any).flashMessageTimerInstance;
+      return (globalThis.window as any).flashMessageTimerInstance;
     }
     return null;
   }

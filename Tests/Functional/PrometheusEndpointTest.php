@@ -80,28 +80,40 @@ final class PrometheusEndpointTest extends TestCase
         $output = $renderer->render($this->registry->getMetricFamilySamples());
 
         // Test the output format and content
-        $this->assertStringContainsString('# HELP yii3_invoice_invoice_operations_total', $output);
-        $this->assertStringContainsString('# TYPE yii3_invoice_invoice_operations_total counter', $output);
+        $this->assertStringContainsString(
+                '# HELP yii3_invoice_invoice_operations_total', $output);
+        $this->assertStringContainsString(
+                '# TYPE yii3_invoice_invoice_operations_total counter', $output);
         
         // Check specific metric values
-        $this->assertStringContainsString('operation="create",status="success"} 2', $output);
-        $this->assertStringContainsString('operation="create",status="error"} 1', $output);
-        $this->assertStringContainsString('operation="view",status="success"} 6', $output);
+        $this->assertStringContainsString(
+                'operation="create",status="success"} 2', $output);
+        $this->assertStringContainsString(
+                'operation="create",status="error"} 1', $output);
+        $this->assertStringContainsString(
+                'operation="view",status="success"} 6', $output);
 
         // Verify histogram metrics are present
-        $this->assertStringContainsString('yii3_invoice_database_query_duration_seconds_bucket', $output);
-        $this->assertStringContainsString('yii3_invoice_database_query_duration_seconds_count', $output);
-        $this->assertStringContainsString('yii3_invoice_database_query_duration_seconds_sum', $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_database_query_duration_seconds_bucket', $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_database_query_duration_seconds_count', $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_database_query_duration_seconds_sum', $output);
 
         // Verify gauge metrics
-        $this->assertStringContainsString('yii3_invoice_active_connections 3', $output);
-        $this->assertStringContainsString('yii3_invoice_php_memory_usage_bytes', $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_active_connections 3', $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_php_memory_usage_bytes', $output);
 
         // Ensure proper Prometheus format
         $lines = explode("\n", $output);
-        $metricLines = array_filter($lines, fn($line) => !empty($line) && !str_starts_with($line, '#'));
+        $metricLines = array_filter($lines,
+                fn($line) => !empty($line) && !str_starts_with($line, '#'));
         
-        $this->assertGreaterThan(10, count($metricLines), 'Should have multiple metric lines');
+        $this->assertGreaterThan(10, count($metricLines),
+                'Should have multiple metric lines');
         
         foreach ($metricLines as $line) {
             if (!empty($line)) {
@@ -139,7 +151,7 @@ final class PrometheusEndpointTest extends TestCase
         $familyProductsCounter->incBy(15, ['family_2']);
         $familyProductsCounter->incBy(30, ['family_3']);
 
-        // User activity metrics  
+        // User activity metrics
         $userActionsCounter = $this->registry->getOrRegisterCounter(
             'yii3_invoice_business',
             'user_actions_total',
@@ -155,15 +167,22 @@ final class PrometheusEndpointTest extends TestCase
         $output = $renderer->render($this->registry->getMetricFamilySamples());
 
         // Verify business metrics are properly formatted
-        $this->assertStringContainsString('yii3_invoice_business_total_revenue_amount{currency="USD"} 125000.5', $output);
-        $this->assertStringContainsString('yii3_invoice_business_total_revenue_amount{currency="EUR"} 95000.75', $output);
+        $this->assertStringContainsString('yii3_invoice_business_total_revenue'
+                . '_amount{currency="USD"} 125000.5', $output);
+        $this->assertStringContainsString('yii3_invoice_business_total_revenue'
+                . '_amount{currency="EUR"} 95000.75', $output);
         
-        $this->assertStringContainsString('yii3_invoice_business_products_generated_from_families_total{family_id="family_1"} 25', $output);
-        $this->assertStringContainsString('yii3_invoice_business_products_generated_from_families_total{family_id="family_2"} 15', $output);
-        $this->assertStringContainsString('yii3_invoice_business_products_generated_from_families_total{family_id="family_3"} 30', $output);
+        $this->assertStringContainsString('yii3_invoice_business_products'
+                . '_generated_from_families_total{family_id="family_1"} 25', $output);
+        $this->assertStringContainsString('yii3_invoice_business_products'
+                . '_generated_from_families_total{family_id="family_2"} 15', $output);
+        $this->assertStringContainsString('yii3_invoice_business_products'
+                . '_generated_from_families_total{family_id="family_3"} 30', $output);
 
-        $this->assertStringContainsString('yii3_invoice_business_user_actions_total{action="view",controller="product"} 1', $output);
-        $this->assertStringContainsString('yii3_invoice_business_user_actions_total{action="view",controller="invoice"} 3', $output);
+        $this->assertStringContainsString('yii3_invoice_business_user_actions'
+                . '_total{action="view",controller="product"} 1', $output);
+        $this->assertStringContainsString('yii3_invoice_business_user_actions'
+                . '_total{action="view",controller="invoice"} 3', $output);
     }
 
     public function testMetricsEndpointOutput(): void
@@ -182,7 +201,8 @@ final class PrometheusEndpointTest extends TestCase
         ], $output);
         
         // Check content-type would be correct
-        $this->assertEquals('text/plain; version=0.0.4; charset=utf-8', 'text/plain; version=0.0.4; charset=utf-8');
+        $this->assertEquals('text/plain; version=0.0.4; charset=utf-8',
+                'text/plain; version=0.0.4; charset=utf-8');
         
         // Verify no PHP errors or warnings in output
         $this->assertStringNotContainsString('Warning:', $output);
@@ -194,8 +214,10 @@ final class PrometheusEndpointTest extends TestCase
         $this->assertGreaterThan(5, count($lines));
         
         // Verify we have both HELP and TYPE comments
-        $helpLines = array_filter($lines, fn($line) => str_starts_with($line, '# HELP'));
-        $typeLines = array_filter($lines, fn($line) => str_starts_with($line, '# TYPE'));
+        $helpLines = array_filter($lines, fn($line) => str_starts_with($line,
+                '# HELP'));
+        $typeLines = array_filter($lines, fn($line) => str_starts_with($line,
+                '# TYPE'));
         
         $this->assertGreaterThan(0, count($helpLines), 'Should have HELP comments');
         $this->assertGreaterThan(0, count($typeLines), 'Should have TYPE comments');
@@ -205,13 +227,16 @@ final class PrometheusEndpointTest extends TestCase
     {
         // Add various metric types for comprehensive testing
         
-        $this->registry->getOrRegisterCounter('test', 'requests_total', 'Total requests', ['status'])
+        $this->registry->getOrRegisterCounter('test', 'requests_total',
+                'Total requests', ['status'])
             ->incBy(100, ['200']);
             
-        $this->registry->getOrRegisterGauge('test', 'cpu_usage', 'CPU usage percentage')
+        $this->registry->getOrRegisterGauge('test', 'cpu_usage',
+                'CPU usage percentage')
             ->set(75.5);
             
-        $this->registry->getOrRegisterHistogram('test', 'request_duration', 'Request duration', ['endpoint'])
+        $this->registry->getOrRegisterHistogram('test', 'request_duration',
+                'Request duration', ['endpoint'])
             ->observe(0.5, ['api']);
     }
 
@@ -223,6 +248,7 @@ final class PrometheusEndpointTest extends TestCase
                 return;
             }
         }
-        $this->fail("String does not start with any of the expected prefixes: " . implode(', ', $prefixes));
+        $this->fail("String does not start with any of the expected prefixes: "
+                . implode(', ', $prefixes));
     }
 }

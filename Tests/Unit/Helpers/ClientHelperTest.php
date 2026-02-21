@@ -21,15 +21,21 @@ class ClientHelperTest extends Unit
         parent::setUp();
         $this->translator = $this->createMock(TranslatorInterface::class);
         
-        // Create ClientHelper using reflection to bypass the final SettingRepository dependency
+        // Create ClientHelper using reflection to bypass the final
+        // SettingRepository dependencies
         $settingRepo = $this->createSettingRepository();
         $this->clientHelper = new ClientHelper($settingRepo);
     }
 
     private function createSettingRepository(): SettingRepository
     {
+        // SettingRepository is a final class and therefore cannot be mocked
+        // Therefore suppress SonarQube issue using '// NOSONAR: php: S3011 and
+        // use Reflection to bypass Setting Repository constructor that has
+        // dependencies that are hard to instantiate in a test context.
         $reflection = new ReflectionClass(SettingRepository::class);
-        return $reflection->newInstanceWithoutConstructor();
+        
+        return $reflection->newInstanceWithoutConstructor(); // NOSONAR: php:S3011
     }
 
     public function testFormatClientWithClientEntityWithBothNames(): void
@@ -62,7 +68,7 @@ class ClientHelperTest extends Unit
         
         $result = $this->clientHelper->format_client($client);
         
-        $this->assertSame(' Doe', $result);
+        $this->assertSame('Doe', $result);
     }
 
     public function testFormatClientWithClientEntityBothEmpty(): void
@@ -154,16 +160,29 @@ class ClientHelperTest extends Unit
         $this->assertSame('John', $result);
     }
 
-    public function testFormatClientTrimsTrailingSpacesWithSurname(): void
+    public function testFormatClientTrimsTrailingSpaces(): void
     {
         $client = new Client();
         $client->setClient_name('John   ');
-        $client->setClient_surname('Doe');
+        $client->setClient_surname('Doe    ');
         
         $result = $this->clientHelper->format_client($client);
         
         // When surname exists, rtrim is used to remove trailing spaces after the surname
-        $this->assertSame('John    Doe', $result);
+        $this->assertSame('John Doe', $result);
+    }
+    
+    public function testFormatClientTrimsPreceedingAndTrailingSpaces(): void
+    {
+        $client = new Client();
+        $client->setClient_name(' John  ');
+        $client->setClient_surname('  Doe     ');
+        
+        $result = $this->clientHelper->format_client($client);
+        
+        // When surname exists, ltrim and rtrim are used to remove trailing
+        // spaces
+        $this->assertSame('John Doe', $result);
     }
 
     public function testFormatClientWithNameAndEmptyStringForSurname(): void

@@ -13,7 +13,6 @@
         <directory name="config" />
         <directory name="resources/views" />
         <directory name="src" />
-        <directory name="dev-scripts-psalm-1" />
         <file name="public/index.php"/>
         <file name="yii"/>
         <file name="autoload.php"/>

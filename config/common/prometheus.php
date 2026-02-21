@@ -111,4 +111,3 @@ return [
         ->name('prometheus/dashboard'),
     */
 ];
-    

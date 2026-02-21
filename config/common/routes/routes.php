@@ -1724,11 +1724,11 @@ return [
                 ->action([QuoteController::class, 'delete_quote_item'])
                 ->name('quote/delete_quote_item'),
             Route::methods([$mG, $mP], '/quote/pdf_dashboard_include_cf/{id}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
                 ->action([QuoteController::class, 'pdf_dashboard_include_cf'])
                 ->name('quote/pdf_dashboard_include_cf'),
             Route::methods([$mG, $mP], '/quote/pdf_dashboard_exclude_cf/{id}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
                 ->action([QuoteController::class, 'pdf_dashboard_exclude_cf'])
                 ->name('quote/pdf_dashboard_exclude_cf'),
             Route::methods([$mG, $mP], '/quote/modalcreate')

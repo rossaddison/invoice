@@ -50,6 +50,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>21st February 2026</b></p>
+<p>Replace composer.json's roave-security-advisories: https://github.com/yiisoft/app/pull/442 with composer audit in invoice_build.yaml</p>
+<p>Sonarqube code reduction. Previous SonarQube Reliability Issues reduced from 176 to 167: Rating C</p>
+<p>Security Open Issues: 0, Rating: A</p>
 <p><b>14th February 2026</b></p>
 <p>Lint AuthController and SignupController. ClassList Trait created for divs in 
 the login and signup view.</p>

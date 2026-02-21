@@ -8,10 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Unit test for Quote → SalesOrder → Invoice workflow business logic
- * 
+ *
  * This test verifies the core business logic patterns without requiring
  * database connections or full application bootstrap.
- * 
+ *
  * Key scenarios tested:
  * 1. Tax calculation consistency across conversions
  * 2. Allowance/charge copying logic

@@ -148,7 +148,7 @@ export class FlashMessageControlsComponent implements OnInit, OnDestroy {
     this.flashMessageService.init();
     
     // Start monitoring flash messages
-    this.updateInterval = window.setInterval(() => {
+    this.updateInterval = globalThis.window.setInterval(() => {
       this.updateStatus();
     }, 500);
 

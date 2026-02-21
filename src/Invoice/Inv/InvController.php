@@ -2571,7 +2571,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             return $this->factory->createResponse(
                     $this->viewRenderer->renderPartialAsString(
                 '//invoice/setting/pdf_close',
-                ['heading' => '', 
+                ['heading' => '',
                     'message' => $this->translator->translate('pdf.archived.yes')],
             ));
         }
@@ -2611,9 +2611,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     {
         $inv = $iR->repoInvUnLoadedquery((string) $inv_id);
         if (null!==$inv) {
-            if (!($this->rbacObserver($inv, $ucR, $uiR))) {
-               throw new PdfNotFoundException($this->translator);
-            }
+            $this->pdfNotFoundException($inv, $ucR, $uiR);
         }
         if ($inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
@@ -2674,10 +2672,8 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             SOR $soR): void
     {
         $inv = $iR->repoInvUnLoadedquery((string) $inv_id);
-        if (null!==$inv) {
-            if (!($this->rbacObserver($inv, $ucR, $uiR))) {
-               throw new PdfNotFoundException($this->translator);
-            }
+        if (null !== $inv) {
+            $this->pdfNotFoundException($inv, $ucR, $uiR);
         }
         if ($inv_id) {
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
@@ -2740,10 +2736,8 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     {
         $inv = $iR->repoUrl_key_guest_loaded($url_key);
         if (null!==$inv) {
-            if (!($this->rbacObserver($inv, $ucR, $uiR))) {
-                throw new PdfNotFoundException($this->translator);
-            }
-        }
+            $this->pdfNotFoundException($inv, $ucR, $uiR);
+        }    
         if ($url_key) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
             if ($iR->repoUrl_key_guest_count($url_key) < 1) {
@@ -2858,10 +2852,8 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     {
         $inv = $iR->repoUrl_key_guest_loaded($urlKey);
         if (null!==$inv) {
-            if (!($this->rbacObserver($inv, $ucR, $uiR))) {
-                exit;
-            }
-        }
+            $this->pdfNotFoundException($inv, $ucR, $uiR);
+        }    
         if ($urlKey) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
             if ($iR->repoUrl_key_guest_count($urlKey) < 1) {
@@ -4941,7 +4933,20 @@ echo file_get_contents($temp_aliase, true);
             return false;
         }
     }
-
+    
+    private function pdfNotFoundException(Inv $inv, UCR $ucR, UIR $uiR) : void {
+        if (($this->rbacObserver($inv, $ucR, $uiR))
+                ||
+            ($this->rbacAdmin())
+                ||
+            ($this->rbacAccountant())
+        ) {
+            // Do nothing
+        } else {
+            throw new PdfNotFoundException($this->translator);
+        }
+    }
+ 
     /**
      * @param IRR $irR
      * @return string

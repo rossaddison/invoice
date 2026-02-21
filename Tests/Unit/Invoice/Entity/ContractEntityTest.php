@@ -344,7 +344,7 @@ class ContractEntityTest extends TestCase
         // Set new client
         $contract->setClient_id(200);
         $contract->setClient($client2);
-        $this->assertSame($client2, $contract->getClient());        
+        $this->assertSame($client2, $contract->getClient());
     }
 
     public function testTimezoneHandling(): void

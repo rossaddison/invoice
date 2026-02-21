@@ -141,7 +141,8 @@ final class ProductRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function filter_product_sku_price(string $product_price, string $product_sku): EntityReader
+    public function filter_product_sku_price(string $product_price,
+            string $product_sku): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['product_price' => ltrim(rtrim($product_price))])

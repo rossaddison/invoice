@@ -36,11 +36,7 @@ export class FamilyCommalistComponent implements OnInit, OnDestroy {
       this.selectedNumbers = new Set(existingNumbers);
     }
   }
-  
-  ngOnDestroy() {
-    // Cleanup if needed
-  }
-  
+    
   get paginatedNumbers(): number[] {
     const startIndex = (this.currentPage - 1) * this.numbersPerPage;
     const endIndex = startIndex + this.numbersPerPage;
