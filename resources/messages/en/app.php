@@ -779,6 +779,8 @@ return [
   'faq.php.info.variables' => 'Variables',
   'faq.shared.hosting' => 'How do I host yii3i on shared hosting?',
   'faq.taxpoint' => 'How to determine what the Tax Point is?',
+  'faq.wsl.to.alpine' => 'How do I update an alpine hosted site using'
+    . ' Windows 11\'s wsl (Windows Subsystem for Linux)',
   'faq.yii.requirement.checker' => 'Yii Application Requirement Checker',
   'fax' => 'Fax',
   'fax.abbr' => 'F',
@@ -1027,6 +1029,7 @@ return [
   'invalid.amount' => 'Invalid Amount',
   'invalid.subscriber.number' => 'Invalid Subscriber Number',
   'invoice' => 'Invoice',
+  'invoice.to.html' => 'Invoice to Html',
   'invoice.created.from.quote' => 'Invoice created from quote',
   'invoice.validation.errors' => 'Invoice Validation Errors',
   'invoiced' => 'Invoiced',

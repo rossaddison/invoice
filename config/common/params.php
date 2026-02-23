@@ -43,30 +43,30 @@ use App\Widget\PageSizeLimiter;
 use App\Widget\SubMenu;
 
 $env = $_ENV['APP_ENV'] ?? 'local';
+$dbUser = $_ENV['DB_USERNAME'] ?: 'root';
+$dbName = $_ENV['DB_NAME'] ?: 'yii3_i';
+$dbPassword = $_ENV['DB_PASSWORD'] ?: null;
 
 switch ($env) {
     case 'docker':
-        // Running docker with wampserver
-        $dbHost = '192.168.0.24';
-        $dbUser = 'root';
-        $dbPassword = null;
+        $dbHost = $_ENV['DB_HOST_IP_ADDRESS'] ?? '192.168.0.24';
         break;
+    // alpine will fall into this default
     default:
-        $dbHost = 'localhost';
-        $dbUser = 'root';
-        $dbPassword = null;
+        $dbHost = $_ENV['DB_HOST_IP_ADDRESS'] ?? 'localhost';
 }
-
+$buttonClass = 'buttonClass()';
+$containerClass = 'containerClass()';
 $submitButtonConfigs = [
     'default' => [
-        'buttonClass()' => ['btn btn-primary btn-sm mt-3'],
-        'containerClass()' => ['d-grid gap-2 form-floating'],
+        $buttonClass => ['btn btn-primary btn-sm mt-3'],
+        $containerClass => ['d-grid gap-2 form-floating'],
     ],
     'bootstrap5-vertical' => [
-        'buttonClass()' => ['btn btn-primary'],
+        $buttonClass => ['btn btn-primary'],
     ],
     'bootstrap5-horizontal' => [
-        'buttonClass()' => ['btn btn-primary'],
+        $buttonClass => ['btn btn-primary'],
     ],
 ];
 
@@ -260,10 +260,10 @@ return [
                     // up floating because of the default containerClass above;
                     // refer to client form with active client checkbox
                     Checkbox::class => [
-                        'containerClass()' => ['form-group'],
+                        $containerClass => ['form-group'],
                     ],
                     DataColumn::class => [
-                        'containerClass()' => ['form-group'],
+                        $containerClass => ['form-group'],
                     ],
                     OffsetPagination::class => [
                         'listTag()' => ['ul'],
@@ -287,7 +287,7 @@ return [
                 'inputInvalidClass' => 'is-invalid',
                 'fieldConfigs' => [
                     ErrorSummary::class => [
-                        'containerClass()' => ['alert alert-danger'],
+                        $containerClass => ['alert alert-danger'],
                         'listAttributes()' => [['class' => 'mb-0']],
                         'header()' => [''],
                     ],
@@ -310,7 +310,7 @@ return [
                     SubmitButton::class =>
                                     $submitButtonConfigs['bootstrap5-horizontal'],
                     ErrorSummary::class => [
-                        'containerClass()' => ['alert alert-danger'],
+                        $containerClass => ['alert alert-danger'],
                         'listClass()' => ['mb-0'],
                         'header()' => [''],
                     ],
@@ -405,7 +405,7 @@ return [
             'connections' => [
                 'mysql' => new Cycle\Database\Config\MySQLDriverConfig(
                     connection: new Cycle\Database\Config\MySQL\DsnConnectionConfig(
-                        'mysql:host=' . $dbHost . ';dbname=yii3_i',
+                        'mysql:host=' . $dbHost . ';dbname='. $dbName,
                         $dbUser,
                         $dbPassword,
                     ),

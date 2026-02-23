@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Option;
 
 /**
  * @var App\Invoice\Entity\Inv $inv
@@ -115,7 +116,7 @@ if (!empty($payments)) {
       /**
        * @var App\Invoice\Entity\Payment $payment
        */
-      foreach ($payments as $payment) { 
+      foreach ($payments as $payment) {
         echo H::openTag('tr');
          echo H::openTag('td');
           echo H::encode(!is_string($paymentDate = $payment->getPayment_date()) ?
@@ -126,15 +127,15 @@ if (!empty($payments)) {
            $payment->getAmount() : 0.00));
          echo H::closeTag('td');
          echo H::openTag('td');
-          echo H::encode($payment->getNote()); 
+          echo H::encode($payment->getNote());
          echo H::closeTag('td');
         echo H::closeTag('tr');
-      } 
+      }
       echo H::closeTag('tbody');
      echo H::closeTag('table');
     echo H::closeTag('div');
-} 
-if ($readOnly === false && $invEdit) {
+}
+if ($readOnly === false && $invEdit && $inv->getStatus_id() === 1) {
     echo '<br>';
     echo '<br>';
     echo H::openTag('ul', ['id' => 'product-tabs',
@@ -162,7 +163,7 @@ if ($readOnly === false && $invEdit) {
             ->href('#add-task-tab')
             ->id('btn-reset')
             ->render();
-        echo H::closeTag('li'); 
+        echo H::closeTag('li');
         echo H::openTag('li', ['id' => 'back', 'class' => 'tab-pane']);
         echo A::tag()
             ->addAttributes([
@@ -175,7 +176,7 @@ if ($readOnly === false && $invEdit) {
             ->addClass('btn btn-danger bi bi-arrow-left')
             ->id('back')
             ->render();
-        echo H::closeTag('li');    
+        echo H::closeTag('li');
     echo H::closeTag('ul');
     echo H::openTag('div', ['class' => 'tabbable tabs-below']);
      echo H::openTag('div', ['class' => 'tab-content']);
@@ -245,7 +246,11 @@ echo $buttonsToolbarFull;
    echo H::closeTag('button');
    echo H::openTag('ul', ['class' => 'dropdown-menu dropdown-menu']);
 // Options...Edit
-if ($showButtons && $invEdit) {
+if ($showButtons
+        && $invEdit
+        && strlen($inv->getQuote_id()) === 0
+// Only allow the editing of the invoice if not connected to a salesorder
+        && strlen($inv->getSo_id()) === 0) {
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]),
@@ -373,7 +378,7 @@ if ($showButtons && $invEdit) {
                     // Show the create credit invoice button if the invoice is
                     // read-only or if it is paid + the user is allowed to edit.
                     /**
-                     * Related logic: see Modal string activated with 
+                     * Related logic: see Modal string activated with
                      * #create-credit-inv. Modal string from InvController/index
                      * output to $modal_create_credit
                      * Related logic: see InvController/create_credit_confirm
@@ -471,9 +476,6 @@ if ((in_array($inv->getStatus_id(), [2, 3])
 }
 echo H::openTag('li');
 ?>
-<!-- null!==$sumex There is a sumex extension record linked to the current
-    invoice_id and the sumex setting under View...Settings...Invoice...Sumex
-    Settings is set at Yes. -->
 <?php
 // Options ... Download PDF
  echo H::openTag('a', [
@@ -566,29 +568,16 @@ if ($invEdit) {
      echo H::closeTag('a');
     echo H::closeTag('li');
     echo H::openTag('li');
-// Options ... Invoice to HTML with Sumex
-     if ($s->getSetting('sumex') === '1') {
-         echo H::openTag('a', [
-             'href' => '#inv-to-html',
-             'data-bs-toggle' => 'modal',
-             'style' => 'text-decoration:none'
-         ]);
-          echo H::openTag('i', ['class' => 'fa fa-print fa-margin']);
-          echo H::closeTag('i');
-          echo ' ' . H::encode($translator->translate('html.sumex.yes'));
-         echo H::closeTag('a');
-// Options ... Invoice to HTML without Sumex
-     } else {
-         echo H::openTag('a', [
-             'href' => '#inv-to-html',
-             'data-bs-toggle' => 'modal',
-             'style' => 'text-decoration:none'
-         ]);
-          echo H::openTag('i', ['class' => 'fa fa-print fa-margin']);
-          echo H::closeTag('i');
-          echo ' ' . H::encode($translator->translate('html.sumex.no'));
-         echo H::closeTag('a');
-     }
+    echo H::openTag('a', [
+        'href' => '#inv-to-html',
+        'data-bs-toggle' => 'modal',
+        'style' => 'text-decoration:none'
+    ]);
+     echo H::openTag('i', ['class' => 'fa fa-print fa-margin']);
+     echo H::closeTag('i');
+     echo ' ' . H::encode($translator->translate('invoice.to.html'));
+    echo H::closeTag('a');
+    
 
 /**
     views/invoice/inv/modal_inv_to_pdf   ... include custom fields or not on pdf
@@ -612,9 +601,12 @@ if ($invEdit) {
 // sales order
  
 // Options ... Delete Invoice
-if (($inv->getStatus_id() === 1 ||
-        ($s->getSetting('enable_invoice_deletion') === '1'
-        && $inv->getIs_read_only() === false)) && !$inv->getSo_id() && $invEdit) {
+if ($inv->getStatus_id() === 1
+        && $s->getSetting('enable_invoice_deletion') === '1'
+        && $inv->getIs_read_only() === false
+        && strlen($inv->getSo_id()) === 0
+        && strlen($inv->getQuote_id()) === 0
+        && $invEdit) {
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => '#delete-inv',
@@ -871,22 +863,17 @@ if ($vat === '1') {
              'disabled' => true,
              'class' => 'form-control'
          ]);
-/**
- * @var array $inv_statuses
- * @var string $key
- * @var array $status
- */
-foreach ($inv_statuses as $key => $status) {
-    echo H::openTag('option', [
-        'value' => $key,
-        'selected' => ($key == (string)$form->getStatus_id() ?
-            $s->check_select((string)$form->getStatus_id(), $key) : null)
-    ]);
-     echo H::encode($status['label']);
-    echo H::closeTag('option');
-}
-?>
-<?php
+         /**
+          * @var array $inv_statuses
+          * @var string $key
+          * @var array $status
+          */
+         foreach ($inv_statuses as $key => $status) {
+            echo Option::tag()
+            ->value($key)
+            ->selected($key == (string) $form->getStatus_id())
+            ->content(H::encode((string) $status['label']));
+         }
          echo H::closeTag('select');
         echo H::closeTag('div');
         echo H::openTag('div', ['class' => 'invoice-properties']);

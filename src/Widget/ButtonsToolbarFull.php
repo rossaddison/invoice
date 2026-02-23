@@ -48,11 +48,11 @@ final readonly class ButtonsToolbarFull
         if (!empty($inv->getQuote_id()) && $inv->getQuote_id() !== '0') {
             $primaryButtons[] = $this->createButton(
                 'view-quote',
-                $this->urlGenerator->generate('quote/view', 
+                $this->urlGenerator->generate('quote/view',
                     ['id' => $inv->getQuote_id()]),
                 'fa-file-text-o',
                 'btn-info',
-                $this->translator->translate('view') 
+                $this->translator->translate('view')
                     . ' ' 
                     . $this->translator->translate('quote'),
             );
@@ -169,7 +169,10 @@ final readonly class ButtonsToolbarFull
         $buttons = [];
 
         // Tax and Allowance/Charge buttons
-        if ($invEdit && $vat === '0') {
+        if ($invEdit
+            && $vat === '0'
+            // Only allow adding if the invoice is in draft mode
+            && $inv->getStatus_id() == 1) {
             $buttons[] = $this->createModalButton(
                 'add-tax',
                 '#add-inv-tax',
@@ -179,7 +182,9 @@ final readonly class ButtonsToolbarFull
             );
         }
 
-        if ($invEdit) {
+        if ($invEdit
+            // Only allow adding if the invoice is in draft mode
+            && $inv->getStatus_id() == 1) {
             $buttons[] = $this->createModalButton(
                 'allowance-charge',
                 '#add-inv-allowance-charge',
@@ -324,12 +329,11 @@ final readonly class ButtonsToolbarFull
     private function canDeleteInvoice(Inv $inv, bool $invEdit): bool
     {
         return ($inv->getStatus_id() === 1
-                ||
-                ($this->settingRepository->getSetting(
+                && $this->settingRepository->getSetting(
                     'enable_invoice_deletion') === '1'
-                && $inv->getIs_read_only() === false))
+                && $inv->getIs_read_only() === false
                 && !$inv->getSo_id()
-                && $invEdit;
+                && $invEdit);
     }
 
     private function createButton(

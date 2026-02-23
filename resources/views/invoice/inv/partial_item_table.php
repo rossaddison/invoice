@@ -86,7 +86,7 @@ foreach ($invItems as $item) {
         $productRef = A::tag()
             ->href($urlGenerator->generate('product/view',
                 [
-                    '_language' => (string) $session->get('_language'), 
+                    '_language' => (string) $session->get('_language'),
                     'id' => $productId
                 ]
             ))
@@ -218,8 +218,8 @@ foreach ($invItems as $item) {
        echo H::openTag('div', ['class' => 'input-group']);
         echo H::openTag('span', ['class' => 'input-group-text']);
          echo H::openTag('b');
-          echo ($vat === '0' ? $translator->translate('item.discount') :
-              $translator->translate('cash.discount'));
+          echo $vat === '0' ? $translator->translate('item.discount') :
+              $translator->translate('cash.discount');
          echo H::closeTag('b');
         echo H::closeTag('span');
         echo H::openTag('input', [
@@ -243,9 +243,9 @@ foreach ($invItems as $item) {
        echo H::openTag('div', ['class' => 'input-group']);
         echo H::openTag('span', ['class' => 'input-group-text']);
          echo H::openTag('b');
-          echo ($vat === '0' ?
+          echo $vat === '0' ?
               $translator->translate('tax.rate') :
-              $translator->translate('vat.rate'));
+              $translator->translate('vat.rate');
          echo H::closeTag('b');
         echo H::closeTag('span');
         echo H::openTag('select', [
@@ -283,7 +283,9 @@ foreach ($invItems as $item) {
 // Buttons for line item start here
       echo H::openTag('td', ['class' => 'td-vert-middle btn-group']);
        if ($showButtons === true && $userCanEdit === true
-           && $draft === true) {
+           && $draft === true
+// Do not show the buttons if the invoice is linked to a sales order    
+           && strlen($inv->getSo_id()) == 0) {
            if ($piR->repoCount((int) $item->getProduct_id()) > 0) {
                echo H::openTag('span', [
                    'data-bs-toggle' => 'tooltip',
@@ -532,7 +534,7 @@ foreach ($invItems as $item) {
                echo H::openTag('b');
                 echo $invItemAllowanceCharge->getAllowanceCharge()?->getIdentifier() == '1'
                     ? $translator->translate('allowance.or.charge.charge')
-                    : '(' . $translator->translate('allowance.or.charge.allowance') 
+                    : '(' . $translator->translate('allowance.or.charge.allowance')
                         . ')';
                echo H::closeTag('b');
               echo H::closeTag('td');
@@ -589,7 +591,7 @@ foreach ($invItems as $item) {
            'name' => 'subtotal',
            'class' => 'amount',
            'data-bs-toggle' => 'tooltip',
-           'title' => 
+           'title' =>
 'inv_item_amount->subtotal using InvItemController/edit_product->saveInvItemAmount'
        ]);
         echo "\n";
@@ -795,7 +797,11 @@ foreach ($invItems as $item) {
           echo H::openTag('tr');
            echo H::openTag('td');
             echo H::openTag('b');
-             if ($showButtons === true && $userCanEdit === true) {
+             if ($showButtons === true
+                && $userCanEdit === true
+                && strlen($inv->getQuote_id()) === 0
+                && strlen($inv->getSo_id()) === 0
+                && $draft === true) {
                  echo H::openTag('a', [
                      'href' => '#add-inv-tax',
                      'data-bs-toggle' => 'modal',
@@ -827,7 +833,10 @@ foreach ($invItems as $item) {
                      ]);
                      echo H::closeTag('input');
                      if ($showButtons === true
-                         && $userCanEdit === true) {
+                             && $userCanEdit === true
+                             && strlen($inv->getQuote_id()) === 0
+                             && strlen($inv->getSo_id()) === 0
+                             && $draft === true) {
                          echo H::openTag('span');
                           echo A::tag()
                               ->addAttributes([
@@ -847,7 +856,9 @@ foreach ($invItems as $item) {
                       $taxRatePercent = $invTaxRate->getTaxRate()?->getTaxRatePercent();
                       $numberPercent = $numberHelper->format_amount($taxRatePercent);
                       $taxRateName = $invTaxRate->getTaxRate()?->getTaxRateName();
-                      if ($taxRatePercent >= 0.00 && null !== $taxRateName && $numberPercent >= 0.00
+                      if ($taxRatePercent >= 0.00
+                              && null !== $taxRateName
+                              && $numberPercent >= 0.00
                           && null !== $numberPercent) {
                           echo H::encode($taxRateName . ' ' . $numberPercent);
                       }

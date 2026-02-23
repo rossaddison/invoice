@@ -244,6 +244,8 @@ final class InvoiceController extends BaseController
                         '//invoice/info/shared_hosting'),
             'alpine' => $this->viewRenderer->renderPartialAsString(
                         '//invoice/info/alpine'),
+            'wsl_to_alpine' => $this->viewRenderer->renderPartialAsString(
+                        '//invoice/info/wsl_to_alpine'),
             'oauth2' => $this->viewRenderer->renderPartialAsString(
                         '//invoice/info/oauth2'),
             'paymentprovider' => $this->viewRenderer->renderPartialAsString(
