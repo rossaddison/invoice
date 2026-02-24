@@ -664,7 +664,11 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
             if ($taxRatePercent >= 0.00 && null !== $taxRateName
                     && $numberPercent >= 0.00 &&
                     null !== $numberPercent) {
-                Html::encode($taxRateName . ' ' . $numberPercent);
+                echo Html::encode(' '
+                        . $taxRateName
+                        . ' '
+                        . $numberPercent
+                        . ' ');
             }
         ?>
                                     </span>

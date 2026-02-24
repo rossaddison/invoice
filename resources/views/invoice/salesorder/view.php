@@ -75,7 +75,8 @@ $vat = $s->getSetting('enable_vat_registration');
         echo null !== $soNumber ? '#' . $soNumber : $so->getId();
     ?>
     </h1>
-        <div class="headerbar-item pull-right btn-group">
+    <br>
+        <div class="headerbar-item pull-left btn-group">
             <div class="dropdown">
                 <button class="btn btn-primary dropdown-toggle"
                         type="button"
@@ -87,21 +88,38 @@ $vat = $s->getSetting('enable_vat_registration');
             
 <?php
             if ($invEdit) { ?>
-                <li>
+                <li>1
+                    
                     <a href="<?= 
 $urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]) ?>"
                        style="text-decoration:none">
-                        <i class="fa fa-edit fa-margin"></i>
-                        <?= $translator->translate('edit'); ?>
+                       <i class="fa fa-edit fa-margin"></i>
+                       <?= $translator->translate('edit'); ?>
                     </a>
                 </li>
                 <?php } ?>
                 <li>
-                    <a href="#so-to-pdf"
-                       data-bs-toggle="modal"
+                    <a href="<?= $urlGenerator->generate('salesorder/pdf',
+                            ['include' => 1]); ?>"
+                       target="_blank"
                        style="text-decoration:none">
-                        <i class="fa fa-print fa-margin"></i>
-                        <?= $translator->translate('download.pdf'); ?>
+                       <i class="fa fa-file-pdf-o"></i>
+                       <?= $translator->translate('download.pdf')
+                            . ': '
+                            . $translator->translate('custom.fields')
+                            . '✅'; ?>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?= $urlGenerator->generate('salesorder/pdf',
+                            ['include' => 0]); ?>"
+                       target="_blank"
+                       style="text-decoration:none">
+                        <i class="fa fa-file-pdf-o"></i>
+                        <?= $translator->translate('download.pdf')
+                            . ': '
+                            . $translator->translate('custom.fields')
+                            . '❌'; ?>
                     </a>
                 </li>
 <?php

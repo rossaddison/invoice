@@ -693,7 +693,7 @@ parameters -->
             && null !== $taxRateName
             && $numberPercent >= 0.00
             && null !== $numberPercent) {
-        Html::encode($taxRateName . ' ' . $numberPercent);
+        echo Html::encode(' '. $taxRateName . ' ' . $numberPercent . ' ');
     }
 ?>                                  </span>
                                     <span

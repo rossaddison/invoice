@@ -94,7 +94,7 @@
         "yiisoft/csrf": "^2.2.3",
         "yiisoft/data": "^2.0.0",
         "yiisoft/data-cycle": "dev-master",
-        "yiisoft/data-response": "^2.1.2",
+        "yiisoft/data-response": "2.1.2",
         "yiisoft/db": ">=2.0.1",
         "yiisoft/db-mysql": ">=2",
         "yiisoft/definitions": "^3.4.1",

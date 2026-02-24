@@ -860,7 +860,10 @@ foreach ($invItems as $item) {
                               && null !== $taxRateName
                               && $numberPercent >= 0.00
                           && null !== $numberPercent) {
-                          echo H::encode($taxRateName . ' ' . $numberPercent);
+                          echo H::encode(' ' . $taxRateName
+                                  . ' '
+                                  . $numberPercent
+                                  . ' ');
                       }
                      echo H::closeTag('span');
                      echo H::openTag('span', [
