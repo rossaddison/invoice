@@ -7,8 +7,8 @@ declare(strict_types=1);
  *
  * public function phpinfo(#[RouteArgument('selection')] string $selection = '-1') : Response
     {
-        $view = $this->viewRenderer->renderPartialAsString('//invoice/info/phpinfo', ['selection' => (int)$selection]);
-        return $this->viewRenderer->render('info/view', ['topic'=> $view]);
+        $view = $this->webViewRenderer->renderPartialAsString('//invoice/info/phpinfo', ['selection' => (int)$selection]);
+        return $this->webViewRenderer->render('info/view', ['topic'=> $view]);
     }
  *
  *

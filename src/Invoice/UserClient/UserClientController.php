@@ -18,14 +18,14 @@ use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class UserClientController extends BaseController
 {
@@ -38,11 +38,11 @@ final class UserClientController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer,
+        parent::__construct($webService, $userService, $translator, $webViewRenderer,
                 $session, $sR, $flash);
         $this->userclientService = $userclientService;
         $this->factory = $factory;
@@ -55,7 +55,7 @@ final class UserClientController extends BaseController
      * @param IR $iR
      * @param QR $qR
      * @param SOR $soR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function delete(
         CurrentRoute $currentRoute,
@@ -64,7 +64,7 @@ final class UserClientController extends BaseController
         IR $iR,
         QR $qR,
         SOR $soR    
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $user_client = $this->userclient($currentRoute, $userclientRepository);
         if (null !== $user_client) {
             $user_id = (int) $user_client->getUser_Id();
@@ -78,7 +78,7 @@ final class UserClientController extends BaseController
                     $this->flashMessage('info', $this->translator->translate(
                                                     'record.successfully.deleted'));
                     return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/setting/userclient_successful',
                             [
                                 'heading' => $this->translator->translate('client'),
@@ -188,7 +188,7 @@ final class UserClientController extends BaseController
                     }
                 }
             }
-            return $this->viewRenderer->render('new', $parameters);
+            return $this->webViewRenderer->render('new', $parameters);
         }
         return $this->webService->getRedirectResponse('userinv/index');
     }

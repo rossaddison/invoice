@@ -17,7 +17,7 @@ use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\CurrentRoute;
@@ -25,7 +25,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class DeliveryLocationController extends BaseController
@@ -39,12 +39,12 @@ final class DeliveryLocationController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator,
-                                        $viewRenderer, $session, $sR, $flash);
+                                        $webViewRenderer, $session, $sR, $flash);
         $this->delService = $delService;
         $this->factory = $factory;
     }
@@ -83,7 +83,7 @@ final class DeliveryLocationController extends BaseController
             'qR' => $qR,
             'sortString' => $querySort ?? '-id',
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     public function add_in_invoice_flash(): void
@@ -173,7 +173,7 @@ final class DeliveryLocationController extends BaseController
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -243,7 +243,7 @@ final class DeliveryLocationController extends BaseController
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('del/index');
     }
@@ -277,13 +277,13 @@ final class DeliveryLocationController extends BaseController
      * @param DeliveryLocationRepository $delRepository
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         DeliveryLocationRepository $delRepository,
         UCR $ucR,
-        UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+        UIR $uiR): \Psr\Http\Message\ResponseInterface
     {
         $del = $this->del($currentRoute, $delRepository);
         if ($del) {
@@ -298,11 +298,11 @@ final class DeliveryLocationController extends BaseController
                 'electronic_address_scheme' =>
                 PeppolArrays::electronic_address_scheme(),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
             
             if ($this->rbacObserver(
                                         $del->getClient_id(), $ucR, $uiR)) {
-                return $this->viewRenderer->render('_view', $parameters);
+                return $this->webViewRenderer->render('_view', $parameters);
             }
             
         }

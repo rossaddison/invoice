@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 
 /**
  * @OA\Info(title="Yii demo API", version="2.0")
@@ -28,8 +28,13 @@ final readonly class ApiInfo implements MiddlewareInterface
      * )
      */
     #[\Override]
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function process(ServerRequestInterface $request,
+            RequestHandlerInterface $handler): ResponseInterface
     {
-        return $this->responseFactory->createResponse(['version' => '2.0', 'author' => 'yiisoft']);
+        // Refer to config/common/routes/routes.php
+        // 'info/v2' JsonDataResponseMiddleware
+        return $this->responseFactory->createResponse(
+            ['version' => '2.0', 'author' => 'yiisoft']
+        );
     }
 }

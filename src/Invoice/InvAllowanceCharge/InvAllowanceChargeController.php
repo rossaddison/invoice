@@ -22,7 +22,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class InvAllowanceChargeController extends BaseController
@@ -35,11 +35,11 @@ final class InvAllowanceChargeController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->invallowancechargeService = $invallowancechargeService;
     }
 
@@ -82,7 +82,7 @@ final class InvAllowanceChargeController extends BaseController
                 $parameters['form'] = $form;
             } // is_array
         }
-        return $this->viewRenderer->render('modal_add_allowance_charge_form', $parameters);
+        return $this->webViewRenderer->render('modal_add_allowance_charge_form', $parameters);
     }
 
     /**
@@ -127,7 +127,7 @@ final class InvAllowanceChargeController extends BaseController
             'sortString' => $querySort ?? '-id',
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -215,7 +215,7 @@ final class InvAllowanceChargeController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('invallowancecharge/index');
     }
@@ -249,13 +249,13 @@ final class InvAllowanceChargeController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param InvAllowanceChargeRepository $invallowancechargeRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         InvAllowanceChargeRepository $invallowancechargeRepository,
         AllowanceChargeRepository $allowanceChargeRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $invAllowanceCharge = $this->invallowancecharge($currentRoute, $invallowancechargeRepository);
         if ($invAllowanceCharge) {
             $inv_id = $invAllowanceCharge->getInv_id();
@@ -267,7 +267,7 @@ final class InvAllowanceChargeController extends BaseController
                 'form' => $form,
                 'optionsDataAllowanceCharges' => $allowanceChargeRepository->optionsDataAllowanceCharges(),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('invallowancecharge/index');
     }

@@ -21,7 +21,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class TaxRateController extends BaseController
 {
@@ -33,11 +33,11 @@ final class TaxRateController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->taxRateService = $taxRateService;
     }
 
@@ -45,7 +45,7 @@ final class TaxRateController extends BaseController
      * @param int $page
      * @param TaxRateRepository $taxRateRepository
      */
-    public function index(TaxRateRepository $taxRateRepository, #[Query('page')] ?int $page = null): \Yiisoft\DataResponse\DataResponse
+    public function index(TaxRateRepository $taxRateRepository, #[Query('page')] ?int $page = null): \Psr\Http\Message\ResponseInterface
     {
         $canEdit = $this->rbac();
         $parameters = [
@@ -54,7 +54,7 @@ final class TaxRateController extends BaseController
             'canEdit' => $canEdit,
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -88,7 +88,7 @@ final class TaxRateController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('__form', $parameters);
+        return $this->webViewRenderer->render('__form', $parameters);
     }
 
     /**
@@ -130,7 +130,7 @@ final class TaxRateController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('__form', $parameters);
+            return $this->webViewRenderer->render('__form', $parameters);
         }
         return $this->webService->getRedirectResponse('taxrate/index');
     }
@@ -162,7 +162,7 @@ final class TaxRateController extends BaseController
     public function view(
         CurrentRoute $currentRoute,
         TaxRateRepository $taxRateRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $taxRate = $this->taxRate($currentRoute, $taxRateRepository);
         $peppolArrays = new PeppolArrays();
         if ($taxRate) {
@@ -175,7 +175,7 @@ final class TaxRateController extends BaseController
                 'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
                 'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType(),
             ];
-            return $this->viewRenderer->render('__view', $parameters);
+            return $this->webViewRenderer->render('__view', $parameters);
         }
         return $this->webService->getRedirectResponse('taxrate/index');
     }

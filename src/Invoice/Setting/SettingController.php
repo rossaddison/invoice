@@ -26,12 +26,11 @@ use Ramsey\Uuid\Uuid;
 // Yii
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Cache\ArrayCache;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Db\Cache\SchemaCache;
 use Yiisoft\Db\Mysql\Connection;
 use Yiisoft\Db\Mysql\Driver;
 use Yiisoft\Db\Mysql\Dsn;
-use Yiisoft\Files\FileHelper;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
@@ -43,7 +42,7 @@ use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 // Psr
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -64,11 +63,11 @@ final class SettingController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->settingService = $settingService;
         $this->factory = $factory;
     }
@@ -83,7 +82,7 @@ final class SettingController extends BaseController
         CurrentRoute $currentRoute,
         Request $request,
         sR $sR,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
 
         $pageNum = (int) $currentRoute->getArgument('page', '1');
         $query_params = $request->getQueryParams();
@@ -111,14 +110,14 @@ final class SettingController extends BaseController
             'sortString' => $query_params['sort'] ?? '-id, setting_key, setting_value',
             'urlFastRouteGenerator' => $urlFastRouteGenerator,
         ];
-        return $this->viewRenderer->render('debug_index', $parameters);
+        return $this->webViewRenderer->render('debug_index', $parameters);
     }
 
     // The tab_index is the index of settings showing in non debug mode
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param ER $eR
      * @param GR $gR
      * @param PM $pm
@@ -127,7 +126,7 @@ final class SettingController extends BaseController
      */
     public function tab_index(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         ER $eR,
         GR $gR,
         PM $pm,
@@ -156,8 +155,8 @@ final class SettingController extends BaseController
             'alert' => $this->alert(),
             'head' => $head,
             'body' => $body,
-            'frontPage' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_front_page'),
-            'general' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_general', [
+            'frontPage' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_front_page'),
+            'general' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_general', [
                 /**
                  * @psalm-suppress PossiblyInvalidArgument
                  */
@@ -172,44 +171,44 @@ final class SettingController extends BaseController
                 'current_date' => new \DateTime(),
                 'icon' => $aliases->get('@icon'),
             ]),
-            'invoices' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoices', [
+            'invoices' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoices', [
                 'invoice_groups' => $gR->findAllPreloaded(),
                 'payment_methods' => $pm->findAllPreloaded(),
                 'public_invoice_templates' => $this->sR->get_invoice_templates('public'),
                 'pdf_invoice_templates' => $this->sR->get_invoice_templates('pdf'),
                 'email_templates_invoice' => $eR->repoEmailTemplateType('invoice'),
             ]),
-            'quotes' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_quotes', [
+            'quotes' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_quotes', [
                 'invoice_groups' => $gR->findAllPreloaded(),
                 'public_quote_templates' => $this->sR->get_quote_templates('public'),
                 'pdf_quote_templates' => $this->sR->get_quote_templates('pdf'),
                 'email_templates_quote' => $eR->repoEmailTemplateType('quote'),
             ]),
-            'salesorders' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_client_purchase_orders', [
+            'salesorders' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_client_purchase_orders', [
                 'gR' => $gR,
             ]),
-            'oauth2' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_oauth2', [
+            'oauth2' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_oauth2', [
                 'openBankingProviders' => $this->getOpenBankingProvidersWithAuthUrl(),
             ]),
-            'taxes' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_taxes', [
+            'taxes' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_taxes', [
                 'tax_rates' => $tR->findAllPreloaded(),
             ]),
-            'email' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_email'),
-            'google_translate' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_google_translate', [
+            'email' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_email'),
+            'google_translate' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_google_translate', [
                 'locales' => $this->sR->locales(),
             ]),
-            'online_payment' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_online_payment', [
+            'online_payment' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_online_payment', [
                 'gateway_drivers' => $this->sR->active_payment_gateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'gateway_regions' => $this->sR->amazon_regions(),
                 'openBankingProviders' => $this->getOpenBankingProviderNames(),
                 'payment_methods' => $pm->findAllPreloaded(),
             ]),
-            'mpdf' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_mpdf'),
-            'mtd' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_making_tax_digital'),
-            'projects_tasks' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_projects_tasks'),
-            'vat_registered' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_vat_registered'),
-            'peppol_electronic_invoicing' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_peppol', [
+            'mpdf' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_mpdf'),
+            'mtd' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_making_tax_digital'),
+            'projects_tasks' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_projects_tasks'),
+            'vat_registered' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_vat_registered'),
+            'peppol_electronic_invoicing' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_peppol', [
                 'config_tax_currency' => $this->sR->get_config_peppol()['TaxCurrencyCode'] ?: $this->sR->get_config_company_details()['tax_currency'],
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 // if delivery/invoice periods are used, a tax point date cannot be determined
@@ -220,23 +219,23 @@ final class SettingController extends BaseController
                 // They cannot both exist at the same time.
                 'stand_in_codes' => $peppol_arrays->getUncl2005subset(),
             ]),
-            'storecove' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_storecove', [
+            'storecove' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_storecove', [
                 'countries' => $countries->get_country_list((string) $this->session->get('_language')),
                 'sender_identifier_array' => StoreCoveArrays::store_cove_sender_identifier_array(),
             ]),
-            'invoiceplane' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoiceplane', [
+            'invoiceplane' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoiceplane', [
                 'actionTestConnectionName' => 'import/testconnection',
                 'actionTestConnectionArguments' => ['_language' => 'en'],
                 'actionImportName' => 'import/invoiceplane',
                 'actionImportArguments' => ['_language' => 'en'],
             ]),
-            'qrcode' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_qr_code', [
+            'qrcode' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_qr_code', [
             ]),
-            'telegram' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_telegram', [
+            'telegram' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_telegram', [
             ]),
             // two-factor-authentication
-            'tfa' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_two_factor_authentication'),
-            'bootstrap5' => $this->viewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_bootstrap5', [
+            'tfa' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_two_factor_authentication'),
+            'bootstrap5' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_bootstrap5', [
                 'alertMessageFontSize' => '10',
                 'alertCloseButtonFontSize' => '10',
             ]),
@@ -294,16 +293,16 @@ final class SettingController extends BaseController
                 return $this->webService->getRedirectResponse('setting/tab_index');
             }
         }
-        return $this->viewRenderer->render('tab_index', $parameters);
+        return $this->webViewRenderer->render('tab_index', $parameters);
     }
 
     /**
      * Related logic: see src\Invoice\Asset\rebuild\js\setting.js
      * Related logic: see resources\views\invoice\setting\views\partial_settings_making_tax_digital.php btn_fph_generate
      * @param Request $request
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function fphgenerate(Request $request): \Yiisoft\DataResponse\DataResponse
+    public function fphgenerate(Request $request): \Psr\Http\Message\ResponseInterface
     {
         $query_params = $request->getQueryParams();
         $randomDeviceIdVersion4 = Uuid::uuid4();
@@ -425,7 +424,7 @@ final class SettingController extends BaseController
             $parameters['form'] = $form;
             $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('__form', $parameters);
+        return $this->webViewRenderer->render('__form', $parameters);
     }
 
     /**
@@ -609,7 +608,7 @@ final class SettingController extends BaseController
                 $parameters['form'] = $form;
                 $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            return $this->viewRenderer->render('__form', $parameters);
+            return $this->webViewRenderer->render('__form', $parameters);
         }
         return $this->webService->getRedirectResponse('setting/debug_index');
     }
@@ -647,7 +646,7 @@ final class SettingController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      */
-    public function view(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute): \Psr\Http\Message\ResponseInterface
     {
         $setting = $this->setting($currentRoute);
         if ($setting) {
@@ -659,7 +658,7 @@ final class SettingController extends BaseController
                 'setting' => $setting,
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('__view', $parameters);
+            return $this->webViewRenderer->render('__view', $parameters);
         }
         return $this->webService->getRedirectResponse('setting/index');
     }
@@ -702,9 +701,9 @@ final class SettingController extends BaseController
     }
 
     /**
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get_cron_key(): \Yiisoft\DataResponse\DataResponse
+    public function get_cron_key(): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'success' => 1,

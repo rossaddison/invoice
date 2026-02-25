@@ -72,9 +72,9 @@ use App\Middleware\{AccessChecker as AC, ApiDataWrapper};
 use App\User\Controller\{ApiUserController, UserController};
 use Psr\Http\Message\ResponseFactoryInterface;
 use Yiisoft\{Auth\Middleware\Authentication,
-    DataResponse\DataResponseFactoryInterface as DRFI,
-    DataResponse\Middleware\FormatDataResponseAsJson,
-    DataResponse\Middleware\FormatDataResponseAsXml,
+    DataResponse\ResponseFactory\DataResponseFactoryInterface as DRFI,
+    DataResponse\Middleware\JsonDataResponseMiddleware,
+    DataResponse\Middleware\XmlDataResponseMiddleware,
     Http\Method, Router\Group, Router\Route, Yii\AuthClient\AuthAction,
     Yii\RateLimiter\Counter, Yii\RateLimiter\LimitRequestsMiddleware as LRM,
     Yii\RateLimiter\Storage\StorageInterface};
@@ -300,7 +300,7 @@ return [
                 ->name('user/profile'),
         ),
     Group::create('/api')
-        ->middleware(FormatDataResponseAsXml::class)
+        ->middleware(XmlDataResponseMiddleware::class)
         ->middleware(ApiDataWrapper::class)
         ->routes(
             Route::get('/info/v1')
@@ -311,7 +311,7 @@ return [
                 }),
             Route::get('/info/v2')
                 ->name('api/info/v2')
-                ->middleware(FormatDataResponseAsJson::class)
+                ->middleware(JsonDataResponseMiddleware::class)
                 ->action(ApiInfo::class),
             Route::get('/user')
                 ->name('api/user/index')
@@ -320,7 +320,7 @@ return [
             Route::get('/user/{login}')
                 ->name('api/user/profile')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->middleware(FormatDataResponseAsJson::class)
+                ->middleware(JsonDataResponseMiddleware::class)
                 ->action([ApiUserController::class, 'profile']),
         ),
     Group::create('/invoice')
@@ -924,7 +924,7 @@ return [
                 ->name('family/index'),
             Route::methods([$mG, $mP], '/family/test')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->middleware(FormatDataResponseAsJson::class)
+                ->middleware(JsonDataResponseMiddleware::class)
                 ->action([FamilyController::class])
                 ->name('family/test'),
             Route::methods([$mG, $mP], '/family/add')
@@ -1475,7 +1475,7 @@ return [
                 ->name('product/search'),
             Route::methods([$mG, $mP], '/product/test')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->middleware(FormatDataResponseAsJson::class)
+                ->middleware(JsonDataResponseMiddleware::class)
                 ->action([ProductController::class, 'test'])
                 ->name('product/test'),
             Route::methods([$mG, $mP], '/product/add')
@@ -1492,6 +1492,7 @@ return [
                 ->name('product/selection_quote'),
             Route::get('/product/selection_inv')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->middleware(JsonDataResponseMiddleware::class)
                 ->action([ProductController::class, 'selection_inv'])
                 ->name('product/selection_inv'),
             Route::methods([$mG, $mP], '/product/edit/{id}')

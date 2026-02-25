@@ -126,6 +126,7 @@ $totalAmount = 0.0;
  * @var Quote $quote
  */
 foreach ($quotes as $quote) {
+    
     $totalAmount += null !== ($total = $quote->getQuoteAmount()->getTotal())
             ? $total : 0.00;
 }

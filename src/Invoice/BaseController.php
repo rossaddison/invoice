@@ -18,7 +18,7 @@ use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 abstract class BaseController
 {
@@ -31,7 +31,7 @@ abstract class BaseController
         protected WebControllerService $webService,
         protected UserService $userService,
         protected TranslatorInterface $translator,
-        protected ViewRenderer $viewRenderer,
+        protected WebViewRenderer $webViewRenderer,
         protected SessionInterface $session,
         protected SettingRepository $sR,
         protected Flash $flash,
@@ -46,8 +46,8 @@ abstract class BaseController
     {
         if (!$this->userService->hasPermission(Permissions::VIEW_INV)
                 && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
-            $this->viewRenderer =
-            $this->viewRenderer->withControllerName($this->controllerName)
+            $this->webViewRenderer =
+            $this->webViewRenderer->withControllerName($this->controllerName)
                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                      ->withLayout('@views/layout/templates/soletrader/main.php');
         } elseif ($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -56,8 +56,8 @@ abstract class BaseController
                     Permissions::NO_ENTRY_TO_BASE_CONTROLLER)
             && $this->userService->hasPermission(
                     Permissions::ENTRY_TO_BASE_CONTROLLER)) {
-            $this->viewRenderer =
-            $this->viewRenderer->withControllerName($this->controllerName)
+            $this->webViewRenderer =
+            $this->webViewRenderer->withControllerName($this->controllerName)
                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                      ->withLayout('@views/layout/guest.php');
         } elseif ($this->userService->hasPermission(Permissions::EDIT_INV)
@@ -65,8 +65,8 @@ abstract class BaseController
                     Permissions::NO_ENTRY_TO_BASE_CONTROLLER)
             && $this->userService->hasPermission(
                     Permissions::ENTRY_TO_BASE_CONTROLLER)) {
-            $this->viewRenderer =
-            $this->viewRenderer->withControllerName($this->controllerName)
+            $this->webViewRenderer =
+            $this->webViewRenderer->withControllerName($this->controllerName)
                      ->withLayout('@views/invoice/layout/fullpage-loader.php')
                      ->withLayout('@views/layout/invoice.php');
         }
@@ -81,7 +81,7 @@ abstract class BaseController
       */
     protected function render(string $view, array $parameters = []): Response
     {
-        return $this->viewRenderer->render($view, $parameters);
+        return $this->webViewRenderer->render($view, $parameters);
     }
 
     /**
@@ -91,7 +91,7 @@ abstract class BaseController
      */
     protected function alert(): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
                 'flash' => $this->flash,
@@ -277,7 +277,7 @@ abstract class BaseController
         if (!empty($delivery_location_id)) {
             $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
             if (null !== $del) {
-                return $this->viewRenderer->renderPartialAsString(
+                return $this->webViewRenderer->renderPartialAsString(
                     '//invoice/inv/partial_inv_delivery_location', [
                     'actionName' => 'del/view',
                     'actionArguments' => [

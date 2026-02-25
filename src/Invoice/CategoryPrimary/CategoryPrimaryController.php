@@ -13,14 +13,14 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class CategoryPrimaryController extends BaseController
@@ -34,11 +34,11 @@ final class CategoryPrimaryController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->categoryPrimaryService = $categoryPrimaryService;
         $this->factory = $factory;
     }
@@ -73,7 +73,7 @@ final class CategoryPrimaryController extends BaseController
                 $parameters['form'] = $form;
             } // is_array($body)
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     public function index(
@@ -96,7 +96,7 @@ final class CategoryPrimaryController extends BaseController
             'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
                                                           ? (int) $settingRepository->getSetting('default_list_limit') : 1,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -155,7 +155,7 @@ final class CategoryPrimaryController extends BaseController
                         $parameters['form'] = $form;
                     }
                 }
-                return $this->viewRenderer->render('_form', $parameters);
+                return $this->webViewRenderer->render('_form', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('categoryprimary/index');
@@ -191,9 +191,9 @@ final class CategoryPrimaryController extends BaseController
      * @param CategoryPrimaryRepository $categoryPrimaryRepository
      * @param SettingRepository $settingRepository
      * @param int id
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CategoryPrimaryRepository $categoryPrimaryRepository, #[RouteArgument('id')] int $id): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CategoryPrimaryRepository $categoryPrimaryRepository, #[RouteArgument('id')] int $id): \Psr\Http\Message\ResponseInterface
     {
         if ($id) {
             $category_primary = $this->categoryprimary($categoryPrimaryRepository, $id);
@@ -206,7 +206,7 @@ final class CategoryPrimaryController extends BaseController
                     'form' => $form,
                     'category_primary' => $category_primary,
                 ];
-                return $this->viewRenderer->render('_view', $parameters);
+                return $this->webViewRenderer->render('_view', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('categoryprimary/index');

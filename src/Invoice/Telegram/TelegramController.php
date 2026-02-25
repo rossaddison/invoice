@@ -17,14 +17,14 @@ use Phptg\BotApi\FailResult;
 use Phptg\BotApi\ParseResult\TelegramParseResultException;
 use Phptg\BotApi\TelegramBotApi;
 use Phptg\BotApi\Type\Update\Update;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class TelegramController extends BaseController
 {
@@ -37,7 +37,7 @@ final class TelegramController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         private DataResponseFactoryInterface $factory,
         private Logger $logger,
@@ -45,14 +45,14 @@ final class TelegramController extends BaseController
         private ?TelegramBotApi $telegramBotApi,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->factory = $factory;
         $this->logger = $logger;
         $this->update = $update;
         $this->telegramBotApi = $telegramBotApi;
     }
 
-    public function index(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
+    public function index(Request $request, UrlGenerator $urlGenerator): \Psr\Http\Message\ResponseInterface
     {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $chatId = $this->sR->getSetting('telegram_chat_id');
@@ -153,7 +153,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->viewRenderer->render('index', $parameters = [
+        return $this->webViewRenderer->render('index', $parameters = [
             'alert' => $this->alert(),
         ]);
     }
@@ -163,7 +163,7 @@ final class TelegramController extends BaseController
      * @param Request $request
      * @param string $secret_token
      * @param string $jsonString
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function webhook(
         Request $request,
@@ -171,7 +171,7 @@ final class TelegramController extends BaseController
         string $secret_token,
         #[RouteArgument('jsonString')]
         string $jsonString,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $settingRepositoryTelegramSecretToken = $this->sR->getSetting('telegram_secret_token');
         try {
@@ -199,9 +199,9 @@ final class TelegramController extends BaseController
      * Note: Tested and functional
      * @param Request $request
      * @param UrlGenerator $urlGenerator
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get_webhookinfo(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
+    public function get_webhookinfo(Request $request, UrlGenerator $urlGenerator): \Psr\Http\Message\ResponseInterface
     {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $failResultWebhookInfo = '';
@@ -226,7 +226,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->viewRenderer->render('getwebhookinfo', $parameters = [
+        return $this->webViewRenderer->render('getwebhookinfo', $parameters = [
             'alert' => $this->alert(),
             'webhookinfo' => $failResultWebhookInfo,
         ]);
@@ -236,9 +236,9 @@ final class TelegramController extends BaseController
      * Note: Tested and functional
      * @param Request $request
      * @param UrlGenerator $urlGenerator
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function set_webhook(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
+    public function set_webhook(Request $request, UrlGenerator $urlGenerator): \Psr\Http\Message\ResponseInterface
     {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $failResultWebhookInfo = '';
@@ -282,7 +282,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->viewRenderer->render('setwebhook', $parameters = [
+        return $this->webViewRenderer->render('setwebhook', $parameters = [
             'alert' => $this->alert(),
             'webhookinfo' => $failResultWebhookInfo,
         ]);
@@ -292,9 +292,9 @@ final class TelegramController extends BaseController
      * Note: Tested and functional
      * @param Request $request
      * @param UrlGenerator $urlGenerator
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function delete_webhook(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
+    public function delete_webhook(Request $request, UrlGenerator $urlGenerator): \Psr\Http\Message\ResponseInterface
     {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         try {
@@ -331,7 +331,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->viewRenderer->render('index', $parameters = [
+        return $this->webViewRenderer->render('index', $parameters = [
             'alert' => $this->alert(),
         ]);
     }
@@ -340,9 +340,9 @@ final class TelegramController extends BaseController
      * Note: Tested and functional
      * @param Request $request
      * @param UrlGenerator $urlGenerator
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get_updates(Request $request, UrlGenerator $urlGenerator): \Yiisoft\DataResponse\DataResponse|Response
+    public function get_updates(Request $request, UrlGenerator $urlGenerator): \Psr\Http\Message\ResponseInterface
     {
         $settingRepositoryTelegramToken = $this->sR->getSetting('telegram_token');
         $offset = null;
@@ -394,7 +394,7 @@ final class TelegramController extends BaseController
             $this->logger->warning($e->getMessage());
             $this->flashMessage('secondary', $e->getMessage());
         }
-        return $this->viewRenderer->render('updates', $parameters = [
+        return $this->webViewRenderer->render('updates', $parameters = [
             'alert' => $this->alert(),
             'updates' => $failResultUpdates,
         ]);

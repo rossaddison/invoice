@@ -25,7 +25,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Security\TokenMask;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ForgotPasswordController
 {
@@ -33,7 +33,7 @@ final class ForgotPasswordController
 
     public function __construct(
         private readonly WebControllerService $webService,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
         private MailerInterface $mailer,
         private sR $sR,
         private Translator $translator,
@@ -41,7 +41,7 @@ final class ForgotPasswordController
         private CurrentRoute $currentRoute,
         private LoggerInterface $logger,
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('forgotpassword');
+        $this->webViewRenderer = $webViewRenderer->withControllerName('forgotpassword');
         $this->mailer = $mailer;
         $this->sR = $sR;
         $this->translator = $translator;
@@ -167,7 +167,7 @@ final class ForgotPasswordController
              */
             return $this->webService->getRedirectResponse('site/forgotalert');
         }
-        return $this->viewRenderer->render('forgotpassword', ['formModel' => $requestPasswordResetTokenForm]);
+        return $this->webViewRenderer->render('forgotpassword', ['formModel' => $requestPasswordResetTokenForm]);
     }
 
     /**

@@ -39,13 +39,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 use \Exception;
 
@@ -59,11 +59,11 @@ final class <?= $generator->getCamelcase_capital_name(); ?>Controller extends Ba
         sR $sR,
         TranslatorInterface $translator, 
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService
     )
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this-><?= $generator->getSmall_singular_name(); ?>Service = $<?= $generator->getSmall_singular_name(); ?>Service;
     }
     
@@ -112,7 +112,7 @@ foreach ($relations as $relation) {
                 $parameters['form'] = $form;
             } // is_array($body)   
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
         
     public function index(<?= $generator->getCamelcase_capital_name(); ?>Repository $<?= lcfirst($generator->getCamelcase_capital_name()); ?>Repository, 
@@ -130,7 +130,7 @@ foreach ($relations as $relation) {
       'defaultPageSizeOffsetPaginator' => $settingRepository->getSetting('default_list_limit')
                                                     ? (int)$settingRepository->getSetting('default_list_limit') : 1
     ];
-    return $this->viewRenderer->render('index', $parameters);
+    return $this->webViewRenderer->render('index', $parameters);
     }
     
     /**
@@ -203,7 +203,7 @@ echo rtrim($rel, ",\n") . "\n";
                     $parameters['form'] = $form;
                 }    
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name(); ?>/index');
     }
@@ -239,10 +239,10 @@ echo rtrim($rel, ",\n") . "\n";
      * @param <?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name(); ?>Repository
      * @param SettingRepository $settingRepository
      * @param int id
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(<?= $generator->getCamelcase_capital_name(); ?>Repository $<?= $generator->getSmall_singular_name();?>Repository, #[RouteArgument('id')] int $id) 
-                         : \Yiisoft\DataResponse\DataResponse|Response 
+                         : \Psr\Http\Message\ResponseInterface 
     {
         $<?= $generator->getSmall_singular_name(); ?> = $this-><?= $generator->getSmall_singular_name(); ?>($<?= $generator->getSmall_singular_name(); ?>Repository, $id); 
         if ($<?= $generator->getSmall_singular_name(); ?>) {
@@ -254,7 +254,7 @@ echo rtrim($rel, ",\n") . "\n";
                 'form' => $form,
                 '<?= $generator->getSmall_plural_name();?>' => $<?= $generator->getSmall_singular_name();?>,
             ];        
-        return $this->viewRenderer->render('_view', $parameters);
+        return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('<?= $generator->getSmall_singular_name(); ?>/index');
     }

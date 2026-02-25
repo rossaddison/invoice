@@ -20,7 +20,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class ProductPropertyController extends BaseController
@@ -33,11 +33,11 @@ final class ProductPropertyController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->productpropertyService = $productpropertyService;
     }
 
@@ -77,7 +77,7 @@ final class ProductPropertyController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -101,7 +101,7 @@ final class ProductPropertyController extends BaseController
             'alert' => $this->alert(),
             'max' => (int) $this->sR->getSetting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -164,7 +164,7 @@ final class ProductPropertyController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('productproperty/index');
     }
@@ -198,9 +198,9 @@ final class ProductPropertyController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param ProductPropertyRepository $productpropertyRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): \Psr\Http\Message\ResponseInterface
     {
         $productProperty = $this->productproperty($currentRoute, $productpropertyRepository);
         if ($productProperty) {
@@ -212,7 +212,7 @@ final class ProductPropertyController extends BaseController
                 'form' => $form,
                 'productproperty' => $productProperty,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('productproperty/index');
     }

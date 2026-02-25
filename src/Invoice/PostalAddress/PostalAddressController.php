@@ -24,7 +24,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class PostalAddressController extends BaseController
@@ -37,11 +37,11 @@ final class PostalAddressController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer,
+        parent::__construct($webService, $userService, $translator, $webViewRenderer,
                                                         $session, $sR, $flash);
         $this->postaladdressService = $postaladdressService;
     }
@@ -113,7 +113,7 @@ final class PostalAddressController extends BaseController
                 = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -151,7 +151,7 @@ final class PostalAddressController extends BaseController
             'routeCurrent' => $routeCurrent,
             'urlFastRouteGenerator' => $urlFastRouteGenerator,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -249,7 +249,7 @@ final class PostalAddressController extends BaseController
                              ->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('postaladdress/index');
     }
@@ -285,12 +285,12 @@ final class PostalAddressController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param PostalAddressRepository $postalAddressRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         PostalAddressRepository $postalAddressRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $postalAddress = $this->postaladdress($currentRoute,
                                                     $postalAddressRepository);
         if ($postalAddress) {
@@ -305,7 +305,7 @@ final class PostalAddressController extends BaseController
                 'form' => $form,
                 'postaladdress' => $postalAddress,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('postaladdress/index');
     }

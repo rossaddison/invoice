@@ -46,7 +46,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface as Logger;
 use Stripe\Stripe;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -55,7 +55,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use App\Auth\Client\OpenBanking;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class PaymentInformationController
 {
@@ -84,7 +84,7 @@ final class PaymentInformationController
         private UrlGenerator $urlGenerator,
         private UserService $userService,
         private Translator $translator,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
         private WebControllerService $webService,
         private compR $compR,
         private cPR $cPR,
@@ -106,17 +106,17 @@ final class PaymentInformationController
         $this->urlGenerator              = $urlGenerator;
         $this->userService               = $userService;
         $this->translator                = $translator;
-        $this->viewRenderer              = $viewRenderer;
+        $this->webViewRenderer           = $webViewRenderer;
         if ($this->userService->hasPermission(Permissions::VIEW_INV)
                 && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
-            $this->viewRenderer =
-                $viewRenderer->withControllerName('invoice/paymentinformation')
+            $this->webViewRenderer =
+                $webViewRenderer->withControllerName('invoice/paymentinformation')
                 ->withLayout('@views/layout/guest.php');
         }
         if ($this->userService->hasPermission(Permissions::VIEW_INV)
                 && $this->userService->hasPermission(Permissions::EDIT_INV)) {
-            $this->viewRenderer =
-                $viewRenderer->withControllerName('invoice/paymentinformation')
+            $this->webViewRenderer =
+                $webViewRenderer->withControllerName('invoice/paymentinformation')
                 ->withLayout('@views/layout/invoice.php');
         }
         $this->webService    = $webService;
@@ -128,7 +128,7 @@ final class PaymentInformationController
 
     private function alert(): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/layout/alert',
             [
                 'flash'  => $this->flash,
@@ -188,7 +188,7 @@ final class PaymentInformationController
             'json_encoded_items'     => Json::encode($items_array),
             'companyLogo'            => $this->renderPartialAsStringCompanyLogo(),
             'partial_client_address' =>
-                                     $this->viewRenderer->renderPartialAsString(
+                                     $this->webViewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address',
                 ['client' => $cR->repoClientquery($invoice->getClient_id())],
             ),
@@ -281,7 +281,7 @@ final class PaymentInformationController
                     ['url_key' => $url_key, '_language' => 'en'], [], null];
                 break;
         }
-        return $this->viewRenderer->render(
+        return $this->webViewRenderer->render(
         '//invoice/paymentinformation/payment_information_openbanking', $viewData);
     }
 
@@ -289,7 +289,7 @@ final class PaymentInformationController
  * Related logic: https://developer.amazon.com/docs/amazon-pay-api-v2/
  * checkout-session.html#create-checkout-session.
  */
-    public function amazon_complete(Request $request, CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
+    public function amazon_complete(Request $request, CurrentRoute $currentRoute): \Psr\Http\Message\ResponseInterface
     {
         $invoice_url_key = $currentRoute->getArgument('url_key');
         if (null === $invoice_url_key) {
@@ -326,7 +326,7 @@ final class PaymentInformationController
         // Update invoice/payment status if successful
         if ($result['success']) {
             $view_data = [
-                'render' => $this->viewRenderer->renderPartialAsString(
+                'render' => $this->webViewRenderer->renderPartialAsString(
                     '//invoice/setting/payment_message',
                     [
                         'heading'     =>
@@ -344,7 +344,7 @@ final class PaymentInformationController
             ];
         } else {
             $view_data = [
-                'render' => $this->viewRenderer->renderPartialAsString(
+                'render' => $this->webViewRenderer->renderPartialAsString(
                     '//invoice/setting/payment_message',
                     [
                         'heading'     => $this->translator->translate(
@@ -361,7 +361,7 @@ final class PaymentInformationController
             ];
         }
 
-        return $this->viewRenderer->render('payment_completion_page', $view_data);
+        return $this->webViewRenderer->render('payment_completion_page', $view_data);
     }
 
     public function openbanking_oauth_complete(Request $request,
@@ -406,7 +406,7 @@ final class PaymentInformationController
 
                 $this->flashMessage('success', 'Open Banking authentication successful.');
                 
-                return $this->viewRenderer->render('payment_completion_page', [
+                return $this->webViewRenderer->render('payment_completion_page', [
                     'render' => '<h2>Open Banking payment authorized.</h2>',
                 ]);
             } catch (\Throwable $e) {
@@ -419,12 +419,12 @@ final class PaymentInformationController
     }
 
     public function tink_complete(CurrentRoute $currentRoute):
-                                    \Yiisoft\DataResponse\DataResponse|Response
+                                    \Psr\Http\Message\ResponseInterface
     {
         $urlKey = $currentRoute->getArgument('url_key');
         $ref = $currentRoute->getArgument('ref');
         $view_data = [
-            'render' => $this->viewRenderer->renderPartialAsString(
+            'render' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/setting/payment_message',
                 [
                     'heading'     =>
@@ -439,15 +439,15 @@ final class PaymentInformationController
                 ],
             ),
         ];
-        return $this->viewRenderer->render('payment_completion_page', $view_data);
+        return $this->webViewRenderer->render('payment_completion_page', $view_data);
     }
 
-    public function wonderful_complete(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
+    public function wonderful_complete(CurrentRoute $currentRoute): \Psr\Http\Message\ResponseInterface
     {
         $urlKey = $currentRoute->getArgument('url_key');
         $ref = $currentRoute->getArgument('ref');
         $view_data = [
-            'render' => $this->viewRenderer->renderPartialAsString(
+            'render' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/setting/payment_message',
                 [
                     'heading'     => sprintf(
@@ -462,7 +462,7 @@ final class PaymentInformationController
                 ],
             ),
         ];
-        return $this->viewRenderer->render('payment_completion_page', $view_data);
+        return $this->webViewRenderer->render('payment_completion_page', $view_data);
     }
 
     public function inform(Request $request, CurrentRoute $currentRoute,
@@ -692,7 +692,7 @@ final class PaymentInformationController
         if (null !== $pemCheck) {
             $this->flashMessage('warning', (string) $pemCheck['message']);
 
-            return $this->viewRenderer->render(
+            return $this->webViewRenderer->render(
                 '//invoice/setting/payment_message',
                 [
                     'heading' => '',
@@ -722,7 +722,7 @@ final class PaymentInformationController
             'is_overdue'             => $is_overdue,
             'json_encoded_items'     => Json::encode($items_array),
             'companyLogo'            => $this->renderPartialAsStringCompanyLogo(),
-            'partial_client_address' => $this->viewRenderer
+            'partial_client_address' => $this->webViewRenderer
                 ->renderPartialAsString(
                     '//invoice/client/partial_client_address',
                     ['client' => $cR->repoClientquery($invoice->getClient_id())],
@@ -734,7 +734,7 @@ final class PaymentInformationController
             'total'          => $total,
         ];
 
-        return $this->viewRenderer->render('payment_information_amazon_pci',
+        return $this->webViewRenderer->render('payment_information_amazon_pci',
                                                         $amazon_pci_view_data);
     }
 
@@ -793,7 +793,7 @@ final class PaymentInformationController
             'invoice'                => $invoice,
             'inv_url_key'            => $url_key,
             'is_overdue'             => $is_overdue,
-            'partial_client_address' => $this->viewRenderer
+            'partial_client_address' => $this->webViewRenderer
                 ->renderPartialAsString(
                     '//invoice/client/partial_client_address',
                     ['client' => $cR->repoClientquery($invoice->getClient_id())],
@@ -853,7 +853,7 @@ final class PaymentInformationController
             }
 
             $view_data = [
-                'render' => $this->viewRenderer->renderPartialAsString(
+                'render' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/setting/payment_message', ['heading' => '',
                     // https://developer.paypal.com/braintree/docs/reference/general/result-objects
                     'message' => $transactionResult['success']
@@ -871,11 +871,11 @@ final class PaymentInformationController
             ];
             $this->iR->save($invoice);
 
-            return $this->viewRenderer->render('payment_completion_page',
+            return $this->webViewRenderer->render('payment_completion_page',
                     $view_data);
         } // request->getMethod Braintree
 
-        return $this->viewRenderer->render('payment_information_braintree_pci',
+        return $this->webViewRenderer->render('payment_information_braintree_pci',
                 $braintree_pci_view_data);
     }
 
@@ -905,7 +905,7 @@ final class PaymentInformationController
 // For Braintree, transactions are typically completed directly in the form POST
 // This completion handler is primarily for consistency with other payment methods
                 $view_data = [
-                    'render' => $this->viewRenderer->renderPartialAsString(
+                    'render' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/setting/payment_message',
                         [
                             'heading'     => sprintf(
@@ -923,7 +923,7 @@ final class PaymentInformationController
                     ),
                 ];
 
-                return $this->viewRenderer->render('payment_completion_page',
+                return $this->webViewRenderer->render('payment_completion_page',
                         $view_data);
             }
         }
@@ -992,7 +992,7 @@ final class PaymentInformationController
             'inv_url_key'                => $url_key,
             'is_overdue'                 => $is_overdue,
             'partial_client_address'     =>
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address',
                 [
                     'client' => $cR->repoClientquery($invoice->getClient_id()),
@@ -1008,7 +1008,7 @@ final class PaymentInformationController
                 . ' - PCI Compliant - is enabled. ',
         ];
 
-        return $this->viewRenderer->render('payment_information_mollie_pci',
+        return $this->webViewRenderer->render('payment_information_mollie_pci',
             $mollie_pci_view_data);
     }
 
@@ -1107,7 +1107,7 @@ final class PaymentInformationController
     }
 
     public function mollie_complete(CurrentRoute $currentRoute):
-        \Yiisoft\DataResponse\DataResponse|Response
+        \Psr\Http\Message\ResponseInterface
     {
         // Redirect to the invoice using the url key
         $url_key               = $currentRoute->getArgument('url_key');
@@ -1193,7 +1193,7 @@ final class PaymentInformationController
                         );
 
                         $view_data = [
-                            'render' => $this->viewRenderer->renderPartialAsString(
+                            'render' => $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/paymentinformation/payment_message',
                                 [
                                     'heading'     => $heading,
@@ -1210,7 +1210,7 @@ final class PaymentInformationController
                             ),
                         ];
 
-                        return $this->viewRenderer->render(
+                        return $this->webViewRenderer->render(
                                 'payment_completion_page', $view_data);
                     } // null!==$balance
                 } else {
@@ -1240,7 +1240,7 @@ final class PaymentInformationController
                     );
                     $this->iR->save($invoice);
                     $view_data = [
-                        'render' => $this->viewRenderer->renderPartialAsString(
+                        'render' => $this->webViewRenderer->renderPartialAsString(
                             '//invoice/paymentinformation/payment_message',
                             [
                                 'heading'     => $heading,
@@ -1256,7 +1256,7 @@ final class PaymentInformationController
                         ),
                     ];
 
-                    return $this->viewRenderer->render('payment_completion_page',
+                    return $this->webViewRenderer->render('payment_completion_page',
                             $view_data);
                 }
             }
@@ -1298,7 +1298,7 @@ final class PaymentInformationController
             'invoice'                    => $invoice,
             'inv_url_key'                => $url_key,
             'is_overdue'                 => $is_overdue,
-            'partial_client_address'     => $this->viewRenderer
+            'partial_client_address'     => $this->webViewRenderer
                 ->renderPartialAsString(
                     '//invoice/client/partial_client_address',
                     ['client' => $cR->repoClientquery($invoice->getClient_id())],
@@ -1310,7 +1310,7 @@ final class PaymentInformationController
                                     . ' - PCI Compliant - is enabled. ',
         ];
 
-        return $this->viewRenderer->render('payment_information_stripe_pci',
+        return $this->webViewRenderer->render('payment_information_stripe_pci',
                 $stripe_pci_view_data);
     }
 
@@ -1372,7 +1372,7 @@ final class PaymentInformationController
                                         . ' '
                                         . ((string) $result['message'] ?: ''));
                 $view_data = [
-                    'render' => $this->viewRenderer->renderPartialAsString(
+                    'render' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/paymentinformation/payment_message',
                         [
                             'heading'     => $heading,
@@ -1388,7 +1388,7 @@ final class PaymentInformationController
                     ),
                 ];
 
-                return $this->viewRenderer->render('payment_completion_page',
+                return $this->webViewRenderer->render('payment_completion_page',
                     $view_data);
             } // null!==$balance
 
@@ -1436,7 +1436,7 @@ final class PaymentInformationController
         string $invoice_url_key,
         bool $response,
         array $sandbox_url_array,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         if ($response) {
             $payment_note = $this->translator->translate('transaction.reference')
                     . ': ' . $reference . "\n";
@@ -1480,7 +1480,7 @@ final class PaymentInformationController
             $this->flashMessage('success', $payment_success_msg);
 
             return $this->factory->createResponse(
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
                     '//invoice/setting/payment_message',
                     [
                         'heading'     => '',
@@ -1520,7 +1520,7 @@ final class PaymentInformationController
         $this->flashMessage('warning', $payment_failure_msg);
 
         return $this->factory->createResponse(
-            $this->viewRenderer->renderPartialAsString(
+            $this->webViewRenderer->renderPartialAsString(
                 '//invoice/setting/payment_message',
                 [
                     'heading'     => '',
@@ -1561,7 +1561,7 @@ final class PaymentInformationController
         $src = (null !== $companyLogoFileName ? '/logo/'
                 . $companyLogoFileName : '/site/logo.png');
 
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
                 '//invoice/paymentinformation/logo/companyLogo',
         [
             'src' => $src,
@@ -1575,7 +1575,7 @@ final class PaymentInformationController
 
     public function renderPartialAsStringBraintreeLogo(string $merchantId): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
                 '//invoice/paymentinformation/logo/braintreeLogo',
         [
             'merchantId' => $merchantId,
@@ -1584,7 +1584,7 @@ final class PaymentInformationController
 
     public function renderPartialAsStringMollieLogo(): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
                 '//invoice/paymentinformation/logo/mollieLogo');
     }
 

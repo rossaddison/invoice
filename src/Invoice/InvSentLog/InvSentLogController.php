@@ -23,7 +23,7 @@ use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class InvSentLogController extends BaseController
 {
@@ -35,12 +35,12 @@ final class InvSentLogController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator,
-                                        $viewRenderer, $session, $sR, $flash);
+                                        $webViewRenderer, $session, $sR, $flash);
         $this->invsentlogService = $invsentlogService;
     }
 
@@ -107,7 +107,7 @@ final class InvSentLogController extends BaseController
                     'optionsDataGuestClientDropDownFilter' =>
                             $this->optionsDataGuestClientsFilter($islR, $userId),
                 ];
-                return $this->viewRenderer->render('guest', $parameters);
+                return $this->webViewRenderer->render('guest', $parameters);
             }
             $this->flashMessage('info',
                         $this->translator->translate('user.inv.active.not'));
@@ -166,7 +166,7 @@ final class InvSentLogController extends BaseController
             'optionsDataClientsDropDownFilter' =>
                                         $this->optionsDataClientsFilter($islR),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -190,10 +190,10 @@ final class InvSentLogController extends BaseController
      * @param ISLR $islR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(#[RouteArgument('id')] int $id, ISLR $islR,
-        UCR $ucR, UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+        UCR $ucR, UIR $uiR): \Psr\Http\Message\ResponseInterface
     {
         $invsentlog = $this->invsentlog($islR, $id);
         if ($invsentlog) {
@@ -207,13 +207,13 @@ final class InvSentLogController extends BaseController
             $inv = $invsentlog->getInv();
             if (null!==$inv) {
                 if ($this->rbacObserver($inv, $ucR, $uiR)) {
-                    return $this->viewRenderer->render('view', $parameters);
+                    return $this->webViewRenderer->render('view', $parameters);
                 }
                 if ($this->rbacAdmin()) {
-                    return $this->viewRenderer->render('view', $parameters);
+                    return $this->webViewRenderer->render('view', $parameters);
                 }
                 if ($this->rbacAccountant()) {
-                    return $this->viewRenderer->render('view', $parameters);
+                    return $this->webViewRenderer->render('view', $parameters);
                 }
             }    
         }

@@ -21,7 +21,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class AllowanceChargeController extends BaseController
@@ -32,13 +32,13 @@ final class AllowanceChargeController extends BaseController
         private AllowanceChargeService $allowanceChargeService,
         SessionInterface $session,
         sR $sR,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         UserService $userService,
         TranslatorInterface $translator,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->allowanceChargeService = $allowanceChargeService;
     }
 
@@ -100,7 +100,7 @@ final class AllowanceChargeController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_form_allowance', $parameters);
+        return $this->webViewRenderer->render('_form_allowance', $parameters);
     }
 
     /**
@@ -162,7 +162,7 @@ final class AllowanceChargeController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_form_charge', $parameters);
+        return $this->webViewRenderer->render('_form_charge', $parameters);
     }
 
     /**
@@ -181,7 +181,7 @@ final class AllowanceChargeController extends BaseController
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                           ? (int) $this->sR->getSetting('default_list_limit') : 1,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -247,7 +247,7 @@ final class AllowanceChargeController extends BaseController
                     $parameters['form'] = $form;
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 }
-                return $this->viewRenderer->render('_form_allowance', $parameters);
+                return $this->webViewRenderer->render('_form_allowance', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('allowancecharge/index');
@@ -298,7 +298,7 @@ final class AllowanceChargeController extends BaseController
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 }
             }
-            return $this->viewRenderer->render('_form_charge', $parameters);
+            return $this->webViewRenderer->render('_form_charge', $parameters);
         }
         return $this->webService->getRedirectResponse('allowancecharge/index');
     }
@@ -332,9 +332,9 @@ final class AllowanceChargeController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param AllowanceChargeRepository $allowanceChargeRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, AllowanceChargeRepository $allowanceChargeRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, AllowanceChargeRepository $allowanceChargeRepository): \Psr\Http\Message\ResponseInterface
     {
         $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
         if ($allowanceCharge) {
@@ -346,7 +346,7 @@ final class AllowanceChargeController extends BaseController
                 'form' => $form,
                 'allowanceCharge' => $allowanceCharge,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('allowancecharge/index');
     }

@@ -4,133 +4,134 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Psr\Http\Message\ResponseInterface as Response;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class SiteController
 {
-    public function __construct(private ViewRenderer $viewRenderer)
+    public function __construct(private WebViewRenderer $webViewRenderer)
     {
-        $this->viewRenderer = $viewRenderer->withController($this);
+        $this->webViewRenderer = $webViewRenderer->withController($this);
     }
 
-    public function index(): \Yiisoft\DataResponse\DataResponse
+    public function index(): Response
     {
-        return $this->viewRenderer->render('index');
+        return $this->webViewRenderer->render('index');
     }
 
-    public function about(): \Yiisoft\DataResponse\DataResponse
+    public function about(): Response
     {
-        return $this->viewRenderer->render('about');
+        return $this->webViewRenderer->render('about');
     }
 
-    public function accreditations(): \Yiisoft\DataResponse\DataResponse
+    public function accreditations(): Response
     {
-        return $this->viewRenderer->render('accreditations');
+        return $this->webViewRenderer->render('accreditations');
     }
 
-    public function gallery(): \Yiisoft\DataResponse\DataResponse
+    public function gallery(): Response
     {
-        return $this->viewRenderer->render('gallery');
+        return $this->webViewRenderer->render('gallery');
     }
 
-    public function team(): \Yiisoft\DataResponse\DataResponse
+    public function team(): Response
     {
-        return $this->viewRenderer->render('team');
+        return $this->webViewRenderer->render('team');
     }
 
-    public function pricing(): \Yiisoft\DataResponse\DataResponse
+    public function pricing(): Response
     {
-        return $this->viewRenderer->render('pricing');
+        return $this->webViewRenderer->render('pricing');
     }
 
-    public function privacypolicy(): \Yiisoft\DataResponse\DataResponse
+    public function privacypolicy(): Response
     {
-        return $this->viewRenderer->render('privacypolicy');
+        return $this->webViewRenderer->render('privacypolicy');
     }
 
-    public function termsofservice(): \Yiisoft\DataResponse\DataResponse
+    public function termsofservice(): Response
     {
-        return $this->viewRenderer->render('termsofservice');
+        return $this->webViewRenderer->render('termsofservice');
     }
 
-    public function testimonial(): \Yiisoft\DataResponse\DataResponse
+    public function testimonial(): Response
     {
-        return $this->viewRenderer->render('testimonial');
+        return $this->webViewRenderer->render('testimonial');
     }
 
-    public function oauth2autherror(#[RouteArgument('message')] string $message): \Yiisoft\DataResponse\DataResponse
+    public function oauth2autherror(#[RouteArgument('message')] string $message): Response
     {
-        return $this->viewRenderer->render('oauth2autherror', ['message' => $message]);
+        return $this->webViewRenderer->render('oauth2autherror', ['message' => $message]);
     }
 
-    public function oauth2callbackresultunauthorised(): \Yiisoft\DataResponse\DataResponse
+    public function oauth2callbackresultunauthorised(): Response
     {
-        return $this->viewRenderer->render('oauth2callbackresultunauthorised');
+        return $this->webViewRenderer->render('oauth2callbackresultunauthorised');
     }
 
-    public function usercancelledoauth2(): \Yiisoft\DataResponse\DataResponse
+    public function usercancelledoauth2(): Response
     {
-        return $this->viewRenderer->render('usercancelledoauth2');
+        return $this->webViewRenderer->render('usercancelledoauth2');
     }
 
-    public function adminmustmakeactive(): \Yiisoft\DataResponse\DataResponse
+    public function adminmustmakeactive(): Response
     {
-        return $this->viewRenderer->render('adminmustmakeactive');
+        return $this->webViewRenderer->render('adminmustmakeactive');
     }
 
-    public function contact(): \Yiisoft\DataResponse\DataResponse
+    public function contact(): Response
     {
-        return $this->viewRenderer->render('contact');
+        return $this->webViewRenderer->render('contact');
     }
 
-    public function forgotalert(): \Yiisoft\DataResponse\DataResponse
+    public function forgotalert(): Response
     {
-        return $this->viewRenderer->render('forgotalert');
+        return $this->webViewRenderer->render('forgotalert');
     }
 
-    public function forgotemailfailed(): \Yiisoft\DataResponse\DataResponse
+    public function forgotemailfailed(): Response
     {
-        return $this->viewRenderer->render('forgotemailfailed');
+        return $this->webViewRenderer->render('forgotemailfailed');
     }
 
-    public function forgotusernotfound(): \Yiisoft\DataResponse\DataResponse
+    public function forgotusernotfound(): Response
     {
-        return $this->viewRenderer->render('forgotusernotfound');
+        return $this->webViewRenderer->render('forgotusernotfound');
     }
 
-    public function onetimepassworderror(): \Yiisoft\DataResponse\DataResponse
+    public function onetimepassworderror(): Response
     {
-        return $this->viewRenderer->render('onetimepassworderror');
+        return $this->webViewRenderer->render('onetimepassworderror');
     }
 
-    public function onetimepasswordfailure(): \Yiisoft\DataResponse\DataResponse
+    public function onetimepasswordfailure(): Response
     {
-        return $this->viewRenderer->render('onetimepasswordfailure');
+        return $this->webViewRenderer->render('onetimepasswordfailure');
     }
 
-    public function onetimepasswordsuccess(): \Yiisoft\DataResponse\DataResponse
+    public function onetimepasswordsuccess(): Response
     {
-        return $this->viewRenderer->render('onetimepasswordsuccess');
+        return $this->webViewRenderer->render('onetimepasswordsuccess');
     }
 
-    public function resetpasswordfailed(): \Yiisoft\DataResponse\DataResponse
+    public function resetpasswordfailed(): Response
     {
-        return $this->viewRenderer->render('resetpasswordfailed');
+        return $this->webViewRenderer->render('resetpasswordfailed');
     }
 
-    public function resetpasswordsuccess(): \Yiisoft\DataResponse\DataResponse
+    public function resetpasswordsuccess(): Response
     {
-        return $this->viewRenderer->render('resetpasswordsuccess');
+        return $this->webViewRenderer->render('resetpasswordsuccess');
     }
 
-    public function signupfailed(): \Yiisoft\DataResponse\DataResponse
+    public function signupfailed(): Response
     {
-        return $this->viewRenderer->render('signupfailed');
+        return $this->webViewRenderer->render('signupfailed');
     }
 
-    public function signupsuccess(): \Yiisoft\DataResponse\DataResponse
+    public function signupsuccess(): Response
     {
-        return $this->viewRenderer->render('signupsuccess');
+        return $this->webViewRenderer->render('signupsuccess');
     }
 }

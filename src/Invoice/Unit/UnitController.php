@@ -20,7 +20,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class UnitController extends BaseController
 {
@@ -32,11 +32,11 @@ final class UnitController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->unitService = $unitService;
     }
 
@@ -45,7 +45,7 @@ final class UnitController extends BaseController
      * @param UnitRepository $unitRepository
      * @param UnitPeppolRepository $upR
      */
-    public function index(CurrentRoute $currentRoute, UnitRepository $unitRepository, UnitPeppolRepository $upR): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, UnitRepository $unitRepository, UnitPeppolRepository $upR): \Psr\Http\Message\ResponseInterface
     {
         $units = $this->units($unitRepository);
         $pageNum = (int) $currentRoute->getArgument('page', '1');
@@ -60,7 +60,7 @@ final class UnitController extends BaseController
             'upR' => $upR,
             'units' => $units,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -91,7 +91,7 @@ final class UnitController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('__form', $parameters);
+        return $this->webViewRenderer->render('__form', $parameters);
     }
 
     /**
@@ -130,7 +130,7 @@ final class UnitController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('__form', $parameters);
+            return $this->webViewRenderer->render('__form', $parameters);
         }
         return $this->webService->getRedirectResponse('unit/index');
     }
@@ -159,7 +159,7 @@ final class UnitController extends BaseController
      * @param string $unit_id
      * @param UnitRepository $unitRepository
      */
-    public function view(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository): \Psr\Http\Message\ResponseInterface
     {
         $unit = $this->unit($unit_id, $unitRepository);
         if ($unit) {
@@ -170,7 +170,7 @@ final class UnitController extends BaseController
                 'actionArguments' => ['unit_id' => $unit_id],
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('__view', $parameters);
+            return $this->webViewRenderer->render('__view', $parameters);
         }
         return $this->webService->getRedirectResponse('unit/index');
     }

@@ -58,7 +58,7 @@ use Yiisoft\Data\Paginator\OffsetPaginator as DataOffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\OrderHelper;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -69,7 +69,7 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 // Miscellaneous
 
@@ -87,11 +87,11 @@ final class ClientController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->clientService = $clientService;
         $this->clientCustomService = $clientCustomService;
         $this->factory = $factory;
@@ -241,7 +241,7 @@ final class ClientController extends BaseController
             }
         }
         $parameters['form'] = $form;
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     public function edit(
@@ -305,7 +305,7 @@ final class ClientController extends BaseController
                         if (!$returned_form->isValid()) {
                             $parameters['form'] = $returned_form;
                             $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                            return $this->viewRenderer->render('_form', $parameters);
+                            return $this->webViewRenderer->render('_form', $parameters);
                         }
                         $this->processCustomFields($body, $formHydrator, $this->clientCustomFieldProcessor, (string) $client_id);
                     } // is_array
@@ -317,7 +317,7 @@ final class ClientController extends BaseController
                         return $this->webService->getRedirectResponse('inv/index');
                     }
                 }
-                return $this->viewRenderer->render('_form', $parameters);
+                return $this->webViewRenderer->render('_form', $parameters);
             } // null!==client_id
         } //client
         return $this->webService->getRedirectResponse('client/index');
@@ -331,9 +331,9 @@ final class ClientController extends BaseController
      * @param mixed $matches
      * @param string $client_id
      * @param ccR $ccR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function custom_fields(FormHydrator $formHydrator, array $body, mixed $matches, string $client_id, ccR $ccR): \Yiisoft\DataResponse\DataResponse
+    public function custom_fields(FormHydrator $formHydrator, array $body, mixed $matches, string $client_id, ccR $ccR): \Psr\Http\Message\ResponseInterface
     {
         if (!empty($body['custom'])) {
             $db_array = [];
@@ -432,7 +432,7 @@ final class ClientController extends BaseController
      * @param iR $iR
      * @param cpR $cpR
      * @param ucR $ucR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(
         CurrentRoute $currentRoute,
@@ -443,7 +443,7 @@ final class ClientController extends BaseController
         iR $iR,
         cpR $cpR,
         ucR $ucR,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         /**
          * Related logic: see $canEdit used in client/index.php to display via label
          *      whether a client has been assigned to an active user account
@@ -496,13 +496,13 @@ final class ClientController extends BaseController
             'ucR' => $ucR,
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
-            'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
+            'modal_create_client' => $this->webViewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
             'optionsDataClientNameDropdownFilter' => $this->optionsDataClientNameDropdownFilter($cR),
             'optionsDataClientSurnameDropdownFilter' => $this->optionsDataClientSurnameDropdownFilter($cR),
             'urlCreator' => $urlCreator,
             'visible' => $this->sR->getSetting('columns_all_visible') == '0' ? false : true,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -573,11 +573,11 @@ final class ClientController extends BaseController
                             'cpR' => $cpR,
                             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                                 ? (int) $this->sR->getSetting('default_list_limit') : 1,
-                            'modal_create_client' => $this->viewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
+                            'modal_create_client' => $this->webViewRenderer->renderPartialAsString('//invoice/client/modal_create_client'),
                             'userInv' => $userInv,
                             'urlCreator' => $urlCreator,
                         ];
-                        return $this->viewRenderer->render('guest', $parameters);
+                        return $this->webViewRenderer->render('guest', $parameters);
                     }
                     $this->flashMessage('warning', $this->translator->translate('user.clients.assigned.not'));
                     throw new NoClientsAssignedToUserException($this->translator);
@@ -587,7 +587,7 @@ final class ClientController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    public function load_client_notes(Request $request, cnR $cnR): \Yiisoft\DataResponse\DataResponse
+    public function load_client_notes(Request $request, cnR $cnR): \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
         /** @var int $body['client_id'] */
@@ -617,9 +617,9 @@ final class ClientController extends BaseController
      * @param FormHydrator $formHydrator
      * @param Request $request
      * @param ccR $ccR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function save_custom(FormHydrator $formHydrator, Request $request, ccR $ccR): \Yiisoft\DataResponse\DataResponse
+    public function save_custom(FormHydrator $formHydrator, Request $request, ccR $ccR): \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
         $custom = $body['custom'] ? (array) $body['custom'] : '';
@@ -680,9 +680,9 @@ final class ClientController extends BaseController
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param cnS $cnS
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function save_client_note_new(Request $request, FormHydrator $formHydrator, cnS $cnS): \Yiisoft\DataResponse\DataResponse
+    public function save_client_note_new(Request $request, FormHydrator $formHydrator, cnS $cnS): \Psr\Http\Message\ResponseInterface
     {
         $datehelper = new DateHelper($this->sR);
         //receive data ie. note
@@ -716,7 +716,7 @@ final class ClientController extends BaseController
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    public function delete_client_note(Request $request, cnR $cnR, cnS $cnS): \Yiisoft\DataResponse\DataResponse
+    public function delete_client_note(Request $request, cnR $cnR, cnS $cnS): \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
         /**
@@ -884,11 +884,11 @@ final class ClientController extends BaseController
     ): Response {
         $quote = new Quote();
         $quoteForm = new QuoteForm($quote);
-        $bootstrap5ModalQuote = new Bootstrap5ModalQuote($this->translator, $this->viewRenderer, $cR, $gR, $this->sR, $ucR, $quoteForm);
+        $bootstrap5ModalQuote = new Bootstrap5ModalQuote($this->translator, $this->webViewRenderer, $cR, $gR, $this->sR, $ucR, $quoteForm);
 
         $inv = new Inv();
         $invForm = new InvForm($inv);
-        $bootstrap5ModalInv = new Bootstrap5ModalInv($this->translator, $this->viewRenderer, $cR, $gR, $this->sR, $ucR, $invForm);
+        $bootstrap5ModalInv = new Bootstrap5ModalInv($this->translator, $this->webViewRenderer, $cR, $gR, $this->sR, $ucR, $invForm);
 
         $clientCustom = new ClientCustom();
         $clientCustomForm = new ClientCustomForm($clientCustom);
@@ -916,125 +916,125 @@ final class ClientController extends BaseController
                     'clientCustomValues' => $this->client_custom_values((string) $client_id, $ccR),
                     'client' => $client,
                     'client_notes' => $cnR->repoClientNoteCount($client_id) > 0 ? $cnR->repoClientquery((string) $client_id) : [],
-                    'partial_client_address' => $this->viewRenderer->renderPartialAsString('//invoice/client/partial_client_address', [
+                    'partial_client_address' => $this->webViewRenderer->renderPartialAsString('//invoice/client/partial_client_address', [
                         'client' => $client,
                     ]),
                     // Note here the client_id is presented as the 'origin'. Origin could be 'quote', 'main', 'dashboard'
                     'client_modal_layout_quote' => $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString((string) $client_id, []),
                     'client_modal_layout_inv' => $bootstrap5ModalInv->renderPartialLayoutWithFormAsString((string) $client_id, []),
-                    'quote_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
+                    'quote_table' => $this->webViewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'quote_count' => $qR->repoCountByClient($client_id),
                         'quotes' => $qR->repoClient($client_id),
                     ]),
-                    'quote_draft_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
+                    'quote_draft_table' => $this->webViewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'quote_count' => $qR->by_client_quote_status_count($client_id, 1),
                         'quotes' => $qR->by_client_quote_status($client_id, 1),
                     ]),
-                    'quote_sent_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
+                    'quote_sent_table' => $this->webViewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'quote_count' => $qR->by_client_quote_status_count($client_id, 2),
                         'quotes' => $qR->by_client_quote_status($client_id, 2),
                     ]),
-                    'quote_viewed_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
+                    'quote_viewed_table' => $this->webViewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'quote_count' => $qR->by_client_quote_status_count($client_id, 3),
                         'quotes' => $qR->by_client_quote_status($client_id, 3),
                     ]),
-                    'quote_approved_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
+                    'quote_approved_table' => $this->webViewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'quote_count' => $qR->by_client_quote_status_count($client_id, 4),
                         'quotes' => $qR->by_client_quote_status($client_id, 4),
                     ]),
-                    'quote_rejected_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
+                    'quote_rejected_table' => $this->webViewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'quote_count' => $qR->by_client_quote_status_count($client_id, 5),
                         'quotes' => $qR->by_client_quote_status($client_id, 5),
                     ]),
-                    'quote_cancelled_table' => $this->viewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
+                    'quote_cancelled_table' => $this->webViewRenderer->renderPartialAsString('//invoice/quote/partial_quote_table', [
                         'quote_count' => $qR->by_client_quote_status_count($client_id, 6),
                         'quotes' => $qR->by_client_quote_status($client_id, 6),
                     ]),
-                    'invoice_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->repoCountByClient($client_id),
                         'invoices' => $iR->repoClient($client_id),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                         'session' => $session,
                     ]),
-                    'invoice_draft_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_draft_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 1),
                         'invoices' => $iR->by_client_inv_status($client_id, 1),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_sent_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_sent_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 2),
                         'invoices' => $iR->by_client_inv_status($client_id, 2),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_viewed_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_viewed_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 3),
                         'invoices' => $iR->by_client_inv_status($client_id, 3),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_paid_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_paid_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 4),
                         'invoices' => $iR->by_client_inv_status($client_id, 4),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_overdue_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_overdue_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 5),
                         'invoices' => $iR->by_client_inv_status($client_id, 5),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_unpaid_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_unpaid_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 6),
                         'invoices' => $iR->by_client_inv_status($client_id, 6),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_reminder_sent_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_reminder_sent_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 7),
                         'invoices' => $iR->by_client_inv_status($client_id, 7),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_seven_day_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_seven_day_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 8),
                         'invoices' => $iR->by_client_inv_status($client_id, 8),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_legal_claim_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_legal_claim_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 9),
                         'invoices' => $iR->by_client_inv_status($client_id, 9),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_judgement_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_judgement_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 10),
                         'invoices' => $iR->by_client_inv_status($client_id, 10),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_officer_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_officer_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 11),
                         'invoices' => $iR->by_client_inv_status($client_id, 11),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_credit_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_credit_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 12),
                         'invoices' => $iR->by_client_inv_status($client_id, 12),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'invoice_written_off_table' => $this->viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
+                    'invoice_written_off_table' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_table', [
                         'invoice_count' => $iR->by_client_inv_status_count($client_id, 13),
                         'invoices' => $iR->by_client_inv_status($client_id, 13),
                         'inv_statuses' => $iR->getStatuses($this->translator),
                     ]),
-                    'partial_notes' => $this->viewRenderer->renderPartialAsString('//invoice/clientnote/partial_notes', [
+                    'partial_notes' => $this->webViewRenderer->renderPartialAsString('//invoice/clientnote/partial_notes', [
                         'client_notes' => $cnR->repoClientquery((string) $client_id),
                     ]),
-                    'payment_table' => $this->viewRenderer->renderPartialAsString('//invoice/payment/partial_payment_table', [
+                    'payment_table' => $this->webViewRenderer->renderPartialAsString('//invoice/payment/partial_payment_table', [
                         'client' => $client,
                         // All payments from the client are loaded and filtered in the view with
                         // if ($payment->getInv()->getClient_id() === $client->getClient_id())
                         'payments' => $pymtR->repoPaymentInvLoadedAll((int) $this->sR->getSetting('payment_list_limit') ?: 10),
                     ]),
-                    'delivery_locations' => $this->viewRenderer->renderPartialAsString('//invoice/client/client_delivery_location_list', [
+                    'delivery_locations' => $this->webViewRenderer->renderPartialAsString('//invoice/client/client_delivery_location_list', [
                         'locations' => $delR->repoClientquery((string) $client->getClient_id()),
                     ]),
                 ];
-                return $this->viewRenderer->render('view', $parameters);
+                return $this->webViewRenderer->render('view', $parameters);
             }
             return $this->webService->getRedirectResponse('client/index');
         } // if $client

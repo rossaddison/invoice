@@ -20,7 +20,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class GroupController extends BaseController
 {
@@ -32,11 +32,11 @@ final class GroupController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->groupService = $groupService;
     }
 
@@ -45,7 +45,7 @@ final class GroupController extends BaseController
      * @param Request $request
      * @param GroupService $service
      */
-    public function index(GroupRepository $groupRepository, Request $request, GroupService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(GroupRepository $groupRepository, Request $request, GroupService $service): \Psr\Http\Message\ResponseInterface
     {
         $page = (int) $request->getAttribute('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -63,7 +63,7 @@ final class GroupController extends BaseController
             'groups' => $this->groups($groupRepository),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -96,7 +96,7 @@ final class GroupController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -133,7 +133,7 @@ final class GroupController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('group/index');
     }
@@ -164,12 +164,12 @@ final class GroupController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param GroupRepository $groupRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         GroupRepository $groupRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $group = $this->group($currentRoute, $groupRepository);
         if ($group) {
             $form = new GroupForm($group);
@@ -181,7 +181,7 @@ final class GroupController extends BaseController
                 'form' => $form,
                 'group' => $groupRepository->repoGroupquery($group->getId()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('group/index');
     }

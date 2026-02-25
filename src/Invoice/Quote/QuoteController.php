@@ -112,7 +112,7 @@ use Yiisoft\{
     Data\Paginator\PageToken,
     Data\Reader\Sort,
     Data\Reader\OrderHelper,
-    DataResponse\DataResponseFactoryInterface,
+    DataResponse\ResponseFactory\DataResponseFactoryInterface,
     Html\Html,
     Http\Method,
     Input\Http\Attribute\Parameter\Query,
@@ -126,7 +126,7 @@ use Yiisoft\{
     Translator\TranslatorInterface as Translator,
     User\CurrentUser,
     Yii\DataView\YiiRouter\UrlCreator,
-    Yii\View\Renderer\ViewRenderer,
+    Yii\View\Renderer\WebViewRenderer,
 };
 use Psr\{
     Log\LoggerInterface,
@@ -172,7 +172,7 @@ final class QuoteController extends BaseController
      * @param SR $sR
      * @param Translator $translator
      * @param UserService $userService
-     * @param ViewRenderer $viewRenderer
+     * @param WebViewRenderer $webViewRenderer
      * @param WebControllerService $webService
      * @param Flash $flash
      */
@@ -208,12 +208,12 @@ final class QuoteController extends BaseController
         SR $sR,
         Translator $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator,
-            $viewRenderer, $session, $sR, $flash);
+            $webViewRenderer, $session, $sR, $flash);
         $this->number_helper = new NumberHelper($sR);
         $this->pdf_helper = new PdfHelper($sR, $session, $translator);
     }
@@ -255,7 +255,7 @@ final class QuoteController extends BaseController
      * @param UR $uR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function add(
         Request $request,
@@ -268,13 +268,13 @@ final class QuoteController extends BaseController
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $quote = new Quote();
         $errors = [];
         $form = new QuoteForm($quote);
         $bootstrap5ModalQuote = new Bootstrap5ModalQuote(
             $this->translator,
-            $this->viewRenderer,
+            $this->webViewRenderer,
             $clientRepository,
             $gR,
             $this->sR,
@@ -425,12 +425,12 @@ final class QuoteController extends BaseController
             /**
              * @psalm-suppress MixedArgumentTypeCoercion $parameters
              */
-            return $this->viewRenderer->render(
+            return $this->webViewRenderer->render(
                 'modal_add_quote_form', $parameters);
         }
         // show the form inside a modal when engaging with a view
         if ($origin == 'quote') {
-            return $this->viewRenderer->render('modal_layout', [
+            return $this->webViewRenderer->render('modal_layout', [
                 // use type to id the quote\modal_layout.php eg.
                 // ->options(['id' => 'modal-add-'.$type,
                 'type' => 'quote',
@@ -442,7 +442,7 @@ final class QuoteController extends BaseController
         }
         // Otherwise return to client
         if (($origin != 'main') && ($origin != 'quote')) {
-            return $this->viewRenderer->render('modal_layout', [
+            return $this->webViewRenderer->render('modal_layout', [
                 'type' => 'client',
                 'form' =>
                     $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString(
@@ -479,7 +479,7 @@ final class QuoteController extends BaseController
      * @param UIR $uiR
      * @param UNR $unR
      *
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function approve(
         Request $request,
@@ -506,7 +506,7 @@ final class QuoteController extends BaseController
         UCR $ucR,
         UIR $uiR,
         UNR $unR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $body = $request->getQueryParams();
         $url_key = (string) $body['url_key'];
         $purchase_order_number = (string) $body['client_po_number'];
@@ -628,7 +628,7 @@ final class QuoteController extends BaseController
                         $quote->setStatus_id(5);
                         $qR->save($quote);
                         return $this->factory->createResponse(
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                             '//invoice/setting/quote_successful',
                             ['heading' => $this->translator->translate(
                                 'record.successfully.updated'),'url' =>
@@ -681,11 +681,11 @@ final class QuoteController extends BaseController
      * @param UR $uR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function create_confirm(Request $request, FormHydrator $formHydrator,
         GR $gR, TRR $trR, UR $uR, UCR $ucR, UIR $uiR):
-            \Yiisoft\DataResponse\DataResponse
+            \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
         $ajax_body = [
@@ -856,6 +856,9 @@ final class QuoteController extends BaseController
         #[RouteArgument('id')]
         int $id,
         QR $quoteRepo,
+        ACQR $acqR,
+        ACQIR $acqiR,
+        QIAR $qiaR,
         QCR $qcR,
         QuoteCustomService $qcS,
         QIR $qiR,
@@ -874,8 +877,8 @@ final class QuoteController extends BaseController
                     && ($quote->getInv_id() == 0))) {
                 $this->quote_service
                      ->deleteQuote(
-                        $quote, $qcR, $qcS, $qiR, $qiS, $qtrR, $qtrS, $qaR,
-                            $qaS);
+                        $quote, $acqR, $acqiR, $qiaR, $qcR, $qcS, $qiR, $qiS,
+                        $qtrR, $qtrS, $qaR, $qaS);
                 $this->flashMessage('success', $this->translator->translate(
                         'record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('quote/index');
@@ -892,10 +895,10 @@ final class QuoteController extends BaseController
     /**
      * @param int $id
      * @param QIR $qiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function delete_quote_item(#[RouteArgument('id')] int $id, QIR $qiR):
-        \Yiisoft\DataResponse\DataResponse|Response
+        \Psr\Http\Message\ResponseInterface
     {
         $quote_id = (string) $this->session->get('quote_id');
         try {
@@ -920,7 +923,7 @@ final class QuoteController extends BaseController
                     'quote.item.cannot.delete'));
         }
         return $this->factory->createResponse(
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/quote_successful',
             ['heading' => '','message' => $this->translator->translate(
                 'record.successfully.deleted'),'url' => 'quote/view','id' =>
@@ -931,11 +934,11 @@ final class QuoteController extends BaseController
     /**
      * @param int $id
      * @param QTRR $quotetaxrateRepository
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function delete_quote_tax_rate(
         #[RouteArgument('id')] int $id, QTRR $quotetaxrateRepository):
-        \Yiisoft\DataResponse\DataResponse
+        \Psr\Http\Message\ResponseInterface
     {
         try {
             $this->quote_tax_rate_service->deleteQuoteTaxRate(
@@ -947,7 +950,7 @@ final class QuoteController extends BaseController
         }
         $quote_id = (string) $this->session->get('quote_id');
         return $this->factory->createResponse(
-            $this->viewRenderer->renderPartialAsString(
+            $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             ['heading' => $this->translator->translate(
                 'quote.tax.rate'),'message' => $this->translator->translate(
@@ -972,7 +975,7 @@ final class QuoteController extends BaseController
      * @param UR $uR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function edit(
         Request $request,
@@ -991,7 +994,7 @@ final class QuoteController extends BaseController
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $quote = $this->quote($id, $quoteRepo, true);
         if (null !== $quote) {
             $form = new QuoteForm($quote);
@@ -1067,11 +1070,11 @@ final class QuoteController extends BaseController
                         $parameters['errors'] =
                             $form->getValidationResult()
                                  ->getErrorMessagesIndexedByProperty();
-                        return $this->viewRenderer->render('_form', $parameters);
+                        return $this->webViewRenderer->render('_form', $parameters);
                     }
                 }
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         } // $quote
         return $this->webService->getNotFoundResponse();
     }
@@ -1087,7 +1090,7 @@ final class QuoteController extends BaseController
     }
 
     /**
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param int $id
      * @param CCR $ccR
      * @param CFR $cfR
@@ -1102,7 +1105,7 @@ final class QuoteController extends BaseController
      * @return Response
      */
     public function email_stage_0(
-        ViewRenderer $head,
+        WebViewRenderer $head,
         #[RouteArgument('id')]
         int $id,
         CCR $ccR,
@@ -1188,12 +1191,12 @@ final class QuoteController extends BaseController
                     'quote' => $quote,
                     'pdfTemplates' => $this->email_get_quote_templates('pdf'),
                     'templateTags' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/emailtemplate/template-tags', [
                         'custom_fields' => $custom_fields,
                         'template_tags_inv' => '',
                         'template_tags_quote' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/emailtemplate/template-tags-quote', [
                             'custom_fields_quote_custom' =>
                                 $custom_fields['quote_custom'],
@@ -1202,7 +1205,7 @@ final class QuoteController extends BaseController
                     'form' => new MailerQuoteForm(),
                     'custom_fields' => $custom_fields,
                 ];
-                return $this->viewRenderer->render('mailer_quote', $parameters);
+                return $this->webViewRenderer->render('mailer_quote', $parameters);
             } // quote
             return $this->webService->getRedirectResponse('quote/index');
         } // quote_entity
@@ -1278,7 +1281,7 @@ final class QuoteController extends BaseController
      * @param QAR $qaR
      * @param QCR $qcR
      * @param UIR $uiR
-     * @param ViewRenderer $viewrenderer
+     * @param WebViewRenderer $webViewRenderer
      * @return bool
      */
     public function email_stage_1(
@@ -1310,7 +1313,7 @@ final class QuoteController extends BaseController
         QCR $qcR,
         SOR $soR,
         UIR $uiR,
-        ViewRenderer $viewrenderer,
+        WebViewRenderer $webViewRenderer,
     ): bool {
         // All custom repositories, including icR have to be initialised.
         $template_helper = new TemplateHelper(
@@ -1332,7 +1335,7 @@ final class QuoteController extends BaseController
                         $quote_id, $quote_entity->getUser_id(), $stream, true,
                             $quote_amount, $quote_custom_values, $cR, $cvR,
                                 $cfR, $dlR, $qiR, $qiaR, $acqiR, $qR, $qtrR,
-                                    $uiR, $viewrenderer);
+                                    $uiR, $webViewRenderer);
                 if ($pdf_template_target_path) {
                     $mail_message = $template_helper->parse_template(
                         $quote_id, false, $email_body, $cR, $cvR, $iR, $iaR,
@@ -1448,7 +1451,7 @@ final class QuoteController extends BaseController
                 $to = (string) $body['MailerQuoteForm']['to_email'] ?: '';
                 if (empty($to)) {
                     return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                         '//invoice/setting/quote_message',
                         ['heading' => '',
                             'message' => $this->translator->translate(
@@ -1468,7 +1471,7 @@ final class QuoteController extends BaseController
 
                 if (empty($from[0])) {
                     return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                         '//invoice/setting/quote_message',
                         ['heading' => '', 'message' =>
                             $this->translator->translate(
@@ -1502,7 +1505,7 @@ final class QuoteController extends BaseController
                         $subject, $email_body, $cc, $bcc, $attachFiles, $cR,
                             $ccR, $cfR, $dlR, $cvR, $iaR, $icR, $qiaR, $acqiR,
                                 $qiR, $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR,
-                                    $soR, $uiR, $this->viewRenderer)) {
+                                    $soR, $uiR, $this->webViewRenderer)) {
                     $this->sR->quote_mark_sent((string) $quote_id, $qR);
                     $this->flashMessage('success', $this->translator->translate(
                         'email.successfully.sent'));
@@ -1552,7 +1555,7 @@ final class QuoteController extends BaseController
      * @param int $page
      * @param int $status
      * @throws NoClientsAssignedToUserException
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function guest(
         Request $request,
@@ -1564,7 +1567,7 @@ final class QuoteController extends BaseController
         int $page = 1,
         #[RouteArgument('status')]
         int $status = 0,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']
@@ -1668,7 +1671,7 @@ final class QuoteController extends BaseController
                         'status' => $status,
                         'urlCreator' => $urlCreator,
                     ];
-                    return $this->viewRenderer->render('guest', $parameters);
+                    return $this->webViewRenderer->render('guest', $parameters);
                 } // empty user client
                 throw new NoClientsAssignedToUserException($this->translator);
             } // userinv
@@ -1691,7 +1694,7 @@ final class QuoteController extends BaseController
      * @param string $_language
      * @param string $page
      * @param string $status
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(
         Request $request,
@@ -1714,13 +1717,13 @@ final class QuoteController extends BaseController
         ?string $queryFilterClient = null,
         #[Query('filterStatus')]
         ?string $queryFilterStatus = null,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         // build the quote
         $quote = new Quote();
         $quoteForm = new QuoteForm($quote);
         $bootstrap5ModalQuote = new Bootstrap5ModalQuote(
             $this->translator,
-            $this->viewRenderer,
+            $this->webViewRenderer,
             $clientRepo,
             $groupRepo,
             $sR,
@@ -1846,7 +1849,7 @@ final class QuoteController extends BaseController
                         'quote', []),
                 'urlCreator' => $urlCreator,
             ];
-            return $this->viewRenderer->render('index', $parameters);
+            return $this->webViewRenderer->render('index', $parameters);
         }
         $this->flashMessage('info',
             $this->translator->translate('user.client.active.no'));
@@ -1863,7 +1866,7 @@ final class QuoteController extends BaseController
      * @param SR $sR
      */
     public function modal_change_client(Request $request, CR $cR, SR $sR):
-        \Yiisoft\DataResponse\DataResponse
+        \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
         $client = $cR->repoClientquery((string) $body['client_id']);
@@ -1909,6 +1912,7 @@ final class QuoteController extends BaseController
      * @param DLR $dlR
      * @param GR $gR
      * @param QAR $qaR
+     * @param ACQIR $acqiR
      * @param QCR $qcR
      * @param QIR $qiR
      * @param QIAR $qiaR
@@ -1916,12 +1920,12 @@ final class QuoteController extends BaseController
      * @param QTRR $qtrR
      * @param SR $sR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function pdf(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, ACQIR $acqiR,
         QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR,
-        UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+        UIR $uiR): \Psr\Http\Message\ResponseInterface
     {
         // include is a value of 0 or 1 passed from quote.js
         // function quote_to_pdf_with(out)_custom_fields indicating whether
@@ -1951,7 +1955,7 @@ final class QuoteController extends BaseController
                     $quote->getUser_id(), $stream, $custom, $quote_amount,
                         $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR,
                             $qiaR, $acqiR, $qR, $qtrR, $uiR,
-                                $this->viewRenderer);
+                                $this->webViewRenderer);
                 $parameters = ($include == '1' ?
                     ['success' => 1] : ['success' => 0]);
                 return $this->factory->createResponse(
@@ -1971,6 +1975,7 @@ final class QuoteController extends BaseController
      * @param DLR $dlR
      * @param GR $gR
      * @param QAR $qaR
+     * @param ACQIR $acqiR
      * @param QCR $qcR
      * @param QIR $qiR
      * @param QIAR $qiaR
@@ -2010,7 +2015,7 @@ final class QuoteController extends BaseController
                         (string) $quote_id, $quote->getUser_id(), $stream,
                             true, $quote_amount, $quote_custom_values, $cR,
                                 $cvR, $cfR, $dlR, $qiR, $qiaR, $acqiR, $qR,
-                                    $qtrR, $uiR, $this->viewRenderer);
+                                    $qtrR, $uiR, $this->webViewRenderer);
                 }
             }
         } //quote_id
@@ -2024,6 +2029,7 @@ final class QuoteController extends BaseController
      * @param DLR $dlR
      * @param GR $gR
      * @param QAR $qaR
+     * @param ACQIR $acqiR
      * @param QCR $qcR
      * @param QIR $qiR
      * @param QIAR $qiaR
@@ -2063,7 +2069,7 @@ final class QuoteController extends BaseController
                         $quote->getUser_id(), $stream, false, $quote_amount,
                             $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR,
                                 $qiaR, $acqiR, $qR, $qtrR, $uiR,
-                                    $this->viewRenderer);
+                                    $this->webViewRenderer);
                 }
             }
         } // quote_id
@@ -2193,7 +2199,7 @@ final class QuoteController extends BaseController
      * @param UCR $ucR
      * @param UIR $uiR
      *
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function quote_to_invoice_confirm(
         Request $request,
@@ -2218,7 +2224,7 @@ final class QuoteController extends BaseController
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $body = $request->getQueryParams();
         $quote_id = (string) $body['quote_id'];
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
@@ -2341,7 +2347,7 @@ final class QuoteController extends BaseController
      * @param UNR $unR
      * @param UCR $ucR
      * @param UR $uR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function quote_to_so_confirm(
         Request $request,
@@ -2367,7 +2373,7 @@ final class QuoteController extends BaseController
         UNR $unR,
         UCR $ucR,
         UR $uR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         // $body data received from user in
         // ...resources\views\invoice\quote\modal_quote_to_so
         // ...src\Invoice\Asset\rebuild-1.13\js\ $(document).on('click',
@@ -2895,7 +2901,7 @@ final class QuoteController extends BaseController
         UCR $ucR,
         UIR $uiR,
         UNR $unR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $data_quote_js = $request->getQueryParams();
         $quote_id = (string) $data_quote_js['quote_id'];
         $original = $qR->repoQuoteUnloadedquery($quote_id);
@@ -3311,7 +3317,7 @@ final class QuoteController extends BaseController
      * @param QCR $qcR
      */
     public function save_custom(FormHydrator $formHydrator, Request $request,
-        QCR $qcR): \Yiisoft\DataResponse\DataResponse
+        QCR $qcR): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'success' => 0,
@@ -3334,7 +3340,7 @@ final class QuoteController extends BaseController
      * @param FormHydrator $formHydrator
      */
     public function save_quote_tax_rate(Request $request,
-        FormHydrator $formHydrator): \Yiisoft\DataResponse\DataResponse
+        FormHydrator $formHydrator): \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
         $ajax_body = [
@@ -3432,7 +3438,7 @@ final class QuoteController extends BaseController
                                 if ($quote_amount) {
                                     $parameters = [
                                         'renderTemplate' =>
-                                            $this->viewRenderer
+                                            $this->webViewRenderer
                                                  ->renderPartialAsString(
                                             '//invoice/template/quote/public/'
                                             . ($this->sR->getSetting(
@@ -3470,13 +3476,13 @@ final class QuoteController extends BaseController
                                                 $uiR->repoUserInvUserIdquery(
                                                     $user_id) : null,
                                             'modal_purchase_order_number' =>
-                                                $this->viewRenderer
+                                                $this->webViewRenderer
                                                      ->renderPartialAsString(
                                 '//invoice/quote/modal_purchase_order_number',
                                                     ['urlKey' => $urlKey]),
                                         ]),
                                     ];
-                                    return $this->viewRenderer->render(
+                                    return $this->webViewRenderer->render(
                                         'url_key', $parameters);
                                 } // if quote_amount
                             } // if there is a quote id
@@ -3515,7 +3521,7 @@ final class QuoteController extends BaseController
      * @param SOR $soR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         #[RouteArgument('id')]
@@ -3546,7 +3552,7 @@ final class QuoteController extends BaseController
         SOR $soR,
         UCR $ucR,
         UIR $uiR
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $quote = $this->quote($id, $qR, false);
         if (null !== $quote) {
             $quote_id = $quote->getId();
@@ -3597,12 +3603,12 @@ final class QuoteController extends BaseController
                         'dateHelper' => new DateHelper($this->sR),
                         'numberHelper' => $this->number_helper,
                         'view_product_task_tabs' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/quote/view_product_task_tabs', [
                             'quote' => $quote,
                             'invEdit' => $quoteEdit,
                             'add_quote_product' =>
-                                $this->viewRenderer->renderPartialAsString(
+                                $this->webViewRenderer->renderPartialAsString(
                                     '//invoice/quoteitem/_item_form_product', [
                                 'actionName' => 'quoteitem/add_product',
                                 'actionArguments' => ['_language' => $_language],
@@ -3616,7 +3622,7 @@ final class QuoteController extends BaseController
                                 'numberHelper' => new NumberHelper($this->sR),
                             ]),
                             'add_quote_task' =>
-                                    $this->viewRenderer->renderPartialAsString(
+                                    $this->webViewRenderer->renderPartialAsString(
                                         '//invoice/quoteitem/_item_form_task', [
                                 'actionName' => 'quoteitem/add_task',
                                 'actionArguments' => ['_language' => $_language],
@@ -3630,15 +3636,15 @@ final class QuoteController extends BaseController
                             ]),
                         ]),
                         'view_quote_number' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/quote/view_quote_number', [
                             'quote' => $quote,
                         ]),
                         'view_quote_vat_enabled_switch' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/quote/view_quote_vat_enabled_switch'),
                         'view_quote_client_details' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/quote/view_quote_client_details', [
                             'clientHelper' => new ClientHelper($this->sR),
                             'countryHelper' => new CountryHelper(),
@@ -3646,7 +3652,7 @@ final class QuoteController extends BaseController
                             '_language' => $_language,
                         ]),
                         'view_details_box_with_custom_field' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                             '//invoice/quote/view_details_box_with_custom_field',
                             [
                                 'quote' => $quote,
@@ -3660,7 +3666,7 @@ final class QuoteController extends BaseController
                                 'vat' => $vat,
                             ]),
                         'view_quote_approve_reject' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/quote/view_quote_approve_reject', [
                             'quote' => $quote,
                             'body' => $this->body($quote),
@@ -3670,7 +3676,7 @@ final class QuoteController extends BaseController
                             'sales_order_number' => $sales_order_number,
                         ]),
                         'view_custom_fields' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/quote/view_custom_fields', [
                             'custom_fields' => $cfR->repoTablequery(
                                 'quote_custom'),
@@ -3696,7 +3702,7 @@ final class QuoteController extends BaseController
                         'quoteStatuses' => $qR->getStatuses($this->translator),
                         'quote' => $quote,
                         'partial_item_table' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/quote/partial_item_table', [
                             'acqiR' => $acqiR,
                             'packHandleShipTotal' =>
@@ -3722,7 +3728,7 @@ final class QuoteController extends BaseController
                             'units' => $uR->findAllPreloaded(),
                         ]),
                         'modal_choose_products' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                             '//invoice/product/modal_product_lookups_quote',
                             [
                                 'families' => $fR->findAllPreloaded(),
@@ -3734,7 +3740,7 @@ final class QuoteController extends BaseController
                                 'reset_table' => '',
                                 'products' => $pR->findAllPreloadedwithPrice(),
                                 'partial_product_table_modal' =>
-                                $this->viewRenderer->renderPartialAsString(
+                                $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/product/_partial_product_table_modal',
                                 [
                                     'products' => $pR->findAllPreloadedwithPrice(),
@@ -3742,14 +3748,14 @@ final class QuoteController extends BaseController
                             ],
                         ),
                         'modal_choose_tasks' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/task/modal_task_lookups_quote',
                             [
                                 'default_item_tax_rate' =>
                                 $this->sR->getSetting(
                                         'default_item_tax_rate') !== '' ?: 0,
                                 'partial_task_table_modal' =>
-                                $this->viewRenderer->renderPartialAsString(
+                                $this->webViewRenderer->renderPartialAsString(
                                     '//invoice/task/partial_task_table_modal', [
                                     'tasks' => $taskR->repoTaskStatusquery(1),
                                     'projectR' => $projectR,
@@ -3757,7 +3763,7 @@ final class QuoteController extends BaseController
                             ],
                         ),
                         'modal_add_quote_tax' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                             '//invoice/quote/modal_add_quote_tax',
                             [
                                 'taxRates' => $trR->findAllPreloaded(),
@@ -3767,11 +3773,11 @@ final class QuoteController extends BaseController
                             ],
                         ),
                         'modal_add_allowance_charge' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                             '//invoice/quote/modal_add_allowance_charge',
                             [
                                 'modal_add_allowance_charge_form' =>
-                                $this->viewRenderer->renderPartialAsString(
+                                $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/quote/modal_add_allowance_charge_form',
                                     [
                                         'optionsDataAllowanceCharges' =>
@@ -3790,7 +3796,7 @@ final class QuoteController extends BaseController
                             ],
                         ),
                         'modal_copy_quote' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/quote/modal_copy_quote', [
                                 's' => $this->sR,
                             'quote' => $qR->repoQuoteLoadedquery(
@@ -3799,7 +3805,7 @@ final class QuoteController extends BaseController
                             'groups' => $gR->findAllPreloaded(),
                         ]),
                         'modal_delete_quote' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/quote/modal_delete_quote',
                             [
                                 'actionName' => 'quote/delete',
@@ -3809,10 +3815,10 @@ final class QuoteController extends BaseController
                             ],
                         ),
                         'modal_delete_items' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/quote/modal_delete_item', [
                             'partial_item_table_modal' =>
-                                $this->viewRenderer->renderPartialAsString(
+                                $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/quoteitem/_partial_item_table_modal',
                                 [
                                     'quoteItems' => $qiR->repoQuotequery(
@@ -3824,19 +3830,19 @@ final class QuoteController extends BaseController
                             ]),
                         ]),
                         'modal_quote_to_invoice' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/quote/modal_quote_to_invoice', [
                             'quote' => $quote,
                             'groups' => $gR->findAllPreloaded(),
                         ]),
                         'modal_quote_to_so' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/quote/modal_quote_to_so', [
                             'quote' => $quote,
                             'groups' => $gR->findAllPreloaded(),
                         ]),
                         'modal_quote_to_pdf' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/quote/modal_quote_to_pdf', [
                             'quote' => $quote,
                         ]),
@@ -3845,13 +3851,13 @@ final class QuoteController extends BaseController
                             $_language, $dlR, $quote->getDelivery_location_id()),
                     ];
                     if ($this->rbacObserver($quote, $ucR, $uiR)) {
-                        return $this->viewRenderer->render('view', $parameters);
+                        return $this->webViewRenderer->render('view', $parameters);
                     }
                     if ($this->rbacAdmin()) {
-                        return $this->viewRenderer->render('view', $parameters);
+                        return $this->webViewRenderer->render('view', $parameters);
                     }
                     if ($this->rbacAccountant()) {
-                        return $this->viewRenderer->render('view', $parameters);
+                        return $this->webViewRenderer->render('view', $parameters);
                     }
                 } // quote_amount
                 $this->flashMessage('info', 'no quote tax');

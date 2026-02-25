@@ -24,14 +24,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Yiisoft\{Assets\AssetManager, DataResponse\DataResponse,
-    DataResponse\DataResponseFactoryInterface, Factory\Factory,
+use Yiisoft\{Assets\AssetManager,  
+    DataResponse\ResponseFactory\DataResponseFactoryInterface, Factory\Factory,
     FormModel\FormHydrator, Html\Html, Html\Tag\A, Html\Tag\Style, Http\Method,
     Json\Json, Rbac\Manager as Manager, Router\FastRoute\UrlGenerator, 
     Security\Random, Security\TokenMask, Session\Flash\Flash,
     Session\SessionInterface, Translator\TranslatorInterface,
     User\Login\Cookie\CookieLogin, User\Login\Cookie\CookieLoginIdentityInterface,
-    View\WebView, Yii\View\Renderer\ViewRenderer,
+    View\WebView, Yii\View\Renderer\WebViewRenderer,
     Yii\AuthClient\StateStorage\StateStorageInterface, 
     Yii\AuthClient\Widget\AuthChoice, Yii\RateLimiter\CounterInterface};
 
@@ -67,7 +67,7 @@ final class AuthController
         private readonly RecoveryCodeService $recoveryCodeService,
         private readonly DataResponseFactoryInterface $factory,
         private readonly WebControllerService $webService,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
         private readonly Manager $manager,
         private readonly SessionInterface $session,
         private readonly SettingRepository $sR,
@@ -84,7 +84,7 @@ final class AuthController
         private readonly StateStorageInterface $stateStorage,
         private readonly Factory $yiisoftFactory,
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('auth');
+        $this->webViewRenderer = $webViewRenderer->withControllerName('auth');
         // use the Oauth2 trait function
         $this->initializeOauth2IdentityProviderCredentials();
         $this->initializeOauth2IdentityProviderDualUrls();
@@ -309,7 +309,7 @@ final class AuthController
         $this->session->set('code_verifier', $codeVerifier);
         $codeChallenge = strtr(rtrim(base64_encode(hash('sha256',
                 $codeVerifier, true)), '='), '+/', '-_');
-        return $this->viewRenderer->render(
+        return $this->webViewRenderer->render(
             'login',
             [
                 'class' => $this->classList(),
@@ -385,7 +385,7 @@ final class AuthController
                 $qrContent = $totp->getProvisioningUri();
                 $qrDataUri = $this->generateQrDataUri($qrContent);
                 $form = new TwoFactorAuthenticationSetupForm($translator);
-                return $this->viewRenderer->render('setup', [
+                return $this->webViewRenderer->render('setup', [
                     'qrDataUri' => $qrDataUri,
                     'totpSecret' => $secret,
                     'error' => '',
@@ -398,9 +398,9 @@ final class AuthController
 
     /**
      * Related logic: see src\Auth\Asset\rebuild\js\keypad_copy_to_clipboard.js
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return ResponseInterface
      */
-    public function ajaxShowSetup(ServerRequestInterface $request): DataResponse
+    public function ajaxShowSetup(ServerRequestInterface $request): ResponseInterface
     {
         $params = $request->getQueryParams();
         $parameters = [
@@ -498,7 +498,7 @@ final class AuthController
                         $qrContent = $totp->getProvisioningUri();
                         $qrDataUri = $this->generateQrDataUri($qrContent);
                         $tfasf = new TwoFactorAuthenticationSetupForm($translator);
-                        return $this->viewRenderer->render('setup', [
+                        return $this->webViewRenderer->render('setup', [
                             'qrDataUri' => $qrDataUri,
                             'totpSecret' => $totp->getSecret(),
                             'error' => $error,
@@ -574,7 +574,7 @@ final class AuthController
             if (!$this->checkRateLimit($rateLimitKey)) {
                 $this->logger->log(LogLevel::WARNING, $reached . $clientIp);
                 $error = $translator->translate($tfarlr);
-                return $this->viewRenderer->render('verify', [
+                return $this->webViewRenderer->render('verify', [
                     'error' => $error,
                     'formModel' => $form,
                     'codes' => $codes,
@@ -631,7 +631,7 @@ final class AuthController
                                 }
                                 $error = $translator->translate($tfaibrc);
                             }
-                            return $this->viewRenderer->render('verify', [
+                            return $this->webViewRenderer->render('verify', [
                                 'error' => $error,
                                 'formModel' => $form,
                                 'codes' => $codes,
@@ -642,7 +642,7 @@ final class AuthController
                 $parameters['error'] = $translator->translate($tfaaf);
             }
         }
-        return $this->viewRenderer->render('verify', $parameters);
+        return $this->webViewRenderer->render('verify', $parameters);
     }
 
     // Remove session temps and permit entry to the Base Controller

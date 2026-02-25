@@ -30,7 +30,7 @@ use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yii
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -39,7 +39,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class InvItemController extends BaseController
 {
@@ -52,11 +52,11 @@ final class InvItemController extends BaseController
         SR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->invitemService = $invitemService;
         $this->factory = $factory;
     }
@@ -70,7 +70,7 @@ final class InvItemController extends BaseController
      * @param IRR $irR
      * @param IIAR $iiar
      * @param IIR $iiR
-     * @return \Psr\Http\Message\ResponseInterface|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\ResponseInterface
      */
     public function add_product(
         Request $request,
@@ -81,7 +81,7 @@ final class InvItemController extends BaseController
         IRR $irR,
         IIAR $iiar,
         IIR $iiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $inv_id = (string) $this->session->get('inv_id');
         $invitem = new InvItem();
         $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
@@ -110,7 +110,7 @@ final class InvItemController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_item_form_product', $parameters);
+        return $this->webViewRenderer->render('_item_form_product', $parameters);
     }
 
     /**
@@ -131,7 +131,7 @@ final class InvItemController extends BaseController
         IRR $irR,
         IIAR $iiar,
         IIR $iiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $inv_id = (string) $this->session->get('inv_id');
         $invitem = new InvItem();
         $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
@@ -161,7 +161,7 @@ final class InvItemController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->renderPartial('_item_form_task', $parameters);
+        return $this->webViewRenderer->renderPartial('_item_form_task', $parameters);
     }
 
     /**
@@ -217,7 +217,7 @@ final class InvItemController extends BaseController
      * @param ITRR $itrR
      * @param ACIR $aciR
      * @param ACIIR $aciiR
-     * @return \Psr\Http\Message\ResponseInterface|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\ResponseInterface
      */
     public function edit_product(
         CurrentRoute $currentRoute,
@@ -236,7 +236,7 @@ final class InvItemController extends BaseController
         ITRR $itrR,
         ACIR $aciR,
         ACIIR $aciiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $inv_id = (string) $this->session->get('inv_id');
         $inv_item = $this->invitem($currentRoute, $iiR);
         $is_recurring = ($irR->repoCount((string) $this->session->get('inv_id')) > 0 ? true : false);
@@ -316,7 +316,7 @@ final class InvItemController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_item_edit_product', $parameters);
+            return $this->webViewRenderer->render('_item_edit_product', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -407,7 +407,7 @@ final class InvItemController extends BaseController
      * @param IR $iR
      * @param IIAS $iias
      * @param IIAR $iiaR
-     * @return \Psr\Http\Message\ResponseInterface|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\ResponseInterface
      */
     public function edit_task(
         CurrentRoute $currentRoute,
@@ -426,7 +426,7 @@ final class InvItemController extends BaseController
         IR $iR,
         IIAS $iias,
         IIAR $iiaR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $inv_id = (string) $this->session->get('inv_id');
         $inv_item = $this->invitem($currentRoute, $iiR);
         if ($inv_item) {
@@ -476,7 +476,7 @@ final class InvItemController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_item_form_task', $parameters);
+            return $this->webViewRenderer->render('_item_form_task', $parameters);
         } // $inv_item
         return $this->webService->getNotFoundResponse();
     }
@@ -502,7 +502,7 @@ final class InvItemController extends BaseController
      * @param Request $request
      * @param IIR $iiR
      */
-    public function multiple(Request $request, IIR $iiR): \Yiisoft\DataResponse\DataResponse
+    public function multiple(Request $request, IIR $iiR): \Psr\Http\Message\ResponseInterface
     {
         $select_items = $request->getQueryParams();
         $result = false;

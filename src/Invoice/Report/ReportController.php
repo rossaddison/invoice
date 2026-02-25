@@ -34,7 +34,7 @@ use Yiisoft\Http\Method;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 class ReportController extends BaseController
 {
@@ -45,16 +45,16 @@ class ReportController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
     }
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param ClientRepository $cR
      * @param InvAmountRepository $iaR
      * @return array|\Mpdf\Mpdf|Response|string
@@ -62,7 +62,7 @@ class ReportController extends BaseController
      */
     public function invoice_aging_index(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         ClientRepository $cR,
         InvAmountRepository $iaR,
     ): Response|\Mpdf\Mpdf|array|string {
@@ -84,7 +84,7 @@ class ReportController extends BaseController
             // Last parameter $quote_or_invoice is false because reports are being generated which are not meant for clients
             /** @psalm-suppress MixedReturnStatement */
             return $mpdfhelper->pdf_create(
-                $this->viewRenderer->renderPartialAsString('//invoice/report/invoice_aging', $data),
+                $this->webViewRenderer->renderPartialAsString('//invoice/report/invoice_aging', $data),
                 $this->translator->translate('aging'),
                 true,
                 '',
@@ -97,7 +97,7 @@ class ReportController extends BaseController
                 null,
             );
         }
-        return $this->viewRenderer->render('invoice_aging_index', $parameters);
+        return $this->webViewRenderer->render('invoice_aging_index', $parameters);
     }
 
     /**
@@ -228,14 +228,14 @@ class ReportController extends BaseController
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param PaymentRepository $pymtR
      * @return array|\Mpdf\Mpdf|Response|string
      * @psalm-suppress MixedInferredReturnType
      */
     public function payment_history_index(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         PaymentRepository $pymtR,
     ): Response|\Mpdf\Mpdf|array|string {
         $dateHelper = new DateHelper($this->sR);
@@ -264,7 +264,7 @@ class ReportController extends BaseController
                 $mpdfHelper = new MpdfHelper();
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfHelper->pdf_create(
-                    $this->viewRenderer->renderPartialAsString('//invoice/report/payment_history', $data),
+                    $this->webViewRenderer->renderPartialAsString('//invoice/report/payment_history', $data),
                     $this->translator->translate('payment.history'),
                     true,
                     '',
@@ -279,7 +279,7 @@ class ReportController extends BaseController
             } //is_array body
             return $this->webService->getNotFoundResponse();
         }
-        return $this->viewRenderer->render('payment_history_index', $parameters);
+        return $this->webViewRenderer->render('payment_history_index', $parameters);
     }
 
     /**
@@ -327,7 +327,7 @@ class ReportController extends BaseController
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param ClientRepository $cR
      * @param InvRepository $iR
      * @param InvAmountRepository $iaR
@@ -336,7 +336,7 @@ class ReportController extends BaseController
      */
     public function sales_by_client_index(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         ClientRepository $cR,
         InvRepository $iR,
         InvAmountRepository $iaR,
@@ -365,7 +365,7 @@ class ReportController extends BaseController
                 $mpdfhelper = new MpdfHelper();
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
-                    $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_client', $data),
+                    $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_client', $data),
                     $this->translator->translate('sales.by.client'),
                     true,
                     '',
@@ -380,7 +380,7 @@ class ReportController extends BaseController
             } // is_array body
             return $this->webService->getNotFoundResponse();
         }
-        return $this->viewRenderer->render('sales_by_client_index', $parameters);
+        return $this->webViewRenderer->render('sales_by_client_index', $parameters);
     }
 
     /**
@@ -451,7 +451,7 @@ class ReportController extends BaseController
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param ProductRepository $pR
      * @param InvRepository $iR
      * @param InvItemAmountRepository $iiaR
@@ -460,7 +460,7 @@ class ReportController extends BaseController
      */
     public function sales_by_product_index(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         ProductRepository $pR,
         InvRepository $iR,
         InvItemAmountRepository $iiaR,
@@ -489,7 +489,7 @@ class ReportController extends BaseController
                 $mpdfhelper = new MpdfHelper();
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
-                    $this->viewRenderer->renderPartialAsString('///invoice/report/sales_by_product', $data),
+                    $this->webViewRenderer->renderPartialAsString('///invoice/report/sales_by_product', $data),
                     $this->translator->translate('report.sales.by.product'),
                     true,
                     '',
@@ -504,7 +504,7 @@ class ReportController extends BaseController
             } // is_array body
             return $this->webService->getNotFoundResponse();
         }
-        return $this->viewRenderer->render('sales_by_product_index', $parameters);
+        return $this->webViewRenderer->render('sales_by_product_index', $parameters);
     }
 
     /**
@@ -562,7 +562,7 @@ class ReportController extends BaseController
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param TaskRepository $taskR
      * @param InvRepository $iR
      * @param InvItemAmountRepository $iiaR
@@ -571,7 +571,7 @@ class ReportController extends BaseController
      */
     public function sales_by_task_index(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         TaskRepository $taskR,
         InvRepository $iR,
         InvItemAmountRepository $iiaR,
@@ -602,7 +602,7 @@ class ReportController extends BaseController
                 $mpdfhelper = new MpdfHelper();
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
-                    $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_task', $data),
+                    $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_task', $data),
                     $this->translator->translate('report.sales.by.task'),
                     true,
                     '',
@@ -617,7 +617,7 @@ class ReportController extends BaseController
             } // is_array body
             return $this->webService->getNotFoundResponse();
         }
-        return $this->viewRenderer->render('sales_by_task_index', $parameters);
+        return $this->webViewRenderer->render('sales_by_task_index', $parameters);
     }
 
     /**
@@ -671,7 +671,7 @@ class ReportController extends BaseController
 
     /**
      * @param Request $request
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param ClientRepository $cR
      * @param InvRepository $iR
      * @param InvAmountRepository $iaR
@@ -680,7 +680,7 @@ class ReportController extends BaseController
      */
     public function sales_by_year_index(
         Request $request,
-        ViewRenderer $head,
+        WebViewRenderer $head,
         ClientRepository $cR,
         InvRepository $iR,
         InvAmountRepository $iaR,
@@ -715,7 +715,7 @@ class ReportController extends BaseController
                 // Last parameter $quote_or_invoice is false because reports are being generated which are not meant for clients
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdf_create(
-                    $this->viewRenderer->renderPartialAsString('//invoice/report/sales_by_year', $data),
+                    $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_year', $data),
                     $this->translator->translate('sales.by.date'),
                     true,
                     '',
@@ -730,7 +730,7 @@ class ReportController extends BaseController
             } // is_array body
             return $this->webService->getNotFoundResponse();
         }
-        return $this->viewRenderer->render('sales_by_year_index', $parameters);
+        return $this->webViewRenderer->render('sales_by_year_index', $parameters);
     }
 
     private function sales_by_year_report(

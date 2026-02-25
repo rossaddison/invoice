@@ -11,7 +11,7 @@ use App\Invoice\UserClient\UserClientRepository;
 use App\Invoice\Inv\InvForm;
 use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class Bootstrap5ModalInv
 {
@@ -20,7 +20,7 @@ final class Bootstrap5ModalInv
 
     public function __construct(
         private readonly Translator $translator,
-        private readonly ViewRenderer $viewRenderer,
+        private readonly WebViewRenderer $webViewRenderer,
         private readonly ClientRepository $cR,
         private readonly GroupRepository $gR,
         private readonly SettingRepository $sR,
@@ -56,9 +56,9 @@ final class Bootstrap5ModalInv
         ];
         $this->layoutParameters = [
             'type' => 'inv',
-            'form' => $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_add_inv_form', $this->formParameters),
+            'form' => $this->webViewRenderer->renderPartialAsString('//invoice/inv/modal_add_inv_form', $this->formParameters),
         ];
-        return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_layout', $this->layoutParameters);
+        return $this->webViewRenderer->renderPartialAsString('//invoice/inv/modal_layout', $this->layoutParameters);
     }
 
     /**

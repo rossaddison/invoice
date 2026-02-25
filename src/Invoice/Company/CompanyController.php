@@ -19,7 +19,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class CompanyController extends BaseController
 {
@@ -32,19 +32,19 @@ final class CompanyController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->companyService = $companyService;
     }
 
     /**
      * @param CompanyRepository $companyRepository
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function index(CompanyRepository $companyRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(CompanyRepository $companyRepository): \Psr\Http\Message\ResponseInterface
     {
         $this->rbac();
         $companies = $this->companies($companyRepository);
@@ -55,7 +55,7 @@ final class CompanyController extends BaseController
             'company_public' => $this->translator->translate('company.public'),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -89,7 +89,7 @@ final class CompanyController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -128,7 +128,7 @@ final class CompanyController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('company/index');
     }
@@ -170,7 +170,7 @@ final class CompanyController extends BaseController
                 'companyPublic' => $this->translator->translate('company.public'),
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('company/index');
     }

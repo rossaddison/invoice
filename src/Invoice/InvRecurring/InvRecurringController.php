@@ -24,7 +24,7 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Log\Logger;
@@ -34,7 +34,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class InvRecurringController extends BaseController
 {
@@ -54,11 +54,11 @@ final class InvRecurringController extends BaseController
         SR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->_logger = new Logger();
         $this->factory = $factory;
         $this->invCustomService = $invCustomService;
@@ -74,7 +74,7 @@ final class InvRecurringController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param IRR $irR
      */
-    public function index(CurrentRoute $currentRoute, IRR $irR): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, IRR $irR): \Psr\Http\Message\ResponseInterface
     {
         $pageNum = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -93,7 +93,7 @@ final class InvRecurringController extends BaseController
             'invrecurrings' => $this->invrecurrings($irR),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -137,7 +137,7 @@ final class InvRecurringController extends BaseController
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                         $parameters['form'] = $form;
                     }
-                    return $this->viewRenderer->render('_form', $parameters);
+                    return $this->webViewRenderer->render('_form', $parameters);
                 }
                 $this->flashMessage('danger', $this->translator->translate('recurring.status.sent.only') . '❗');
                 // Redirect back to the invoice view instead of showing 404
@@ -153,7 +153,7 @@ final class InvRecurringController extends BaseController
      * @param Request $request
      * @param FormHydrator $formHydrator
      */
-    public function multiple(Request $request, FormHydrator $formHydrator, IR $iR): \Yiisoft\DataResponse\DataResponse
+    public function multiple(Request $request, FormHydrator $formHydrator, IR $iR): \Psr\Http\Message\ResponseInterface
     {
         $data = $request->getQueryParams();
         $parameters = ['success' => 0];
@@ -257,7 +257,7 @@ final class InvRecurringController extends BaseController
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
                 }
-                return $this->viewRenderer->render('_form', $parameters);
+                return $this->webViewRenderer->render('_form', $parameters);
             } // null!== $base_invoice
         }
         return $this->webService->getNotFoundResponse();
@@ -328,9 +328,9 @@ final class InvRecurringController extends BaseController
     /**
      * @param Request $request
      * @param IR $iR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get_recur_start_date(Request $request, IR $iR): \Yiisoft\DataResponse\DataResponse
+    public function get_recur_start_date(Request $request, IR $iR): \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
         /**
@@ -360,9 +360,9 @@ final class InvRecurringController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param IRR $invrecurringRepository
      * @param IR $iR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, IRR $invrecurringRepository, IR $iR): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, IRR $invrecurringRepository, IR $iR): \Psr\Http\Message\ResponseInterface
     {
         $inv_recurring = $this->invrecurring($currentRoute, $invrecurringRepository);
         if ($inv_recurring) {
@@ -381,7 +381,7 @@ final class InvRecurringController extends BaseController
                     'invDateCreated' => $invDateCreated,
                     'invrecurring' => $invrecurringRepository->repoInvRecurringquery($invRecurringId),
                 ];
-                return $this->viewRenderer->render('_view', $parameters);
+                return $this->webViewRenderer->render('_view', $parameters);
             }
         }
         return $this->webService->getNotFoundResponse();

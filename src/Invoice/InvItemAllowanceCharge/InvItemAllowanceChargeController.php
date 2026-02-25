@@ -28,7 +28,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class InvItemAllowanceChargeController extends BaseController
 {
@@ -42,11 +42,11 @@ final class InvItemAllowanceChargeController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->numberHelper = $numberHelper;
         $this->aciiService = $aciiService;
         $this->invAmountService = $invAmountService;
@@ -154,7 +154,7 @@ final class InvItemAllowanceChargeController extends BaseController
                     } //allowance_charge
                 } // is_array
             }   // request
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         } // if inv_item
         return $this->webService->getNotFoundResponse();
     }
@@ -181,7 +181,7 @@ final class InvItemAllowanceChargeController extends BaseController
             'inv_item_id' => $inv_item_id,
             'paginator' => $paginator,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -324,7 +324,7 @@ final class InvItemAllowanceChargeController extends BaseController
                     } // allowance_charge_id
                     $parameters['form'] = $form;
                 } // request
-                return $this->viewRenderer->render('_form', $parameters);
+                return $this->webViewRenderer->render('_form', $parameters);
             } // is_array
         } // if acii
         return $this->webService->getRedirectResponse('index');
@@ -360,13 +360,13 @@ final class InvItemAllowanceChargeController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param InvItemAllowanceChargeRepository $aciiRepository
      * @param AllowanceChargeRepository $acR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         InvItemAllowanceChargeRepository $aciiRepository,
         AllowanceChargeRepository $acR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $acii = $this->acii($currentRoute, $aciiRepository);
         if ($acii) {
             $inv_item_id = $acii->getInv_item_id();
@@ -379,7 +379,7 @@ final class InvItemAllowanceChargeController extends BaseController
                 'form' => $form,
                 'acii' => $acii,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('acii/index');
     }

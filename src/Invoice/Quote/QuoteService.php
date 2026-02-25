@@ -7,13 +7,18 @@ namespace App\Invoice\Quote;
 // Entities
 use App\User\User;
 use App\Invoice\Entity\Quote;
+use App\Invoice\Entity\QuoteAllowanceCharge;
 use App\Invoice\Entity\QuoteCustom;
 use App\Invoice\Entity\QuoteItem;
+use App\Invoice\Entity\QuoteItemAllowanceCharge;
 use App\Invoice\Entity\QuoteTaxRate;
 // Repositories
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Group\GroupRepository as GR;
+use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as ACQR;
+use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
+use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
 use App\Invoice\QuoteCustom\QuoteCustomRepository as QCR;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTRR;
@@ -170,6 +175,9 @@ final readonly class QuoteService
 
     /**
      * @param Quote $model
+     * @param ACQR $acqR
+     * @param ACQIR $acqiR
+     * @param QIAR $qiaR
      * @param QCR $qcR
      * @param QCS $qcS
      * @param QIR $qiR
@@ -181,6 +189,9 @@ final readonly class QuoteService
      */
     public function deleteQuote(
         Quote $model,
+        ACQR $acqR,
+        ACQIR $acqiR,
+        QIAR $qiaR,    
         QCR $qcR,
         QCS $qcS,
         QIR $qiR,
@@ -196,6 +207,20 @@ final readonly class QuoteService
         // so check if there is a quote amount otherwise null
         // error will occur.
         if (null !== $quote_id) {
+            /** @var QuoteItem $item */
+            foreach ($qiR->repoQuoteItemIdquery($quote_id) as $item) {
+                $itemId = $item->getId();
+                $quoteItemAmount = $qiaR->repoQuoteItemAmountquery($itemId);
+                if (null !== $quoteItemAmount) {
+                    $qiaR->delete($quoteItemAmount);
+                }
+                $quoteItemAllowanceCharges = $acqiR->repoQuoteItemquery($itemId);
+                /** @var QuoteItemAllowanceCharge $quoteItemAllowanceCharge */
+                foreach ($quoteItemAllowanceCharges as $quoteItemAllowanceCharge) {
+                    $acqiR->delete($quoteItemAllowanceCharge);
+                }
+                $qiS->deleteQuoteItem($item);
+            }
             $count = $qaR->repoQuoteAmountCount($quote_id);
             if ($count > 0) {
                 $quote_amount = $qaR->repoQuotequery($quote_id);
@@ -220,6 +245,12 @@ final readonly class QuoteService
             foreach ($qcR->repoFields($quote_id) as $quote_custom) {
                 $qcS->deleteQuoteCustom($quote_custom);
             }
+            
+            /** @var QuoteAllowanceCharge $quote_allowance_charge */
+            foreach ($acqR->repoACQquery($quote_id) as $quote_allowance_charge) {
+                $acqR->delete($quote_allowance_charge);
+            }
+            
             $this->repository->delete($model);
         }
     }

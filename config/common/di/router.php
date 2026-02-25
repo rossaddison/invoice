@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use Yiisoft\Config\Config;
 use Yiisoft\Csrf\CsrfTokenMiddleware;
-use Yiisoft\DataResponse\Middleware\FormatDataResponse;
+use Yiisoft\DataResponse\Middleware\DataResponseMiddleware;
+use Yiisoft\DataResponse\Formatter\JsonFormatter;
+use Yiisoft\Definitions\Reference;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\Group;
 use Yiisoft\Router\RouteCollection;
@@ -26,12 +28,17 @@ return [
         'setEncodeRaw()' => [$params['yiisoft/router-fastroute']['encodeRaw']],
         'setDefaultArgument()' => ['_language', 'en'],
     ],
-
+    DataResponseMiddleware::class => [
+        'class' => DataResponseMiddleware::class,
+        '__construct()' => [
+            'formatter' => Reference::to(JsonFormatter::class),
+        ],
+    ],
     RouteCollectionInterface::class => static function (RouteCollectorInterface $collector) use ($config) {
         $routes = $config->get('routes');
         $collector
             ->middleware(CsrfTokenMiddleware::class)
-            ->middleware(FormatDataResponse::class)
+            ->middleware(DataResponseMiddleware::class)
             ->addRoute(
                 Group::create('/{_language}')
                     ->routes(...$routes),

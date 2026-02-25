@@ -19,7 +19,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class FromDropDownController extends BaseController
@@ -32,11 +32,11 @@ final class FromDropDownController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->fromService = $fromService;
     }
 
@@ -67,7 +67,7 @@ final class FromDropDownController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     public function index(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): Response
@@ -86,7 +86,7 @@ final class FromDropDownController extends BaseController
             'alert' => $this->alert(),
             'max' => (int) $this->sR->getSetting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -146,7 +146,7 @@ final class FromDropDownController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('from/index');
     }
@@ -180,9 +180,9 @@ final class FromDropDownController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param FromDropDownRepository $fromRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): \Psr\Http\Message\ResponseInterface
     {
         $from = $this->from($currentRoute, $fromRepository);
         if ($from) {
@@ -195,7 +195,7 @@ final class FromDropDownController extends BaseController
                 'form' => $form,
                 'from' => $from,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('from/index');
     }

@@ -24,7 +24,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class CustomFieldController extends BaseController
 {
@@ -36,11 +36,11 @@ final class CustomFieldController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->customFieldService = $customFieldService;
     }
 
@@ -48,7 +48,7 @@ final class CustomFieldController extends BaseController
      * @param CustomFieldRepository $customfieldRepository
      * @param Request $request
      */
-    public function index(CustomFieldRepository $customfieldRepository, Request $request): \Yiisoft\DataResponse\DataResponse
+    public function index(CustomFieldRepository $customfieldRepository, Request $request): \Psr\Http\Message\ResponseInterface
     {
         $query_params = $request->getQueryParams();
         /**
@@ -66,7 +66,7 @@ final class CustomFieldController extends BaseController
         ->withCurrentPage($currentPageNeverZero)
         ->withToken(PageToken::next((string) $page));
         $this->rbac();
-        $this->flashMessage('info', $this->viewRenderer->renderPartialAsString('//invoice/info/custom_field'));
+        $this->flashMessage('info', $this->webViewRenderer->renderPartialAsString('//invoice/info/custom_field'));
         $parameters = [
             'page' => $page,
             'paginator' => $paginator,
@@ -76,7 +76,7 @@ final class CustomFieldController extends BaseController
             'custom_value_fields' => self::custom_value_fields(),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -129,7 +129,7 @@ final class CustomFieldController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -170,7 +170,7 @@ final class CustomFieldController extends BaseController
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('customfield/index');
     }
@@ -213,7 +213,7 @@ final class CustomFieldController extends BaseController
                 'form' => $form,
                 'custom_tables' => $this->custom_tables(),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('customfield/index');
     }

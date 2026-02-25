@@ -80,7 +80,7 @@ use App\User\UserRepository as UR;
 use App\Service\WebControllerService;
 use App\Invoice\Helpers\{
     CustomValuesHelper as CVH, DateHelper, MailerHelper, NumberHelper, PdfHelper,
-    Peppol\PeppolHelper, Peppol\PeppolArrays, Peppol\PeppolValidator, 
+    Peppol\PeppolHelper, Peppol\PeppolArrays, Peppol\PeppolValidator,
     StoreCove\StoreCoveHelper, TemplateHelper
 };
 use App\Widget\{
@@ -89,12 +89,13 @@ use App\Widget\{
 };
 use Yiisoft\{
     Data\Paginator\OffsetPaginator, Data\Reader\Sort,
-    DataResponse\DataResponseFactoryInterface, FormModel\FormHydrator,
+    DataResponse\ResponseFactory\DataResponseFactoryInterface,
+    DataResponse\Formatter\HtmlFormatter as htmlF, FormModel\FormHydrator,
     Http\Method, Html\Html, Input\Http\Attribute\Parameter\Query, Json\Json,
     Mailer\MailerInterface, Router\FastRoute\UrlGenerator,
     Router\HydratorAttribute\RouteArgument, Security\Random, Session\Flash\Flash,
     Session\SessionInterface, Translator\TranslatorInterface, User\CurrentUser,
-    Yii\View\Renderer\ViewRenderer
+    Yii\View\Renderer\WebViewRenderer
 };
 use Psr\{
     Log\LoggerInterface, Http\Message\ResponseInterface as Response,
@@ -127,7 +128,7 @@ final class InvController extends BaseController
      * @param SR $sR
      * @param TranslatorInterface $translator
      * @param UserService $userService
-     * @param ViewRenderer $viewRenderer
+     * @param WebViewRenderer $webViewRenderer
      * @param WebControllerService $webService
      * @param Flash $flash
      */
@@ -151,11 +152,11 @@ final class InvController extends BaseController
         SR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer,
+        parent::__construct($webService, $userService, $translator, $webViewRenderer,
                 $session, $sR, $flash);
         $this->date_helper = new DateHelper($sR);
         $this->number_helper = new NumberHelper($sR);
@@ -191,9 +192,9 @@ final class InvController extends BaseController
 
     /**
      * @param Request $request
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function archive(Request $request): \Yiisoft\DataResponse\DataResponse
+    public function archive(Request $request): \Psr\Http\Message\ResponseInterface
     {
         $invoice_archive = [];
         $flash_message = '';
@@ -217,7 +218,7 @@ final class InvController extends BaseController
             $flash_message = '';
         }
         $parameters = [
-            'partial_inv_archive' => $this->viewRenderer->renderPartialAsString(
+            'partial_inv_archive' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/inv/partial_inv_archive',
                 [
                     'invoices_archive' => $invoice_archive,
@@ -226,7 +227,7 @@ final class InvController extends BaseController
             'alert' => $this->alert(),
             'body' => $request->getParsedBody(),
         ];
-        return $this->viewRenderer->render('archive', $parameters);
+        return $this->webViewRenderer->render('archive', $parameters);
     }
 
     /**
@@ -289,7 +290,7 @@ final class InvController extends BaseController
      */
     private function attachment_not_writable(int $inv_id): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
                 'heading' => $this->translator->translate('errors'),
@@ -306,7 +307,7 @@ final class InvController extends BaseController
      */
     private function attachment_successfully_created(int $inv_id): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
                 'heading' => '',
@@ -322,7 +323,7 @@ final class InvController extends BaseController
      */
     private function attachment_no_file_uploaded(int $inv_id): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
                 'heading' => $this->translator->translate('errors'),
@@ -336,10 +337,10 @@ final class InvController extends BaseController
      * @param int $inv_id
      * @param IR $iR
      * @param UPR $uPR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function attachment(#[RouteArgument('id')] int $inv_id, IR $iR,
-            UPR $uPR): \Yiisoft\DataResponse\DataResponse|Response
+            UPR $uPR): \Psr\Http\Message\ResponseInterface
     {
         $aliases = $this->sR->get_customer_files_folder_aliases();
         $targetPath = $aliases->get('@customer_files');
@@ -431,7 +432,7 @@ $original_file_name = preg_replace(
     /**
      * Related logic: see config/common/routes.php search 'inv/add'
      * Only the admin has the EDIT_INV permission and can add an invoice.
-     * 
+     *
      * @param Request $request
      * @param string $origin
      * @param FormHydrator $formHydrator
@@ -441,7 +442,7 @@ $original_file_name = preg_replace(
      * @param UR $uR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function add(
         Request $request,
@@ -454,13 +455,13 @@ $original_file_name = preg_replace(
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $inv = new Inv();
         $errors = [];
         $form = new InvForm($inv);
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
             $this->translator,
-            $this->viewRenderer,
+            $this->webViewRenderer,
             $clientRepository,
             $gR,
             $this->sR,
@@ -606,11 +607,11 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             /**
              * @psalm-suppress MixedArgumentTypeCoercion $parameters
              */
-            return $this->viewRenderer->render('modal_add_inv_form', $parameters);
+            return $this->webViewRenderer->render('modal_add_inv_form', $parameters);
         }
         // show the form inside a modal when engaging with a view
         if ($origin == 'inv') {
-            return $this->viewRenderer->render('modal_layout', [
+            return $this->webViewRenderer->render('modal_layout', [
                 // use type to id the inv\modal_layout.php eg.
                 // ->options(['id' => 'modal-add-'.$type,
                 'type' => 'inv',
@@ -621,7 +622,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         }
         // Otherwise return to client
         if (($origin != 'main') && ($origin != 'inv') && ($origin != 'dashboard')) {
-            return $this->viewRenderer->render('modal_layout', [
+            return $this->webViewRenderer->render('modal_layout', [
                 'type' => 'client',
                 'form' =>
                 $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
@@ -639,7 +640,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     {
         $bootstrap5ModalPdf = new Bootstrap5ModalPdf(
             $this->translator,
-            $this->viewRenderer,
+            $this->webViewRenderer,
             'inv',
         );
         // show the pdf inside a modal when engaging with a view
@@ -765,7 +766,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form_create_confirm', $parameters);
+        return $this->webViewRenderer->render('_form_create_confirm', $parameters);
     }
 
     /**
@@ -781,11 +782,11 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param UCR $ucR
      * @param UIR $uiR
      * @param UR $uR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function create_credit_confirm(Request $request,
             FormHydrator $formHydrator, IR $iR, GR $gR, IIR $iiR, IIAR $iiaR,
-                UCR $ucR, UIR $uiR, UR $uR): \Yiisoft\DataResponse\DataResponse
+                UCR $ucR, UIR $uiR, UR $uR): \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
         $basis_inv = $iR->repoInvLoadedquery((string) $body['inv_id']);
@@ -961,11 +962,11 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IIAR $iiaR
      * @param ITRR $itrR
      * @param SR $sR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function delete_inv_item(#[RouteArgument('id')] int $id, IAR $iaR,
         IIR $iiR, ACIIR $aciiR, IIAR $iiaR, ITRR $itrR, SR $sR):
-        \Yiisoft\DataResponse\DataResponse|Response
+        \Psr\Http\Message\ResponseInterface
     {
         try {
             $invItem = $this->inv_item($id, $iiR);
@@ -996,7 +997,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         }
         $inv_id = (string) $this->session->get('inv_id');
         return $this->factory->createResponse(
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             ['heading' => $this->translator->translate('items'),
                 'message' =>
@@ -1008,11 +1009,11 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     /**
      * @param int $id
      * @param ITRR $invtaxrateRepository
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function delete_inv_tax_rate(#[RouteArgument('id')] int $id,
             ITRR $invtaxrateRepository):
-        \Yiisoft\DataResponse\DataResponse|Response
-    {
+        \Psr\Http\Message\ResponseInterface {
         try {
             $inv_tax_rate = $this->invtaxrate($id, $invtaxrateRepository);
             $this->inv_tax_rate_service->deleteInvTaxRate($inv_tax_rate);
@@ -1022,7 +1023,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         }
         $inv_id = (string) $this->session->get('inv_id');
         return $this->factory->createResponse(
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             ['heading' => $this->translator->translate('tax.rate'),
                 'message' =>
@@ -1324,7 +1325,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param CVR $cvR
      * @param ICR $icR
      * @param paR $paR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function edit(
         Request $request,
@@ -1346,7 +1347,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         paR $paR,
         UCR $ucR,
         UIR $uiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $inv = $this->inv($id, $invRepo, true);
         if ($inv) {
             $form = new InvForm($inv);
@@ -1359,7 +1360,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             $defaultGroupId = (int) $this->sR->getSetting('default_invoice_group');
             if (($this->sR->getSetting('debug_mode') == '1')
                     && $this->userService->hasPermission(Permissions::EDIT_INV)) {
-                $note_on_tax_point = $this->viewRenderer->renderPartialAsString(
+                $note_on_tax_point = $this->webViewRenderer->renderPartialAsString(
                     '//invoice/info/taxpoint');
             }
             $parameters = [
@@ -1421,7 +1422,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     if (!$this->edit_check_status_reconciling_with_balance(
                             $iaR, (int) $inv_id) && $body['status_id'] === 4) {
                         return $this->factory->createResponse(
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                             '//invoice/setting/inv_message',
                             [
                                 'heading' =>
@@ -1443,7 +1444,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             $parameters['errors'] =
                                 $ret_form->getValidationResult()
                                          ->getErrorMessagesIndexedByProperty();
-                            return $this->viewRenderer->render('_form_edit',
+                            return $this->webViewRenderer->render('_form_edit',
                                 $parameters);
                         }
                         $this->processCustomFields($body, $formHydrator,
@@ -1458,7 +1459,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 return $this->webService->getRedirectResponse('inv/index');
             }
             if ($this->rbacAdmin()) {
-                return $this->viewRenderer->render('_form_edit', $parameters);
+                return $this->webViewRenderer->render('_form_edit', $parameters);
             }    
         } // if $inv_id
         return $this->webService->getRedirectResponse('inv/index');
@@ -1527,7 +1528,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     }
 
     /**
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param int $id
      * @param CCR $ccR
      * @param CFR $cfR
@@ -1543,7 +1544,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @return Response
      */
     public function email_stage_0(
-        ViewRenderer $head,
+        WebViewRenderer $head,
         #[RouteArgument('id')]
         int $id,
         CCR $ccR,
@@ -1638,12 +1639,12 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     'invoice' => $invoice,
                     // All templates ie. overdue, paid, invoice
                     'pdfTemplates' => $this->email_get_invoice_templates('pdf'),
-                    'templateTags' => $this->viewRenderer->renderPartialAsString(
+                    'templateTags' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/emailtemplate/template-tags-with-inv', [
                             'custom_fields' => $custom_fields,
                             'template_tags_quote' => '',
                             'template_tags_inv' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/emailtemplate/template-tags-inv', [
                             'custom_fields_inv_custom' =>
                                 $custom_fields['inv_custom'],
@@ -1651,7 +1652,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     ]),
                     'form' => new MailerInvForm(),
                 ];
-                return $this->viewRenderer->render('mailer_invoice', $parameters);
+                return $this->webViewRenderer->render('mailer_invoice', $parameters);
             }// if invoice
             return $this->webService->getRedirectResponse('inv/index');
         } // if $inv
@@ -1726,7 +1727,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param QCR $qcR
      * @param SOR $soR
      * @param UIR $uiR
-     * @param ViewRenderer $viewrenderer
+     * @param WebViewRenderer $webViewRenderer
      * @return bool
      */
     public function email_stage_1(
@@ -1759,7 +1760,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         QCR $qcR,
         SOR $soR,
         UIR $uiR,
-        ViewRenderer $viewrenderer,
+        WebViewRenderer $webViewRenderer,
     ): bool {
         $template_helper = new TemplateHelper($this->sR, $ccR, $qcR, $icR, $pcR,
             $socR, $cfR, $cvR);
@@ -1798,7 +1799,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 $pdf_template_target_path = $this->pdf_helper->generate_inv_pdf(
                     $inv_id, $inv->getUser_id(), $stream, true, $so, $inv_amount,
                         $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR,
-                            $aciiR, $iiaR, $iR, $itrR, $uiR, $viewrenderer);
+                            $aciiR, $iiaR, $iR, $itrR, $uiR, $webViewRenderer);
                 if ($pdf_template_target_path) {
                     $mail_message = $template_helper->parse_template(
                         $inv_id, true, $email_body, $cR, $cvR, $iR, $iaR, $qR,
@@ -1918,7 +1919,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 $to = $body['MailerInvForm']['to_email'] ?? '';
                 if (empty($to)) {
                     return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                         '//invoice/setting/inv_message',
                         ['heading' => '', 'message' =>
                          $this->translator->translate('email.to.address.missing'),
@@ -1935,7 +1936,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
 
                 if (empty($from[0])) {
                     return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                         '//invoice/setting/inv_message',
                         ['heading' => '',
                          'message' =>
@@ -1988,7 +1989,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     $qcR,
                     $soR,
                     $uiR,
-                    $this->viewRenderer,
+                    $this->webViewRenderer,
                 )) {
                     $invoice = $iR->repoInvUnloadedquery((string) $inv_id);
                     if ($invoice) {
@@ -2007,7 +2008,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                         $iR->save($invoice);
                     }
                     return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                         '//invoice/setting/inv_message',
                         // EMAIL SENT
                         ['heading' => '',
@@ -2018,7 +2019,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     ));
                 }
                 return $this->factory->createResponse(
-                    $this->viewRenderer->renderPartialAsString(
+                    $this->webViewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
                     // EMAIL ... NOT ... SENT
                     ['heading' => '',
@@ -2030,7 +2031,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 //$this->email_stage_1
             } //is_array(body)
             return $this->factory->createResponse(
-                    $this->viewRenderer->renderPartialAsString(
+                    $this->webViewRenderer->renderPartialAsString(
                 '//invoice/setting/inv_message',
                 ['heading' => '', 'message' => $this->translator->translate(
                         'email.not.sent.successfully'),
@@ -2038,7 +2039,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             ));
         }
         return $this->factory->createResponse(
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             ['heading' => '', 'message' => $this->translator->translate(
                     'email.not.sent'),
@@ -2077,7 +2078,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param string $queryFilterInvAmountTotal
      * @param string $queryFilterStatus
      * @throws NoClientsAssignedToUserException
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function guest(
         IAR $iaR,
@@ -2101,7 +2102,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ?string $queryFilterInvAmountTotal = null,
         #[Query('filterStatus')]
         ?string $queryFilterStatus = null,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $page = $queryPage ?? $page;
         $sortString = $querySort ?? '-id';
         // Get the current user and determine from (Related logic: see Settings
@@ -2188,7 +2189,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                         'sortString' => $sortString,
                         'status' => $status,
                     ];
-                    return $this->viewRenderer->render('guest', $parameters);
+                    return $this->webViewRenderer->render('guest', $parameters);
                 } // no clients assigned to this user
                 throw new NoClientsAssignedToUserException($this->translator);
             } // $user_inv
@@ -2215,13 +2216,13 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IR $iR
      * @param ITRR $itrR
      * @param UIR $uiR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function html(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR,
             IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
             UIR $uiR, SOR $soR):
-        \Yiisoft\DataResponse\DataResponse
+        \Psr\Http\Message\ResponseInterface
     {
         $inv_id = (string) $this->session->get('inv_id');
         $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ?
@@ -2251,7 +2252,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     $inv,
                     $itrR,
                     $uiR,
-                    $this->viewRenderer,
+                    $this->webViewRenderer,
                 );
                 return $this->factory->createResponse('<pre>'
                     . Html::encode($html) . '</pre>');
@@ -2284,7 +2285,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param string $queryFilterInvAmountTotal
      * @param string $queryFilterClientGroup
      * @param string $queryFilterDateCreatedYearMonth
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(
         IR $invRepo,
@@ -2321,7 +2322,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ?string $queryFilterStatus = null,
         #[Query('groupBy')]
         ?string $queryGroupBy = 'none',
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         // build the inv and hasOne InvAmount table
         $visible = $this->sR->getSetting('columns_all_visible');
         $visibleToggleInvSentLogColumn =
@@ -2330,7 +2331,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         $invForm = new InvForm($inv);
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
             $this->translator,
-            $this->viewRenderer,
+            $this->webViewRenderer,
             $clientRepo,
             $groupRepo,
             $this->sR,
@@ -2442,13 +2443,13 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 'modal_copy_inv_multiple' =>
                     $this->index_modal_copy_inv_multiple(),
                 'sortString' => $querySort ?? '-id',
-                'viewRenderer' => $this->viewRenderer,
+                'viewRenderer' => $this->webViewRenderer,
                 'visible' => $visible == '0' ? false : true,
                 'visibleToggleInvSentLogColumn' =>
                     $visibleToggleInvSentLogColumn == '0' ? false : true,
                 'locale' => new \Yiisoft\I18n\Locale($_language),
             ];
-            return $this->viewRenderer->render('index', $parameters);
+            return $this->webViewRenderer->render('index', $parameters);
         }
         $this->flashMessage('info',
             $this->translator->translate('user.client.active.no'));
@@ -2512,7 +2513,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     public function pdf(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, SOR $soR, IAR $iaR,
             ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
-                UIR $uiR): \Yiisoft\DataResponse\DataResponse
+                UIR $uiR): \Psr\Http\Message\ResponseInterface
     {
         try {
             // include is a value of 0 or 1 passed from inv.js function
@@ -2550,7 +2551,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             $stream, $custom, $so, $inv_amount,
                             $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR,
                             $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR,
-                            $this->viewRenderer);
+                            $this->webViewRenderer);
                     return $this->pdf_archive_message();
                 } // $inv
                 return $this->factory->createResponse(
@@ -2563,20 +2564,20 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     }
 
     /**
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function pdf_archive_message(): \Yiisoft\DataResponse\DataResponse
+    public function pdf_archive_message(): \Psr\Http\Message\ResponseInterface
     {
         if ($this->sR->getSetting('pdf_archive_inv') == '1') {
             return $this->factory->createResponse(
-                    $this->viewRenderer->renderPartialAsString(
+                    $this->webViewRenderer->renderPartialAsString(
                 '//invoice/setting/pdf_close',
                 ['heading' => '',
                     'message' => $this->translator->translate('pdf.archived.yes')],
             ));
         }
         return $this->factory->createResponse(
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/pdf_close',
             ['heading' => '',
                 'message' => $this->translator->translate('pdf.archived.no')],
@@ -2640,7 +2641,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                         (string) $inv_id, $inv->getUser_id(), $stream, true,
                             $so, $inv_amount, $inv_custom_values, $cR, $cvR,
                                 $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR,
-                                    $itrR, $uiR, $this->viewRenderer);
+                                    $itrR, $uiR, $this->webViewRenderer);
                 } //inv
             } //$inv_amount
         } //$inv_id
@@ -2702,7 +2703,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                         (string) $inv_id, $inv->getUser_id(), $stream, false,
                             $so, $inv_amount, $inv_custom_values, $cR, $cvR,
                                 $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR,
-                                    $itrR, $uiR, $this->viewRenderer);
+                                    $itrR, $uiR, $this->webViewRenderer);
                 } //inv
             } //inv_amount
         } // inv_id
@@ -2779,7 +2780,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             $inv_id, $inv->getUser_id(), $stream, $c_f, $so,
                                 $inv_amount, $inv_custom_values, $cR, $cvR,
                                     $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR,
-                                        $iR, $itrR, $uiR, $this->viewRenderer);
+                                        $iR, $itrR, $uiR, $this->webViewRenderer);
                         if ($temp_aliase) {
                             $path_parts = pathinfo($temp_aliase);
                             /**
@@ -2893,7 +2894,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             $inv_id, $inv->getUser_id(), $stream, $c_f, $so,
                                 $inv_amount, $inv_custom_values, $cR, $cvR,
                                     $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR,
-                                        $itrR, $uiR, $this->viewRenderer);
+                                        $itrR, $uiR, $this->webViewRenderer);
                         if ($temp_aliase) {
                             $path_parts = pathinfo($temp_aliase);
                             /**
@@ -3233,7 +3234,7 @@ echo file_get_contents($temp_aliase, true);
         UCR $ucR,
         UIR $uiR,
         UNR $unR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $data_inv_js = $request->getQueryParams();
         $inv_id = (string) $data_inv_js['inv_id'];
         $original = $iR->repoInvUnloadedquery($inv_id);
@@ -3528,10 +3529,10 @@ echo file_get_contents($temp_aliase, true);
      * @param Request $request
      * @param IR $iR
      * @param GR $gR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function mark_as_sent(Request $request, IR $iR, GR $gR):
-        \Yiisoft\DataResponse\DataResponse
+        \Psr\Http\Message\ResponseInterface
     {
         $data = $request->getQueryParams();
         $parameters = ['success' => 0];
@@ -3586,10 +3587,10 @@ echo file_get_contents($temp_aliase, true);
     * @param Request $request
     * @param IR $iR
     * @param GR $gR
-    * @return \Yiisoft\DataResponse\DataResponse
+    * @return \Psr\Http\Message\ResponseInterface
     */
     public function mark_sent_as_draft(Request $request, IR $iR, GR $gR):
-        \Yiisoft\DataResponse\DataResponse
+        \Psr\Http\Message\ResponseInterface
     {
         $data = $request->getQueryParams();
         $parameters = ['success' => 0];
@@ -3665,7 +3666,7 @@ echo file_get_contents($temp_aliase, true);
         UCR $ucR,
         UIR $uiR,
         UNR $unR,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $data = $request->getQueryParams();
         /**
          * Purpose: Provide a list of ids from inv/index checkbox column
@@ -3795,7 +3796,7 @@ echo file_get_contents($temp_aliase, true);
      * @param ICR $icR
      */
     public function save_custom(FormHydrator $formHydrator, Request $request,
-        ICR $icR): \Yiisoft\DataResponse\DataResponse
+        ICR $icR): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'success' => 0,
@@ -3818,7 +3819,7 @@ echo file_get_contents($temp_aliase, true);
      * @param FormHydrator $formHydrator
      */
     public function save_inv_tax_rate(Request $request,
-        FormHydrator $formHydrator): \Yiisoft\DataResponse\DataResponse
+        FormHydrator $formHydrator): \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
         $ajax_body = [
@@ -3940,7 +3941,7 @@ echo file_get_contents($temp_aliase, true);
                                             true : false);
                             $parameters = [
                                 'renderTemplate' =>
-                                    $this->viewRenderer->renderPartialAsString(
+                                    $this->webViewRenderer->renderPartialAsString(
                                         '//invoice/template/invoice/public/'
                                             . ($this->sR->getSetting(
                                                 'public_invoice_template')
@@ -3979,7 +3980,7 @@ echo file_get_contents($temp_aliase, true);
                                                 $user_id) : null,
                                 ]),
                             ];
-                            return $this->viewRenderer->render('url_key',
+                            return $this->webViewRenderer->render('url_key',
                                     $parameters);
                         } // if inv_amount
                         $this->flashMessage('warning',
@@ -4144,7 +4145,7 @@ echo file_get_contents($temp_aliase, true);
      * @param ACIIR $aciiR
      * @param SOIR $soiR
      * @param TRR $trR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function peppol(
         #[RouteArgument('id')]
@@ -4238,7 +4239,7 @@ echo file_get_contents($temp_aliase, true);
                                                 'errors' =>
                                                     $pVal->getErrors(),
                                             ];
-                                            return $this->viewRenderer->render(
+                                            return $this->webViewRenderer->render(
                                                 'peppolerrors', $parameters);
                                         }
                                     } else {
@@ -4533,7 +4534,7 @@ echo file_get_contents($temp_aliase, true);
     // permission can reach this 
 
     /**
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param int $id
      * @param string $_language
      * @param CFR $cfR
@@ -4562,10 +4563,10 @@ echo file_get_contents($temp_aliase, true);
      * @param UCR $ucR
      * @param UPR $upR
      * @param DLR $dlR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
-        ViewRenderer $head,
+        WebViewRenderer $head,
         #[RouteArgument('id')]
         int $id,
         #[RouteArgument('_language')]
@@ -4598,7 +4599,7 @@ echo file_get_contents($temp_aliase, true);
         UPR $upR,
         SOR $soR,
         DLR $dlR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $inv = $this->inv($id, $iR, false);
         $enabled_gateways = $this->sR->payment_gateways_enabled_DriverList();
         $this->flash_no_enabled_gateways($enabled_gateways,
@@ -4637,7 +4638,7 @@ echo file_get_contents($temp_aliase, true);
                 $delivery_location_id = $inv->getDelivery_location_id();
                 $bootstrap5ModalTranslatorMessageWithoutAction =
                     new Bootstrap5ModalTranslatorMessageWithoutAction(
-                    $this->viewRenderer,
+                    $this->webViewRenderer,
                 );
                 $parameters = [
                     'aciR' => $aciR,
@@ -4687,7 +4688,7 @@ echo file_get_contents($temp_aliase, true);
                     // Sits above options section of invoice allowing the
                     // adding of a new row to the invoice
                     'add_inv_item_product' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/invitem/_item_form_product', [
                         'actionName' => 'invitem/add_product',
                         'actionArguments' => ['_language' => $_language],
@@ -4708,7 +4709,7 @@ echo file_get_contents($temp_aliase, true);
                         'units' => $uR->findAllPreloaded(),
                     ]),
                     'add_inv_item_task' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/invitem/_item_form_task', [
                         'actionName' => 'invitem/add_task',
                         'actionArguments' => ['_language' => $_language],
@@ -4727,7 +4728,7 @@ echo file_get_contents($temp_aliase, true);
                         'units' => $uR->findAllPreloaded(),
                     ]),
                     'modal_choose_items' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                         '//invoice/product/modal_product_lookups_inv',
                         [
                             'families' => $fR->findAllPreloaded(),
@@ -4739,7 +4740,7 @@ echo file_get_contents($temp_aliase, true);
                             'reset_table' => '',
                             'products' => $pR->findAllPreloadedWithPrice(),
                             'partial_product_table_modal' =>
-                                $this->viewRenderer->renderPartialAsString(
+                                $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/product/_partial_product_table_modal',
                                 [
                                     'products' => $pR->findAllPreloadedWithPrice(),
@@ -4748,11 +4749,11 @@ echo file_get_contents($temp_aliase, true);
                         ],
                     ),
                     'modal_choose_tasks' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                         '//invoice/task/modal_task_lookups_inv',
                         [
                             'partial_task_table_modal' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/task/partial_task_table_modal', [
                                 'tasks' => $taskR->repoTaskStatusquery(3),
                                 'projectR' => $prjctR,
@@ -4767,15 +4768,15 @@ echo file_get_contents($temp_aliase, true);
                         ],
                     ),
                     'modal_add_inv_tax' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                         '//invoice/inv/modal_add_inv_tax', [
                             'taxRates' => $trR->findAllPreloaded(),
                         ]),
                     'modal_add_allowance_charge' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                         '//invoice/inv/modal_add_allowance_charge', [
                             'modal_add_allowance_charge_form' =>
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/inv/modal_add_allowance_charge_form',
                                 [
                                     'optionsDataAllowanceCharges' =>
@@ -4794,7 +4795,7 @@ echo file_get_contents($temp_aliase, true);
                         ],
                     ),
                     'modal_copy_inv' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/inv/modal_copy_inv', [
                         'inv' => $iR->repoInvLoadedquery(
                             (string) $this->session->get('inv_id')),
@@ -4864,13 +4865,13 @@ echo file_get_contents($temp_aliase, true);
                     ),
                 ];
                 if ($this->rbacObserver($inv, $ucR, $uiR)) {
-                    return $this->viewRenderer->render('view', $parameters);
+                    return $this->webViewRenderer->render('view', $parameters);
                 }
                 if ($this->rbacAdmin()) {
-                    return $this->viewRenderer->render('view', $parameters);
+                    return $this->webViewRenderer->render('view', $parameters);
                 }
                 if ($this->rbacAccountant()) {
-                    return $this->viewRenderer->render('view', $parameters);
+                    return $this->webViewRenderer->render('view', $parameters);
                 }
             } // if $inv_amount
             return $this->webService->getNotFoundResponse();
@@ -4953,7 +4954,7 @@ echo file_get_contents($temp_aliase, true);
      */
     private function index_modal_create_recurring_multiple(IRR $irR): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_create_recurring_multiple', [
             'recur_frequencies' => $irR->recur_frequencies(),
         ]);
@@ -4964,7 +4965,7 @@ echo file_get_contents($temp_aliase, true);
      */
     private function index_modal_copy_inv_multiple(): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_copy_inv_multiple');
     }
 
@@ -4977,7 +4978,7 @@ echo file_get_contents($temp_aliase, true);
     private function view_custom_fields(
         CFR $cfR, CVR $cvR, array $inv_custom_values): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/view_custom_fields', [
             'custom_fields' => $cfR->repoTablequery('inv_custom'),
             'custom_values' =>
@@ -4997,7 +4998,7 @@ echo file_get_contents($temp_aliase, true);
      */
     private function view_modal_change_client(int $id, CR $cR, IR $iR): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_change_client', [
             'inv' => $this->inv($id, $iR, true),
             'clients' => $cR->findAllPreloaded(),
@@ -5012,7 +5013,7 @@ echo file_get_contents($temp_aliase, true);
      */
     private function view_modal_create_credit(int $id, GR $gR, IR $iR): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_create_credit', [
             'invoice_groups' => $gR->repoCountAll() > 0 ? $gR->findAllPreloaded()
                 : null,
@@ -5026,7 +5027,7 @@ echo file_get_contents($temp_aliase, true);
      */
     private function view_modal_delete_inv(string $_language): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_delete_inv', [
             'actionName' => 'inv/delete',
             'actionArguments' => ['id' =>
@@ -5040,10 +5041,10 @@ echo file_get_contents($temp_aliase, true);
      */
     private function view_modal_delete_items(IIR $iiR): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_delete_item', [
             'partial_item_table_modal' =>
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
                     '//invoice/invitem/_partial_item_table_modal', [
                 'invItems' => $iiR->repoInvquery(
                     (string) $this->session->get('inv_id')),
@@ -5058,7 +5059,7 @@ echo file_get_contents($temp_aliase, true);
      */
     private function view_modal_inv_to_pdf(int $id, IR $iR): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_inv_to_pdf', [
             'inv' => $this->inv($id, $iR, true),
         ]);
@@ -5071,7 +5072,7 @@ echo file_get_contents($temp_aliase, true);
      */
     private function view_modal_inv_to_modal_pdf(int $id, IR $iR): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_inv_to_modal_pdf', [
             'inv' => $this->inv($id, $iR, true),
         ]);
@@ -5084,7 +5085,7 @@ echo file_get_contents($temp_aliase, true);
      */
     private function view_modal_inv_to_html(int $id, IR $iR): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_inv_to_html', [
             'inv' => $this->inv($id, $iR, true),
         ]);
@@ -5104,13 +5105,13 @@ echo file_get_contents($temp_aliase, true);
         $paginator = new OffsetPaginator($uploads);
         $invEdit = $this->userService->hasPermission(Permissions::EDIT_PAYMENT);
         $invView = $this->userService->hasPermission(Permissions::VIEW_PAYMENT);
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/partial_inv_attachments', [
             'form' => new InvAttachmentsForm(),
             'invEdit' => $invEdit,
             'invView' => $invView,
             'partial_inv_attachments_list' =>
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
                     '//invoice/inv/partial_inv_attachments_list', [
                     'paginator' => $paginator,
                     'invEdit' => $invEdit,
@@ -5159,7 +5160,7 @@ echo file_get_contents($temp_aliase, true);
             //      $aciiR->repoCount((string)$inv->getId());
             $packHandleShipTotal = $aciR->getPackHandleShipTotal(
                 (string) $inv->getId());
-            return $this->viewRenderer->renderPartialAsString(
+            return $this->webViewRenderer->renderPartialAsString(
                 '//invoice/inv/partial_item_table', [
                 'packHandleShipTotal' => $packHandleShipTotal,
                 'aciiR' => $aciiR,

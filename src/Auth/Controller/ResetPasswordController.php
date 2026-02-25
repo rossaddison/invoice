@@ -16,7 +16,7 @@ use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Security\TokenMask;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ResetPasswordController
 {
@@ -24,13 +24,13 @@ final class ResetPasswordController
 
     public function __construct(
         private WebControllerService $webService,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
         private UrlGenerator $urlGenerator,
         private TranslatorInterface $translator,
         private LoggerInterface $logger,
     ) {
         $this->webService = $webService;
-        $this->viewRenderer = $viewRenderer->withControllerName('resetpassword');
+        $this->webViewRenderer = $webViewRenderer->withControllerName('resetpassword');
         $this->urlGenerator = $urlGenerator;
         $this->translator = $translator;
         $this->logger = $logger;
@@ -88,7 +88,7 @@ final class ResetPasswordController
                             }
                             return $this->webService->getRedirectResponse('site/resetpasswordsuccess');
                         }
-                        return $this->viewRenderer->render('resetpassword', ['formModel' => $resetPasswordForm, 'token' => $maskedToken]);
+                        return $this->webViewRenderer->render('resetpassword', ['formModel' => $resetPasswordForm, 'token' => $maskedToken]);
                     }
                 }
             }

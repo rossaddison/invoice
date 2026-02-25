@@ -17,7 +17,7 @@ use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ChangePasswordController
 {
@@ -27,13 +27,13 @@ final class ChangePasswordController
         private Translator $translator,
         private CurrentUser $currentUser,
         private readonly WebControllerService $webService,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
     ) {
         $this->currentUser = $currentUser;
         $this->session = $session;
         $this->flash = $flash;
         $this->translator = $translator;
-        $this->viewRenderer = $viewRenderer->withControllerName('changepassword');
+        $this->webViewRenderer = $webViewRenderer->withControllerName('changepassword');
     }
 
     public function change(
@@ -71,7 +71,7 @@ final class ChangePasswordController
                     $this->flashMessage('success', $this->translator->translate('validator.password.change'));
                     return $this->redirectToMain();
                 }
-                return $this->viewRenderer->render('change', [
+                return $this->webViewRenderer->render('change', [
                     'formModel' => $changePasswordForm,
                     'login' => $login,
                 ]);

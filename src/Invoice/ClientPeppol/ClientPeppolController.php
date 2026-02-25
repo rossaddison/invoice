@@ -17,14 +17,14 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yiisoft
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class ClientPeppolController extends BaseController
@@ -38,12 +38,12 @@ final class ClientPeppolController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator,
-            $viewRenderer, $session, $sR, $flash);
+            $webViewRenderer, $session, $sR, $flash);
             $this->clientPeppolService = $clientPeppolService;
             $this->factory = $factory;
     }
@@ -101,7 +101,7 @@ final class ClientPeppolController extends BaseController
                 }
             }
             $parameters['form'] = $form;
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         } // null !== $client
         return $this->webService->getNotFoundResponse();
     }
@@ -183,7 +183,7 @@ final class ClientPeppolController extends BaseController
             'clientpeppols' => $this->clientpeppols($clientpeppolRepository),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -235,7 +235,7 @@ final class ClientPeppolController extends BaseController
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'clientpeppol/edit',
                 'actionArguments' => ['client_id' => $clientpeppol->getClient_id()],
-                'buttons' => $this->viewRenderer->renderPartialAsString(
+                'buttons' => $this->webViewRenderer->renderPartialAsString(
                     '//invoice/layout/header_buttons',
                     ['hide_submit_button' => false, 'hide_cancel_button' => false],
                 ),
@@ -267,7 +267,7 @@ final class ClientPeppolController extends BaseController
                                         && !$this->userService->hasPermission(
                                             Permissions::EDIT_INV)) {
                             return $this->factory->createResponse(
-                                $this->viewRenderer->renderPartialAsString(
+                                $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/setting/clientpeppol_successful_guest',
                                 ['url' => 'client/guest',
                                     'heading' => $this->translator->translate(
@@ -292,7 +292,7 @@ final class ClientPeppolController extends BaseController
                     $parameters['form'] = $form;
                 }
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }
