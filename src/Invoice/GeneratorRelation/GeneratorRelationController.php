@@ -18,7 +18,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -32,18 +32,18 @@ final class GeneratorRelationController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->generatorrelationService = $generatorrelationService;
     }
 
     /**
      * @param GeneratorRelationRepository $generatorrelationRepository
      */
-    public function index(GeneratorRelationRepository $generatorrelationRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(GeneratorRelationRepository $generatorrelationRepository): \Psr\Http\Message\ResponseInterface
     {
         $this->rbac();
         $generatorrelations = $this->generatorrelations($generatorrelationRepository);
@@ -52,7 +52,7 @@ final class GeneratorRelationController extends BaseController
             'alert' => $this->alert(),
             'paginator' => $paginator,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -85,7 +85,7 @@ final class GeneratorRelationController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -126,7 +126,7 @@ final class GeneratorRelationController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('generatorrelation/index');
     }
@@ -150,13 +150,13 @@ final class GeneratorRelationController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param GeneratorRelationRepository $generatorrelationRepository
      * @param GeneratorRepository $generatorRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         GeneratorRelationRepository $generatorrelationRepository,
         GeneratorRepository $generatorRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $generatorrelation = $this->generatorrelation($currentRoute, $generatorrelationRepository);
         if ($generatorrelation) {
             $form = new GeneratorRelationForm($generatorrelation);
@@ -170,7 +170,7 @@ final class GeneratorRelationController extends BaseController
                 'generators' => $generatorRepository->findAllPreloaded(),
                 'egrs' => $generatorrelationRepository->repoGeneratorRelationquery($generatorrelation->getRelation_id()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('generatorrelation/index');
     }

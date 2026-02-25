@@ -30,7 +30,7 @@ declare(strict_types=1);
     <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span><span class="hljs-params">(
         private readonly AuthService $authService,
         private readonly WebControllerService $webService,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
         private Manager $manager,
         private SessionInterface $session,
         private SettingRepository $sR,
@@ -45,7 +45,7 @@ declare(strict_types=1);
         private UrlGenerator $urlGenerator,
         SessionStateStorage $stateStorage
     )</span> </span>{
-        <span class="hljs-keyword">$this</span>-&gt;viewRenderer = $viewRenderer-&gt;withControllerName(<span class="hljs-string">'auth'</span>);
+        <span class="hljs-keyword">$this</span>-&gt;viewRenderer = $webViewRenderer-&gt;withControllerName(<span class="hljs-string">'auth'</span>);
         <span class="hljs-keyword">$this</span>-&gt;manager = $manager;
         <span class="hljs-keyword">$this</span>-&gt;session = $session;
         <span class="hljs-keyword">$this</span>-&gt;sR = $sR;

@@ -26,7 +26,7 @@ use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 use \Exception;
 use \DateTimeImmutable;
@@ -42,12 +42,12 @@ final class ProductClientController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
         parent::__construct(
-            $webService, $userService, $translator, $viewRenderer, $session,
+            $webService, $userService, $translator, $webViewRenderer, $session,
             $sR, $flash);
         $this->productclientService = $productclientService;
         $this->clientService = $clientService;
@@ -209,7 +209,7 @@ final class ProductClientController extends BaseController
             'remainingProducts' => count($productIds) - $currentIndex,
         ];
         
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
     
     /**
@@ -363,7 +363,7 @@ final class ProductClientController extends BaseController
                 $parameters['form'] = $form;
             }
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
     
     /**
@@ -429,7 +429,7 @@ final class ProductClientController extends BaseController
                     $parameters['form'] = $form;
                 }
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('productclient/index');
     }
@@ -466,12 +466,12 @@ final class ProductClientController extends BaseController
     /**
      * @param ProductClientRepository $productclientRepository
      * @param int $id
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         ProductClientRepository $productclientRepository,
         #[RouteArgument('id')] int $id)
-            : \Yiisoft\DataResponse\DataResponse|Response
+            : \Psr\Http\Message\ResponseInterface
     {
         $productclient = $this->productclient($productclientRepository, $id);
         if ($productclient) {
@@ -493,7 +493,7 @@ final class ProductClientController extends BaseController
                 'client' => $client,
                 'alert' => '',
             ];
-        return $this->viewRenderer->render('_view', $parameters);
+        return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('productclient/index');
     }

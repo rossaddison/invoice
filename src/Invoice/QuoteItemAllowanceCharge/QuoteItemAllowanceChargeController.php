@@ -27,7 +27,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class QuoteItemAllowanceChargeController extends BaseController
 {
@@ -41,12 +41,12 @@ final class QuoteItemAllowanceChargeController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator,
-            $viewRenderer, $session, $sR, $flash);
+            $webViewRenderer, $session, $sR, $flash);
         $this->numberHelper = $numberHelper;
         $this->acqiService = $acqiService;
         $this->quoteAmountService = $quoteAmountService;
@@ -189,7 +189,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
                     } //allowance_charge
                 } // is_array
             }   // request
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         } // if quote_item
         return $this->webService->getNotFoundResponse();
     }
@@ -218,7 +218,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
             'quote_item_id' => $quote_item_id,
             'paginator' => $paginator,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -406,7 +406,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
                     } // allowance_charge_id
                     $parameters['form'] = $form;
                 } // request
-                return $this->viewRenderer->render('_form', $parameters);
+                return $this->webViewRenderer->render('_form', $parameters);
             } // is_array
         } // if acii
         return $this->webService->getRedirectResponse('index');
@@ -434,13 +434,13 @@ final class QuoteItemAllowanceChargeController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param QuoteItemAllowanceChargeRepository $acqiRepository
      * @param AllowanceChargeRepository $acR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         QuoteItemAllowanceChargeRepository $acqiRepository,
         AllowanceChargeRepository $acR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $acqi = $this->acqi($currentRoute, $acqiRepository);
         if ($acqi) {
             $quote_item_id = $acqi->getQuote_item_id();
@@ -453,7 +453,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
                 'form' => $form,
                 'acqi' => $acqi,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('acqi/index');
     }

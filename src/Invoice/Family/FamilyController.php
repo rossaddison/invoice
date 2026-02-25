@@ -24,7 +24,7 @@ use App\Service\WebControllerService;
 use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -34,7 +34,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Yiisoft\Injector\Inject;
 
 final class FamilyController extends BaseController
@@ -51,11 +51,11 @@ final class FamilyController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->familyService = $familyService;
         $this->factory = $factory;
         $this->urlGenerator = $urlGenerator;
@@ -69,7 +69,7 @@ final class FamilyController extends BaseController
      * @param csR $csR
      * @param trR $taxRateRepository
      * @param uR $unitRepository
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(
         Request $request,
@@ -79,7 +79,7 @@ final class FamilyController extends BaseController
         csR $csR,
         trR $taxRateRepository,
         uR $unitRepository,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $families = $this->familys($familyRepository);
         $pageNum = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -101,7 +101,7 @@ final class FamilyController extends BaseController
             'modal_generate_products' => $this->index_modal_generate_products($taxRateRepository, $unitRepository),
             'defaultPageSizeOffsetPaginator' => (int) $this->sR->getSetting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -123,7 +123,7 @@ final class FamilyController extends BaseController
             'categorySecondaries' => [],
             'familyNames' => [],
         ];
-        return $this->viewRenderer->render('_search', $parameters);
+        return $this->webViewRenderer->render('_search', $parameters);
     }
 
     /**
@@ -202,15 +202,15 @@ final class FamilyController extends BaseController
             }
         }
         $parameters['form'] = $form;
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
      * @param Request $request
      * @param fR $fR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function names(Request $request, fR $fR): \Yiisoft\DataResponse\DataResponse
+    public function names(Request $request, fR $fR): \Psr\Http\Message\ResponseInterface
     {
         $queryParams = $request->getQueryParams();
 
@@ -237,9 +237,9 @@ final class FamilyController extends BaseController
     /**
      * @param Request $request
      * @param csR $csR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function secondaries(Request $request, csR $csR): \Yiisoft\DataResponse\DataResponse
+    public function secondaries(Request $request, csR $csR): \Psr\Http\Message\ResponseInterface
     {
         $queryParams = $request->getQueryParams();
 
@@ -317,7 +317,7 @@ final class FamilyController extends BaseController
                         $parameters['errors'] = 
                             $returned_form->getValidationResult()
                                           ->getErrorMessagesIndexedByProperty();
-                        return $this->viewRenderer->render('_form', $parameters);
+                        return $this->webViewRenderer->render('_form', $parameters);
                     }
                     $this->processCustomFields(
                         $body,
@@ -329,7 +329,7 @@ final class FamilyController extends BaseController
                 $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                 return $this->webService->getRedirectResponse('family/index');
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('family/index');
     }
@@ -422,7 +422,7 @@ final class FamilyController extends BaseController
                 'family' => $family,
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('family/index');
     }
@@ -573,7 +573,7 @@ final class FamilyController extends BaseController
      */
     private function index_modal_generate_products(trR $taxRateRepository, uR $unitRepository): string
     {
-        return $this->viewRenderer->renderPartialAsString('//invoice/family/modal_generate_products', [
+        return $this->webViewRenderer->renderPartialAsString('//invoice/family/modal_generate_products', [
             'taxRates' => $taxRateRepository->findAllPreloaded(),
             'units' => $unitRepository->findAllPreloaded(),
         ]);

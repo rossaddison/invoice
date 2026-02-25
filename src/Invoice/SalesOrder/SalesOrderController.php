@@ -57,7 +57,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
@@ -68,7 +68,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class SalesOrderController extends BaseController
 {
@@ -86,14 +86,14 @@ final class SalesOrderController extends BaseController
         private readonly SalesOrderService $salesorderService,
         Session $session,
         SettingRepository $sR,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         UserService $userService,
         TranslatorInterface $translator,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator,
-                $viewRenderer, $session, $sR, $flash);
+                $webViewRenderer, $session, $sR, $flash);
     }
 
     /**
@@ -103,7 +103,7 @@ final class SalesOrderController extends BaseController
      * @param SOR $soR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function guest(
         Request $request,
@@ -112,7 +112,7 @@ final class SalesOrderController extends BaseController
         SoR $soR,
         UCR $ucR,
         UIR $uiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']
@@ -177,7 +177,7 @@ final class SalesOrderController extends BaseController
                         'so_statuses' => $so_statuses,
                         'paginator' => $paginator,
                     ];
-                    return $this->viewRenderer->render('guest', $parameters);
+                    return $this->webViewRenderer->render('guest', $parameters);
                 }
                 throw new NoClientsAssignedToUserException($this->translator);
             } // userinv
@@ -194,7 +194,7 @@ final class SalesOrderController extends BaseController
      * @param SOR $soR
      * @param SettingRepository $sR
      * @param string|null $queryFilterClient
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(CurrentRoute $currentRoute, CR $clientRepo,
             Request $request, SoAR $soaR, SoR $soR, InvRepo $iR,
@@ -202,7 +202,7 @@ final class SalesOrderController extends BaseController
             #[Query('filterClient')]
             ?string $queryFilterClient = null,
             #[Query('groupBy')]
-            ?string $queryGroupBy = 'none'): \Yiisoft\DataResponse\DataResponse
+            ?string $queryGroupBy = 'none'): \Psr\Http\Message\ResponseInterface
     {
         // If the language dropdown changes
         $this->session->set('_language', $currentRoute->getArgument('_language'));
@@ -245,7 +245,7 @@ final class SalesOrderController extends BaseController
             'sortString' => $sort_string,
             'page' => $currentPageNeverZero,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     // Sales Orders are created from Quotes see quote/approve
@@ -281,7 +281,7 @@ final class SalesOrderController extends BaseController
                      */
                     $so_label = $so_statuses[$status_id]['label'];
                     return $this->factory->createResponse(
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                         '//invoice/setting/salesorder_successful',
                         [
                             'heading' => $so_label,
@@ -321,7 +321,7 @@ final class SalesOrderController extends BaseController
                         $so->setStatus_id(9);
                         $soR->save($so);
                         return $this->factory->createResponse(
-                            $this->viewRenderer->renderPartialAsString(
+                            $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/setting/salesorder_successful',
                                 [
                                     'heading' => $soR->getSpecificStatusArrayLabel(
@@ -573,7 +573,7 @@ final class SalesOrderController extends BaseController
                 'delCount' => $delRepo->repoClientCount($so->getClient_id()),
                 'dels' => $dels,
                 'terms_and_conditions_file' =>
-                    $this->viewRenderer->renderPartialAsString(
+                    $this->webViewRenderer->renderPartialAsString(
                             '//invoice/salesorder/terms_and_conditions_file'),
                 'terms_and_conditions' =>
                     $settingRepository->getTermsAndConditions(),
@@ -608,7 +608,7 @@ final class SalesOrderController extends BaseController
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form_edit', $parameters);
+            return $this->webViewRenderer->render('_form_edit', $parameters);
         }
         return $this->webService->getRedirectResponse('salesorder/index');
     }
@@ -682,7 +682,7 @@ final class SalesOrderController extends BaseController
     public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR,
         DR $dlR, SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR,
         ACSOIR $acsoiR, SoR $soR, SoTRR $sotrR, SettingRepository $sR,
-        UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+        UIR $uiR): \Psr\Http\Message\ResponseInterface
     {
         // include is a value of 0 or 1 passed from quote.js function
         // quote_to_pdf_with(out)_custom_fields indicating whether the user
@@ -708,7 +708,7 @@ final class SalesOrderController extends BaseController
                     $stream, $custom, $salesorder_amount,
                         $salesorder_custom_values, $cR, $cvR, $cfR, $dlR,
                             $soiR, $soiaR, $acsoiR, $soR, $sotrR, $uiR,
-                                $this->viewRenderer, $this->translator);
+                                $this->webViewRenderer, $this->translator);
                 $parameters = ($include == '1'
                 ? [
                     'success' => 1,
@@ -746,7 +746,7 @@ final class SalesOrderController extends BaseController
      * @param SoCR $socR
      * @param InvRepo $invRepo
      * @param SettingRepository $settingRepository
-     * @return \Yiisoft\DataResponse\DataResponse|Response
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         #[RouteArgument('id')]
@@ -775,7 +775,7 @@ final class SalesOrderController extends BaseController
         SoCR $socR,
         InvRepo $invRepo,
         SettingRepository $settingRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $so = $this->salesorderunloaded($id, $soR, false);
         if ($so) {
             $so_id = $so->getId();
@@ -833,7 +833,7 @@ final class SalesOrderController extends BaseController
                     'soStatuses' => $soR->getStatuses($this->translator),
                     'salesOrderCustomValues' => $salesorder_custom_values,
                     'partial_item_table' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/salesorder/partial_item_table', [
                         'acsoiR' => $acsoiR,
                         'packHandleShipTotal' => $acsoR->getPackHandleShipTotal(
@@ -862,18 +862,18 @@ final class SalesOrderController extends BaseController
                         'units' => $uR->findAllPreloaded(),
                     ]),
                     'modal_salesorder_to_pdf' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/salesorder/modal_salesorder_to_pdf', [
                         'so' => $so,
                     ]),
                     'modal_so_to_invoice' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/salesorder/modal_so_to_invoice', [
                         'so' => $so,
                         'gR' => $gR,
                     ]),
                     'view_custom_fields' =>
-                        $this->viewRenderer->renderPartialAsString(
+                        $this->webViewRenderer->renderPartialAsString(
                             '//invoice/salesorder/view_custom_fields', [
                         'customFields' => $this->fetchCustomFieldsAndValues(
                             $cfR, $cvR, 'salesorder_custom')['customFields'],
@@ -891,13 +891,13 @@ final class SalesOrderController extends BaseController
                                 : '',
                 ];
                 if ($this->rbacObserver($so, $ucR, $uiR)) {
-                    return $this->viewRenderer->render('view', $parameters);
+                    return $this->webViewRenderer->render('view', $parameters);
                 }
                 if ($this->rbacAdmin()) {
-                    return $this->viewRenderer->render('view', $parameters);
+                    return $this->webViewRenderer->render('view', $parameters);
                 }
                 if ($this->rbacAccountant()) {
-                    return $this->viewRenderer->render('view', $parameters);
+                    return $this->webViewRenderer->render('view', $parameters);
                 }
             } // $so_amount
         } // $so->getId()
@@ -1021,7 +1021,7 @@ final class SalesOrderController extends BaseController
      * @param UR $uR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function so_to_invoice_confirm(
         #[RouteArgument('id')] string $id = '',
@@ -1050,7 +1050,7 @@ final class SalesOrderController extends BaseController
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $body = $request->getQueryParams();
         // Support both URL path parameter (/so_to_invoice/66) and query
         // parameter (?so_id=66)
@@ -1509,14 +1509,14 @@ final class SalesOrderController extends BaseController
                                 if ($salesorder_amount) {
                                     $parameters = [
                                         'renderTemplate' =>
-                                     $this->viewRenderer->renderPartialAsString(
+                                     $this->webViewRenderer->renderPartialAsString(
                                         '//invoice/template/salesorder/public/'
                                              . ($this->sR->getSetting(
                                                 'public_salesorder_template')
                                                         ?: 'SalesOrder_Web'), [
                                             'isGuest' => $currentUser->isGuest(),
                                             'terms_and_conditions_file' =>
-                                     $this->viewRenderer->renderPartialAsString(
+                                     $this->webViewRenderer->renderPartialAsString(
                               '//invoice/salesorder/terms_and_conditions_file'),
                                             'alert' => $this->alert(),
                                             'salesorder' => $salesorder,
@@ -1543,7 +1543,7 @@ final class SalesOrderController extends BaseController
                                               $salesorder->getUser_id()) : null,
                                         ]),
                                     ];
-                                    return $this->viewRenderer->render('url_key',
+                                    return $this->webViewRenderer->render('url_key',
                                         $parameters);
                                 } // if salesorder_amount
                             } // if there is a salesorder id

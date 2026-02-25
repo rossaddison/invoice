@@ -19,7 +19,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ItemLookupController extends BaseController
 {
@@ -31,12 +31,12 @@ final class ItemLookupController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator,
-                                        $viewRenderer, $session, $sR, $flash);
+                                        $webViewRenderer, $session, $sR, $flash);
         $this->itemlookupService = $itemlookupService;
     }
 
@@ -44,7 +44,7 @@ final class ItemLookupController extends BaseController
      * @param ItemLookupRepository $itemlookupRepository
      */
     public function index(ItemLookupRepository $itemlookupRepository):
-                                            \Yiisoft\DataResponse\DataResponse
+                                            \Psr\Http\Message\ResponseInterface
     {
         $itemLookups = $this->itemlookups($itemlookupRepository);
         $paginator = (new OffsetPaginator($itemLookups));
@@ -52,7 +52,7 @@ final class ItemLookupController extends BaseController
             'paginator' => $paginator,
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -86,7 +86,7 @@ final class ItemLookupController extends BaseController
               $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -125,7 +125,7 @@ final class ItemLookupController extends BaseController
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -150,12 +150,12 @@ final class ItemLookupController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param ItemLookupRepository $itemlookupRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         ItemLookupRepository $itemlookupRepository,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $itemLookup = $this->itemlookup($currentRoute, $itemlookupRepository);
         if (null !== $itemLookup) {
             $form = new ItemLookupForm($itemLookup);
@@ -165,7 +165,7 @@ final class ItemLookupController extends BaseController
                 'actionArguments' => ['id' => $itemLookup->getId()],
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }

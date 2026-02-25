@@ -40,7 +40,7 @@ use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use App\Invoice\Libraries\Crypt;
 
 final class InvoiceController extends BaseController
@@ -52,13 +52,13 @@ final class InvoiceController extends BaseController
         WebControllerService $webService,
         UserService $userService,
         TranslatorInterface $translator,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         SessionInterface $session,
         SettingRepository $sR,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator,
-                $viewRenderer, $session, $sR, $flash);
+                $webViewRenderer, $session, $sR, $flash);
     }
 
     /**
@@ -230,42 +230,42 @@ final class InvoiceController extends BaseController
     {
         $view = match ($topic) {
             'ai_callback_session' =>
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/ai/ai_callback_session'),
             'javascript_analysis' =>
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/javascript_analysis'),
             'codeception_selectors_checklist' =>
-                $this->viewRenderer->renderPartialAsString(
+                $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/codeception_selectors_checklist'),
-            'tp' => $this->viewRenderer->renderPartialAsString(
+            'tp' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/taxpoint'),
-            'shared' => $this->viewRenderer->renderPartialAsString(
+            'shared' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/shared_hosting'),
-            'alpine' => $this->viewRenderer->renderPartialAsString(
+            'alpine' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/alpine'),
-            'wsl_to_alpine' => $this->viewRenderer->renderPartialAsString(
+            'wsl_to_alpine' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/wsl_to_alpine'),
-            'oauth2' => $this->viewRenderer->renderPartialAsString(
+            'oauth2' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/oauth2'),
-            'paymentprovider' => $this->viewRenderer->renderPartialAsString(
+            'paymentprovider' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/payment_provider'),
-            'consolecommands' => $this->viewRenderer->renderPartialAsString(
+            'consolecommands' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/console_commands'),
-            'ipaddress' => $this->viewRenderer->renderPartialAsString(
+            'ipaddress' => $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/ip_address'),
             default => '',
         };
-        return $this->viewRenderer->render('info/view', ['topic' => $view]);
+        return $this->webViewRenderer->render('info/view', ['topic' => $view]);
     }
 
     public function phpinfo(#[RouteArgument('selection')]
                                             string $selection = '-1'): Response
     {
-        $view = $this->viewRenderer->renderPartialAsString(
+        $view = $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/phpinfo',
                                             ['selection' => (int) $selection]);
-        return $this->viewRenderer->render('info/view', ['topic' => $view]);
+        return $this->webViewRenderer->render('info/view', ['topic' => $view]);
     }
 
     /**
@@ -275,9 +275,9 @@ final class InvoiceController extends BaseController
      * Related logic: see config\common\routes\routes.php api-store-cove
      * Related logic: see https://www.storecove.com/docs 3.3.2. Sending a
      * document UBL format
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function store_cove_call_api(): \Yiisoft\DataResponse\DataResponse
+    public function store_cove_call_api(): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'result' => '',
@@ -319,7 +319,7 @@ final class InvoiceController extends BaseController
                 'status' => curl_error($site) ? 'warning' : 'success',
             ];
         }
-        return $this->viewRenderer->render('curl/api_result', $parameters);
+        return $this->webViewRenderer->render('curl/api_result', $parameters);
     }
 
     /**
@@ -328,10 +328,10 @@ final class InvoiceController extends BaseController
      * Related logic:
      *   see config\common\routes\routes.php api-store-cove-get-legal-entity-id
      * Related logic: see https://www.storecove.com/docs/
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function store_cove_call_api_get_legal_entity_id():
-                                            \Yiisoft\DataResponse\DataResponse
+                                            \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'result' => '',
@@ -368,7 +368,7 @@ final class InvoiceController extends BaseController
                 'status' => curl_error($site) ? 'warning' : 'success',
             ];
         }
-        return $this->viewRenderer->render('curl/api_result', $parameters);
+        return $this->webViewRenderer->render('curl/api_result', $parameters);
     }
 
     /**
@@ -376,10 +376,10 @@ final class InvoiceController extends BaseController
      * an Identifier
      * Related logic: see config\common\routes\routes.php api-store-cove-legal-entity-identifier
      * Related logic: see https://www.storecove.com/docs/
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function store_cove_call_api_legal_entity_identifier():
-                                            \Yiisoft\DataResponse\DataResponse
+                                            \Psr\Http\Message\ResponseInterface
     {
         // Obtain from above function store_cove_call_api_legal_entity()
         // store-cove regex: ^GB(\d{9}(\d{3})?$|^[A-Z]{2}\d{3})$ will match eg.
@@ -425,17 +425,17 @@ final class InvoiceController extends BaseController
                 'status' => curl_error($site) ? 'warning' : 'success',
             ];
         }
-        return $this->viewRenderer->render('curl/api_result', $parameters);
+        return $this->webViewRenderer->render('curl/api_result', $parameters);
     }
 
     /**
      * Related logic: see https://app.storecove.com/en/docs #1.1.5 Send your
      * first invoice .. Click on green button for json copy
      * Paste json copy into $data
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function store_cove_send_test_json_invoice():
-                                            \Yiisoft\DataResponse\DataResponse
+                                            \Psr\Http\Message\ResponseInterface
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
         // Remove zeros from '000217668' => integer'
@@ -541,11 +541,11 @@ final class InvoiceController extends BaseController
                 'status' => curl_error($site) ? 'warning' : 'success',
             ];
         }
-        return $this->viewRenderer->render('curl/api_result', $parameters);
+        return $this->webViewRenderer->render('curl/api_result', $parameters);
     }
 
     public function store_cove_send_actual_json_invoice():
-                                            \Yiisoft\DataResponse\DataResponse
+                                            \Psr\Http\Message\ResponseInterface
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
         // Remove zeros from '000217668' => integer'
@@ -873,7 +873,7 @@ final class InvoiceController extends BaseController
                 'status' => curl_error($site) ? 'warning' : 'success',
             ];
         }
-        return $this->viewRenderer->render('curl/api_result', $parameters);
+        return $this->webViewRenderer->render('curl/api_result', $parameters);
     }
 
     /**
@@ -900,7 +900,7 @@ final class InvoiceController extends BaseController
         TaskRepository $taskR,
         ProjectRepository $prjctR,
         TranslatorInterface $translator,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $data = [
             'alerts' => $this->alert(),
             // Repositories
@@ -946,12 +946,12 @@ final class InvoiceController extends BaseController
             // Current tasks
             'taskR' => $taskR,
 
-            'modal_create_client' => $this->viewRenderer->renderPartialAsString(
+            'modal_create_client' => $this->webViewRenderer->renderPartialAsString(
                     '//invoice/client/modal_create_client'),
 
             'client_count' => $cR->count(),
         ];
-        return $this->viewRenderer->render('dashboard/index', $data);
+        return $this->webViewRenderer->render('dashboard/index', $data);
     }
 
     /**
@@ -965,7 +965,7 @@ final class InvoiceController extends BaseController
      * @param ProductRepository $pR
      * @param ClientRepository $cR
      * @param GroupRepository $gR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(
         CurrentRoute $currentRoute,
@@ -978,7 +978,7 @@ final class InvoiceController extends BaseController
         ProductRepository $pR,
         ClientRepository $cR,
         GroupRepository $gR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         if ($this->userService->hasPermission(
                 Permissions::NO_ENTRY_TO_BASE_CONTROLLER)) {
             return $this->webService->getNotFoundResponse();
@@ -992,13 +992,13 @@ final class InvoiceController extends BaseController
             
             // Check if language-specific file exists by attempting to render it
             try {
-                $content = $this->viewRenderer->renderPartialAsString(
+                $content = $this->webViewRenderer->renderPartialAsString(
                                                                 $languageFile);
                 $this->flashMessage('info', $content);
             } catch (\Throwable) {
                 // Fallback to default English version
                 $this->flashMessage('info',
-                    $this->viewRenderer->renderPartialAsString(
+                    $this->webViewRenderer->renderPartialAsString(
                         '//invoice/info/en/invoice'));
             }
         }
@@ -1017,7 +1017,7 @@ final class InvoiceController extends BaseController
         $parameters = [
             'alerts' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -1412,7 +1412,7 @@ final class InvoiceController extends BaseController
         ClientRepository $cR,
         QuoteRepository $qR,
         InvRepository $iR,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $flash = '';
         if ($sR->repoCount('use_test_data') > 0
                                 && $sR->getSetting('use_test_data') == '0') {
@@ -1436,7 +1436,7 @@ final class InvoiceController extends BaseController
         $data = [
             'alerts' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $data);
+        return $this->webViewRenderer->render('index', $data);
     }
 
     /**
@@ -1458,7 +1458,7 @@ final class InvoiceController extends BaseController
         QuoteRepository $qR,
         InvRepository $iR,
         TaxRateRepository $trR,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $flash = '';
         if ($sR->repoCount('install_test_data') > 0 && $sR->getSetting(
                 'install_test_data') == 1) {
@@ -1478,7 +1478,7 @@ final class InvoiceController extends BaseController
         $data = [
             'alerts' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $data);
+        return $this->webViewRenderer->render('index', $data);
     }
 
     /**

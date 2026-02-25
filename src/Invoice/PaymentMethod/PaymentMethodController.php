@@ -18,7 +18,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class PaymentMethodController extends BaseController
 {
@@ -30,11 +30,11 @@ final class PaymentMethodController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->paymentmethodService = $paymentmethodService;
     }
 
@@ -43,7 +43,7 @@ final class PaymentMethodController extends BaseController
      * @param Request $request
      * @param PaymentMethodService $service
      */
-    public function index(PaymentMethodRepository $paymentmethodRepository, Request $request, PaymentMethodService $service): \Yiisoft\DataResponse\DataResponse
+    public function index(PaymentMethodRepository $paymentmethodRepository, Request $request, PaymentMethodService $service): \Psr\Http\Message\ResponseInterface
     {
         $canEdit = $this->rbac();
         $parameters = [
@@ -51,7 +51,7 @@ final class PaymentMethodController extends BaseController
             'payment_methods' => $this->paymentmethods($paymentmethodRepository),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -81,7 +81,7 @@ final class PaymentMethodController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -118,7 +118,7 @@ final class PaymentMethodController extends BaseController
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         } // if payment_method
         return $this->webService->getRedirectResponse('paymentmethod/index');
     }
@@ -149,9 +149,9 @@ final class PaymentMethodController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param PaymentMethodRepository $paymentmethodRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository): \Psr\Http\Message\ResponseInterface
     {
         $payment_method = $this->paymentmethod($currentRoute, $paymentmethodRepository);
         $parameters = [];
@@ -164,7 +164,7 @@ final class PaymentMethodController extends BaseController
                 'form' => $form,
                 'paymentmethod' => $paymentmethodRepository->repoPaymentMethodquery($payment_method->getId()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('paymentmethod/index');
     }

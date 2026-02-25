@@ -14,7 +14,7 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Http\Method;
@@ -23,7 +23,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Exception;
 
@@ -38,11 +38,11 @@ final class UploadController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->factory = $factory;
         $this->uploadService = $uploadService;
     }
@@ -62,9 +62,9 @@ final class UploadController extends BaseController
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param UploadRepository $uploadRepository
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function index(Request $request, CurrentRoute $currentRoute, UploadRepository $uploadRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(Request $request, CurrentRoute $currentRoute, UploadRepository $uploadRepository): \Psr\Http\Message\ResponseInterface
     {
         $query_params = $request->getQueryParams();
         /**
@@ -90,7 +90,7 @@ final class UploadController extends BaseController
             'uploads' => $this->uploads($uploadRepository),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -126,7 +126,7 @@ final class UploadController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -144,7 +144,7 @@ final class UploadController extends BaseController
                 $this->uploadService->deleteUpload($upload, $this->sR);
                 $inv_id = (string) $this->session->get('inv_id');
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+                return $this->factory->createResponse($this->webViewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
                     ['heading' => '', 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id],
                 ));
@@ -193,7 +193,7 @@ final class UploadController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('upload/index');
     }
@@ -204,7 +204,7 @@ final class UploadController extends BaseController
      * @param ClientRepository $clientRepository
      * @param UploadRepository $uploadRepository
      */
-    public function view(CurrentRoute $currentRoute, ClientRepository $clientRepository, UploadRepository $uploadRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, ClientRepository $clientRepository, UploadRepository $uploadRepository): \Psr\Http\Message\ResponseInterface
     {
         $upload = $this->upload($currentRoute, $uploadRepository);
         if ($upload) {
@@ -216,7 +216,7 @@ final class UploadController extends BaseController
                 'form' => $form,
                 'optionsDataClients' => $this->optionsDataClients($clientRepository->findAllPreloaded()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('upload/index');
     }

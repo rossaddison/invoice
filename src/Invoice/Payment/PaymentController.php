@@ -39,7 +39,7 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\OrderHelper;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -47,7 +47,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use App\Invoice\Payment\PaymentCustomFieldProcessor;
 
 final class PaymentController extends BaseController
@@ -63,12 +63,12 @@ final class PaymentController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator,
-                                        $viewRenderer, $session, $sR, $flash);
+                                        $webViewRenderer, $session, $sR, $flash);
         $this->paymentService = $paymentService;
         $this->paymentCustomService = $paymentCustomService;
         $this->paymentCustomFieldProcessor = $paymentCustomFieldProcessor;
@@ -206,7 +206,7 @@ final class PaymentController extends BaseController
                             $params['paymentCustomForm'] = $pcForm;
                         } // foreach
                         if (count($params['errorsCustom']) > 0) {
-                            return $this->viewRenderer->render('_form', $params);
+                            return $this->webViewRenderer->render('_form', $params);
                         }
                     } // isset body['custom']
                     return $this->webService->getRedirectResponse('payment/index');
@@ -216,7 +216,7 @@ final class PaymentController extends BaseController
                                      ->getErrorMessagesIndexedByProperty();
             $params['form'] = $form;
         } // request
-        return $this->viewRenderer->render('_form', $params);
+        return $this->webViewRenderer->render('_form', $params);
     }
 
     // If the custom field already exists return false
@@ -438,7 +438,7 @@ final class PaymentController extends BaseController
                     }
                 } // is_array
             } // request
-            return $this->viewRenderer->render('_form', $params);
+            return $this->webViewRenderer->render('_form', $params);
         }
         return $this->webService->getRedirectResponse('payment/index');
     }
@@ -477,7 +477,7 @@ final class PaymentController extends BaseController
      * @param InvAmountRepository $iaR
      * @param UserClientRepository $ucR
      * @param UserInvRepository $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function guest(
         Request $request,
@@ -486,7 +486,7 @@ final class PaymentController extends BaseController
         InvAmountRepository $iaR,
         UserClientRepository $ucR,
         UserInvRepository $uiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']
@@ -555,7 +555,7 @@ final class PaymentController extends BaseController
                     'payments' => $this->payments($payR),
                     'max' => (int) $this->sR->getSetting('default_list_limit'),
                 ];
-                return $this->viewRenderer->render('guest', $params);
+                return $this->webViewRenderer->render('guest', $params);
             }
             throw new NoClientsAssignedToUserException($this->translator);
         } //if user
@@ -568,7 +568,7 @@ final class PaymentController extends BaseController
      * @param MerchantRepository $merchR
      * @param UserClientRepository $ucR
      * @param UserInvRepository $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function guest_online_log(
         Request $request,
@@ -576,7 +576,7 @@ final class PaymentController extends BaseController
         MerchantRepository $merchR,
         UserClientRepository $ucR,
         UserInvRepository $uiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $query_params = $request->getQueryParams();
         $page = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -617,7 +617,7 @@ final class PaymentController extends BaseController
                 'merchants' => $this->merchants($merchR),
                 'max' => 10,
             ];
-            return $this->viewRenderer->render('guest_online_log', $params);
+            return $this->webViewRenderer->render('guest_online_log', $params);
         }
         return $this->webService->getRedirectResponse('payment/guest');
     }
@@ -633,7 +633,7 @@ final class PaymentController extends BaseController
         CurrentRoute $currentRoute,
         PaymentRepository $payR,
         InvAmountRepository $iaR,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $query_params = $request->getQueryParams();
         $page = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -694,7 +694,7 @@ final class PaymentController extends BaseController
             'payments' => $this->payments($payR),
             'max' => (int) $this->sR->getSetting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('index', $params);
+        return $this->webViewRenderer->render('index', $params);
     }
 
     /**
@@ -744,7 +744,7 @@ final class PaymentController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         MerchantRepository $merchR,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $query_params = $request->getQueryParams();
         $page = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -795,7 +795,7 @@ final class PaymentController extends BaseController
                         (int) $this->sR->getSetting('default_list_limit') : 1,
             'merchants' => $this->merchants($merchR),
         ];
-        return $this->viewRenderer->render('online_log', $params);
+        return $this->webViewRenderer->render('online_log', $params);
     }
 
     /**
@@ -879,7 +879,7 @@ final class PaymentController extends BaseController
      * @param PaymentCustomRepository $pcR
      */
     public function save_custom(FormHydrator $fmHyd,
-                                Request $request, PaymentCustomRepository $pcR):                                                       \Yiisoft\DataResponse\DataResponse
+                                Request $request, PaymentCustomRepository $pcR):                                                       \Psr\Http\Message\ResponseInterface
     {
         $js_data = $request->getQueryParams();
         $payment_id = (string) $js_data['payment_id'];
@@ -904,7 +904,7 @@ final class PaymentController extends BaseController
         CustomFieldRepository $cfR,
         CustomValueRepository $cvR,
         PaymentCustomRepository $pcR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $payment = $this->payment($currentRoute, $payR);
         if ($payment) {
             $paymentId = $payment->getId();
@@ -922,7 +922,7 @@ final class PaymentController extends BaseController
                     $this->payment_custom_values($paymentId, $pcR),
                 ),
             ];
-            return $this->viewRenderer->render('_view', $params);
+            return $this->webViewRenderer->render('_view', $params);
         }
         return $this->webService->getRedirectResponse('payment/index');
     }
@@ -936,7 +936,7 @@ final class PaymentController extends BaseController
     private function view_custom_fields(CustomFieldRepository $cfR,
             CustomValueRepository $cvR, array $payment_custom_values): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
                                     '//invoice/payment/view_custom_fields', [
             'customFields' => $cfR->repoTablequery('payment_custom'),
             'customValues' =>

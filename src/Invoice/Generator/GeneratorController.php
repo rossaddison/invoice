@@ -24,7 +24,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Http\Method;
@@ -36,7 +36,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\View\View;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 class GeneratorController extends BaseController
 {
@@ -91,11 +91,11 @@ class GeneratorController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->aliases = $this->setAliases();
         $this->factory = $factory;
         $this->generatorService = $generatorService;
@@ -168,9 +168,9 @@ class GeneratorController extends BaseController
      * @throws CaCertFileNotFoundException
      * @throws GoogleTranslateJsonFileNotFoundException
      * @throws GoogleTranslateLocaleSettingNotFoundException
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function google_translate_lang(CurrentRoute $currentRoute): \Yiisoft\DataResponse\DataResponse|Response
+    public function google_translate_lang(CurrentRoute $currentRoute): \Psr\Http\Message\ResponseInterface
     {
         // 1. Downloaded https://curl.haxx.se/ca/cacert.pem" into c:\wamp64\bin\php\{active_php} e.g. c:\wamp64\bin\php\php8.2.0
         // 2. Symlink C:\wamp64\bin\apache\apache2.4.54.2\bin\php.ini points to C:\wamp64\bin\php\php8.2\phpForApache.ini.
@@ -260,7 +260,7 @@ class GeneratorController extends BaseController
                     $content_params = [
                         'combined_array' => $combined_array,
                     ];
-                    $file_content = $this->viewRenderer->renderPartialAsString(
+                    $file_content = $this->webViewRenderer->renderPartialAsString(
                         '//invoice/generator/templates_protected/' . $templateFile,
                         $content_params,
                     );
@@ -297,9 +297,9 @@ class GeneratorController extends BaseController
      * @throws CaCertFileNotFoundException
      * @throws GoogleTranslateJsonFileNotFoundException
      * @throws GoogleTranslateLocaleSettingNotFoundException
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function google_translate_info(): \Yiisoft\DataResponse\DataResponse|Response
+    public function google_translate_info(): \Psr\Http\Message\ResponseInterface
     {
         $curlcertificate = \ini_get('curl.cainfo');
         if ($curlcertificate == false) {
@@ -546,7 +546,7 @@ class GeneratorController extends BaseController
     public function index(
         GeneratorRepository $generatorRepository,
         GeneratorRelationRepository $grR,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $this->rbac();
         $generators = $this->generators($generatorRepository);
         $paginator = (new OffsetPaginator($generators));
@@ -555,7 +555,7 @@ class GeneratorController extends BaseController
             'alert' => $this->alert(),
             'paginator' => $paginator,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -588,7 +588,7 @@ class GeneratorController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -625,7 +625,7 @@ class GeneratorController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('generator/index');
     }
@@ -671,7 +671,7 @@ class GeneratorController extends BaseController
                 'generator' => $generator,
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('generator/index');
     }
@@ -754,7 +754,7 @@ class GeneratorController extends BaseController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('_results', $parameters);
+        return $this->webViewRenderer->render('_results', $parameters);
     }
 
     /**
@@ -798,7 +798,7 @@ class GeneratorController extends BaseController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('_results', $parameters);
+        return $this->webViewRenderer->render('_results', $parameters);
     }
 
     /**
@@ -842,7 +842,7 @@ class GeneratorController extends BaseController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('_results', $parameters);
+        return $this->webViewRenderer->render('_results', $parameters);
     }
 
     /**
@@ -887,7 +887,7 @@ class GeneratorController extends BaseController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('_results', $parameters);
+        return $this->webViewRenderer->render('_results', $parameters);
     }
 
     /**
@@ -931,7 +931,7 @@ class GeneratorController extends BaseController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('_results', $parameters);
+        return $this->webViewRenderer->render('_results', $parameters);
     }
 
     /**
@@ -975,7 +975,7 @@ class GeneratorController extends BaseController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('_results', $parameters);
+        return $this->webViewRenderer->render('_results', $parameters);
     }
 
     /**
@@ -1018,7 +1018,7 @@ class GeneratorController extends BaseController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('_results', $parameters);
+        return $this->webViewRenderer->render('_results', $parameters);
     }
 
     /**
@@ -1062,7 +1062,7 @@ class GeneratorController extends BaseController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('_results', $parameters);
+        return $this->webViewRenderer->render('_results', $parameters);
     }
 
     //generate this individual route. Append to config/routes file.
@@ -1105,21 +1105,21 @@ class GeneratorController extends BaseController
             'alert' => $this->alert(),
             'generated' => $build_file,
         ];
-        return $this->viewRenderer->render('_results', $parameters);
+        return $this->webViewRenderer->render('_results', $parameters);
     }
 
     /**
      * @param CurrentUser $currentUser
      * @param DatabaseManager $dba
      */
-    public function quick_view_schema(CurrentUser $currentUser, DatabaseManager $dba): \Yiisoft\DataResponse\DataResponse
+    public function quick_view_schema(CurrentUser $currentUser, DatabaseManager $dba): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'alerts' => $this->alert(),
             'isGuest' => $currentUser->isGuest(),
             'tables' => $dba->database('default')->getTables(),
         ];
-        return $this->viewRenderer->render('_schema', $parameters);
+        return $this->webViewRenderer->render('_schema', $parameters);
     }
 
     /**

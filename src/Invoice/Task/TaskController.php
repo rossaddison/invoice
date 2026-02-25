@@ -37,7 +37,7 @@ use App\Invoice\QuoteItem\QuoteItemService;
 use App\Invoice\QuoteItem\QuoteItemForm;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Json\Json;
 use Yiisoft\Http\Method;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
@@ -45,7 +45,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Yiisoft\FormModel\FormHydrator;
 
 final class TaskController extends BaseController
@@ -61,11 +61,11 @@ final class TaskController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->invitemService = $invitemService;
         $this->quoteitemService = $quoteitemService;
     }
@@ -75,7 +75,7 @@ final class TaskController extends BaseController
      * @param tR $tR
      * @param prjctR $prjctR
      */
-    public function index(tR $tR, prjctR $prjctR, #[Query('page')] ?int $page = null): \Yiisoft\DataResponse\DataResponse
+    public function index(tR $tR, prjctR $prjctR, #[Query('page')] ?int $page = null): \Psr\Http\Message\ResponseInterface
     {
         $canEdit = $this->rbac();
         $parameters = [
@@ -85,7 +85,7 @@ final class TaskController extends BaseController
             'prjctR' => $prjctR,
             'tasks' => $this->tasks($tR),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -126,7 +126,7 @@ final class TaskController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -171,7 +171,7 @@ final class TaskController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('task/index');
     }
@@ -246,7 +246,7 @@ final class TaskController extends BaseController
         iaR $iaR,
         iR $iR,
         pymR $pymR,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
         $task_ids = ($select_items['task_ids'] ?: []);
@@ -328,7 +328,7 @@ final class TaskController extends BaseController
         qR $qR,
         pymR $pymR,
         acqR $acqR,    
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
         $task_ids = ($select_items['task_ids'] ?: []);
@@ -387,14 +387,14 @@ final class TaskController extends BaseController
      * @param tR $tR
      * @param trR $trR
      * @param prjctR $pR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         tR $tR,
         trR $trR,
         prjctR $pR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $task = $this->task($currentRoute, $tR);
         if ($task) {
             $taskForm = new TaskForm($task);
@@ -408,7 +408,7 @@ final class TaskController extends BaseController
                 'taxRates' => $trR->optionsDataTaxRates(),
                 'projects' => $pR->optionsDataProjects(),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('task/index');
     }

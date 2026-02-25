@@ -20,7 +20,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class CustomValueController extends BaseController
 {
@@ -32,11 +32,11 @@ final class CustomValueController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->customValueService = $customValueService;
     }
 
@@ -56,7 +56,7 @@ final class CustomValueController extends BaseController
             'custom_values' => $custom_values,
             'custom_values_types' => array_merge($this->user_input_types(), $this->custom_value_fields()),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -82,7 +82,7 @@ final class CustomValueController extends BaseController
                     'custom_values_types' => array_merge($this->user_input_types(), $this->custom_value_fields()),
                     'custom_values' => $customvalues,
                 ];
-                return $this->viewRenderer->render('field', $parameters);
+                return $this->webViewRenderer->render('field', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('customvalue/index');
@@ -128,7 +128,7 @@ final class CustomValueController extends BaseController
                     $parameters['form'] = $form;
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 }
-                return $this->viewRenderer->render('new', $parameters);
+                return $this->webViewRenderer->render('new', $parameters);
             }
         } //if custom_fiedl
         return $this->webService->getRedirectResponse('customvalue/index');
@@ -173,7 +173,7 @@ final class CustomValueController extends BaseController
                 $parameters['form'] = $form;
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            return $this->viewRenderer->render('edit', $parameters);
+            return $this->webViewRenderer->render('edit', $parameters);
         }
         return $this->webService->getRedirectResponse('customvalue/index');
     }
@@ -212,7 +212,7 @@ final class CustomValueController extends BaseController
                 'actionArguments' => ['id' => $custom_value->getId()],
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('customvalue/index');
     }

@@ -53,7 +53,7 @@ declare(strict_types=1);
     $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
     $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
     $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
-    return $this->viewRenderer->render('login', 
+    return $this->webViewRenderer->render('login', 
         [
             'formModel' => $loginForm,
             'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',

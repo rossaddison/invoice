@@ -36,7 +36,7 @@ use Yiisoft\Security\TokenMask;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class UserInvController extends BaseController
 {
@@ -55,11 +55,11 @@ final class UserInvController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         // Related logic: see yiisoft/rbac-php
         $this->itemstorage = $itemstorage;
         $this->assignment = $assignment;
@@ -157,7 +157,7 @@ final class UserInvController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form_add', $parameters);
+        return $this->webViewRenderer->render('_form_add', $parameters);
     }
 
     // UserInv  is the extension Table of User
@@ -176,7 +176,7 @@ final class UserInvController extends BaseController
      * @param string $queryPage
      * @param string $querySort
      * @param string $queryFilterUser
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(
         cR $cR,
@@ -195,7 +195,7 @@ final class UserInvController extends BaseController
         ?string $querySort = null,
         #[Query('filterUser')]
         ?string $queryFilterUser = null,
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $canEdit = $this->rbac();
         $page = $queryPage ?? $page;
         $activeInt = (int) $active;
@@ -222,7 +222,7 @@ final class UserInvController extends BaseController
             'manager' => $this->manager,
             'optionsDataFilterUserInvLoginDropDown' => $this->optionsDataFilterUserInvLogin($uiR),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -263,7 +263,7 @@ final class UserInvController extends BaseController
                         $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                         $parameters['form'] = $form;
                     }
-                    return $this->viewRenderer->render('_form_guest', $parameters);
+                    return $this->webViewRenderer->render('_form_guest', $parameters);
                 }
                 return $this->webService->getRedirectResponse('invoice/index');
             } // nul!== $id
@@ -430,7 +430,7 @@ final class UserInvController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form_edit', $parameters);
+            return $this->webViewRenderer->render('_form_edit', $parameters);
         }
         return $this->webService->getRedirectResponse('userinv/index');
     }
@@ -439,9 +439,9 @@ final class UserInvController extends BaseController
      * @param int $id
      * @param ucR $ucR
      * @param uiR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function client(#[RouteArgument('id')] int $id, ucR $ucR, uiR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+    public function client(#[RouteArgument('id')] int $id, ucR $ucR, uiR $uiR): \Psr\Http\Message\ResponseInterface
     {
         // Use the primary key 'id' passed in userinv/index's urlGenerator to retrieve the user_id
         $userinv = $this->userinv($id, $uiR);
@@ -454,7 +454,7 @@ final class UserInvController extends BaseController
                     'ucR' => $ucR,
                     'userInv' => $uiR->repoUserInvUserIdquery($user_id),
                 ];
-                return $this->viewRenderer->render('field', $parameters);
+                return $this->webViewRenderer->render('field', $parameters);
             }
             return $this->webService->getRedirectResponse('userinv/index');
         }
@@ -594,9 +594,9 @@ final class UserInvController extends BaseController
     /**
      * @param int $id
      * @param UserInvRepository $userinvRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(#[RouteArgument('id')] int $id, uiR $userinvRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(#[RouteArgument('id')] int $id, uiR $userinvRepository): \Psr\Http\Message\ResponseInterface
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
@@ -612,7 +612,7 @@ final class UserInvController extends BaseController
                 'form' => $form,
                 'userinv' => $userinvRepository->repoUserInvquery((string) $userinv->getId()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('userinv/index');
     }

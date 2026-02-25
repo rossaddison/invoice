@@ -16,7 +16,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\DataResponse\DataResponseFactoryInterface as Factory;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface as Factory;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
@@ -24,7 +24,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class EmailTemplateController extends BaseController
 {
@@ -37,11 +37,11 @@ final class EmailTemplateController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->emailTemplateService = $emailTemplateService;
         $this->factory = $factory;
     }
@@ -50,7 +50,7 @@ final class EmailTemplateController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param EmailTemplateRepository $emailtemplateRepository
      */
-    public function index(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): \Psr\Http\Message\ResponseInterface
     {
         $page = (int) $currentRoute->getArgument('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -63,7 +63,7 @@ final class EmailTemplateController extends BaseController
             'alert' => $this->alert(),
             'email_templates' => $this->emailtemplates($emailtemplateRepository),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -86,8 +86,8 @@ final class EmailTemplateController extends BaseController
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'email_template_tags' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-inv', [
-                'template_tags_inv' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-inv', [
+            'email_template_tags' => $this->webViewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-inv', [
+                'template_tags_inv' => $this->webViewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-inv', [
                     'custom_fields_inv_custom' => $customfieldRepository->repoTablequery('inv_custom'),
                 ]),
                 'custom_fields' => [
@@ -114,7 +114,7 @@ final class EmailTemplateController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form_invoice', $parameters, );
+        return $this->webViewRenderer->render('_form_invoice', $parameters, );
     }
 
     /**
@@ -137,8 +137,8 @@ final class EmailTemplateController extends BaseController
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'email_template_tags' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-quote', [
-                'template_tags_quote' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-quote', [
+            'email_template_tags' => $this->webViewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-quote', [
+                'template_tags_quote' => $this->webViewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-quote', [
                     'custom_fields_quote_custom' => $customfieldRepository->repoTablequery('quote_custom'),
                 ]),
                 'custom_fields' => [
@@ -164,7 +164,7 @@ final class EmailTemplateController extends BaseController
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form_quote', $parameters, );
+        return $this->webViewRenderer->render('_form_quote', $parameters, );
     }
 
     /**
@@ -195,8 +195,8 @@ final class EmailTemplateController extends BaseController
                 'email_template' => $email_template,
                 'form' => $form,
                 'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']),
-                'email_template_tags' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-inv', [
-                    'template_tags_inv' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-inv', [
+                'email_template_tags' => $this->webViewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-inv', [
+                    'template_tags_inv' => $this->webViewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-inv', [
                         'custom_fields_inv_custom' => $customfieldRepository->repoTablequery('inv_custom'),
                     ]),
                     'custom_fields' => [
@@ -222,7 +222,7 @@ final class EmailTemplateController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form_invoice', $parameters);
+            return $this->webViewRenderer->render('_form_invoice', $parameters);
         }
         return $this->webService->getRedirectResponse('emailtemplate/index');
     }
@@ -255,8 +255,8 @@ final class EmailTemplateController extends BaseController
                 'email_template' => $email_template,
                 'form' => $form,
                 'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']),
-                'email_template_tags' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-quote', [
-                    'template_tags_quote' => $this->viewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-quote', [
+                'email_template_tags' => $this->webViewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-quote', [
+                    'template_tags_quote' => $this->webViewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-quote', [
                         'custom_fields_quote_custom' => $customfieldRepository->repoTablequery('quote_custom'),
                     ]),
                     'custom_fields' => [
@@ -282,7 +282,7 @@ final class EmailTemplateController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form_quote', $parameters);
+            return $this->webViewRenderer->render('_form_quote', $parameters);
         }
         return $this->webService->getRedirectResponse('emailtemplate/index');
     }
@@ -309,7 +309,7 @@ final class EmailTemplateController extends BaseController
      * @param Request $request
      * @param EmailTemplateRepository $etR
      */
-    public function get_content(Request $request, EmailTemplateRepository $etR): \Yiisoft\DataResponse\DataResponse
+    public function get_content(Request $request, EmailTemplateRepository $etR): \Psr\Http\Message\ResponseInterface
     {
         //views/invoice/inv/mailer_invoice'
         $get_content = $request->getQueryParams();
@@ -347,7 +347,7 @@ final class EmailTemplateController extends BaseController
                 'emailtemplate' => $email_template,
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_pre_view', $parameters);
+            return $this->webViewRenderer->render('_pre_view', $parameters);
         }
         return $this->webService->getRedirectResponse('emailtemplate/index');
     }
@@ -369,7 +369,7 @@ final class EmailTemplateController extends BaseController
                 'emailtemplate' => $email_template,
                 'form' => $form,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('emailtemplate/index');
     }

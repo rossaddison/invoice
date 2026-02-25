@@ -20,7 +20,7 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Body;
@@ -38,7 +38,7 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use App\Auth\Client\OpenBanking;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class SignupController
 {
@@ -63,7 +63,7 @@ final class SignupController
         private readonly DataResponseFactoryInterface $factory,
         private readonly WebControllerService $webService,
         private readonly SessionInterface $session,
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
         private readonly MailerInterface $mailer,
         private readonly sR $sR,
         private readonly Translator $translator,
@@ -74,7 +74,7 @@ final class SignupController
         $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
         $this->rule = $rule;
         $this->flash = new Flash($this->session);
-        $this->viewRenderer = $viewRenderer->withControllerName('signup');
+        $this->webViewRenderer = $webViewRenderer->withControllerName('signup');
         $this->initializeOauth2IdentityProviderCredentials();
         $this->initializeOauth2IdentityProviderDualUrls();
         $this->telegramToken = $sR->getSetting('telegram_token');
@@ -237,7 +237,7 @@ final class SignupController
         $rTrim =  rtrim(base64_encode(hash('sha256', $codeVerifier, true)), '=');
         $codeChallenge = strtr($rTrim, '+/', '-_');
         $nocb = $this->sR->getSetting('no_openbanking_continue_button');
-        return $this->viewRenderer->render('signup', [
+        return $this->webViewRenderer->render('signup', [
             'class' => $this->classList(),
             'formModel' => $signupForm,
             'selectedOpenBankingProvider' => $openBankChoice,

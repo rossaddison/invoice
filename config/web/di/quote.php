@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Invoice\Quote\QuoteController;
-use Yiisoft\DataResponse\DataResponseFactory;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactory;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 
 return [
     QuoteController::class => [

@@ -13,7 +13,7 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
@@ -21,7 +21,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class ProductImageController extends BaseController
@@ -35,11 +35,11 @@ final class ProductImageController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->factory = $factory;
         $this->productimageService = $productimageService;
     }
@@ -58,9 +58,9 @@ final class ProductImageController extends BaseController
     /**
      * @param Request $request
      * @param ProductImageRepository $productimageRepository
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function index(Request $request, ProductImageRepository $productimageRepository): \Yiisoft\DataResponse\DataResponse
+    public function index(Request $request, ProductImageRepository $productimageRepository): \Psr\Http\Message\ResponseInterface
     {
         $query_params = $request->getQueryParams();
         /** @var string $query_params['sort'] */
@@ -78,7 +78,7 @@ final class ProductImageController extends BaseController
             'productimages' => $this->productimages($productimageRepository),
             'alert' => $this->alert(),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -120,7 +120,7 @@ final class ProductImageController extends BaseController
             $parameters['errors'] = $productImageForm->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $productImageForm;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -138,7 +138,7 @@ final class ProductImageController extends BaseController
                 $this->productimageService->deleteProductImage($productimage, $this->sR);
                 $product_id = (string) $productimage->getProduct()?->getProduct_id();
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                return $this->factory->createResponse($this->viewRenderer->renderPartialAsString(
+                return $this->factory->createResponse($this->webViewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
                     [
                         'heading' => '',
@@ -193,7 +193,7 @@ final class ProductImageController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('productimage/index');
     }
@@ -201,9 +201,9 @@ final class ProductImageController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param ProductImageRepository $productimageRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): \Psr\Http\Message\ResponseInterface
     {
         $productImage = $this->productimage($currentRoute, $productimageRepository);
         if ($productImage) {
@@ -214,7 +214,7 @@ final class ProductImageController extends BaseController
                 'form' => new ProductImageForm($productImage, (int) $productImage->getProduct_id()),
                 'productimage' => $productimageRepository->repoProductImagequery($productImage->getId()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('productimage/index');
     }

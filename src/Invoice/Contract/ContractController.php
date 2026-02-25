@@ -27,7 +27,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class ContractController extends BaseController
@@ -40,11 +40,11 @@ final class ContractController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->contractService = $contractService;
     }
 
@@ -54,10 +54,10 @@ final class ContractController extends BaseController
      * @param Request $request
      * @param cR $cR
      * @param iR $iR
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index(CurrentRoute $currentRoute, contractR $contractR,
-            Request $request, cR $cR, iR $iR): \Yiisoft\DataResponse\DataResponse
+            Request $request, cR $cR, iR $iR): \Psr\Http\Message\ResponseInterface
     {
         $this->rbac();
         $query_params = $request->getQueryParams();
@@ -88,7 +88,7 @@ final class ContractController extends BaseController
 // contract
             'iR' => $iR,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -96,11 +96,11 @@ final class ContractController extends BaseController
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param cR $cR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function add(CurrentRoute $currentRoute, Request $request,
                                             FormHydrator $formHydrator, cR $cR):
-                                    \Yiisoft\DataResponse\DataResponse|Response
+                                    \Psr\Http\Message\ResponseInterface
     {
         $client_id = $currentRoute->getArgument('client_id');
         $contract = new Contract();
@@ -136,7 +136,7 @@ final class ContractController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -176,7 +176,7 @@ final class ContractController extends BaseController
                 $parameters['errors'] =
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('contract/index');
     }
@@ -223,13 +223,13 @@ final class ContractController extends BaseController
      * @param contractR $contractRepository
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         contractR $contractRepository,
         UCR $ucR,
-        UIR $uiR): \Yiisoft\DataResponse\DataResponse|Response
+        UIR $uiR): \Psr\Http\Message\ResponseInterface
     {
         $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {
@@ -243,7 +243,7 @@ final class ContractController extends BaseController
             ];
             if ($this->rbacObserver($contract->getClient_id(),
                                                                 $ucR, $uiR)) {
-                return $this->viewRenderer->render('_view', $parameters);
+                return $this->webViewRenderer->render('_view', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('contract/index');

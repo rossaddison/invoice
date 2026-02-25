@@ -25,14 +25,14 @@ use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class SalesOrderItemController extends BaseController
 {
@@ -45,11 +45,11 @@ final class SalesOrderItemController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer,
+        parent::__construct($webService, $userService, $translator, $webViewRenderer,
                 $session, $sR, $flash);
     }
 
@@ -67,7 +67,7 @@ final class SalesOrderItemController extends BaseController
         UIR $uiR,    
         UR $uR,
         SOR $qR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $so_item = $this->salesorderitem($currentRoute, $soiR);
         if ($so_item) {
             $so = $so_item->getSales_order();
@@ -101,7 +101,7 @@ final class SalesOrderItemController extends BaseController
                             $this->salesorderitemService->savePeppol_po_lineid(
                                                                     $so_item, $body);
                             return $this->factory->createResponse(
-                                        $this->viewRenderer->renderPartialAsString(
+                                        $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/setting/salesorder_successful',
                                 [
                                     'heading' => $this->translator->translate(
@@ -119,7 +119,7 @@ final class SalesOrderItemController extends BaseController
                                  ->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
                 }
-                return $this->viewRenderer->render('_item_edit_form', $parameters);
+                return $this->webViewRenderer->render('_item_edit_form', $parameters);
             } // rbac 
         } //so_item
         return $this->webService->getNotFoundResponse();

@@ -61,7 +61,7 @@ use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yiisoft
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
@@ -72,7 +72,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ProductController extends BaseController
 {
@@ -96,11 +96,11 @@ final class ProductController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->responseFactory = $responseFactory;
         $this->productService = $productService;
         $this->productCustomService = $productCustomService;
@@ -190,7 +190,7 @@ final class ProductController extends BaseController
             }
         }
         $parameters['form'] = $form;
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -260,7 +260,7 @@ final class ProductController extends BaseController
                         if (!$returned_form->isValid()) {
                             $parameters['form'] = $returned_form;
                             $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                            return $this->viewRenderer->render('_form', $parameters);
+                            return $this->webViewRenderer->render('_form', $parameters);
                         }
                         // Only save custom fields if they exist
                         if ($cfR->repoTableCountquery('product_custom') > 0) {
@@ -294,7 +294,7 @@ final class ProductController extends BaseController
                                 // If there are custom field errors, return to form
                                 if (count($errorsCustom) > 0) {
                                     $parameters['errorsCustom'] = $errorsCustom;
-                                    return $this->viewRenderer->render('_form', $parameters);
+                                    return $this->webViewRenderer->render('_form', $parameters);
                                 }
                             } //isset
                         } // cfR
@@ -302,7 +302,7 @@ final class ProductController extends BaseController
                     $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                     return $this->webService->getRedirectResponse('product/index');
                 }
-                return $this->viewRenderer->render('_form', $parameters);
+                return $this->webViewRenderer->render('_form', $parameters);
             } // null!==product_id
         } // product
         return $this->webService->getRedirectResponse('product/index');
@@ -427,9 +427,9 @@ final class ProductController extends BaseController
      * @param pR $pR
      * @param fR $fR
      * @param string $page
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, fR $fR, #[RouteArgument('page')] string $page = '1'): \Yiisoft\DataResponse\DataResponse
+    public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, fR $fR, #[RouteArgument('page')] string $page = '1'): \Psr\Http\Message\ResponseInterface
     {
         $this->rbac();
         $this->flashMessage('info', $this->translator->translate('productimage.view'));
@@ -468,16 +468,16 @@ final class ProductController extends BaseController
             'urlFastRouteGenerator' => $urlFastRouteGenerator,
             'visible' => $this->sR->getSetting('columns_all_visible') == '0' ? false : true,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
      * Related logic: see ...\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js $(document).on('click', '#product_filters_submit', function ()
      * Related logic: see ...\product\index.php
      * @param Request $request
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function search(Request $request): \Yiisoft\DataResponse\DataResponse
+    public function search(Request $request): \Psr\Http\Message\ResponseInterface
     {
         $query_params = $request->getQueryParams();
         $product_sku = (string) $query_params['product_sku'];
@@ -497,13 +497,14 @@ final class ProductController extends BaseController
 
     /**
      * Related logic: see  ...\src\Invoice\Asset\rebuild-1.13\js\modal_product_lookups.js
-     * @param ViewRenderer $head
+     * @param WebViewRenderer $head
      * @param Request $request
      * @param fR $fR
      * @param sR $sR
      * @param pR $pR
      */
-    public function lookup(ViewRenderer $head, Request $request, fR $fR, sR $sR, pR $pR): \Yiisoft\DataResponse\DataResponse
+    public function lookup(WebViewRenderer $head, Request $request,
+            fR $fR, sR $sR, pR $pR): \Psr\Http\Message\ResponseInterface
     {
         $queryparams = $request->getQueryParams();
         /** @var string $queryparams[$this->fpc] */
@@ -525,7 +526,7 @@ final class ProductController extends BaseController
             'products' => $rt || ($ff == '' && $fp == '') ? $pR->findAllPreloaded() : $pR->repoProductwithfamilyquery($fp, $ff),
             'default_item_tax_rate' => $sR->getSetting('default_item_tax_rate') !== '' ?: 0,
         ];
-        return $this->viewRenderer->renderPartial('_partial_product_table_modal', $parameters);
+        return $this->webViewRenderer->renderPartial('_partial_product_table_modal', $parameters);
     }
 
     /**
@@ -633,7 +634,7 @@ final class ProductController extends BaseController
         qiaR $qiaR,
         qiaS $qiaS,
         acqR $acqR,    
-    ): \Yiisoft\DataResponse\DataResponse {
+    ): \Psr\Http\Message\ResponseInterface {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
         $product_ids = ($select_items['product_ids'] ?: []);
@@ -670,7 +671,7 @@ final class ProductController extends BaseController
      * @param pymR $pymR
      * @param aciR $aciR
      */
-    public function selection_inv(FormHydrator $formHydrator, Request $request, pR $pR, trR $trR, uR $uR, iiaR $iiaR, iiR $iiR, itrR $itrR, iaR $iaR, iR $iR, pymR $pymR, aciR $aciR): \Yiisoft\DataResponse\DataResponse
+    public function selection_inv(FormHydrator $formHydrator, Request $request, pR $pR, trR $trR, uR $uR, iiaR $iiaR, iiR $iiR, itrR $itrR, iaR $iaR, iR $iR, pymR $pymR, aciR $aciR): \Psr\Http\Message\ResponseInterface
     {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */
@@ -767,7 +768,7 @@ final class ProductController extends BaseController
         upR $upR,
         #[RouteArgument('id')]
         string $id,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $product = $this->product($id, $pR);
         $language = (string) $this->session->get('_language');
         $peppolarrays = new PeppolArrays();
@@ -781,7 +782,7 @@ final class ProductController extends BaseController
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'product/view',
                 'actionArguments' => ['id' => $product_id],
-                'partial_product_details' => $this->viewRenderer->renderPartialAsString(
+                'partial_product_details' => $this->webViewRenderer->renderPartialAsString(
                     '//invoice/product/views/partial_product_details',
                     [
                         'form' => $productForm,
@@ -801,26 +802,26 @@ final class ProductController extends BaseController
                         'product' => $pR->repoProductquery($product_id),
                     ],
                 ),
-                'partial_product_properties' => $this->viewRenderer->renderPartialAsString(
+                'partial_product_properties' => $this->webViewRenderer->renderPartialAsString(
                     '//invoice/product/views/partial_product_properties',
                     [
                         'product' => $pR->repoProductquery($product_id),
                         'language' => $language,
-                        'productpropertys' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/property_index', [
+                        'productpropertys' => $this->webViewRenderer->renderPartialAsString('//invoice/product/views/property_index', [
                             'all' => $ppR->findAllProduct($product_id),
                             'language' => $language,
                         ]),
                     ],
                 ),
                 'partial_product_images' => $this->view_partial_product_image($language, (int) $product_id, $piR),
-                'partial_product_gallery' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_gallery', [
+                'partial_product_gallery' => $this->webViewRenderer->renderPartialAsString('//invoice/product/views/partial_product_gallery', [
                     'product' => $product,
                     'productImages' => $product_images,
                     'invEdit' => $this->userService->hasPermission(Permissions::EDIT_INV),
                     'invView' => $this->userService->hasPermission(Permissions::VIEW_INV),
                 ]),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('product/index');
     }
@@ -867,7 +868,7 @@ final class ProductController extends BaseController
      * @param PR $pR
      * @param PIR $piR
      */
-    public function image_attachment(#[RouteArgument('id')] string $id, pR $pR, piR $piR): \Yiisoft\DataResponse\DataResponse|Response
+    public function image_attachment(#[RouteArgument('id')] string $id, pR $pR, piR $piR): \Psr\Http\Message\ResponseInterface
     {
         $aliases = $this->sR->get_productimages_files_folder_aliases();
         // https://github.com/yiisoft/yii2/issues/3566
@@ -918,12 +919,12 @@ final class ProductController extends BaseController
         $paginator = new OffsetPaginator($productimages);
         $invEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         $invView = $this->userService->hasPermission(Permissions::VIEW_INV);
-        return $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image', [
+        return $this->webViewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image', [
             'form' => new ImageAttachForm(),
             'invEdit' => $invEdit,
             'invView' => $invView,
-            'partial_product_image_info' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image_info'),
-            'partial_product_image_list' => $this->viewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image_list', [
+            'partial_product_image_info' => $this->webViewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image_info'),
+            'partial_product_image_list' => $this->webViewRenderer->renderPartialAsString('//invoice/product/views/partial_product_image_list', [
                 'paginator' => $paginator,
                 'invEdit' => $invEdit,
             ]),
@@ -938,7 +939,7 @@ final class ProductController extends BaseController
      */
     private function image_attachment_not_writable(int $product_id): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
                 'heading' => $this->translator->translate('errors'),
@@ -954,7 +955,7 @@ final class ProductController extends BaseController
      */
     private function image_attachment_successfully_created(int $product_id): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
                 'heading' => '',
@@ -970,7 +971,7 @@ final class ProductController extends BaseController
      */
     private function image_attachment_no_file_uploaded(int $product_id): string
     {
-        return $this->viewRenderer->renderPartialAsString(
+        return $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/inv_message',
             [
                 'heading' => $this->translator->translate('errors'),

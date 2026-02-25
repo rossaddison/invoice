@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Invoice\Inv\InvController;
-use Yiisoft\DataResponse\DataResponseFactory;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactory;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;

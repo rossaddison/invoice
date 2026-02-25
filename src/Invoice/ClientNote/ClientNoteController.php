@@ -23,7 +23,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ClientNoteController extends BaseController
 {
@@ -35,11 +35,11 @@ final class ClientNoteController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer,
+        parent::__construct($webService, $userService, $translator, $webViewRenderer,
                 $session, $sR, $flash);
         $this->clientNoteService = $clientNoteService;
     }
@@ -48,16 +48,16 @@ final class ClientNoteController extends BaseController
      * @param ClientNoteRepository $clientnoteRepository
      * @param Request $request
      * @param ClientNoteService $service
-     * @return \Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function index(ClientNoteRepository $clientnoteRepository, Request $request): \Yiisoft\DataResponse\DataResponse
+    public function index(ClientNoteRepository $clientnoteRepository, Request $request): \Psr\Http\Message\ResponseInterface
     {
         $paginator = (new OffsetPaginator($clientnoteRepository->findAllPreloaded()));
         $parameters = [
             'alert' => $this->alert(),
             'paginator' => $paginator,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -94,7 +94,7 @@ final class ClientNoteController extends BaseController
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             $parameters['form'] = $form;
         }
-        return $this->viewRenderer->render('_form', $parameters);
+        return $this->webViewRenderer->render('_form', $parameters);
     }
 
     /**
@@ -139,7 +139,7 @@ final class ClientNoteController extends BaseController
                     $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 }
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         } //client note
         return $this->webService->getRedirectResponse('clientnote/index');
     }
@@ -188,7 +188,7 @@ final class ClientNoteController extends BaseController
             ];
             if ($this->rbacObserver(
                                     $clientNote->getClient_id(), $ucR, $uiR)) {
-                return $this->viewRenderer->render('_view', $parameters);
+                return $this->webViewRenderer->render('_view', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('clientnote/index');

@@ -24,7 +24,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class DeliveryController extends BaseController
@@ -37,11 +37,11 @@ final class DeliveryController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->deliveryService = $deliveryService;
     }
 
@@ -89,7 +89,7 @@ final class DeliveryController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -126,7 +126,7 @@ final class DeliveryController extends BaseController
             'deliveries' => $this->deliveries($dR),
             'max' => (int) $this->sR->getSetting('default_list_limit'),
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -211,7 +211,7 @@ final class DeliveryController extends BaseController
                     $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
                 }
-                return $this->viewRenderer->render('_form', $parameters);
+                return $this->webViewRenderer->render('_form', $parameters);
             } // null!==$inv
         }
         return $this->webService->getRedirectResponse('delivery/index');
@@ -246,9 +246,9 @@ final class DeliveryController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryRepository $deliveryRepository
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
-    public function view(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): \Yiisoft\DataResponse\DataResponse|Response
+    public function view(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): \Psr\Http\Message\ResponseInterface
     {
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {
@@ -261,7 +261,7 @@ final class DeliveryController extends BaseController
                 'form' => $form,
                 'delivery' => $delivery,
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('delivery/index');
     }

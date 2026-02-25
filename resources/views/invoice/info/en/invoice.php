@@ -50,6 +50,9 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>25th February 2026</b></p>
+<p>Apply https://github.com/yiisoft/data-response/pull/107</p>
+<p>Quote delete bugfix</p>
 <p><b>23rd February 2026</b></p>
 <p>Improvements to .env and config/common/params.php</p>
 <p><b>doctrine/annotations has been deprecated so composer audit in invoice_build fails.</b></p>

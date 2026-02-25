@@ -25,7 +25,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 use Exception;
 
 final class PaymentPeppolController extends BaseController
@@ -38,12 +38,12 @@ final class PaymentPeppolController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
         parent::__construct($webService, $userService, $translator,
-                $viewRenderer, $session, $sR, $flash);
+                $webViewRenderer, $session, $sR, $flash);
         $this->paymentpeppolService = $paymentpeppolService;
     }
 
@@ -69,7 +69,7 @@ final class PaymentPeppolController extends BaseController
             'actionName' => 'paymentpeppol/add',
             'errors' => [],
             'form' => $form,
-            'response' => $this->viewRenderer->renderPartial(
+            'response' => $this->webViewRenderer->renderPartial(
                 '//invoice/layout/header_buttons',
                 [
                     'hide_submit_button' => false,
@@ -93,7 +93,7 @@ final class PaymentPeppolController extends BaseController
         }
         if (null!==$inv) {
             if ($this->rbacObserver($inv, $ucR, $uiR)) {
-                return $this->viewRenderer->render('_form', $parameters);
+                return $this->webViewRenderer->render('_form', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('paymentpeppol/index');
@@ -122,7 +122,7 @@ final class PaymentPeppolController extends BaseController
             'alert' => $this->alert(),
             'routeCurrent' => $routeCurrent,
         ];
-        return $this->viewRenderer->render('index', $parameters);
+        return $this->webViewRenderer->render('index', $parameters);
     }
 
     /**
@@ -170,7 +170,7 @@ final class PaymentPeppolController extends BaseController
                 'actionArguments' => ['id' => $paymentPeppol->getId()],
                 'errors' => [],
                 'form' => $form,
-                'response' => $this->viewRenderer->renderPartial(
+                'response' => $this->webViewRenderer->renderPartial(
                     '//invoice/layout/header_buttons',
                     [
                         'hide_submit_button' => false,
@@ -192,7 +192,7 @@ final class PaymentPeppolController extends BaseController
                 $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_form', $parameters);
+            return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('paymentpeppol/index');
     }
@@ -230,14 +230,14 @@ final class PaymentPeppolController extends BaseController
      * @param PaymentPeppolRepository $paymentpeppolRepository
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return Response|\Yiisoft\DataResponse\DataResponse
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function view(
         CurrentRoute $currentRoute,
         PaymentPeppolRepository $paymentpeppolRepository,
         UCR $ucR,
         UIR $uiR
-    ): \Yiisoft\DataResponse\DataResponse|Response
+    ): \Psr\Http\Message\ResponseInterface
     {
         $paymentPeppol = $this->paymentpeppol(
                                         $currentRoute, $paymentpeppolRepository);
@@ -249,7 +249,7 @@ final class PaymentPeppolController extends BaseController
                 'actionArguments' => ['id' => $paymentPeppol->getId()],
                 'form' => $form,
                 'paymentpeppol' => $paymentPeppol,
-                'response' => $this->viewRenderer->renderPartial(
+                'response' => $this->webViewRenderer->renderPartial(
                     '//invoice/layout/header_buttons',
                     [
                         'hide_submit_button' => false,
@@ -260,13 +260,13 @@ final class PaymentPeppolController extends BaseController
             $inv = $paymentPeppol->getInv();
             if (null!==$inv) {
                 if ($this->rbacObserver($inv, $ucR, $uiR)) {
-                    return $this->viewRenderer->render('_view', $parameters);
+                    return $this->webViewRenderer->render('_view', $parameters);
                 }
                 if ($this->rbacAdmin()) {
-                    return $this->viewRenderer->render('_view', $parameters);
+                    return $this->webViewRenderer->render('_view', $parameters);
                 }
                 if ($this->rbacAccountant()) {
-                    return $this->viewRenderer->render('_view', $parameters);
+                    return $this->webViewRenderer->render('_view', $parameters);
                 }
             }
         }

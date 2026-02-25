@@ -142,7 +142,7 @@ trait Callback
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'developersandboxhmrc');
-                return $this->viewRenderer->render('proceed', [
+                return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
                 ]);
             }
@@ -280,7 +280,7 @@ trait Callback
                      * @see A new UserInv (extension table of user) for the user is created.
                      */
                     $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'facebook');
-                    return $this->viewRenderer->render('proceed', [
+                    return $this->webViewRenderer->render('proceed', [
                         'proceedToMenuButton' => $proceedToMenuButton,
                     ]);
                 }
@@ -413,7 +413,7 @@ trait Callback
                      * @see A new UserInv (extension table of user) for the user is created.
                      */
                     $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'github');
-                    return $this->viewRenderer->render('proceed', [
+                    return $this->webViewRenderer->render('proceed', [
                         'proceedToMenuButton' => $proceedToMenuButton,
                     ]);
                 }
@@ -534,7 +534,7 @@ trait Callback
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'google');
-                return $this->viewRenderer->render('proceed', [
+                return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
                 ]);
             }
@@ -636,7 +636,7 @@ trait Callback
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'govuk');
-                return $this->viewRenderer->render('proceed', [
+                return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
                 ]);
             }
@@ -753,7 +753,7 @@ trait Callback
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'linkedin');
-                return $this->viewRenderer->render('proceed', [
+                return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
                 ]);
             }
@@ -863,7 +863,7 @@ trait Callback
                  * @see A new UserInv (extension table of user) for the user is created.
                  */
                 $proceedToMenuButton = $this->proceedToMenuButtonWithMaskedRandomAndTimeTokenLink($translator, $user, $uiR, $language, $_language, $randomAndTimeToken, 'microsoftonline');
-                return $this->viewRenderer->render('proceed', [
+                return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
                 ]);
             }
@@ -1046,7 +1046,7 @@ trait Callback
                         $randomAndTimeToken,
                         'x',
                     );
-                    return $this->viewRenderer->render('proceed', [
+                    return $this->webViewRenderer->render('proceed', [
                         'proceedToMenuButton' => $proceedToMenuButton,
                     ]);
                 }
@@ -1217,7 +1217,7 @@ trait Callback
                     $randomAndTimeToken,
                     'vkontakte',
                 );
-                return $this->viewRenderer->render('proceed', [
+                return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
                 ]);
             }
@@ -1342,7 +1342,7 @@ trait Callback
                     $randomAndTimeToken,
                     'yandex',
                 );
-                return $this->viewRenderer->render('proceed', [
+                return $this->webViewRenderer->render('proceed', [
                     'proceedToMenuButton' => $proceedToMenuButton,
                 ]);
             }

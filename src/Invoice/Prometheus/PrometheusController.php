@@ -11,11 +11,11 @@ use App\User\UserService;
 use App\Invoice\Setting\SettingRepository as sR;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 /**
  * Prometheus Metrics Controller
@@ -34,11 +34,11 @@ final class PrometheusController extends BaseController
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
     }
 
     /**
@@ -142,7 +142,7 @@ final class PrometheusController extends BaseController
             'health_url' => '/prometheus/health',
         ];
         
-        return $this->viewRenderer->render('dashboard', $parameters);
+        return $this->webViewRenderer->render('dashboard', $parameters);
     }
 
     private function updateSystemMetrics(): void

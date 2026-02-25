@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Widget;
 
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class Bootstrap5ModalTranslatorMessageWithAction
 {
@@ -12,7 +12,7 @@ final class Bootstrap5ModalTranslatorMessageWithAction
     private readonly array $formParameters;
 
     public function __construct(
-        private readonly ViewRenderer $viewRenderer,
+        private readonly WebViewRenderer $webViewRenderer,
     ) {
         $this->layoutParameters = [];
         $this->formParameters = [];
@@ -27,7 +27,7 @@ final class Bootstrap5ModalTranslatorMessageWithAction
     ): string {
         $this->layoutParameters = [
             'type' => $origin,
-            'form' => $this->viewRenderer->renderPartialAsString(
+            'form' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/inv/modal_message_action',
                 [
                     'translatedHeading' => $translatedHeading,
@@ -37,6 +37,6 @@ final class Bootstrap5ModalTranslatorMessageWithAction
                 ],
             ),
         ];
-        return $this->viewRenderer->renderPartialAsString('//invoice/inv/modal_message_layout', $this->layoutParameters);
+        return $this->webViewRenderer->renderPartialAsString('//invoice/inv/modal_message_layout', $this->layoutParameters);
     }
 }

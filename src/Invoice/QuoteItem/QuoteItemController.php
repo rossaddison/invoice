@@ -24,7 +24,7 @@ use App\Invoice\Helpers\NumberHelper;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 // Yii
-use Yiisoft\DataResponse\DataResponseFactoryInterface;
+use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
 use Yiisoft\Json\Json;
 use Yiisoft\Router\CurrentRoute;
@@ -32,7 +32,7 @@ use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class QuoteItemController extends BaseController
 {
@@ -45,11 +45,11 @@ final class QuoteItemController extends BaseController
         SR $sR,
         TranslatorInterface $translator,
         UserService $userService,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $viewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
         $this->quoteitemService = $quoteitemService;
     }
 
@@ -72,7 +72,7 @@ final class QuoteItemController extends BaseController
         TRR $trR,
         QIAR $qiar,
         QIR $qiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         // This function is used
         $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = new QuoteItem();
@@ -101,7 +101,7 @@ final class QuoteItemController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_item_form', $parameters);
+        return $this->webViewRenderer->render('_item_form', $parameters);
     }
 
     /**
@@ -122,7 +122,7 @@ final class QuoteItemController extends BaseController
         TRR $trR,
         QIAR $qiar,
         QIAS $qias,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = new QuoteItem();
         $form = new QuoteItemForm($quoteItem, $quote_id);
@@ -151,7 +151,7 @@ final class QuoteItemController extends BaseController
             $parameters['form'] = $form;
             $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
-        return $this->viewRenderer->render('_item_form_task', $parameters);
+        return $this->webViewRenderer->render('_item_form_task', $parameters);
     }
 
     /**
@@ -177,7 +177,7 @@ final class QuoteItemController extends BaseController
         QR $qR,
         QIAS $qias,
         QIAR $qiar,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = $this->quoteitem($currentRoute, $qiR);
         if (null !== $quoteItem) {
@@ -226,7 +226,7 @@ final class QuoteItemController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_item_edit_form_product', $parameters);
+            return $this->webViewRenderer->render('_item_edit_form_product', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -251,7 +251,7 @@ final class QuoteItemController extends BaseController
         TASKR $taskR,
         QIAS $qias,
         QIAR $qiar,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = $this->quoteitem($currentRoute, $qiR);
         if (null !== $quoteItem) {
@@ -298,7 +298,7 @@ final class QuoteItemController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
             }
-            return $this->viewRenderer->render('_item_edit_form_task', $parameters);
+            return $this->webViewRenderer->render('_item_edit_form_task', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -321,14 +321,14 @@ final class QuoteItemController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param QIR $qiR
      */
-    public function delete(CurrentRoute $currentRoute, QIR $qiR): \Yiisoft\DataResponse\DataResponse|Response
+    public function delete(CurrentRoute $currentRoute, QIR $qiR): \Psr\Http\Message\ResponseInterface
     {
         $quote_item = $this->quoteitem($currentRoute, $qiR);
         if ($quote_item) {
             if ($qiR->repoQuoteItemCount($quote_item->getId()) === 1) {
                 $this->quoteitemService->deleteQuoteItem($quote_item);
             }
-            return $this->viewRenderer->render('quote/index');
+            return $this->webViewRenderer->render('quote/index');
         }
         return $this->webService->getNotFoundResponse();
     }
@@ -337,7 +337,7 @@ final class QuoteItemController extends BaseController
      * @param Request $request
      * @param QIR $qiR
      */
-    public function multiple(Request $request, QIR $qiR): \Yiisoft\DataResponse\DataResponse
+    public function multiple(Request $request, QIR $qiR): \Psr\Http\Message\ResponseInterface
     {
         //jQuery parameters from quote.js function delete-items-confirm-quote 'item_ids' and 'quote_id'
         $select_items = $request->getQueryParams();
@@ -370,7 +370,7 @@ final class QuoteItemController extends BaseController
         UR $uR,
         TRR $trR,
         QIR $qiR,
-    ): \Yiisoft\DataResponse\DataResponse|Response {
+    ): \Psr\Http\Message\ResponseInterface {
         $quoteItem = $this->quoteitem($currentRoute, $qiR);
         if ($quoteItem) {
             $form = new QuoteItemForm($quoteItem, $quoteItem->getQuote_id());
@@ -384,7 +384,7 @@ final class QuoteItemController extends BaseController
                 'units' => $uR->findAllPreloaded(),
                 'quoteitem' => $qiR->repoQuoteItemquery($quoteItem->getId()),
             ];
-            return $this->viewRenderer->render('_view', $parameters);
+            return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getNotFoundResponse();
     }

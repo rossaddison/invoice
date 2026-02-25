@@ -14,14 +14,14 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Input\Http\Attribute\Parameter\Body;
 use Yiisoft\Input\Http\Attribute\Parameter\Query;
 use Yiisoft\Router\HydratorAttribute\RouteArgument;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class UserController
 {
     public function __construct(
-        private ViewRenderer $viewRenderer,
+        private WebViewRenderer $webViewRenderer,
     ) {
-        $this->viewRenderer = $viewRenderer->withControllerName('user');
+        $this->webViewRenderer = $webViewRenderer->withControllerName('user');
     }
 
     public function index(
@@ -52,7 +52,7 @@ final class UserController
                       ->withSort($sort)
                       ->withToken(PageToken::next((string) $page));
 
-        return $this->viewRenderer->render('index', ['paginator' => $paginator]);
+        return $this->webViewRenderer->render('index', ['paginator' => $paginator]);
     }
 
     public function profile(
@@ -67,6 +67,6 @@ final class UserController
             return $responseFactory->createResponse(404);
         }
 
-        return $this->viewRenderer->render('profile', ['item' => $item]);
+        return $this->webViewRenderer->render('profile', ['item' => $item]);
     }
 }

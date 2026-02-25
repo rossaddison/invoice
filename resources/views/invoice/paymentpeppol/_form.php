@@ -7,7 +7,7 @@ use Yiisoft\Bootstrap5\Alert;
 use Yiisoft\Bootstrap5\AlertVariant;
 
 /**
- * @var Yiisoft\DataResponse\DataResponse $response
+ * @var Yiisoft\DataResponse\DataStream\DataStream $dataStream
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $body
@@ -38,7 +38,7 @@ if (!empty($errors)) {
 <input type="hidden" name="_csrf" value="<?= $csrf ?>">
     <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('paymentpeppols.form'); ?></h1>
-    <?= (string) $response->getBody(); ?>
+    <?= (string) $dataStream->getData(); ?>
     <div id="content">
         <div class = 'row'>
            <div class="mb3 form-group">

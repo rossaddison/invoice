@@ -4,6 +4,21 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
 
+use App\Invoice\Client\ClientRepository;
+use App\Invoice\CustomValue\CustomValueRepository;
+use App\Invoice\CustomField\CustomFieldRepository;
+use App\Invoice\QuoteItem\QuoteItemRepository;
+use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository;
+use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository;
+use App\Invoice\Quote\QuoteRepository;
+use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository;
+use App\Invoice\DeliveryLocation\DeliveryLocationRepository;
+use App\Invoice\SalesOrderItem\SalesOrderItemRepository;
+use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository;
+use App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository;
+use App\Invoice\SalesOrder\SalesOrderRepository;
+use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository;
+use App\Invoice\UserInv\UserInvRepository;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvAllowanceCharge;
@@ -17,7 +32,7 @@ use App\Invoice\Helpers\CustomValuesHelper as CVH;
 use App\Invoice\Setting\SettingRepository as SR;
 use Yiisoft\Session\SessionInterface as Session;
 use Yiisoft\Translator\TranslatorInterface as Translator;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 class PdfHelper
 {
@@ -62,15 +77,16 @@ class PdfHelper
      * @param bool $custom
      * @param QuoteAmount|null $quote_amount
      * @param array $quote_custom_values
-     * @param \App\Invoice\Client\ClientRepository $cR
-     * @param \App\Invoice\CustomValue\CustomValueRepository $cvR
-     * @param \App\Invoice\CustomField\CustomFieldRepository $cfR
-     * @param \App\Invoice\QuoteItem\QuoteItemRepository $qiR
-     * @param \App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR
-     * @param \App\Invoice\Quote\QuoteRepository $qR
-     * @param \App\Invoice\QuoteTaxRate\QuoteTaxRateRepository $qtrR
-     * @param \App\Invoice\UserInv\UserInvRepository $uiR
-     * @param \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
+     * @param ClientRepository $cR
+     * @param CustomValueRepository $cvR
+     * @param CustomFieldRepository $cfR
+     * @param QuoteItemRepository $qiR
+     * @param QuoteItemAmountRepository $qiaR
+     * @param QuoteItemAllowanceChargeRepository $acqiR
+     * @param QuoteRepository $qR
+     * @param QuoteTaxRateRepository $qtrR
+     * @param UserInvRepository $uiR
+     * @param WebViewRenderer $webViewRenderer
      * @return string
      */
     public function generate_quote_pdf(
@@ -80,17 +96,17 @@ class PdfHelper
         bool $custom,
         ?object $quote_amount,
         array $quote_custom_values,
-        \App\Invoice\Client\ClientRepository $cR,
-        \App\Invoice\CustomValue\CustomValueRepository $cvR,
-        \App\Invoice\CustomField\CustomFieldRepository $cfR,
-        \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
-        \App\Invoice\QuoteItem\QuoteItemRepository $qiR,
-        \App\Invoice\QuoteItemAmount\QuoteItemAmountRepository $qiaR,
-        \App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository $acqiR,
-        \App\Invoice\Quote\QuoteRepository $qR,
-        \App\Invoice\QuoteTaxRate\QuoteTaxRateRepository $qtrR,
-        \App\Invoice\UserInv\UserInvRepository $uiR,
-        \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer,
+        ClientRepository $cR,
+        CustomValueRepository $cvR,
+        CustomFieldRepository $cfR,
+        DeliveryLocationRepository $dlR,
+        QuoteItemRepository $qiR,
+        QuoteItemAmountRepository $qiaR,
+        QuoteItemAllowanceChargeRepository $acqiR,
+        QuoteRepository $qR,
+        QuoteTaxRateRepository $qtrR,
+        UserInvRepository $uiR,
+        WebViewRenderer $webViewRenderer,
     ) {
         if (null !== $quote_id) {
             $quote = $qR->repoCount($quote_id) > 0 ? $qR->repoQuoteLoadedquery($quote_id) : null;
@@ -135,20 +151,20 @@ class PdfHelper
                     'cvH' => new CVH($this->s, $cvR),
                     'cvR' => $cvR,
                     'quote_custom_values' => $quote_custom_values,
-                    'top_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/top_custom_fields', [
+                    'top_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/quote/pdf/top_custom_fields', [
                         'custom_fields' => $cfR->repoTablequery('quote_custom'),
                         'cvR' => $cvR,
                         'quote_custom_values' => $quote_custom_values,
                         'cvH' => new CVH($this->s, $cvR),
                     ]),
                     // Custom fields appearing at the bottom of the quote
-                    'view_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/view_custom_fields', [
+                    'view_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/quote/pdf/view_custom_fields', [
                         'custom_fields' => $cfR->repoTablequery('quote_custom'),
                         'cvR' => $cvR,
                         'quote_custom_values' => $quote_custom_values,
                         'cvH' => new CVH($this->s, $cvR),
                     ]),
-                    'company_logo_and_address' => $viewrenderer->renderPartialAsString(
+                    'company_logo_and_address' => $webViewRenderer->renderPartialAsString(
                         '//invoice/setting/company_logo_and_address.php',
                         ['company' => $company = $this->s->get_config_company_details(),
                             'document_number' => $quote->getNumber(),
@@ -158,7 +174,7 @@ class PdfHelper
                             'isSalesOrder' => false,
                         ],
                     ),
-                    'delivery_location' => $this->view_partial_delivery_location((string) $_language, $dlR, $quote->getDelivery_location_id(), $viewrenderer),
+                    'delivery_location' => $this->view_partial_delivery_location((string) $_language, $dlR, $quote->getDelivery_location_id(), $webViewRenderer),
                     'userInv' => $userinv,
                     'client' => $cR->repoClientquery((string) $quote->getClient()?->getClient_id()),
                     'quote_amount' => $quote_amount,
@@ -166,7 +182,7 @@ class PdfHelper
                     'cldr' => array_search($this->get_print_language($quote), $this->s->locale_language_array()),
                 ];
                 // Quote Template will be either 'quote' or a custom designed quote in the folder.
-                $html = $viewrenderer->renderPartialAsString('//invoice/template/quote/pdf/' . $quote_template, $data);
+                $html = $webViewRenderer->renderPartialAsString('//invoice/template/quote/pdf/' . $quote_template, $data);
                 if ($this->s->getSetting('pdf_html_quote') === '1') {
                     return $html;
                 }
@@ -187,15 +203,17 @@ class PdfHelper
      * @param bool $custom
      * @param object|null $so_amount
      * @param array $so_custom_values
-     * @param \App\Invoice\Client\ClientRepository $cR
-     * @param \App\Invoice\CustomValue\CustomValueRepository $cvR
-     * @param \App\Invoice\CustomField\CustomFieldRepository $cfR
-     * @param \App\Invoice\SalesOrderItem\SalesOrderItemRepository $soiR
-     * @param \App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository $soiaR
-     * @param \App\Invoice\SalesOrder\SalesOrderRepository $soR
-     * @param \App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository $sotrR
-     * @param \App\Invoice\UserInv\UserInvRepository $uiR
-     * @param \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
+     * @param ClientRepository $cR
+     * @param CustomValueRepository $cvR
+     * @param CustomFieldRepository $cfR
+     * @param DeliveryLocationRepository $dlR
+     * @param SalesOrderItemRepository $soiR
+     * @param SalesOrderItemAmountRepository $soiaR
+     * @param SalesOrderItemAllowanceChargeRepository $acsoiR
+     * @param SalesOrderRepository $soR
+     * @param SalesOrderTaxRateRepository $sotrR
+     * @param UserInvRepository $uiR
+     * @param WebViewRenderer $webViewRenderer
      * @param Translator $translator
      * @return string
      */
@@ -206,17 +224,17 @@ class PdfHelper
         bool $custom,
         ?object $so_amount,
         array $so_custom_values,
-        \App\Invoice\Client\ClientRepository $cR,
-        \App\Invoice\CustomValue\CustomValueRepository $cvR,
-        \App\Invoice\CustomField\CustomFieldRepository $cfR,
-        \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
-        \App\Invoice\SalesOrderItem\SalesOrderItemRepository $soiR,
-        \App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository $soiaR,
-        \App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository $acsoiR,
-        \App\Invoice\SalesOrder\SalesOrderRepository $soR,
-        \App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository $sotrR,
-        \App\Invoice\UserInv\UserInvRepository $uiR,
-        \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer,
+        ClientRepository $cR,
+        CustomValueRepository $cvR,
+        CustomFieldRepository $cfR,
+        DeliveryLocationRepository $dlR,
+        SalesOrderItemRepository $soiR,
+        SalesOrderItemAmountRepository $soiaR,
+        SalesOrderItemAllowanceChargeRepository $acsoiR,
+        SalesOrderRepository $soR,
+        SalesOrderTaxRateRepository $sotrR,
+        UserInvRepository $uiR,
+        WebViewRenderer $webViewRenderer,
         Translator $translator,
     ): string {
         if (null !== $so_id) {
@@ -259,20 +277,20 @@ class PdfHelper
                     'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
                     'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
                     'salesorder_custom_values' => $so_custom_values,
-                    'top_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/top_custom_fields', [
+                    'top_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/salesorder/pdf/top_custom_fields', [
                         'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
                         'cvR' => $cvR,
                         'salesorder_custom_values' => $so_custom_values,
                         'cvH' => new CVH($this->s, $cvR),
                     ]),
                     // Custom fields appearing at the bottom of the salesorder
-                    'view_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/view_custom_fields', [
+                    'view_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/salesorder/pdf/view_custom_fields', [
                         'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
                         'cvR' => $cvR,
                         'salesorder_custom_values' => $so_custom_values,
                         'cvH' => new CVH($this->s, $cvR),
                     ]),
-                    'company_logo_and_address' => $viewrenderer->renderPartialAsString(
+                    'company_logo_and_address' => $webViewRenderer->renderPartialAsString(
                         '//invoice/setting/company_logo_and_address.php',
                         ['company' => $company = $this->s->get_config_company_details(),
                             'document_number' => $so->getNumber(),
@@ -289,7 +307,7 @@ class PdfHelper
                     'cldr' => array_search($this->get_print_language($so), $this->s->locale_language_array()),
                 ];
                 // Sales Order Template will be either 'salesorder' or a custom designed salesorder in the folder.
-                $html = $viewrenderer->renderPartialAsString('//invoice/template/salesorder/pdf/' . $salesorder_template, $data);
+                $html = $webViewRenderer->renderPartialAsString('//invoice/template/salesorder/pdf/' . $salesorder_template, $data);
                 if ($this->s->getSetting('pdf_html_salesorder') === '1') {
                     return $html;
                 }
@@ -311,10 +329,10 @@ class PdfHelper
      * @param SalesOrder|null $so
      * @param InvAmount|null $inv_amount
      * @param array $inv_custom_values
-     * @param \App\Invoice\Client\ClientRepository $cR
-     * @param \App\Invoice\CustomValue\CustomValueRepository $cvR
-     * @param \App\Invoice\CustomField\CustomFieldRepository $cfR
-     * @param \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR
+     * @param ClientRepository $cR
+     * @param CustomValueRepository $cvR
+     * @param CustomFieldRepository $cfR
+     * @param DeliveryLocationRepository $dlR
      * @param \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR
      * @param \App\Invoice\InvItem\InvItemRepository $iiR
      * @param \App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR
@@ -322,7 +340,7 @@ class PdfHelper
      * @param Inv $inv
      * @param \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR
      * @param \App\Invoice\UserInv\UserInvRepository $uiR
-     * @param \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
+     * @param WebViewRenderer $webViewRenderer
      * @return string
      */
     public function generate_inv_html(
@@ -332,10 +350,10 @@ class PdfHelper
         ?SalesOrder $so,
         ?InvAmount $inv_amount,
         array $inv_custom_values,
-        \App\Invoice\Client\ClientRepository $cR,
-        \App\Invoice\CustomValue\CustomValueRepository $cvR,
-        \App\Invoice\CustomField\CustomFieldRepository $cfR,
-        \App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR,
+        ClientRepository $cR,
+        CustomValueRepository $cvR,
+        CustomFieldRepository $cfR,
+        DeliveryLocationRepository $dlR,
         \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR,
         \App\Invoice\InvItem\InvItemRepository $iiR,
         \App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR,
@@ -343,7 +361,7 @@ class PdfHelper
         Inv $inv,
         \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR,
         \App\Invoice\UserInv\UserInvRepository $uiR,
-        \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer,
+        WebViewRenderer $webViewRenderer,
     ): string {
         if (null !== $inv_id) {
             // If userinv details have been filled, use these details
@@ -384,21 +402,21 @@ class PdfHelper
                 'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
                 'cvH' => new CVH($this->s, $cvR),
                 'inv_custom_values' => $inv_custom_values,
-                'top_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/top_custom_fields', [
+                'top_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/invoice/pdf/top_custom_fields', [
                     'custom_fields' => $cfR->repoTablequery('inv_custom'),
                     'cvR' => $cvR,
                     'inv_custom_values' => $inv_custom_values,
                     'cvH' => new CVH($this->s, $cvR),
                 ]),
                 // Custom fields appearing at the bottom of the invoice
-                'view_custom_fields' => $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/view_custom_fields', [
+                'view_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/invoice/pdf/view_custom_fields', [
                     'custom_fields' => $cfR->repoTablequery('inv_custom'),
                     'cvR' => $cvR,
                     'inv_custom_values' => $inv_custom_values,
                     'cvH' => new CVH($this->s, $cvR),
                 ]),
                 'userinv' => $userinv,
-                'company_logo_and_address' => $viewrenderer->renderPartialAsString(
+                'company_logo_and_address' => $webViewRenderer->renderPartialAsString(
                     '//invoice/setting/company_logo_and_address.php',
                     [
                         // if there is no active company with private details, use the config params company details
@@ -416,14 +434,14 @@ class PdfHelper
                         'isSalesOrder' => false,
                     ],
                 ),
-                'inv_allowance_charges' => $this->view_partial_inv_allowance_charges($inv_id, $vat, $aciR, $viewrenderer),
-                'delivery_location' => $this->view_partial_delivery_location((string) $_language, $dlR, $inv->getDelivery_location_id(), $viewrenderer),
+                'inv_allowance_charges' => $this->view_partial_inv_allowance_charges($inv_id, $vat, $aciR, $webViewRenderer),
+                'delivery_location' => $this->view_partial_delivery_location((string) $_language, $dlR, $inv->getDelivery_location_id(), $webViewRenderer),
                 'client' => $cR->repoClientquery((string) $inv->getClient()?->getClient_id()),
                 'inv_amount' => $inv_amount,
                 'cldr' => array_search($this->get_print_language($inv), $this->s->locale_language_array()),
             ];
             // Inv Template will be either 'inv' or a custom designed inv in the folder.
-            return $viewrenderer->renderPartialAsString('//invoice/template/invoice/pdf/' . $inv_template, $data);
+            return $webViewRenderer->renderPartialAsString('//invoice/template/invoice/pdf/' . $inv_template, $data);
         }
         return '';
     }
@@ -436,9 +454,9 @@ class PdfHelper
      * @param SalesOrder|null $so
      * @param InvAmount|null $inv_amount
      * @param array $inv_custom_values
-     * @param \App\Invoice\Client\ClientRepository $cR
-     * @param \App\Invoice\CustomValue\CustomValueRepository $cvR
-     * @param \App\Invoice\CustomField\CustomFieldRepository $cfR
+     * @param ClientRepository $cR
+     * @param CustomValueRepository $cvR
+     * @param CustomFieldRepository $cfR
      * @param \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR,
      * @param \App\Invoice\InvItem\InvItemRepository $iiR
      * @param \App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR
@@ -446,7 +464,7 @@ class PdfHelper
      * @param \App\Invoice\Inv\InvRepository $iR
      * @param \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR
      * @param \App\Invoice\UserInv\UserInvRepository $uiR
-     * @param \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer
+     * @param WebViewRenderer $webViewRenderer
      * @return string
      */
     public function generate_inv_pdf(
@@ -468,12 +486,12 @@ class PdfHelper
         \App\Invoice\Inv\InvRepository $iR,
         \App\Invoice\InvTaxRate\InvTaxRateRepository $itrR,
         \App\Invoice\UserInv\UserInvRepository $uiR,
-        \Yiisoft\Yii\View\Renderer\ViewRenderer $viewrenderer,
+        WebViewRenderer $webViewRenderer,
     ): string {
         if (null !== $inv_id) {
             $inv = $iR->repoCount($inv_id) > 0 ? $iR->repoInvLoadedquery($inv_id) : null;
             if ($inv) {
-                $html = $this->generate_inv_html($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $inv, $itrR, $uiR, $viewrenderer);
+                $html = $this->generate_inv_html($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $inv, $itrR, $uiR, $webViewRenderer);
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
@@ -524,14 +542,14 @@ class PdfHelper
      * @param string $inv_id
      * @param string $vat
      * @param \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR
-     * @param ViewRenderer $viewRenderer
+     * @param WebViewRenderer $webViewRenderer
      * @return string
      */
     private function view_partial_inv_allowance_charges(
         string $inv_id,
         string $vat,
         \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR,
-        ViewRenderer $viewRenderer,
+        WebViewRenderer $webViewRenderer,
     ): string {
         $identifier = 0;
         $print = '';
@@ -554,7 +572,7 @@ class PdfHelper
                 $vatOrHeadingTitle = $identifier ? ($vat ? $this->translator->translate('allowance.or.charge.allowance.vat') : $this->translator->translate('allowance.or.charge.allowance.tax')) : ($vat ? $this->translator->translate('allowance.or.charge.charge.vat') : $this->translator->translate('allowance.or.charge.charge.tax'));
                 $print .= "{$allowanceOrCharge}: {$amountTitle} {$amount}, {$vatOrHeadingTitle}: {$vatOrTax}<br>";
             }
-            return $viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_allowance_charges', [
+            return $webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_allowance_charges', [
                 'title' => $this->translator->translate('allowance.or.charge.inv'),
                 'inv_allowance_charges' => $print,
             ]);
@@ -564,12 +582,12 @@ class PdfHelper
         return '';
     }
 
-    private function view_partial_delivery_location(string $_language, DLR $dlr, string $delivery_location_id, ViewRenderer $viewRenderer): string
+    private function view_partial_delivery_location(string $_language, DLR $dlr, string $delivery_location_id, WebViewRenderer $webViewRenderer): string
     {
         if (!empty($delivery_location_id)) {
             $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
             if (null !== $del) {
-                return $viewRenderer->renderPartialAsString('//invoice/inv/partial_inv_delivery_location', [
+                return $webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_delivery_location', [
                     'actionName' => 'del/view',
                     'actionArguments' => ['_language' => $_language, 'id' => $delivery_location_id],
                     'title' => $this->translator->translate('delivery.location'),
