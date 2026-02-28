@@ -386,6 +386,7 @@ final class AuthController
                 $qrDataUri = $this->generateQrDataUri($qrContent);
                 $form = new TwoFactorAuthenticationSetupForm($translator);
                 return $this->webViewRenderer->render('setup', [
+                    'class' => $this->classList(),
                     'qrDataUri' => $qrDataUri,
                     'totpSecret' => $secret,
                     'error' => '',
@@ -440,10 +441,11 @@ final class AuthController
 
         $pendingUserId = (int) $this->session->get('pending_2fa_user_id');
         $body = $request->getParsedBody() ?? [];
-        $tfans = 'two.factor.authentication.no.secret.generated';
-        $tfaicf =  'two.factor.authentication.invalid.code.format';
-        $tfaafms =  'two.factor.authentication.attempt.failure.must.setup';
-        $tfaaf = 'two.factor.authentication.attempt.failure';
+        $tfa = 'two.factor.authentication';
+        $tfans = $tfa . '.no.secret.generated';
+        $tfaicf =  $tfa . '.invalid.code.format';
+        $tfaafms =  $tfa . '.attempt.failure.must.setup';
+        $tfaaf = $tfa . '.attempt.failure';
         if (is_array($body)) {
             $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
             if ($inputCode !== null) {
@@ -499,6 +501,7 @@ final class AuthController
                         $qrDataUri = $this->generateQrDataUri($qrContent);
                         $tfasf = new TwoFactorAuthenticationSetupForm($translator);
                         return $this->webViewRenderer->render('setup', [
+                            'class' => $this->classList(),
                             'qrDataUri' => $qrDataUri,
                             'totpSecret' => $totp->getSecret(),
                             'error' => $error,

@@ -90,8 +90,8 @@ use App\Widget\{
 use Yiisoft\{
     Data\Paginator\OffsetPaginator, Data\Reader\Sort,
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
-    DataResponse\Formatter\HtmlFormatter as htmlF, FormModel\FormHydrator,
-    Http\Method, Html\Html, Input\Http\Attribute\Parameter\Query, Json\Json,
+    FormModel\FormHydrator, Http\Method, Html\Html,
+    Input\Http\Attribute\Parameter\Query, Json\Json,
     Mailer\MailerInterface, Router\FastRoute\UrlGenerator,
     Router\HydratorAttribute\RouteArgument, Security\Random, Session\Flash\Flash,
     Session\SessionInterface, Translator\TranslatorInterface, User\CurrentUser,

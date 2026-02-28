@@ -26,6 +26,7 @@ trait ClassList
             14 => 'form-check-label',
             15 => 'btn btn-primary',
             16 => 'my-1 mx-0',
+            17 => 'card-body p-1 text-center',
         ];
     }
 }

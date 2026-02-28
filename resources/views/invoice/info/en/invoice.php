@@ -1,6 +1,6 @@
 <h6 id="invoice">Development Summary: (...resources/views/invoice/info/invoice.php)</h6>
 
-<p><b>Aim: To develop a similar invoicing system to InvoicePlane integrating with Microsoft's Latest Typescript Go V7 initiative <s>integrating with the latest Jquery, and</s> the security features of Yii3, Snyk, CodeQl using wampserver as a test platform for WAMP and also lightweight Alpine / heavier Ubuntu 22.04 LTS for LAMP and the production of e-invoices in compliance with the April 6th 2029 Mandate by the HMRC for all businesses to use e-invoicing<a href="https://www.gov.uk/government/consultations/promoting-electronic-invoicing-across-uk-businesses-and-the-public-sector/outcome/promoting-electronic-invoicing-across-uk-businesses-and-the-public-sector-consultation-response"></a></b>
+<p><b>Aim: To develop a similar invoicing system to InvoicePlane integrating with Microsoft's Latest Typescript Go V7 initiative <s>integrating with the latest Jquery, and</s> the security features of Yii3, Snyk, CodeQl using wampserver as a test platform for WAMP and also lightweight Alpine / heavier Ubuntu 24.04 LTS for LAMP and the production of e-invoices in compliance with the April 6th 2029 Mandate by the HMRC for all businesses to use e-invoicing<a href="https://www.gov.uk/government/consultations/promoting-electronic-invoicing-across-uk-businesses-and-the-public-sector/outcome/promoting-electronic-invoicing-across-uk-businesses-and-the-public-sector-consultation-response"></a></b>
 </p>
 <p>Less emphasis has been placed on using javascript due to security vulnerabilities with jQuery. More emphasis is being placed on using php forms instead of javascript. Typescript is replacing jQuery because it is more secure and like the Yii3 Framework solidly type strict. Yii3 has been chosen because it relies heavily on psalm static analysis level 1 standards which exposes even the most robust AI solutions. All credit to psalm.dev</p>
 <p>Free sponsorship has been provided by vultr.com in Frankfurt on yii3i.online for testing.<p>
@@ -53,6 +53,8 @@
 <p><b>25th February 2026</b></p>
 <p>Apply https://github.com/yiisoft/data-response/pull/107</p>
 <p>Quote delete bugfix</p>
+<p><b>28th February 2026</b></p>
+<p>More explicit Aegis usage instructions.</p>
 <p><b>23rd February 2026</b></p>
 <p>Improvements to .env and config/common/params.php</p>
 <p><b>doctrine/annotations has been deprecated so composer audit in invoice_build fails.</b></p>

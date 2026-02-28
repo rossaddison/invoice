@@ -1128,8 +1128,10 @@ prior to importing and no existing documents e.g. Invoices.',
   'layout.password-verify' => 'Confirm your password',
   'layout.password-verify.new' => 'Confirm your new password',
   'layout.password.new' => 'New Password',
-  'layout.password.otp.6' => 'OTP Password (6 digits)',
-  'layout.password.otp.6.8' => 'OTP Password (6 digits)'
+  'layout.password.otp.6.first' => 'Enter First of Two Aegis Generated OTP'
+    . ' Passwords (6 digits)',
+  'layout.password.otp.6.8' => 'Enter Second Different Aegis Generated OTP'
+    . ' Password (6 digits)'
     . ' / Backup Recovery Codes (8 digits)',
   'layout.rbac.assign-role' => 'Assign RBAC role to user',
   'layout.remember' => 'Remember me',
@@ -2543,9 +2545,14 @@ prior to importing and no existing documents e.g. Invoices.',
     'Two Factor Authentication Attempt Failure',
   'two.factor.authentication.attempt.failure.must.setup' =>
     'Two Factor Authentication Attempt Failure:'
-    . ' You must setup a new qr code'
-    . ' with secret (+)'
-    . ' and choose the overwrite previous entry when prompted',
+    . ' You must setup a new QR code'
+    . ' with secret (➕ ... SCROLL UP or DOWN to reveal the plus sign)'
+    . ' and with the SAME name (typically an email address)'
+    . ' SAVE (top right) and choose the OVERWRITE EXISTING ENTRY / ENTRIES'
+    . '  when prompted .... DELETE'
+    . ' You will be asked to overwrite because you are saving with the SAME name'
+    . ' Enter the first of two 6 digits and on the '
+    . ' next screen WAIT and enter a DIFFERENT NEW 6 digit code.',
   'two.factor.authentication.attempt.success' =>
     'Two Factor Authentication Attempt Success',
   'two.factor.authentication.disabled' =>
@@ -2553,26 +2560,17 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' has now been disabled for additional security.',
   'two.factor.authentication.enable' =>
     'Enable Two Factor Authentication',
+  'two.factor.authentication.enabled.aegis' =>
+    'Aegis Two Factor Authentication',
   'two.factor.authentication.enabled.with.disabling' =>
-    'Two Factor Authentication is currently enabled'
-    . ' for additional security'
-    . ' and is disabled'
-    . ' after successful authentication'
-    . ' for an additional layer of security'
-    . ' until the next login.'
-    . ' Compulsory scanning of Qr code,'
-    . ' after each login, for a new secret. + '
-    . '... Scan the Qr Code '
-    . '... save '
-    . '... delete previous entry.'
-    . ' (Not recommended)',
+    'Two Factor Authentication is currently enabled.'
+    . ' Compulsory scanning of Qr code.'
+    . ' Press +  to enter a new secret.'
+    . ' (Option 1)',
   'two.factor.authentication.enabled.without.disabling' =>
-    'Two Factor Authentication is currently enabled'
-    . ' for additional security'
-    . ' and is not disabled after successful authentication'
-    . ' The Qr code will not be seen again for scanning,'
-    . ' after logging in, after having setup two factor authentication.'
-    . ' (Recommended)',
+    'Two Factor Authentication is currently enabled.'
+    . ' The Qr code will not be seen again for scanning.'
+    . ' (Option 2)',
   'two.factor.authentication.error' => 'Two Factor Authentication Error',
   'two.factor.authentication.form.verify.login' => 'Verify Login',
   'two.factor.authentication.invalid.code.format' =>
@@ -2585,7 +2583,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'two.factor.authentication.missing.code.or.secret' =>
     'Missing authentication code or 2FA secret.',
   'two.factor.authentication.new.six.digit.code' =>
-    'Please enter a new 6-digit authentication code'
+    'Please enter another confirmation 6-digit authentication code'
     . ' (different to the setup code) from your app.',
   'two.factor.authentication.no.secret.generated' =>
     'No secret generated. Please restart setup.',

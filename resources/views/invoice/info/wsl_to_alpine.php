@@ -51,5 +51,7 @@ declare(strict_types=1);
         as the admin, is rotating between a visible 'entry.to.base.controller'
         and invisible.
  </b>
+ <b>18. Terminate wsl so it does not conflict with wampserver:
+        wsl --terminate Ubuntu/Alpine
 </p>
 </pre>

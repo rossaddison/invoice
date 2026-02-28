@@ -113,7 +113,7 @@
         "yiisoft/json": "^1.1",
         "yiisoft/log": ">=2.2.0",
         "yiisoft/log-target-file": ">=3.1",
-        "yiisoft/mailer": ">=6.0.1",
+        "yiisoft/mailer": ">=6.1.0",
         "yiisoft/mailer-symfony": ">=4",
         "yiisoft/middleware-dispatcher": "^5.4",
         "yiisoft/rate-limiter": "dev-master",

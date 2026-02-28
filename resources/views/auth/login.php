@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 use App\Widget\Button;
-use Yiisoft\{FormModel\Field as F, Html\Html as H, Html\Tag\A, Html\Tag\Form};
+use Yiisoft\{FormModel\Field as F};
+use Yiisoft\Html\{Html as H, Tag\A, Tag\Img, Tag\Form, Tag\Span};
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 
 /**
@@ -76,18 +77,32 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     if (($s->getSetting('enable_tfa') == '1')) {
       echo H::openTag('div', [
           'id' => 'tfa-badge', 'class' => (string) $class[8]]);
-        echo H::tag(
-            'span',
-            $s->getSetting('enable_tfa_with_disabling') == '1'
-                ? $translator->translate($tfaEnabled . '.with.disabling')
-                : $translator->translate($tfaEnabled . '.without.disabling'),
-            [
-                'class' => (string) $class[9],
-                'style' => 'white-space:normal;word-break:break-word;'
+        echo Span::tag()
+             ->addAttributes([
+                 'class' => (string) $class[9],
+                 'style' => 'white-space:normal;word-break:break-word;'
                 . 'max-width:100%;display:inline-block;',
-            ],
-        );
-        echo H::closeTag('div');
+                 'data-toggle-bs' => 'tooltip',
+                 'title' => $s->getSetting('enable_tfa_with_disabling') == '1'
+                ? $translator->translate($tfaEnabled . '.with.disabling')
+                : $translator->translate($tfaEnabled . '.without.disabling'
+             )])
+             ->content($translator->translate($tfaEnabled . '.aegis'))
+             ->render();
+        echo H::openTag('br');
+        echo A::tag()
+         ->href('https://getaegis.app')
+         ->addAttributes([
+            'target' => '_blank',
+            'data-toggle-bs' => 'tooltip',
+            'title' => $translator->translate('download')
+         ])
+         ->content(Img::tag()
+                    ->size(60, 60)
+                    ->src('/img/aegis.png')
+                    ->alt('Opensource Two Factor Authentication Software'))
+         ->render();
+      echo H::closeTag('div');
     }
     echo H::openTag('div', ['class' => (string) $class[10]]);
     echo Form::tag()
