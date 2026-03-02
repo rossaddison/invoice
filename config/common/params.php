@@ -96,7 +96,10 @@ return [
             'compressRotatedFiles' => false,
         ],
     ],
-    'env' => $_ENV['YII_ENV'] ?? '',
+    
+    // DeveloperSandboxHmrc
+    'env' => $_ENV['YII_ENV'] ?? 'dev',
+    
     'server' => [
         'remote_port' => $_SERVER['REMOTE_PORT'] ?? null,
         'http_x_forwarded_for' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
@@ -110,14 +113,14 @@ return [
         'version' => 'pre-release',
     ],
     'mailer' => [
-        'adminEmail' => 'admin@example.com',
+        'adminEmail' => ($_ENV['ADMIN_EMAIL'] ?? '') ?: 'info@yourhost.com',
     /**
      * Note: This setting is critical to the sending of emails since it is used
      * in SettingsRepository getConfigSenderEmail()
      * Used in critical function e.g src/Auth/Controller/SignUpController
      * function signup and src/Auth/Controller/ForgotController function forgot
      */
-        'senderEmail' => 'sender@your.web.site.domain.com',
+        'senderEmail' => ($_ENV['SENDER_EMAIL'] ?? '') ?: 'info@yourhost.com',
     ],
 
     /**
@@ -474,7 +477,7 @@ return [
             FromConveyorSchemaProvider::class => [
                 'generators' => [
                     // sync table changes to database
-                    Cycle\Schema\Generator\SyncTables::class, 
+                    Cycle\Schema\Generator\SyncTables::class,
                 ],
             ],
         ],
