@@ -21,6 +21,8 @@ phpunit.phar
 .env
 /docker-compose.override.yml
 /config/common/params.php
+/resources/views/site/privacypolicy.php
+/resources/views/site/termsofservice.php
 
 # evolving files
 /vendor
