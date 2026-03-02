@@ -11,7 +11,8 @@ CustomField\CustomFieldRepository as CFR,
 CustomValue\CustomValueRepository as CVR,
 DeliveryLocation\DeliveryLocationRepository as DR,
 Entity\CustomField, Entity\DeliveryLocation, Entity\Group, Entity\Inv,
-Entity\InvAllowanceCharge, Entity\InvAmount, Entity\InvCustom, Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrder,
+Entity\InvAllowanceCharge, Entity\InvAmount, Entity\InvCustom,
+Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrder,
 Entity\SalesOrderAmount, Entity\SalesOrderCustom, Entity\SalesOrderItem,
 Entity\SalesOrderTaxRate, Entity\SalesOrderItemAllowanceCharge, 
 Group\GroupRepository as GR, Entity\SalesOrderAllowanceCharge,
@@ -45,7 +46,6 @@ Setting\SettingRepository,
 Task\TaskRepository as TASKR,
 TaxRate\TaxRateRepository as TRR,
 Unit\UnitRepository as UNR,
-UserClient\Exception\NoClientsAssignedToUserException,
 UserClient\UserClientRepository as UCR,
 UserInv\UserInvRepository as UIR,
 };
@@ -57,6 +57,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\CountableDataInterface as CDI;
+use Yiisoft\Data\Reader\DataReaderInterface as DRI;
+use Yiisoft\Data\Reader\LimitableDataInterface as LDI;
+use Yiisoft\Data\Reader\OffsetableDataInterface as ODI;
+use Yiisoft\Data\Reader\ReadableDataInterface as RDI;
+use Yiisoft\Data\Reader\SortableDataInterface as SDI;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
@@ -179,7 +185,8 @@ final class SalesOrderController extends BaseController
                     ];
                     return $this->webViewRenderer->render('guest', $parameters);
                 }
-                throw new NoClientsAssignedToUserException($this->translator);
+                $this->flashMessage('warning',
+                            $this->translator->translate('user.clients.assigned.not'));
             } // userinv
             return $this->webService->getNotFoundResponse();
         } //user
@@ -464,9 +471,9 @@ final class SalesOrderController extends BaseController
      * @param int $status
      * @param Sort $sort
      *
-     * @return \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface
+     * @return DRI&SDI
      *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, SalesOrder>
+     * @psalm-return SDI&DRI<int, SalesOrder>
      */
     private function salesorders_status_with_sort(SoR $soRepo, int $status,
         Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
@@ -481,9 +488,9 @@ final class SalesOrderController extends BaseController
      * @param array $user_clients
      * @param Sort $sort
      *
-     * @return \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface
+     * @return DRI&SDI
      *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, SalesOrder>
+     * @psalm-return SDI&DRI<int, SalesOrder>
      */
     private function salesorders_status_with_sort_guest(SoR $soR, int $status,
     array $user_clients, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface

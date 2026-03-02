@@ -411,7 +411,7 @@ final class FamilyController extends BaseController
                 'title' => $this->translator->translate('view'),
                 'familyCustomForm' => $familyCustomForm,
                 'custom_fields' => $cfR->repoTablequery('family_custom'),
-                'customValues' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('family_custom')),
+                'customValues' => $cvR->fixCfValueToCf($cfR->repoTablequery('family_custom')),
                 'cpR' => $cpR,
                 'actionName' => 'family/view',
                 'actionArguments' => ['id' => $familyId = $family->getFamily_id()],                

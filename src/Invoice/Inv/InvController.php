@@ -73,7 +73,6 @@ use App\Invoice\{
     UnitPeppol\UnitPeppolRepository as unpR,
     Upload\UploadRepository as UPR,
     UserClient\UserClientRepository as UCR,
-    UserClient\Exception\NoClientsAssignedToUserException,
     UserInv\UserInvRepository as UIR
 };
 use App\User\UserRepository as UR;
@@ -2077,7 +2076,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param string $queryFilterInvNumber
      * @param string $queryFilterInvAmountTotal
      * @param string $queryFilterStatus
-     * @throws NoClientsAssignedToUserException
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function guest(
@@ -2191,7 +2189,8 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     ];
                     return $this->webViewRenderer->render('guest', $parameters);
                 } // no clients assigned to this user
-                throw new NoClientsAssignedToUserException($this->translator);
+                $this->flashMessage('warning',
+                    $this->translator->translate('user.clients.assigned.not'));
             } // $user_inv
             $this->flashMessage('info',
                         $this->translator->translate('user.inv.active.not'));
@@ -4646,7 +4645,7 @@ echo file_get_contents($temp_aliase, true);
                     // Get the standard extra custom fields built for EVERY invoice.
                     'custom_fields' => $cfR->repoTablequery('inv_custom'),
                     'custom_values' =>
-                    $cvR->attach_hard_coded_custom_field_values_to_custom_field(
+                    $cvR->fixCfValueToCf(
                         $cfR->repoTablequery('inv_custom')),
                     'cvH' => new CVH($this->sR, $cvR),
                     'enabled_gateways' => $enabled_gateways,
@@ -4982,7 +4981,7 @@ echo file_get_contents($temp_aliase, true);
             '//invoice/inv/view_custom_fields', [
             'custom_fields' => $cfR->repoTablequery('inv_custom'),
             'custom_values' =>
-                $cvR->attach_hard_coded_custom_field_values_to_custom_field(
+                $cvR->fixCfValueToCf(
                     $cfR->repoTablequery('inv_custom')),
             'inv_custom_values' => $inv_custom_values,
             'cvH' => new CVH($this->sR, $cvR),

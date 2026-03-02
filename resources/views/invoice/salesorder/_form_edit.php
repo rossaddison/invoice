@@ -203,7 +203,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
  * @var App\Invoice\Entity\CustomField $customField
  */
 foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
-    $custom_values = $cvR->attach_hard_coded_custom_field_values_to_custom_field(
+    $custom_values = $cvR->fixCfValueToCf(
             $cfR->repoTablequery('salesorder_custom'));
     $cvH->print_field_for_form($customField, $salesOrderCustomForm, $translator,
             $urlGenerator, $so_custom_values, $custom_values);

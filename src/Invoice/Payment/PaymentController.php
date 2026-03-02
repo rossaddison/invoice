@@ -27,7 +27,6 @@ use App\Invoice\PaymentCustom\PaymentCustomForm;
 use App\Invoice\PaymentCustom\PaymentCustomService;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository;
-use App\Invoice\UserClient\Exception\NoClientsAssignedToUserException;
 use App\Invoice\UserInv\UserInvRepository;
 use App\User\User;
 use App\User\UserService;
@@ -37,7 +36,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\CountableDataInterface as CDI;
+use Yiisoft\Data\Reader\DataReaderInterface as DRI;
+use Yiisoft\Data\Reader\LimitableDataInterface as LDI;
+use Yiisoft\Data\Reader\OffsetableDataInterface as ODI;
+use Yiisoft\Data\Reader\ReadableDataInterface as RDI;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\SortableDataInterface as SDI;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;
 use Yiisoft\Http\Method;
@@ -557,7 +562,8 @@ final class PaymentController extends BaseController
                 ];
                 return $this->webViewRenderer->render('guest', $params);
             }
-            throw new NoClientsAssignedToUserException($this->translator);
+            $this->flashMessage('warning',
+                $this->translator->translate('user.clients.assigned.not'));
         } //if user
         return $this->webService->getRedirectResponse('payment/guest');
     }
@@ -599,27 +605,30 @@ final class PaymentController extends BaseController
             $client_id_array = (null !== $userinv ?
                                     $ucR->get_assigned_to_user($user_id) : []);
 /**
- * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $merchants
+ * @psalm-var RDI<array-key, array<array-key, mixed>|object>&LDI&ODI&CDI $merchants
  */
+            
             $merchants = $this->merchant_with_sort_guest($merchR,
                 $client_id_array, $sort_by);
-            $paginator = (new OffsetPaginator($merchants))
-             ->withPageSize(10)
-             ->withCurrentPage($currentPageNeverZero)
-             ->withToken(PageToken::next((string) $page));
-// No need for rbac here since the route accessChecker for payment/online_log
-// includes Permissions::VIEW_PAYMENT Related logic: see config/routes.php
-            $params = [
-                'alert' => $this->alert(),
-                'page' => $page,
-                'paginator' => $paginator,
-                'sortOrder' => $query_params['sort'] ?? '',
-                'merchants' => $this->merchants($merchR),
-                'max' => 10,
-            ];
-            return $this->webViewRenderer->render('guest_online_log', $params);
+            if (!empty($client_id_array)) {
+                $paginator = (new OffsetPaginator($merchants))
+                 ->withPageSize(10)
+                 ->withCurrentPage($currentPageNeverZero)
+                 ->withToken(PageToken::next((string) $page));
+    // No need for rbac here since the route accessChecker for payment/online_log
+    // includes Permissions::VIEW_PAYMENT Related logic: see config/routes.php
+                $params = [
+                    'alert' => $this->alert(),
+                    'page' => $page,
+                    'paginator' => $paginator,
+                    'sortOrder' => $query_params['sort'] ?? '',
+                    'merchants' => $this->merchants($merchR),
+                    'max' => 10,
+                ];
+                return $this->webViewRenderer->render('guest_online_log', $params);
+            }    
         }
-        return $this->webService->getRedirectResponse('payment/guest');
+        return $this->webService->getNotFoundResponse();
     }
 
     /**
@@ -650,7 +659,7 @@ final class PaymentController extends BaseController
                 // Sort the merchant responses in descending order
                 ->withOrder($order);
 /**
- * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $payments
+ * @psalm-var RDI<array-key, array<array-key, mixed>|object>&LDI&ODI&CDI $payments
  */
         $payments = $this->payments_with_sort($payR, $sort);
         if (isset($query_params['paymentAmountFilter'])
@@ -940,7 +949,7 @@ final class PaymentController extends BaseController
                                     '//invoice/payment/view_custom_fields', [
             'customFields' => $cfR->repoTablequery('payment_custom'),
             'customValues' =>
-                $cvR->attach_hard_coded_custom_field_values_to_custom_field(
+                $cvR->fixCfValueToCf(
                                         $cfR->repoTablequery('payment_custom')),
             'paymentCustomValues' => $payment_custom_values,
             'cvH' => new CustomValuesHelper($this->sR, $cvR),

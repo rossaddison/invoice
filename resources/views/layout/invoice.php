@@ -598,11 +598,15 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link($t->translate('platform.PhpSupport'),
                     'https://php.net/supported-versions'),
                 DropdownItem::link($t->translate('Psalm\'s Daniil Gentilli\'s Blog'),
-                    'https://https://blog.daniil.it/'),    
+                    'https://https://blog.daniil.it/'),
                 DropdownItem::link($t->translate('platform.update'),
                     'https://wampserver.aviatechno.net/'),
+                DropdownItem::link('Testing temporary signup emails',
+                    'https://guerrillamail.com/'),
+                DropdownItem::link('Email forwarding instead of a mailserver',
+                    'https://improvmx.com/'),
                 DropdownItem::link('Packages Microsoft Com',
-                    'https://packages.microsoft.com/'),    
+                    'https://packages.microsoft.com/'),
                 DropdownItem::link(
 'Microsoft Typescript-Go Development Site for Typescript Version 7 (10x faster):'
 . ' Superceding Typescript 5.95',

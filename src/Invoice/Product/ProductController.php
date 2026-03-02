@@ -793,7 +793,7 @@ final class ProductController extends BaseController
                         'tax_rates' => $this->taxRates($trR->findAllPreloaded()),
                         'unit_peppols' => $this->unit_peppols($upR->findAllPreloaded()),
                         'custom_fields' => $cfR->repoTablequery('product_custom'),
-                        'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('product_custom')),
+                        'custom_values' => $cvR->fixCfValueToCf($cfR->repoTablequery('product_custom')),
                         'cvH' => new CVH($this->sR, $cvR),
                         'product_custom_values' => $this->product_custom_values($product_id, $pcR),
                         'productCustomForm' => $productCustomForm,

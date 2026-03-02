@@ -130,17 +130,21 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
+     * Purpose: Attach hard coded custom field values to custom field
      * @param EntityReader $custom_fields
      * @return array
      */
-    public function attach_hard_coded_custom_field_values_to_custom_field(EntityReader $custom_fields): array
+    public function fixCfValueToCf(EntityReader $custom_fields): array
     {
         $custom_values = [];
         /** @var CustomField $custom_field */
         foreach ($custom_fields as $custom_field) {
-            if (in_array($custom_field->getType(), ['SINGLE-CHOICE','MULTIPLE-CHOICE','RADIOLIST-CHOICE'])) {
-                // build the $custom_values array with the eg. dropdown values for the field whether it be a multiple-choice field or a single-choice field
-                $custom_values[$custom_field->getId()] = $this->repoCustomFieldquery((int) $custom_field->getId());
+            if (in_array($custom_field->getType(),
+                    ['SINGLE-CHOICE','MULTIPLE-CHOICE','RADIOLIST-CHOICE'])) {
+// build the $custom_values array with the eg. dropdown values for the field
+// whether it be a multiple-choice field or a single-choice field
+                $custom_values[$custom_field->getId()] =
+                        $this->repoCustomFieldquery((int) $custom_field->getId());
             }
         }
         return $custom_values;

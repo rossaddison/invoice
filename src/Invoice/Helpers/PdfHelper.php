@@ -147,7 +147,7 @@ class PdfHelper
                     'show_custom_fields' => $custom,
                     // Custom fields appearing near the top of the quote
                     'custom_fields' => $cfR->repoTablequery('quote_custom'),
-                    'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('quote_custom')),
+                    'custom_values' => $cvR->fixCfValueToCf($cfR->repoTablequery('quote_custom')),
                     'cvH' => new CVH($this->s, $cvR),
                     'cvR' => $cvR,
                     'quote_custom_values' => $quote_custom_values,
@@ -275,7 +275,7 @@ class PdfHelper
                     'show_custom_fields' => $custom,
                     // Custom fields appearing near the top of the quote
                     'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
-                    'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('salesorder_custom')),
+                    'custom_values' => $cvR->fixCfValueToCf($cfR->repoTablequery('salesorder_custom')),
                     'salesorder_custom_values' => $so_custom_values,
                     'top_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/salesorder/pdf/top_custom_fields', [
                         'custom_fields' => $cfR->repoTablequery('salesorder_custom'),
@@ -399,7 +399,7 @@ class PdfHelper
                 'show_custom_fields' => $custom,
                 // Custom fields appearing near the top of the quote
                 'custom_fields' => $cfR->repoTablequery('inv_custom'),
-                'custom_values' => $cvR->attach_hard_coded_custom_field_values_to_custom_field($cfR->repoTablequery('inv_custom')),
+                'custom_values' => $cvR->fixCfValueToCf($cfR->repoTablequery('inv_custom')),
                 'cvH' => new CVH($this->s, $cvR),
                 'inv_custom_values' => $inv_custom_values,
                 'top_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/invoice/pdf/top_custom_fields', [

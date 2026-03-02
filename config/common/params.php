@@ -43,9 +43,14 @@ use App\Widget\PageSizeLimiter;
 use App\Widget\SubMenu;
 
 $env = $_ENV['APP_ENV'] ?? 'local';
-$dbUser = $_ENV['DB_USERNAME'] ?: 'root';
-$dbName = $_ENV['DB_NAME'] ?: 'yii3_i';
-$dbPassword = $_ENV['DB_PASSWORD'] ?: null;
+/**
+ * Avoid undefined array key errors in
+ * EventListenerConfigurationTest.php:testConsoleListenerConfiguration
+ * by surrounding in brackets
+ */
+$dbUser = ($_ENV['DB_USERNAME'] ?? '') ?: 'root';
+$dbName = ($_ENV['DB_NAME'] ?? '') ?: 'yii3_i';
+$dbPassword = ($_ENV['DB_PASSWORD'] ?? '') ?: null;
 
 switch ($env) {
     case 'docker':
@@ -519,25 +524,13 @@ return [
     ],
     'yiisoft/mailer-symfony' => [
         'esmtpTransport' => [
-/**
- * enabled => true is a setting independent of vendor/yiisoft/mailer-symfony/
- * config/params.php
- * Related logic: see SettingRepository function config_params()  */
             'enabled' => true,
             'useSendMail' => false,
-            'scheme' => 'smtp', // "smtps": using TLS, "smtp": without using TLS.
-            'host' => 'mail.yourinternet.com',
-            'port' => 25,
-            'username' => filter_input(INPUT_ENV, 'SYMFONY_MAILER_USERNAME') ?? '',
-/**
- * Avoid the use of hard-coded credentials
- * Related logic: https://cwe.mitre.org/data/definitions/798.html
- * Related logic: The .env file in the root folder
- * Related logic:
- * https://stackoverflow.com/questions/97984/
- *                                      how-to-secure-database-passwords-in-php
- */
-            'password' => filter_input(INPUT_ENV, 'SYMFONY_MAILER_PASSWORD') ?? '',
+            'scheme' => 'smtps',
+            'host' => $_ENV['SYMFONY_MAILER_HOST'] ?? 'smtp.gmail.com',
+            'port' => (int) ($_ENV['SYMFONY_MAILER_PORT'] ?? 465),
+            'username' => $_ENV['SYMFONY_MAILER_USERNAME'] ?? '',
+            'password' => $_ENV['SYMFONY_MAILER_PASSWORD'] ?? '',
             'options' => [],
             // See: https://symfony.com/doc/current/mailer.html#tls-peer-verification
         ],

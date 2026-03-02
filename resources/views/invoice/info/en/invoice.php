@@ -50,11 +50,22 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>1st March 2026</b></p>
+<p>Remove javascript-serialize security vulnerability with override 7.0.3 in package.json</p>
+<p>The config/common/params.php filter_input(INPUT_ENV, 'SYMFONY_MAILER_USERNAME') ?? '' was causing an exception on vultr.com so replaced with S_ENV['SYMFONY_MAILER_USERNAME'] ?? ''.
+   Did the same for the mailer password.
+   Included a few additional tips that claude.com (free try) gave me to solve the above error in wsl_to_alpine.
+   guerrillamail.com works really well to test emails on signup instead of using real emails.
+   You can simply 'delete' the test email after 'set' on guerrillamail.com once you have received and clicked
+   on the confirmation link in the email to register the new signup.
+   Signing up new users on vultr.com has been partially tested using guerrillamail.com.
+   Vultr blocks port 25 due to spam issues but allows 465 and 587. So in order to use the more secure       symfony/mailer as opposed to swiftmailer, using yiisoft/mailer-symfony and smtps, use port 465.  With YII_DEBUG=false the ClientNotAssignedToUserException could not be raised with php being disabled so opted for a message and a getNotFoundResponse for new users that HAVE NOT been assigned any clients.
+</p>
+<p><b>28th February 2026</b></p>
+<p>More explicit Aegis usage instructions.</p>
 <p><b>25th February 2026</b></p>
 <p>Apply https://github.com/yiisoft/data-response/pull/107</p>
 <p>Quote delete bugfix</p>
-<p><b>28th February 2026</b></p>
-<p>More explicit Aegis usage instructions.</p>
 <p><b>23rd February 2026</b></p>
 <p>Improvements to .env and config/common/params.php</p>
 <p><b>doctrine/annotations has been deprecated so composer audit in invoice_build fails.</b></p>

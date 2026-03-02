@@ -42,16 +42,44 @@ declare(strict_types=1);
  <b>15. See what is in your stash without applying it:
          git stash show -p</b>
  <b>16. Giving ownership to apache user:
-         chown -R apache:apache /var/www/invoice/
+         chown -R apache:apache /var/www/invoice/         
+         chown -R apache:apache /var/www/invoice/resources/rbac/assignments.php
          chmod -R 755 /var/www/invoice/
          chmod -R 775 /var/www/invoice/resources/
          chmod -R 775 /var/www/invoice/runtime/
          chmod -R 775 /var/www/invoice/public/assets/</b>
  <b>17. Ensure that the resources/rbac/items.php file, when logged in
         as the admin, is rotating between a visible 'entry.to.base.controller'
-        and invisible.
+        and invisible or not existing.
  </b>
- <b>18. Terminate wsl so it does not conflict with wampserver:
-        wsl --terminate Ubuntu/Alpine
+ <b>18. Install telnet to check that port 465 is open for smtps
+        On alpine: apk add busybox-extras
+        On ubuntu: sudo apt install telnet -y
+        Checking e.g.: telnet smtp.gmail.com 465
+        
+        If 'Connection closed by foreign host' is seen, this is normal — e.g.
+        Gmail's SMTP server closed the plain telnet connection because it
+        expects an SSL handshake, not a raw telnet connection.
+ </b>
+ <b>19. Ensure that all log files are initially deleted: rm runtime/logs/*.log
+        Yiisoft will rebuild them automatically.
+        Viewing the initial logfile:
+        sudo nano /var/www/invoice/runtime/logs/app.log
+ </b>
+ <b>20. Settings ... General ... Stop Signing Up ... No
+        Use guerrillamail.com to receive the test email addresses
+        that are used in the signup process, in order for the recipient to confirm
+        their details i.e. clicking on the confirmation link ... and therefore
+        confirm that an email can be sent through port 465 using the latest
+        more secure symfony-mailer.
+ </b>
+ <b>21. To Output the first 30 lines of your mailer settings:
+        grep -A 30 "yiisoft/mailer-symfony"
+            /var/www/invoice/config/common/params.php
+ </b>
+ <b>22. Terminate your locally run wsl if you are using it so it does not
+        conflict with wampserver:
+        wsl --terminate Ubuntu   /Alpine
+ </b>
 </p>
 </pre>

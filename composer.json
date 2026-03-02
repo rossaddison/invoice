@@ -139,11 +139,11 @@
         "yiisoft/yii-dataview": ">=1",
         "yiisoft/yii-event": "^2.2",
         "yiisoft/yii-http": "^1.1.1",
-        "yiisoft/yii-middleware": ">=1.1.0",
+        "yiisoft/yii-middleware": ">=1.1.1",
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.0",
-        "zircote/swagger-php": ">=6.0.5"
+        "zircote/swagger-php": ">=6.0.6"
     },    
     "require-dev": {
         "codeception/c3": "^2.9",

@@ -119,7 +119,7 @@ abstract class BaseController
     {
         $customFields = $cfR->repoTablequery($tableName);
         $customValues =
-        $cvR->attach_hard_coded_custom_field_values_to_custom_field($customFields);
+        $cvR->fixCfValueToCf($customFields);
 
         return [
             'customFields' => $customFields,

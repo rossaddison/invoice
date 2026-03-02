@@ -22,7 +22,8 @@ class EventListenerConfigurationTest extends TestCase
             $_ENV['YII_ENV'] ?? 'dev',
             [
                 ReverseMerge::groups('events', 'events-web', 'events-console'),
-                RecursiveMerge::groups('params', 'params-web', 'params-console', 'events', 'events-web', 'events-console'),
+                RecursiveMerge::groups('params', 'params-web', 'params-console',
+                        'events', 'events-web', 'events-console'),
             ],
             'params-console',
         );

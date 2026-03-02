@@ -97,7 +97,6 @@ use App\Invoice\{
     Task\TaskRepository as TASKR,
     Unit\UnitRepository as UNR,
     UserClient\UserClientRepository as UCR,
-    UserClient\Exception\NoClientsAssignedToUserException,
     UserInv\UserInvRepository as UIR,
 };
 use App\User\UserRepository as UR;
@@ -1554,7 +1553,6 @@ final class QuoteController extends BaseController
      * @param UIR $uiR
      * @param int $page
      * @param int $status
-     * @throws NoClientsAssignedToUserException
      * @return \Psr\Http\Message\ResponseInterface
      */
     public function guest(
@@ -1673,7 +1671,8 @@ final class QuoteController extends BaseController
                     ];
                     return $this->webViewRenderer->render('guest', $parameters);
                 } // empty user client
-                throw new NoClientsAssignedToUserException($this->translator);
+                $this->flashMessage('warning',
+                            $this->translator->translate('user.clients.assigned.not'));
             } // userinv
         } //user
         return $this->webService->getNotFoundResponse();
@@ -3585,7 +3584,7 @@ final class QuoteController extends BaseController
                     $vat = $this->sR->getSetting('enable_vat_registration');
                     $quoteAmountTotal = $quote_amount->getTotal();
                     $customValues =
-                    $cvR->attach_hard_coded_custom_field_values_to_custom_field(
+                    $cvR->fixCfValueToCf(
                         $cfR->repoTablequery('quote_custom'));
                     $parameters = [
                         '_language' => $_language,
@@ -3695,7 +3694,7 @@ final class QuoteController extends BaseController
                         // quote.
                         'customFields' => $cfR->repoTablequery('quote_custom'),
                         'customValues' =>
-                        $cvR->attach_hard_coded_custom_field_values_to_custom_field(
+                        $cvR->fixCfValueToCf(
                             $cfR->repoTablequery('quote_custom')),
                         'cvH' => new CVH($this->sR, $cvR),
                         'quoteCustomValues' => $quote_custom_values,
