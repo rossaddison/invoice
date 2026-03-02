@@ -50,6 +50,8 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>2nd March 2026</b></p>
+<p>Stripe running with stricter Content Security Policy</p>
 <p><b>1st March 2026</b></p>
 <p>Remove javascript-serialize security vulnerability with override 7.0.3 in package.json</p>
 <p>The config/common/params.php filter_input(INPUT_ENV, 'SYMFONY_MAILER_USERNAME') ?? '' was causing an exception on vultr.com so replaced with S_ENV['SYMFONY_MAILER_USERNAME'] ?? ''.

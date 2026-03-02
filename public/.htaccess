@@ -12,11 +12,16 @@ RewriteEngine on
     # Content Security Policy for PWA    
     Header always set Content-Security-Policy "\
     default-src 'self'; \
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://cdn.jsdelivr.net; \
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; \
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://cdn.jsdelivr.net https://js.stripe.com https://*.stripe.com https://*.payments-amazon.com https://assets.braintreegateway.com; \
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://assets.braintreegateway.com; \
     font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; \
-    img-src 'self' data: blob: https:; \
-    connect-src 'self' https://api.storecove.com https://api.stripe.com; \
+    img-src 'self' data: blob: https: https://*.stripe.com; \
+    connect-src 'self' https://api.storecove.com https://api.stripe.com https://*.stripe.com; \
+    frame-src 'self' https://js.stripe.com https://*.stripe.com https://hooks.stripe.com https://assets.braintreegateway.com; \
+    child-src 'self' https://js.stripe.com https://*.stripe.com; \
+    form-action 'self'; \
+    base-uri 'self'; \
+    object-src 'none'; \
     manifest-src 'self'; \
     worker-src 'self'"
 </IfModule>
