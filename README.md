@@ -31,7 +31,7 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
-[Content Security Policy Updates](docs/CONTENT_SECURITY_POLICY_UPDATES) (March 2026)
+[Content Security Policy Updates](docs/CONTENT_SECURITY_POLICY_UPDATES.md) (March 2026)
 
 [Email Setup for yii3i.online](docs/EMAIL_SETUP_SUMMARY.md) (March 2026)
 
