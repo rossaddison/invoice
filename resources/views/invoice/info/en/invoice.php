@@ -50,6 +50,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>5th March 2026</b></p>
+<p>Updated Amazon Pay v2 to v2.7. Config array changed.</p>
+<p>Views Html converted to php.</p>
+<p>Include payment icons on the inv/view</p>
 <p><b>2nd March 2026</b></p>
 <p>Stripe running with stricter Content Security Policy</p>
 <p><b>1st March 2026</b></p>

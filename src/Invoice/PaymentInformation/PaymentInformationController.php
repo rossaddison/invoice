@@ -286,7 +286,8 @@ final class PaymentInformationController
     }
 
 /**
- * Related logic: https://developer.amazon.com/docs/amazon-pay-api-v2/
+ * Update: 29 May 2025
+ * Related logic: https://developer.amazon.com/docs/amazon-pay-api-v2.7/
  * checkout-session.html#create-checkout-session.
  */
     public function amazon_complete(Request $request, CurrentRoute $currentRoute): \Psr\Http\Message\ResponseInterface

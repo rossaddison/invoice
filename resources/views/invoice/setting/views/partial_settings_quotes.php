@@ -1,210 +1,447 @@
 <?php
 declare(strict_types=1);
 
+use Yiisoft\Html\Html as H;
+use Yiisoft\Html\Tag\Option;
+
 /**
- * @var App\Invoice\Setting\SettingRepository $s
- * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var array $body
- * @var array $invoice_groups
- * @var array $public_quote_templates
- * @var array $pdf_quote_templates
- * @var array $email_templates_quote
- */
-?>
-<div class='row'>
-    <div class="col-xs-12 col-md-8 col-md-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <?= $translator->translate('quote'); ?>
-            </div>
-            <div class="panel-body">
-                <div class='row'>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="settings[default_quote_group]">
-                                <?= $translator->translate('default.quote.group'); ?>
-                            </label>
-                            <?php $body['settings[default_quote_group]'] = $s->getSetting('default_quote_group');?>
-                            <select name="settings[default_quote_group]" id="settings[default_quote_group]"
-                                class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value=""><?= $translator->translate('none'); ?></option>
-                                <?php
-                                    /**
-                                     * @var App\Invoice\Entity\Group $invoice_group
-                                     */
-                                    foreach ($invoice_groups as $invoice_group) { ?>
-                                    <option value="<?= $invoice_group->getId(); ?>"
-                                        <?php $s->check_select($body['settings[default_quote_group]'], $invoice_group->getId()); ?>>
-                                        <?= $invoice_group->getName(); ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
+* @var App\Invoice\Setting\SettingRepository $s
+* @var Yiisoft\Translator\TranslatorInterface $translator
+* @var array $body
+* @var array $invoice_groups
+* @var array $public_quote_templates
+* @var array $pdf_quote_templates
+* @var array $email_templates_quote
+*/
 
-                        <div class="form-group">
-                            <label for="settings[default_quote_notes]">
-                                <?= $translator->translate('default.notes'); ?>
-                            </label>
-                            <?php $body['settings[default_quote_notes]'] = $s->getSetting('default_quote_notes');?>
-                            <textarea name="settings[default_quote_notes]" id="settings[default_quote_notes]" rows="3"
-                                class="form-control"><?= $body['settings[default_quote_notes]']; ?></textarea>
-                        </div>
+$row = ['class' => 'row'];
+$colMd6 = ['class' => 'col-xs-12 col-md-6'];
+$colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
+$panel = ['class' => 'panel panel-default'];
+$panelHead = ['class' => 'panel-heading'];
+$panelBody = ['class' => 'panel-body'];
+$formGroup = ['class' => 'form-group'];
+$formControl = ['class' => 'form-control'];
+$helpBlock = ['class' => 'help-block'];
+$noMargin = ['class' => 'form-control no-margin'];
+$minSearch = ['data-minimum-results-for-search' => 'Infinity'];
 
-                    </div>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="settings[quotes_expire_after]">
-                                <?= $translator->translate('quotes.expire.after'); ?>
-                            </label>
-                            <?php $body['settings[quotes_expire_after]'] = $s->getSetting('quotes_expire_after');?>
-                            <input type="number" name="settings[quotes_expire_after]" id="settings[quotes_expire_after]"
-                                class="form-control"
-                                value="<?= $body['settings[quotes_expire_after]']; ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="settings[generate_quote_number_for_draft]">
-                                <?= $translator->translate('generate.quote.number.for.draft'); ?>
-                            </label>                            
-                            <?php $body['settings[generate_quote_number_for_draft]'] = $s->getSetting('generate_quote_number_for_draft');?>
-                            <select name="settings[generate_quote_number_for_draft]" class="form-control"
-                                id="settings[generate_quote_number_for_draft]" data-minimum-results-for-search="Infinity">
-                                <option value="0">
-                                    <?= $translator->translate('no'); ?>
-                                </option>
-                                <option value="1" <?php $s->check_select($body['settings[generate_quote_number_for_draft]'], '1'); ?>>
-                                    <?= $translator->translate('yes'); ?>
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+echo H::openTag('div', $row); //1
+ echo H::openTag('div', $colMd8); //2
+  echo H::openTag('div', $panel); //3
+   echo H::openTag('div', $panelHead); //4
+    echo $translator->translate('quote');
+   echo H::closeTag('div'); //4
+   echo H::openTag('div', $panelBody); //4
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <?= $translator->translate('pdf.settings'); ?>
-            </div>
-            <div class="panel-body">
-                <div class='row'>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="settings[mark_quotes_sent_pdf]">
-                                <?= $translator->translate('mark.quotes.sent.pdf'); ?>
-                            </label>
-                            <?php $body['settings[mark_quotes_sent_pdf]'] = $s->getSetting('mark_quotes_sent_pdf');?>
-                            <select name="settings[mark_quotes_sent_pdf]" id="settings[mark_quotes_sent_pdf]"
-                                class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value="0">
-                                    <?= $translator->translate('no'); ?>
-                                </option>
-                                <option value="1" <?php $s->check_select($body['settings[mark_quotes_sent_pdf]'], '1'); ?>>
-                                    <?= $translator->translate('yes'); ?>
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="settings[quote_pre_password]">
-                                <?= $translator->translate('quote.pre.password'); ?>
-                            </label>
-                            <?php $body['settings[quote_pre_password]'] = $s->getSetting('quote_pre_password');?>
-                            <input type="text" name="settings[quote_pre_password]" id="settings[quote_pre_password]"
-                                class="form-control" value="<?= $body['settings[quote_pre_password]']; ?>">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <?= $translator->translate('quote.templates'); ?>
-            </div>
-            <div class="panel-body">
-                <div class='div'>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="settings[pdf_quote_template]">
-                                <?= $translator->translate('default.pdf.template'); ?>
-                            </label>                            
-                            <?php $body['settings[pdf_quote_template]'] = $s->getSetting('pdf_quote_template');?>
-                            <select name="settings[pdf_quote_template]" id="settings[pdf_quote_template]"
-                                class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value=""><?= $translator->translate('none'); ?></option>
-                                <?php
-                                    /**
-                                     * @var string $quote_template
-                                     */
-                                    foreach ($pdf_quote_templates as $quote_template) { ?>
-                                    <option value="<?= $quote_template; ?>"
-                                        <?php $s->check_select($body['settings[pdf_quote_template]'], $quote_template); ?>>
-                                        <?= ucfirst($quote_template); ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
+       echo H::openTag('label', [
+        'for' => 'settings[default_quote_group]'
+       ]); 
 
-                        <div class="form-group">
-                            <label for="settings[public_quote_template]">
-                                <?= $translator->translate('default.public.template'); ?>
-                            </label>                            
-                            <?php $body['settings[public_quote_template]'] = $s->getSetting('public_quote_template');?>
-                            <select name="settings[public_quote_template]" id="settings[public_quote_template]"
-                                class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value=""><?= $translator->translate('none'); ?></option>
-                                <?php
-                                    /**
-                                     * @var string $quote_template
-                                     */
-                                    foreach ($public_quote_templates as $quote_template) { ?>
-                                    <option value="<?= $quote_template; ?>"
-                                        <?php $s->check_select($body['settings[public_quote_template]'], $quote_template); ?>>
-                                        <?= ucfirst($quote_template); ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
+        echo $translator->translate(
+         'default.quote.group'
+        );
+       echo H::closeTag('label'); 
 
-                    </div>
-                    <div class="col-xs-12 col-md-6">
+       $body['settings[default_quote_group]'] = 
+       $s->getSetting('default_quote_group');
 
-                        <div class="form-group">
-                            <label for="settings[email_quote_template]">
-                                <?= $translator->translate('default.email.template'); ?>
-                            </label>                                                        
-                            <?php $body['settings[email_quote_template]'] = $s->getSetting('email_quote_template');?>
-                            <select name="settings[email_quote_template]" id="settings[email_quote_template]"
-                                class="form-control" data-minimum-results-for-search="Infinity">
-                                <option value=""><?= $translator->translate('none'); ?></option>
-                                <?php
-                                    /**
-                                     * @var App\Invoice\Entity\EmailTemplate $email_template
-                                     */
-                                    foreach ($email_templates_quote as $email_template) { ?>
-                                    <option value="<?= $email_template->getEmail_template_id(); ?>"
-                                        <?php $s->check_select($body['settings[email_quote_template]'], $email_template->getEmail_template_id()); ?>>
-                                        <?= $email_template->getEmail_template_title(); ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class='row'>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="settings[pdf_quote_footer]">
-                                <?= $translator->translate('pdf.quote.footer'); ?>
-                            </label>                                                                                    
-                            <?php $body['settings[pdf_quote_footer]'] = $s->getSetting('pdf_quote_footer');?>
-                            <textarea name="settings[pdf_quote_footer]" id="settings[pdf_quote_footer]"
-                                class="form-control no-margin"><?= $body['settings[pdf_quote_footer]']; ?></textarea>
-                            <p class="help-block"><?= $translator->translate('pdf.quote.footer.hint'); ?></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+       echo H::openTag('select', array_merge([
+        'name' => 'settings[default_quote_group]',
+        'id' => 'settings[default_quote_group]'
+       ], $formControl, $minSearch)); 
+
+
+        echo Option::tag()
+         ->value('')
+         ->content($translator->translate('none'));
+
+
+        /**
+        * @var App\Invoice\Entity\Group 
+        * $invoice_group
+        */
+        foreach ($invoice_groups as $invoice_group) { 
+        echo Option::tag()
+         ->value($invoice_group->getId())
+         ->selected(
+          $body['settings[default_quote_group]'] 
+          == $invoice_group->getId()
+         )
+         ->content(
+          $invoice_group->getName() ?? ''
+         );
+        } 
+
+       echo H::closeTag('select'); 
+      echo H::closeTag('div'); //7
+
+      echo H::openTag('div', $formGroup); //7
+
+       echo H::openTag('label', [
+        'for' => 'settings[default_quote_notes]'
+       ]); 
+
+        echo $translator->translate('default.notes');
+       echo H::closeTag('label'); 
+
+       $body['settings[default_quote_notes]'] = 
+       $s->getSetting('default_quote_notes');
+
+
+       echo H::openTag('textarea', array_merge([
+        'name' => 'settings[default_quote_notes]',
+        'id' => 'settings[default_quote_notes]',
+        'rows' => '3'
+       ], $formControl)); 
+
+        echo $body['settings[default_quote_notes]'];
+       echo H::closeTag('textarea'); 
+      echo H::closeTag('div'); //7
+
+     echo H::closeTag('div'); //6
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
+
+       echo H::openTag('label', [
+        'for' => 'settings[quotes_expire_after]'
+       ]); 
+
+        echo $translator->translate(
+         'quotes.expire.after'
+        );
+       echo H::closeTag('label'); 
+
+       $body['settings[quotes_expire_after]'] = 
+       $s->getSetting('quotes_expire_after');
+
+
+       echo H::openTag('input', array_merge([
+        'type' => 'number',
+        'name' => 'settings[quotes_expire_after]',
+        'id' => 'settings[quotes_expire_after]',
+        'value' => 
+        $body['settings[quotes_expire_after]']
+       ], $formControl)); 
+
+      echo H::closeTag('div'); //7
+      echo H::openTag('div', $formGroup); //7
+
+       echo H::openTag('label', [
+        'for' => 
+        'settings[generate_quote_number_for_draft]'
+       ]); 
+
+        echo $translator->translate(
+         'generate.quote.number.for.draft'
+        );
+       echo H::closeTag('label'); 
+
+       $body['settings[generate_quote_number_for_draft]'] = 
+       $s->getSetting(
+        'generate_quote_number_for_draft'
+       );
+
+
+       echo H::openTag('select', array_merge([
+        'name' => 
+        'settings[generate_quote_number_for_draft]',
+        'id' => 
+        'settings[generate_quote_number_for_draft]'
+       ], $formControl, $minSearch)); 
+
+
+        echo Option::tag()
+         ->value('0')
+         ->content(
+          $translator->translate('no')
+         );
+
+
+        echo Option::tag()
+         ->value('1')
+         ->selected(
+          $body[
+          'settings['.
+          'generate_quote_number_for_draft]'
+         ] == '1'
+        )
+         ->content(
+          $translator->translate('yes')
+         );
+
+       echo H::closeTag('select'); 
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
+   echo H::closeTag('div'); //4
+  echo H::closeTag('div'); //3
+
+  echo H::openTag('div', $panel); //3
+   echo H::openTag('div', $panelHead); //4
+    echo $translator->translate('pdf.settings');
+   echo H::closeTag('div'); //4
+   echo H::openTag('div', $panelBody); //4
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
+
+       echo H::openTag('label', [
+        'for' => 'settings[mark_quotes_sent_pdf]'
+       ]); 
+
+        echo $translator->translate(
+         'mark.quotes.sent.pdf'
+        );
+       echo H::closeTag('label'); 
+
+       $body['settings[mark_quotes_sent_pdf]'] = 
+       $s->getSetting('mark_quotes_sent_pdf');
+
+
+       echo H::openTag('select', array_merge([
+        'name' => 'settings[mark_quotes_sent_pdf]',
+        'id' => 'settings[mark_quotes_sent_pdf]'
+       ], $formControl, $minSearch)); 
+
+
+        echo Option::tag()
+         ->value('0')
+         ->content(
+          $translator->translate('no')
+         );
+
+
+        echo Option::tag()
+         ->value('1')
+         ->selected(
+          $body['settings[mark_quotes_sent_pdf]'] 
+          == '1'
+         )
+         ->content(
+          $translator->translate('yes')
+         );
+
+       echo H::closeTag('select'); 
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
+
+       echo H::openTag('label', [
+        'for' => 'settings[quote_pre_password]'
+       ]); 
+
+        echo $translator->translate(
+         'quote.pre.password'
+        );
+       echo H::closeTag('label'); 
+
+       $body['settings[quote_pre_password]'] = 
+       $s->getSetting('quote_pre_password');
+
+
+       echo H::openTag('input', array_merge([
+        'type' => 'text',
+        'name' => 'settings[quote_pre_password]',
+        'id' => 'settings[quote_pre_password]',
+        'value' => 
+        $body['settings[quote_pre_password]']
+       ], $formControl)); 
+
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
+   echo H::closeTag('div'); //4
+  echo H::closeTag('div'); //3
+  echo H::openTag('div', $panel); //3
+   echo H::openTag('div', $panelHead); //4
+    echo $translator->translate('quote.templates');
+   echo H::closeTag('div'); //4
+   echo H::openTag('div', $panelBody); //4
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
+
+       echo H::openTag('label', [
+        'for' => 'settings[pdf_quote_template]'
+       ]); 
+
+        echo $translator->translate(
+         'default.pdf.template'
+        );
+       echo H::closeTag('label'); 
+
+       $body['settings[pdf_quote_template]'] = 
+       $s->getSetting('pdf_quote_template');
+
+
+       echo H::openTag('select', array_merge([
+        'name' => 'settings[pdf_quote_template]',
+        'id' => 'settings[pdf_quote_template]'
+       ], $formControl, $minSearch)); 
+
+
+        echo Option::tag()
+         ->value('')
+         ->content($translator->translate('none'));
+
+
+        /**
+        * @var string $quote_template
+        */
+        foreach ($pdf_quote_templates 
+         as $quote_template) { 
+         echo Option::tag()
+         ->value($quote_template)
+         ->selected(
+         $body['settings[pdf_quote_template]'] 
+         == $quote_template
+        )
+         ->content(ucfirst($quote_template));
+        } 
+
+       echo H::closeTag('select'); 
+      echo H::closeTag('div'); //7
+
+      echo H::openTag('div', $formGroup); //7
+
+       echo H::openTag('label', [
+        'for' => 'settings[public_quote_template]'
+       ]); 
+
+        echo $translator->translate(
+         'default.public.template'
+        );
+       echo H::closeTag('label'); 
+
+       $body['settings[public_quote_template]'] = 
+       $s->getSetting('public_quote_template');
+
+
+       echo H::openTag('select', array_merge([
+        'name' => 'settings[public_quote_template]',
+        'id' => 'settings[public_quote_template]'
+       ], $formControl, $minSearch)); 
+
+
+        echo Option::tag()
+         ->value('')
+         ->content($translator->translate('none'));
+
+
+        /**
+        * @var string $quote_template
+        */
+        foreach ($public_quote_templates 
+         as $quote_template) { 
+         echo Option::tag()
+         ->value($quote_template)
+         ->selected(
+         $body[
+         'settings[public_quote_template]'
+        ] == $quote_template
+        )
+         ->content(ucfirst($quote_template));
+        } 
+
+       echo H::closeTag('select'); 
+      echo H::closeTag('div'); //7
+
+     echo H::closeTag('div'); //6
+     echo H::openTag('div', $colMd6); //6
+
+      echo H::openTag('div', $formGroup); //7
+
+       echo H::openTag('label', [
+        'for' => 'settings[email_quote_template]'
+       ]); 
+
+        echo $translator->translate(
+         'default.email.template'
+        );
+       echo H::closeTag('label'); 
+
+       $body['settings[email_quote_template]'] = 
+       $s->getSetting('email_quote_template');
+
+
+       echo H::openTag('select', array_merge([
+        'name' => 'settings[email_quote_template]',
+        'id' => 'settings[email_quote_template]'
+       ], $formControl, $minSearch)); 
+
+
+        echo Option::tag()
+         ->value('')
+         ->content($translator->translate('none'));
+
+
+        /**
+        * @var App\Invoice\Entity\EmailTemplate 
+        * $email_template
+        */
+        foreach ($email_templates_quote 
+         as $email_template) { 
+         echo Option::tag()
+         ->value(
+         $email_template
+         ->getEmail_template_id()
+        )
+         ->selected(
+          $body[
+          'settings[email_quote_template]'
+         ] == $email_template
+         ->getEmail_template_id()
+        )
+         ->content(
+          $email_template
+          ->getEmail_template_title() 
+          ?? ''
+         );
+        } 
+
+       echo H::closeTag('select'); 
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
+
+       echo H::openTag('label', [
+        'for' => 'settings[pdf_quote_footer]'
+       ]); 
+
+        echo $translator->translate(
+         'pdf.quote.footer'
+        );
+       echo H::closeTag('label'); 
+
+       $body['settings[pdf_quote_footer]'] = 
+       $s->getSetting('pdf_quote_footer');
+
+
+       echo H::openTag('textarea', array_merge([
+        'name' => 'settings[pdf_quote_footer]',
+        'id' => 'settings[pdf_quote_footer]'
+       ], $noMargin)); 
+
+        echo $body['settings[pdf_quote_footer]'];
+       echo H::closeTag('textarea'); 
+
+       echo H::openTag('p', $helpBlock); 
+
+        echo $translator->translate('pdf.quote.footer.hint');
+       echo H::closeTag('p'); 
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+    echo H::closeTag('div'); //5
+   echo H::closeTag('div'); //4
+  echo H::closeTag('div'); //3
+ echo H::closeTag('div'); //2
+echo H::closeTag('div'); //1

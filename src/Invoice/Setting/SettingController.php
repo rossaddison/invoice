@@ -19,6 +19,7 @@ use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
+use App\Invoice\Setting\Trait\SettingsTabBootstrap5;
 use App\Invoice\TaxRate\TaxRateRepository as TR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -53,6 +54,7 @@ use DateTimeZone;
 final class SettingController extends BaseController
 {
     use OpenBankingProviders;
+    use SettingsTabBootstrap5;
 
     protected string $controllerName = 'invoice/setting';
 
@@ -235,10 +237,7 @@ final class SettingController extends BaseController
             ]),
             // two-factor-authentication
             'tfa' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_two_factor_authentication'),
-            'bootstrap5' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_bootstrap5', [
-                'alertMessageFontSize' => '10',
-                'alertCloseButtonFontSize' => '10',
-            ]),
+            'bootstrap5' => $this->bootstrap5Partial(),
         ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody();

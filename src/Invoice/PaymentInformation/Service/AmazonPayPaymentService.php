@@ -8,15 +8,14 @@ use Amazon\Pay\API\Client;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvAmount\InvAmountRepository;
-use App\Invoice\Libraries\Crypt;
-use App\Invoice\Setting\SettingRepository;
+use App\Invoice\Setting\SettingRepository as sR;
 use Yiisoft\Json\Json;
 use Yiisoft\Security\Random;
 
 class AmazonPayPaymentService
 {
     public function __construct(
-        private readonly SettingRepository $settingRepository,
+        private readonly sR $sR,
     ) {
     }
 
@@ -24,7 +23,8 @@ class AmazonPayPaymentService
      * Create a payment request for Amazon Pay.
      * Customize this method as needed for your integration.
      */
-    public function createPaymentRequest(float $amount, string $currency, array $options = []): array
+    public function createPaymentRequest(float $amount, string $currency,
+            array $options = []): array
     {
         // Integrate with Amazon Pay SDK or API here.
         // Return data required for frontend or further processing.
@@ -53,19 +53,26 @@ class AmazonPayPaymentService
                 'details' => null,
             ];
         }
-
+        
+        $sandboxOrLive = '';
         try {
+            if ($this->sR->getSetting('gateway_amazon_pay_sandbox') === '1') {
+                $sandboxOrLive = 'SANDBOX-';
+            } else {
+                $sandboxOrLive = 'LIVE-';
+            }
             $amazonpayConfig = [
-                'public_key_id' => $this->settingRepository
-                                        ->decode($this->settingRepository
-                                                      ->getSetting('gateway_amazon_pay_publicKeyId')),
+                'public_key_id' => $sandboxOrLive
+                . (string) $this->sR->decode($this->sR->getSetting(
+                        'gateway_amazon_pay_publicKeyId')),
                 'private_key' => $this->getAmazonPrivateKeyFile(),
                 'region' => $this->getAmazonRegion(),
-                'sandbox' => $this->settingRepository->getSetting('gateway_amazon_pay_sandbox') === '1',
+                'algorithm' => 'AMZN-PAY-RSASSA-PSS-V2'
             ];
             $client = new Client($amazonpayConfig);
 
-            $apiResponse = (array) $client->getCheckoutSession(['checkoutSessionId' => $sessionId]);
+            $apiResponse = (array) $client->getCheckoutSession(
+                    ['checkoutSessionId' => $sessionId]);
             $responseData = (array) $apiResponse['response'];
             $statusDetails = (array) $responseData['statusDetails'];
             /** @var string|null $paymentState */
@@ -91,7 +98,8 @@ class AmazonPayPaymentService
             $invoice->setStatus_id(4);      // 4 = Paid
             $invoiceRepository->save($invoice);
 
-            $invoiceAmountRecord = $invoiceAmountRepository->repoInvquery((int) $invoice->getId());
+            $invoiceAmountRecord =
+                $invoiceAmountRepository->repoInvquery((int) $invoice->getId());
             if ($invoiceAmountRecord) {
                 $balance = $invoiceAmountRecord->getBalance();
                 if (null !== $balance) {
@@ -120,12 +128,15 @@ class AmazonPayPaymentService
 
     public function checkPrivatePemFile(): ?array
     {
-        $aliases = $this->settingRepository->get_amazon_pem_file_folder_aliases();
+        $aliases = $this->sR->get_amazon_pem_file_folder_aliases();
         if (!file_exists($aliases->get('@pem_file_unique_folder') . '/private.pem')) {
             return [
                 'heading' => '',
                 'message' => 'Amazon_Pay private.pem File Not Downloaded.'.
-                ' from Amazon and saved in Pem_unique_folder as private.pem',
+                ' from Amazon and saved in Pem_unique_folder as'
+                . ' private.pem (Amazon Pay: 29 May 2025) Download at:'
+                . 'https://sellercentral-europe.amazon.com/gp/pyop/seller/'
+                . 'integrationcentral?ref=py_intcentr_confcard_sboxhome_GB',
                 'url' => 'inv/url_key',
                 'url_key' => '', // Set dynamically in controller
                 'gateway' => 'Amazon_Pay',
@@ -147,29 +158,26 @@ class AmazonPayPaymentService
     {
         // Get client language and determine Amazon language code
         $client_language = $invoice->getClient()?->getClient_language() ?? '';
-        $amazon_languages = $this->settingRepository->amazon_languages();
+        $amazon_languages = $this->sR->amazon_languages();
         $checkoutLanguage = 'en_GB';
         if ($client_language && isset($amazon_languages[$client_language])) {
             $checkoutLanguage = $amazon_languages[$client_language];
         }
 
         // Get ledger currency
-        $ledgerCurrency = $this->settingRepository->getSetting('currency_code') ?: 'GBP';
+        $ledgerCurrency = $this->sR->getSetting('currency_code') ?: 'GBP';
 
         // Get merchant and public key id
-        $merchantId = (string) $this->settingRepository
-                                    ->decode($this->settingRepository
-                                    ->getSetting('gateway_amazon_pay_merchantId'));
-        $publicKeyId = (string) $this->settingRepository
-                                     ->decode($this->settingRepository
-                                     ->getSetting('gateway_amazon_pay_publicKeyId'));
+        $merchantId =
+            (string) $this->sR->decode($this->sR->getSetting('gateway_amazon_pay_merchantId'));
+        $publicKeyId =
+            (string) $this->sR->decode($this->sR->getSetting('gateway_amazon_pay_publicKeyId'));
 
         // Generate the payload JSON for Amazon Pay
-        $checkoutReviewReturnUrl = $this->settingRepository
-                                        ->getSetting('gateway_amazon_pay_returnUrl') . '/' . $url_key;
-        $storeId = (string) $this->settingRepository
-                                 ->decode($this->settingRepository
-                                               ->getSetting('gateway_amazon_pay_storeId'));
+        $checkoutReviewReturnUrl = $this->sR->getSetting('gateway_amazon_pay_returnUrl')
+            . '/' . $url_key;
+        $storeId =
+            (string) $this->sR->decode($this->sR->getSetting('gateway_amazon_pay_storeId'));
 
         $payloadArray = [
             'webCheckoutDetails' => [
@@ -213,7 +221,8 @@ class AmazonPayPaymentService
 
     /**
      * Related logic: see https://developer.amazon.com
-     * /docs/amazon-pay-checkout/add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
+     * /docs/amazon-pay-checkout/
+     * add-the-amazon-pay-button.html#2-generate-the-create-checkout-session-payload
      * Step 3: Sign the payload
      *
      * @param string $payloadJSON
@@ -224,12 +233,12 @@ class AmazonPayPaymentService
     {
         $amazonpay_config = [
             'public_key_id' =>
-                $this->settingRepository
-                     ->decode($this->settingRepository
+                $this->sR
+                     ->decode($this->sR
                                    ->getSetting('gateway_amazon_pay_publicKeyId')),
             'private_key' => $this->getAmazonPrivateKeyFile(),
             'region' => $this->getAmazonRegion(),
-            'sandbox' => $this->settingRepository->getSetting('gateway_amazon_pay_sandbox') === '1',
+            'sandbox' => $this->sR->getSetting('gateway_amazon_pay_sandbox') === '1',
         ];
         $client = new Client($amazonpay_config);
 
@@ -241,8 +250,7 @@ class AmazonPayPaymentService
 
     private function getAmazonPrivateKeyFile(): string
     {
-        $aliases = $this->settingRepository
-                        ->get_amazon_pem_file_folder_aliases();
+        $aliases = $this->sR->get_amazon_pem_file_folder_aliases();
         $targetPath = $aliases->get('@pem_file_unique_folder');
         $original_file_name = 'private.pem';
         return $targetPath . '/' . $original_file_name;
@@ -250,8 +258,8 @@ class AmazonPayPaymentService
 
     private function getAmazonRegion(): string
     {
-        $regions = $this->settingRepository->amazon_regions();
-        $region = $this->settingRepository->getSetting('gateway_amazon_pay_region');
+        $regions = $this->sR->amazon_regions();
+        $region = $this->sR->getSetting('gateway_amazon_pay_region');
         return (string) $regions[$region] ?: 'eu';
     }
 }

@@ -600,7 +600,7 @@ $columns = [
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('email.warning.draft'),
-                    'class' => 'btn btn-outline-primary btn-sm dropdown-item',
+                    'class' => 'btn btn-outline-primary btn-lg dropdown-item',
                 ],
             ),
         ],
@@ -613,7 +613,9 @@ $columns = [
         header: $translator->translate('number'),
         content: static function (Inv $model) use ($urlGenerator): A {
             return  A::tag()
-                    ->addAttributes(['style' => 'text-decoration:none'])
+                    ->addAttributes([
+                        'class' => 'btn btn-primary btn-lg',
+                        'style' => 'text-decoration:none'])
                     ->content(($model->getNumber() ?? '#') . ' 🔍')
                     ->href($urlGenerator->generate('inv/view',
                                                     ['id' => $model->getId()]));

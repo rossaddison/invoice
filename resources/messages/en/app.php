@@ -1031,6 +1031,8 @@ return [
   'invoice' => 'Invoice',
   'invoice.to.html' => 'Invoice to Html',
   'invoice.created.from.quote' => 'Invoice created from quote',
+  'invoice.needs.to.be.sent' => 'To see Pay buttons change'
+    . ' status to sent.',
   'invoice.validation.errors' => 'Invoice Validation Errors',
   'invoiced' => 'Invoiced',
   'invoiceplane' => 'InvoicePlane',

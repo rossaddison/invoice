@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Widget\Button;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\A;
@@ -450,9 +451,13 @@ if ((in_array($inv->getStatus_id(), [2, 3])
             ]);
              echo H::openTag('i', ['class' => 'fa fa-minus fa-margin']);
              echo H::closeTag('i');
-             echo ' '
-                . H::encode($translator->translate('pay.now')
-                . '-' . ucfirst($gateway));
+             echo $translator->translate('pay.now')
+                . '➡️'
+                . (ucfirst($gateway) == 'Braintree' ? Button::braintree() : '')
+                . (ucfirst($gateway) == 'Stripe' ? Button::stripe() : '')
+                . (ucfirst($gateway) == 'Amazon_Pay' ? Button::amazon() : '')
+                . (ucfirst($gateway) == 'Mollie' ? Button::mollie() : '');
+                  
             echo H::closeTag('a');
         }
         // show a message modal if there is no payment method
@@ -473,6 +478,20 @@ if ((in_array($inv->getStatus_id(), [2, 3])
         }
         echo H::closeTag('li');
     }
+} 
+if ((in_array($inv->getStatus_id(), [1]))) {
+    echo H::openTag('li');
+        echo H::openTag('a', [
+                'href' => '#modal-message-inv',
+                'data-bs-toggle' => 'modal',
+                'style' => 'text-decoration:none'
+            ]);
+             echo H::openTag('i', ['class' => 'fa fa-minus fa-margin']);
+             echo H::closeTag('i');
+             echo ' ' . H::encode($translator->translate('pay.now') . '-'
+                     . $translator->translate('invoice.needs.to.be.sent'));
+            echo H::closeTag('a');
+    echo H::closeTag('li');
 }
 echo H::openTag('li');
 ?>
@@ -1083,3 +1102,4 @@ if (!empty($inv->getSo_id())) {
    echo H::closeTag('div');
    echo $modal_add_allowance_charge;
   echo H::closeTag('div');
+  
