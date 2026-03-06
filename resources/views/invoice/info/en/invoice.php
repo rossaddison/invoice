@@ -53,6 +53,7 @@
 <p><b>6th March 2026</b></p>
 <p>Bugfix: Update inv_id session variable if using function url_key
 otherwise route inv/attachment only picks up _language argument and not also the id argument</p>
+<p>Removed 6 security vulnerabilities from hono via "npm-check-updates": "^19.6.3"</p>
 <p><b>5th March 2026</b></p>
 <p>Updated Amazon Pay v2 to v2.7. Config array changed.</p>
 <p>Views Html converted to php.</p>
