@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3f5f836cc9adedff672fb90c7a71837e",
+    "content-hash": "4eb3d5196c725fc7982d48db0a45c47b",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -13836,24 +13836,25 @@
         },
         {
             "name": "yiisoft/bootstrap5",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/bootstrap5.git",
-                "reference": "f8770e4281b7dbbb33c7b695e64a52d360795fc7"
+                "reference": "94da3be20f85d4b06fde186c2718742c0049a2c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/bootstrap5/zipball/f8770e4281b7dbbb33c7b695e64a52d360795fc7",
-                "reference": "f8770e4281b7dbbb33c7b695e64a52d360795fc7",
+                "url": "https://api.github.com/repos/yiisoft/bootstrap5/zipball/94da3be20f85d4b06fde186c2718742c0049a2c6",
+                "reference": "94da3be20f85d4b06fde186c2718742c0049a2c6",
                 "shasum": ""
             },
             "require": {
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "8.1 - 8.5",
                 "yiisoft/html": "^3.0",
                 "yiisoft/widget": "^2.0"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.92.5",
                 "maglnet/composer-require-checker": "^4.1",
                 "phpunit/phpunit": "^10.5",
                 "rector/rector": "^2.0",
@@ -13900,7 +13901,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-04-13T19:55:03+00:00"
+            "time": "2026-03-06T17:24:11+00:00"
         },
         {
             "name": "yiisoft/cache",
@@ -25292,5 +25293,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
