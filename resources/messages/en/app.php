@@ -1600,6 +1600,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' will be displayed on the bottom'
     . ' of your PDF invoices.',
   'pdf.modal' => 'Modal Pdf',
+  'install.pdf.viewer.extension' => 'Install PDF Viewer Extension',
   'pdf.quote.footer' => 'Quote footer',
   'pdf.quote.footer.hint' => 'You can enter '
     . 'any HTML here which will be displayed'

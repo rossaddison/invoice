@@ -4904,7 +4904,7 @@ echo file_get_contents($temp_aliase, true);
                 // the observer user may be paying for more than one client    
                 && ($ucR->repoUserClientqueryCount($inv->getUser_id(),
                                                 $inv->getClient_id()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
+                $userInv = $uiR->repoUserInvUserIdquery($inv->getUser_id());
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {
                     return true;

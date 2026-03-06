@@ -302,6 +302,15 @@ final readonly class ButtonsToolbarFull
             $htmlTitle,
         );
 
+        // Chrome PDF Viewer Extension
+        $buttons[] = $this->createWindowButton(
+            'chrome-pdf-viewer',
+            'https://chromewebstore.google.com/detail/pdf-viewer/oemmndcbldboiebfnladdacbdfmadadm?pli=1',
+            'fa-chrome',
+            'btn-outline-primary',
+            $this->translator->translate('install.pdf.viewer.extension'),
+        );
+
         // Delete buttons (if allowed)
         if ($this->canDeleteInvoice($inv, $invEdit)) {
             $buttons[] = $this->createModalButton(
