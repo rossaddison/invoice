@@ -3899,6 +3899,7 @@ echo file_get_contents($temp_aliase, true);
         $inv = $iR->repoUrl_key_guest_loaded($urlKey);
         if ($inv instanceof Inv) {
             $inv_id = $inv->getId();
+            $this->session->set('inv_id', $inv_id);
             if ($itrR->repoCount($inv_id) == 0) {
                 $this->flashMessage('warning',
                     $this->translator->translate('tax.rate.active.not'));

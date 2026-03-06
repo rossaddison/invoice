@@ -50,6 +50,9 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>6th March 2026</b></p>
+<p>Bugfix: Update inv_id session variable if using function url_key
+otherwise route inv/attachment only picks up _language argument and not also the id argument</p>
 <p><b>5th March 2026</b></p>
 <p>Updated Amazon Pay v2 to v2.7. Config array changed.</p>
 <p>Views Html converted to php.</p>
