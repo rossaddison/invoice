@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b8a97590a76e93f6cc082122507bcdab",
+    "content-hash": "3f5f836cc9adedff672fb90c7a71837e",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -2031,16 +2031,16 @@
         },
         {
             "name": "cycle/orm",
-            "version": "v2.14.2",
+            "version": "v2.14.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cycle/orm.git",
-                "reference": "c6d621bcf68d749b36c9802549b32a61469f3db3"
+                "reference": "2e9463eafae14f4e7de2e4a9f56ce34f3ec20cb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cycle/orm/zipball/c6d621bcf68d749b36c9802549b32a61469f3db3",
-                "reference": "c6d621bcf68d749b36c9802549b32a61469f3db3",
+                "url": "https://api.github.com/repos/cycle/orm/zipball/2e9463eafae14f4e7de2e4a9f56ce34f3ec20cb7",
+                "reference": "2e9463eafae14f4e7de2e4a9f56ce34f3ec20cb7",
                 "shasum": ""
             },
             "require": {
@@ -2114,7 +2114,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-05T13:59:29+00:00"
+            "time": "2026-03-06T06:58:01+00:00"
         },
         {
             "name": "cycle/schema-builder",
