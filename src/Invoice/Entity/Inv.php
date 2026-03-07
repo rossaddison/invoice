@@ -204,6 +204,18 @@ class Inv
     {
         return $this->items;
     }
+    
+    public function getFirstItemFamilyProductName(): string
+    {
+        foreach ($this->items as $item) {
+            $familyName =
+                $item->getProduct()?->getFamily()?->getFamily_name() ?? '';
+            $productName =
+                $item->getProduct()?->getProduct_name() ?? '';
+            return $familyName . '➡️' . $productName;
+        }
+        return '';
+    }
 
     /**
      * @return numeric-string|null

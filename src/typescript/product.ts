@@ -58,10 +58,24 @@ export class ProductHandler {
         this.bindEventListeners();
         this.exposeGlobalFunctions();
         this.initializeComponents();
+        this.bindModalEvents();
+    }
+
+    private bindModalEvents(): void {
+        // Listen for Bootstrap modal shown event to initialize components
+        document.addEventListener('shown.bs.modal', (event) => {
+            const target = event.target as HTMLElement;
+            if (target && target.id === 'modal-choose-items') {
+                console.log('Product modal shown, initializing components');
+                this.updateButtonStates();
+            }
+        });
     }
 
     private bindEventListeners(): void {
         document.addEventListener('click', this.handleClick.bind(this), true);
+        document.addEventListener('change', this.handleChange.bind(this), true);
+        document.addEventListener('keydown', this.handleKeydown.bind(this), true);
     }
 
     private handleClick(event: Event): void {
@@ -84,6 +98,32 @@ export class ProductHandler {
             return;
         }
 
+        // Handle filter button clicks
+        if (target.id === 'filter-button-inv' || target.closest('#filter-button-inv')) {
+            event.preventDefault();
+            this.filterProducts('inv');
+            return;
+        }
+
+        if (target.id === 'filter-button-quote' || target.closest('#filter-button-quote')) {
+            event.preventDefault();
+            this.filterProducts('quote');
+            return;
+        }
+
+        // Handle reset button clicks
+        if (target.id === 'product-reset-button-inv' || target.closest('#product-reset-button-inv')) {
+            event.preventDefault();
+            this.resetProducts('inv');
+            return;
+        }
+
+        if (target.id === 'product-reset-button-quote' || target.closest('#product-reset-button-quote')) {
+            event.preventDefault();
+            this.resetProducts('quote');
+            return;
+        }
+
         // Handle product row clicks (for checkbox toggling)
         const productRow = target.closest('.product');
         if (productRow && target.tagName !== 'INPUT') {
@@ -97,6 +137,33 @@ export class ProductHandler {
         // Handle checkbox state changes
         if (target.matches("input[name='product_ids[]']")) {
             this.updateButtonStates();
+        }
+    }
+
+    private handleChange(event: Event): void {
+        const target = event.target as HTMLElement;
+
+        // Handle family dropdown changes
+        if (target.id === 'filter_family_inv') {
+            this.filterProducts('inv');
+        }
+        if (target.id === 'filter_family_quote') {
+            this.filterProducts('quote');
+        }
+    }
+
+    private handleKeydown(event: KeyboardEvent): void {
+        if (event.key === 'Enter') {
+            const target = event.target as HTMLElement;
+            
+            if (target.id === 'filter_product_inv') {
+                event.preventDefault();
+                this.filterProducts('inv');
+            }
+            if (target.id === 'filter_product_quote') {
+                event.preventDefault();
+                this.filterProducts('quote');
+            }
         }
     }
 
@@ -381,5 +448,109 @@ export class ProductHandler {
     private exposeGlobalFunctions(): void {
         // Export tableFunction to global scope in case other scripts call it
         (window as any).productTableFilter = this.filterTableBySku.bind(this);
+    }
+
+    /**
+     * Filter products by family and/or product name
+     */
+    private async filterProducts(type: 'inv' | 'quote'): Promise<void> {
+        const familySelect = document.getElementById(`filter_family_${type}`) as HTMLSelectElement;
+        const productInput = document.getElementById(`filter_product_${type}`) as HTMLInputElement;
+        const productTable = document.getElementById('product-lookup-table');
+        
+        if (!productTable) return;
+        
+        const familyId = familySelect ? familySelect.value : '0';
+        const productFilter = productInput ? productInput.value.trim() : '';
+        
+        // Show loading spinner
+        productTable.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+        
+        // Build URL with query parameters
+        const params = new URLSearchParams();
+        if (familyId && familyId !== '0') {
+            params.append('ff', familyId);
+        }
+        if (productFilter) {
+            params.append('fp', productFilter);
+        }
+        const queryString = params.toString();
+        const url = queryString ? `/invoice/product/lookup?${queryString}` : '/invoice/product/lookup';
+        
+        console.log('Filtering products:', { type, familyId, productFilter, url });
+        
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin',
+                cache: 'no-store'
+            });
+            
+            const html = await response.text();
+            
+            console.log('Received HTML response, length:', html.length);
+            console.log('HTML preview:', html.substring(0, 200));
+            
+            // Secure HTML insertion using DOMParser to prevent XSS
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const fragment = document.createDocumentFragment();
+            Array.from(doc.body.children).forEach(child => fragment.appendChild(child));
+            productTable.innerHTML = '';
+            productTable.appendChild(fragment);
+            
+            console.log('Products table updated, children count:', productTable.children.length);
+            this.updateButtonStates();
+        } catch (error) {
+            console.error('Error filtering products:', error);
+            productTable.innerHTML = '<p class="text-danger">Error loading products</p>';
+        }
+    }
+
+    /**
+     * Reset product filters and reload all products
+     */
+    private async resetProducts(type: 'inv' | 'quote'): Promise<void> {
+        const familySelect = document.getElementById(`filter_family_${type}`) as HTMLSelectElement;
+        const productInput = document.getElementById(`filter_product_${type}`) as HTMLInputElement;
+        const productTable = document.getElementById('product-lookup-table');
+        
+        if (!productTable) return;
+        
+        // Reset form fields
+        if (familySelect) familySelect.value = '0';
+        if (productInput) productInput.value = '';
+        
+        // Show loading spinner
+        productTable.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+        
+        // Load all products with reset parameter
+        try {
+            const response = await fetch('/invoice/product/lookup?rt=true', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'same-origin',
+                cache: 'no-store'
+            });
+            
+            const html = await response.text();
+            
+            // Secure HTML insertion using DOMParser to prevent XSS
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const fragment = document.createDocumentFragment();
+            Array.from(doc.body.children).forEach(child => fragment.appendChild(child));
+            productTable.innerHTML = '';
+            productTable.appendChild(fragment);
+            this.updateButtonStates();
+        } catch (error) {
+            console.error('Error resetting products:', error);
+            productTable.innerHTML = '<p class="text-danger">Error loading products</p>';
+        }
     }
 }

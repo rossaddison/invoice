@@ -1660,9 +1660,21 @@ var InvoiceApp = (() => {
       this.bindEventListeners();
       this.exposeGlobalFunctions();
       this.initializeComponents();
+      this.bindModalEvents();
+    }
+    bindModalEvents() {
+      document.addEventListener("shown.bs.modal", (event) => {
+        const target = event.target;
+        if (target && target.id === "modal-choose-items") {
+          console.log("Product modal shown, initializing components");
+          this.updateButtonStates();
+        }
+      });
     }
     bindEventListeners() {
       document.addEventListener("click", this.handleClick.bind(this), true);
+      document.addEventListener("change", this.handleChange.bind(this), true);
+      document.addEventListener("keydown", this.handleKeydown.bind(this), true);
     }
     handleClick(event) {
       const target = event.target;
@@ -1680,6 +1692,26 @@ var InvoiceApp = (() => {
         this.handleInvoiceConfirm();
         return;
       }
+      if (target.id === "filter-button-inv" || target.closest("#filter-button-inv")) {
+        event.preventDefault();
+        this.filterProducts("inv");
+        return;
+      }
+      if (target.id === "filter-button-quote" || target.closest("#filter-button-quote")) {
+        event.preventDefault();
+        this.filterProducts("quote");
+        return;
+      }
+      if (target.id === "product-reset-button-inv" || target.closest("#product-reset-button-inv")) {
+        event.preventDefault();
+        this.resetProducts("inv");
+        return;
+      }
+      if (target.id === "product-reset-button-quote" || target.closest("#product-reset-button-quote")) {
+        event.preventDefault();
+        this.resetProducts("quote");
+        return;
+      }
       const productRow = target.closest(".product");
       if (productRow && target.tagName !== "INPUT") {
         const checkbox = productRow.querySelector('input[type="checkbox"]');
@@ -1690,6 +1722,28 @@ var InvoiceApp = (() => {
       }
       if (target.matches("input[name='product_ids[]']")) {
         this.updateButtonStates();
+      }
+    }
+    handleChange(event) {
+      const target = event.target;
+      if (target.id === "filter_family_inv") {
+        this.filterProducts("inv");
+      }
+      if (target.id === "filter_family_quote") {
+        this.filterProducts("quote");
+      }
+    }
+    handleKeydown(event) {
+      if (event.key === "Enter") {
+        const target = event.target;
+        if (target.id === "filter_product_inv") {
+          event.preventDefault();
+          this.filterProducts("inv");
+        }
+        if (target.id === "filter_product_quote") {
+          event.preventDefault();
+          this.filterProducts("quote");
+        }
       }
     }
     initializeComponents() {
@@ -1909,6 +1963,85 @@ var InvoiceApp = (() => {
      */
     exposeGlobalFunctions() {
       window.productTableFilter = this.filterTableBySku.bind(this);
+    }
+    /**
+     * Filter products by family and/or product name
+     */
+    async filterProducts(type) {
+      const familySelect = document.getElementById(`filter_family_${type}`);
+      const productInput = document.getElementById(`filter_product_${type}`);
+      const productTable = document.getElementById("product-lookup-table");
+      if (!productTable) return;
+      const familyId = familySelect ? familySelect.value : "0";
+      const productFilter = productInput ? productInput.value.trim() : "";
+      productTable.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+      const params = new URLSearchParams();
+      if (familyId && familyId !== "0") {
+        params.append("ff", familyId);
+      }
+      if (productFilter) {
+        params.append("fp", productFilter);
+      }
+      const queryString = params.toString();
+      const url = queryString ? `/invoice/product/lookup?${queryString}` : "/invoice/product/lookup";
+      console.log("Filtering products:", { type, familyId, productFilter, url });
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: "same-origin",
+          cache: "no-store"
+        });
+        const html = await response.text();
+        console.log("Received HTML response, length:", html.length);
+        console.log("HTML preview:", html.substring(0, 200));
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const fragment = document.createDocumentFragment();
+        Array.from(doc.body.children).forEach((child) => fragment.appendChild(child));
+        productTable.innerHTML = "";
+        productTable.appendChild(fragment);
+        console.log("Products table updated, children count:", productTable.children.length);
+        this.updateButtonStates();
+      } catch (error) {
+        console.error("Error filtering products:", error);
+        productTable.innerHTML = '<p class="text-danger">Error loading products</p>';
+      }
+    }
+    /**
+     * Reset product filters and reload all products
+     */
+    async resetProducts(type) {
+      const familySelect = document.getElementById(`filter_family_${type}`);
+      const productInput = document.getElementById(`filter_product_${type}`);
+      const productTable = document.getElementById("product-lookup-table");
+      if (!productTable) return;
+      if (familySelect) familySelect.value = "0";
+      if (productInput) productInput.value = "";
+      productTable.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+      try {
+        const response = await fetch("/invoice/product/lookup?rt=true", {
+          method: "GET",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: "same-origin",
+          cache: "no-store"
+        });
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const fragment = document.createDocumentFragment();
+        Array.from(doc.body.children).forEach((child) => fragment.appendChild(child));
+        productTable.innerHTML = "";
+        productTable.appendChild(fragment);
+        this.updateButtonStates();
+      } catch (error) {
+        console.error("Error resetting products:", error);
+        productTable.innerHTML = '<p class="text-danger">Error loading products</p>';
+      }
     }
   };
 

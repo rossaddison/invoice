@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
 
 /**
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -10,43 +10,63 @@ use Yiisoft\Html\Html;
  * @var array $products
  */
 
-?>
-<div class="table-responsive">
-    <table class="table table-hover table-bordered table-striped">
-        <tr>
-            <th>&nbsp;</th>
-            <th><?= $translator->translate('product.sku'); ?></th>
-            <th><?= $translator->translate('family.name'); ?></th>
-            <th><?= $translator->translate('product.name'); ?></th>
-            <th><?= $translator->translate('product.description'); ?></th>
-            <th class="text-right"><?= $translator->translate('product.price'); ?></th>
-        </tr>
-        <?php
-            /**
-             * @var App\Invoice\Entity\Product $product
-             */
-            foreach ($products as $product) { ?>
-            <tr class="product">
-                <td class="text-left">
-                    <input type="checkbox" name="product_ids[]"
-                           value="<?php echo (int) $product->getProduct_id(); ?>">
-                </td>
-                <td nowrap class="text-left">
-                    <b><?= Html::encode($product->getProduct_sku()); ?></b>
-                </td>
-                <td>
-                    <b><?= Html::encode($product->getFamily()?->getFamily_name()); ?></b>
-                </td>
-                <td>
-                    <b><?= Html::encode($product->getProduct_name()); ?></b>
-                </td>
-                <td>
-                    <?= nl2br(Html::encode($product->getProduct_description())); ?>
-                </td>
-                <td class="text-right">
-                    <?= $numberHelper->format_currency($product->getProduct_price()); ?>
-                </td>
-            </tr>
-        <?php } ?>
-    </table>
-</div>
+echo H::openTag('div', ['class' => 'table-responsive']); //1
+ echo H::openTag('table', ['class' => 'table table-hover table-bordered table-striped']); //2
+  echo H::openTag('tr'); //3
+   echo H::openTag('th'); //4
+    echo '&nbsp;';
+   echo H::closeTag('th'); //4
+   echo H::openTag('th'); //4
+    echo H::encode($translator->translate('product.sku'));
+   echo H::closeTag('th'); //4
+   echo H::openTag('th'); //4
+    echo H::encode($translator->translate('family.name'));
+   echo H::closeTag('th'); //4
+   echo H::openTag('th'); //4
+    echo H::encode($translator->translate('product.name'));
+   echo H::closeTag('th'); //4
+   echo H::openTag('th'); //4
+    echo H::encode($translator->translate('product.description'));
+   echo H::closeTag('th'); //4
+   echo H::openTag('th', ['class' => 'text-right']); //4
+    echo H::encode($translator->translate('product.price') . '> 0.00');
+   echo H::closeTag('th'); //4
+  echo H::closeTag('tr'); //3
+  /**
+   * @var App\Invoice\Entity\Product $product
+   */
+  foreach ($products as $product) {
+   echo H::openTag('tr', ['class' => 'product']); //3
+    echo H::openTag('td', ['class' => 'text-left']); //4
+     echo H::openTag('input', [
+         'type' => 'checkbox',
+         'name' => 'product_ids[]',
+         'value' => (int) $product->getProduct_id()
+     ]);
+    echo H::closeTag('td'); //4
+    echo H::openTag('td', ['nowrap' => true, 'class' => 'text-left']); //4
+     echo H::openTag('b'); //5
+      echo H::encode($product->getProduct_sku());
+     echo H::closeTag('b'); //5
+    echo H::closeTag('td'); //4
+    echo H::openTag('td'); //4
+     echo H::openTag('b'); //5
+      echo H::encode($product->getFamily()?->getFamily_name());
+     echo H::closeTag('b'); //5
+    echo H::closeTag('td'); //4
+    echo H::openTag('td'); //4
+     echo H::openTag('b'); //5
+      echo H::encode($product->getProduct_name());
+     echo H::closeTag('b'); //5
+    echo H::closeTag('td'); //4
+    echo H::openTag('td'); //4
+     echo nl2br(H::encode($product->getProduct_description()));
+    echo H::closeTag('td'); //4
+    echo H::openTag('td', ['class' => 'text-right']); //4
+     echo $numberHelper->format_currency($product->getProduct_price());
+    echo H::closeTag('td'); //4
+   echo H::closeTag('tr'); //3
+  }
+ echo H::closeTag('table'); //2
+echo H::closeTag('div'); //1
+

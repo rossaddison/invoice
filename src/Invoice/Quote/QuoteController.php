@@ -3730,6 +3730,9 @@ final class QuoteController extends BaseController
                             $this->webViewRenderer->renderPartialAsString(
                             '//invoice/product/modal_product_lookups_quote',
                             [
+                                'numberHelper' => $this->number_helper,
+                                'translator' => $this->translator,
+                                'csrf' => '',
                                 'families' => $fR->findAllPreloaded(),
                                 'default_item_tax_rate' =>
                                 $this->sR->getSetting(
@@ -3743,6 +3746,8 @@ final class QuoteController extends BaseController
                                 '//invoice/product/_partial_product_table_modal',
                                 [
                                     'products' => $pR->findAllPreloadedwithPrice(),
+                                    'numberHelper' => $this->number_helper,
+                                    'translator' => $this->translator,
                                 ]),
                             ],
                         ),

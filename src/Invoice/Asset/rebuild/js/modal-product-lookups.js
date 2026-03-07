@@ -269,6 +269,147 @@
         });
     }
 
+    // Filter products by family dropdown change
+    document.addEventListener('change', function(e) {
+        if (e.target.id === 'filter_family_inv') {
+            filterProducts('inv');
+        }
+        if (e.target.id === 'filter_family_quote') {
+            filterProducts('quote');
+        }
+    });
+
+    // Filter button click handler
+    document.addEventListener('click', function(e) {
+        if (e.target.id === 'filter-button-inv' || e.target.closest('#filter-button-inv')) {
+            e.preventDefault();
+            filterProducts('inv');
+        }
+        
+        if (e.target.id === 'filter-button-quote' || e.target.closest('#filter-button-quote')) {
+            e.preventDefault();
+            filterProducts('quote');
+        }
+        
+        if (e.target.id === 'product-reset-button-inv' || e.target.closest('#product-reset-button-inv')) {
+            e.preventDefault();
+            resetProducts('inv');
+        }
+        
+        if (e.target.id === 'product-reset-button-quote' || e.target.closest('#product-reset-button-quote')) {
+            e.preventDefault();
+            resetProducts('quote');
+        }
+    });
+
+    // Handle Enter key in product filter input
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.target.id === 'filter_product_inv') {
+            e.preventDefault();
+            filterProducts('inv');
+        }
+        if (e.key === 'Enter' && e.target.id === 'filter_product_quote') {
+            e.preventDefault();
+            filterProducts('quote');
+        }
+    });
+
+    function filterProducts(type) {
+        var familySelect = document.getElementById('filter_family_' + type);
+        var productInput = document.getElementById('filter_product_' + type);
+        var productTable = document.getElementById('product-lookup-table');
+        
+        if (!productTable) return;
+        
+        var familyId = familySelect ? familySelect.value : '0';
+        var productFilter = productInput ? productInput.value.trim() : '';
+        
+        // Show loading spinner
+        productTable.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+        
+        // Build URL with query parameters
+        var params = new URLSearchParams();
+        if (familyId && familyId !== '0') {
+            params.set('ff', familyId);
+        }
+        if (productFilter) {
+            params.set('fp', productFilter);
+        }
+        var queryString = params.toString();
+        var url = queryString ? '/invoice/product/lookup?' + queryString : '/invoice/product/lookup';
+        
+        console.log('Filtering products:', { type: type, familyId: familyId, productFilter: productFilter, url: url });
+        
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin',
+            cache: 'no-store'
+        })
+        .then(response => response.text())
+        .then(html => {
+            console.log('Received HTML response, length:', html.length);
+            console.log('HTML preview:', html.substring(0, 200));
+            
+            // Secure HTML insertion using DOMParser to prevent XSS
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const fragment = document.createDocumentFragment();
+            Array.from(doc.body.children).forEach(child => fragment.appendChild(child));
+            productTable.innerHTML = '';
+            productTable.appendChild(fragment);
+            
+            console.log('Products table updated, children count:', productTable.children.length);
+            updateButtonStates();
+        })
+        .catch(error => {
+            console.error('Error filtering products:', error);
+            productTable.innerHTML = '<p class="text-danger">Error loading products</p>';
+        });
+    }
+
+    function resetProducts(type) {
+        var familySelect = document.getElementById('filter_family_' + type);
+        var productInput = document.getElementById('filter_product_' + type);
+        var productTable = document.getElementById('product-lookup-table');
+        
+        if (!productTable) return;
+        
+        // Reset form fields
+        if (familySelect) familySelect.value = '0';
+        if (productInput) productInput.value = '';
+        
+        // Show loading spinner
+        productTable.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+        
+        // Load all products with reset parameter
+        fetch('/invoice/product/lookup?rt=true', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin',
+            cache: 'no-store'
+        })
+        .then(response => response.text())
+        .then(html => {
+            // Secure HTML insertion using DOMParser to prevent XSS
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const fragment = document.createDocumentFragment();
+            Array.from(doc.body.children).forEach(child => fragment.appendChild(child));
+            productTable.innerHTML = '';
+            productTable.appendChild(fragment);
+            updateButtonStates();
+        })
+        .catch(error => {
+            console.error('Error resetting products:', error);
+            productTable.innerHTML = '<p class="text-danger">Error loading products</p>';
+        });
+    }
+
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);

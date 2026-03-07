@@ -616,7 +616,10 @@ $columns = [
                     ->addAttributes([
                         'class' => 'btn btn-primary btn-lg',
                         'style' => 'text-decoration:none'])
-                    ->content(($model->getNumber() ?? '#') . ' 🔍')
+                    ->content(($model->getNumber() ?? '#')
+                            . ' 🔍'
+                            // List the first item on the invoice as a reminder                            
+                            . $model->getFirstItemFamilyProductName())
                     ->href($urlGenerator->generate('inv/view',
                                                     ['id' => $model->getId()]));
         },

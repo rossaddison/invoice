@@ -81,5 +81,8 @@ declare(strict_types=1);
         conflict with wampserver:
         wsl --terminate Ubuntu   /Alpine
  </b>
+ <b>23. Finding where phpmyadmin is installed: 
+        find / -name "index.php" -path "*/phpmyadmin/*" 2>/dev/null
+ </b>    
 </p>
 </pre>
