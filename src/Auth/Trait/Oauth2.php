@@ -63,14 +63,13 @@ trait Oauth2
 
     private function initializeOauth2IdentityProviderDualUrls(): void
     {
+        $authChoice = AuthChoice::widget();
+        $developerSandboxHmrc = $authChoice->getClient('developersandboxhmrc');
+        /** @psalm-var \App\Auth\Client\DeveloperSandboxHmrc $developerSandboxHmrc */
+        
         if ($this->sR->getEnv() == 'dev') {
-
-            $authChoice = AuthChoice::widget();
-            $developerSandboxHmrc = $authChoice->getClient('developersandboxhmrc');
-            /** @psalm-var \App\Auth\Client\DeveloperSandboxHmrc $developerSandboxHmrc */
             $developerSandboxHmrc->setEnvironment('dev');
         } else {
-            /** @psalm-var \App\Auth\Client\DeveloperSandboxHmrc $developerSandboxHmrc */
             $developerSandboxHmrc->setEnvironment('prod');
         }
     }
