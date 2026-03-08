@@ -51,6 +51,7 @@
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
 <p><b>8th March 2026</b></p>
+<p>Font size can be adjusted through variables on the layouts.</p>
 <p>Vjik has removed updateFromServerRequest => TelegramHelper adjusted</p>
 <p>A column has been included by default in the inv/index which allows sorting
    according to family. So the first product on an invoice is searched. This

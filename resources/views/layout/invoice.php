@@ -111,6 +111,7 @@ $this->addJsFiles($assetManager->getJsFiles());
 $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
 $t = $translator;
+$itemFontArray = ['style' => 'font-size: 1.5rem; color: black;'];
 // Platform, Performance, and Clear Assets Cache, and links Menu will disappear
 // if set to false;
 /**
@@ -237,18 +238,19 @@ if ((null !== $currentPath) && !$isGuest) {
             ->items(
                 // Vat exists? Show red or green background
                 DropdownItem::text($t->translate('vat'),
-                    ['style' => $vat ? 'background-color: #ffcccb' :
-                        'background-color: #90EE90']),
+                    ['style' => $vat ? 'font-size: 1.5rem; color: black; background-color: #ffcccb' :
+                        'font-size: 1.5rem; color: black; background-color: #90EE90']),
                 // Debug Mode
-                DropdownItem::text($t->translate('debug')),
+                DropdownItem::text($t->translate('debug'), $itemFontArray),
                 // Locale
                 DropdownItem::text($t->translate('region')
-                    . ' ➡️ ' . ($splitterRegion ?: 'unknown')),
+                    . ' ➡️ ' . ($splitterRegion ?: 'unknown'), $itemFontArray),
                 // cldr
-                DropdownItem::text('cldr ➡️ ' . ($splitterLanguage ?: 'unknown')),
+                DropdownItem::text('cldr ➡️ ' . ($splitterLanguage ?: 'unknown'),
+                    $itemFontArray),
                 // File Location
                 DropdownItem::text('File Location ➡️ '
-                    . $s->debug_mode_file_location(0)),
+                    . $s->debug_mode_file_location(0), $itemFontArray),
             ),
             // FAQ's
             Dropdown::widget()
@@ -262,34 +264,43 @@ if ((null !== $currentPath) && !$isGuest) {
             ->items(
                 DropdownItem::link('Console Commands',
                     $urlGenerator->generate($ifaq,
-                        [$tpc => 'consolecommands', $sel => ''])),
+                        [$tpc => 'consolecommands', $sel => '']),
+                        itemAttributes: $itemFontArray),
                 DropdownItem::link($t->translate('faq.taxpoint'),
                     $urlGenerator->generate($ifaq,
-                        [$tpc => 'tp', $sel => ''])),
+                        [$tpc => 'tp', $sel => '']),
+                        itemAttributes: $itemFontArray),
                 DropdownItem::link($t->translate('faq.shared.hosting'),
                     $urlGenerator->generate($ifaq,
-                        [$tpc => 'shared', $sel => ''])),
+                        [$tpc => 'shared', $sel => '']),
+                        itemAttributes: $itemFontArray),
                 DropdownItem::link($t->translate('faq.wsl.to.alpine'),
                     $urlGenerator->generate($ifaq,
-                        [$tpc => 'wsl_to_alpine', $sel => ''])),
+                        [$tpc => 'wsl_to_alpine', $sel => '']),
+                        itemAttributes: $itemFontArray),
                 DropdownItem::link($t->translate('faq.payment.provider'),
                     $urlGenerator->generate($ifaq,
-                        [$tpc => 'paymentprovider', $sel => ''])),
+                        [$tpc => 'paymentprovider', $sel => '']),
+                        itemAttributes: $itemFontArray),
                 DropdownItem::text($subMenu->generate(
                         $t->translate('faq.php.info.details'),
                     $urlGenerator, $subMenuPhpInfo)),
                 DropdownItem::link('JavaScript Analysis',
                     $urlGenerator->generate($ifaq,
-                        [$tpc => 'javascript_analysis', $sel => ''])),
+                        [$tpc => 'javascript_analysis', $sel => '']),
+                        itemAttributes: $itemFontArray),
                 DropdownItem::link('Codeception Selectors Checklist',
                     $urlGenerator->generate($ifaq,
-                        [$tpc => 'codeception_selectors_checklist', $sel => ''])),
+                        [$tpc => 'codeception_selectors_checklist', $sel => '']),
+                        itemAttributes: $itemFontArray),
                 DropdownItem::link($t->translate('faq.oauth2'),
                     $urlGenerator->generate($ifaq,
-                        [$tpc => 'oauth2', $sel => ''])),
+                        [$tpc => 'oauth2', $sel => '']),
+                        itemAttributes: $itemFontArray),
                 DropdownItem::link($t->translate('faq.ai.callback.session'),
                     $urlGenerator->generate($ifaq,
-                        [$tpc => 'ai_callback_session', $sel => ''])),
+                        [$tpc => 'ai_callback_session', $sel => '']),
+                        itemAttributes: $itemFontArray),
             ),
             // E-Invoicing
             Dropdown::widget()
@@ -767,50 +778,67 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($t->translate('caution.delete.invoices'),
                 $urlGenerator->generate('inv/flush'),
                     false, !$debugMode,
-                        ['style' => 'background-color: #ffcccb',
+                        ['style' => 'background-color: #ffcccb; ',
                          'hidden' => !$debugMode]),
             DropdownItem::link($t->translate('view'),
-                $urlGenerator->generate('setting/tab_index')),
+                $urlGenerator->generate('setting/tab_index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate((
                 ($s->getSetting('install_test_data') == '1') 
                 && ($s->getSetting('use_test_data') == '1'))
-                ? 'install.test.data' : 'install.test.data.goto.tab.index'), 
-                    (($s->getSetting('install_test_data') == '1' 
+                ? 'install.test.data' : 'install.test.data.goto.tab.index'),
+                    (($s->getSetting('install_test_data') == '1'
                         && $s->getSetting('use_test_data') == '1')
-                ? $urlGenerator->generate('invoice/index') : 
-                $urlGenerator->generate('setting/tab_index')), 
-                    ($s->getSetting('install_test_data') == '1' 
-                        && $s->getSetting('use_test_data') == '1')),
+                ? $urlGenerator->generate('invoice/index') :
+                $urlGenerator->generate('setting/tab_index')),
+                    ($s->getSetting('install_test_data') == '1'
+                        && $s->getSetting('use_test_data') == '1'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('email.template'),
-                $urlGenerator->generate('emailtemplate/index')),
+                $urlGenerator->generate('emailtemplate/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('email.from.dropdown'),
-                $urlGenerator->generate('from/index')),
-            DropdownItem::link($t->translate('email.log'), 
-                $urlGenerator->generate('invsentlog/index')),
-            DropdownItem::link($t->translate('custom.fields'), 
-                $urlGenerator->generate('customfield/index')),
-            DropdownItem::link($t->translate('group'), 
-                $urlGenerator->generate('group/index')),
-            DropdownItem::link($t->translate('archive'), 
-                $urlGenerator->generate('inv/archive')),
-            DropdownItem::link($t->translate('payment.method'), 
-                $urlGenerator->generate('paymentmethod/index')),
-            DropdownItem::link($t->translate('tax.rate'), 
-                $urlGenerator->generate('taxrate/index')),
+                $urlGenerator->generate('from/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('email.log'),
+                $urlGenerator->generate('invsentlog/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('custom.fields'),
+                $urlGenerator->generate('customfield/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('group'),
+                $urlGenerator->generate('group/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('archive'),
+                $urlGenerator->generate('inv/archive'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('payment.method'),
+                $urlGenerator->generate('paymentmethod/index'),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('tax.rate'),
+                $urlGenerator->generate('taxrate/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('contract'),
-                $urlGenerator->generate('contract/index')),
+                $urlGenerator->generate('contract/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('user.account'),
-                $urlGenerator->generate('userinv/index')),
+                $urlGenerator->generate('userinv/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('password.change'),
-                $urlGenerator->generate('auth/change')),
+                $urlGenerator->generate('auth/change'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('user.api.list'),
-                $urlGenerator->generate('user/index')),
+                $urlGenerator->generate('user/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('setting.company'),
-                $urlGenerator->generate('company/index')),
+                $urlGenerator->generate('company/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('setting.company.private'),
-                $urlGenerator->generate('companyprivate/index')),
+                $urlGenerator->generate('companyprivate/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('setting.company.profile'),
-                $urlGenerator->generate('profile/index')),
+                $urlGenerator->generate('profile/index'),
+                itemAttributes: $itemFontArray),
         ),
         // peppol
         Dropdown::widget()
@@ -824,15 +852,20 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('allowance.or.charge.add'),
-                $urlGenerator->generate('allowancecharge/index')),
+                $urlGenerator->generate('allowancecharge/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.store.cove.1.1.1'),
-                'https://www.storecove.com/register/'),
+                'https://www.storecove.com/register/',
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.store.cove.1.1.2'),
-                $urlGenerator->generate('setting/tab_index')),
+                $urlGenerator->generate('setting/tab_index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.store.cove.1.1.3'),
-                $urlGenerator->generate('invoice/store_cove_call_api')),
+                $urlGenerator->generate('invoice/store_cove_call_api'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.store.cove.1.1.4'),
-                $urlGenerator->generate('invoice/store_cove_send_test_json_invoice')
+                $urlGenerator->generate('invoice/store_cove_send_test_json_invoice'),
+                itemAttributes: $itemFontArray    
             ),
         ),
         // Client
@@ -846,15 +879,20 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('client.add'),
-                $urlGenerator->generate('client/add', ['origin' => 'main'])),
+                $urlGenerator->generate('client/add', ['origin' => 'main']),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('client.view'),
-                $urlGenerator->generate('client/index')),
+                $urlGenerator->generate('client/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('client.note.add'),
-                $urlGenerator->generate('clientnote/add')),
+                $urlGenerator->generate('clientnote/add'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('client.note.view'),
-                $urlGenerator->generate('clientnote/index')),
+                $urlGenerator->generate('clientnote/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('delivery.location'),
-                $urlGenerator->generate('del/index')),
+                $urlGenerator->generate('del/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Quote
         Dropdown::widget()
@@ -867,9 +905,11 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('create.quote'),
-                $urlGenerator->generate('quote/add', ['origin' => 'main'])),
+                $urlGenerator->generate('quote/add', ['origin' => 'main']),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('view'),
-                $urlGenerator->generate('quote/index')),
+                $urlGenerator->generate('quote/index'),
+                itemAttributes: $itemFontArray),
         ),
         // SalesOrder
         Dropdown::widget()
@@ -882,7 +922,8 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('view'), 
-                $urlGenerator->generate('salesorder/index')),
+                $urlGenerator->generate('salesorder/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Invoice
         Dropdown::widget()
@@ -894,12 +935,15 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerContent($t->translate('invoice'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($t->translate('create.invoice'), 
-                $urlGenerator->generate('inv/add', ['origin' => 'main'])),
-            DropdownItem::link($t->translate('view'), 
-                $urlGenerator->generate('inv/index')),
+            DropdownItem::link($t->translate('create.invoice'),
+                $urlGenerator->generate('inv/add', ['origin' => 'main']),
+                itemAttributes: $itemFontArray),
+            DropdownItem::link($t->translate('view'),
+                $urlGenerator->generate('inv/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('recurring'), 
-                $urlGenerator->generate('invrecurring/index')),
+                $urlGenerator->generate('invrecurring/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Payment
         Dropdown::widget()
@@ -912,11 +956,14 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('enter.payment'),
-                $urlGenerator->generate('payment/add')),
+                $urlGenerator->generate('payment/add'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('view'),
-                $urlGenerator->generate('payment/index')),
+                $urlGenerator->generate('payment/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('payment.logs'),
-                $urlGenerator->generate('payment/online_log')),
+                $urlGenerator->generate('payment/online_log'),
+                itemAttributes: $itemFontArray),
         ),
         // Product
         Dropdown::widget()
@@ -929,21 +976,29 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('add.product'),
-                $urlGenerator->generate('product/add')),
+                $urlGenerator->generate('product/add'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('view'),
-                $urlGenerator->generate('product/index')),
+                $urlGenerator->generate('product/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('category.primary'),
-                $urlGenerator->generate('categoryprimary/index')),
+                $urlGenerator->generate('categoryprimary/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('category.secondary'),
-                $urlGenerator->generate('categorysecondary/index')),
+                $urlGenerator->generate('categorysecondary/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('family'),
-                $urlGenerator->generate('family/index')),
+                $urlGenerator->generate('family/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('family.search'),
-                $urlGenerator->generate('family/search')),
+                $urlGenerator->generate('family/search'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('unit'),
-                $urlGenerator->generate('unit/index')),
+                $urlGenerator->generate('unit/index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.unit'),
-                $urlGenerator->generate('unitpeppol/index')),
+                $urlGenerator->generate('unitpeppol/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Tasks
         Dropdown::widget()
@@ -956,9 +1011,11 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('add.task'),
-                $urlGenerator->generate('task/add')),
+                $urlGenerator->generate('task/add'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('view'),
-                $urlGenerator->generate('task/index')),
+                $urlGenerator->generate('task/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Projects
         Dropdown::widget()
@@ -971,9 +1028,11 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('create.project'),
-                $urlGenerator->generate('project/add')),
+                $urlGenerator->generate('project/add'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('view'),
-                $urlGenerator->generate('project/index')),
+                $urlGenerator->generate('project/index'),
+                itemAttributes: $itemFontArray),
         ),
         // Reports
         Dropdown::widget()
@@ -986,20 +1045,27 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('sales.by.client'),
-                $urlGenerator->generate('report/sales_by_client_index')),
+                $urlGenerator->generate('report/sales_by_client_index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('report.sales.by.product'),
-                $urlGenerator->generate('report/sales_by_product_index')),
+                $urlGenerator->generate('report/sales_by_product_index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('report.sales.by.task'),
-                $urlGenerator->generate('report/sales_by_task_index')),
+                $urlGenerator->generate('report/sales_by_task_index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('sales.by.date'),
-                $urlGenerator->generate('report/sales_by_year_index')),
+                $urlGenerator->generate('report/sales_by_year_index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('payment.history'),
-                $urlGenerator->generate('report/payment_history_index')),
+                $urlGenerator->generate('report/payment_history_index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('aging'),
-                $urlGenerator->generate('report/invoice_aging_index')),
+                $urlGenerator->generate('report/invoice_aging_index'),
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate(
                     'report.test.fraud.prevention.headers.api'),
-                $urlGenerator->generate('backend/hmrc/fphValidate')),
+                $urlGenerator->generate('backend/hmrc/fphValidate'),
+                itemAttributes: $itemFontArray),
         ),
         // Translate
         Dropdown::widget()

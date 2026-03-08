@@ -45,7 +45,8 @@ final class SubMenu
                     $urlGenerator->generate(
                         $actionName,
                         $actionArguments,
-                    ),
+                    ),                    
+                    itemAttributes: ['style' => 'font-size: 1.5rem; color: black;']
                 );
             }
             $finalString = Dropdown::widget()

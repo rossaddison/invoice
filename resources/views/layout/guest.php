@@ -123,6 +123,8 @@ $this->addJsVars($assetManager->getJsVars());
 $currentRouteName = $currentRoute->getName() ?? '';
 
 $isGuest = $user === null || $user->getId() === null;
+$fontSizeStyle = 'font-size: 1.5rem; color: cornflowerblue;';
+$itemFontArray = ['style' => 'font-size: 1.5rem; color: black;'];
 $this->beginPage();
 ?>
 
@@ -172,14 +174,15 @@ if ((null !== $currentPath) && !$isGuest) {
     echo Dropdown::widget()
     ->addClass('navbar fs-4')
     ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+        'style' => $fontSizeStyle,
     ])
     ->togglerVariant(ButtonVariant::INFO)
     ->togglerContent($translator->translate('client'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         DropdownItem::link($translator->translate('view'),
-            $urlGenerator->generate('client/guest')),
+            $urlGenerator->generate('client/guest'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
 
@@ -187,14 +190,15 @@ if ((null !== $currentPath) && !$isGuest) {
     echo Dropdown::widget()
     ->addClass('navbar fs-4')
     ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+        'style' => $fontSizeStyle,
     ])
     ->togglerVariant(ButtonVariant::INFO)
     ->togglerContent($translator->translate('quote'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         DropdownItem::link($translator->translate('view'),
-            $urlGenerator->generate('quote/guest')),
+            $urlGenerator->generate('quote/guest'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
 
@@ -202,14 +206,15 @@ if ((null !== $currentPath) && !$isGuest) {
     echo Dropdown::widget()
     ->addClass('navbar fs-4')
     ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+        'style' => $fontSizeStyle,
     ])
     ->togglerVariant(ButtonVariant::INFO)
     ->togglerContent($translator->translate('salesorder'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         DropdownItem::link($translator->translate('view'),
-            $urlGenerator->generate('salesorder/guest')),
+            $urlGenerator->generate('salesorder/guest'),
+            itemAttributes: $itemFontArray)
     )
     ->render();
 
@@ -217,14 +222,15 @@ if ((null !== $currentPath) && !$isGuest) {
     echo Dropdown::widget()
     ->addClass('navbar fs-4')
     ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+        'style' => $fontSizeStyle,
     ])
     ->togglerVariant(ButtonVariant::INFO)
     ->togglerContent($translator->translate('invoice'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         DropdownItem::link($translator->translate('view'),
-            $urlGenerator->generate('inv/guest')),
+            $urlGenerator->generate('inv/guest'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
 
@@ -232,16 +238,19 @@ if ((null !== $currentPath) && !$isGuest) {
     echo Dropdown::widget()
     ->addClass('navbar fs-4')
     ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+        'style' => $fontSizeStyle,
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent((string) I::tag()->addClass('bi bi-coin') . ' ' . $translator->translate('payment'))
+    ->togglerContent((string) I::tag()->addClass('bi bi-coin')
+            . ' ' . $translator->translate('payment'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         DropdownItem::link($translator->translate('view'),
-            $urlGenerator->generate('payment/guest')),
+            $urlGenerator->generate('payment/guest'),
+            itemAttributes: $itemFontArray),
         DropdownItem::link($translator->translate('online.log'),
-            $urlGenerator->generate('payment/guest_online_log')),
+            $urlGenerator->generate('payment/guest_online_log'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
 
@@ -252,22 +261,26 @@ if ((null !== $currentPath) && !$isGuest) {
         'style' => 'font-size: 1rem;',
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent((string) I::tag()->addClass('fa fa-cogs') . ' ' . $translator->translate('settings'))
+    ->togglerContent((string) I::tag()->addClass('fa fa-cogs')
+            . ' ' . $translator->translate('settings'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         DropdownItem::link($translator->translate('view'),
-            $urlGenerator->generate('userinv/guest')),
+            $urlGenerator->generate('userinv/guest'),
+            itemAttributes: $itemFontArray),
         DropdownItem::link($translator->translate('password.change'),
-            $urlGenerator->generate('auth/change')),
+            $urlGenerator->generate('auth/change'),
+            itemAttributes: $itemFontArray),
         DropdownItem::link($translator->translate('email.log'),
-            $urlGenerator->generate('invsentlog/guest')),
+            $urlGenerator->generate('invsentlog/guest'),
+            itemAttributes: $itemFontArray),
     )
     ->render();
     // Translate
     echo Dropdown::widget()
     ->addClass('navbar fs4')
     ->addAttributes([
-        'style' => 'font-size: 1rem; color: cornflowerblue;',
+        'style' => $fontSizeStyle,
         'data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('language'),
         'url' => '#',
