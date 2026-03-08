@@ -45,6 +45,24 @@ final class InvRepository extends Select\Repository
         $query = $select->where(['number' => ltrim(rtrim($invNumber))]);
         return $this->prepareDataReader($query);
     }
+    
+    public function filterFamilyName(string $invFamilyName): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                /**
+                 * Related logic: Entity Inv
+                 *  #[HasMany(target: InvItem::class)]
+                 *  private readonly ArrayCollection $items;
+                 *  The load('items') below derives from $items above
+                 *  Also see: Entity InvItem .. private ?Product $product = null;
+                 *  Also see: Entity Product .. private ?Family $family = null;
+                 *  Also see: Entity Family .. public ?string $family_name = '',
+                 */
+                ->load('items')
+                ->where(['items.product.family.family_name' => $invFamilyName]);
+        return $this->prepareDataReader($query);
+    }
 
     public function filterInvAmountTotal(string $invAmountTotal): EntityReader
     {

@@ -50,6 +50,40 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p>Payment gateway testing on alpine</p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>8th March 2026</b></p>
+<p>Vjik has removed updateFromServerRequest => TelegramHelper adjusted</p>
+<p>A column has been included by default in the inv/index which allows sorting
+   according to family. So the first product on an invoice is searched. This
+   product's family group is used in the sorting of invoices according to family.
+   This is useful for sorting invoices according to product's family. Also useful
+   for window cleaning or service orientated runs where all invoices relating to
+   a run i.e. (product: House Number) and (family: Run's name) can be sorted.
+   This code is significant: 
+   <pre><code>
+       public function filterFamilyName(string $invFamilyName): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                /**
+                 * Related logic: Entity Inv
+                 *  #[HasMany(target: InvItem::class)]
+                 *  private readonly ArrayCollection $items;
+                 *  The load('items') below derives from $items above
+                 *  Also see: Entity InvItem .. private ?Product $product = null;
+                 *  Also see: Entity Product .. private ?Family $family = null;
+                 *  Also see: Entity Family .. public ?string $family_name = '',
+                 */
+                ->load('items')
+                ->where(['items.product.family.family_name' => $invFamilyName]);
+        return $this->prepareDataReader($query);
+    }
+
+   </code></pre>
+</p>
+
+<p>Next: The InvItem has an order field that is not being utilized. The invitems
+   will be sorted and prioritized according to items order or sequential number.
+   Inv item with order number 1 will be picked up in the family search in future.</p>
 <p><b>7th March 2026</b></p>
 <p>Modal Product Lookups only lookup products with prices greater than zero</p>
 <p><b>6th March 2026</b></p>

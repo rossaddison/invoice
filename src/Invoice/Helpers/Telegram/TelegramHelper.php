@@ -92,12 +92,8 @@ final class TelegramHelper
         return $this->botApi->getUpdates($offset, $limit, $timeout, $allowedUpdates);
     }
 
-    public static function updateFromServerRequest(Request $request, Logger $logger): Update
-    {
-        return Update::fromServerRequest($request, $logger);
-    }
-
-    public static function decodeJsonEncodedUpdatePushedToWebhookFromTelegramApi(string $jsonString, Logger $logger): Update
+    public static function decodeJsonEncodedUpdatePushedToWebhookFromTelegramApi(
+        string $jsonString, Logger $logger): Update
     {
         return Update::fromJson($jsonString, $logger);
     }

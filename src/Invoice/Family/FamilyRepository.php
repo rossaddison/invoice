@@ -87,7 +87,8 @@ final class FamilyRepository extends Select\Repository
      * @param string $category_secondary_id
      * @return EntityReader
      */
-    public function repoCategoryPrimaryAndSecondaryQuery(string $category_primary_id, string $category_secondary_id): EntityReader
+    public function repoCategoryPrimaryAndSecondaryQuery(string $category_primary_id,
+            string $category_secondary_id): EntityReader
     {
         $select = $this->select();
         $query = $select

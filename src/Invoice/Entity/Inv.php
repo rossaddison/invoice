@@ -205,6 +205,14 @@ class Inv
         return $this->items;
     }
     
+    public function getFirstItemFamilyName(): string
+    {
+        foreach ($this->items as $item) {
+            return $item->getProduct()?->getFamily()?->getFamily_name() ?? '';
+        }
+        return '';
+    }
+    
     public function getFirstItemFamilyProductName(): string
     {
         foreach ($this->items as $item) {
@@ -317,7 +325,8 @@ class Inv
 
     public function setStatus_id(int $status_id): void
     {
-        $this->status_id = (!in_array($status_id, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]) ? 1 : $status_id);
+        $this->status_id = (!in_array($status_id,
+                [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]) ? 1 : $status_id);
     }
 
     public function getIs_read_only(): bool
@@ -381,7 +390,8 @@ class Inv
             $days = $sR->getSetting('invoices_due_after');
         }
 
-        $this->date_due = $this->date_created->add(new \DateInterval('P' . (string) $days . 'D'));
+        $this->date_due = $this->date_created->add(new \DateInterval('P'
+                . (string) $days . 'D'));
     }
 
     public function getDate_due(): DateTimeImmutable

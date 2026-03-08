@@ -191,9 +191,9 @@ final class InvController extends BaseController
 
     /**
      * @param Request $request
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
-    public function archive(Request $request): \Psr\Http\Message\ResponseInterface
+    public function archive(Request $request): Response
     {
         $invoice_archive = [];
         $flash_message = '';
@@ -336,10 +336,10 @@ final class InvController extends BaseController
      * @param int $inv_id
      * @param IR $iR
      * @param UPR $uPR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function attachment(#[RouteArgument('id')] int $inv_id, IR $iR,
-            UPR $uPR): \Psr\Http\Message\ResponseInterface
+            UPR $uPR): Response
     {
         $aliases = $this->sR->get_customer_files_folder_aliases();
         $targetPath = $aliases->get('@customer_files');
@@ -441,7 +441,7 @@ $original_file_name = preg_replace(
      * @param UR $uR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function add(
         Request $request,
@@ -454,7 +454,7 @@ $original_file_name = preg_replace(
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $inv = new Inv();
         $errors = [];
         $form = new InvForm($inv);
@@ -781,11 +781,11 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param UCR $ucR
      * @param UIR $uiR
      * @param UR $uR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function create_credit_confirm(Request $request,
             FormHydrator $formHydrator, IR $iR, GR $gR, IIR $iiR, IIAR $iiaR,
-                UCR $ucR, UIR $uiR, UR $uR): \Psr\Http\Message\ResponseInterface
+                UCR $ucR, UIR $uiR, UR $uR): Response
     {
         $body = $request->getQueryParams();
         $basis_inv = $iR->repoInvLoadedquery((string) $body['inv_id']);
@@ -961,11 +961,11 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IIAR $iiaR
      * @param ITRR $itrR
      * @param SR $sR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function delete_inv_item(#[RouteArgument('id')] int $id, IAR $iaR,
         IIR $iiR, ACIIR $aciiR, IIAR $iiaR, ITRR $itrR, SR $sR):
-        \Psr\Http\Message\ResponseInterface
+        Response
     {
         try {
             $invItem = $this->inv_item($id, $iiR);
@@ -1008,11 +1008,11 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     /**
      * @param int $id
      * @param ITRR $invtaxrateRepository
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function delete_inv_tax_rate(#[RouteArgument('id')] int $id,
             ITRR $invtaxrateRepository):
-        \Psr\Http\Message\ResponseInterface {
+        Response {
         try {
             $inv_tax_rate = $this->invtaxrate($id, $invtaxrateRepository);
             $this->inv_tax_rate_service->deleteInvTaxRate($inv_tax_rate);
@@ -1324,7 +1324,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param CVR $cvR
      * @param ICR $icR
      * @param paR $paR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function edit(
         Request $request,
@@ -1346,7 +1346,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         paR $paR,
         UCR $ucR,
         UIR $uiR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $inv = $this->inv($id, $invRepo, true);
         if ($inv) {
             $form = new InvForm($inv);
@@ -2076,7 +2076,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param string $queryFilterInvNumber
      * @param string $queryFilterInvAmountTotal
      * @param string $queryFilterStatus
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function guest(
         IAR $iaR,
@@ -2100,7 +2100,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ?string $queryFilterInvAmountTotal = null,
         #[Query('filterStatus')]
         ?string $queryFilterStatus = null,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $page = $queryPage ?? $page;
         $sortString = $querySort ?? '-id';
         // Get the current user and determine from (Related logic: see Settings
@@ -2215,13 +2215,13 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IR $iR
      * @param ITRR $itrR
      * @param UIR $uiR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function html(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR,
             IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
             UIR $uiR, SOR $soR):
-        \Psr\Http\Message\ResponseInterface
+        Response
     {
         $inv_id = (string) $this->session->get('inv_id');
         $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ?
@@ -2284,13 +2284,14 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param string $queryFilterInvAmountTotal
      * @param string $queryFilterClientGroup
      * @param string $queryFilterDateCreatedYearMonth
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function index(
         IR $invRepo,
         IRR $irR,
         ISLR $islR,
         CR $clientRepo,
+        FR $familyRepo,    
         GR $groupRepo,
         QR $qR,
         PMR $pmR,
@@ -2309,6 +2310,8 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ?string $querySort = null,
         #[Query('filterInvNumber')]
         ?string $queryFilterInvNumber = null,
+        #[Query('filterFamilyName')]
+        ?string $queryFilterFamilyName = null,
         #[Query('filterClient')]
         ?string $queryFilterClient = null,
         #[Query('filterInvAmountTotal')]
@@ -2321,7 +2324,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ?string $queryFilterStatus = null,
         #[Query('groupBy')]
         ?string $queryGroupBy = 'none',
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         // build the inv and hasOne InvAmount table
         $visible = $this->sR->getSetting('columns_all_visible');
         $visibleToggleInvSentLogColumn =
@@ -2356,6 +2359,11 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             $invs = $this->invs_status($invRepo, $effectiveStatus);
             if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                 $invs = $invRepo->filterInvNumber($queryFilterInvNumber);
+            }
+            if (isset($queryFilterFamilyName) && !empty($queryFilterFamilyName)) {
+                //$family = $familyRepo->withName($queryFilterFamilyName);
+                // family -> product -> inv
+                $invs = $invRepo->filterFamilyName($queryFilterFamilyName);
             }
             if (isset($queryFilterInvAmountTotal)
                     && !empty($queryFilterInvAmountTotal)) {
@@ -2430,6 +2438,8 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     $this->optionsDataClientGroupFilter($clientRepo),
                 'optionsInvNumberDropDownFilter' =>
                     $this->optionsDataInvNumberFilter($invRepo),
+                'optionsFamilyNameDropDownFilter' =>
+                    $this->optionsDataFamilyNameFilter($invRepo),
                 'optionsYearMonthDropDownFilter' =>
                     $this->optionsDataYearMonthFilter(),
                 'optionsStatusDropDownFilter' =>
@@ -2512,7 +2522,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     public function pdf(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, SOR $soR, IAR $iaR,
             ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
-                UIR $uiR): \Psr\Http\Message\ResponseInterface
+                UIR $uiR): Response
     {
         try {
             // include is a value of 0 or 1 passed from inv.js function
@@ -2563,9 +2573,9 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     }
 
     /**
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
-    public function pdf_archive_message(): \Psr\Http\Message\ResponseInterface
+    public function pdf_archive_message(): Response
     {
         if ($this->sR->getSetting('pdf_archive_inv') == '1') {
             return $this->factory->createResponse(
@@ -3233,7 +3243,7 @@ echo file_get_contents($temp_aliase, true);
         UCR $ucR,
         UIR $uiR,
         UNR $unR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $data_inv_js = $request->getQueryParams();
         $inv_id = (string) $data_inv_js['inv_id'];
         $original = $iR->repoInvUnloadedquery($inv_id);
@@ -3528,10 +3538,10 @@ echo file_get_contents($temp_aliase, true);
      * @param Request $request
      * @param IR $iR
      * @param GR $gR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function mark_as_sent(Request $request, IR $iR, GR $gR):
-        \Psr\Http\Message\ResponseInterface
+        Response
     {
         $data = $request->getQueryParams();
         $parameters = ['success' => 0];
@@ -3586,10 +3596,10 @@ echo file_get_contents($temp_aliase, true);
     * @param Request $request
     * @param IR $iR
     * @param GR $gR
-    * @return \Psr\Http\Message\ResponseInterface
+    * @return Response
     */
     public function mark_sent_as_draft(Request $request, IR $iR, GR $gR):
-        \Psr\Http\Message\ResponseInterface
+        Response
     {
         $data = $request->getQueryParams();
         $parameters = ['success' => 0];
@@ -3665,7 +3675,7 @@ echo file_get_contents($temp_aliase, true);
         UCR $ucR,
         UIR $uiR,
         UNR $unR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $data = $request->getQueryParams();
         /**
          * Purpose: Provide a list of ids from inv/index checkbox column
@@ -3795,7 +3805,7 @@ echo file_get_contents($temp_aliase, true);
      * @param ICR $icR
      */
     public function save_custom(FormHydrator $formHydrator, Request $request,
-        ICR $icR): \Psr\Http\Message\ResponseInterface
+        ICR $icR): Response
     {
         $parameters = [
             'success' => 0,
@@ -3818,7 +3828,7 @@ echo file_get_contents($temp_aliase, true);
      * @param FormHydrator $formHydrator
      */
     public function save_inv_tax_rate(Request $request,
-        FormHydrator $formHydrator): \Psr\Http\Message\ResponseInterface
+        FormHydrator $formHydrator): Response
     {
         $body = $request->getQueryParams();
         $ajax_body = [
@@ -4145,7 +4155,7 @@ echo file_get_contents($temp_aliase, true);
      * @param ACIIR $aciiR
      * @param SOIR $soiR
      * @param TRR $trR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function peppol(
         #[RouteArgument('id')]
@@ -4563,7 +4573,7 @@ echo file_get_contents($temp_aliase, true);
      * @param UCR $ucR
      * @param UPR $upR
      * @param DLR $dlR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function view(
         WebViewRenderer $head,
@@ -4599,7 +4609,7 @@ echo file_get_contents($temp_aliase, true);
         UPR $upR,
         SOR $soR,
         DLR $dlR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $inv = $this->inv($id, $iR, false);
         $enabled_gateways = $this->sR->payment_gateways_enabled_DriverList();
         $this->flash_no_enabled_gateways($enabled_gateways,
@@ -5372,6 +5382,30 @@ echo file_get_contents($temp_aliase, true);
             }
         }
         return $optionsDataInvNumbers;
+    }
+    
+    /**
+     * @param IR $iR
+     * @return array
+     */
+    public function optionsDataFamilyNameFilter(IR $iR): array
+    {
+        $optionsDataFamilyNames = [];
+        // Get all the invoices that have been made out to clients with user
+        // accounts
+        $invs = $iR->findAllPreloaded();
+        /**
+         * @var Inv $inv
+         */
+        foreach ($invs as $inv) {
+            $familyName = $inv->getFirstItemFamilyName();
+            if (strlen($familyName) > 0) {
+                if (!in_array($familyName, $optionsDataFamilyNames)) {
+                    $optionsDataFamilyNames[$familyName] = $familyName;
+                }
+            }
+        }
+        return $optionsDataFamilyNames;
     }
 
     /**

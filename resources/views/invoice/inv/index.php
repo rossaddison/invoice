@@ -73,6 +73,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
  * @var string $status
  * @psalm-var positive-int $page
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsInvNumberDropDownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsFamilyNameDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsClientsDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsClientGroupDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsYearMonthDropDownFilter
@@ -555,7 +556,7 @@ $columns = [
                 'class' => 'dropdown-menu',
                 'aria-labelledby' => 'dropdownMenuButton'
             ])
-            . Html::openTag('div', 
+            . Html::openTag('div',
                 ['class' => 'btn-group', 'role' => 'group']),
         buttons: [
             new ActionButton(
@@ -630,6 +631,28 @@ $columns = [
                     'class' => 'native-reset',
                 ])
                 ->optionsData($optionsInvNumberDropDownFilter),
+        withSorting: false,
+    ),
+    new DataColumn(
+        property: 'filterFamilyName',
+        header: $translator->translate('family.name'),
+        content: static function (Inv $model) use ($urlGenerator): string {
+            // List the family of the first item on the invoice
+            // as a reminder e.g. On a window cleaning run the
+            // first product on the invoice (only one anyway)
+            // is the 'product' house number of the original
+            // csv_comma_list.
+            // Family is the run's name. So the total
+            // index can be sorted according to the run name
+            return $model->getFirstItemFamilyName();
+        },
+        encodeContent: false,
+        filter: DropdownFilter::widget()
+                ->addAttributes([
+                    'name' => 'number',
+                    'class' => 'native-reset',
+                ])
+                ->optionsData($optionsFamilyNameDropDownFilter),
         withSorting: false,
     ),
     new DataColumn(
@@ -1364,25 +1387,32 @@ if ($enableGrouping) {
 '<span class="badge bg-primary ms-2">'
                              . $groupData['count']
                              . ' invoice'
-                             . ($groupData['count'] === 1 ? '' : 's') . '</span>' .
-'</div>' .
-'<div class="text-end">' .
-'<small class="d-block">Total: <strong>'
-                             . number_format($groupData['total'],
-                                     $decimalPlaces) . ' ' . $currencySymbol . '</strong></small>' .
-'<small class="d-block">Paid: <strong>'
+                             . ($groupData['count'] === 1 ? '' : 's')
+                             . '</span>'
+                             . '</div>'
+                             . '<div class="text-end">'
+                             . '<small class="d-block">Total: <strong>'
+                             . number_format($groupData['total'], $decimalPlaces)
+                             . ' '
+                             . $currencySymbol
+                             . '</strong></small>'
+                             . '<small class="d-block">Paid: <strong>'
                              . number_format($groupData['paid'], $decimalPlaces)
-                             . ' ' . $currencySymbol . '</strong></small>' .
-'<small class="d-block">Balance: <strong>'
+                             . ' '
+                             . $currencySymbol
+                             . '</strong></small>'
+                             . '<small class="d-block">Balance: <strong>'
                              . number_format($groupData['balance'],
-                                     $decimalPlaces) . ' ' . $currencySymbol . '</strong></small>' .
-'</div>' .
-'</div>'
+                                     $decimalPlaces)
+                             . ' '
+                             . $currencySymbol
+                             . '</strong></small>'
+                             . '</div>'
+                             . '</div>'
                         )
                         ->encode(false)
                 );
         }
-        
         return null;
     });
 }
