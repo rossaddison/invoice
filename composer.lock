@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "81b26765ccfd9d43d73585f73cea6958",
+    "content-hash": "7028c01acf383dcf72959c966c90f748",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -5344,16 +5344,16 @@
         },
         {
             "name": "mpdf/mpdf",
-            "version": "v8.2.7",
+            "version": "v8.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpdf/mpdf.git",
-                "reference": "b59670a09498689c33ce639bac8f5ba26721dab3"
+                "reference": "0e552ec93cf01dc830599e303b200edb600d8094"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/b59670a09498689c33ce639bac8f5ba26721dab3",
-                "reference": "b59670a09498689c33ce639bac8f5ba26721dab3",
+                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/0e552ec93cf01dc830599e303b200edb600d8094",
+                "reference": "0e552ec93cf01dc830599e303b200edb600d8094",
                 "shasum": ""
             },
             "require": {
@@ -5377,6 +5377,7 @@
             },
             "suggest": {
                 "ext-bcmath": "Needed for generation of some types of barcodes",
+                "ext-imagick": "Needed if developing the Mpdf library",
                 "ext-xml": "Needed mainly for SVG manipulation",
                 "ext-zlib": "Needed for compression of embedded resources, such as fonts"
             },
@@ -5421,7 +5422,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-12-01T10:18:02+00:00"
+            "time": "2026-02-27T08:41:25+00:00"
         },
         {
             "name": "mpdf/psr-http-message-shim",
@@ -18345,16 +18346,16 @@
         },
         {
             "name": "yiisoft/yii-middleware",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-middleware.git",
-                "reference": "92b53128a3aed252eeef48b4910a872c786515dc"
+                "reference": "86331975b92ac0d94a0f6679fa1663a25b0bd418"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-middleware/zipball/92b53128a3aed252eeef48b4910a872c786515dc",
-                "reference": "92b53128a3aed252eeef48b4910a872c786515dc",
+                "url": "https://api.github.com/repos/yiisoft/yii-middleware/zipball/86331975b92ac0d94a0f6679fa1663a25b0bd418",
+                "reference": "86331975b92ac0d94a0f6679fa1663a25b0bd418",
                 "shasum": ""
             },
             "require": {
@@ -18426,7 +18427,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-02-28T13:28:12+00:00"
+            "time": "2026-03-09T20:39:42+00:00"
         },
         {
             "name": "yiisoft/yii-runner",
@@ -22183,18 +22184,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "68e4c6721ef8cd2c366bd5e2290baf007d3f0e6d"
+                "reference": "f0711e3b818ce08f92cc2f34c28a9aff8b2060b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/68e4c6721ef8cd2c366bd5e2290baf007d3f0e6d",
-                "reference": "68e4c6721ef8cd2c366bd5e2290baf007d3f0e6d",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f0711e3b818ce08f92cc2f34c28a9aff8b2060b7",
+                "reference": "f0711e3b818ce08f92cc2f34c28a9aff8b2060b7",
                 "shasum": ""
             },
             "conflict": {
                 "3f/pygmentize": "<1.2",
                 "adaptcms/adaptcms": "<=1.3",
-                "admidio/admidio": "<=4.3.16",
+                "admidio/admidio": "<5.0.6",
                 "adodb/adodb-php": "<=5.22.9",
                 "aheinze/cockpit": "<2.2",
                 "aimeos/ai-admin-graphql": ">=2022.04.1,<2022.10.10|>=2023.04.1,<2023.10.6|>=2024.04.1,<2024.07.2",
@@ -22245,7 +22246,7 @@
                 "automattic/jetpack": "<9.8",
                 "awesome-support/awesome-support": "<=6.0.7",
                 "aws/aws-sdk-php": "<3.368",
-                "azuracast/azuracast": "<=0.23.1",
+                "azuracast/azuracast": "<=0.23.3",
                 "b13/seo_basics": "<0.8.2",
                 "backdrop/backdrop": "<=1.32",
                 "backpack/crud": "<3.4.9",
@@ -22950,7 +22951,7 @@
                 "sylius/grid-bundle": "<1.10.1",
                 "sylius/paypal-plugin": "<1.6.2|>=1.7,<1.7.2|>=2,<2.0.2",
                 "sylius/resource-bundle": ">=1,<1.3.14|>=1.4,<1.4.7|>=1.5,<1.5.2|>=1.6,<1.6.4",
-                "sylius/sylius": "<1.12.19|>=1.13.0.0-alpha1,<1.13.4",
+                "sylius/sylius": "<1.9.12|>=1.10,<1.10.16|>=1.11,<1.11.17|>=1.12.0.0-alpha1,<1.12.19|>=1.13.0.0-alpha1,<1.13.4",
                 "symbiote/silverstripe-multivaluefield": ">=3,<3.1",
                 "symbiote/silverstripe-queuedjobs": ">=3,<3.0.2|>=3.1,<3.1.4|>=4,<4.0.7|>=4.1,<4.1.2|>=4.2,<4.2.4|>=4.3,<4.3.3|>=4.4,<4.4.3|>=4.5,<4.5.1|>=4.6,<4.6.4",
                 "symbiote/silverstripe-seed": "<6.0.3",
@@ -23202,7 +23203,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-07T02:54:13+00:00"
+            "time": "2026-03-09T20:10:00+00:00"
         },
         {
             "name": "sanmai/di-container",

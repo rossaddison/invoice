@@ -30,7 +30,7 @@ declare(strict_types=1);
  <b>9. Or necessary to override your changes:</b>
          git checkout -- . (dash dash space fullstop)
  <b>10. Restoring a specific file from the stash:</b>
-         git checkout stash@{0} -- config/common/params.php
+        git checkout stash@{0} -- config/common/params.php
  <b>11. Pull from the repository:
          git pull origin main
  <b>12. Accessing the Apline mySql/mariaDB database:
@@ -44,6 +44,7 @@ declare(strict_types=1);
  <b>16. Giving ownership to apache user:
          chown -R apache:apache /var/www/invoice/         
          chown -R apache:apache /var/www/invoice/resources/rbac/assignments.php
+         chown -R apache:apache /var/www/invoice/resources/rbac/items.php
          chmod -R 755 /var/www/invoice/
          chmod -R 775 /var/www/invoice/resources/
          chmod -R 775 /var/www/invoice/runtime/
