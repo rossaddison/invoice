@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "81b26765ccfd9d43d73585f73cea6958",
+    "content-hash": "6f9445aadb0f97d7f3e564e697330739",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -18345,16 +18345,16 @@
         },
         {
             "name": "yiisoft/yii-middleware",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii-middleware.git",
-                "reference": "92b53128a3aed252eeef48b4910a872c786515dc"
+                "reference": "86331975b92ac0d94a0f6679fa1663a25b0bd418"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii-middleware/zipball/92b53128a3aed252eeef48b4910a872c786515dc",
-                "reference": "92b53128a3aed252eeef48b4910a872c786515dc",
+                "url": "https://api.github.com/repos/yiisoft/yii-middleware/zipball/86331975b92ac0d94a0f6679fa1663a25b0bd418",
+                "reference": "86331975b92ac0d94a0f6679fa1663a25b0bd418",
                 "shasum": ""
             },
             "require": {
@@ -18426,7 +18426,7 @@
                     "type": "opencollective"
                 }
             ],
-            "time": "2026-02-28T13:28:12+00:00"
+            "time": "2026-03-09T20:39:42+00:00"
         },
         {
             "name": "yiisoft/yii-runner",
@@ -25232,5 +25232,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
