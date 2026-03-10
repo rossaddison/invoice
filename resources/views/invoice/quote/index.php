@@ -118,15 +118,34 @@ $disabledAddQuoteButton = A::tag()
 
 $enableGrouping = $groupBy !== 'none';
 
-// Calculate totals for footer
+$sort = Sort::only([
+    'id',
+    'status_id',
+    'number',
+    'date_created',
+    'date_expires',
+    'client_id'
+])
+// (Related logic: see vendor\yiisoft\data\src\Reader\Sort
+// - => 'desc'  so -id => default descending on id
+->withOrderString($sortString);
+
+$sortedAndPagedPaginator = (new OffsetPaginator($quotes))
+    ->withPageSize(
+        $defaultPageSizeOffsetPaginator > 0 ?
+            $defaultPageSizeOffsetPaginator : 1
+    )
+    ->withCurrentPage($page)
+    ->withSort($sort)
+    ->withToken(PageToken::next((string) $page));
+
+// Calculate totals for footer (from paginator to avoid exhausting $quotes)
 $totalAmount = 0.0;
 
-// Get all data for calculations (not just current page)
 /**
  * @var Quote $quote
  */
-foreach ($quotes as $quote) {
-    
+foreach ($sortedAndPagedPaginator->read() as $quote) {
     $totalAmount += null !== ($total = $quote->getQuoteAmount()->getTotal())
             ? $total : 0.00;
 }
@@ -313,8 +332,10 @@ $columns = [
                 return ($model->getSo_id() == 0) && ($model->getInv_id() == 0)
                 ?  
                 [
-                    'onclick' => "return confirm(" . "'"
-                    . $translator->translate('delete.record.warning') . "');",
+                    'onclick' => "return confirm("
+                    . (string) json_encode($translator->translate('delete.record.warning'))
+                    . ");",
+
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('delete.quote.single'),
                     'class' => 'btn btn-outline-danger btn-sm',
@@ -330,7 +351,7 @@ $columns = [
     ]),
     new DataColumn(
         property: 'filterStatus',
-        header: '<span data-bs-toggle="tooltip" data-bs-html="true" title="' . 
+        header: '<span data-bs-toggle="tooltip" data-bs-html="false" title="' . 
                 Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 '
                 . $translator->translate('draft') . '<br/>📨 '
                 . $translator->translate('sent') . '<br/>👀 '
@@ -460,27 +481,6 @@ $columns = [
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 
-$sort = Sort::only([
-    'id',
-    'status_id',
-    'number',
-    'date_created',
-    'date_expires',
-    'client_id'
-])
-// (Related logic: see vendor\yiisoft\data\src\Reader\Sort
-// - => 'desc'  so -id => default descending on id
-->withOrderString($sortString);
-
-$sortedAndPagedPaginator = (new OffsetPaginator($quotes))
-    ->withPageSize(
-        $defaultPageSizeOffsetPaginator > 0 ?
-            $defaultPageSizeOffsetPaginator : 1
-    )
-    ->withCurrentPage($page)
-    ->withSort($sort)
-    ->withToken(PageToken::next((string) $page));
-
 $grid_summary = $s->grid_summary(
     $sortedAndPagedPaginator,
     $translator,
@@ -525,7 +525,7 @@ if ($enableGrouping) {
     /**
      * @var App\Invoice\Entity\Quote $quote
      */
-    foreach ($quotes as $quote) {
+    foreach ($sortedAndPagedPaginator->read() as $quote) {
         $groupValue = $getGroupValue($quote);
         if (!isset($groupTotals[$groupValue])) {
             $groupTotals[$groupValue] = [
@@ -545,6 +545,10 @@ $gridView = GridView::widget()
 ->columns(...$columns)
 ->columnGrouping(true); // Enable HTML column grouping for better styling
 
+$columnCount = count(array_filter($columns,
+    fn(ColumnInterface $col) => $col->isVisible()
+));
+
 // Apply grouping only if enabled
 if ($enableGrouping) {
     $gridView = $gridView->beforeRow(static function (array|object $quote, $key, int $index) use (
@@ -553,7 +557,8 @@ if ($enableGrouping) {
         $groupTotals,
         $decimalPlaces,
         $groupBy,
-        $s
+        $s,
+        $columnCount
     ): ?\Yiisoft\Html\Tag\Tr {
         // Ensure the quote is of the expected type
         assert($quote instanceof Quote);
@@ -563,9 +568,6 @@ if ($enableGrouping) {
             $previousGroupValue = $currentGroupValue;
             $groupData = $groupTotals[$currentGroupValue];
             $currencySymbol = $s->getSetting('currency_symbol');
-            
-            // Get column count - count visible columns
-            $columnCount = 12; // Approximate column count, adjust as needed
             
             return \Yiisoft\Html\Html::tr()
                 ->addClass('group-header bg-secondary text-white fw-bold group-collapsible')
@@ -615,12 +617,10 @@ $toolbarString
                     ->content(' ' . $translator->translate('group.by') . ':')
                 .
                 Select::tag()
-                    ->addClass('form-select')
+                    ->addClass('form-select group-by-select')
                     ->addAttributes([
                         'style' => 'max-width: 150px;',
-                        'onchange' => 'window.location.href=\''
-                            . $urlGenerator->generate('quote/index')
-                            . '?groupBy=\' + this.value'
+                        'data-base-url' => $urlGenerator->generate('quote/index'),
                     ])
                     ->optionsData([
                         'none' => $translator->translate('grouping.none'),
@@ -696,7 +696,8 @@ if ($visible) {
 echo $modal_add_quote;
 ?>
 
-<script>
+<?php
+$magnifierScript = <<<JS
 // Initialize Quote Amount Magnifier when page loads
 document.addEventListener('DOMContentLoaded', function() {
     class QuoteAmountMagnifier {
@@ -714,14 +715,15 @@ document.addEventListener('DOMContentLoaded', function() {
         attachMagnifiersToAmounts() {
             const amountSelectors = [
                 '.label.label-success',
-                '.label.label-warning', 
+                '.label.label-warning',
                 '.label.label-danger'
             ];
 
             amountSelectors.forEach(selector => {
                 const elements = document.querySelectorAll(selector);
                 elements.forEach((element) => {
-                    if (this.isAmountElement(element) && !element.hasAttribute('data-magnifier-initialized')) {
+                    if (this.isAmountElement(element)
+                        && !element.hasAttribute('data-magnifier-initialized')) {
                         this.addMagnificationBehavior(element);
                         element.setAttribute('data-magnifier-initialized', 'true');
                     }
@@ -738,7 +740,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addMagnificationBehavior(element) {
             let borderColor = '#007bff';
             let bgColor = 'rgba(255, 255, 255, 0.95)';
-            
+
             if (element.classList.contains('label-success')) {
                 borderColor = '#28a745';
                 bgColor = '#d4edda';
@@ -764,7 +766,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 boxShadow: computedStyle.boxShadow
             };
 
-            element.style.transition = `all ${this.animationDuration}ms ease-in-out`;
+            element.style.transition = `all \${this.animationDuration}ms ease-in-out`;
             element.style.cursor = 'pointer';
             element.classList.add('amount-magnifiable');
 
@@ -773,7 +775,8 @@ document.addEventListener('DOMContentLoaded', function() {
             element.addEventListener('mouseenter', () => {
                 if (!isHovered) {
                     isHovered = true;
-                    this.applyMagnification(element, originalStyles, borderColor, bgColor);
+                    this.applyMagnification(element, originalStyles, borderColor,
+                        bgColor);
                 }
             });
 
@@ -790,7 +793,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.removeMagnification(element, originalStyles);
                     isHovered = false;
                 } else {
-                    this.applyMagnification(element, originalStyles, borderColor, bgColor);
+                    this.applyMagnification(element, originalStyles, borderColor,
+                        bgColor);
                     isHovered = true;
                 }
             });
@@ -799,11 +803,11 @@ document.addEventListener('DOMContentLoaded', function() {
         applyMagnification(element, originalStyles, borderColor, bgColor) {
             const currentFontSize = parseFloat(originalStyles.fontSize);
             const newFontSize = currentFontSize * this.magnificationFactor;
-            
-            element.style.fontSize = `${newFontSize}px`;
+
+            element.style.fontSize = `\${newFontSize}px`;
             element.style.fontWeight = 'bold';
             element.style.backgroundColor = bgColor;
-            element.style.border = `2px solid ${borderColor}`;
+            element.style.border = `2px solid \${borderColor}`;
             element.style.borderRadius = '6px';
             element.style.padding = '8px 12px';
             element.style.zIndex = '1000';
@@ -821,7 +825,8 @@ document.addEventListener('DOMContentLoaded', function() {
         setupMutationObserver() {
             this.observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
-                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    if (mutation.type === 'childList'
+                            && mutation.addedNodes.length > 0) {
                         setTimeout(() => {
                             this.attachMagnifiersToAmounts();
                         }, 100);
@@ -829,7 +834,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            const tableContainer = document.querySelector('.table-responsive') || document.body;
+            const tableContainer = document.getElementById('table-quote')
+                    || document.querySelector('.table-responsive');
+            if (!tableContainer) return;
             this.observer.observe(tableContainer, {
                 childList: true,
                 subtree: true
@@ -837,58 +844,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize the amount magnifier
     new QuoteAmountMagnifier();
-    
-    // Group collapsible functionality
-    window.toggleGroupRows = function(groupHeader) {
-        const toggleIcon = groupHeader.querySelector('.group-toggle-icon');
-        let nextRow = groupHeader.nextElementSibling;
-        let isCollapsing = toggleIcon.classList.contains('bi-chevron-down');
-        
-        // Toggle icon
-        if (isCollapsing) {
-            toggleIcon.classList.remove('bi-chevron-down');
-            toggleIcon.classList.add('bi-chevron-right');
-        } else {
-            toggleIcon.classList.remove('bi-chevron-right');
-            toggleIcon.classList.add('bi-chevron-down');
-        }
-        
-        // Toggle all rows until next group header or end of table
-        while (nextRow && !nextRow.classList.contains('group-header')) {
-            if (isCollapsing) {
-                nextRow.style.display = 'none';
-            } else {
-                nextRow.style.display = '';
-            }
-            nextRow = nextRow.nextElementSibling;
-        }
-    };
-    
-    // Add expand/collapse all functionality
-    window.toggleAllGroups = function(expand = null) {
-        const groupHeaders = document.querySelectorAll('.group-header');
-        groupHeaders.forEach(header => {
-            const toggleIcon = header.querySelector('.group-toggle-icon');
-            const isCurrentlyCollapsed = toggleIcon.classList.contains('bi-chevron-right');
-            
-            if (expand === null) {
-                // Toggle current state
-                window.toggleGroupRows(header);
-            } else if (expand && isCurrentlyCollapsed) {
-                // Expand if currently collapsed
-                window.toggleGroupRows(header);
-            } else if (!expand && !isCurrentlyCollapsed) {
-                // Collapse if currently expanded
-                window.toggleGroupRows(header);
+
+    // Group-by select — safe whitelist-validated navigation
+    const groupBySelect = document.querySelector('.group-by-select');
+    if (groupBySelect) {
+        const allowed = ['none', 'status', 'client', 'client_group', 'month',
+                         'year', 'date', 'amount_range'];
+        groupBySelect.addEventListener('change', function() {
+            if (allowed.includes(this.value)) {
+                const baseUrl = this.dataset.baseUrl || '';
+                window.location.href = baseUrl + '?groupBy='
+                        + encodeURIComponent(this.value);
             }
         });
-    };
+    }
 });
-</script>
+JS;
 
-<style>
+$magnifierStyle = <<<CSS
 .amount-magnifiable {
     transition: all 0.25s ease-in-out;
     display: inline-block;
@@ -904,13 +878,66 @@ document.addEventListener('DOMContentLoaded', function() {
     position: relative !important;
 }
 
+/* Status column tooltip font size - 2x larger */
+.label[data-bs-toggle="tooltip"] + .tooltip .tooltip-inner,
+.tooltip.show .tooltip-inner {
+    font-size: 2em !important;
+}
+CSS;
+
+echo Html::script($magnifierScript)->type('module');
+echo Html::style($magnifierStyle);
+
+if ($enableGrouping):
+    $groupingScript = <<<JS
+// Group collapsible functionality
+window.toggleGroupRows = function(groupHeader) {
+    const toggleIcon = groupHeader.querySelector('.group-toggle-icon');
+    let nextRow = groupHeader.nextElementSibling;
+    let isCollapsing = toggleIcon.classList.contains('bi-chevron-down');
+
+    if (isCollapsing) {
+        toggleIcon.classList.remove('bi-chevron-down');
+        toggleIcon.classList.add('bi-chevron-right');
+    } else {
+        toggleIcon.classList.remove('bi-chevron-right');
+        toggleIcon.classList.add('bi-chevron-down');
+    }
+
+    while (nextRow && !nextRow.classList.contains('group-header')) {
+        if (isCollapsing) {
+            nextRow.style.display = 'none';
+        } else {
+            nextRow.style.display = '';
+        }
+        nextRow = nextRow.nextElementSibling;
+    }
+};
+
+window.toggleAllGroups = function(expand = null) {
+    const groupHeaders = document.querySelectorAll('.group-header');
+    groupHeaders.forEach(header => {
+        const toggleIcon = header.querySelector('.group-toggle-icon');
+        const isCurrentlyCollapsed =
+                        toggleIcon.classList.contains('bi-chevron-right');
+
+        if (expand === null) {
+            window.toggleGroupRows(header);
+        } else if (expand && isCurrentlyCollapsed) {
+            window.toggleGroupRows(header);
+        } else if (!expand && !isCurrentlyCollapsed) {
+            window.toggleGroupRows(header);
+        }
+    });
+};
+JS;
+
+    $groupingStyle = <<<CSS
 /* Group Header Styles */
 .group-header {
     background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
     border-top: 3px solid #495057 !important;
     border-bottom: 1px solid #495057 !important;
-    cursor: pointer;
-    user-select: none;
 }
 
 .group-header td {
@@ -957,10 +984,6 @@ document.addEventListener('DOMContentLoaded', function() {
     transform: rotate(0deg);
 }
 
-.group-row-hidden {
-    display: none;
-}
-
 /* Add subtle indentation for grouped rows */
 .group-header + tr td:first-child {
     border-left: 4px solid #007bff;
@@ -983,10 +1006,8 @@ tbody tr:not(.group-header):hover {
         z-index: 20;
     }
 }
+CSS;
 
-/* Status column tooltip font size - 2x larger */
-.label[data-bs-toggle="tooltip"] + .tooltip .tooltip-inner,
-.tooltip.show .tooltip-inner {
-    font-size: 2em !important;
-}
-</style>
+    echo Html::script($groupingScript)->type('module');
+    echo Html::style($groupingStyle);
+endif;

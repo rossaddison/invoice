@@ -328,22 +328,41 @@ $disabledAddInvoiceButton = A::tag()
 
 $enableGrouping = $groupBy !== 'none';
 
-// Calculate totals for footer
+$sort = Sort::only([
+    'id',
+    'status_id',
+    'number',
+    'date_created',
+    'date_due',
+    'client_id'
+])
+// (Related logic: see vendor\yiisoft\data\src\Reader\Sort
+// - => 'desc'  so -id => default descending on id
+->withOrderString($sortString);
+
+$sortedAndPagedPaginator = (new OffsetPaginator($invs))
+    ->withPageSize(
+        $defaultPageSizeOffsetPaginator > 0 ?
+            $defaultPageSizeOffsetPaginator : 1
+    )
+    ->withCurrentPage($page)
+    ->withSort($sort)
+    ->withToken(PageToken::next((string) $page));
+
+// Calculate totals for footer (from paginator to avoid exhausting $invs)
 $totalAmount = 0.0;
 $totalPaid = 0.0;
 $totalBalance = 0.0;
 
-// Get all data for calculations (not just current page)
-
 /**
  * @var Inv $invoice
  */
-foreach ($invs as $invoice) {
-    $totalAmount += null!== ($total = $invoice->getInvAmount()->getTotal())
+foreach ($sortedAndPagedPaginator->read() as $invoice) {
+    $totalAmount += null !== ($total = $invoice->getInvAmount()->getTotal())
             ? $total : 0.00;
-    $totalPaid += null!== ($paid = $invoice->getInvAmount()->getPaid())
+    $totalPaid += null !== ($paid = $invoice->getInvAmount()->getPaid())
             ? $paid : 0.00;
-    $totalBalance += null!== ($balance = $invoice->getInvAmount()->getBalance())
+    $totalBalance += null !== ($balance = $invoice->getInvAmount()->getBalance())
             ? $balance : 0.00;
 }
 
@@ -672,7 +691,7 @@ $columns = [
     ),
     new DataColumn(
         property: 'filterStatus',
-        header: '<span data-bs-toggle="tooltip" data-bs-html="true" title="' . 
+        header: '<span data-bs-toggle="tooltip" data-bs-html="false" title="' .
                 Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 '
                         . $translator->translate('draft')
                         . '<br/>📨 ' . $translator->translate('sent')
@@ -1147,9 +1166,9 @@ $columns = [
                             'data-bs-toggle' => 'tooltip',
                             'title' => $translator->translate('delete'),
                             'class' => 'btn btn-outline-danger btn-sm',
-                            'onclick' => "return confirm('"
-                            . $translator->translate('delete.record.warning')
-                            . "');"
+                            'onclick' => "return confirm("
+                            . (string) json_encode($translator->translate('delete.record.warning'))
+                            . ");"
                         ];
                     } else {
                         return [
@@ -1197,12 +1216,10 @@ $toolbarString
                     ->content(' ' . $translator->translate('group.by') . ':')
                 .
                 Select::tag()
-                    ->addClass('form-select')
+                    ->addClass('form-select group-by-select')
                     ->addAttributes([
                         'style' => 'max-width: 150px;',
-                        'onchange' => 'window.location.href=\''
-                            . $urlGenerator->generate('inv/index')
-                            . '?groupBy=\' + this.value'
+                        'data-base-url' => $urlGenerator->generate('inv/index'),
                     ])
                     ->optionsData([
                         'none' => $translator->translate('grouping.none'),
@@ -1249,27 +1266,6 @@ $toolbarString
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 
-$sort = Sort::only([
-    'id', 
-    'status_id', 
-    'number', 
-    'date_created', 
-    'date_due', 
-    'client_id'
-])
-// (Related logic: see vendor\yiisoft\data\src\Reader\Sort
-// - => 'desc'  so -id => default descending on id
-->withOrderString($sortString);
-
-$sortedAndPagedPaginator = (new OffsetPaginator($invs))
-    ->withPageSize(
-        $defaultPageSizeOffsetPaginator > 0 ?
-            $defaultPageSizeOffsetPaginator : 1
-    )
-    ->withCurrentPage($page)
-    ->withSort($sort)
-    ->withToken(PageToken::next((string) $page));
-
 $grid_summary = $s->grid_summary(
     $sortedAndPagedPaginator,
     $translator,
@@ -1311,6 +1307,10 @@ $getGroupValue = static function (Inv $invoice) use ($groupBy, $iR): string {
         default => 'No Group'
     };
 };
+
+$columnCount = count(array_filter($columns,
+    fn(ColumnInterface $col) => $col->isVisible()
+));
 
 // Calculate totals per group (only if grouping is enabled)
 $groupTotals = [];
@@ -1355,7 +1355,8 @@ if ($enableGrouping) {
         $groupTotals,
         $decimalPlaces,
         $groupBy,
-        $s
+        $s,
+        $columnCount
     ): ?\Yiisoft\Html\Tag\Tr {
         // Ensure the invoice is of the expected type
         assert($invoice instanceof Inv);
@@ -1365,10 +1366,7 @@ if ($enableGrouping) {
             $previousGroupValue = $currentGroupValue;
             $groupData = $groupTotals[$currentGroupValue];
             $currencySymbol = $s->getSetting('currency_symbol');
-            
-            // Get column count - count visible columns
-            $columnCount = 15; // Approximate column count, adjust as needed
-            
+
             return \Yiisoft\Html\Html::tr()
                 ->addClass(
                'group-header bg-secondary text-white fw-bold group-collapsible')
@@ -1451,14 +1449,16 @@ if ($visible) {
 echo $modal_add_inv;
 echo $modal_create_recurring_multiple;
 echo $modal_copy_inv_multiple;
-
-// Angular Amount Magnifier Integration
 ?>
+
+<!-- Angular Amount Magnifier Integration -->
+
 <div id="angular-amount-magnifier-app">
     <app-root></app-root>
 </div>
 
-<script>
+<?php
+$magnifierScript = <<<JS
 // Initialize Angular Amount Magnifier when page loads
 document.addEventListener('DOMContentLoaded', function() {
     // Import and initialize the amount magnifier service
@@ -1528,7 +1528,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 boxShadow: computedStyle.boxShadow
             };
 
-            element.style.transition = `all ${this.animationDuration}ms ease-in-out`;
+            element.style.transition = `all \${this.animationDuration}ms ease-in-out`;
             element.style.cursor = 'pointer';
             element.classList.add('amount-magnifiable');
 
@@ -1566,10 +1566,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentFontSize = parseFloat(originalStyles.fontSize);
             const newFontSize = currentFontSize * this.magnificationFactor;
             
-            element.style.fontSize = `${newFontSize}px`;
+            element.style.fontSize = `\${newFontSize}px`;
             element.style.fontWeight = 'bold';
             element.style.backgroundColor = bgColor;
-            element.style.border = `2px solid ${borderColor}`;
+            element.style.border = `2px solid \${borderColor}`;
             element.style.borderRadius = '6px';
             element.style.padding = '8px 12px';
             element.style.zIndex = '1000';
@@ -1596,8 +1596,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            const tableContainer = document.querySelector('.table-responsive')
-                    || document.body;
+            const tableContainer = document.getElementById('table-invoice')
+                    || document.querySelector('.table-responsive');
+            if (!tableContainer) return;
             this.observer.observe(tableContainer, {
                 childList: true,
                 subtree: true
@@ -1605,37 +1606,80 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize the amount magnifier
     new InvoiceAmountMagnifier();
-    
-    // Group collapsible functionality
-    window.toggleGroupRows = function(groupHeader) {
-        const toggleIcon = groupHeader.querySelector('.group-toggle-icon');
-        let nextRow = groupHeader.nextElementSibling;
-        let isCollapsing = toggleIcon.classList.contains('bi-chevron-down');
-        
-        // Toggle icon
-        if (isCollapsing) {
-            toggleIcon.classList.remove('bi-chevron-down');
-            toggleIcon.classList.add('bi-chevron-right');
-        } else {
-            toggleIcon.classList.remove('bi-chevron-right');
-            toggleIcon.classList.add('bi-chevron-down');
-        }
-        
-        // Toggle all rows until next group header or end of table
-        while (nextRow && !nextRow.classList.contains('group-header')) {
-            if (isCollapsing) {
-                nextRow.style.display = 'none';
-            } else {
-                nextRow.style.display = '';
+
+    // Group-by select — safe whitelist-validated navigation
+    const groupBySelect = document.querySelector('.group-by-select');
+    if (groupBySelect) {
+        const allowed = ['none', 'status', 'client', 'client_group', 'month',
+                         'year', 'date', 'amount_range'];
+        groupBySelect.addEventListener('change', function() {
+            if (allowed.includes(this.value)) {
+                const baseUrl = this.dataset.baseUrl || '';
+                window.location.href = baseUrl + '?groupBy='
+                        + encodeURIComponent(this.value);
             }
-            nextRow = nextRow.nextElementSibling;
-        }
-    };
+        });
+    }
+});
+JS;
+
+$magnifierStyle = <<<CSS
+.amount-magnifiable {
+    transition: all 0.25s ease-in-out;
+    display: inline-block;
+}
+
+.amount-magnifiable:hover {
+    cursor: pointer;
+}
+
+/* Ensure magnified elements appear above other content */
+.amount-magnifiable[style*="z-index: 1000"] {
+    z-index: 1000 !important;
+    position: relative !important;
+}
+
+/* Status column tooltip font size - 2x larger */
+.label[data-bs-toggle="tooltip"] + .tooltip .tooltip-inner,
+.tooltip.show .tooltip-inner {
+    font-size: 2em !important;
+}
+CSS;
+
+echo Html::script($magnifierScript)->type('module');
+echo Html::style($magnifierStyle);
+
+if ($enableGrouping):
+    $groupingScript = <<<JS
+// Group collapsible functionality
+window.toggleGroupRows = function(groupHeader) {
+    const toggleIcon = groupHeader.querySelector('.group-toggle-icon');
+    let nextRow = groupHeader.nextElementSibling;
+    let isCollapsing = toggleIcon.classList.contains('bi-chevron-down');
     
-    // Add expand/collapse all functionality
-    window.toggleAllGroups = function(expand = null) {
+    // Toggle icon
+    if (isCollapsing) {
+        toggleIcon.classList.remove('bi-chevron-down');
+        toggleIcon.classList.add('bi-chevron-right');
+    } else {
+        toggleIcon.classList.remove('bi-chevron-right');
+        toggleIcon.classList.add('bi-chevron-down');
+    }
+    
+    // Toggle all rows until next group header or end of table
+    while (nextRow && !nextRow.classList.contains('group-header')) {
+        if (isCollapsing) {
+            nextRow.style.display = 'none';
+        } else {
+            nextRow.style.display = '';
+        }
+        nextRow = nextRow.nextElementSibling;
+    }
+};
+
+// Add expand/collapse all functionality
+window.toggleAllGroups = function(expand = null) {
         const groupHeaders = document.querySelectorAll('.group-header');
         groupHeaders.forEach(header => {
             const toggleIcon = header.querySelector('.group-toggle-icon');
@@ -1654,25 +1698,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     };
-});
-</script>
+JS;
 
-<style>
-.amount-magnifiable {
-    transition: all 0.25s ease-in-out;
-    display: inline-block;
-}
-
-.amount-magnifiable:hover {
-    cursor: pointer;
-}
-
-/* Ensure magnified elements appear above other content */
-.amount-magnifiable[style*="z-index: 1000"] {
-    z-index: 1000 !important;
-    position: relative !important;
-}
-
+    $groupingStyle = <<<CSS
 /* Group Header Styles */
 .group-header {
     background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
@@ -1746,11 +1774,135 @@ tbody tr:not(.group-header):hover {
         z-index: 20;
     }
 }
+CSS;
 
-/* Status column tooltip font size - 2x larger */
-.label[data-bs-toggle="tooltip"] + .tooltip .tooltip-inner,
-.tooltip.show .tooltip-inner {
-    font-size: 2em !important;
+    echo Html::script($groupingScript)->type('module');
+    echo Html::style($groupingStyle);
+endif;
+
+$mobilePreviewScript = <<<JS
+// Mobile/Desktop Preview Toggle
+// Renders the current page inside a 390 px phone-frame overlay (Android standard).
+// Suppressed when running inside the preview iframe itself.
+class MobilePreviewToggle {
+    constructor() {
+        if (window.self !== window.top) return;
+        this.isActive = false;
+        this.toggleBtn = null;
+        this.injectStyles();
+        this.createButton();
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isActive) this.deactivate();
+        });
+    }
+
+    injectStyles() {
+        if (document.getElementById('mp-styles')) return;
+        const s = document.createElement('style');
+        s.id = 'mp-styles';
+        s.textContent =
+            '.mp-btn{position:fixed;bottom:72px;right:20px;z-index:10001;' +
+            'padding:9px 18px;background:#212529;color:#fff;' +
+            'border:2px solid #495057;border-radius:22px;cursor:pointer;' +
+            'font-size:13px;font-weight:600;' +
+            'box-shadow:0 4px 14px rgba(0,0,0,.35);' +
+            'transition:background .2s,transform .15s;}' +
+            '.mp-btn:hover{background:#495057;transform:translateY(-2px);}' +
+            '.mp-btn.mp-on{background:#0d6efd;border-color:#0d6efd;}' +
+            '#mp-overlay{display:none;position:fixed;inset:0;z-index:10000;' +
+            'background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);' +
+            'overflow-y:auto;justify-content:center;' +
+            'align-items:flex-start;padding:30px 0 60px;}' +
+            '#mp-overlay.mp-show{display:flex;}' +
+            '#mp-phone{width:390px;background:#fff;border-radius:48px;' +
+            'box-shadow:inset 0 0 0 2px #555,0 0 0 10px #1c1c1e,' +
+            '0 0 0 12px #3a3a3c,0 40px 100px rgba(0,0,0,.6);' +
+            'overflow:hidden;position:relative;flex-shrink:0;}' +
+            '#mp-badge{position:absolute;top:-28px;left:50%;' +
+            'transform:translateX(-50%);background:rgba(0,0,0,.6);' +
+            'color:#a0cfff;font-size:11px;padding:2px 10px;' +
+            'border-radius:10px;white-space:nowrap;}' +
+            '#mp-notch-bar{background:#1c1c1e;height:34px;' +
+            'display:flex;align-items:center;justify-content:center;}' +
+            '#mp-notch{width:110px;height:24px;background:#1c1c1e;' +
+            'border-radius:0 0 16px 16px;}' +
+            '#mp-iframe{width:390px;height:800px;border:none;display:block;}' +
+            '#mp-home-bar{background:#1c1c1e;height:28px;' +
+            'display:flex;align-items:center;justify-content:center;}' +
+            '#mp-home-ind{width:120px;height:5px;background:#555;border-radius:3px;}' +
+            '#mp-hint{position:fixed;bottom:18px;left:50%;' +
+            'transform:translateX(-50%);z-index:10002;' +
+            'color:rgba(255,255,255,.45);font-size:12px;' +
+            'pointer-events:none;white-space:nowrap;}';
+        document.head.appendChild(s);
+    }
+
+    createButton() {
+        this.toggleBtn = document.createElement('button');
+        this.toggleBtn.className = 'mp-btn';
+        this.toggleBtn.textContent = '📱 Mobile Preview';
+        this.toggleBtn.title = 'Preview at Android 390 px width';
+        this.toggleBtn.addEventListener('click', () => this.toggle());
+        document.body.appendChild(this.toggleBtn);
+    }
+
+    buildOverlay() {
+        if (document.getElementById('mp-overlay')) return;
+        const overlay = document.createElement('div');
+        overlay.id = 'mp-overlay';
+        const phone = document.createElement('div');
+        phone.id = 'mp-phone';
+        const badge = document.createElement('div');
+        badge.id = 'mp-badge';
+        badge.textContent = '📱 Android — 390 × 844 px';
+        phone.appendChild(badge);
+        const notchBar = document.createElement('div');
+        notchBar.id = 'mp-notch-bar';
+        const notch = document.createElement('div');
+        notch.id = 'mp-notch';
+        notchBar.appendChild(notch);
+        phone.appendChild(notchBar);
+        const iframe = document.createElement('iframe');
+        iframe.id = 'mp-iframe';
+        iframe.src = window.location.href;
+        phone.appendChild(iframe);
+        const homeBar = document.createElement('div');
+        homeBar.id = 'mp-home-bar';
+        const homeInd = document.createElement('div');
+        homeInd.id = 'mp-home-ind';
+        homeBar.appendChild(homeInd);
+        phone.appendChild(homeBar);
+        overlay.appendChild(phone);
+        const hint = document.createElement('div');
+        hint.id = 'mp-hint';
+        hint.textContent = 'Press Esc or click 🖥️ Desktop View to exit';
+        overlay.appendChild(hint);
+        document.body.appendChild(overlay);
+    }
+
+    activate() {
+        this.isActive = true;
+        this.buildOverlay();
+        document.getElementById('mp-overlay')?.classList.add('mp-show');
+        this.toggleBtn.textContent = '🖥️ Desktop View';
+        this.toggleBtn.classList.add('mp-on');
+    }
+
+    deactivate() {
+        this.isActive = false;
+        document.getElementById('mp-overlay')?.classList.remove('mp-show');
+        this.toggleBtn.textContent = '📱 Mobile Preview';
+        this.toggleBtn.classList.remove('mp-on');
+    }
+
+    toggle() {
+        this.isActive ? this.deactivate() : this.activate();
+    }
 }
-</style>
-<?php
+
+document.addEventListener('DOMContentLoaded', () => {
+    new MobilePreviewToggle();
+});
+JS;
+
+echo Html::script($mobilePreviewScript)->type('module');

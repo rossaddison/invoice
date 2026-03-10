@@ -1641,18 +1641,20 @@ var InvoiceApp = (() => {
   };
 
   // src/typescript/product.ts
-  function setButtonLoading4(buttons, isLoading) {
+  var BUTTON_ICONS = {
+    loading: "fa fa-spin fa-spinner",
+    success: "fa fa-check",
+    error: "fa fa-times"
+  };
+  function setButtonState(buttons, state) {
     buttons.forEach((button) => {
-      if (isLoading) {
-        button.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
-      } else {
-        button.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
-      }
-    });
-  }
-  function setButtonError(buttons) {
-    buttons.forEach((button) => {
-      button.innerHTML = '<h6 class="text-center"><i class="fa fa-error"></i></h6>';
+      button.textContent = "";
+      const h6 = document.createElement("h6");
+      h6.className = "text-center";
+      const i = document.createElement("i");
+      i.className = BUTTON_ICONS[state];
+      h6.appendChild(i);
+      button.appendChild(h6);
     });
   }
   var ProductHandler = class {
@@ -1666,7 +1668,6 @@ var InvoiceApp = (() => {
       document.addEventListener("shown.bs.modal", (event) => {
         const target = event.target;
         if (target && target.id === "modal-choose-items") {
-          console.log("Product modal shown, initializing components");
           this.updateButtonStates();
         }
       });
@@ -1749,9 +1750,10 @@ var InvoiceApp = (() => {
     initializeComponents() {
       if (typeof window.TomSelect !== "undefined") {
         document.querySelectorAll(".simple-select").forEach((el) => {
-          if (!el._tomselect) {
+          const tracked = el;
+          if (!tracked._tomselect) {
             new window.TomSelect(el, {});
-            el._tomselect = true;
+            tracked._tomselect = true;
           }
         });
       }
@@ -1796,14 +1798,12 @@ var InvoiceApp = (() => {
      * Perform the product search request and update UI
      */
     async submitProductFilters(event) {
-      if (event?.preventDefault) {
-        event.preventDefault();
-      }
-      const url = `${location.origin}/invoice/product/search`;
+      event.preventDefault();
+      const url = `${window.location.origin}/invoice/product/search`;
       const buttons = document.querySelectorAll(
         ".product_filters_submit"
       );
-      setButtonLoading4(buttons, true);
+      setButtonState(buttons, "loading");
       try {
         const productSkuInput = document.getElementById(
           "filter_product_sku"
@@ -1817,16 +1817,16 @@ var InvoiceApp = (() => {
         if (data.success === 1) {
           this.filterTableBySku();
           this.hideSummaryBar();
-          setButtonLoading4(buttons, false);
+          setButtonState(buttons, "success");
         } else {
-          setButtonError(buttons);
+          setButtonState(buttons, "error");
           if (data.message) {
             alert(data.message);
           }
         }
       } catch (error) {
         console.error("product search failed", error);
-        setButtonError(buttons);
+        setButtonState(buttons, "error");
         alert("An error occurred while searching products. See console for details.");
       }
     }
@@ -1846,17 +1846,15 @@ var InvoiceApp = (() => {
       const productIds = [];
       const quoteId = (absoluteUrl.pathname.split("/").at(-1) || "").replace(/[^0-9]/g, "");
       document.querySelectorAll("input[name='product_ids[]']:checked").forEach((input) => {
-        const value = parseInt(input.value);
+        const value = parseInt(input.value, 10);
         if (!isNaN(value)) {
           productIds.push(value);
         }
       });
       const sortedProductIds = productIds.toSorted((a, b) => a - b);
-      console.log("Processing products in sorted order:", sortedProductIds);
-      let url = `/invoice/product/selection_quote?quote_id=${quoteId}`;
-      sortedProductIds.forEach((id) => {
-        url += `&product_ids[]=${id}`;
-      });
+      const urlParams = new URLSearchParams({ quote_id: quoteId });
+      sortedProductIds.forEach((id) => urlParams.append("product_ids[]", String(id)));
+      const url = `/invoice/product/selection_quote?${urlParams.toString()}`;
       try {
         const response = await fetch(url, {
           method: "GET",
@@ -1881,16 +1879,15 @@ var InvoiceApp = (() => {
       const productIds = [];
       const invId = absoluteUrl.pathname.split("/").at(-1) || "";
       document.querySelectorAll("input[name='product_ids[]']:checked").forEach((input) => {
-        const value = parseInt(input.value);
+        const value = parseInt(input.value, 10);
         if (!isNaN(value)) {
           productIds.push(value);
         }
       });
       const sortedProductIds = productIds.toSorted((a, b) => a - b);
-      let url = `/invoice/product/selection_inv?inv_id=${invId}`;
-      sortedProductIds.forEach((id) => {
-        url += `&product_ids[]=${id}`;
-      });
+      const urlParams = new URLSearchParams({ inv_id: invId });
+      sortedProductIds.forEach((id) => urlParams.append("product_ids[]", String(id)));
+      const url = `/invoice/product/selection_inv?${urlParams.toString()}`;
       try {
         const response = await fetch(url, {
           method: "GET",
@@ -1909,15 +1906,7 @@ var InvoiceApp = (() => {
       }
     }
     processProducts(products) {
-      console.log("Processing", Object.keys(products).length, "products");
-      const productsByTaxRate = Object.groupBy(
-        Object.entries(products).map(([key, product]) => ({ key, ...product })),
-        (product) => product.tax_rate_id || "default"
-      );
-      console.log("Products grouped by tax rate:", Object.keys(productsByTaxRate));
-      for (const key in products) {
-        console.log("Processing product key:", key);
-        const product = products[key];
+      for (const [, product] of Object.entries(products)) {
         if (!product || typeof product !== "object") continue;
         const currentTaxRateId = product.tax_rate_id;
         let productDefaultTaxRateId;
@@ -1974,7 +1963,7 @@ var InvoiceApp = (() => {
       if (!productTable) return;
       const familyId = familySelect ? familySelect.value : "0";
       const productFilter = productInput ? productInput.value.trim() : "";
-      productTable.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+      this.setLoadingSpinner(productTable);
       const params = new URLSearchParams();
       if (familyId && familyId !== "0") {
         params.append("ff", familyId);
@@ -1984,7 +1973,6 @@ var InvoiceApp = (() => {
       }
       const queryString = params.toString();
       const url = queryString ? `/invoice/product/lookup?${queryString}` : "/invoice/product/lookup";
-      console.log("Filtering products:", { type, familyId, productFilter, url });
       try {
         const response = await fetch(url, {
           method: "GET",
@@ -1995,19 +1983,16 @@ var InvoiceApp = (() => {
           cache: "no-store"
         });
         const html = await response.text();
-        console.log("Received HTML response, length:", html.length);
-        console.log("HTML preview:", html.substring(0, 200));
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
         const fragment = document.createDocumentFragment();
         Array.from(doc.body.children).forEach((child) => fragment.appendChild(child));
-        productTable.innerHTML = "";
+        productTable.textContent = "";
         productTable.appendChild(fragment);
-        console.log("Products table updated, children count:", productTable.children.length);
         this.updateButtonStates();
       } catch (error) {
         console.error("Error filtering products:", error);
-        productTable.innerHTML = '<p class="text-danger">Error loading products</p>';
+        this.setTableError(productTable, "Error loading products");
       }
     }
     /**
@@ -2020,7 +2005,7 @@ var InvoiceApp = (() => {
       if (!productTable) return;
       if (familySelect) familySelect.value = "0";
       if (productInput) productInput.value = "";
-      productTable.innerHTML = '<h2 class="text-center"><i class="fa fa-spin fa-spinner"></i></h2>';
+      this.setLoadingSpinner(productTable);
       try {
         const response = await fetch("/invoice/product/lookup?rt=true", {
           method: "GET",
@@ -2035,13 +2020,29 @@ var InvoiceApp = (() => {
         const doc = parser.parseFromString(html, "text/html");
         const fragment = document.createDocumentFragment();
         Array.from(doc.body.children).forEach((child) => fragment.appendChild(child));
-        productTable.innerHTML = "";
+        productTable.textContent = "";
         productTable.appendChild(fragment);
         this.updateButtonStates();
       } catch (error) {
         console.error("Error resetting products:", error);
-        productTable.innerHTML = '<p class="text-danger">Error loading products</p>';
+        this.setTableError(productTable, "Error loading products");
       }
+    }
+    setLoadingSpinner(container) {
+      container.textContent = "";
+      const h2 = document.createElement("h2");
+      h2.className = "text-center";
+      const i = document.createElement("i");
+      i.className = "fa fa-spin fa-spinner";
+      h2.appendChild(i);
+      container.appendChild(h2);
+    }
+    setTableError(container, message) {
+      container.textContent = "";
+      const p = document.createElement("p");
+      p.className = "text-danger";
+      p.textContent = message;
+      container.appendChild(p);
     }
   };
 

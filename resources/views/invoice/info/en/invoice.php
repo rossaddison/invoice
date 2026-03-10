@@ -29,11 +29,11 @@
       'session' => Reference::to(SessionInterface::class),
       'datehelper' => Reference::to(DateHelper::class),
       'pageSizeLimiter' => Reference::to(PageSizeLimiter::class),
-      'gridComponents' => Reference::to(GridComponents::class)  
+      'gridComponents' => Reference::to(GridComponents::class)
     ],
-  ],      
+  ],
 </code>
-</p> 
+</p>
 <p><s>Pdf template construction upon emailing.</s></p>
 <p><s>Work on info issues</s></p>
 <p>Work In Progress - Shorter Term Goals</p>
@@ -53,7 +53,7 @@
 <p><b>10th March 2026</b></p>
 <p>Security improvement: access to phpinfo is removed.</p>
 <p>Security improvement: apache's ssl.conf updated. Contents provided in docs/SSL_CONF_EXPLAINED.md</p>
-<p>Include assignments.php in .gitignore to prevent overwriting of assignments during a 
+<p>Include assignments.php in .gitignore to prevent overwriting of assignments during a
    'git pull origin main' otherwise the roles will have to be reassigned via
    Settings ... Invoice User Account ... Clicking on Yes/No button under Observer column.
 </p>
@@ -68,7 +68,7 @@
    This is useful for sorting invoices according to product's family. Also useful
    for window cleaning or service orientated runs where all invoices relating to
    a run i.e. (product: House Number) and (family: Run's name) can be sorted.
-   This code is significant: 
+   This code is significant:
    <pre><code>
        public function filterFamilyName(string $invFamilyName): EntityReader
     {
@@ -134,14 +134,14 @@ otherwise route inv/attachment only picks up _language argument and not also the
 <p>Sonarqube code reduction. Previous SonarQube Reliability Issues reduced from 176 to 167: Rating C</p>
 <p>Security Open Issues: 0, Rating: A</p>
 <p><b>14th February 2026</b></p>
-<p>Lint AuthController and SignupController. ClassList Trait created for divs in 
+<p>Lint AuthController and SignupController. ClassList Trait created for divs in
 the login and signup view.</p>
 <p><b>11th February 2026</b></p>
 <p>Test m.bat with the recent changes</p>
 <p>Update the Makefile to reflect m.bat and to facilitate alpine ubuntu integration.</p>
 <p>Codeception updates: Correct the failing tests due to (1) Removing discount_percent (2) Bugfixing the quote to salesorder to invoice functions.</p>
 <p>Include InvItemAllowanceCharges and InvAllowanceCharges in tests to improve code coverage. Run yii invoice/items at command prompt which accesses src/Command/Invoice/ItemsCommand.php</p>
-<p>Rate limit increased to 20. Refer to update.</p> 
+<p>Rate limit increased to 20. Refer to update.</p>
 <p><b>10th February 2026</b></p>
 <p>Fraud Prevention Headers Bugfix md</p>
 <p><b>9th February 2026</b></p>
@@ -151,10 +151,10 @@ the login and signup view.</p>
 <p>Revert 8.5 testing to 8.4 in composer.json</p>
 <p><b>30th January 2026</b></p>
 <p>Sorted config/common/routes.php according to permission $pVI and $pEI.</p>
-<p>Added rbac to those $pVI routes which were susceptible to browser 
+<p>Added rbac to those $pVI routes which were susceptible to browser
    manipulation.</p>
-<p>A client cannot be unassigned or removed from a registered user if there is 
-pre-existing documentation i.e. quote, salesorders, invoices, credit notes. 
+<p>A client cannot be unassigned or removed from a registered user if there is
+pre-existing documentation i.e. quote, salesorders, invoices, credit notes.
 type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
 'userclient/delete'</p>
 <p>Removed discount percent </p>
@@ -171,8 +171,8 @@ type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
    currency, and currency conversions.</p>
 <p><b>18th January 2026</b></p>
 <p>Document and Line Item Allowance Charges between Quote, SalesOrder, and Inv functional.</p>
-<p>Step 1: Quote sent, Step 2: Observer User accepts terms, Step 3: SalesOrder sent, 
-   Step 4: Observer User approves with Purchase Order number submission on line items, 
+<p>Step 1: Quote sent, Step 2: Observer User accepts terms, Step 3: SalesOrder sent,
+   Step 4: Observer User approves with Purchase Order number submission on line items,
    Step 5: Admin sets SalesOrder status to InvoiceGenerate after Delivery,
    Step 6: Admin Generates Invoice, Step 7: Peppol Invoice creatable on Admin side.
    Step 8: e-invoice validated via ecosio free validator or above Peppol Validator.</p>
@@ -190,20 +190,20 @@ type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
 <p>The client has to be setup for peppol on the client index. Far right plus sign</p>
 <p>Each client will have to have a valid Postal Address Client...View..+ Add a
     client postal address</p>
-<p>Make sure all the current tax rates i.e. ⚙️ ... TaxRate have Peppol
+<p>Make sure all the current tax rates i.e. âš™ï¸ ... TaxRate have Peppol
     associated values.</p>
 <p>Peppol Testing will now recommence.</p>
 <p>The charge_amount under the SalesOrderItem has been removed. Redundant since
     we now have a fully functional salesorderitemallowancecharge many-to-one
     salesorderitem relationship for all possible peppol allowances or charges
-    which stems from the quoteitemallowancecharge relationship and is passed to 
+    which stems from the quoteitemallowancecharge relationship and is passed to
     the invitemallowancecharge relationship.</p>
-<p>Updated the README with additional Cycle/Orm links 
+<p>Updated the README with additional Cycle/Orm links
     into Cycle/Orm</p>
 <p><b>4th January 2026</b></p>
 <p>quote to salesorder tested</p>
 <p>salesorder to invoice tested</p>
-<p>The SalesOrderController function quote_to_so_amount is a good example of the 
+<p>The SalesOrderController function quote_to_so_amount is a good example of the
    application of the hasOne Entity function ... for both the quote and the salesorder
    <pre>
        /**
@@ -243,12 +243,12 @@ type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
 <p><pre>
       Note: HasOne will default to fkAction: CASCADE & Camelcase salesOrder_id
       foreign key which creates a conflict with snake case sales_order_id.
-     
-      Solution: Specify the outerKey (the foreign key in the table) 
+
+      Solution: Specify the outerKey (the foreign key in the table)
       explicitly here to avoid conflicts between automatically inserted
       Camelcase foreign keys in tables during schema building after Entity
       changes i.e. .env file BUILD_DATABASE=true ... BUILD_DATABASE
-      
+
       #[HasOne(target: SalesOrderAmount::class, outerKey: 'sales_order_id')]
       private readonly SalesOrderAmount $sales_order_amount;
 
@@ -256,7 +256,7 @@ type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
       the name Quote is merely one word unlike SalesOrder which is two words
       and this probably lends itself towards the camelcase foreign key creation
       issue.
-      
+
       Related logic:
       https://cycle-orm.dev/        ...
       docs/relation-has-one/current/en#differences-from-belongsto
@@ -275,7 +275,7 @@ type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
 <p>Flash messages can be paused with angular particularly the info/invoice.php file.</p>
 <p>Hide and unhide functionality to columns applied to the product and the client index as well.</p>
 <p><b>14th December 2025</b></p>
-<p>Product Generator created. It uses the family_commalist field and prefixes the 
+<p>Product Generator created. It uses the family_commalist field and prefixes the
    family_productprefix field to generate products with their product names. An angular number picker has been
    created for the family form to fill the commalist field.</p>
 <p><b>8th December 2025</b></p>
@@ -295,9 +295,9 @@ type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
 <p>Step 3: resources/views/layout/... all the php files</p>
 <p>Step 4: SettingRepository function locales() ... locale selected in the Google Translate Dropdown.</p>
 <p>Included additional translations in all the languages</p>
-<p>Code reduction: Dropdown items have been converted to variables in the src/ViewInjection/LayoutViewInjection.php</p> 
+<p>Code reduction: Dropdown items have been converted to variables in the src/ViewInjection/LayoutViewInjection.php</p>
 <p>Public Assets can only be cleared from the command line. Removed from main menu.</p>
-<p>A script function shorten() shortens 'too long key value' lines in output_overwrite/app.php's identified by SonarQube Rule s103.</p>  
+<p>A script function shorten() shortens 'too long key value' lines in output_overwrite/app.php's identified by SonarQube Rule s103.</p>
 <p>Next: Microsoft Typescript-Go Compatibility test on separate branch 'typescript-go-v7-compatibility-test' using vs-code</p>
 <p><b>29th November 2025</b></p>
 <p>Mobile Phone Testing</p>
@@ -327,11 +327,11 @@ type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
 <p><b>5th November 2025</b></p>
 <p>54 Vulnerabilities removed using Snyk's code Analysis tool. This tool will now run alongside Snyk's Dependency Analysis tool which was instrumental in highlighting the jQuey CVE's.
 
-Locally accessible m.bat and Makefile: 
+Locally accessible m.bat and Makefile:
 
-Added Snyk Code for static security analysis alongside ESLint for comprehensive code quality checking. Added security npm scripts: 'security:quick' (high-severity only), 'security:full' (complete analysis), 'security:deps' (dependency vulnerabilities). 
+Added Snyk Code for static security analysis alongside ESLint for comprehensive code quality checking. Added security npm scripts: 'security:quick' (high-severity only), 'security:full' (complete analysis), 'security:deps' (dependency vulnerabilities).
 
-Identified 4 high-priority security issues requiring attention: 3 XSS vulnerabilities in JavaScript files and 1 hardcoded secret. 
+Identified 4 high-priority security issues requiring attention: 3 XSS vulnerabilities in JavaScript files and 1 hardcoded secret.
 
 Created .snyk and .snykignore configuration files for security policy management. Added security commands to m.bat ([5f] Quick, [5g] Full, [5h] Dependencies) and Makefile (sq, sf, sd) for easy access.
 There are alternatives to eslint but will see what eslint version 10 brings with it regarding deprecations.
@@ -368,7 +368,7 @@ hasPermission\(['\"][^'\"]*['\"]
 <p><b>Zero-price product exclusion:</b> Implemented silent zero-price product filtering for product selection modals. Uses findAllPreloadedWithPrice() method for consistent filtering across invoice and quote item selection modals. Zero-priced products are automatically excluded from selection lists without user notification to avoid repetitive flash messages. Product filtering remains active but operates transparently.</p>
 <p><b>Fixed development tooling:</b> Updated .php-cs-fixer.php configuration to use '@PER-CS2x0' rule set instead of deprecated '@PER-CS2.0' and added PHP 8.3 version constraint to ensure consistent code formatting across environments. Resolved npm dependency conflict by downgrading ESLint from v9.39.0 to v8.57.0 for compatibility with eslint-plugin-deprecation@3.0.0. Added .eslintrc.cjs configuration for TypeScript linting. Both PHP CS Fixer and ESLint now work without deprecation warnings. Removed duplicate addProducts function from InvController as existing modal workflow provides superior functionality.</p>
 <p><b>28th October 2025</b></p>
-<p>The following files have been consolidated into one IIFE Typescript file invoice-typescript-iife.js: 
+<p>The following files have been consolidated into one IIFE Typescript file invoice-typescript-iife.js:
     'rebuild/js/quote.js',
     'rebuild/js/inv.js',
     'rebuild/js/salesorder.js',
@@ -381,7 +381,7 @@ hasPermission\(['\"][^'\"]*['\"]
 <p>Separate vanilla cron.js created.</p>
 <p><b>26h October 2025</b></p>
 <p>Bugfix: Length annotation: include skipOnEmpty = true</p>
-<p>Bugfix: Delete invoice items. src\Invoice\Asset\rebuild\js\inv.js</p> 
+<p>Bugfix: Delete invoice items. src\Invoice\Asset\rebuild\js\inv.js</p>
 <p>Use vs code to increase test coverage from 18.3 to approx. 40%</p>
 <p>New invoices, and quotes redirect to the new invoice and quote respectively and not the index.</p>
 <p>Inv to inv copy redirects to the new invoice's view</p>
@@ -478,13 +478,13 @@ hasPermission\(['\"][^'\"]*['\"]
 <p>Bugfixes for PDF and product sorting/filtering, improvements to index screens, and enhancements to Peppol invoice handling.</p>
 <p>Codeception and phpunit test upgrades, plus improvements to developer scripts (e.g., <code>m.bat</code>).</p>
 <p><b>17th August 2025</b></p>
-<p>Peppol arrays have been updated to the 24th November 2024 arrays. It has been over 2 years since this has been done. 
+<p>Peppol arrays have been updated to the 24th November 2024 arrays. It has been over 2 years since this has been done.
    The $vat field for InvAllowanceCharge and InvItemAllowanceCharge have been adjusted to $vatOrTax so that non-vat operating
-   companies can include a gst tax or a tax similar to vat when working with handling, packing, and shipping fees. 
+   companies can include a gst tax or a tax similar to vat when working with handling, packing, and shipping fees.
    I have included a field called Packhandleship_tax and packhandleship_total in the InvAmount entity which will reflect
    the overall value of invoice allowances and charges when using the categories under Peppol. These categories are useful
-   in a non-peppol context and particularly a non-vat context hence the more flexible approach and renaming of $vat to 
-   $vat_or_tax. The InvAmount entity has been adjusted to accomodate these two new totals which really are a net 
+   in a non-peppol context and particularly a non-vat context hence the more flexible approach and renaming of $vat to
+   $vat_or_tax. The InvAmount entity has been adjusted to accomodate these two new totals which really are a net
    invallowancecharge field ... so not strictly just packing, handling, and shipping. The InvAllowanceCharge index
    has been upgraded to allow indexing and sorting. </p>
 
@@ -493,12 +493,12 @@ hasPermission\(['\"][^'\"]*['\"]
 <p><b>Step 3:</b> Use the + sign on individual line items under the invoice view to input allowances or charges.</p>
 
 Refresh the view screen to see updated totals so allow redirects to complete once Inv Allowance Charges are entered.
-The NumberHelper works independently of screen refreshes and redirects. 
- 
+The NumberHelper works independently of screen refreshes and redirects.
+
 Next: Include some Codeception Tests which will secure these concepts if bugs creep in later with 'failure' notifications output in the cli.</p>
 <p><b>3rd August 2025</b></p>
-<p>Replaced int with float since amount being sent via Wonderful was being truncated. e.g. £3.60 truncated to £3.00</p>
-<p>The return url is functional but ref was being truncated because the route did not have it so included ref in the route.</p>  
+<p>Replaced int with float since amount being sent via Wonderful was being truncated. e.g. Â£3.60 truncated to Â£3.00</p>
+<p>The return url is functional but ref was being truncated because the route did not have it so included ref in the route.</p>
 <p>A more general message is preferred on the completion page for Wonderful which is compiled in the PaymentInformationController function wonderful_complete.</p>
 <p>Next: Refund a Credit Note if Payment has been made by the customer via Wonderful</p>
 <p>Next: Include an Oauth2.0 payment provider e.g. Tink in the Open Banking selection process. Tink uses OIDC so this will be an interesting integration.</p>
@@ -598,7 +598,7 @@ Next: Include some Codeception Tests which will secure these concepts if bugs cr
 <p>Include hash in WebControllerService function getRedirectResponse</p>
 <p>Remove underscores in translation keys and replace with dots</p>
 <p>resources/messages/en/app.php has simplified and sorted keys</p>
-<p>en/app.php keys replaced old underscore keys in src and resources folders</p> 
+<p>en/app.php keys replaced old underscore keys in src and resources folders</p>
 <p>Scripts produced by Copilot stored in scripts folder</p>
 <p>After a locale is selected from Google Translate dropdown, and app.php produced, redirection to this dropdown occurs using hash</p>
 <p><b>18th June 2025</b></p>
@@ -614,7 +614,7 @@ Next: Include some Codeception Tests which will secure these concepts if bugs cr
     <li class="step">
       <strong>Make WampServer MySQL Accessible from the Network</strong>
       <ul>
-        <li>In your WampServer’s MySQL config file (<code>C:\wamp\bin\mysql\mysql8.3.0\my.ini</code>), set:
+        <li>In your WampServerâ€™s MySQL config file (<code>C:\wamp\bin\mysql\mysql8.3.0\my.ini</code>), set:
             <pre><p>[mysqld]</p>
                  <p>bind-address=0.0.0.0</p></pre>
         </li>
@@ -650,7 +650,7 @@ FLUSH PRIVILEGES;
     <li class="step">
       <strong>Configure Your Docker App</strong>
       <ul>
-        <li>In your Docker container’s database configuration c:\...invoice\docker-compose.yml, use:
+        <li>In your Docker containerâ€™s database configuration c:\...invoice\docker-compose.yml, use:
           <pre>
 DB_HOST=192.168.1.100   # Use your Windows host's IP address
 DB_PORT=3306
@@ -702,8 +702,7 @@ mysql -h 192.168.1.100 -u youruser -p
       DB_DATABASE: yii3_i
       DB_USER: root
       DB_PASSWORD: root
-      
-      
+
   db:
     image: mysql:8.0
     restart: always
@@ -712,7 +711,7 @@ mysql -h 192.168.1.100 -u youruser -p
       MYSQL_DATABASE: yii3_i
       # The user below is optional; root is fine for local dev
       MYSQL_USER: root
-      MYSQL_PASSWORD: 
+      MYSQL_PASSWORD:
     ports:
       - "33060:3306" # Optional: expose if you want to connect from host
     volumes:
@@ -820,7 +819,7 @@ CMD ["php-fpm"]
 <p>1a. Step 1: Settings ... View ... Making Tax Digital tab ... Generate. This app uses the WEB_APP_VIA_SERVER connection method. </p>
 <p>There are approx. 13 headers that need to be generated - action 'setting/fphGenerate' and rebuild/js/settings.js.</p>
 <p>1b. Step 2. Reports ... Test Fraud Prevention Headers API. </p>
-<p>2. HmrcController.php has been setup in the backend folder and will include other API implementations. </p>   
+<p>2. HmrcController.php has been setup in the backend folder and will include other API implementations. </p>
 <p>3. https://developer.service.hmrc.gov.uk/guides/fraud-prevention/connection-method/web-app-via-server
 <p><b>26th April 2025</b></p>
 <p>Retested oauth2 with rossaddison/yii-auth-client and introduced a gov uk oauth2 which has not been tested.</p>
@@ -831,7 +830,7 @@ CMD ["php-fpm"]
 <p>The following m.bat has been introduced to the root folder.</p>
 <p><pre>@echo off
 :: This batch script provides a menu to run common commands for the Invoice System project.
-:: It allows users to execute PHP Psalm, check for outdated Composer dependencies, 
+:: It allows users to execute PHP Psalm, check for outdated Composer dependencies,
 :: and run the Composer Require Checker, all from the directory where the script is located
 :: Acknowledgement: Copilot
 
@@ -882,7 +881,7 @@ pause
 exit
 </pre></p>
 <p>A BaseController has been introduced for InvController, SalesOrderController, and QuoteController</p>
-<p>Buttons in the inv/index are disabled using the following combination: 
+<p>Buttons in the inv/index are disabled using the following combination:
 <pre>'disabled' => 'disabled', 'aria-disabled' => 'true', 'style' => 'pointer-events:none'</pre>
 </p>
 <p><b>7th April 2025</b></p>
@@ -893,7 +892,7 @@ exit
 <p>Dropdown sub menu for php details within resources\views\layout\invoice.php dropdown menu</p>
 <p>Use DropdownItem::text($subMenu->generate($translator->translate('faq.php.info.details'),$urlGenerator, $subMenuPhpInfo)),  to create a submenu dropdown.
 
-src\Widget\SubMenu compiles from an array specified in the layout  
+src\Widget\SubMenu compiles from an array specified in the layout
 </p>
 <p><b>3rd April 2025</b></p>
 <p>
@@ -1010,14 +1009,14 @@ Available commands:
   generate:test         Generates empty unit test file in suite
  gherkin
   gherkin:snippets      Fetches empty steps from feature files of suite and prints code snippets for them
-  gherkin:steps         Prints all defined feature steps  
+  gherkin:steps         Prints all defined feature steps
 </pre></p>
 <p><b>9 March 2025</b></p>
 <p>Replace jquery datepicker with bootstrap datepicker due to consistent security vulnerabilities with the jquery datepicker.
 
 Remove flexible date formats i.e. Field::text and replace with Field::date, or in Html
 
-Remove the flexible date format under settings ... views ... general ... date format  for the time being, with possible reintroduction later. 
+Remove the flexible date format under settings ... views ... general ... date format  for the time being, with possible reintroduction later.
 
 The js files are jquery based i.e. Basic syntax is: $(selector).action() so retain jquery.</p>
 <p><b>8 March 2025</b></p>
@@ -1027,8 +1026,8 @@ The js files are jquery based i.e. Basic syntax is: $(selector).action() so reta
 <p><b>5 March 2025</b></p>
 <p>Apply breaking changes of latest yiisoft/router version 4 to config/common/di/router.php (https://github.com/yiisoft/router/pull/207)</p>
 <p>c:\wamp64\www\invoice>php vendor/bin/codecept  run</p>
-<p>Included a few additional forks which will be replaced later with updated composer.json's: 
-        "rossaddison/yii-cycle-1": ">=1",                
+<p>Included a few additional forks which will be replaced later with updated composer.json's:
+        "rossaddison/yii-cycle-1": ">=1",
         "rossaddison/yii-gii": "dev-master",
         "rossaddison/yii-middleware": "dev-master",
 </p>
@@ -1042,7 +1041,7 @@ The js files are jquery based i.e. Basic syntax is: $(selector).action() so reta
 <p>Bootstrap5 Offcanvas functional</p>
 <p><b>19th February 2025</b></p>
 <p>Google Translate version 2 functional.</p>
-<p>A new GeneratorController function rebuildLocale() compares the source resources/messages/en/app.php with an already built {locale}/app.php. 
+<p>A new GeneratorController function rebuildLocale() compares the source resources/messages/en/app.php with an already built {locale}/app.php.
    A diff_lang.php file is created under src/Invoice/Language/English folder, and its keys are used to create the timestamped translated file in resources/views/invoice/generator/output_overwrite.
    An exception is thrown if the diff_lang.php file is too large for Google to translate.
 </p>
@@ -1052,13 +1051,13 @@ The js files are jquery based i.e. Basic syntax is: $(selector).action() so reta
      Implemented 16/02/2025 psalm version upgrade to 6.6.0
      This will have to be addressed with the cycle/orm which is error-messaging classes that are being made final.
      ClassMustBeFinal<br>
-     
+
      Implemented 16/02/2025 new ActionButton(url: ...unable to psalm-suppress named parameters.
      InvalidArgument<br>
 
      Implemented 17/02/2025 upgrade to psalm version 6.7.1
-     MissingOverrideAttribute<br>        
-</pre>    
+     MissingOverrideAttribute<br>
+</pre>
 </p>
 <p><b>10th February 2025</b></p>
 <p>Scrutinizer removed with the possibility of reimplementation.</p>
@@ -1198,7 +1197,7 @@ Not finding what you were looking for? Try calling `composer require "zircote/sw
             'user_id' => '2',
             'item_name' => 'observer',
         ],
-    ]; 
+    ];
 </pre>
 <p>Next LinkedIn Oauth2</p>
 <p><b>27th December 2024</b></p>
@@ -1210,11 +1209,11 @@ Not finding what you were looking for? Try calling `composer require "zircote/sw
 <p>A new oAuthService function oauthLogin has been created which does not require a password since authentication is already provided by Github.</p>
 <p>In summary, the user is found by means of their login i.e. username with code<pre>
     Auth\AuthService
-    
+
     public function oauthLogin(string $login): bool
     {
         $user = $this->userRepository->findByLoginWithAuthIdentity($login);
-        
+
         if ($user === null) {
             return false;
         }
@@ -1222,7 +1221,7 @@ Not finding what you were looking for? Try calling `composer require "zircote/sw
         return $this->currentUser->login($user->getIdentity());
     }
 </pre> and using the user identity, the current user is logged in.</p>
-<p><b>Step 1.</b> When the user chooses to 'Continue to Github', Github returns an access token using <pre>$oAuthTokenType = $this->github->fetchAccessToken($request, $code, $params = [])</pre>, 
+<p><b>Step 1.</b> When the user chooses to 'Continue to Github', Github returns an access token using <pre>$oAuthTokenType = $this->github->fetchAccessToken($request, $code, $params = [])</pre>,
    and we use this token in a header request, to get information from the user by means of the Github Client in fork rossaddison/yii-auth-client
    <pre>$this->github->getCurrentUserJsonArray($oAuthTokenType);</pre>
    The auth/callbackGithub function concatenates a user using:</p>
@@ -1232,7 +1231,7 @@ Not finding what you were looking for? Try calling `composer require "zircote/sw
 <p>c. and the Github 'login' or username which is perhaps not that unique and may have been used more than once by the user when registering with other Identity Providers e.g LinkedIn</p>
 <p><b>Step 2.</b> A random string password is built but will never be used and is hashed.</p>
 <p><b>Step 3.</b> The authService attempts to 'first time login' with this 'login' and deactivate the hour token ...otherwise a new user, and userinv is created, directing the user to login with their Identity Provider. </p>
-<p><b>Step 4.</b> The user must click on the 'please click here within the next hour to make active' button, to avoid our 'Github Access Token' from expiring.  
+<p><b>Step 4.</b> The user must click on the 'please click here within the next hour to make active' button, to avoid our 'Github Access Token' from expiring.
 <p>Like the email verification token, our Github Access Token is set at an hour or 3600 seconds, allowing the user to activate and login within the hour and is unrelated to the Application's Github Access Token received from Github in step 1.</p>
 <p><b>20th December 2024</b></p>
 <p>Introduce Oauth2 and FlashMessage Trait</p>
@@ -1240,7 +1239,7 @@ Not finding what you were looking for? Try calling `composer require "zircote/sw
 <p><b>18th December 2024</b></p>
 <p>Creating an Oauth Application with Github to get a Github Client Id and Client Secret so that users can login to your site with their Github login. </p>
 <p><b>Step 1. </b><a href="https://docs.github.com/v3/oauth">Read the docs</a>
-<p><b>Step 2. </b><a href="https://datatracker.ietf.org/doc/html/rfc6749#section-4.1">GitHub's OAuth implementation supports the standard authorization code grant type</a>    
+<p><b>Step 2. </b><a href="https://datatracker.ietf.org/doc/html/rfc6749#section-4.1">GitHub's OAuth implementation supports the standard authorization code grant type</a>
 <p><b>Step 3. </b><a href="https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#web-application-flow">We are using the web application flow.</a>
 <p><b>Step 4. </b><a href="https://github.com/settings/applications/new">Register your application</a></p>
 <p><b>Step 5a. </b>Request a User's Web Identity with <pre>GET https://github.com/login/oauth/authorize</pre> and <pre>query parameters client_id, redirect_url, state, login</pre></p>
@@ -1250,7 +1249,7 @@ e.g. of an access token <pre>access_token=gho_16C7e42F292c6912E7710c838347Ae178B
 <p><b>Step 5d. </b>If the code is not an unauthorised 401 and the state param is not empty, fetch the token <pre>function OAuth2->fetchAccessToken</pre>.
 <p><b>Step 5e. </b>If an official token is received, then use the Access token to access the Api on behalf of a user using <pre>Authorization: Bearer OAUTH-TOKEN<br>
 GET https://api.github.com/user</pre><p>
-<p><b>Step 5f. </b>Use the function vendor/rossaddison/yii-auth-client/src/Client/Github.php getCurrentUserJsonArray(OAuthToken $token) to use the built OauthToken Type with param 'access-token' specific to Github to access the user details e.g login i.e repository base, and id. </p>    
+<p><b>Step 5f. </b>Use the function vendor/rossaddison/yii-auth-client/src/Client/Github.php getCurrentUserJsonArray(OAuthToken $token) to use the built OauthToken Type with param 'access-token' specific to Github to access the user details e.g login i.e repository base, and id. </p>
 <p><b>18th December 2024</b></p>
 <p>Bootstrap 5 - Apply refactor dropdown widget</p>
 <p><b>11th December 2024</b></p>
@@ -1272,13 +1271,13 @@ GET https://api.github.com/user</pre><p>
 <p>The read only toggle gets set to a status e.g. draft, sent, viewed, paid which serves as a comparison when to set the invoice to read-only. Included a few more checks.</p>
 <p><b>11th November 2024</b></p>
 <p>1. Email with pdf attachment testing</p>
-<p>2. Conflict section in composer.json removed because symfony 7.1.6 could not be installed containing symfony/mime/file 
+<p>2. Conflict section in composer.json removed because symfony 7.1.6 could not be installed containing symfony/mime/file
     which yiisoft/mailer-symfony was dependent upon and could not be found in symfony/mime 5.45</p>
 <p>3. General testing of invoices. Few changes made regarding read_only status. </p>
 <p><b>9th November 2024</b></p>
 <p>1. Retest the .env and autoload files with Psalm Level 1 and filter_var function. Changes made.<p>
 <p>2. public/index.php and yii console file at the root tested. Changes made.<p>
-<p>3. The build database boolean value appears under performance on the application's menu now and warns if it has not been set back to false after setup.<p> 
+<p>3. The build database boolean value appears under performance on the application's menu now and warns if it has not been set back to false after setup.<p>
 <p>4. Include a php-space-filter-var-test.php function for testing .env values at the command line using the filter_var function.</p>
 <p>5. If signup fails due to no internet connection, token 'disabled' with: 'already_used_token' and a time value. The admin has to make the signed up userinv status active. </p>
 <p><b>7th November 2024</b></p>
@@ -1288,7 +1287,7 @@ GET https://api.github.com/user</pre><p>
 <p><b>31st October 2024</b></p>
 <p>1. Reconfigured config/common/params to accomodate yiisoft/mailer-symfony</p>
 <p>2. Tested SignUpController, ForgotController and are functional.</p>
-<p>3. Added additional email headers for authorisation.</p> 
+<p>3. Added additional email headers for authorisation.</p>
 <p><b>24th October 2024</b></p>
 <p>1. yiisoft/mailer backward compatibility corrections. pull requests 104 - 109</p>
 <p>2. MessageBodyTemplate(s) removed.</p>
@@ -1301,7 +1300,7 @@ GET https://api.github.com/user</pre><p>
 <p>Testing of above changes on one.com and beging yii3 discussion on webhooks use with Telegram and testing with one.com</p>
 <p><b>23rd October 2024</b></p>
 <p><b>Telegram</b></p>
-<p>1. 10 step instructions for using Telegram under Settings ... View ... Telegram tab to setup client/customer payment notifications</p> 
+<p>1. 10 step instructions for using Telegram under Settings ... View ... Telegram tab to setup client/customer payment notifications</p>
 <p>2. getUpdates tested and functional</p>
 <p>3. A webhook is currently not being used because payment notifications are being sent to the admin only. No messages are being sent from customers.</p>
 <p>4. Currently messages from the admin's telegram account to the bot can be retrieved using the manual getUpdates</p>
@@ -1311,7 +1310,7 @@ GET https://api.github.com/user</pre><p>
     // since the admin will be receiving payment notification messages from the bot
     $telegramChatId = $settingRepository->getSetting('telegram_chat_id');
     $telegramHelper = new TelegramHelper(
-        $settingRepositoryTelegramToken, 
+        $settingRepositoryTelegramToken,
         $this->logger
     );
     $this->telegramBotApi = $telegramHelper->getBotApi();
@@ -1328,16 +1327,16 @@ GET https://api.github.com/user</pre><p>
 <p>4b. A viewInjection site/forgotfailed is presented, if the sites senderEmail has not been setup encouraging the user to setup their config/common/params.php senderEmail.</p>
 <p>5. When the masked link is clicked, the src/Auth/ResetPasswordController.php function resetpassword unmasks the token.</p>
 <p>6. A form with a 'new password' field and a 'verify new password' field is presented if the now unmasked token matches the 32bit string in Token->token with type 'request-password-reset'</p>
-<p>7. As soon as this form is submitted, the following algorithm 
-       https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/models/ResetPasswordForm.php is followed:</p> 
+<p>7. As soon as this form is submitted, the following algorithm
+       https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/models/ResetPasswordForm.php is followed:</p>
 <pre>
-   1.) setPassword in User 
-   2.) nullify PasswordResetToken by setting the Token:token to null but retaining the Token:type 
-       so that the token can no longer be used.  
+   1.) setPassword in User
+   2.) nullify PasswordResetToken by setting the Token:token to null but retaining the Token:type
+       so that the token can no longer be used.
    3.) generateAuthKey in Identity
 </pre>
 <p>8. A viewInjection site/resetpasswordsuccess 'Password Reset' is shown if the password has changed.</p>
-<p>9. A viewInjection site/resetpasswordfailed 'An error occurred while trying to send your password reset email. 
+<p>9. A viewInjection site/resetpasswordfailed 'An error occurred while trying to send your password reset email.
       Please review the application logs or contact the system administrator.' is shown if the password has failed.</p>
 <p>10. A logger interface records the failed error messages.</p>
 <p>11. Testing site one.com settings have been included in the shared hosting FAQ</P>
@@ -1376,7 +1375,7 @@ GET https://api.github.com/user</pre><p>
 <p>This has been done to: </p>
 <p>1. enable AI suggestions through codeql using rossaddison/invoice ... settings ... code security ... advanced setup.</p>
 <p>2. support jQuery who have now included codeQL in their workflows recently.
-<p>3. eliminate the need to constantly check jQuery for vulnerabilities in their javascript.    
+<p>3. eliminate the need to constantly check jQuery for vulnerabilities in their javascript.
 <p>Reference: <a href="https://docs.github.com/en/code-security/code-scanning/managing-code-scanning-alerts/about-autofix-for-codeql-code-scanning#limitations-of-autofix-suggestions">Limitations of Autofix suggestions</a></p>
 <p><b>18th September 2024</b></p>
 <p>A 'stop logging in' and 'stop signing up' setting appear in the settings...view tab and is related to the src\ViewInjection\LayoutViewInjection.php</p>
@@ -1388,7 +1387,7 @@ GET https://api.github.com/user</pre><p>
 <p>40 security vulnerabilities were removed. Responsible files have been removed.</p>
 <p>jQuery is to be informed of 12 security vulnerabilities using their latest beta version.
    All responsible files have been removed from the directory ...src\Invoice\Asset\jquery-ui-1.14.0</p>
-<p>Set .env YII_DEBUG default value to non-empty. If the value is not empty so there is a value after the = sign it will be 
+<p>Set .env YII_DEBUG default value to non-empty. If the value is not empty so there is a value after the = sign it will be
 evaluated as a string first and then as true. YII_DEBUG= equates to false whereas YII_DEBUG=false equates to true because it is not empty.</p>
 <p>Scrutinizer used for code analysis. scrutinizer.yml appears at the root.</p>
 <p>bootstrap 4 data-toggle to bootstrap 5 data-bs-toggle.</p>
@@ -1398,7 +1397,7 @@ evaluated as a string first and then as true. YII_DEBUG= equates to false wherea
 <p><b>3rd August 2024</b></p>
 <p>Psalm Level 1 Testing Completed using below file format.</p>
 <p><pre>
-    <plugins><pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/></plugins>    
+    <plugins><pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/></plugins>
     <projectFiles>
         <directory name="config" />
         <directory name="resources/views" />
@@ -1431,7 +1430,7 @@ evaluated as a string first and then as true. YII_DEBUG= equates to false wherea
         Errors: 0   Warnings: 0   Total checks: 3
     </pre>
     <p>The nullable: true relations getPostalAddress, getDelivery, and getDeliveryLocation have been removed in favour of using</p>
-    <p>repository access to the inv related tables in order to retrieve relevant information.</p> 
+    <p>repository access to the inv related tables in order to retrieve relevant information.</p>
 <p>What's next: Telegram integration</p>
 <p><b>13th July 2024</b></p>
 <p>2. Folders p and q completed.</p>
@@ -1444,7 +1443,7 @@ evaluated as a string first and then as true. YII_DEBUG= equates to false wherea
 <p>1. Folders z to r completed.</p>
 <p>Psalm Level 1 file future psalm.xml</p>
 <p><xmp>
-    <plugins><pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/></plugins>    
+    <plugins><pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/></plugins>
     <projectFiles>
         <directory name="config" />
         <directory name="resources/views/invoice" />
@@ -1470,12 +1469,12 @@ evaluated as a string first and then as true. YII_DEBUG= equates to false wherea
 <p>5. The Admin side can also filter the emails according to client name. The user associated with this client is also shown.</p>
 <p>6. An additional field has been created for Client i.e. Title. The dropdown for this is built from the language folder invoice\resources\messages\en\app.php.</p>
 <p>7. jQuery has been upgraded to the latest. i.e. ui 1.13.2 to 1.13.3. and 3.6.0 to 3.7.1</p>
-<p>8. The UserInv index now includes the function revoke all roles i.e. revoke the Accountant and Observer role . Excludes the Administrator role. 
+<p>8. The UserInv index now includes the function revoke all roles i.e. revoke the Accountant and Observer role . Excludes the Administrator role.
 <p>9. A few temporary forks i.e. rossaddison/... have been created whilst vjik is busy with the upgrades. These will be removed later.
 <p>10. The mailer had a bug which has been fixed and has been tested with a few emails. </p>
 <p><b>24th April 2024</b></p>
 <p>Include stopLoggingIn and stopSigningUp variable into the LayoutViewInjection</p>
-<p>Include these variables into main.php</p> 
+<p>Include these variables into main.php</p>
 <p>Replace currentRoute with RouteArguments in InvoiceController.php</p>
 <p>The $debugMode variable now is linked to the .env file. Alter the debugMode in the .env file now instead of the LayoutViewInjection.
    If the $_ENV['BUILD_DATABASE']  environment variable is linked directly in the config/common params.php file it results in performance degradation so leave the setitng on 'false' for the moment.
@@ -1498,7 +1497,7 @@ evaluated as a string first and then as true. YII_DEBUG= equates to false wherea
 <p><b>2nd April 2024</b></p>
 <p>1. The debug mode setting, normally situated in ..\views\layout\invoice\main.php, has been moved to the </p>
 <p>   ..\src\ViewInjection\LayoutViewInjection.php return array i.e.  'debugMode' => true, </p>
-<p>2. A few basic front pages have been created for the site using 
+<p>2. A few basic front pages have been created for the site using
     <a href="https://bootstrapbrain.com/template/free-bootstrap-5-multipurpose-one-page-template-wave/">
         BootstrapBrain Wavelight Free Template
     </a>
@@ -1506,7 +1505,7 @@ evaluated as a string first and then as true. YII_DEBUG= equates to false wherea
 </p>
 <p>3. All dependency classes e.g. bsb- have been removed from the template and just raw bootstrap 5 code remains</p>
 <p>4. An acknowledgement link has been included on the about page.</p>
-<p>5. A soletrader layout template has been created to illustrate the ..\src\ViewInjection\CommonViewInjection.php pages. i.e. ..resources\views\layout\templates\soletrader\main.php</p>    
+<p>5. A soletrader layout template has been created to illustrate the ..\src\ViewInjection\CommonViewInjection.php pages. i.e. ..resources\views\layout\templates\soletrader\main.php</p>
 <p>6. The front pages use the variables declared in the CommonViewInjection.php pages.</p>
 <p>7. The Mollie Payment Api has been introduced. <a>https://github.com/mollie/mollie-api-php</a>
       A redirectUrl and not a webhookUrl is being used. After clients make payment on the Mollie site,
@@ -1521,9 +1520,9 @@ evaluated as a string first and then as true. YII_DEBUG= equates to false wherea
        better reflect the fact that data is not being captured on a form for pci compliance purposes.
 </p>
 <p>12. Additional invoice statuses have been included in inv/getStatuses(Translator $translator) namely
-       unpaid, reminder, letter, claim, judgement, enforcement, credit_invoice_for_invoice, loss 
-</p>       
-    </code>    
+       unpaid, reminder, letter, claim, judgement, enforcement, credit_invoice_for_invoice, loss
+</p>
+    </code>
 <p>
 <p><b>8th March 2024</b></p>
 <p>Update the client index with filters firstname surname, and a mini table of invoices per client using Entity Client ArrayCollection</p>
@@ -1568,7 +1567,7 @@ p>Further integration of the entity into the form constructs for the rest of the
 <p><img src="/site/options.png" alt="Options" height="300" width="500"></p>
 <p><img src="/site/ecosio_openpeppol_ubl_invoice_3_15_0.png" alt="Ecosio Open Peppol" height="300" width="600"></p>
 <p>Introduce Peppol (src\Invoice\Helpers\Peppol\PeppolHelper)</p>
-<p><a href="https://ecosio.com/en/peppol-and-xml-document-validator-button/?pk_abe=EN_Peppol_XML_Validator_Page&pk_abv=With_CTA"> An Ecosio validated 0 error xml e-invoice</a> can be generated. 
+<p><a href="https://ecosio.com/en/peppol-and-xml-document-validator-button/?pk_abe=EN_Peppol_XML_Validator_Page&pk_abv=With_CTA"> An Ecosio validated 0 error xml e-invoice</a> can be generated.
 <p>Introduce StoreCove (src\Invoice\Helpers\StoreCove\StoreCoveHelper) </p>
 <p><a href="https://www.storecove.com/docs#_json_object">A Storecove Json Encoded Invoice</a> can be generated. </p>
 <p><b>Requirement 1:</b></p>
@@ -1577,13 +1576,13 @@ p>Further integration of the entity into the form constructs for the rest of the
 <p>Store Cove Api connection functions have been created. (src\Invoice\InvoiceController.php store_cove_call_api)</p>
 <p><b>Requirement 3:</b></p>
 <p><b>Xml electronic invoices - Can be output</b> if the following sequence is followed:</p>
-<p>a: A logged in Client sets up their Peppol details on their side via Client...View...Options...Edit Peppol Details for e-invoicing. </p> 
+<p>a: A logged in Client sets up their Peppol details on their side via Client...View...Options...Edit Peppol Details for e-invoicing. </p>
 <p>b: A quote is created and sent by the Administrator to the Client.</p>
 <p>c: A logged in Client creates a sales order from the quote with their purchase order number, <s>purchase order line number</s>, and their contact person in the modal.</p>
 <p>d: A logged in Client, on each of the sales order line items, inputs their line item purchase order reference number, and their purchase order line number. (Mandatory or else exception will be raised). </p>
 <p>e: A logged in Administrator, requests that terms and conditions be accepted.</p>
 <p>f: A logged in Client accepts the terms and conditions. </p>
-<p>g: A logged in Administrator, updates the status of the sales order from assembled, approved, confirmed, to generate. </p> 
+<p>g: A logged in Administrator, updates the status of the sales order from assembled, approved, confirmed, to generate. </p>
 <p>h: A logged in Administrator can generate an invoice if the sales order status is on 'generate'</p>
 <p>i: A logged in Administrator can now generate a Peppol Xml Invoice using today's exchange rates setup on Settings...View...Peppol Electronic Invoicing...One of From Currency and One of To Currency</p>
 <p>j: Peppol exceptions will be raised.</p>
@@ -1614,7 +1613,7 @@ p>Further integration of the entity into the form constructs for the rest of the
 <p>Helpers\CountryHelper\get_country_list</p>
 <p>The following code is functional but results in UnresolvableInclude: Worth coming back to.</p>
 <p>Psalm Level 2 Testing - Submission 1</p>
-<code>    
+<code>
 /**<br>
  * Returns an array list of cldr => country, translated in the language $cldr.<br>
  * If there is no translated country list, return the english one.<br>
@@ -1644,10 +1643,10 @@ public function get_country_list(string $cldr) : mixed<br>
 <p>Psalm Level 3 Testing (0 errors)</p>
 <p>Testing</p>
 <p>Upgrade Amazon Pay: 2.4.0 => 2.5.1</p>
-<p>Test Amazon Pay with a Client logon.</p> 
+<p>Test Amazon Pay with a Client logon.</p>
 <p>1. Client has been registered as a User via Yii Demo.</p>
 <p>2. Client's User id has been transferred to UserInv via Settings ... User Account...+ by means of an Admin logon</p>
-<p>3. Client's client_id has been assigned to their user_id via Settings ... User Account ...Assigned Clients by means of an Admin logon.</p>  
+<p>3. Client's client_id has been assigned to their user_id via Settings ... User Account ...Assigned Clients by means of an Admin logon.</p>
 <p>Remove unknown region 'gb' bug. Admin must select one of three amazon regions in dropdown under Settings ... Online Payment. </p>
 <p>Include Amazon's 3 standard regions ie. North America, Europe, and Japan in regions dropdown on Amazon_pay Settings Payment Gateway.</p>
 <p>If region is not set, default to 'eu' in PaymentInformation/amazon_get_region</p>
@@ -1687,7 +1686,7 @@ if ($user_inv && $user_client) {  <br>
 <p>11. copy output_overwrite/_gateway_lang to src/Invoice/Language/{new language}</p>
 <p>12. copy output_overwrite/_app.php to ...resources/messages/{new locale}</p>
 <p><a href="https://github.com/yiisoft/demo/issues/559">Issue 559</a>
-<p><code>Psalm level 4 php ./vendor/bin/psalm --alter --issues=InvalidReturnType,MissingReturnType,LessSpecificReturnType,MissingParamType --dry-run</code>     
+<p><code>Psalm level 4 php ./vendor/bin/psalm --alter --issues=InvalidReturnType,MissingReturnType,LessSpecificReturnType,MissingParamType --dry-run</code>
 <p><b>29 December 2022</b></p>
 <p>Psalm Level 4 Testing (0 errors)</p>
 <p>Using Generator...Translate{language file} and Setting...View...Google Translate...locale,
@@ -1700,7 +1699,7 @@ if ($user_inv && $user_client) {  <br>
 <p>...adjust the config/params 'locales' setting.</p>
 <p><b>28 December 2022</b></p>
 <p></p>
-<p>Google Translate included to generate language files ie. ip_lang.php, gateway_lang.php, app.php for a locale.</p>    
+<p>Google Translate included to generate language files ie. ip_lang.php, gateway_lang.php, app.php for a locale.</p>
 <p><a href="https://github.com/googleapis/google-cloud-php-translate">Examples here</a></p>
 <p><a href="https://console.cloud.google.com/iam-admin/serviceaccounts/details/
         // {unique_project_id}/keys?project={your_project_name}"">Build your cloud project<a/>
@@ -1723,7 +1722,7 @@ if ($user_inv && $user_client) {  <br>
 <p><b>24th December 2022</b></p>
 <p>1. Retesting Sending of invoices by email.</p>
 <p>2. Remove 55 Psalm Errors mostly related to <a href="https://github.com/rossaddison/yii3-i/issues/5">Issue #5</a>
-<p>3. Psalm Level 7,6,5,4 Testing using Psalm 5.4 instead of 4.3</p>    
+<p>3. Psalm Level 7,6,5,4 Testing using Psalm 5.4 instead of 4.3</p>
 <p>4. Auditing of Setting...View...Invoice...Default Public Template and Mark Invoices Sent Copy</p>.
 <p>5. Moved rossaddison/yii-invoice to rossaddison/yii3-i.</p>
 <p>6. Resynced rossaddison/yii-invoice fork.</p>
@@ -1731,11 +1730,11 @@ if ($user_inv && $user_client) {  <br>
 <p>1. Moved repository into separate working folder under blog, and blog-api for separate github workflow purposes.</p>
 <p>2. Invoice works separately from blog. There are no hyperlinks to blog.</p>
 <p>3. The Entity User's relations to comment and post have been removed since these are no longer needed.<br>
-However the user that is registered under the demo still has to be added to the userinv table using Setting...User Account.    
+However the user that is registered under the demo still has to be added to the userinv table using Setting...User Account.
 </p>
 <p>4. New Setting: <b>Invoices marked as 'sent' when copying</b> so that a client can view them online immediately without having to be sent by email. See Settings...View...Invoices...Other Settings. This is also useful for testing a series of invoices against a payment gateway.</p>
 <p>5. A checkbox 'sandbox' has been added to the SettingsRepository/payment_gateways array for amazon_pay, and braintree.
-If you plan to use a language other than English, you will need to include <code>'online_payment_sandbox' => 'Sandbox',</code> in the corresponding src/Invoice/Language/{your_language}/gateway_lang.php file. 
+If you plan to use a language other than English, you will need to include <code>'online_payment_sandbox' => 'Sandbox',</code> in the corresponding src/Invoice/Language/{your_language}/gateway_lang.php file.
 ie. check that the gateway_lang.php in the English folder corresponds with your language folder.
 <p>6. The omnipay payment gateway with stripe will give the following warning (which is not recommended to accept): </p>
 <p>Payment failed. Please try again. Response: Sending credit card numbers directly to the Stripe API is generally unsafe. We suggest you use test tokens that map to the test card you are using, see https://stripe.com/docs/testing.</p>
@@ -1750,31 +1749,31 @@ ie. check that the gateway_lang.php in the English folder corresponds with your 
      * @psalm-suppress InvalidReturnType, InvalidReturnStatement, UndefinedInterfaceMethod
      */
 </code>
-<p>This will need to be looked at later.</p>     
+<p>This will need to be looked at later.</p>
 <p><b>10th December 2022(Update July 2025 - Omnipay has been deleted)</b></p>
 <p>Github Static Analysis: Psalm Level 7,6,5,4 testing - errors 0</p>
 <p>1. Payment and Merchant (Online log) views upgraded to GridView.</p>
 <p>2. A subarray has been added to the gateway array under SettingRepository/payment_gateways function <code>'version' => array(
                     'type' => 'checkbox',
-                    'label' => 'Omnipay Version'                    
+                    'label' => 'Omnipay Version'
                     )</code><br>This is to facilitate the introduction of PCI compliant gateways. The two pci compliant tested gateways introduced here are: Stripe version 10 and Amazon_Pay. </p>
 <p>3. If the above 'Omnipay version' checkbox is left unchecked for the specific gateway, you are implying that it is PCI compliant.</p>
 <p>4. Uncheck 'Omnipay version' for Stripe Version 10 and the latest Amazon_Pay which have been introduced here.  </p>
-<p>5. The guest url has been removed from the guest view. The user/client when logged in with 'observer role', has a list of enabled gateways in a list under options under the guest's invoice view. </p> 
+<p>5. The guest url has been removed from the guest view. The user/client when logged in with 'observer role', has a list of enabled gateways in a list under options under the guest's invoice view. </p>
 <p>6. Stripe version 10 is PCI compliant because their js.stripe.com/v3 cdn is dealt with directly and no credit card details are shared. </p>
 <p>7. Amazon Pay is PCI compliant because the user/client has to be logged into amazon.co.uk before they can use the Amazon Button. No credit card details are shared. </p>
 <p>8. The PaymentInformationForm includes place to enter credit card details but this form only presents itself with Omnipay version checked gateways.
 <p>9. The PaymentInformationController handles Omnipay and PCI compliant gateways.</p>
 <p>10. Amazon_Pay has been integrated with productType set to PayOnly (see function form) so clients can pay if they have an Amazon Account.  </p>
 <p>11. Register as a developer under Stripe to test the Omnipay Integration.
-<p>12. The following code under ...resources/views/invoice/paymentinformation/payment_information_stripe_pci is of importance.</p>    
+<p>12. The following code under ...resources/views/invoice/paymentinformation/payment_information_stripe_pci is of importance.</p>
 <p><code>. 'async function initialize() {'<br>
         // To avoid Error 422 Unprocessible entity <br>
         // const { clientSecret } = await fetch("/create.php", {<br>
         // method: "POST",<br>
         // headers: { "Content-Type": "application/json" },<br>
         // body: JSON.stringify({ items }),<br>
-        // }).then((r) => r.json());<br>    
+        // }).then((r) => r.json());<br>
         . 'const { clientSecret } = {"clientSecret": "'. $client_secret .'"};'<br>
         . 'elements = stripe.elements({ clientSecret });'<br>
         . 'const paymentElementOptions = {'<br>
@@ -1794,18 +1793,18 @@ ie. check that the gateway_lang.php in the English folder corresponds with your 
         // Get the current user and determine from (Related logic: see Settings...User Account) whether they have been given <br>
         // either guest or admin rights. These rights are unrelated to rbac and serve as a second <br>
         // 'line of defense' to support role based admin control. <br>
-        <br> 
+        <br>
         // Retrieve the user from Yii-Demo's list of users in the User Table <br>
-        $user = $this->user_service->getUser(); <br>         
+        $user = $this->user_service->getUser(); <br>
         <br>
         // Use this user's id to see whether a user has been setup under UserInv ie. yii-invoice's list of users <br>
         $userinv = ($uiR->repoUserInvUserIdcount((string)$user->getId()) > 0 <br>
                  ? $uiR->repoUserInvUserIdquery((string)$user->getId()) <br>
                  : null); <br>
-        <br>        
+        <br>
         // Determine what clients have been allocated to this user (Related logic: see Settings...User Account) <br>
-        // by looking at UserClient table <br>       
-        <br>                
+        // by looking at UserClient table <br>
+        <br>
         // eg. If the user is a guest-accountant, they will have been allocated certain clients <br>
         // A user-quest-accountant will be allocated a series of clients <br>
         // A user-guest-client will be allocated their client number by the administrator so that <br>
@@ -1819,7 +1818,7 @@ ie. check that the gateway_lang.php in the English folder corresponds with your 
     <li>sign in to your Amazon Payments merchant account in
         <a href="https://sellercentral-europe.amazon.com" target="_blank">Seller Central</a>
     </li>
-    <li>click 
+    <li>click
         <strong>Integration</strong>, and then click
         <strong>Integration Central</strong>
     </li>
@@ -1869,12 +1868,12 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <code>
      OffsetPagination::widget()<br>
          ->menuClass('pagination justify-content-center')<br>
-         ->paginator($paginator)<br>         
+         ->paginator($paginator)<br>
          // No need to use page argument since built-in. Use status bar value passed from urlGenerator to quote/guest<br>
          ->urlArguments(['status'=>$status])<br>
          ->render(),<br>
     )
-</code>    
+</code>
 <p><b>8th November 2022</b></p>
 <p>Add tabs draft, sent, viewed, approved, canceled, rejected to client view quote</p>
 <p>Add tabs draft, sent, viewed, paid to client view invoice</p>
@@ -1891,9 +1890,9 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
                 // Show the latest quotes first => -id
                 ->withOrderString($query_params['sort'] ?? '-id'); </code>
 <p>The email config params mentioned in 11th October, now have to be linked to the Email Sending Method on Setting...Email...Email Sending Method.</p>
-<p>The following code added to the end of the latest yiisoft/demo composer.json ensures that rossaddison/yii-invoice</p> 
+<p>The following code added to the end of the latest yiisoft/demo composer.json ensures that rossaddison/yii-invoice</p>
 <p>will work with psr-3. The dev-psr-3 branch will be picked up. </p>
-<code>"rossaddison/mpdf": "*"</code>    
+<code>"rossaddison/mpdf": "*"</code>
 <p>Psalm Level - 7,6,5,4 Testing - 0 errors</p>
 <p>Include start date and end date on CompanyPrivate Entity</p>
 <p>Archived pdf can now be sent automatically with singular email attachment using Setting...View...Email...Attach Quote/Invoice on email?</p>
@@ -1912,7 +1911,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>Setting...View...Email shows some config/params.php settings using SettingRepository <code>config_params</code> function.</p>
 <p>
 <code>
-    public function config_params() : array { <br>    
+    public function config_params() : array { <br>
         $config = ConfigFactory::create(new ConfigPaths(dirname(dirname(dirname(__DIR__))), 'config/'), null); <br>
         $params = $config->get('params'); <br>
         $config_array = [ <br>
@@ -1922,7 +1921,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
             'use_send_mail'=>$params['yiisoft/mailer']['useSendmail'] == 1 ? $this->trans('true') : $this->trans('false'),<br>
         ];<br>
         return $config_array;<br>
-    }     
+    }
 </code>
 </p>
 <p>Continue with auditing of settings</p>
@@ -1930,7 +1929,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p><b>4th October 2022</b></p>
 <p>Psalm Level 4 Testing Complete - 150 errors removed.</p>
 <p><b>1st October 2022</b></p>
-<p>Files can be attached to invoices. Security measure <code>is_uploaded_file php</code> function using 
+<p>Files can be attached to invoices. Security measure <code>is_uploaded_file php</code> function using
     specifically a tmp file. See InvController/attachment_move_to function. </p>
 <p>Add adjustments to Generator Templates</p>
 <p><b>21st September 2022</b></p>
@@ -1944,7 +1943,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>Inclusion of below code in config/params and adjustments to MailerHelper and TemplateHelper to facilitate emailing.</p>
 <p>Email Templates are working through javascript and parsing of data to build the template is functional.</p>
 <p><s>Note: Yii's php textbox, rather than preferably a textarea, is currently used to display the email template.</s></p>
-<p>Emailing of quotes/invoices with adjustment to config.params. 
+<p>Emailing of quotes/invoices with adjustment to config.params.
 <code>
     'yiisoft/mailer' => [<br>
         'messageBodyTemplate' => [<br>
@@ -1981,14 +1980,14 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>The yii logo is called up permanently in the navbar with the logo located in the public folder.</p>
 <p>The login logo previously located under Settings ... General has been moved to Settings...Company Private Details.</p>
 <p>Each Company Private Detail record can now have their own logo/icon</p>
-<p>This is useful for a company logo that evolves with time, older invoices retaining their older logo.</p> 
+<p>This is useful for a company logo that evolves with time, older invoices retaining their older logo.</p>
 <p>Use Yii's<code> Form::tag()
     ->post($urlGenerator->generate(...$action))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CompanyPrivateForm')
     ->open()</code> on forms instead of Html form tag</p>
-<p><code>C:\wamp64\www\yii-invoice>php ./vendor/bin/psalm 
+<p><code>C:\wamp64\www\yii-invoice>php ./vendor/bin/psalm
          --alter --issues=InvalidNullableReturnType,
                           InvalidReturnType,
                           MissingReturnType,
@@ -2008,14 +2007,14 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>Invoices cannot be edited once paid. The read only flag is used on the invoice and buttons are disabled.</p>
 <p><b>5th August 2022</b> - The Dashboard has been put up.</p>
 <p>To avoid issues concerning psr3 and unvoided return types in mpdf/mpdf I have forked the latest mpdf/mpdf development repo and made adjustments to the relevant files. </p>
-<p>The fork rossaddison/mpdf has been included in the composer.json file. Although at this stage it will run using version mpdf/mpdf 8.016, using psr 2, I have the reassurance that these errors concerning void will not show up in Yii</p> 
+<p>The fork rossaddison/mpdf has been included in the composer.json file. Although at this stage it will run using version mpdf/mpdf 8.016, using psr 2, I have the reassurance that these errors concerning void will not show up in Yii</p>
 <p><b>29th July 2022</b> - Psalm testing using 'php ./vendor/bin/psalm' at command prompt - static errors removed. Info issues reduced from 2800 to 2000.</p>
 <p>The client view now includes client's details, quotes, invoices, notes, and custom fields tabs.</p>
 <p>Relevant javascript has been added to client.js ... load_client_notes, and save_client_notes.</p>
 <b>21st July 2022</b>
 <p>Invoice/Layout/main.php has been moved to @views/layout/invoice.php. The cldr setting value is given the $session->get('_language') value by means of the locale dropdown.</p>
 <p>The $s value is configured for the @views/layout/invoice.php. (different to the demo layout ie. views/layout/main.php) in config/params.php yii-soft/view Reference::to and NOT by means of the InvoiceController .
-   The $s value is necessary in this layout to record the current locale in the cldr setting if it is selected BEFORE login. ie. 
+   The $s value is necessary in this layout to record the current locale in the cldr setting if it is selected BEFORE login. ie.
    <code><s>$s->save_session_locale_to_cldr($session->get('_language') ?? ($s->getSetting('cldr') ? $s->getSetting('cldr') : 'en'));</s></code>
 <p></p>
 <p>jquery 1.13.2 which has just been released is now the default. jquery 1.13.0 has been removed. </p>
@@ -2025,7 +2024,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>Individual datepickers have been removed, and only one datepicker is used on the @views/layout/invoice.php page.
     <code>
         ...php<br>
-    
+
     $js11 = "$(function () {".
     '$(".form-control.input-sm.datepicker").datepicker({dateFormat:"'.$datehelper->datepicker_dateFormat()<br>
                                                         .'", firstDay:'.$datehelper->datepicker_firstDay()<br>
@@ -2038,7 +2037,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
                                                         .' });'.<br>
     '});';<br>
     echo Html::script($js11)->type('module');<br>
-    
+
     </code>
 <p>Every setting under views/invoice/setting/views is being audited by a <code>$s->where('number_format')</code> which tooltips why and where the setting is used.</p>
 <p>config/params.php : Uncommenting Synctables (Table structure relatively permanent now) and assigning READ_AND_WRITE parameter to below with significant performance improvement.</p>
@@ -2048,13 +2047,13 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 ],</code>
 <p>Inclusion of all countries from https://en.wikipedia.org/wiki/ISO_4217</p>
 <p><b>9th July 2022</b> - Psalm testing using ./vendor/bin/psalm at the command prompt is now complete. 155 static errors and redundant code removed.</p>
-<p><s><a href="https://github.com/yiisoft/demo/issues/439" >Issue 439: BelongsTo relation not updating on edit of relation field eg. Product' relation field tax rate is not editing and updating.</a></s> 
-<s>Absolute Clear Cache path is located under SettingsController clear function and it will have to be adjusted to your setup in debug mode. </s>   
+<p><s><a href="https://github.com/yiisoft/demo/issues/439" >Issue 439: BelongsTo relation not updating on edit of relation field eg. Product' relation field tax rate is not editing and updating.</a></s>
+<s>Absolute Clear Cache path is located under SettingsController clear function and it will have to be adjusted to your setup in debug mode. </s>
 <s>public function clear() $directory = "C:\wamp64\www\yii-invoice\public\assets";</s>
 <p>The SettingsController clear cache function is functional without an absolute path now.</p>
 <p>The LAMP administrator will have to add sufficient permission to the public assets folder using the <code>sudo chown -R username folderpath </code> command before assets can be deleted in debug mode.</p>
 <p>Quote - The Quote is functional ie. can be pdf'd <s>but the emailing aspect has to be developed.</s>and the emailing aspect has been tested with sendmail. Testing with SMTP is in progress.</p>
-<p>Invoice - The Invoice is functional ie. can be pdf'd and archived <s>but the emailing aspect has to be developed.</s> and sendmail is functional. </p> 
+<p>Invoice - The Invoice is functional ie. can be pdf'd and archived <s>but the emailing aspect has to be developed.</s> and sendmail is functional. </p>
 <p>Recurring invoices - Functional but not fully tested.</p>
 <p>Payment - Can be recorded against an Invoice. The latest version in League/Omnipay v3.2 will be setup with a few of the major payment providers added to the composer.json</p>
 <p>User Custom Fields - not started yet.</p>
@@ -2069,7 +2068,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>The code generator templates have been adapted according to the latest demo updates.</p>
 <b>Annotations</b>
 <p>The lengthy Entity annotations have been replaced with the more concise Attributes coding structure. eg. <code> * @ORM\Column(type="string")</code>
-    replaced with <code>#[ORM\Column(type: "string")]</code>. <s>However issue 439 is currently relevant here.</s>  
+    replaced with <code>#[ORM\Column(type: "string")]</code>. <s>However issue 439 is currently relevant here.</s>
 </p>
 <b>Demo Mode</b>
 <p>A demo mode variable located in src\Invoice\Layout\main.php ie. <code>$demo_mode</code> can be set to false to remove performance settings and the clear cache tool.
@@ -2085,7 +2084,7 @@ The modals are dependent on it. </p>
 <p>The SettingRepository <code>load_language_folder</code> function accepts the dropdown locale through yiisoft/demo's <code>$session->get('_language')</code> function: this setting takes precedence over the database 'default_language' setting when set.</p>
 <b>Client's language different to locale_derived_language or fallback settings 'default_language'</b>
 <p>When printing occurs, the client's language ensures the documentation is printed out in his/her language using <code>$session->get('print_language')</code>
-<p>The session variable <code>print_language</code> is reset after printing.</p>    
+<p>The session variable <code>print_language</code> is reset after printing.</p>
 <b>Languages</b>
 <p>Any words used not in the Invoiceplane folders, will be translated using Yii's translation methodology.</p>
 <p>The above menu's language can be created in ...resources/messages for a specific language.
@@ -2105,12 +2104,12 @@ Korean,
 and Japanese
 
 <a href="https://helpx.adobe.com/acrobat/kb/windows-font-packs-32-bit-reader.html">For Windows</a>
-<a href="https://helpx.adobe.com/acrobat/kb/macintosh-font-packs�acrobat�reader-.html">For Mac</a></p>
+<a href="https://helpx.adobe.com/acrobat/kb/macintosh-font-packsï¿½acrobatï¿½reader-.html">For Mac</a></p>
 <p>If spaces appear where the language should appear whilst viewing using eg. Chrome default PDF reader, add the extension - Chrome PDF Viewer 2.3.164.</p>
 <p>7. When copying, and pasting the Chinese Simplified folder make sure that you remove the space between the Chinese and Simplified. ie. ChineseSimplified. This is camelcase. </p>
 <b>Netbeans: <a href="https://stackoverflow.com/questions/59800221/gradle-netbeans-howto-set-encoding-to-utf-8-in-editor-and-compiler">How to include UTF-8 in Netbeans</a></b>
 <p>Set encoding used in Netbeans globally to UTF-8. Added in netbeans.conf "-J-Dfile.encoding=UTF-8" to parameter "netbeans_default_options". This unfortunately has
-to be done everytime you edit a file with 'special letters'. So edit the file with the UTF-8 setting above, save it, and then remove the above setting from Netbeans.conf. </p> 
+to be done everytime you edit a file with 'special letters'. So edit the file with the UTF-8 setting above, save it, and then remove the above setting from Netbeans.conf. </p>
 <p>File Location: C:\Program Files\NetBeans-16\netbeans\etc\netbeans.conf open with notepad cntrl+F netbeans_default_options </p>
 <b>Improved Features</b>
 <p>A start tax year date eg. 06/04/2022 can be setup under view so that reports will use this by default as their start date.</p>
@@ -2133,8 +2132,8 @@ to be done everytime you edit a file with 'special letters'. So edit the file wi
 <b>Security</b>
 <p>All Entity properties initialized before the construct should be private. The private property is accessed through a public getter method as built below the construct.</p>
 <b>Reasons for using a simplified <code>id</code> as a primary key in all the tables</b>
-<p>See <a href="https://cycle-orm.dev/docs/annotated-relations/1.x/en#belongsto">{relationName}_{outerKey}</a>, the outerKey being the primary key, structure. 
-    Eg. the field <code>tax_rate_id</code> in the Product table is a relation or a foreign key in the Product table equal and pointing to its parent table's Tax Rate's <code>id</code>  
+<p>See <a href="https://cycle-orm.dev/docs/annotated-relations/1.x/en#belongsto">{relationName}_{outerKey}</a>, the outerKey being the primary key, structure.
+    Eg. the field <code>tax_rate_id</code> in the Product table is a relation or a foreign key in the Product table equal and pointing to its parent table's Tax Rate's <code>id</code>
     so the relation name <b>variable</b> in Entity: Product must be <code>$tax_rate</code> and joined with the outerKey as <code>$id</code> you get <code>$tax_rate_id</code> which matches the foreign key <code>$tax_rate_id</code> in Entity: Product
     If the primary key in the Tax Rate table was named something like tax_rate_id and not id then the relation could not be given a name.
 </p>
@@ -2184,11 +2183,11 @@ to be done everytime you edit a file with 'special letters'. So edit the file wi
 
 <p><b>Verification Results:</b></p>
 <ul>
-<li>✅ TypeScript 6.0-dev: Active and compiling successfully</li>
-<li>✅ Angular ESLint: Installed and ready for modern TypeScript development</li>
-<li>✅ Build Performance: Maintained 8ms compilation times</li>
-<li>✅ ES2024 Features: Full compatibility preserved</li>
-<li>✅ Development Workflow: Enhanced with comprehensive npm management tools</li>
+<li>âœ… TypeScript 6.0-dev: Active and compiling successfully</li>
+<li>âœ… Angular ESLint: Installed and ready for modern TypeScript development</li>
+<li>âœ… Build Performance: Maintained 8ms compilation times</li>
+<li>âœ… ES2024 Features: Full compatibility preserved</li>
+<li>âœ… Development Workflow: Enhanced with comprehensive npm management tools</li>
 </ul>
 
 <p><b>Strategic Success:</b> The Google ecosystem approach proved superior to attempting compatibility with standard TypeScript ESLint parsers. Angular's development tools are designed for forward compatibility and cutting-edge TypeScript features, making this the optimal solution for bleeding-edge development environments.</p>
