@@ -266,7 +266,6 @@ curl -I https://yii3i.online
 
 ---
 
-*See also: `invoice-repo-security-evaluation.md` for the full repository security assessment.*  
 *See also: `why-apache.md` for a broader explanation of Apache's role in this stack.*
 
 ---
