@@ -193,25 +193,10 @@ echo Form::tag()
 ->class('btn btn-xs btn-warning')
 . Form::tag()->close();
 
-$info = 'invoice/phpinfo';
+
 $ifaq = 'invoice/faq';
 $sel = 'selection';
-$faq = 'faq.php.info.';
 $tpc = 'topic';
-$subMenuPhpInfo = [
-    0 => [
-        'items' => [
-            $t->translate($faq.'all') => [$info, [$sel => '-1']],
-            $t->translate($faq.'general') => [$info, [$sel => '1']],
-            $t->translate($faq.'credits') => [$info, [$sel => '2']],
-            $t->translate($faq.'configuration') => [$info, [$sel => '4']],
-            $t->translate($faq.'modules') => [$info, [$sel => '8']],
-            $t->translate($faq.'environment') => [$info, [$sel => '16']],
-            $t->translate($faq.'variables') => [$info, [$sel => '32']],
-            $t->translate($faq.'licence') => [$info, [$sel => '64']],
-        ],
-    ],
-];
 
 $subMenuPrometheus = [
     0 => [
@@ -282,9 +267,6 @@ if ((null !== $currentPath) && !$isGuest) {
                     $urlGenerator->generate($ifaq,
                         [$tpc => 'paymentprovider', $sel => '']),
                         itemAttributes: $itemFontArray),
-                DropdownItem::text($subMenu->generate(
-                        $t->translate('faq.php.info.details'),
-                    $urlGenerator, $subMenuPhpInfo)),
                 DropdownItem::link('JavaScript Analysis',
                     $urlGenerator->generate($ifaq,
                         [$tpc => 'javascript_analysis', $sel => '']),

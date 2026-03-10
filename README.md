@@ -1,7 +1,7 @@
-[![Yii2](https://img.shields.io/badge/Powered_by-Yii_Framework-green.svg?style=flat)](https://www.yiiframework.com/) 
+[![Yii3](https://img.shields.io/badge/Powered_by-Yii_Framework-green.svg?style=flat)](https://www.yiiframework.com/) 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) 
 ![stable](https://img.shields.io/static/v1?label=No%20Release&message=0.0.0&color=9cf)  
-![Downloads](https://img.shields.io/static/v1?label=Downloads/week&message=1700&color=9cf)  
+![Downloads](https://img.shields.io/static/v1?label=Avg/wk&message=1200&color=9cf)  
 ![Build](https://img.shields.io/static/v1?label=Build&message=Passing&color=66ff00)
 ![Dependency Checker](https://img.shields.io/static/v1?label=Dependency%20Checker&message=Passing&color=66ff00) 
 ![Static Analysis](https://img.shields.io/static/v1?label=Static%20Analysis&message=Passing&color=66ff00)
@@ -9,7 +9,7 @@
 [![type-coverage](https://shepherd.dev/github/rossaddison/invoice/coverage.svg)](https://shepherd.dev/github/rossaddison/invoice)
 [![PHP-CS-Fixer](https://img.shields.io/badge/php--cs--fixer-enabled-blue?logo=php)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
 ![Stats](https://github-readme-stats.vercel.app/api?username=rossaddison)
-![Hosted by Vultr](https://img.shields.io/badge/hosting-vultr%20(209.250.232.212)-blue?logo=vultr&style=flat-square)
+![Hosted by Vultr](https://img.shields.io/badge/hosting-vultr%20(yii3i.online)-blue?logo=vultr&style=flat-square)
 
 (Place the contents of this download into the yii3-i invoice folder or run as a
  separate repository.)
@@ -30,6 +30,16 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
  Peppol network.
 
 **Recent Implementations**
+
+[ssl.conf explained](docs/SSL_CONF_EXPLAINED.md) (March 2026)
+
+[Why Apache?](docs/WHY_APACHE.md) (March 2026)
+
+[Apache2 vs. Nginx](docs/APACHE2_VS_NGINX.md) (March 2026)
+
+[Vultr Alpine Security](docs/VULTR_ALPINE_SECURITY.md) (March 2026)
+
+[phpMyAdmin Vulnerabilities on Alpine](docs/PHPMYADMIN_VULNERABILITIES_ON_ALPINE.md) (March 2026)
 
 [AuthController Production Environment Fix](docs/AUTHCONTROLLER_PROD_ENV_FIX.md) (March 2026)
 
@@ -122,6 +132,10 @@ php install_writable.php
 # Or using the yii console directly  
 ./yii install
 ```
+
+Note: install.php and install_writable must be removed after installation.
+Remember to setup your ssl.conf under apache properly. Refer to above ssl.conf
+md. 
 
 Both installers will:
 - ✅ Perform preflight checks (PHP version, extensions, Composer)

@@ -48,8 +48,17 @@
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
-<p>Payment gateway testing on alpine</p>
+<p><s>Payment gateway testing on alpine<s></p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>10th March 2026</b></p>
+<p>Security improvement: access to phpinfo is removed.</p>
+<p>Security improvement: apache's ssl.conf updated. Contents provided in docs/SSL_CONF_EXPLAINED.md</p>
+<p>Include assignments.php in .gitignore to prevent overwriting of assignments during a 
+   'git pull origin main' otherwise the roles will have to be reassigned via
+   Settings ... Invoice User Account ... Clicking on Yes/No button under Observer column.
+</p>
+<p>Included 'phpmyadmin vulnerabilities on alpine.md'</p>
+<p>.env converted to env.example</p>
 <p><b>8th March 2026</b></p>
 <p>Font size can be adjusted through variables on the layouts.</p>
 <p>Vjik has removed updateFromServerRequest => TelegramHelper adjusted</p>

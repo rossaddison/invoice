@@ -570,10 +570,6 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ICLR::class, 'faq'])
                 ->name('invoice/faq'),
-            Route::get('/phpinfo/{selection}')
-                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ICLR::class, 'phpinfo'])
-                ->name('invoice/phpinfo'),
             Route::get('/requirements')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ICLR::class, 'requirements'])

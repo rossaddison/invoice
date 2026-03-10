@@ -9,7 +9,8 @@ declare(strict_types=1);
 ?>
 
 <p><b><?php echo $translator->translate('faq.wsl.to.alpine'); ?></b></p>
-<pre><p><b>WSL to Alpine: Updating with latest changes seen on Github Repo</b>
+<pre><p><b>WSL to Alpine running on Apache2:
+ Updating with latest changes seen on Github Repo</b>
  <b>1. Right click on windows 11 icon 🪟 … Run … wsl</b>
  <b>2. Connect to Alpine:</b>
          ssh root@ipaddress or ssh root@yourdomain
@@ -25,16 +26,20 @@ declare(strict_types=1);
          apk update && apk upgrade git
  <b>7. Check for any local changes that you have made on the website before pulling:</b>
          git status
- <b>8. Maybe necessary to stash your changes depending on git status:</b>
+ <b>8. Always stash your changes depending on git status:</b>
          git stash (Restore with git stash pop)
  <b>9. Or necessary to override your changes:</b>
          git checkout -- . (dash dash space fullstop)
  <b>10. Restoring a specific file from the stash:</b>
-        git checkout stash@{0} -- config/common/params.php
+        git checkout stash@{0} -- .env
  <b>11. Pull from the repository:
          git pull origin main
- <b>12. Accessing the Apline mySql/mariaDB database:
+ <b>12 a. Accessing the Apline mySql/mariaDB database:
          mysql -u root -p</b>
+ <b>12 b. Advisable to make sure the phpMyAdmin endpoint is not visible and that
+        phpMyAdmin is not used even with ipaddress restrictions and aliasing.</b>
+ <b>23. Finding where phpmyadmin is installed: 
+        find / -name "index.php" -path "*/phpmyadmin/*" 2>/dev/null</b>          
  <b>13. Listing Multiple Stashes:
          git stash list</b>
  <b>14. Getting out of the stash list whilst viewing it by pressing q:
@@ -42,7 +47,7 @@ declare(strict_types=1);
  <b>15. See what is in your stash without applying it:
          git stash show -p</b>
  <b>16. Giving ownership to apache user:
-         chown -R apache:apache /var/www/invoice/         
+         chown -R apache:apache /var/www/invoice/
          chown -R apache:apache /var/www/invoice/resources/rbac/assignments.php
          chown -R apache:apache /var/www/invoice/resources/rbac/items.php
          chmod -R 755 /var/www/invoice/
@@ -80,10 +85,13 @@ declare(strict_types=1);
  </b>
  <b>22. Terminate your locally run wsl if you are using it so it does not
         conflict with wampserver:
-        wsl --terminate Ubuntu   /Alpine
+        wsl --terminate Ubuntu/Alpine
  </b>
- <b>23. Finding where phpmyadmin is installed: 
-        find / -name "index.php" -path "*/phpmyadmin/*" 2>/dev/null
- </b>    
+ <b>23. Update ssl.conf on apache2: 
+        sudo nano /etc/apache2/conf.d/ssl.conf
+        
+        Test and restart Apache2:
+        httpd -t && rc-service apache2 restart
+ </b>             
 </p>
 </pre>

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7028c01acf383dcf72959c966c90f748",
+    "content-hash": "c62c1be6e4cf50dadfe9173805e76288",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -4044,16 +4044,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.8.0",
+            "version": "2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "21dc724a0583619cd1652f673303492272778051"
+                "reference": "718f1ee6a878be5290af3557aeda0c91278361d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/21dc724a0583619cd1652f673303492272778051",
-                "reference": "21dc724a0583619cd1652f673303492272778051",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/718f1ee6a878be5290af3557aeda0c91278361d9",
+                "reference": "718f1ee6a878be5290af3557aeda0c91278361d9",
                 "shasum": ""
             },
             "require": {
@@ -4140,7 +4140,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.8.0"
+                "source": "https://github.com/guzzle/psr7/tree/2.8.1"
             },
             "funding": [
                 {
@@ -4156,7 +4156,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-23T21:21:41+00:00"
+            "time": "2026-03-10T09:55:26+00:00"
         },
         {
             "name": "httpsoft/http-basis",
@@ -22184,12 +22184,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "f0711e3b818ce08f92cc2f34c28a9aff8b2060b7"
+                "reference": "36683ac82ccf638fea90e617a83057de184a5833"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f0711e3b818ce08f92cc2f34c28a9aff8b2060b7",
-                "reference": "f0711e3b818ce08f92cc2f34c28a9aff8b2060b7",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/36683ac82ccf638fea90e617a83057de184a5833",
+                "reference": "36683ac82ccf638fea90e617a83057de184a5833",
                 "shasum": ""
             },
             "conflict": {
@@ -22468,6 +22468,7 @@
                 "flarum/flarum": "<0.1.0.0-beta8",
                 "flarum/framework": "<1.8.10",
                 "flarum/mentions": "<1.6.3",
+                "flarum/nicknames": "<1.8.3",
                 "flarum/sticky": ">=0.1.0.0-beta14,<=0.1.0.0-beta15",
                 "flarum/tags": "<=0.1.0.0-beta13",
                 "floriangaerber/magnesium": "<0.3.1",
@@ -23079,8 +23080,9 @@
                 "wallabag/wallabag": "<2.6.11",
                 "wanglelecc/laracms": "<=1.0.3",
                 "wapplersystems/a21glossary": "<=0.4.10",
-                "web-auth/webauthn-framework": ">=3.3,<3.3.4|>=4.5,<4.9",
-                "web-auth/webauthn-lib": ">=4.5,<4.9",
+                "web-auth/webauthn-framework": "<5.2.4",
+                "web-auth/webauthn-lib": "<5.2.4",
+                "web-auth/webauthn-symfony-bundle": "<5.2.4",
                 "web-feet/coastercms": "==5.5",
                 "web-tp3/wec_map": "<3.0.3",
                 "webbuilders-group/silverstripe-kapost-bridge": "<0.4",
@@ -23203,7 +23205,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-09T20:10:00+00:00"
+            "time": "2026-03-10T01:37:07+00:00"
         },
         {
             "name": "sanmai/di-container",

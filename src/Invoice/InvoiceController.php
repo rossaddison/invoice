@@ -259,15 +259,6 @@ final class InvoiceController extends BaseController
         return $this->webViewRenderer->render('info/view', ['topic' => $view]);
     }
 
-    public function phpinfo(#[RouteArgument('selection')]
-                                            string $selection = '-1'): Response
-    {
-        $view = $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/phpinfo',
-                                            ['selection' => (int) $selection]);
-        return $this->webViewRenderer->render('info/view', ['topic' => $view]);
-    }
-
     /**
      * Use curL to call the store_cove api ... 1.1.3. Make your first API call
      * Tab: ERP or Accounting System, NOT: Individual Company, NOT: Reseller or
