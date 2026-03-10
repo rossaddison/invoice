@@ -35,7 +35,7 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 [Why Apache?](docs/WHY_APACHE.md) (March 2026)
 
-[Apache2 vs. Nginx](docs/APACHE2_VS_NGINX.md) (March 2026)
+[Apache2 vs. Nginx](docs/APACHE_VS_NGINX.md) (March 2026)
 
 [Vultr Alpine Security](docs/VULTR_ALPINE_SECURITY.md) (March 2026)
 
