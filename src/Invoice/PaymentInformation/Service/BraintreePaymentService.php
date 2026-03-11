@@ -194,10 +194,8 @@ class BraintreePaymentService
      */
     public function getMerchantId(): string
     {
-        $merchantId = $this->settings
-                           ->getSetting('gateway_braintree_merchantId');
-        return (string) $this->settings
-                             ->decode($merchantId ?: '');
+        $merchantId = $this->settings->getSetting('gateway_braintree_merchantId');
+        return (string) $this->settings->decode($merchantId ?: '');
     }
 
     /**
@@ -205,8 +203,7 @@ class BraintreePaymentService
      */
     public function getEnvironment(): string
     {
-        return $this->settings
-                    ->getSetting('gateway_braintree_sandbox') === '1'
+        return $this->settings->getSetting('gateway_braintree_sandbox') === '1'
                       ? 'sandbox' : 'production';
     }
 
@@ -215,10 +212,8 @@ class BraintreePaymentService
      */
     private function getPublicKey(): string
     {
-        $publicKey = $this->settings
-                          ->getSetting('gateway_braintree_publicKey');
-        return (string) $this->settings
-                             ->decode($publicKey ?: '');
+        $publicKey = $this->settings->getSetting('gateway_braintree_publicKey');
+        return (string) $this->settings->decode($publicKey ?: '');
     }
 
     /**
@@ -226,10 +221,8 @@ class BraintreePaymentService
      */
     private function getPrivateKey(): string
     {
-        $privateKey = $this->settings
-                           ->getSetting('gateway_braintree_privateKey');
-        return (string) $this->settings
-                             ->decode($privateKey ?: '');
+        $privateKey = $this->settings->getSetting('gateway_braintree_privateKey');
+        return (string) $this->settings->decode($privateKey ?: '');
     }
 
     /**

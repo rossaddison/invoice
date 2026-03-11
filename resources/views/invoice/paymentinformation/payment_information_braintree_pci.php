@@ -81,12 +81,22 @@ if ($disable_form === false) {
         echo H::tag('br');
         echo H::openTag('div', ['class' => 'card-body p-5 text-center']);
          echo $alert;
-         echo H::openTag('div', ['id' => 'dropin-container']);
-         echo H::closeTag('div');
-         echo H::openTag('input', ['type' => 'submit']);
-         echo H::closeTag('input');
-         echo H::openTag('input', ['type' => 'hidden', 'id' => 'nonce', 'name' => 'payment_method_nonce']);
-         echo H::closeTag('input');
+         // Form required by Braintree Drop-in: nonce is posted to paymentinformation/form
+         echo H::openTag('form', [
+             'id'     => 'payment-form',
+             'method' => 'post',
+             'action' => $urlGenerator->generate(
+                 'paymentinformation/inform',
+                 ['url_key' => $inv_url_key, 'gateway' => 'Braintree'],
+             ),
+         ]);
+          echo H::openTag('div', ['id' => 'dropin-container']);
+          echo H::closeTag('div');
+          echo H::openTag('input', ['type' => 'submit']);
+          echo H::closeTag('input');
+          echo H::openTag('input', ['type' => 'hidden', 'id' => 'nonce', 'name' => 'payment_method_nonce']);
+          echo H::closeTag('input');
+         echo H::closeTag('form');
          echo $companyLogo;
          echo H::tag('br');
          echo H::tag('br');
@@ -158,23 +168,12 @@ if ($disable_form === false) {
      echo H::closeTag('div');
     echo H::closeTag('div');
 }
-$js22 = 'const form = document.getElementById("payment-form");'
-        . 'braintree.dropin.create('
-        . '{'
-        . 'authorization: "' . $client_token . '",'
-        . 'container: "#dropin-container"'
-        . '}, '
-        . '(error, dropinInstance) => {'
-        . '    if (error) console.error(error);'
-        . '    form.addEventListener("submit", event => {'
-        . '       event.preventDefault();'
-        . '       dropinInstance.requestPaymentMethod((error, payload) => {'
-        . '          if (error) console.error(error);'
-        . '          document.getElementById("nonce").value = payload.nonce;'
-        . '          form.submit();'
-        . '       });'
-        . '    });'
-        . '}'
-        . ');';
-echo H::script($js22)->type('module')->charset('utf-8');
+// Supply the client token to the TypeScript payment-braintree module via
+// a data-* attribute. The IIFE bundle (invoice-typescript-iife.js) reads this
+// on DOMContentLoaded and calls braintree.dropin.create() — no inline JS required.
+echo H::tag('div', '', [
+    'id'                => 'braintree-config',
+    'data-client-token' => $client_token,
+    'style'             => 'display:none',
+]);
 

@@ -2074,7 +2074,10 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param string $querySort
      * @param string $queryFilterClient
      * @param string $queryFilterInvNumber
+     * @param string $queryFilterCreditInvNumber
      * @param string $queryFilterInvAmountTotal
+     * @param string $queryFilterInvAmountPaid
+     * @param string $queryFilterInvAmountBalance
      * @param string $queryFilterStatus
      * @return Response
      */
@@ -2096,8 +2099,14 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ?string $queryFilterClient = null,
         #[Query('filterInvNumber')]
         ?string $queryFilterInvNumber = null,
+        #[Query('filterCreditInvNumber')]
+        ?string $queryFilterCreditInvNumber = null,
         #[Query('filterInvAmountTotal')]
         ?string $queryFilterInvAmountTotal = null,
+        #[Query('filterInvAmountPaid')]
+        ?string $queryFilterInvAmountPaid = null,
+        #[Query('filterInvAmountBalance')]
+        ?string $queryFilterInvAmountBalance = null,
         #[Query('filterStatus')]
         ?string $queryFilterStatus = null,
     ): Response {
@@ -2137,10 +2146,23 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             && !empty($queryFilterInvNumber)) {
                         $invs = $iR->filterInvNumber($queryFilterInvNumber);
                     }
+                    if (isset($queryFilterCreditInvNumber)
+                            && !empty($queryFilterCreditInvNumber)) {
+                        $invs = $iR->filterCreditInvNumber(
+                            $queryFilterCreditInvNumber);
+                    }
                     if (isset($queryFilterInvAmountTotal)
                             && !empty($queryFilterInvAmountTotal)) {
                         $invs = $iR->filterInvAmountTotal(
                             $queryFilterInvAmountTotal);
+                    }
+                    if (isset($queryFilterInvAmountPaid)
+                            && !empty($queryFilterInvAmountPaid)) {
+                        $invs = $iR->filterInvAmountPaid($queryFilterInvAmountPaid);
+                    }
+                    if (isset($queryFilterInvAmountBalance)
+                            && !empty($queryFilterInvAmountBalance)) {
+                        $invs = $iR->filterInvAmountBalance($queryFilterInvAmountBalance);
                     }
                     if ((isset($queryFilterInvNumber)
                             && !empty($queryFilterInvNumber))
@@ -2162,6 +2184,9 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                         'optionsClientsDropDownFilter' =>
                         $this->optionsDataUserClientsFilter($ucR, $user_id),
                         'optionsInvNumberDropDownFilter' => $this->                                                         optionsDataInvNumberGuestFilter($preFilterInvs),
+                        'optionsCreditInvNumberDropDownFilter' =>
+                        $this->optionsDataCreditInvNumberGuestFilter(
+                            $preFilterInvs, $iR),
                         'optionsStatusDropDownFilter' =>
                                 $this->optionsDataStatusFilter($iR),
                         'iaR' => $iaR,
@@ -2280,9 +2305,13 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param string $queryPage
      * @param string $querySort
      * @param string $queryFilterInvNumber
+     * @param string $queryFilterCreditInvNumber
      * @param string $queryFilterClient
      * @param string $queryFilterInvAmountTotal
+     * @param string $queryFilterInvAmountPaid
+     * @param string $queryFilterInvAmountBalance
      * @param string $queryFilterClientGroup
+     * @param string $queryFilterClientAddress1
      * @param string $queryFilterDateCreatedYearMonth
      * @return Response
      */
@@ -2310,14 +2339,22 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ?string $querySort = null,
         #[Query('filterInvNumber')]
         ?string $queryFilterInvNumber = null,
+        #[Query('filterCreditInvNumber')]
+        ?string $queryFilterCreditInvNumber = null,
         #[Query('filterFamilyName')]
         ?string $queryFilterFamilyName = null,
         #[Query('filterClient')]
         ?string $queryFilterClient = null,
         #[Query('filterInvAmountTotal')]
         ?string $queryFilterInvAmountTotal = null,
+        #[Query('filterInvAmountPaid')]
+        ?string $queryFilterInvAmountPaid = null,
+        #[Query('filterInvAmountBalance')]
+        ?string $queryFilterInvAmountBalance = null,
         #[Query('filterClientGroup')]
         ?string $queryFilterClientGroup = null,
+        #[Query('filterClientAddress1')]
+        ?string $queryFilterClientAddress1 = null,
         #[Query('filterDateCreatedYearMonth')]
         ?string $queryFilterDateCreatedYearMonth = null,
         #[Query('filterStatus')]
@@ -2360,6 +2397,11 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                 $invs = $invRepo->filterInvNumber($queryFilterInvNumber);
             }
+            if (isset($queryFilterCreditInvNumber)
+                    && !empty($queryFilterCreditInvNumber)) {
+                $invs = $invRepo->filterCreditInvNumber(
+                    $queryFilterCreditInvNumber);
+            }
             if (isset($queryFilterFamilyName) && !empty($queryFilterFamilyName)) {
                 //$family = $familyRepo->withName($queryFilterFamilyName);
                 // family -> product -> inv
@@ -2368,6 +2410,14 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             if (isset($queryFilterInvAmountTotal)
                     && !empty($queryFilterInvAmountTotal)) {
                 $invs = $invRepo->filterInvAmountTotal($queryFilterInvAmountTotal);
+            }
+            if (isset($queryFilterInvAmountPaid)
+                    && !empty($queryFilterInvAmountPaid)) {
+                $invs = $invRepo->filterInvAmountPaid($queryFilterInvAmountPaid);
+            }
+            if (isset($queryFilterInvAmountBalance)
+                    && !empty($queryFilterInvAmountBalance)) {
+                $invs = $invRepo->filterInvAmountBalance($queryFilterInvAmountBalance);
             }
             if ((isset($queryFilterInvNumber)
                     && !empty($queryFilterInvNumber))
@@ -2381,6 +2431,10 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
             }
             if (isset($queryFilterClientGroup) && !empty($queryFilterClientGroup)) {
                 $invs = $invRepo->filterClientGroup($queryFilterClientGroup);
+            }
+            if (isset($queryFilterClientAddress1)
+                    && !empty($queryFilterClientAddress1)) {
+                $invs = $invRepo->filterClientAddress1($queryFilterClientAddress1);
             }
             if (isset($queryFilterDateCreatedYearMonth)
                     && !empty($queryFilterDateCreatedYearMonth)) {
@@ -2438,6 +2492,8 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     $this->optionsDataClientGroupFilter($clientRepo),
                 'optionsInvNumberDropDownFilter' =>
                     $this->optionsDataInvNumberFilter($invRepo),
+                'optionsCreditInvNumberDropDownFilter' =>
+                    $this->optionsDataCreditInvNumberFilter($invRepo),
                 'optionsFamilyNameDropDownFilter' =>
                     $this->optionsDataFamilyNameFilter($invRepo),
                 'optionsYearMonthDropDownFilter' =>
@@ -5415,6 +5471,52 @@ echo file_get_contents($temp_aliase, true);
      * @param \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface $invs
      * @return array
      */
+    public function optionsDataCreditInvNumberFilter(IR $iR): array
+    {
+        $optionsData = [];
+        /** @var Inv $inv */
+        foreach ($iR->findAllPreloaded() as $inv) {
+            $parentId = $inv->getCreditinvoice_parent_id();
+            if ($parentId !== '' && $parentId !== '0') {
+                $parentInv = $iR->repoInvUnLoadedquery($parentId);
+                if (null !== $parentInv) {
+                    $number = $parentInv->getNumber();
+                    if (null !== $number && !isset($optionsData[$number])) {
+                        $optionsData[$number] = $number;
+                    }
+                }
+            }
+        }
+        return $optionsData;
+    }
+
+    /**
+     * @param \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface $invs
+     * @param IR $iR
+     * @return array
+     */
+    public function optionsDataCreditInvNumberGuestFilter(
+        \Yiisoft\Data\Reader\SortableDataInterface
+            &\Yiisoft\Data\Reader\DataReaderInterface $invs,
+        IR $iR): array
+    {
+        $optionsData = [];
+        /** @var Inv $inv */
+        foreach ($invs as $inv) {
+            $parentId = $inv->getCreditinvoice_parent_id();
+            if ($parentId !== '' && $parentId !== '0') {
+                $parentInv = $iR->repoInvUnLoadedquery($parentId);
+                if (null !== $parentInv) {
+                    $number = $parentInv->getNumber();
+                    if (null !== $number && !isset($optionsData[$number])) {
+                        $optionsData[$number] = $number;
+                    }
+                }
+            }
+        }
+        return $optionsData;
+    }
+
     public function optionsDataInvNumberGuestFilter(
         \Yiisoft\Data\Reader\SortableDataInterface
             &\Yiisoft\Data\Reader\DataReaderInterface $invs): array

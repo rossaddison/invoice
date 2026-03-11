@@ -73,6 +73,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
  * @var string $status
  * @psalm-var positive-int $page
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsInvNumberDropDownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsCreditInvNumberDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsFamilyNameDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsClientsDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsClientGroupDropDownFilter
@@ -646,8 +647,11 @@ $columns = [
         encodeContent: false,
         filter: DropdownFilter::widget()
                 ->addAttributes([
-                    'name' => 'number',
-                    'class' => 'native-reset',
+                    'id'         => 'filter-inv-number',
+                    'name'       => 'number',
+                    'class'      => 'native-reset inv-filter',
+                    'aria-label' => 'Filter by invoice number',
+                    'title'      => $translator->translate('number'),
                 ])
                 ->optionsData($optionsInvNumberDropDownFilter),
         withSorting: false,
@@ -668,8 +672,11 @@ $columns = [
         encodeContent: false,
         filter: DropdownFilter::widget()
                 ->addAttributes([
-                    'name' => 'number',
-                    'class' => 'native-reset',
+                    'id'         => 'filter-family-name',
+                    'name'       => 'number',
+                    'class'      => 'native-reset inv-filter',
+                    'aria-label' => 'Filter by family name',
+                    'title'      => $translator->translate('family.name'),
                 ])
                 ->optionsData($optionsFamilyNameDropDownFilter),
         withSorting: false,
@@ -682,8 +689,12 @@ $columns = [
                         string => ($model->getDate_created())->format('Y-m-d'),
         filter: DropdownFilter::widget()
             ->addAttributes([
-                'name' => 'number',
-                'class' => 'native-reset',
+                'id'         => 'filter-year-month',
+                'name'       => 'number',
+                'class'      => 'native-reset inv-filter',
+                'aria-label' => 'Filter by year-month',
+                'title'      => $translator->translate(
+                    'datetime.immutable.date.created.mySql.format.year.month.filter'),
             ])
             ->optionsData($optionsYearMonthDropDownFilter),
         withSorting: false,
@@ -735,8 +746,11 @@ $columns = [
         },
         filter: DropdownFilter::widget()
             ->addAttributes([
-                'name' => 'status',
-                'class' => 'native-reset',
+                'id'         => 'filter-status',
+                'name'       => 'status',
+                'class'      => 'native-reset inv-filter',
+                'aria-label' => 'Filter by status',
+                'title'      => $translator->translate('status'),
             ])
             ->optionsData($optionsStatusDropDownFilter),
         encodeContent: false,
@@ -772,7 +786,7 @@ $columns = [
                 'title' => $translator->translate('credit.invoice.for.invoice')
             ])->render(),
         encodeHeader: false,    
-        property: 'creditinvoice_parent_id',
+        property: 'filterCreditInvNumber',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
             $visible = $iR->repoInvUnLoadedquery(
                                         $model->getCreditinvoice_parent_id());
@@ -787,6 +801,15 @@ $columns = [
             return A::tag()->content('')->href('');
         },
         encodeContent: false,
+        filter: DropdownFilter::widget()
+                ->addAttributes([
+                    'id'         => 'filter-credit-inv-number',
+                    'class'      => 'native-reset inv-filter',
+                    'aria-label' => 'Filter by credit note parent invoice',
+                    'title'      => $translator->translate(
+                        'credit.invoice.for.invoice'),
+                ])
+                ->optionsData($optionsCreditInvNumberDropDownFilter),
         withSorting: false,
         visible: $visible,
     ),
@@ -897,8 +920,11 @@ $columns = [
         encodeContent: false,
         filter: DropdownFilter::widget()
                 ->addAttributes([
-                    'name' => 'client_id',
-                    'class' => 'native-reset',
+                    'id'         => 'filter-client',
+                    'name'       => 'client_id',
+                    'class'      => 'native-reset inv-filter',
+                    'aria-label' => 'Filter by client',
+                    'title'      => $translator->translate('client'),
                 ])
                 ->optionsData($optionsClientsDropDownFilter),
         withSorting: false,
@@ -911,11 +937,19 @@ $columns = [
         encodeContent: false,
     ),
     new DataColumn(
-        'client_address_1',
+        property: 'filterClientAddress1',
         header: $translator->translate('street.address'),
         content: static fn (Inv $model):
             string => Html::encode($model->getClient()?->getClient_address_1()),
         encodeContent: false,
+        filter: TextInputFilter::widget()
+                ->addAttributes([
+                    'id'          => 'filter-address-1',
+                    'class'       => 'native-reset inv-filter',
+                    'aria-label'  => 'Filter by street address',
+                    'title'       => $translator->translate('street.address'),
+                    'placeholder' => $translator->translate('street.address'),
+                ]),
     ),
     new DataColumn(
         'client_address_2',
@@ -931,8 +965,11 @@ $columns = [
                         string => $model->getClient()?->getClient_group() ?? '',
         filter: DropdownFilter::widget()
             ->addAttributes([
-                'name' => 'number',
-                'class' => 'native-reset',
+                'id'         => 'filter-client-group',
+                'name'       => 'number',
+                'class'      => 'native-reset inv-filter',
+                'aria-label' => 'Filter by client group',
+                'title'      => $translator->translate('client.group'),
             ])
             ->optionsData($optionsClientGroupDropDownFilter),
         withSorting: false,
@@ -1000,16 +1037,24 @@ $columns = [
         encodeContent: false,
         filter: TextInputFilter::widget()
                 ->addAttributes([
-                    'style' => 'max-width: 50px',
-                    'class' => 'native-reset',
+                    'id'         => 'filter-amount-total',
+                    'class'      => 'native-reset inv-amount-filter',
+                    'aria-label' => 'Filter by total amount',
+                    'title'      => $translator->translate('total'),
+                    'placeholder' => $translator->translate('total'),
                 ]),
         withSorting: false,
-        footer: Span::tag()->addAttributes([
-                'style' => 'text-align: right; display: block; width: 100%;'
-            ])->content(number_format($totalAmount, $decimalPlaces))->render(),
+        footer: Span::tag()
+                ->addClass('inv-footer-amount')
+                ->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])
+                ->content(
+                    Html::tag('small', $translator->translate('total') . ':', ['class' => 'inv-footer-label'])
+                    . ' ' . $s->getSetting('currency_symbol')
+                    . ' ' . number_format($totalAmount, $decimalPlaces)
+                )->encode(false)->render(),
     ),
     new DataColumn(
-        'id',
+        property: 'filterInvAmountPaid',
         header: $translator->translate('paid')
                                     . '➡️' . $s->getSetting('currency_symbol'),
         content: static function (Inv $model) use ($decimalPlaces): Label {
@@ -1025,13 +1070,26 @@ $columns = [
                             : number_format(0, $decimalPlaces)));
         },
         encodeContent: false,
+        filter: TextInputFilter::widget()
+                ->addAttributes([
+                    'id'          => 'filter-amount-paid',
+                    'class'       => 'native-reset inv-amount-filter',
+                    'aria-label'  => 'Filter by paid amount',
+                    'title'       => $translator->translate('paid'),
+                    'placeholder' => $translator->translate('paid'),
+                ]),
         withSorting: false,
-        footer: Span::tag()->addAttributes([
-                'style' => 'text-align: right; display: block; width: 100%;'
-            ])->content(number_format($totalPaid, $decimalPlaces))->render(),
+        footer: Span::tag()
+                ->addClass('inv-footer-amount')
+                ->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])
+                ->content(
+                    Html::tag('small', $translator->translate('paid') . ':', ['class' => 'inv-footer-label'])
+                    . ' ' . $s->getSetting('currency_symbol')
+                    . ' ' . number_format($totalPaid, $decimalPlaces)
+                )->encode(false)->render(),
     ),
     new DataColumn(
-        'id',
+        property: 'filterInvAmountBalance',
         header: $translator->translate('balance')
                                     . '➡️' . $s->getSetting('currency_symbol'),
         content: static function (Inv $model) use ($decimalPlaces): Label {
@@ -1046,10 +1104,23 @@ $columns = [
                             : number_format(0, $decimalPlaces)));
         },
         encodeContent: false,
+        filter: TextInputFilter::widget()
+                ->addAttributes([
+                    'id'          => 'filter-amount-balance',
+                    'class'       => 'native-reset inv-amount-filter',
+                    'aria-label'  => 'Filter by balance amount',
+                    'title'       => $translator->translate('balance'),
+                    'placeholder' => $translator->translate('balance'),
+                ]),
         withSorting: false,
-        footer: Span::tag()->addAttributes([
-                'style' => 'text-align: right; display: block; width: 100%;'
-            ])->content(number_format($totalBalance, $decimalPlaces))->render(),
+        footer: Span::tag()
+                ->addClass('inv-footer-amount')
+                ->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])
+                ->content(
+                    Html::tag('small', $translator->translate('balance') . ':', ['class' => 'inv-footer-label'])
+                    . ' ' . $s->getSetting('currency_symbol')
+                    . ' ' . number_format($totalBalance, $decimalPlaces)
+                )->encode(false)->render(),
     ),
     new DataColumn(
         header: '🚚',
@@ -1645,10 +1716,140 @@ $magnifierStyle = <<<CSS
 .tooltip.show .tooltip-inner {
     font-size: 2em !important;
 }
+
+/* ── Distinguishable filter dropdowns (all viewports, essential on mobile) ── */
+.inv-filter {
+    border-left: 4px solid transparent;
+    border-radius: 4px;
+    padding-left: 6px;
+    font-size: 1rem;
+    max-width: 160px;
+    font-weight: 500;
+}
+
+/* Colour-coded left border per filter */
+#filter-inv-number        { border-left-color: #0d6efd; } /* blue   – invoice #      */
+#filter-credit-inv-number { border-left-color: #6610f2; } /* indigo – credit note   */
+#filter-family-name       { border-left-color: #6f42c1; } /* purple – family        */
+#filter-year-month   { border-left-color: #fd7e14; } /* orange – date      */
+#filter-status       { border-left-color: #198754; } /* green  – status    */
+#filter-client       { border-left-color: #0dcaf0; } /* cyan   – client    */
+#filter-client-group { border-left-color: #dc3545; } /* red    – group     */
+#filter-address-1    { border-left-color: #d63384; } /* pink   – address   */
+
+/* ── Footer row: hide empty cells, compact layout on mobile ── */
+
+/* Desktop: label above the value, right-aligned */
+.inv-footer-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.8;
+}
+.inv-footer-amount {
+    font-size: 1rem;
+}
+
+@media (max-width: 767.98px) {
+    /* Collapse empty footer cells so only the three amounts show */
+    tfoot tr td:not(:has(.inv-footer-amount)) {
+        display: none;
+        padding: 0;
+        border: none;
+    }
+    /* Lay out the three amount cells as a flex row */
+    tfoot tr {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 8px;
+    }
+    tfoot tr td:has(.inv-footer-amount) {
+        flex: 1 1 28%;
+        min-width: 90px;
+        text-align: center;
+        border-radius: 6px;
+        padding: 6px 10px;
+        background: rgba(255,255,255,0.15);
+    }
+    .inv-footer-label {
+        font-size: 0.72rem;
+    }
+    .inv-footer-amount {
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+}
+
+/* ── Amount text input filter ── */
+.inv-amount-filter {
+    border-left: 4px solid #20c997; /* teal – amount */
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    max-width: 110px;
+    width: 100%;
+    text-align: right;
+}
+
+#filter-amount-total   { border-left-color: #20c997; } /* teal   – total   */
+#filter-amount-paid    { border-left-color: #198754; } /* green  – paid    */
+#filter-amount-balance { border-left-color: #ffc107; } /* amber  – balance */
+
+/* On small screens show the filter below its column header as a full-width block */
+@media (max-width: 767.98px) {
+    .inv-filter {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        font-size: 1.1rem;
+        padding: 8px 10px;
+        border-left-width: 5px;
+    }
+    .inv-amount-filter {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        font-size: 1.1rem;
+        padding: 8px 10px;
+        border-left-width: 5px;
+        text-align: left;
+    }
+}
 CSS;
 
 echo Html::script($magnifierScript)->type('module');
 echo Html::style($magnifierStyle);
+
+// Inject translated prompt text into each filter's first (empty) option.
+// json_encode ensures the strings are safely embedded inside the JS literal.
+$filterPromptLabels = json_encode([
+    'filter-inv-number'        => '— ' . $translator->translate('number')      . ' —',
+    'filter-credit-inv-number' => '— ' . $translator->translate(
+        'credit.invoice.for.invoice') . ' —',
+    'filter-family-name'       => '— ' . $translator->translate('family.name') . ' —',
+    'filter-year-month'   => '— ' . $translator->translate(
+        'datetime.immutable.date.created.mySql.format.year.month.filter')  . ' —',
+    'filter-status'       => '— ' . $translator->translate('status')      . ' —',
+    'filter-client'       => '— ' . $translator->translate('client')      . ' —',
+    'filter-client-group' => '— ' . $translator->translate('client.group') . ' —',
+], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
+
+$filterPromptScript = <<<JS
+document.addEventListener('DOMContentLoaded', function () {
+    const labels = {$filterPromptLabels};
+    Object.entries(labels).forEach(([id, label]) => {
+        const sel = document.getElementById(id);
+        if (sel && sel.options.length > 0) {
+            sel.options[0].text = label;
+        }
+    });
+});
+JS;
+echo Html::script($filterPromptScript)->type('module');
 
 if ($enableGrouping):
     $groupingScript = <<<JS

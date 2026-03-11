@@ -55,6 +55,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var positive-int $page
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsStatusDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsInvNumberDropDownFilter
+ * @psalm-var array<array-key, array<array-key, string>|string> $optionsCreditInvNumberDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsClientsDropDownFilter
  */
 
@@ -71,12 +72,82 @@ $toolbar = Div::tag();
 /**
  * @var ColumnInterface[] $columns
  */
+// Build enabled payment gateways list once for use in the paid column
+$enabledGateways = $s->payment_gateways_enabled_DriverList();
+
 $columns = [
     new DataColumn(
-        'id',
-        header: $translator->translate('id'),
-        content: static fn (Inv $model) => (string) $model->getId(),
-        withSorting: true,
+        property: 'filterInvNumber',
+        header: $translator->translate('number'),
+        content: static function (Inv $model) use ($urlGenerator): A {
+            return  A::tag()
+                    ->addAttributes(['style' => 'text-decoration:none'])
+                    ->content(($model->getNumber() ?? '#') . ' 🔍')
+                    ->href($urlGenerator->generate(
+                                        'inv/view', ['id' => $model->getId()]));
+        },
+        encodeContent: false,
+        filter: DropdownFilter::widget()
+                ->addAttributes([
+                    'id'         => 'filter-inv-number',
+                    'class'      => 'native-reset inv-filter',
+                    'aria-label' => 'Filter by invoice number',
+                    'title'      => $translator->translate('number'),
+                ])
+                ->optionsData($optionsInvNumberDropDownFilter),
+        withSorting: false,
+    ),
+    new DataColumn(
+        property: 'filterInvAmountPaid',
+        header: $translator->translate('paid')
+            . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
+        content: static function (Inv $model) use (
+            $decimalPlaces, $urlGenerator, $enabledGateways, $translator
+        ): string {
+            $invAmountPaid  = $model->getInvAmount()->getPaid();
+            $invAmountTotal = $model->getInvAmount()->getTotal();
+            $paid    = $invAmountPaid  ?? 0.00;
+            $total   = $invAmountTotal ?? 0.00;
+            $isPaid  = $paid >= $total;
+            $paidFormatted = Html::encode(
+                number_format($paid > 0.00 ? $paid : 0.00, $decimalPlaces)
+            );
+            $labelClass = $isPaid ? 'label label-success' : 'label label-danger';
+            $html = '<span class="' . $labelClass . '">' . $paidFormatted . '</span>';
+            if (!$isPaid && !empty($enabledGateways)) {
+                $dropdownId = 'pay-drop-' . Html::encode((string) $model->getId());
+                $items = '';
+                foreach ($enabledGateways as $gateway) {
+                    $displayName = str_replace('_', ' ', (string) $gateway);
+                    $url = $urlGenerator->generate('paymentinformation/inform', [
+                        'gateway' => $gateway,
+                        'url_key' => $model->getUrl_key(),
+                    ]);
+                    $items .= '<li><a class="dropdown-item" href="'
+                        . Html::encode($url) . '">'
+                        . Html::encode($displayName) . '</a></li>';
+                }
+                $html .= ' <div class="dropdown d-inline-block">'
+                    . '<button class="btn btn-sm btn-outline-primary dropdown-toggle"'
+                    . ' type="button" id="' . $dropdownId . '"'
+                    . ' data-bs-toggle="dropdown" aria-expanded="false">'
+                    . '💳 ' . Html::encode($translator->translate('pay.now'))
+                    . '</button>'
+                    . '<ul class="dropdown-menu" aria-labelledby="'
+                    . $dropdownId . '">' . $items . '</ul></div>';
+            }
+            return $html;
+        },
+        encodeContent: false,
+        filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
+                ->addAttributes([
+                    'id'          => 'filter-amount-paid',
+                    'class'       => 'native-reset inv-amount-filter',
+                    'aria-label'  => 'Filter by paid amount',
+                    'title'       => $translator->translate('paid'),
+                    'placeholder' => $translator->translate('paid'),
+                ]),
+        withSorting: false,
     ),
     new ActionColumn(
         header: '',
@@ -131,6 +202,13 @@ $columns = [
                . Html::closeTag('div'),                
     ),
     new DataColumn(
+        'id',
+        header: $translator->translate('id'),
+        content: static fn (Inv $model) => (string) $model->getId(),
+        withSorting: true,
+        visible: false,
+    ),
+    new DataColumn(
         property: 'filterStatus',
         header: '<span data-bs-toggle="tooltip" data-bs-html="true" title="' . 
                 Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 '
@@ -176,27 +254,16 @@ $columns = [
         },
         filter: DropdownFilter::widget()
             ->addAttributes([
-                'name' => 'status',
-                'class' => 'native-reset',
+                'id'         => 'filter-status',
+                'name'       => 'status',
+                'class'      => 'native-reset inv-filter',
+                'aria-label' => 'Filter by status',
+                'title'      => $translator->translate('status'),
             ])
             ->optionsData($optionsStatusDropDownFilter),
         encodeContent: false,
         withSorting: false,
         visible: true,
-    ),
-    new DataColumn(
-        property: 'filterInvNumber',
-        header: $translator->translate('number'),
-        content: static function (Inv $model) use ($urlGenerator): A {
-            return  A::tag()
-                    ->addAttributes(['style' => 'text-decoration:none'])
-                    ->content(($model->getNumber() ?? '#') . ' 🔍')
-                    ->href($urlGenerator->generate(
-                                        'inv/view', ['id' => $model->getId()]));
-        },
-        encodeContent: false,
-        filter: $optionsInvNumberDropDownFilter,
-        withSorting: false,
     ),
     // Credit note for the invoice
     new DataColumn(
@@ -206,7 +273,7 @@ $columns = [
                 'title' => $translator->translate('credit.invoice.for.invoice')
             ])->render(),
         encodeHeader: false,    
-        property: 'creditinvoice_parent_id',
+        property: 'filterCreditInvNumber',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
             $visible = $iR->repoInvUnLoadedquery(
                                         $model->getCreditinvoice_parent_id());
@@ -221,6 +288,15 @@ $columns = [
             return A::tag()->content('')->href('');
         },
         encodeContent: false,
+        filter: DropdownFilter::widget()
+                ->addAttributes([
+                    'id'         => 'filter-credit-inv-number',
+                    'class'      => 'native-reset inv-filter',
+                    'aria-label' => 'Filter by credit note parent invoice',
+                    'title'      => $translator->translate(
+                        'credit.invoice.for.invoice'),
+                ])
+                ->optionsData($optionsCreditInvNumberDropDownFilter),
         withSorting: false,
         visible: true,
     ),
@@ -235,8 +311,11 @@ $columns = [
         encodeContent: false,
         filter: DropdownFilter::widget()
                 ->addAttributes([
-                    'name' => 'client_id',
-                    'class' => 'native-reset',
+                    'id'         => 'filter-client',
+                    'name'       => 'client_id',
+                    'class'      => 'native-reset inv-filter',
+                    'aria-label' => 'Filter by client',
+                    'title'      => $translator->translate('client'),
                 ])
                 ->optionsData($optionsClientsDropDownFilter),
         withSorting: false,
@@ -282,30 +361,17 @@ $columns = [
         },
         encodeContent: false,
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
-                ->addAttributes(['style' => 'max-width: 50px']),
+                ->addAttributes([
+                    'id'          => 'filter-amount-total',
+                    'class'       => 'native-reset inv-amount-filter',
+                    'aria-label'  => 'Filter by total amount',
+                    'title'       => $translator->translate('total'),
+                    'placeholder' => $translator->translate('total'),
+                ]),
         withSorting: false,
     ),
     new DataColumn(
-        'id',
-        header: $translator->translate('paid')
-            . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
-        content: static function (Inv $model) use ($decimalPlaces): Label {
-            $invAmountPaid = $model->getInvAmount()->getPaid();
-            return Label::tag()
-                    ->attributes([
-                        'class' => $model->getInvAmount()->getPaid()
-                            < $model->getInvAmount()->getTotal() ?
-                            'label label-danger' : 'label label-success'])
-                    ->content(Html::encode(null !== $invAmountPaid
-                            ? number_format($invAmountPaid > 0.00 ?
-                                    $invAmountPaid : 0.00, $decimalPlaces)
-                            : number_format(0, $decimalPlaces)));
-        },
-        encodeContent: false,
-        withSorting: false,
-    ),
-    new DataColumn(
-        'id',
+        property: 'filterInvAmountBalance',
         header: $translator->translate('balance')
             . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
         content: static function (Inv $model) use ($decimalPlaces): Label {
@@ -319,6 +385,14 @@ $columns = [
                             : number_format(0, $decimalPlaces)));
         },
         encodeContent: false,
+        filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
+                ->addAttributes([
+                    'id'          => 'filter-amount-balance',
+                    'class'       => 'native-reset inv-amount-filter',
+                    'aria-label'  => 'Filter by balance amount',
+                    'title'       => $translator->translate('balance'),
+                    'placeholder' => $translator->translate('balance'),
+                ]),
         withSorting: false,
     ),
 ];
@@ -706,10 +780,75 @@ tbody tr:not(.group-header):hover {
 .tooltip.show .tooltip-inner {
     font-size: 2em !important;
 }
+
+/* ── Filter row: shared styles ── */
+.inv-filter {
+    font-size: 1rem;
+    font-weight: 500;
+    max-width: 160px;
+    border-left: 4px solid transparent;
+    border-radius: 4px;
+    padding: 4px 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Colour-coded left border per filter */
+#filter-inv-number        { border-left-color: #0d6efd; } /* blue   – invoice #    */
+#filter-credit-inv-number { border-left-color: #6610f2; } /* indigo – credit note  */
+#filter-status            { border-left-color: #198754; } /* green  – status       */
+#filter-client     { border-left-color: #0dcaf0; } /* cyan  – client    */
+
+/* Amount text filters */
+.inv-amount-filter {
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: right;
+    border-left: 4px solid transparent;
+    border-radius: 4px;
+    padding: 4px 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#filter-amount-total   { border-left-color: #20c997; } /* teal   – total   */
+#filter-amount-paid    { border-left-color: #198754; } /* green  – paid    */
+#filter-amount-balance { border-left-color: #ffc107; } /* amber  – balance */
+
+@media (max-width: 767.98px) {
+    .inv-filter, .inv-amount-filter {
+        max-width: 100%;
+        font-size: 1.1rem;
+        padding: 8px 10px;
+        display: block;
+        margin-bottom: 4px;
+    }
+}
 CSS;
 
 echo Html::script($invScript)->type('module');
 echo Html::style($invStyle);
+
+$filterPromptLabels = json_encode([
+    'filter-inv-number'        => '— ' . $translator->translate('number') . ' —',
+    'filter-credit-inv-number' => '— ' . $translator->translate(
+        'credit.invoice.for.invoice') . ' —',
+    'filter-status'            => '— ' . $translator->translate('status') . ' —',
+    'filter-client'     => '— ' . $translator->translate('client') . ' —',
+], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
+
+$filterPromptScript = <<<JS
+document.addEventListener('DOMContentLoaded', function () {
+    const labels = {$filterPromptLabels};
+    Object.keys(labels).forEach(function (id) {
+        const sel = document.getElementById(id);
+        if (sel && sel.options.length > 0) {
+            sel.options[0].text = labels[id];
+        }
+    });
+});
+JS;
+echo Html::script($filterPromptScript)->type('module');
 
 $mobilePreviewScript = <<<JS
 // Mobile/Desktop Preview Toggle

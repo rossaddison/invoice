@@ -520,42 +520,45 @@ final class PaymentInformationController
                                 $this->translator->translate('already.paid'));
                         $disable_form = true;
                     }
-                    // Get additional invoice information
+                    // Get additional invoice information.
+                    // NOTE: $payment_method_for_this_invoice may be null when
+                    // the invoice has no previously recorded payment method
+                    // (payment_method = 0 or null on an unpaid invoice).
+                    // This must NOT gate routing to the gateway payment form;
+                    // it is only used to display the prior payment method in
+                    // the form — fall back to '' when absent.
                     $payment_method_for_this_invoice =
                         $pmR->repoPaymentMethodquery(
                                         (string) $invoice->getPayment_method());
-                    if (null !== $payment_method_for_this_invoice) {
-                        $is_overdue = ($balance > 0.00
-                                && strtotime(
-                                        $invoice->getDate_due()->format('Y-m-d'))
-                                                        < time() ? true : false);
-                        if ($balance > 0 && $total > 0) {
-                            $payment_method_name =
-                                    $payment_method_for_this_invoice->getName();
-                            if (null !== $payment_method_name) {
-                                $payment_method =
-                                    $this->sR->mollieSupportedPaymentMethodArray();
-                                return $this->pciCompliantGatewayInForms(
-                                    $d,
-                                    $request,
-                                    $client_chosen_gateway,
-                                    $url_key,
-                                    $balance,
-                                    $cR,
-                                    $invoice,
-                                    (int) $invoice_id,
-                                    $items_array,
-                                    $yii_invoice_array,
-                                    $payment_method,
-                                    $disable_form,
-                                    $is_overdue,
-                                    $payment_method_name,
-                                    $total,
-                                    $sandbox_url_array,
-                                );
-                            } // $payment_method_name
-                        } // $balance
-                    } // null!==$payment_method_for_this_invoice
+                    $is_overdue = ($balance > 0.00
+                            && strtotime(
+                                    $invoice->getDate_due()->format('Y-m-d'))
+                                                    < time() ? true : false);
+                    if ($balance > 0 && $total > 0) {
+                        $payment_method_name = null !== $payment_method_for_this_invoice
+                            ? ($payment_method_for_this_invoice->getName() ?? '')
+                            : '';
+                        $payment_method =
+                            $this->sR->mollieSupportedPaymentMethodArray();
+                        return $this->pciCompliantGatewayInForms(
+                            $d,
+                            $request,
+                            $client_chosen_gateway,
+                            $url_key,
+                            $balance,
+                            $cR,
+                            $invoice,
+                            (int) $invoice_id,
+                            $items_array,
+                            $yii_invoice_array,
+                            $payment_method,
+                            $disable_form,
+                            $is_overdue,
+                            $payment_method_name,
+                            $total,
+                            $sandbox_url_array,
+                        );
+                    } // $balance
                 } // null!==$invoice_amount_record
                 // !$invoice else line 319
             } // null!==$url_key line 312

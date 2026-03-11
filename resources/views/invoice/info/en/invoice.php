@@ -50,6 +50,11 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p><s>Payment gateway testing on alpine<s></p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p><b>11th March 2026</b></p>
+<p>The mobile desktop preview will assist in improving bootstrap/mobile views</p>
+<p>Payment Provider javascript has been included in
+    C:\wamp64\www\invoice\src\Invoice\Asset\rebuild\js\invoice-typescript-iife.js</p>
+<p>Additional search filters have been created on the inv/index.php and inv/guest.php</p>
 <p><b>10th March 2026</b></p>
 <p>Security improvement: access to phpinfo is removed.</p>
 <p>Security improvement: apache's ssl.conf updated. Contents provided in docs/SSL_CONF_EXPLAINED.md</p>

@@ -45,7 +45,26 @@ final class InvRepository extends Select\Repository
         $query = $select->where(['number' => ltrim(rtrim($invNumber))]);
         return $this->prepareDataReader($query);
     }
-    
+
+    public function filterCreditInvNumber(string $creditInvNumber): EntityReader
+    {
+        $select = $this->select();
+        $trimmed = ltrim(rtrim($creditInvNumber));
+        $parentInvs = $this->select()
+                           ->where('number', 'like', $trimmed . '%')
+                           ->fetchAll();
+        $parentIds = [];
+        /** @var Inv $parentInv */
+        foreach ($parentInvs as $parentInv) {
+            $parentIds[] = (string) $parentInv->getId();
+        }
+        $query = $parentIds === []
+            ? $select->where(['id' => '0'])
+            : $select->where(['creditinvoice_parent_id' =>
+                ['in' => new Parameter($parentIds)]]);
+        return $this->prepareDataReader($query);
+    }
+
     public function filterFamilyName(string $invFamilyName): EntityReader
     {
         $select = $this->select();
@@ -70,6 +89,24 @@ final class InvRepository extends Select\Repository
         $query = $select
                  ->load('invAmount')
                  ->where('invAmount.total', 'like', $invAmountTotal . '%');
+        return $this->prepareDataReader($query);
+    }
+
+    public function filterInvAmountPaid(string $invAmountPaid): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                 ->load('invAmount')
+                 ->where('invAmount.paid', 'like', $invAmountPaid . '%');
+        return $this->prepareDataReader($query);
+    }
+
+    public function filterInvAmountBalance(string $invAmountBalance): EntityReader
+    {
+        $select = $this->select();
+        $query = $select
+                 ->load('invAmount')
+                 ->where('invAmount.balance', 'like', $invAmountBalance . '%');
         return $this->prepareDataReader($query);
     }
 
@@ -131,6 +168,15 @@ final class InvRepository extends Select\Repository
                        ->load(['client']);
         $query = $select->where([
             'client.client_group' => ltrim(rtrim($clientGroup))]);
+        return $this->prepareDataReader($query);
+    }
+
+    public function filterClientAddress1(string $clientAddress1): EntityReader
+    {
+        $select = $this->select()
+                       ->load(['client']);
+        $query = $select->where('client.client_address_1', 'like',
+            ltrim(rtrim($clientAddress1)) . '%');
         return $this->prepareDataReader($query);
     }
 

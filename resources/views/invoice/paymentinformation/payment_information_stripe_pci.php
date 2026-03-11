@@ -192,87 +192,16 @@ if ($disable_form === false) {
      echo H::closeTag('div');
     echo H::closeTag('div');
 }
-// This is your test publishable API key.
-$js18
-= 'const stripe = Stripe("' . $pci_client_publishable_key . '");'
-. 'let elements;'
-. 'const items = [' . $json_encoded_items . '];'
-. 'initialize();'
-. 'checkStatus();'
-. 'document.querySelector("#payment-form").addEventListener("submit", handleSubmit);'
-. 'async function initialize() {'
-    // To avoid Error 422 Unprocessible entity
-    // const { clientSecret } = await fetch("/create.php", {
-    // method: "POST",
-    // headers: { "Content-Type": "application/json" },
-    // body: JSON.stringify({ items }),
-    // }).then((r) => r.json());
-    . 'const { clientSecret } = {"clientSecret": "' . $client_secret . '"};'
-    . 'elements = stripe.elements({ clientSecret });'
-    . 'const paymentElementOptions = {'
-        . 'layout: "tabs"'
-    . '};'
-    . 'const paymentElement = elements.create("payment", paymentElementOptions);'
-    . 'paymentElement.mount("#payment-element");'
-. '}'
-. 'async function handleSubmit(e) {'
-    . 'e.preventDefault();'
-    . 'setLoading(true);'
-    . 'const { error } = await stripe.confirmPayment({'
-        . 'elements,'
-        . 'confirmParams: {'
-            . 'return_url: "'
-        . $urlGenerator->generateAbsolute('paymentinformation/stripe_complete',
-                ['url_key' => $inv_url_key]) . '"'
-        . '},'
-    . '});'
-    . 'if (error.type === "card_error" || error.type === "validation_error") {'
-        . 'showMessage(error.message);'
-    . '} else {'
-        . 'showMessage("An unexpected error occurred.");'
-    . '}'
-    . 'setLoading(false);'
-. '}'
-. 'async function checkStatus() {'
-. 'const clientSecret ='
-. ' new URLSearchParams(window.location.search).get("payment_intent_client_secret");'
-. 'if (!clientSecret) {'
-    . 'return;'
-. '}'
-. 'const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);'
-. 'switch (paymentIntent.status) {'
-    . '  case "succeeded":'
-    . '    showMessage("Payment succeeded!");'
-    . '    break;'
-    . '  case "processing":'
-    . '    showMessage("Your payment is processing.");'
-    . '    break;'
-    . '  case "requires_payment_method":'
-    . '    showMessage("Your payment was not successful, please try again.");'
-    . '    break;'
-    . '  default:'
-    . '    showMessage("Something went wrong.");'
-    . '    break;'
-. '}'
-. '}'
-. 'function showMessage(messageText) {'
-. 'const messageContainer = document.querySelector("#payment-message");'
-. 'messageContainer.classList.remove("hidden");'
-. 'messageContainer.textContent = messageText;'
-. 'setTimeout(function () {'
-. 'messageContainer.classList.add("hidden");'
-. 'messageText.textContent = "";'
-. '}, 4000);'
-. '}'
-. 'function setLoading(isLoading) {'
-. 'if (isLoading) {'
-. 'document.querySelector("#submit").disabled = true;'
-. 'document.querySelector("#spinner").classList.remove("hidden");'
-. 'document.querySelector("#button-text").classList.add("hidden");'
-. '} else {'
-. 'document.querySelector("#submit").disabled = false;'
-. 'document.querySelector("#spinner").classList.add("hidden");'
-. 'document.querySelector("#button-text").classList.remove("hidden");'
-. '}'
-. '};';
-echo H::script($js18)->type('module');
+// Supply server-side values to the TypeScript payment-stripe module via
+// data-* attributes. The IIFE bundle (invoice-typescript-iife.js) reads these
+// on DOMContentLoaded and initialises Stripe Elements — no inline JS required.
+echo H::tag('div', '', [
+    'id'                   => 'stripe-payment-config',
+    'data-publishable-key' => $pci_client_publishable_key,
+    'data-client-secret'   => $client_secret,
+    'data-return-url'      => $urlGenerator->generateAbsolute(
+        'paymentinformation/stripe_complete',
+        ['url_key' => $inv_url_key],
+    ),
+    'style' => 'display:none',
+]);

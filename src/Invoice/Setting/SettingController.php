@@ -285,9 +285,9 @@ final class SettingController extends BaseController
                         // The settings 'decimal_point' and 'thousands_separator' which are derived from number_format array
                         // and were installed on the first run in InvoiceController
                         // will be derived automatically => their repoCount will be greater than zero and will not cause this to run
-                        $this->tab_index_debug_mode_ensure_all_settings_included(true, $key, $value);
+                            $this->tab_index_debug_mode_ensure_all_settings_included(true, $key, $value);
+                        }
                     }
-                }
                 $this->flashMessage('info', $this->translator->translate('settings.successfully.saved'));
                 return $this->webService->getRedirectResponse('setting/tab_index');
             }

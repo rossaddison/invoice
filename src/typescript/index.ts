@@ -12,6 +12,9 @@ import { FamilyHandler } from './family.js';
 import { SettingsHandler } from './settings.js';
 import { initTooltips, initSimpleSelects, showFullpageLoader, hideFullpageLoader, initPasswordMeter } from './scripts.js';
 import './family-commalist-picker.js';
+import { initStripePayment } from './payment-stripe.js';
+import { initAmazonPayment } from './payment-amazon.js';
+import { initBraintreePayment } from './payment-braintree.js';
 
 /**
  * Initialize Invoice Application
@@ -107,9 +110,17 @@ class InvoiceApp {
 
 // Initialize the application when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => new InvoiceApp());
+    document.addEventListener('DOMContentLoaded', () => {
+        new InvoiceApp();
+        initStripePayment();
+        initAmazonPayment();
+        initBraintreePayment();
+    });
 } else {
     new InvoiceApp();
+    initStripePayment();
+    initAmazonPayment();
+    initBraintreePayment();
 }
 
 // Export for potential external usage
