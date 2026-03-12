@@ -48,7 +48,7 @@
 <p>A General Sales Tax (GST) Tax System will have to be implemented first for this purpose.</p>
 <p>Testing Credit Notes against Invoices with refunds (if payment made) linked to each of the payment gateways.</p>
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
-<p><s>Payment gateway testing on alpine<s></p>
+<p><s>Payment gateway testing on alpine</s></p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
 <p><b>11th March 2026</b></p>
 <p>The mobile desktop preview will assist in improving bootstrap/mobile views</p>
