@@ -1,4 +1,4 @@
-FROM php:8.5.2-fpm-alpine
+FROM php:8.5.4-fpm-alpine
 
 # Install system dependencies, PHP build tools, PECL extensions, then clean up
 RUN apk add --no-cache \
