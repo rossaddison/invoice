@@ -34,10 +34,10 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * @var string $csrf
  */
 
-$toolbarReset = A::tag()
+$toolbarReset = (new A())
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'salesorder/guest'))
     ->id('btn-reset')
     ->render();
@@ -45,7 +45,7 @@ $toolbarReset = A::tag()
 // see SalesOrder/SalesOrderRepository getStatuses function
 // && Invoice\Asset\invoice\css\style.css & yii3i.css
 
-$statusBar =  Div::tag()
+$statusBar =  (new Div())
     ->addClass('btn-group index-options')
     ->content(
         Html::a(
@@ -240,12 +240,12 @@ $grid_summary
     );
 
 $toolbarString
-    = Form::tag()->post(
+    = (new Form())->post(
             $urlGenerator->generate('salesorder/guest'))->csrf($csrf)->open()
     . $statusBar
-    . Div::tag()->addClass(
+    . (new Div())->addClass(
             'float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    . (new Form())->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

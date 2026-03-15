@@ -14,11 +14,11 @@ use Yiisoft\Html\Tag\Img;
  * @var int $logoMargin
  */
 
-echo A::tag()
+echo (new A())
     ->href('')
     ->target('_blank')
     ->content(
-        Img::tag()
+        (new Img())
               ->src($src)
               ->width($logoWidth ?: 280)
               ->height($logoHeight ?: 44)

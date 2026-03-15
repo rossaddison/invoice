@@ -172,8 +172,7 @@ final readonly class InvItemService
                     (float) $array['discount_amount'], 
                     $tax_rate_percentage, 
                     $iias, 
-                    $iiar, 
-                    $s);
+                    $iiar);
             }
         }
         return $model->getId();
@@ -274,12 +273,11 @@ final readonly class InvItemService
      * @param array $array
      * @param string $inv_id
      * @param PR $pr
-     * @param SR $s
      * @param UNR $unR
      * @return int
      */
     public function saveInvItem_product(InvItem $model, array $array,
-                                string $inv_id, PR $pr, SR $s, UNR $unR): int
+                                string $inv_id, PR $pr, UNR $unR): int
     {
         // This function is used in product/save_product_lookup_item_product
         // when adding a product using the modal
@@ -341,11 +339,10 @@ final readonly class InvItemService
      * @param TRR $trr
      * @param IIAS $iias
      * @param IIAR $iiar
-     * @param SR $s
      * @return int|null
      */
     public function addInvItem_task(InvItem $model, array $array, string $inv_id,
-                    taskR $taskR, TRR $trr, IIAS $iias, IIAR $iiar, SR $s): ?int
+                    taskR $taskR, TRR $trr, IIAS $iias, IIAR $iiar): ?int
     {
         // This function is used in task/selection_inv when adding a new task
         // from the modal. Related logic https://github.com/cycle/orm/issues/348
@@ -395,8 +392,7 @@ final readonly class InvItemService
                         (float) $array['discount_amount'],
                         $tax_rate_percentage,
                         $iias,
-                        $iiar,
-                        $s);
+                        $iiar);
             }
         }
         return $model->getId();
@@ -407,11 +403,10 @@ final readonly class InvItemService
      * @param array $array
      * @param string $inv_id
      * @param taskR $taskR
-     * @param SR $s
      * @return int
      */
     public function saveInvItem_task(InvItem $model, array $array,
-                                    string $inv_id, taskR $taskR, SR $s): int
+                                    string $inv_id, taskR $taskR): int
     {
         // This function is used in invitem/edit_task when editing an item on
         // the inv view. Related logic: https://github.com/cycle/orm/issues/348
@@ -473,16 +468,12 @@ final readonly class InvItemService
      * @param string $inv_id
      * @param PR $pr
      * @param taskR $taskR
-     * @param IIAR $iiar
-     * @param IIAS $iias
      * @param UNR $unR
-     * @param TRR $trr
      * @param Translator $translator
-     * @param SR $sR
      */
     public function addInvItemProductTask(InvItem $model, array $array,
-            string $inv_id, PR $pr, taskR $taskR, IIAR $iiar, IIAS $iias,
-            UNR $uR, TRR $trr, Translator $translator, SR $sR): InvItem
+            string $inv_id, PR $pr, taskR $taskR,
+            UNR $uR, Translator $translator): InvItem
     {
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
@@ -571,7 +562,6 @@ final readonly class InvItemService
      * @param float $tax_rate_percentage
      * @param IIAS $iias
      * @param IIAR $iiar
-     * @param SR $s
      * @return InvItemAmount|null
      */
     public function saveInvItemAmount(
@@ -581,8 +571,7 @@ final readonly class InvItemService
         float $discount,
         float $tax_rate_percentage,
         IIAS $iias,
-        IIAR $iiar,
-        SR $s,
+        IIAR $iiar
     ): InvItemAmount|null {
         $iias_array = [];
         $iias_array['inv_item_id'] = $inv_item_id;
@@ -658,10 +647,9 @@ final readonly class InvItemService
      * @param string $new_inv_id
      * @param InvItemRepository $iiR
      * @param IIAR $iiaR
-     * @param SR $sR
      */
     public function initializeCreditInvItems(int $basis_inv_id,
-           string $new_inv_id, InvItemRepository $iiR, IIAR $iiaR, SR $sR): void
+           string $new_inv_id, InvItemRepository $iiR, IIAR $iiaR): void
     {
         // Get the basis invoice's items and balance with a negative quantity
         $items = $iiR->repoInvquery((string) $basis_inv_id);

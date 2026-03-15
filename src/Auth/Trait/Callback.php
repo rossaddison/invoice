@@ -877,11 +877,6 @@ trait Callback
     public function callbackOpenBanking(
         ServerRequestInterface $request,
         TranslatorInterface $translator,
-        TokenRepository $tR,
-        UserInvRepository $uiR,
-        UserRepository $uR,
-        #[RouteArgument('_language')]
-        string $_language,
         #[Query('code')]
         ?string $code = null,
         #[Query('state')]

@@ -43,10 +43,10 @@ final class ProjectController extends BaseController
     /**
      * @param int $page
      * @param ProjectRepository $projectRepository
-     * @param Request $request
-     * @param ProjectService $service
      */
-    public function index(ProjectRepository $projectRepository, Request $request, ProjectService $service, #[Query('page')] ?int $page = null): \Psr\Http\Message\ResponseInterface
+    public function index(
+            ProjectRepository $projectRepository,
+            #[Query('page')] ?int $page = null): \Psr\Http\Message\ResponseInterface
     {
         $canEdit = $this->rbac();
         $parameters = [

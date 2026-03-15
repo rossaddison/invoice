@@ -73,10 +73,12 @@ class MailerHelper
      * @param QR $qR
      * @param UIR $uiR
      * @param UrlGenerator $urlGenerator
-     * @param ServerRequestInterface $request
      * @return bool
      */
-    private function email_quote_status(string $quote_id, QR $qR, UIR $uiR, UrlGenerator $urlGenerator, ServerRequestInterface $request): bool
+    private function email_quote_status(string $quote_id,
+            QR $qR,
+            UIR $uiR,
+            UrlGenerator $urlGenerator): bool
     {
         if (!$this->mailer_configured()) {
             return false;

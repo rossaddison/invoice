@@ -8,6 +8,9 @@ use App\Invoice\Entity\SalesOrderItemAllowanceCharge;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 final class SalesOrderItemAllowanceChargeForm extends FormModel
 {
     private ?int $sales_order_id = null;

@@ -61,7 +61,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
             <tr>
                 <td><?= Html::encode($email_template->getEmail_template_title()); ?></td>
                 <td><?= ucfirst($email_template->getEmail_template_type() ?? 'invoice'); ?></td>
-                <td><?= A::tag()
+                <td><?= (new A())
                 ->href(
                     $urlGenerator->generate(
                         'emailtemplate/preview',

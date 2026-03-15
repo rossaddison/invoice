@@ -107,10 +107,9 @@ final class FamilyController extends BaseController
     /**
      * Build a 3 tiered dependency drop down search form
      * @param cpR $cpR
-     * @param csR $csR
      * @return Response
      */
-    public function search(cpR $cpR, csR $csR): Response
+    public function search(cpR $cpR): Response
     {
         $family = new Family();
         $form = new FamilyForm($family);
@@ -442,16 +441,12 @@ final class FamilyController extends BaseController
      * @param Request $request
      * @param fR $familyRepository
      * @param pR $productRepository
-     * @param trR $taxRateRepository
-     * @param uR $unitRepository
      * @return Response
      */
     public function generate_products(
         Request $request,
         fR $familyRepository,
-        pR $productRepository,
-        trR $taxRateRepository,
-        uR $unitRepository
+        pR $productRepository
     ): Response {
         // Debug: Log that method was called
         error_log("FamilyController::generate_products called at " . date('Y-m-d H:i:s'));

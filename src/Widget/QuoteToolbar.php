@@ -5,29 +5,18 @@ declare(strict_types=1);
 namespace App\Widget;
 
 use App\Invoice\Entity\Quote;
-use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Span;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface;
 
 final readonly class QuoteToolbar
 {
-    public function __construct(
-        private SettingRepository $settingRepository,
+        public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private TranslatorInterface $translator,
     ) {
-    }
-
-    public function render(Quote $quote, bool $quoteEdit, string $vat, float $quoteAmountTotal): string
-    {
-        $quoteId = $quote->getId();
-        $buttons = $this->buildButtons($quote, $quoteEdit, $vat, $quoteAmountTotal);
-
-        return $this->renderToolbar($buttons);
     }
 
     private function buildButtons(Quote $quote, bool $quoteEdit, string $vat, ?float $quoteAmountTotal): array
@@ -251,7 +240,7 @@ final readonly class QuoteToolbar
         $iconHtml = Html::openTag('i', ['class' => 'fa ' . (string) $button['icon']]) . Html::closeTag('i');
 
         if ((string) $button['type'] === 'link') {
-            return A::tag()
+            return (new A())
                 ->href((string) $button['href'])
                 ->addClass($baseClasses)
                 ->id($this->getButtonId($button))
@@ -260,7 +249,7 @@ final readonly class QuoteToolbar
                 ->render();
         } elseif ((string) $button['type'] === 'disabled') {
             // Disabled button with tooltip
-            return A::tag()
+            return (new A())
                 ->href('#')
                 ->addClass($baseClasses . ' disabled')
                 ->id($this->getButtonId($button))
@@ -274,11 +263,11 @@ final readonly class QuoteToolbar
                 ->render();
         } else {
             // Modal button
-            $styleAttr = isset($button['style']) 
+            $styleAttr = isset($button['style'])
                 ? 'text-decoration: none; ' . (string) $button['style']
                 : 'text-decoration: none';
             
-            return A::tag()
+            return (new A())
                 ->href((string) $button['href'])
                 ->addClass($baseClasses)
                 ->id($this->getButtonId($button))
@@ -313,14 +302,14 @@ final readonly class QuoteToolbar
             default => $this->translator->translate('unknown'),
         };
 
-        $badges[] = Span::tag()
+        $badges[] = (new Span())
             ->addClass('badge ' . $statusClass . ' me-2')
             ->content($statusText)
             ->render();
 
         // SO status indicator if quote has been converted
         if ($quote->getSo_id() !== '0' && !empty($quote->getSo_id())) {
-            $badges[] = Span::tag()
+            $badges[] = (new Span())
                 ->addClass('badge bg-info me-2')
                 ->content($this->translator->translate('converted.to.so'))
                 ->render();
@@ -328,7 +317,7 @@ final readonly class QuoteToolbar
 
         // Invoice status indicator if quote has been converted
         if ($quote->getInv_id() !== '0' && !empty($quote->getInv_id())) {
-            $badges[] = Span::tag()
+            $badges[] = (new Span())
                 ->addClass('badge bg-success me-2')
                 ->content($this->translator->translate('converted.to.invoice'))
                 ->render();
@@ -339,7 +328,6 @@ final readonly class QuoteToolbar
 
     public function renderWithStatus(Quote $quote, bool $quoteEdit, string $vat, ?float $quoteAmountTotal): string
     {
-        $quoteId = $quote->getId();
         $buttons = $this->buildButtons($quote, $quoteEdit, $vat, $quoteAmountTotal);
         $statusBadges = $this->renderInlineStatusIndicators($quote);
 

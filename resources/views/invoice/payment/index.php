@@ -40,10 +40,10 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarReset = A::tag()
+$toolbarReset = (new A())
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'payment/index'))
     ->id('btn-reset')
     ->render();
@@ -172,14 +172,14 @@ $columns = [
     ),
 ];
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open()
-. $canEdit && $canView ? A::tag()
+$toolbarString = (new Form())->post($urlGenerator->generate('payment/index'))->csrf($csrf)->open()
+. $canEdit && $canView ? (new A())
     ->href($urlGenerator->generate('payment/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render() : ''
-. Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-. Form::tag()->close();
+. (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+. (new Form())->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

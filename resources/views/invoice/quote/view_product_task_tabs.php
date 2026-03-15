@@ -18,7 +18,7 @@ use Yiisoft\Html\Tag\I;
 <?php if ($invEdit && $quote->getStatus_id() === 1) { ?>
 <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs nav-tabs-noborder']); ?>
     <?= Html::openTag('li', ['class' => 'active']); ?>
-        <?= A::tag()
+        <?= (new A())
         ->addAttributes([
             'data-bs-toggle' => 'tab',
             'style' => 'text-decoration:none',
@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\I;
     ?>
     <?= Html::closeTag('li'); ?>
     <?= Html::openTag('li'); ?>
-        <?= A::tag()
+        <?= (new A())
         ->addAttributes([
             'data-bs-toggle' => 'tab',
             'style' => 'text-decoration:none',
@@ -44,7 +44,7 @@ use Yiisoft\Html\Tag\I;
     ?>
     <?= Html::closeTag('li'); ?> 
     <?= Html::openTag('li', ['id' => 'back', 'class' => 'tab-pane']); ?>
-        <?= A::tag()
+        <?= (new A())
         ->addAttributes([
             'type' => 'reset',
             'onclick' => 'window.history.back()',
@@ -73,7 +73,7 @@ use Yiisoft\Html\Tag\I;
                             ],
                         );
                     ?>
-                    <?= I::tag()
+                    <?= (new I())
                         ->addClass('fa fa-list')
                         ->addAttributes([
                             'data-bs-toggle' => 'tooltip',

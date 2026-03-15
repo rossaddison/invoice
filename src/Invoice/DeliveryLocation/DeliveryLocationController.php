@@ -275,15 +275,11 @@ final class DeliveryLocationController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryLocationRepository $delRepository
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function view(
         CurrentRoute $currentRoute,
-        DeliveryLocationRepository $delRepository,
-        UCR $ucR,
-        UIR $uiR): \Psr\Http\Message\ResponseInterface
+        DeliveryLocationRepository $delRepository): Response
     {
         $del = $this->del($currentRoute, $delRepository);
         if ($del) {

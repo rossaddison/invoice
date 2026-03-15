@@ -16,7 +16,7 @@ final class QrCode
          */
         $qrCode = (new ChillQrCode())->render($absoluteUrl);
         printf(
-            Img::tag()
+            (new Img())
             ->addAttributes(['data-bs-toggle' => 'tooltip', 'title' => $directions])
             ->width($pixels)
             ->height($pixels)

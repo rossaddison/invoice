@@ -46,7 +46,8 @@ final class PerformanceMetrics extends Widget
             if ($cacheFull && ($currentWastedPercentage < $maxWastedPercentage)) {
                 $performanceItems[] = 'Opcache: Cache full, wasted memory below threshold ({$currentWastedPercentage}% < {$maxWastedPercentage}%). '
                     . ($opcacheHitRate < 99 ? 'Hit rate dropped below 99% ({$opcacheHitRate}%). ' : '')
-                    . 'Solution: Increase opcache.memory_consumption.';
+                    . 'Solution: Increase opcache.memory_consumption from ' . 
+                    $memoryConsumption;
             }
             // Condition 2
             if ($cacheFull && ($numCachedKeys == $maxCachedKeys)) {

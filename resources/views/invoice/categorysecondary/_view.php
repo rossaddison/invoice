@@ -29,7 +29,7 @@ use Yiisoft\Html\Tag\Form;
      <?= $translator->translate('add'); ?>
      <?= $button->back(); ?>
 <?= Html::closeTag('h1'); ?>
-<?= Form::tag()
+<?= (new Form())
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)

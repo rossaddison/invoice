@@ -6,6 +6,9 @@ namespace App\Invoice\Asset;
 
 use Yiisoft\Assets\AssetBundle;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 class NodeModulesGovUkFrontEndGovUkAsset extends AssetBundle
 {
     public ?string $basePath = '@assets';

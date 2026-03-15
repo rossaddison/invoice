@@ -172,7 +172,7 @@ $this->setTitle($title);
         <?= null !== $currentPath ? Nav::widget()
     ->items(
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes([
                 'class' => $debugMode ? 'bi bi-info-circle' : '',
                 'style' => 'font-size: 1rem; color: cornflowerblue;',
@@ -188,7 +188,7 @@ $this->setTitle($title);
             false,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes([
                 'class' => 'bi bi-info-circle-fill text-info',
                 'style' => 'font-size: 1rem; color: cornflowerblue;',
@@ -203,7 +203,7 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageAbout,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes([
                 'class' => 'bi bi-patch-check',
             ])
@@ -217,7 +217,7 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageAccreditations,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes(['class' => 'bi bi-images'])
             ->content(str_repeat(' ', 1) . $translator->translate('menu.gallery')),
             $urlGenerator->generate('site/gallery'),
@@ -229,7 +229,7 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageGallery,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes(['class' => 'bi bi-people-fill'])
             ->content(str_repeat(' ', 1) . $translator->translate('menu.team')),
             $urlGenerator->generate('site/team'),
@@ -241,7 +241,7 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageTeam,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes(['class' => 'bi bi-tags-fill text-danger'])
             ->content(str_repeat(' ', 1) . $translator->translate('menu.pricing')),
             $urlGenerator->generate('site/pricing'),
@@ -253,7 +253,7 @@ $this->setTitle($title);
             $isGuest && !$noFrontPagePricing,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes(['class' => 'bi bi-file-ruled'])
             ->content(str_repeat(' ', 1) . $translator->translate('menu.testimonial')),
             $urlGenerator->generate('site/testimonial'),
@@ -265,7 +265,7 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageTestimonial,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes(['class' => 'bi bi-file-text'])
             ->content(str_repeat(' ', 1) . $translator->translate('menu.privacy.policy')),
             $urlGenerator->generate('site/privacypolicy'),
@@ -277,7 +277,7 @@ $this->setTitle($title);
             $isGuest && !$noFrontPagePrivacyPolicy,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes(['class' => 'bi bi-file-text-fill'])
             ->content(str_repeat(' ', 1) . $translator->translate('menu.terms.of.service')),
             $urlGenerator->generate('site/termsofservice'),
@@ -289,7 +289,7 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageTermsOfService,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes(['class' => 'bi bi-person-lines-fill text-primary'])
             ->content(str_repeat(' ', 1) . $translator->translate('menu.contact.us')),
             $urlGenerator->generate('site/contact'),
@@ -301,7 +301,7 @@ $this->setTitle($title);
             $isGuest && !$noFrontPageContactDetails,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes(['class' => 'bi bi-door-open-fill text-success'])
             ->content(str_repeat(' ', 1) . $translator->translate('menu.login')),
             $urlGenerator->generate('auth/login'),
@@ -313,7 +313,7 @@ $this->setTitle($title);
             $isGuest && !$stopLoggingIn,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes([
                 'class' => 'bi bi-person-plus-fill',
                 'data-bs-toggle' => 'tooltip',
@@ -334,7 +334,7 @@ $this->setTitle($title);
              */
             $isGuest && !$stopLoggingIn
                 ? ''
-                : Form::tag()
+                : (new Form())
                     ->post($urlGenerator->generate('auth/logout'))
                     ->csrf($csrf)
                     ->open()
@@ -344,7 +344,7 @@ $this->setTitle($title);
                     )
                     ->class('btn btn-xs btn-danger')
                     . '</div>'
-                    . Form::tag()->close(),
+                    . (new Form())->close(),
             encodeLabel: false,
         ),
     )

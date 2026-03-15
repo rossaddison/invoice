@@ -123,7 +123,7 @@ $this->beginPage();
         <?= null !== $currentPath ? Nav::widget()
     ->items(
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes(['class' => 'bi bi-door-open-fill text-success'])
             ->content(),
             $urlGenerator->generate('auth/login'),
@@ -132,7 +132,7 @@ $this->beginPage();
             false,
         ),
         NavLink::to(
-            Label::tag()
+            (new Label())
             ->attributes([
                 'class' => 'bi bi-person-plus-fill',
                 'data-bs-toggle' => 'tooltip',
@@ -164,7 +164,7 @@ $this->beginPage();
     )->render();
 ?>
 <?=
-    $isGuest ? '' : Form::tag()
+    $isGuest ? '' : (new Form())
                     ->post($urlGenerator->generate('auth/logout'))
                     ->csrf($csrf)
                     ->open()
@@ -174,7 +174,7 @@ $this->beginPage();
                 )
                     ->class('btn btn-xs btn-warning')
                 . '</div>'
-                . Form::tag()->close();
+                . (new Form())->close();
 ?>
         
         <?= NavBar::end() ?>

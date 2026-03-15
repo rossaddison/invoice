@@ -33,10 +33,10 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset = (new A())
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'project/index'))
     ->id('btn-reset')
     ->render();
@@ -118,14 +118,14 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('project/index'))->csrf($csrf)->open()
-    . A::tag()
+$toolbarString = (new Form())->post($urlGenerator->generate('project/index'))->csrf($csrf)->open()
+    . (new A())
     ->href($urlGenerator->generate('project/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    . (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . (new Form())->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

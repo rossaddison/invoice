@@ -19,6 +19,12 @@ use Yiisoft\Translator\TranslatorInterface;
  */
 final readonly class ButtonsToolbarFull
 {
+    /**
+     * @psalm-suppress PossiblyUnusedMethod
+     * @param TranslatorInterface $translator
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param SettingRepository $settingRepository
+     */
     public function __construct(
         private TranslatorInterface $translator,
         private UrlGeneratorInterface $urlGenerator,
@@ -28,6 +34,7 @@ final readonly class ButtonsToolbarFull
 
     /**
      * Generate comprehensive invoice actions toolbar with all features
+     * @psalm-suppress UnusedParam $paymentView, $isRecurring
      */
     public function render(
         Inv $inv,
@@ -446,7 +453,7 @@ final readonly class ButtonsToolbarFull
 
     private function renderButton(array $button): string
     {
-        $link = A::tag()
+        $link = (new A())
             ->id('toolbar-full-' . (string) $button['id'])
             ->addClass('btn', (string) $button['class'], 'btn-sm')
             ->attribute('title', (string) $button['title'])
@@ -492,7 +499,7 @@ final readonly class ButtonsToolbarFull
         ]);
 
         if ($inv->getIs_read_only() === true) {
-            $string .= Span::tag()
+            $string .= (new Span())
                 ->addClass('badge bg-danger')
                 ->attribute('style', 'font-size: 0.75rem; padding: 4px 8px;'
                     . ' border-radius: 12px;')
@@ -518,7 +525,7 @@ final readonly class ButtonsToolbarFull
             default => '❓ ' . $this->translator->translate('unknown'),
         };
 
-        $string .= Span::tag()
+        $string .= (new Span())
             ->addClass('badge ' . $statusClass)
             ->attribute('style', 'font-size: 0.75rem; padding:'
                 . ' 4px 8px; border-radius: 12px;')
@@ -534,7 +541,7 @@ final readonly class ButtonsToolbarFull
         $string = '';
 
         if ($inv->getIs_read_only() === true) {
-            $string .= Span::tag()
+            $string .= (new Span())
                 ->addClass('badge bg-danger')
                 ->attribute('style', 'font-size: 0.7rem; padding:'
                     . ' 3px 6px; border-radius: 10px; margin-right: 6px;')
@@ -560,7 +567,7 @@ final readonly class ButtonsToolbarFull
             default => '❓ ' . $this->translator->translate('unknown'),
         };
 
-        $string .= Span::tag()
+        $string .= (new Span())
             ->addClass('badge ' . $statusClass)
             ->attribute('style',
                 'font-size: 0.7rem; padding: 3px 6px; border-radius: 10px;')

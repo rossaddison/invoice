@@ -82,7 +82,7 @@ $logoFileNameWithPath = match ($logoPublicSource) {
     // @base/public/logo
     'destination.public.logo' => $destinationPublicLogo,
 };
-echo Img::tag()
+echo (new Img())
 ->height(100)
 ->width(150)
 ->src($logoFileNameWithPath)

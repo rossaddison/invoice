@@ -77,11 +77,8 @@ final readonly class SalesOrderItemAllowanceChargeService
 
     public function deleteSalesOrderItemAllowanceCharge(
         SalesOrderItemAllowanceCharge $model,
-        SOAR $soaR,
         SOIAR $soiaR,
-        SOTRR $sotrR,
         ACSOIR $acsoiR,
-        SR $sR
     ): void {
         $salesorder_item_id = $model->getSales_order_item_id();
         $this->repository->delete($model);

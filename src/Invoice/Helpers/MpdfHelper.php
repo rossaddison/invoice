@@ -232,12 +232,15 @@ class MpdfHelper
         return '';
     }
 
-    private function ensure_tmp_folder_exists(SR $sR): Aliases
+    private function ensure_tmp_folder_exists(): Aliases
     {
         // Define aliases for paths
         $aliases = new Aliases([
             '@invoice' => dirname(__DIR__), // Root directory for the invoice
-            '@tmp' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Tmp' . DIRECTORY_SEPARATOR, // Directory for temporary files
+            '@tmp' => dirname(__DIR__)
+            . DIRECTORY_SEPARATOR
+            . 'Tmp'
+            . DIRECTORY_SEPARATOR, // Directory for temporary files
         ]);
 
         // Define the Tmp directory path
@@ -279,7 +282,7 @@ class MpdfHelper
      */
     private function initialize_pdf(?string $password, SR $sR, string $title, ?object $quote_or_invoice, ?iiaR $iiaR, ?InvAmount $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
     {
-        $optionsArray = $this->options($sR);
+        $optionsArray = $this->options();
         $mpdf = new \Mpdf\Mpdf($optionsArray);
         // mPDF configuration
         $mpdf->SetDirectionality('ltr');
@@ -371,9 +374,9 @@ class MpdfHelper
      *
      * @version 1.0.6
      */
-    private function options(SR $sR): array
+    private function options(): array
     {
-        $aliases = $this->ensure_tmp_folder_exists($sR);
+        $aliases = $this->ensure_tmp_folder_exists();
 
         $this->options['mode'] = $this->mode;
         $this->options['format'] = $this->format;

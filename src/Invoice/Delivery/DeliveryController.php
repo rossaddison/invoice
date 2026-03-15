@@ -82,7 +82,7 @@ final class DeliveryController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
-                        $this->deliveryService->saveDelivery($delivery, $body, $this->sR);
+                        $this->deliveryService->saveDelivery($delivery, $body);
                         return $this->webService->getRedirectResponse('inv/edit', ['id' => $inv_id]);
                     }
                 }
@@ -204,7 +204,7 @@ final class DeliveryController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         if (is_array($body)) {
-                            $this->deliveryService->saveDelivery($delivery, $body, $this->sR);
+                            $this->deliveryService->saveDelivery($delivery, $body);
                             return $this->webService->getRedirectResponse('delivery/index');
                         }
                     }

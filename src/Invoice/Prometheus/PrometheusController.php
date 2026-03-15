@@ -70,7 +70,7 @@ final class PrometheusController extends BaseController
             // Set application as unhealthy and return error
             $this->prometheusService->setApplicationHealth(false);
             
-            $errorMetrics = $this->getErrorMetrics($e);
+            $errorMetrics = $this->getErrorMetrics();
             
             return $this->responseFactory->createResponse($errorMetrics, 500)
                                         ->withHeader('Content-Type', $this->prometheusService->getContentType());
@@ -193,11 +193,17 @@ final class PrometheusController extends BaseController
         return rand(5, 25);
     }
 
+    /**
+     * 
+     * @param string $serviceName
+     * @return bool
+     * @psalm-suppress UnusedParam $serviceName
+     */
     private function checkWindowsService(string $serviceName): bool
     {
         // Mock implementation - replace with actual Windows service checking
         // You might use `sc query` command or Windows API
-        return true;
+        return $serviceName = true;
     }
 
     private function checkDatabaseHealth(): array
@@ -251,7 +257,7 @@ final class PrometheusController extends BaseController
         ];
     }
 
-    private function getErrorMetrics(\Throwable $e): string
+    private function getErrorMetrics(): string
     {
         // Return minimal error metrics when the main metrics collection fails
         return "# HELP yii3_invoice_application_healthy Application health status\n" .

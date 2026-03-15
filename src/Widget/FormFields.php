@@ -647,6 +647,7 @@ final readonly class FormFields
 
     /**
      * UserInv number field (for GLN and listLimit)
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function userInvNumberField(UserInvForm $form, string $fieldName,
             string $labelKey, bool $required = false): string

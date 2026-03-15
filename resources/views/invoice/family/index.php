@@ -47,7 +47,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
  * Used with the checkbox column to generate products from selected families
  * Related logic: see family.js handleGenerateProducts function
  */
-$generateProductsButton = A::tag()
+$generateProductsButton = (new A())
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
         ->addClass('btn btn-success')
         ->href('#generate-products-modal')
@@ -58,19 +58,19 @@ $generateProductsButton = A::tag()
         ->id('btn-generate-products')
         ->render();
 
-$toolbarReset = A::tag()
+$toolbarReset = (new A())
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'family/index'))
     ->id('btn-reset')
     ->render();
 
-$toolbarFilter = A::tag()
+$toolbarFilter = (new A())
     ->addAttributes(['type' => 'reset'])
     ->addClass('family_filters_submit')
     ->addClass('btn btn-info me-1')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
     ->href('#family_filters_submit')
     ->id('family_filters_submit')
     ->render();
@@ -83,7 +83,7 @@ $columns = [
         content: static function (Checkbox $input, DataContext $context) use ($translator): string {
             $family = $context->data;
             if (($family instanceof Family) && (null !== ($id = $family->getFamily_id()))) {
-                return Input::tag()
+                return (new Input())
                        ->type('checkbox')
                        ->addAttributes([
                            'id' => $id,
@@ -184,17 +184,17 @@ $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 $sort = Sort::only(['id'])
         ->withOrderString($sortString);
 
-$toolbarString = Form::tag()->post($urlGenerator->generate('family/index'))->csrf($csrf)->open()
-    . A::tag()
+$toolbarString = (new Form())->post($urlGenerator->generate('family/index'))->csrf($csrf)->open()
+    . (new A())
         ->href($urlGenerator->generate('family/add'))
         ->addClass('btn btn-info')
         ->content('➕')
         ->render()
     // use the checkboxcolumn to generate products from selected families
-    . Div::tag()->addClass('float-end m-3')->content($generateProductsButton)->encode(false)->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
-    . Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . Form::tag()->close();
+    . (new Div())->addClass('float-end m-3')->content($generateProductsButton)->encode(false)->render()
+    . (new Div())->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
+    . (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    . (new Form())->close();
 
 $sortedAndPagedPaginator = (new OffsetPaginator($families))
     ->withPageSize($s->positiveListLimit())

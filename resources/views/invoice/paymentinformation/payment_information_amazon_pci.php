@@ -68,7 +68,7 @@ if ($disable_form === false) {
            echo H::closeTag('div');
           echo H::closeTag('div');
          echo H::closeTag('h2');         
-         echo A::tag()
+         echo (new A())
               ->addAttributes([
                     'class' => 'btn btn-sm btn-primary fw-normal h3 text-center',
                     'style' => 'text-decoration:none',
@@ -79,13 +79,13 @@ if ($disable_form === false) {
                     ]
                 )
               )
-              ->content(I::tag()->addAttributes([
+              ->content((new I())->addAttributes([
                   'class' => 'fa fa-file-pdf-o'
               ]) . ' ' . $translator->translate('download.pdf')
                  . '=>' . $translator->translate('yes')
                  . ' ' . $translator->translate('custom.fields'))
               ->render();
-         echo A::tag()
+         echo (new A())
               ->addAttributes([
                     'class' => 'btn btn-sm btn-danger fw-normal h3 text-center',
                     'style' => 'text-decoration:none',
@@ -96,7 +96,7 @@ if ($disable_form === false) {
                     ]
                 )
               )
-              ->content(I::tag()->addAttributes([
+              ->content((new I())->addAttributes([
                   'class' => 'fa fa-file-pdf-o'
               ]) . ' ' . $translator->translate('download.pdf')
                  . '=>' . $translator->translate('no')

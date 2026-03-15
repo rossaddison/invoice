@@ -277,8 +277,7 @@ $so->getDate_created() instanceof \DateTimeImmutable ?
     <?php if ($customField->getLocation() !== 1) {
         continue;
     } ?>
-<?php  $cvH->print_field_for_view($customField, $form, $salesOrderCustomValues,
-        $customValues); ?>                                   
+<?php  $cvH->print_field_for_view($customField, $form, $salesOrderCustomValues); ?>                                   
 <?php endforeach; ?>
                                 </div>    
                             </div>

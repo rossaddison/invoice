@@ -248,7 +248,8 @@ final class SettingController extends BaseController
                  * @var string $value
                  */
                 foreach ($settings as $key => $value) {
-                    $key === 'tax_rate_decimal_places' && (int) $value !== 2 ? $this->tab_index_change_decimal_column((int) $value) : '';
+                    $key === 'tax_rate_decimal_places' && (int) $value !== 2 ?
+                            $this->tab_index_change_decimal_column((int) $value) : '';
                     // Deal with existing keys after first installation
                     if ($this->sR->repoCount($key) > 0) {
                         // Warn if duplicates
@@ -335,14 +336,14 @@ final class SettingController extends BaseController
             $this->sR->save($setting);
         }
     }
-
+    
     /**
      * @param int $value
+     * @psalm-suppress UnusedParam $value
      */
     public function tab_index_change_decimal_column(int $value): void
     {
         // Change the decimal column dynamically using cycle and the Fragment command. SyncTable has been commented out from config/params.php
-        // TODO
     }
 
     /**

@@ -62,7 +62,7 @@ use Yiisoft\Html\Html;
         <?php if ($customField->getLocation() !== 1) {
             continue;
         } ?>
-        <?php  $cvH->print_field_for_view($customField, $quoteForm, $quoteCustomValues, $customValues); ?>                                   
+        <?php  $cvH->print_field_for_view($customField, $quoteForm, $quoteCustomValues); ?>                                   
     <?php endforeach; ?>
 </div>    
 </div>

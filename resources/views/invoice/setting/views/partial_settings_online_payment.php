@@ -66,7 +66,7 @@ echo H::openTag('div', $row); //1
       'id' => 'online-payment-select',
       'class' => 'form-control'
      ]);
-      echo Option::tag()
+      echo (new Option())
        ->value('')
        ->content($translator->translate('none'));
       /**
@@ -75,7 +75,7 @@ echo H::openTag('div', $row); //1
       */
       foreach ($gateway_drivers as $driver => $fields) {
       $d = strtolower($driver);
-      echo Option::tag()
+      echo (new Option())
        ->value($d)
        ->content(ucwords(str_replace(
         '_',
@@ -238,7 +238,7 @@ echo H::openTag('div', $row); //1
       * @var string $key
       */
       foreach ($gateway_regions as $val => $key) {
-      echo Option::tag()
+      echo (new Option())
        ->value($val)
        ->selected($body['settings[gateway_' . 
         $d . '_region]'] == $val)
@@ -266,7 +266,7 @@ echo H::openTag('div', $row); //1
       * @var string $key
       */
       foreach ($gateway_currency_codes as $val => $key) {
-      echo Option::tag()
+      echo (new Option())
        ->value($val)
        ->selected($body['settings[gateway_' . 
         $d . '_currency]'] == $val)
@@ -298,7 +298,7 @@ echo H::openTag('div', $row); //1
       * @var string $value
       */
       foreach ($locales as $key => $value) {
-      echo Option::tag()
+      echo (new Option())
        ->value($value)
        ->selected($body['settings[gateway_mollie_locale]']
         == $value)
@@ -326,7 +326,7 @@ echo H::openTag('div', $row); //1
       *      $payment_method
       */
       foreach ($payment_methods as $payment_method) {
-      echo Option::tag()
+      echo (new Option())
        ->value($payment_method->getId())
        ->selected($body['settings[gateway_' . 
         $d . '_payment_method]'] == 

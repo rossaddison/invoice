@@ -26,7 +26,7 @@ use Yiisoft\Html\Tag\Img;
             <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm overflow-hidden']); ?>
                 <?= Html::openTag('div', ['class' => 'card-body p-0']); ?>
                     <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
-                        <?= Img::tag()
+                        <?= (new Img())
                             ->addClass('img-fluid rounded')
                             ->src('/img/accreditations/1.jpg')
                             ->render();
@@ -39,7 +39,7 @@ use Yiisoft\Html\Tag\Img;
             <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm overflow-hidden']); ?>
                 <?= Html::openTag('div', ['class' => 'card-body p-0']); ?>
                     <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
-                        <?= Img::tag()
+                        <?= (new Img())
     ->addClass('img-fluid rounded')
     ->src('/img/accreditations/2.jpg')
     ->render();
@@ -52,7 +52,7 @@ use Yiisoft\Html\Tag\Img;
             <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm overflow-hidden']); ?>
                 <?= Html::openTag('div', ['class' => 'card-body p-0']); ?>
                     <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
-                        <?= Img::tag()
+                        <?= (new Img())
     ->addClass('img-fluid rounded')
     ->src('/img/accreditations/3.jpg')
     ->render();
@@ -65,7 +65,7 @@ use Yiisoft\Html\Tag\Img;
             <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm overflow-hidden']); ?>
                 <?= Html::openTag('div', ['class' => 'card-body p-0']); ?>
                     <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
-                        <?= Img::tag()
+                        <?= (new Img())
     ->addClass('img-fluid rounded')
     ->src('/img/accreditations/4.jpg')
     ->render();

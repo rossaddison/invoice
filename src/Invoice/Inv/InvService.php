@@ -210,7 +210,7 @@ final readonly class InvService
         return $model;
     }
 
-    public function copyInv(User $user, Inv $model, array $array, SR $s, GR $gR): Inv
+    public function copyInv(User $user, Inv $model, array $array, SR $s): Inv
     {
         /**
          * Follows Inv construct sequence to make sure no fields are missing.

@@ -69,9 +69,9 @@ use Yiisoft\Html\Tag\Td;
                         CSS;
 
 // Table header
-$headerRow = Thead::tag()
+$headerRow = (new Thead())
     ->rows(
-        Tr::tag()->dataStrings(['#', $translator->translate('oauth2.backup.recovery.codes')]),
+        (new Tr())->dataStrings(['#', $translator->translate('oauth2.backup.recovery.codes')]),
     );
 $rows = [];
 /**
@@ -79,9 +79,9 @@ $rows = [];
  * @var string $code
  */
 foreach ($codes as $index => $code) {
-    $rows[] = Tr::tag()->cells(
-        Td::tag()->content((string) ((int) $index + 1)),
-        Td::tag()->content(Html::encode($code)),
+    $rows[] = (new Tr())->cells(
+        (new Td())->content((string) ((int) $index + 1)),
+        (new Td())->content(Html::encode($code)),
     );
 }
 
@@ -89,7 +89,7 @@ foreach ($codes as $index => $code) {
 echo $style;
 
 if (!empty($codes)) {
-    echo Table::tag()
+    echo (new Table())
         ->header($headerRow)
         ->rows(...$rows)
         ->addAttributes(['class' => 'recovery-table'])
@@ -103,7 +103,7 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
 ?>
                 </div>    
                 <div class="card-body p-2 text-center">    
-                    <?= Form::tag()
+                    <?= (new Form())
     ->post($urlGenerator->generate('auth/verifyLogin'))
     ->class('form-floating')
     ->csrf($csrf)
@@ -132,7 +132,7 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     ->buttonClass('btn btn-primary')
     ->name('code-button')
     ->content($translator->translate('layout.submit')) ?>
-                    <?= Form::tag()->close() ?>
+                    <?= (new Form())->close() ?>
                 </div>
                 <div class="card-body p-1 text-center">
                     <?php for ($i = 1; $i <= 9; $i++): ?>

@@ -248,7 +248,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
             // delete the quote item allowance/charge and update the related
             // quote item amount record
             $this->acqiService->deleteQuoteItemAllowanceCharge(
-                $acqi, $qaR, $qiaR, $qtrR, $acqiR, $this->sR);
+                $acqi, $qiaR, $acqiR);
             // update the quote amount record
             $this->numberHelper->calculate_quote(
                 $quote_id, $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
@@ -266,7 +266,6 @@ final class QuoteItemAllowanceChargeController extends BaseController
      * @param FormHydrator $formHydrator
      * @param AllowanceChargeRepository $acR
      * @param QuoteItemAllowanceChargeRepository $acqiR
-     * @param QuoteItemRepository $qiR
      * @param QuoteAmountRepository $qaR
      * @param QuoteItemAmountRepository $qiaR
      * @param QuoteTaxRateRepository $qtrR
@@ -278,7 +277,6 @@ final class QuoteItemAllowanceChargeController extends BaseController
         FormHydrator $formHydrator,
         AllowanceChargeRepository $acR,
         QuoteItemAllowanceChargeRepository $acqiR,
-        QuoteItemRepository $qiR,
         QuoteAmountRepository $qaR,
         QuoteItemAmountRepository $qiaR,
         QuoteTaxRateRepository $qtrR,

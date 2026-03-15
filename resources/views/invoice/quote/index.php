@@ -71,15 +71,15 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset = (new A())
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-primary me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'quote/index'))
     ->id('btn-reset')
     ->render();
 
-$allVisible = A::tag()
+$allVisible = (new A())
     ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('hide.or.unhide.columns')])
     ->addClass('btn btn-warning me-1 ajax-loader')
@@ -88,7 +88,7 @@ $allVisible = A::tag()
     ->id('btn-all-visible')
     ->render();
 
-$enabledAddQuoteButton = A::tag()
+$enabledAddQuoteButton = (new A())
     ->addAttributes([
         'class' => 'btn',
         'data-bs-toggle' => 'modal',
@@ -101,7 +101,7 @@ $enabledAddQuoteButton = A::tag()
     ->id('btn-enabled-quote-add-button')
     ->render();
 
-$disabledAddQuoteButton = A::tag()
+$disabledAddQuoteButton = (new A())
     ->addAttributes([
         'class' => 'btn',
         'data-bs-toggle' => 'tooltip',
@@ -265,7 +265,7 @@ $columns = [
             use ($translator): string {
             $quote = $context->data;
             if (($quote instanceof Quote) && (null !== ($id = $quote->getId()))) {
-                return Input::tag()
+                return (new Input())
                        ->type('checkbox')
                        ->addAttributes([
                            'id' => $id,
@@ -393,7 +393,7 @@ $columns = [
                 $number = $so->getNumber();
                 $statusId = $so->getStatus_id();
                 if (null !== $number && ($statusId > 0)) {
-                    return  A::tag()
+                    return  (new A())
                         ->addAttributes(['style' => 'text-decoration:none',
                         'class' => 'label ' . $soR->getSpecificStatusArrayClass($statusId)])
                         ->content($number . ' ' . $soR->getSpecificStatusArrayLabel((string) $statusId))
@@ -401,14 +401,14 @@ $columns = [
                 }
                 if ($model->getSo_id() === '0' && $model->getStatus_id() === 7) {
                     if ($statusId > 0) {
-                        return A::tag()
+                        return (new A())
                         ->addAttributes(['class' => 'btn btn-warning'])
                                ->content($soR->getSpecificStatusArrayLabel((string) $statusId))
                                ->href('');
                     }
                 }
             }
-            return A::tag();
+            return (new A());
         },
         encodeContent: false
     ),
@@ -463,7 +463,7 @@ $columns = [
         content: static function (Quote $model) use ($decimalPlaces): Label {
             $quoteTotal = $model->getQuoteAmount()->getTotal();
             return
-                Label::tag()
+                (new Label())
                     ->attributes(['class' => $model->getQuoteAmount()->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
                     ->content(Html::encode(null !== $quoteTotal ? number_format($quoteTotal, $decimalPlaces) : number_format(0, $decimalPlaces)));
         },
@@ -474,7 +474,7 @@ $columns = [
                     'class' => 'native-reset',
                 ]),
         withSorting: false,
-        footer: Span::tag()->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])->content(number_format($totalAmount, $decimalPlaces))->render(),
+        footer: (new Span())->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])->content(number_format($totalAmount, $decimalPlaces))->render(),
     ),
 ];
 
@@ -551,7 +551,7 @@ $columnCount = count(array_filter($columns,
 
 // Apply grouping only if enabled
 if ($enableGrouping) {
-    $gridView = $gridView->beforeRow(static function (array|object $quote, $key, int $index) use (
+    $gridView = $gridView->beforeRow(static function (array|object $quote) use (
         &$previousGroupValue,
         $getGroupValue,
         $groupTotals,
@@ -598,9 +598,9 @@ if ($enableGrouping) {
 }
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('quote/index'))->csrf($csrf)->open()
-    . Div::tag()->addClass('float-start')->content(
-        H4::tag()
+    = (new Form())->post($urlGenerator->generate('quote/index'))->csrf($csrf)->open()
+    . (new Div())->addClass('float-start')->content(
+        (new H4())
             ->addClass('me-3 d-inline-block')
             ->content($translator->translate('quote')) 
         . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
@@ -608,15 +608,15 @@ $toolbarString
         . $toolbarReset
         . ($clientCount == 0 ? $disabledAddQuoteButton : $enabledAddQuoteButton)
         . Html::closeTag('div')
-        . Div::tag()
+        . (new Div())
             ->addClass('btn-group ms-3')
             ->addAttributes(['role' => 'group'])
             ->content(
-                Label::tag()
+                (new Label())
                     ->addClass('btn btn-outline-secondary active bi bi-collection me-1')
                     ->content(' ' . $translator->translate('group.by') . ':')
                 .
-                Select::tag()
+                (new Select())
                     ->addClass('form-select group-by-select')
                     ->addAttributes([
                         'style' => 'max-width: 150px;',
@@ -637,32 +637,32 @@ $toolbarString
             ->encode(false)
             ->render()
         . ($enableGrouping ? 
-            Div::tag()
+            (new Div())
                 ->addClass('btn-group ms-2')
                 ->addAttributes(['role' => 'group'])
                 ->content(
-                    HtmlButton::tag()
+                    (new HtmlButton())
                         ->type('button')
                         ->addClass('btn btn-outline-secondary btn-sm')
                         ->addAttributes([
                             'onclick' => 'toggleAllGroups(false)',
                             'title' => 'Collapse All Groups'
                         ])
-                        ->content(I::tag()->addClass('bi bi-chevron-up')) .
-                    HtmlButton::tag()
+                        ->content((new I())->addClass('bi bi-chevron-up')) .
+                    (new HtmlButton())
                         ->type('button')
                         ->addClass('btn btn-outline-secondary btn-sm')
                         ->addAttributes([
                             'onclick' => 'toggleAllGroups(true)',
                             'title' => 'Expand All Groups'
                         ])
-                        ->content(I::tag()->addClass('bi bi-chevron-down'))
+                        ->content((new I())->addClass('bi bi-chevron-down'))
                 )
                 ->encode(false)
                 ->render() : ''
         )
     )->encode(false)->render()
-    . Form::tag()->close();
+    . (new Form())->close();
 
 echo $gridView
 ->dataReader($sortedAndPagedPaginator)

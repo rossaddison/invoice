@@ -27,7 +27,7 @@ $this->setTitle($translator->translate('password.reset'));
                     <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()) ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
-                    <?= Form::tag()
+                    <?= (new Form())
                         ->post($urlGenerator->generate('auth/resetpassword', ['token' => $token]))
                         ->csrf($csrf)
                         ->id('resetPasswordForm')
@@ -45,7 +45,7 @@ $this->setTitle($translator->translate('password.reset'));
     ->name('resetpassword-button')
     ->content($translator->translate('layout.submit'))
 ?>
-                    <?= Form::tag()->close() ?>
+                    <?= (new Form())->close() ?>
                 </div>
             </div>
         </div>

@@ -49,7 +49,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?><?= $translator->translate('edit'); ?><?= Html::closeTag('h1'); ?>
-        <?= Form::tag()->post($urlGenerator->generate($actionName, $actionArguments))
+        <?= (new Form())->post($urlGenerator->generate($actionName, $actionArguments))
                        ->enctypeMultipartFormData()
                        ->csrf($csrf)
                        ->id('QuoteForm')

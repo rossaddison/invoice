@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('setting.company.private'); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= Form::tag()
+<?= (new Form())
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -109,7 +109,7 @@ foreach ($companies as $company) {
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>
-<?= Form::tag()->close() ?>
+<?= (new Form())->close() ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

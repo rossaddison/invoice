@@ -211,7 +211,7 @@ final class InvItemAllowanceChargeController extends BaseController
         if (null !== $acii) {
             $inv_id = $acii->getInv_id();
             // delete the inv item allowance/charge and update the related inv item amount record
-            $this->aciiService->deleteInvItemAllowanceCharge($acii, $iaR, $iiaR, $itrR, $aciiR, $this->sR);
+            $this->aciiService->deleteInvItemAllowanceCharge($acii, $iiaR, $aciiR);
             // update the inv amount record
             $this->numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
             $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
@@ -226,7 +226,6 @@ final class InvItemAllowanceChargeController extends BaseController
      * @param FormHydrator $formHydrator
      * @param AllowanceChargeRepository $acR
      * @param InvItemAllowanceChargeRepository $aciiR
-     * @param InvItemRepository $iiR
      * @param InvAmountRepository $iaR
      * @param InvItemAmountRepository $iiaR
      * @param InvTaxRateRepository $itrR
@@ -238,7 +237,6 @@ final class InvItemAllowanceChargeController extends BaseController
         FormHydrator $formHydrator,
         AllowanceChargeRepository $acR,
         InvItemAllowanceChargeRepository $aciiR,
-        InvItemRepository $iiR,
         InvAmountRepository $iaR,
         InvItemAmountRepository $iiaR,
         InvTaxRateRepository $itrR,

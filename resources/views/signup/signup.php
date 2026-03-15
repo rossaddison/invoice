@@ -59,7 +59,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     };
     echo H::closeTag('div');
     echo H::openTag('div', ['class' => (string) $class[10]]);
-    echo Form::tag()
+    echo (new Form())
     ->post($urlGenerator->generate('auth/signup'))
     ->csrf($csrf)
     ->id('signupForm')
@@ -81,7 +81,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     ->buttonClass((string) $class[15])
     ->name('register-button')
     ->content($translator->translate('layout.submit'));
-    echo Form::tag()->close();
+    echo (new Form())->close();
     echo H::closeTag('div'); // 5
    echo H::closeTag('div'); // 4
   echo H::closeTag('div'); // 3

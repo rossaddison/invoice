@@ -38,7 +38,6 @@ final class ChangePasswordController
 
     public function change(
         AuthService $authService,
-        Identity $identity,
         IdentityRepository $identityRepository,
         ServerRequestInterface $request,
         FormHydrator $formHydrator,

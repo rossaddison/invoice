@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Ubl;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 class CreditNoteLine extends InvoiceLine
 {
     public string $xmlTagName = 'CreditNoteLine';

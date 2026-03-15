@@ -142,7 +142,7 @@ if ($readOnly === false && $invEdit && $inv->getStatus_id() === 1) {
     echo H::openTag('ul', ['id' => 'product-tabs',
         'class' => 'nav nav-tabs nav-tabs-noborder']);
         echo H::openTag('li', ['class' => 'active']);
-        echo A::tag()
+        echo (new A())
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'style' => 'text-decoration:none',
@@ -154,7 +154,7 @@ if ($readOnly === false && $invEdit && $inv->getStatus_id() === 1) {
             ->render();
         echo H::closeTag('li');
         echo H::openTag('li');
-        echo A::tag()
+        echo (new A())
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'style' => 'text-decoration:none',
@@ -166,7 +166,7 @@ if ($readOnly === false && $invEdit && $inv->getStatus_id() === 1) {
             ->render();
         echo H::closeTag('li');
         echo H::openTag('li', ['id' => 'back', 'class' => 'tab-pane']);
-        echo A::tag()
+        echo (new A())
             ->addAttributes([
                 'type' => 'reset',
                 'onclick' => 'window.history.back()',
@@ -192,7 +192,7 @@ if ($readOnly === false && $invEdit && $inv->getStatus_id() === 1) {
                 'data-bs-toggle' => 'modal',
             ],
          );
-         echo I::tag()
+         echo (new I())
             ->addClass('fa fa-list')
             ->addAttributes([
                 'data-bs-toggle' => 'tooltip',
@@ -863,8 +863,7 @@ if ($vat === '1') {
         <?php if ($custom_field->getLocation() !== 1) {
             continue;
         } ?>
-        <?php $cvH->print_field_for_view($custom_field, $form,
-                $inv_custom_values, $custom_values); ?>
+        <?php $cvH->print_field_for_view($custom_field, $form, $inv_custom_values); ?>
  <?php endforeach; ?>
 <?php
         echo H::closeTag('div');
@@ -888,7 +887,7 @@ if ($vat === '1') {
           * @var array $status
           */
          foreach ($inv_statuses as $key => $status) {
-            echo Option::tag()
+            echo (new Option())
             ->value($key)
             ->selected($key == (string) $form->getStatus_id())
             ->content(H::encode((string) $status['label']));

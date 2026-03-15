@@ -118,7 +118,7 @@ echo H::openTag('div', [
       echo H::closeTag('div'); //6
      echo H::closeTag('div'); //5
      echo H::openTag('div', ['class' => 'modal-footer']); //5
-      echo Button::tag()
+      echo (new Button())
           ->addClass('btn btn-danger')
           ->content($translator->translate('close'))
           ->addAttributes(['data-bs-dismiss' => 'modal'])

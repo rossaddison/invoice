@@ -23,8 +23,7 @@ class AmazonPayPaymentService
      * Create a payment request for Amazon Pay.
      * Customize this method as needed for your integration.
      */
-    public function createPaymentRequest(float $amount, string $currency,
-            array $options = []): array
+    public function createPaymentRequest(float $amount, string $currency): array
     {
         // Integrate with Amazon Pay SDK or API here.
         // Return data required for frontend or further processing.

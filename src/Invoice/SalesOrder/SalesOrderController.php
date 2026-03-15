@@ -352,7 +352,6 @@ final class SalesOrderController extends BaseController
      * Related logic: see form_peppol_guest.php
      *
      * @param Request $request
-     * @param CurrentRoute $currentRoute
      * @param SoR $soR
      * @param SoIR $soiR
      * @param SoIS $soiS
@@ -361,7 +360,6 @@ final class SalesOrderController extends BaseController
      */
     public function url_key_guest_save_peppol(
         Request $request,
-        CurrentRoute $currentRoute,
         SoR $soR,
         SoIR $soiR,
         SoIS $soiS
@@ -687,7 +685,7 @@ final class SalesOrderController extends BaseController
     }
     
     public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR,
-        DR $dlR, SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR,
+        SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR,
         ACSOIR $acsoiR, SoR $soR, SoTRR $sotrR, SettingRepository $sR,
         UIR $uiR): \Psr\Http\Message\ResponseInterface
     {
@@ -713,7 +711,7 @@ final class SalesOrderController extends BaseController
             if ($so) {
                 $pdfhelper->generate_salesorder_pdf($so_id, $so->getUser_id(),
                     $stream, $custom, $salesorder_amount,
-                        $salesorder_custom_values, $cR, $cvR, $cfR, $dlR,
+                        $salesorder_custom_values, $cR, $cvR, $cfR,
                             $soiR, $soiaR, $acsoiR, $soR, $sotrR, $uiR,
                                 $this->webViewRenderer, $this->translator);
                 $parameters = ($include == '1'
@@ -1013,11 +1011,9 @@ final class SalesOrderController extends BaseController
      * @param CFR $cfR
      * @param GR $gR
      * @param InvRepo $iR
-     * @param IAR $iaR
      * @param IIAR $iiaR
      * @param IIAS $iiaS
      * @param PR $pR
-     * @param SOAR $soaR
      * @param SOCR $socR
      * @param SOIR $soiR
      * @param SOR $soR
@@ -1039,12 +1035,10 @@ final class SalesOrderController extends BaseController
         ACSOIR $acsoiR,
         CFR $cfR,
         GR $gR,
-        InvRepo $iR,    
-        IAR $iaR,
+        InvRepo $iR,
         IIAR $iiaR,
         IIAS $iiaS,
         PR $pR,
-        SoAR $soaR,
         SoCR $socR,
         SoIAR $soiaR,
         SoIR $soiR,
@@ -1231,8 +1225,8 @@ final class SalesOrderController extends BaseController
             $form = new InvItemForm($newInvItem, (int) $new_inv_id);
             if ($formHydrator->populateAndValidate($form, $inv_item)) {
                 $savedInvItem = $this->invItemService->addInvItemProductTask(
-                    $newInvItem, $inv_item, $new_inv_id, $pR, $taskR, $iiaR,
-                    $iiaS, $unR, $trR, $this->translator, $sR);
+                    $newInvItem, $inv_item, $new_inv_id, $pR, $taskR, $unR, 
+                    $this->translator);
                 $this->copy_so_item_allowance_charges_to_inv(
                         $origSoItemId, $acsoiR, $new_inv_id, 
                         $savedInvItem, $aciiR);
@@ -1256,8 +1250,7 @@ final class SalesOrderController extends BaseController
                         $inv_item['discount_amount'],
                         $tax_rate_percentage,
                         $iiaS,
-                        $iiaR,
-                        $this->sR,
+                        $iiaR
                     );
                 }
             }

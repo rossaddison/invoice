@@ -169,7 +169,6 @@ final class UserInvController extends BaseController
      * @param cR $cR
      * @param uiR $uiR
      * @param ucR $ucR
-     * @param sR $sR
      * @param string $_language
      * @param string $page
      * @param string $active
@@ -182,7 +181,6 @@ final class UserInvController extends BaseController
         cR $cR,
         uiR $uiR,
         ucR $ucR,
-        sR $sR,
         #[RouteArgument('_language')]
         string $_language,
         #[RouteArgument('page')]

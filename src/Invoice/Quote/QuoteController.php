@@ -254,7 +254,7 @@ final class QuoteController extends BaseController
      * @param UR $uR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function add(
         Request $request,
@@ -267,7 +267,7 @@ final class QuoteController extends BaseController
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $quote = new Quote();
         $errors = [];
         $form = new QuoteForm($quote);
@@ -453,12 +453,12 @@ final class QuoteController extends BaseController
     }
 
     /**
-     * Client approves quote WITH purchase order number(if needed by the client
-     *  ie. can be empty). Sales Order generated recording client's
-     *  purchase order number
+     * 
      * @param Request $request
      * @param FormHydrator $formHydrator
      * @param ACQIR $acqiR
+     * @param ACQR $acqR
+     * @param ACSOIR $acsoiR
      * @param CFR $cfR
      * @param GR $gR
      * @param soIAS $soiaS
@@ -477,15 +477,14 @@ final class QuoteController extends BaseController
      * @param UCR $ucR
      * @param UIR $uiR
      * @param UNR $unR
-     *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
+     * @throws GroupException
      */
     public function approve(
         Request $request,
         FormHydrator $formHydrator,
         ACQIR $acqiR,
         ACQR $acqR,
-        ACSOR $acsoR,
         ACSOIR $acsoiR,
         CFR $cfR,
         GR $gR,
@@ -505,7 +504,7 @@ final class QuoteController extends BaseController
         UCR $ucR,
         UIR $uiR,
         UNR $unR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $body = $request->getQueryParams();
         $url_key = (string) $body['url_key'];
         $purchase_order_number = (string) $body['client_po_number'];
@@ -680,11 +679,11 @@ final class QuoteController extends BaseController
      * @param UR $uR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function create_confirm(Request $request, FormHydrator $formHydrator,
         GR $gR, TRR $trR, UR $uR, UCR $ucR, UIR $uiR):
-            \Psr\Http\Message\ResponseInterface
+            Response
     {
         $body = $request->getQueryParams();
         $ajax_body = [
@@ -894,10 +893,10 @@ final class QuoteController extends BaseController
     /**
      * @param int $id
      * @param QIR $qiR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function delete_quote_item(#[RouteArgument('id')] int $id, QIR $qiR):
-        \Psr\Http\Message\ResponseInterface
+        Response
     {
         $quote_id = (string) $this->session->get('quote_id');
         try {
@@ -933,11 +932,11 @@ final class QuoteController extends BaseController
     /**
      * @param int $id
      * @param QTRR $quotetaxrateRepository
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function delete_quote_tax_rate(
         #[RouteArgument('id')] int $id, QTRR $quotetaxrateRepository):
-        \Psr\Http\Message\ResponseInterface
+        Response
     {
         try {
             $this->quote_tax_rate_service->deleteQuoteTaxRate(
@@ -974,7 +973,7 @@ final class QuoteController extends BaseController
      * @param UR $uR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function edit(
         Request $request,
@@ -993,7 +992,7 @@ final class QuoteController extends BaseController
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $quote = $this->quote($id, $quoteRepo, true);
         if (null !== $quote) {
             $form = new QuoteForm($quote);
@@ -1337,16 +1336,16 @@ final class QuoteController extends BaseController
                                     $uiR, $webViewRenderer);
                 if ($pdf_template_target_path) {
                     $mail_message = $template_helper->parse_template(
-                        $quote_id, false, $email_body, $cR, $cvR, $iR, $iaR,
+                        $quote_id, false, $email_body, $cvR, $iR, $iaR,
                             $qR, $qaR, $soR, $uiR);
                     $mail_subject = $template_helper->parse_template(
-                        $quote_id, false, $subject, $cR, $cvR, $iR, $iaR, $qR,
+                        $quote_id, false, $subject, $cvR, $iR, $iaR, $qR,
                             $qaR, $soR, $uiR);
                     $mail_cc = $template_helper->parse_template(
-                        $quote_id, false, $cc, $cR, $cvR, $iR, $iaR, $qR, $qaR,
+                        $quote_id, false, $cc, $cvR, $iR, $iaR, $qR, $qaR,
                             $soR, $uiR);
                     $mail_bcc = $template_helper->parse_template($quote_id,
-                        false, $bcc, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR,
+                        false, $bcc, $cvR, $iR, $iaR, $qR, $qaR, $soR,
                             $uiR);
                     // from[0] is the from_email and from[1] is the from_name
                     /**
@@ -1355,10 +1354,10 @@ final class QuoteController extends BaseController
                      */
                     $mail_from
                         = [$template_helper->parse_template($quote_id, false,
-                            $from[0], $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR,
+                            $from[0], $cvR, $iR, $iaR, $qR, $qaR, $soR,
                                 $uiR),
                             $template_helper->parse_template($quote_id, false,
-                                $from[1], $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR,
+                                $from[1], $cvR, $iR, $iaR, $qR, $qaR, $soR,
                                     $uiR)];
                     // mail_from[0] is the from_email and mail_from[1] is
                     // the from_name
@@ -1553,7 +1552,7 @@ final class QuoteController extends BaseController
      * @param UIR $uiR
      * @param int $page
      * @param int $status
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function guest(
         Request $request,
@@ -1565,7 +1564,7 @@ final class QuoteController extends BaseController
         int $page = 1,
         #[RouteArgument('status')]
         int $status = 0,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $query_params = $request->getQueryParams();
         /**
          * @var string $query_params['page']
@@ -1693,7 +1692,7 @@ final class QuoteController extends BaseController
      * @param string $_language
      * @param string $page
      * @param string $status
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function index(
         Request $request,
@@ -1716,7 +1715,7 @@ final class QuoteController extends BaseController
         ?string $queryFilterClient = null,
         #[Query('filterStatus')]
         ?string $queryFilterStatus = null,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         // build the quote
         $quote = new Quote();
         $quoteForm = new QuoteForm($quote);
@@ -1862,10 +1861,9 @@ final class QuoteController extends BaseController
     /**
      * @param Request $request
      * @param CR $cR
-     * @param SR $sR
      */
-    public function modal_change_client(Request $request, CR $cR, SR $sR):
-        \Psr\Http\Message\ResponseInterface
+    public function modal_change_client(Request $request, CR $cR):
+        Response
     {
         $body = $request->getQueryParams();
         $client = $cR->repoClientquery((string) $body['client_id']);
@@ -1919,12 +1917,12 @@ final class QuoteController extends BaseController
      * @param QTRR $qtrR
      * @param SR $sR
      * @param UIR $uiR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function pdf(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, ACQIR $acqiR,
         QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR,
-        UIR $uiR): \Psr\Http\Message\ResponseInterface
+        UIR $uiR): Response
     {
         // include is a value of 0 or 1 passed from quote.js
         // function quote_to_pdf_with(out)_custom_fields indicating whether
@@ -2198,7 +2196,7 @@ final class QuoteController extends BaseController
      * @param UCR $ucR
      * @param UIR $uiR
      *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function quote_to_invoice_confirm(
         Request $request,
@@ -2223,7 +2221,7 @@ final class QuoteController extends BaseController
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $body = $request->getQueryParams();
         $quote_id = (string) $body['quote_id'];
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
@@ -2346,7 +2344,7 @@ final class QuoteController extends BaseController
      * @param UNR $unR
      * @param UCR $ucR
      * @param UR $uR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function quote_to_so_confirm(
         Request $request,
@@ -2360,7 +2358,6 @@ final class QuoteController extends BaseController
         PR $pR,
         TASKR $taskR,
         QAR $qaR,
-        QIAR $qiaR,
         soAR $soaR,
         QCR $qcR,
         soIAR $soiaR,
@@ -2372,7 +2369,7 @@ final class QuoteController extends BaseController
         UNR $unR,
         UCR $ucR,
         UR $uR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         // $body data received from user in
         // ...resources\views\invoice\quote\modal_quote_to_so
         // ...src\Invoice\Asset\rebuild-1.13\js\ $(document).on('click',
@@ -2534,7 +2531,7 @@ final class QuoteController extends BaseController
                 $this->inv_item_service->addInvItem_product($invItem, $inv_item,
                     $inv_id, $pR, $trR, $iiaS, $iiaR, $sR, $unR):
                 $this->inv_item_service->addInvItem_task($invItem, $inv_item,
-                    $inv_id, $taskR, $trR, $iiaS, $iiaR, $sR);
+                    $inv_id, $taskR, $trR, $iiaS, $iiaR);
                 $invItemId = $invItem->getId();
                 if (null !== $invItemId) {
                     // Copy the quote item amounts to the invoice item amounts
@@ -2900,7 +2897,7 @@ final class QuoteController extends BaseController
         UCR $ucR,
         UIR $uiR,
         UNR $unR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $data_quote_js = $request->getQueryParams();
         $quote_id = (string) $data_quote_js['quote_id'];
         $original = $qR->repoQuoteUnloadedquery($quote_id);
@@ -3129,9 +3126,8 @@ final class QuoteController extends BaseController
             $form = new SoItemForm($newSoItem, $new_so_id);
             if ($formHydrator->populateAndValidate($form, $so_item)) {
                 // Save the SO item without calculating amounts yet
-                $this->so_item_service->addSoItemProductTask(
-                        $newSoItem, $so_item, $new_so_id, $pR, $taskR, $soiaR,
-                        $soiaS, $unR, $trR, $this->translator);
+$this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
+        $pR, $taskR, $unR, $this->translator);
                 
                 // Copy allowances/charges from quote item to sales order item
                 $this->copy_quote_item_allowance_charges_to_so(
@@ -3313,10 +3309,8 @@ final class QuoteController extends BaseController
     /**
      * @param FormHydrator $formHydrator
      * @param Request $request
-     * @param QCR $qcR
      */
-    public function save_custom(FormHydrator $formHydrator, Request $request,
-        QCR $qcR): \Psr\Http\Message\ResponseInterface
+    public function save_custom(FormHydrator $formHydrator, Request $request): Response
     {
         $parameters = [
             'success' => 0,
@@ -3339,7 +3333,7 @@ final class QuoteController extends BaseController
      * @param FormHydrator $formHydrator
      */
     public function save_quote_tax_rate(Request $request,
-        FormHydrator $formHydrator): \Psr\Http\Message\ResponseInterface
+        FormHydrator $formHydrator): Response
     {
         $body = $request->getQueryParams();
         $ajax_body = [
@@ -3378,7 +3372,7 @@ final class QuoteController extends BaseController
 
     public function url_key(#[RouteArgument('url_key')] string $urlKey,
         CurrentUser $currentUser, CFR $cfR, QAR $qaR, QIR $qiR, QIAR $qiaR,
-            ACQIR $acqiR, QR $qR, QTRR $qtrR, UIR $uiR, UCR $ucR, PMR $pmR): Response
+            ACQIR $acqiR, QR $qR, QTRR $qtrR, UIR $uiR, UCR $ucR): Response
     {
         // If there is no quote with such a url_key, issue a not found response
         if ($urlKey === '') {
@@ -3520,7 +3514,7 @@ final class QuoteController extends BaseController
      * @param SOR $soR
      * @param UCR $ucR
      * @param UIR $uiR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function view(
         #[RouteArgument('id')]
@@ -3551,7 +3545,7 @@ final class QuoteController extends BaseController
         SOR $soR,
         UCR $ucR,
         UIR $uiR
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $quote = $this->quote($id, $qR, false);
         if (null !== $quote) {
             $quote_id = $quote->getId();

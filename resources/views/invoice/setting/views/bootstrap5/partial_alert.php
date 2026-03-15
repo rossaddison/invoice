@@ -23,12 +23,12 @@ echo H::openTag('div', ['class' => 'border border-1 border-warning']); //1
     'id' => 'settings[bootstrap5_alert_message_font]',
     'class' => 'form-control',
    ]);
-    echo Option::tag()->value('0')->content('Arial');
+    echo (new Option())->value('0')->content('Arial');
    /**
     * @var string $font
     */
     foreach ($fonts as $font) {
-     echo Option::tag()
+     echo (new Option())
       ->value($font)
       ->selected($body['settings[bootstrap5_alert_message_font]'] === $font)
       ->content($font);
@@ -46,12 +46,12 @@ echo H::openTag('div', ['class' => 'border border-1 border-warning']); //1
     'id' => 'settings[bootstrap5_alert_message_font_size]',
     'class' => 'form-control',
    ]);
-    echo Option::tag()->value('0')->content('10');
+    echo (new Option())->value('0')->content('10');
    /**
     * @var string $fontSize
     */
     foreach ($fontSizes as $fontSize) {
-     echo Option::tag()
+     echo (new Option())
       ->value($fontSize)
       ->selected($body['settings[bootstrap5_alert_message_font_size]'] === $fontSize)
       ->content($fontSize);
@@ -69,12 +69,12 @@ echo H::openTag('div', ['class' => 'border border-1 border-warning']); //1
     'id' => 'settings[bootstrap5_alert_close_button_font_size]',
     'class' => 'form-control',
    ]);
-    echo Option::tag()->value('0')->content('10');
+    echo (new Option())->value('0')->content('10');
    /**
     * @var string $fontSize
     */
     foreach ($fontSizes as $fontSize) {
-     echo Option::tag()
+     echo (new Option())
       ->value($fontSize)
       ->selected($body['settings[bootstrap5_alert_close_button_font_size]'] === $fontSize)
       ->content($fontSize);

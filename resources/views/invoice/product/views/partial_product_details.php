@@ -35,7 +35,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= $translator->translate('products.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= Form::tag()
+<?= (new Form())
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ProductForm')
@@ -44,7 +44,7 @@ use Yiisoft\Html\Tag\Form;
 
 <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs nav-tabs-noborder']); ?>
     <?= Html::openTag('li', ['class' => 'active']); ?>
-        <?= A::tag()
+        <?= (new A())
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'style' => 'text-decoration:none',
@@ -57,7 +57,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
     <?= Html::closeTag('li'); ?>
     <?= Html::openTag('li'); ?>
-        <?= A::tag()
+        <?= (new A())
     ->addAttributes([
         'data-bs-toggle' => 'tab',
         'style' => 'text-decoration:none',
@@ -283,13 +283,13 @@ use Yiisoft\Html\Tag\Form;
          * @var App\Invoice\Entity\CustomField $customField
          */
         foreach ($custom_fields as $customField): ?>
-          <?php $cvH->print_field_for_view($customField, $productCustomForm, $product_custom_values, $custom_values); ?>
+          <?php $cvH->print_field_for_view($customField, $productCustomForm, $product_custom_values); ?>
       <?php endforeach; ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
 <?= $button::back(); ?>
-<?= Form::tag()->close(); ?>
+<?= (new Form())->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

@@ -81,7 +81,7 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
      echo H::openTag('div'); //6
-      echo A::tag()
+      echo (new A())
        ->href($urlGenerator->generate(
         $actionTestConnectionName,
         $actionTestConnectionArguments
@@ -95,7 +95,7 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::openTag('br');
      echo H::openTag('br');
      echo H::openTag('div'); //6
-      echo A::tag()
+      echo (new A())
        ->href($urlGenerator->generate(
         $actionImportName,
         $actionImportArguments

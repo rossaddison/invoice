@@ -43,7 +43,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$allVisible = A::tag()
+$allVisible = (new A())
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
         ->addClass('btn btn-warning me-1 ajax-loader')
         ->content('↔️')
@@ -51,21 +51,21 @@ $allVisible = A::tag()
         ->id('btn-all-visible')
         ->render();
 
-$toolbarReset = A::tag()
+$toolbarReset = (new A())
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate('product/index'))
     ->id('btn-reset')
     ->render();
 
 // Trigger $(document).on('click', '#product_filters_submit', function () located in C:\wamp64\www\invoice\src\Invoice\Asset\rebuild-1.13\js\product.js
 // which in turn runs the ProductController.php index_filters function which returns the index view with the productReppositories search
-$toolbarFilter = A::tag()
+$toolbarFilter = (new A())
     ->addAttributes(['type' => 'reset'])
     ->addClass('product_filters_submit')
     ->addClass('btn btn-info me-1')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
     ->href('#product_filters_submit')
     ->id('product_filters_submit')
     ->render();
@@ -234,21 +234,21 @@ $grid_summary = $s->grid_summary(
 $tableOrTableResponsive = $visible ? 'table-responsive' : 'table';
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open()
-    . Div::tag()->addClass('float-start')->content(
+    = (new Form())->post($urlGenerator->generate('product/index'))->csrf($csrf)->open()
+    . (new Div())->addClass('float-start')->content(
         '<h4 class="me-3 d-inline-block">' . $translator->translate('products') . '</h4>' 
         . '<div class="btn-group me-2" role="group">'
         . $allVisible
         . $toolbarReset
         . $toolbarFilter
-        . A::tag()
+        . (new A())
             ->href($urlGenerator->generate('product/add'))
             ->addClass('btn btn-info')
             ->content('➕')
             ->render()
         . '</div>'
     )->encode(false)->render()
-    . Form::tag()->close();
+    . (new Form())->close();
 
 echo $toolbarString;
 

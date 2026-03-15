@@ -25,21 +25,24 @@ use Yiisoft\User\Login\Cookie\CookieLogin;
 $secretKey = $params['yiisoft/cookies']['secretKey'];
 return [
     IdentityRepositoryInterface::class => static function (ContainerInterface $container): RepositoryInterface {
-        return $container
-            ->get(ORMInterface::class)
-            ->getRepository(Identity::class);
+        /** @var ORMInterface $orm */
+        $orm = $container->get(ORMInterface::class);
+        $repository = $orm->getRepository(Identity::class);
+        assert($repository instanceof \Cycle\ORM\RepositoryInterface);
+        return $repository;
     },
-    CookieMiddleware::class => static fn (CookieLogin $cookieLogin, LoggerInterface $logger) => new CookieMiddleware(
-        $logger,
-        new CookieEncryptor($secretKey),
-        new CookieSigner($secretKey),
-        [$cookieLogin->getCookieName() => CookieMiddleware::SIGN],
-    ),
-    CurrentUser::class => [
-        'withSession()' => [Reference::to(SessionInterface::class)],
-        'withAccessChecker()' => [Reference::to(AccessCheckerInterface::class)],
-        'reset' => function (CurrentUser $currentUser) {
-            $currentUser->clear();
-        },
-    ],
-];
+    CookieMiddleware::class => static fn (CookieLogin $cookieLogin,
+        LoggerInterface $logger) => new CookieMiddleware(
+            $logger,
+            new CookieEncryptor($secretKey),
+            new CookieSigner($secretKey),
+            [$cookieLogin->getCookieName() => CookieMiddleware::SIGN],
+        ),
+        CurrentUser::class => [
+            'withSession()' => [Reference::to(SessionInterface::class)],
+            'withAccessChecker()' => [Reference::to(AccessCheckerInterface::class)],
+            'reset' => function (CurrentUser $currentUser) {
+                $currentUser->clear();
+            },
+        ],
+];   

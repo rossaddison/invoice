@@ -43,9 +43,8 @@ final class GroupController extends BaseController
     /**
      * @param GroupRepository $groupRepository
      * @param Request $request
-     * @param GroupService $service
      */
-    public function index(GroupRepository $groupRepository, Request $request, GroupService $service): \Psr\Http\Message\ResponseInterface
+    public function index(GroupRepository $groupRepository, Request $request): Response
     {
         $page = (int) $request->getAttribute('page', '1');
         /** @psalm-var positive-int $currentPageNeverZero */
@@ -164,12 +163,12 @@ final class GroupController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param GroupRepository $groupRepository
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function view(
         CurrentRoute $currentRoute,
         GroupRepository $groupRepository,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $group = $this->group($currentRoute, $groupRepository);
         if ($group) {
             $form = new GroupForm($group);

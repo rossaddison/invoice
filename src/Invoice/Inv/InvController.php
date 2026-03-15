@@ -823,8 +823,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     $saved_inv_id = $saved_inv->getId();
                     if (null !== $saved_inv_id) {
                         $this->inv_item_service->initializeCreditInvItems(
-                            (int) $basis_inv_id, $saved_inv_id, $iiR, $iiaR,
-                                $this->sR);
+                            (int) $basis_inv_id, $saved_inv_id, $iiR, $iiaR);
                         $this->inv_amount_service->initializeCreditInvAmount(
                             new InvAmount(), (int) $basis_inv_id, $saved_inv_id);
                         $this->inv_tax_rate_service->initializeCreditInvTaxRate(
@@ -913,8 +912,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param InvTaxRateService $itrS
      * @param IAR $iaR
      * @param InvAmountService $iaS
-     * @param PAR $paR
-     * @param PAS $paS
      * @return Response
      */
     public function delete(
@@ -931,9 +928,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ITRR $itrR,
         InvTaxRateService $itrS,
         IAR $iaR,
-        InvAmountService $iaS,
-        paR $paR,
-        PAS $paS,
+        InvAmountService $iaS
     ): Response {
         try {
             $inv = $this->inv($id, $invRepo);
@@ -955,16 +950,12 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
 
     /**
      * @param int $id
-     * @param IAR $iaR
      * @param IIR $iiR
      * @param ACIIR $aciiR
      * @param IIAR $iiaR
-     * @param ITRR $itrR
-     * @param SR $sR
      * @return Response
      */
-    public function delete_inv_item(#[RouteArgument('id')] int $id, IAR $iaR,
-        IIR $iiR, ACIIR $aciiR, IIAR $iiaR, ITRR $itrR, SR $sR):
+    public function delete_inv_item(#[RouteArgument('id')] int $id, IIR $iiR, ACIIR $aciiR, IIAR $iiaR):
         Response
     {
         try {
@@ -976,8 +967,8 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     $aciis = $aciiR->repoInvItemquery((string) $invItem->getId());
                     /** @var InvItemAllowanceCharge $acii */
                     foreach ($aciis as $acii) {
-                        $this->aciis->deleteInvItemAllowanceCharge($acii, $iaR,
-                            $iiaR, $itrR, $aciiR, $sR);
+                        $this->aciis->deleteInvItemAllowanceCharge($acii, $iiaR,
+                                $aciiR);
                     }
                     $this->inv_item_service->deleteInvItem($invItem);
                     $this->flashMessage('info', $this->translator->translate(
@@ -1531,7 +1522,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param int $id
      * @param CCR $ccR
      * @param CFR $cfR
-     * @param DLR $dlR
      * @param CVR $cvR
      * @param ETR $etR
      * @param ICR $icR
@@ -1548,7 +1538,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         int $id,
         CCR $ccR,
         CFR $cfR,
-        DLR $dlR,
         CVR $cvR,
         ETR $etR,
         ICR $icR,
@@ -1801,24 +1790,24 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             $aciiR, $iiaR, $iR, $itrR, $uiR, $webViewRenderer);
                 if ($pdf_template_target_path) {
                     $mail_message = $template_helper->parse_template(
-                        $inv_id, true, $email_body, $cR, $cvR, $iR, $iaR, $qR,
+                        $inv_id, true, $email_body, $cvR, $iR, $iaR, $qR,
                             $qaR, $soR, $uiR);
                     $mail_subject = $template_helper->parse_template(
-                        $inv_id, true, $subject, $cR, $cvR, $iR, $iaR, $qR,
+                        $inv_id, true, $subject, $cvR, $iR, $iaR, $qR,
                             $qaR, $soR, $uiR);
                     $mail_cc = $template_helper->parse_template($inv_id, true,
-                        $cc, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
+                        $cc, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
                     $mail_bcc = $template_helper->parse_template($inv_id, true,
-                        $bcc, $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
+                        $bcc, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR);
                     // from[0] is the from_email and from[1] is the from_name
                     /**
                      * @var string $from[0]
                      * @var string $from[1]
                      */
                     $mail_from = [$template_helper->parse_template($inv_id, true,
-                        $from[0], $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR),
+                        $from[0], $cvR, $iR, $iaR, $qR, $qaR, $soR, $uiR),
                             $template_helper->parse_template($inv_id, true,
-                                $from[1], $cR, $cvR, $iR, $iaR, $qR, $qaR, $soR,
+                                $from[1], $cvR, $iR, $iaR, $qR, $qaR, $soR,
                                     $uiR)];
                     //$message = (empty($mail_message) ? 'this is a message ' :
                     //  $mail_message);
@@ -2231,7 +2220,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param CFR $cfR
      * @param DLR $dlR
      * @param ACIR $aciR
-     * @param GR $gR
      * @param IAR $iaR
      * @param ICR $icR
      * @param IIR $iiR
@@ -2243,7 +2231,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @return Response
      */
     public function html(#[RouteArgument('include')] int $include, CR $cR,
-        CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR,
+        CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, IAR $iaR, ICR $icR,
             IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
             UIR $uiR, SOR $soR):
         Response
@@ -2319,8 +2307,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         IR $invRepo,
         IRR $irR,
         ISLR $islR,
-        CR $clientRepo,
-        FR $familyRepo,    
+        CR $clientRepo,   
         GR $groupRepo,
         QR $qR,
         PMR $pmR,
@@ -3493,8 +3480,7 @@ echo file_get_contents($temp_aliase, true);
                                     $inv_item->getTaxRate()?->getTaxRatePercent()
                                         ?? 0.00,
                                     $iiaS,
-                                    $iiaR,
-                                    $this->sR,
+                                    $iiaR
                                 );
                             }
                         }
@@ -3503,7 +3489,7 @@ echo file_get_contents($temp_aliase, true);
                     if ($taskId > 0) {
                         $newInvItemId = $this->inv_item_service->addInvItem_task(
                             $invItem, $copy_item, $copy_id, $taskR, $trR, $iiaS,
-                                $iiaR, $this->sR);
+                                $iiaR);
                         if (null !== $newInvItemId) {
                             $this->inv_item_service->addInvItem_allowance_charges(
                             $copy_id, $originalInvItemId, $newInvItemId, $aciiR);
@@ -3527,8 +3513,7 @@ echo file_get_contents($temp_aliase, true);
                                     $inv_item->getTaxRate()?->getTaxRatePercent()
                                         ?? 0.00,
                                     $iiaS,
-                                    $iiaR,
-                                    $this->sR,
+                                    $iiaR
                                 );
                             }
                         }
@@ -3651,10 +3636,9 @@ echo file_get_contents($temp_aliase, true);
     /**
     * @param Request $request
     * @param IR $iR
-    * @param GR $gR
     * @return Response
     */
-    public function mark_sent_as_draft(Request $request, IR $iR, GR $gR):
+    public function mark_sent_as_draft(Request $request, IR $iR):
         Response
     {
         $data = $request->getQueryParams();
@@ -3803,7 +3787,7 @@ echo file_get_contents($temp_aliase, true);
                         $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                         if (null !== $user) {
                             $copied = $this->inv_service->copyInv(
-                                $user, $copy, $invoice_body, $this->sR, $gR);
+                                $user, $copy, $invoice_body, $this->sR);
                             /**
                              * Note: Reset the immutable date_created
                              * outside the inv_service
@@ -3858,10 +3842,8 @@ echo file_get_contents($temp_aliase, true);
     /**
      * @param FormHydrator $formHydrator
      * @param Request $request
-     * @param ICR $icR
      */
-    public function save_custom(FormHydrator $formHydrator, Request $request,
-        ICR $icR): Response
+    public function save_custom(FormHydrator $formHydrator, Request $request): Response
     {
         $parameters = [
             'success' => 0,

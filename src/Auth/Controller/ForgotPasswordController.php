@@ -64,7 +64,6 @@ final class ForgotPasswordController
      * @param ServerRequestInterface $request
      * @param RequestPasswordResetTokenForm $requestPasswordResetTokenForm
      * @param tR $tR
-     * @param uiR $uiR
      * @param uR $uR
      * @return ResponseInterface
      */
@@ -75,7 +74,6 @@ final class ForgotPasswordController
         ServerRequestInterface $request,
         RequestPasswordResetTokenForm $requestPasswordResetTokenForm,
         tR $tR,
-        uiR $uiR,
         uR $uR,
     ): ResponseInterface {
         // only guests i.e. only unauthenticated users can access this function i.e NOT logged in before request
@@ -198,13 +196,13 @@ final class ForgotPasswordController
     {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         if (null !== ($userId = $user->getId())) {
-            $content = A::tag()
+            $content = (new A())
                        ->href($this->urlGenerator->generateAbsolute(
                            'auth/resetpassword',
                            ['_language' => $_language, 'token' => $tokenWithMask],
                        ))
                        ->content($this->translator->translate('password.reset.email'));
-            return Body::tag()
+            return (new Body())
                        ->content($content)
                        ->render();
         }

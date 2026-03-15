@@ -30,7 +30,7 @@ $this->setTitle($translator->translate('password.change'));
                     <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()) ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
-                    <?= Form::tag()
+                    <?= (new Form())
                         // note: the change function actually appears in the ChangePasswordController
                         ->post($urlGenerator->generate('auth/change'))
                         ->csrf($csrf)
@@ -61,7 +61,7 @@ $this->setTitle($translator->translate('password.change'));
     ->name('change-button')
     ->content($translator->translate('layout.submit'))
 ?>
-                    <?= Form::tag()->close() ?>
+                    <?= (new Form())->close() ?>
                 </div>
             </div>
         </div>

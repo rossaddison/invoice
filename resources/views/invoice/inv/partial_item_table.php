@@ -83,7 +83,7 @@ foreach ($invItems as $item) {
     $productRef = '';
     $taskRef = '';
     if ($productId !== null) {
-        $productRef = A::tag()
+        $productRef = (new A())
             ->href($urlGenerator->generate('product/view',
                 [
                     '_language' => (string) $session->get('_language'),
@@ -94,7 +94,7 @@ foreach ($invItems as $item) {
             ->render();
     }
     if ($taskId !== null) {
-        $taskRef = A::tag()
+        $taskRef = (new A())
             ->href($urlGenerator->generate('task/view',
                 [
                     '_language' => (string) $session->get('_language'),
@@ -771,7 +771,7 @@ foreach ($invItems as $item) {
       echo H::openTag('tr');
        echo H::openTag('td');
         echo H::openTag('b');
-         echo A::tag()->content(
+         echo (new A())->content(
              $vat == '1' ? $translator->translate(
                  'allowance.or.charge.shipping.handling.packaging.vat') :
                  $translator->translate(
@@ -838,7 +838,7 @@ foreach ($invItems as $item) {
                              && strlen($inv->getSo_id()) === 0
                              && $draft === true) {
                          echo H::openTag('span');
-                          echo A::tag()
+                          echo (new A())
                               ->addAttributes([
                                   'class' => 'btn btn-secondary',
                                   'style' => 'text-decoration:none',

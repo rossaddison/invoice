@@ -35,10 +35,10 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = A::tag()
+$toolbarReset = (new A())
         ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-primary me-1 ajax-loader')
-        ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+        ->content((new I())->addClass('bi bi-bootstrap-reboot'))
         ->href($urlGenerator->generate($currentRoute->getName() ?? 'invrecurring/index'))
         ->id('btn-reset')
         ->render();
@@ -51,7 +51,7 @@ $columns = [
         'next',
         header: $translator->translate('status'),
         content: static fn (InvRecurring $model)
-            => Span::tag()
+            => (new Span())
             ->addClass(null !== $model->getNext() ? 'btn btn-success' : 'btn btn-danger')
             ->content(null !== $model->getNext() ? $translator->translate('active') : $translator->translate('inactive'))
             ->render(),
@@ -61,7 +61,7 @@ $columns = [
         'inv_id',
         header: $translator->translate('base.invoice'),
         content: static function (InvRecurring $model) use ($urlGenerator): A {
-            return A::tag()
+            return (new A())
                     ->addClass('style', 'text-decoration:none')
                     ->content($model->getInv()?->getNumber() ?? '#')
                     ->href($urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]));
@@ -139,8 +139,8 @@ $columns = [
 ];
 
 $toolbarString
-    = Form::tag()->post($urlGenerator->generate('invrecurring/index'))->csrf($csrf)->open()
-    . Form::tag()->close();
+    = (new Form())->post($urlGenerator->generate('invrecurring/index'))->csrf($csrf)->open()
+    . (new Form())->close();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,

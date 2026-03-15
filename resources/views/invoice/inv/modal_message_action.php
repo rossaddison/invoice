@@ -15,7 +15,7 @@ use Yiisoft\Html\Tag\I;
  * @var string $translatedMessage
  */
 ?>
-<?= I::tag()
+<?= (new I())
     ->addClass('bi bi-info-circle')
     ->addAttributes([
         'tooltip' => 'data-bs-toggle',

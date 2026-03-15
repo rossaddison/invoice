@@ -80,11 +80,8 @@ final readonly class InvItemAllowanceChargeService
 
     public function deleteInvItemAllowanceCharge(
         InvItemAllowanceCharge $model,
-        IAR $iaR,
         IIAR $iiaR,
-        ITRR $itrR,
         ACIIR $aciiR,
-        SR $sR
     ): void {
         // before deleting the allowance/charge, 
         // record its related inv_item_id so that we can 

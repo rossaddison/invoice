@@ -35,11 +35,11 @@ echo H::openTag('div', ['class' => 'row']); //1
         'class' => 'form-control',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
-        echo Option::tag()
+        echo (new Option())
          ->value('0')
          ->selected($body['settings[email_pdf_attachment]'] === '0')
          ->content($translator->translate('no'));
-        echo Option::tag()
+        echo (new Option())
          ->value('1')
          ->selected($body['settings[email_pdf_attachment]'] === '1')
          ->content($translator->translate('yes'));
@@ -57,10 +57,10 @@ echo H::openTag('div', ['class' => 'row']); //1
      'id' => 'email_send_method',
      'class' => 'form-control'
     ]);
-     echo Option::tag()
+     echo (new Option())
       ->value('')
       ->content($translator->translate('none'));
-     echo Option::tag()
+     echo (new Option())
       ->value('symfony')
       ->selected($s->getSetting('email_send_method') === 'symfony')
       ->content('eSmtp: Symfony');

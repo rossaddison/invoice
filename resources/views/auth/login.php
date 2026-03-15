@@ -77,7 +77,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     if (($s->getSetting('enable_tfa') == '1')) {
       echo H::openTag('div', [
           'id' => 'tfa-badge', 'class' => (string) $class[8]]);
-        echo Span::tag()
+        echo (new Span())
              ->addAttributes([
                  'class' => (string) $class[9],
                  'style' => 'white-space:normal;word-break:break-word;'
@@ -90,14 +90,14 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
              ->content($translator->translate($tfaEnabled . '.aegis'))
              ->render();
         echo H::openTag('br');
-        echo A::tag()
+        echo (new A())
          ->href('https://getaegis.app')
          ->addAttributes([
             'target' => '_blank',
             'data-toggle-bs' => 'tooltip',
             'title' => $translator->translate('download')
          ])
-         ->content(Img::tag()
+         ->content((new Img())
                     ->size(60, 60)
                     ->src('/img/aegis.png')
                     ->alt('Opensource Two Factor Authentication Software'))
@@ -105,7 +105,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
       echo H::closeTag('div');
     }
     echo H::openTag('div', ['class' => (string) $class[10]]);
-    echo Form::tag()
+    echo (new Form())
     ->post($urlGenerator->generate('auth/login'))
     ->class('form-floating')
     ->csrf($csrf)
@@ -129,9 +129,9 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     ->buttonClass((string) $class[15])
     ->name('login-button')
     ->content($translator->translate('layout.submit'));
-    echo Form::tag()->close();
+    echo (new Form())->close();
     echo H::br();
-    echo A::tag()
+    echo (new A())
     ->attribute('style', 'color:#999;text-decoration:none')
     ->addClass((string) $class[16])
     ->href($urlGenerator->generate('auth/forgotpassword'))

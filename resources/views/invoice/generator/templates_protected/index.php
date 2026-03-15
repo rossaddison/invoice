@@ -49,26 +49,26 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
 ?>
 
 <?php   echo "<?php\n"; ?>
-    $header = Div::tag()
+    $header = (new Div())
       ->addClass('row')
       ->content(
-        H5::tag()
+        (new H5())
         ->addClass('bg-primary text-white p-3 rounded-top')
         ->content(
-          I::tag()->addClass('bi bi-receipt')->content(' ' . $translator->translate('put.your.translation.here'))
+          (new I())->addClass('bi bi-receipt')->content(' ' . $translator->translate('put.your.translation.here'))
         )
       )
       ->render();
 
-    $toolbarReset = A::tag()
+    $toolbarReset = (new A())
       ->addAttributes(['type' => 'reset'])
       ->addClass('btn btn-danger me-1 ajax-loader')
-      ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+      ->content((new I())->addClass('bi bi-bootstrap-reboot'))
       ->href($urlGenerator->generate($currentRoute->getName() ?? '<?= $generator->getSmall_singular_name(); ?>/index'))
       ->id('btn-reset')
       ->render();
 
-    $toolbar = Div::tag();
+    $toolbar = (new Div());
     
     $columns = [
         new DataColumn(
@@ -112,9 +112,9 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
             ),
         ]),
     ];
-    $toolbarString = Form::tag()->post($urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/index'))->csrf($csrf)->open() .
-        Div::tag()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        Form::tag()->close();
+    $toolbarString = (new Form())->post($urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/index'))->csrf($csrf)->open() .
+        (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+        (new Form())->close();
     $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');    
     echo GridView::widget()
       ->bodyRowAttributes(['class' => 'align-middle'])

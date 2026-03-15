@@ -37,7 +37,7 @@ use Yiisoft\Html\Tag\P;
                         <?= Html::openTag('h2', ['class' => 'h1 mb-3']);?>
                             <?= (string) $contact['touch']; ?>
                         <?= Html::closeTag('h2'); ?>
-                        <?= P::tag()
+                        <?= (new P())
                             ->addClass('lead fs-4 text-secondary mb-5')
                             ->content((string) $contact['lookout'])
                             ->render(); ?> 
@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\P;
                                 </svg>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
-                                <?= H4::tag()
+                                <?= (new H4())
                                     ->addClass('mb-3')
                                     ->content(str_repeat(' ', 2) . (string) $contact['address'])
                                     ->render(); ?>
@@ -67,13 +67,13 @@ use Yiisoft\Html\Tag\P;
                                 </svg>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
-                                <?= H4::tag()
+                                <?= (new H4())
                                     ->addClass('mb-3')
                                     ->content((string) $contact['phone'])
                                     ->render(); ?>
                                 <?= Html::openTag('p', ['class' => 'mb-0']); ?>
                                     <?=
-                                        A::tag()
+                                        (new A())
                                         ->href('tel:+15057922430')
                                         ->addClass('link-secondary text-decoration-none')
                                         ->content($companyPhone)
@@ -90,12 +90,12 @@ use Yiisoft\Html\Tag\P;
                                   </svg>
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div'); ?>
-                                <?= H4::tag()
+                                <?= (new H4())
 ->addClass('mb-3')
 ->content((string) $contact['email'])
 ->render(); ?>
                                 <?= Html::openTag('p'); ?>
-                                    <?= A::tag()
+                                    <?= (new A())
     ->href('mailto:demo@yourdomain.com')
     ->addClass('link-secondary text-decoration-none')
     ->content($companyEmail)

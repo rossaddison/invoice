@@ -68,13 +68,13 @@ echo H::openTag('div', ['class' => 'row']); //1
        'id' => 'settings[enable_tfa_with_disabling]',
        'class' => 'form-control'
       ]);
-       echo Option::tag()
+       echo (new Option())
         ->value('0')
         ->content($translator->translate('no'))
         ->selected(
          $body['settings[enable_tfa_with_disabling]'] == '0'
         );
-       echo Option::tag()
+       echo (new Option())
         ->value('1')
         ->content($translator->translate('yes'))
         ->selected(

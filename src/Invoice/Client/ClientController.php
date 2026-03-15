@@ -918,7 +918,6 @@ final class ClientController extends BaseController
      * @param delR $delR
      * @param gR $gR
      * @param iR $iR
-     * @param irR $irR
      * @param qR $qR
      * @param pymtR $pymtR
      * @param ucR $ucR
@@ -936,7 +935,6 @@ final class ClientController extends BaseController
         delR $delR,
         gR $gR,
         iR $iR,
-        irR $irR,
         qR $qR,
         pymtR $pymtR,
         ucR $ucR,

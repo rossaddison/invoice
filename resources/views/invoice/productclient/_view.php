@@ -228,7 +228,7 @@ use Yiisoft\Html\Tag\A;
 <?= Html::openTag('div', ['class' => 'card-footer']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'col-12']); ?>
-            <?= A::tag()
+            <?= (new A())
                 ->addAttributes(['class' => 'btn btn-primary me-2'])
                 ->content($translator->translate('i.edit'))
                 ->href($urlGenerator->generate(
@@ -236,14 +236,14 @@ use Yiisoft\Html\Tag\A;
                 ->render()
             ?>
             
-            <?= A::tag()
+            <?= (new A())
                 ->addAttributes(['class' => 'btn btn-secondary me-2'])
                 ->content($translator->translate('back.to.list'))
                 ->href($urlGenerator->generate('productclient/index'))
                 ->render()
             ?>
             
-            <?= A::tag()
+            <?= (new A())
                 ->addAttributes(['class' => 'btn btn-info me-2'])
                 ->content($translator->translate('view.product'))
                 ->href($urlGenerator->generate(
@@ -251,7 +251,7 @@ use Yiisoft\Html\Tag\A;
                 ->render()
             ?>
             
-            <?= A::tag()
+            <?= (new A())
                 ->addAttributes(['class' => 'btn btn-info'])
                 ->content($translator->translate('view.client'))
                 ->href($urlGenerator->generate(

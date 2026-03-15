@@ -276,7 +276,9 @@ final class TaskController extends BaseController
      * @param iiR $iiR
      * @param FormHydrator $formHydrator
      */
-    private function save_task_lookup_item_inv(int $order, Task $task, string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, iiR $iiR, FormHydrator $formHydrator): void
+    private function save_task_lookup_item_inv(int $order, Task $task,
+            string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, iiR $iiR,
+            FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
         $form = new InvItemForm($invItem, (int) $inv_id);
@@ -296,7 +298,8 @@ final class TaskController extends BaseController
             'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->invitemService->addInvItem_task($invItem, $ajax_content, $inv_id, $taskR, $trR, new iiaS($iiaR, $iiR), $iiaR, $this->sR);
+            $this->invitemService->addInvItem_task($invItem, $ajax_content,
+                    $inv_id, $taskR, $trR, new iiaS($iiaR, $iiR), $iiaR);
         }
     }
 
@@ -312,7 +315,6 @@ final class TaskController extends BaseController
      * @param qtrR $qtrR
      * @param qaR $qaR
      * @param qR $qR
-     * @param pymR $pymR
      * @param acqR $acqR
      */
     public function selection_quote(
@@ -326,8 +328,7 @@ final class TaskController extends BaseController
         qtrR $qtrR,
         qaR $qaR,
         qR $qR,
-        pymR $pymR,
-        acqR $acqR,    
+        acqR $acqR,
     ): \Psr\Http\Message\ResponseInterface {
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */

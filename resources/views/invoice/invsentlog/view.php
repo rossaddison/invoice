@@ -23,7 +23,7 @@ use Yiisoft\FormModel\Field;
 <?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?><?= Html::openTag('div', ['class' => 'card-header']); ?>
-<?= Form::tag()
+<?= (new Form())
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)

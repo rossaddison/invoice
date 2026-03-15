@@ -22,15 +22,15 @@ use Yiisoft\Html\Tag\P;
     <?= Html::openTag('div', ['class' => 'container']); ?>
         <?= Html::openTag('div', ['class' => 'row row gy-5 gy-lg-0 align-items-center']); ?>
             <?= Html::openTag('div', ['class' => 'col-12 col-lg-4']); ?>
-                <?= H2::tag()
+                <?= (new H2())
                     ->addClass('display-3 fw-bolder mb-4')
                     ->content((string) $pricing['pricing'])
                     ->render(); ?>
-                <?= P::tag()
+                <?= (new P())
                         ->addClass('fs-4 mb-4 mb-xl-5')
                         ->content((string) $pricing['explore'])
                         ->render(); ?>    
-                <?= A::tag()
+                <?= (new A())
                         ->addClass('btn bsb-btn-2xl btn-primary rounded-pill')
                         ->href('#!')
                         ->content((string) $pricing['plans'])
@@ -43,15 +43,15 @@ use Yiisoft\Html\Tag\P;
                             <?= Html::openTag('div', ['class' => 'col-12 col-md-6']); ?>
                                 <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm']); ?>
                                     <?= Html::openTag('div', ['class' => 'card-body p-4 p-xxl-5']); ?>
-                                        <?= H2::tag()
+                                        <?= (new H2())
                                             ->addClass('h4 mb-2')
                                             ->content((string) $pricing['starter'])
                                             ->render(); ?>
-                                        <?= H4::tag()
+                                        <?= (new H4())
                                             ->addClass('display-3 fw-bold text-primary mb-0')
                                             ->content($s->format_currency(50))
                                             ->render(); ?>
-                                        <?= P::tag()
+                                        <?= (new P())
                                             ->addClass('text-secondary mb-4')
                                             ->content((string) $pricing['currencyPerMonth'])
                                             ->render(); ?>
@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\P;
                                                 <span><strong>100,000</strong><?= str_repeat(' ', 1) . (string) $pricing['visits']; ?></span>
                                             <?= Html::closeTag('li'); ?>
                                         <?= Html::closeTag('ul'); ?>
-                                        <?= A::tag()
+                                        <?= (new A())
                                             ->addClass('btn bsb-btn-2xl btn-accent rounded-pill')
                                             ->href('#!')
                                             ->content((string) $pricing['choosePlan'])
@@ -80,14 +80,14 @@ use Yiisoft\Html\Tag\P;
                             <?= Html::openTag('div', ['class' => 'col-12 col-md-6']); ?>                            
                                 <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-lg pt-md-4 pb-md-4']); ?>                            
                                     <?= Html::openTag('div', ['class' => 'card-body p-4 p-xxl-5']); ?>                            
-                                        <?= H2::tag()
+                                        <?= (new H2())
                                             ->addClass('h4 mb-2')
                                             ->content((string) $pricing['pro']); ?>
-                                        <?= H4::tag()
+                                        <?= (new H4())
                                             ->addClass('display-3 fw-bold text-primary mb-0')
                                             ->content($s->format_currency(50))
                                             ->render(); ?>
-                                        <?= P::tag()
+                                        <?= (new P())
                                             ->addClass('text-secondary')
                                             ->content((string) $pricing['currencyPerMonth'])
                                             ->render(); ?>
@@ -105,7 +105,7 @@ use Yiisoft\Html\Tag\P;
                                                 <span><strong>400,000</strong><?= str_repeat(' ', 1) . (string) $pricing['visits']; ?></span>
                                             <?= Html::closeTag('li'); ?>
                                         <?= Html::closeTag('ul'); ?>
-                                        <?= A::tag()
+                                        <?= (new A())
                                             ->addClass('btn btn-accent rounded-pill')
                                             ->href('#!')
                                             ->content((string) $pricing['choosePlan'])

@@ -153,7 +153,8 @@ final class InvItemController extends BaseController
             $body = $request->getParsedBody();
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                    $this->invitemService->addInvItem_task($invitem, $body, $inv_id, $taskR, $trR, new IIAS($iiar, $iiR), $iiar, $this->sR);
+                    $this->invitemService->addInvItem_task($invitem, $body,
+                            $inv_id, $taskR, $trR, new IIAS($iiar, $iiR), $iiar);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }
@@ -287,7 +288,7 @@ final class InvItemController extends BaseController
                     // and save in invitemamount->allowance
                     $allowance = $this->accumulative_allowances($inv_item_allowances_charges) ?: 0.00;
                     if (is_array($body)) {
-                        $tax_rate_id = $this->invitemService->saveInvItem_product($inv_item, $body, $inv_id, $pR, $this->sR, $uR) ?: 1;
+                        $tax_rate_id = $this->invitemService->saveInvItem_product($inv_item, $body, $inv_id, $pR, $uR) ?: 1;
                         $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
                         if (null !== $tax_rate_percentage) {
                             /**
@@ -461,7 +462,7 @@ final class InvItemController extends BaseController
                     // and save in invitemamount->allowance
                     $allowance = $this->accumulative_allowances($inv_item_allowances_charges) ?: 0.00;
                     if (is_array($body)) {
-                        $tax_rate_id = $this->invitemService->saveInvItem_task($inv_item, $body, $inv_id, $taskR, $this->sR) ?: 1;
+                        $tax_rate_id = $this->invitemService->saveInvItem_task($inv_item, $body, $inv_id, $taskR) ?: 1;
                         $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
                         if (null !== $tax_rate_percentage) {
                             $request_inv_item = (int) $inv_item->getId();

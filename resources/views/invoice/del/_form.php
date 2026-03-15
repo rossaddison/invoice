@@ -23,7 +23,7 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataEAS
  */
 ?>
-<?= Form::tag()
+<?= (new Form())
     ->post($urlGenerator->generate($actionName, $actionArguments, $actionQueryParameters))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -190,4 +190,4 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
+<?= (new Form())->close() ?>

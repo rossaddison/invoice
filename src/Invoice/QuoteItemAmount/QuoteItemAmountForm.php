@@ -7,6 +7,9 @@ namespace App\Invoice\QuoteItemAmount;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
+/**
+ * @psalm-suppress UnusedClass
+ */
 final class QuoteItemAmountForm extends FormModel
 {
     private ?int $quote_item_id = null;

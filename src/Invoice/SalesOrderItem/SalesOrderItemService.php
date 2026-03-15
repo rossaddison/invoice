@@ -89,10 +89,7 @@ final readonly class SalesOrderItemService
      * @param string $sales_order_id
      * @param PR $pr
      * @param taskR $taskR
-     * @param SoIAR $soiar
-     * @param SoIAS $soias
      * @param UR $uR
-     * @param TRR $trr
      * @param Translator $translator
      */
     public function addSoItemProductTask(
@@ -101,10 +98,7 @@ final readonly class SalesOrderItemService
         string $sales_order_id,
         PR $pr,
         TaskR $taskR,
-        SoIAR $soiar,
-        SoIAS $soias,
         UR $uR,
-        TRR $trr,
         Translator $translator
     ): SalesOrderItem {
         // This function is used in product/save_product_lookup_item_PO

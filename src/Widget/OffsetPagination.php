@@ -47,6 +47,8 @@ final class OffsetPagination extends Widget
      *
      * {Related logic: see \Yiisoft\Html\Html::renderTagAttributes()} for
      *  details on how attributes are being rendered.
+     * 
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function options(array $value): self
     {

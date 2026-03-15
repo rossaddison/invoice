@@ -281,7 +281,7 @@ final class SignupController
             $userInv->setActive(false);
             $userInv->setLanguage($language);
             $uiR->save($userInv);
-            $content = A::tag()
+            $content = (new A())
             // When the url is clicked by the user, return to userinv/signup
             // to activate the user and assign a client to the user
             // depending on whether 'Assign a client to user on signup' has been
@@ -298,7 +298,7 @@ final class SignupController
                             ],
                        ))
                        ->content($elcc);
-            return Body::tag()
+            return (new Body())
                        ->content($content)
                        ->render();
         }

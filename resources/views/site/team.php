@@ -38,11 +38,11 @@ use Yiisoft\Html\Tag\P;
                             'src' => '/img/soletrader/team/team-img-1.jpg',
                             'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>    
                         <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>     
-                            <?= H4::tag()
+                            <?= (new H4())
                                 ->addClass('mb-1')
                                 ->content('Aye Bee')
                                 ->render(); ?>
-                            <?= P::tag()
+                            <?= (new P())
                                 ->addClass('text-secondary mb-0')
                                 ->content((string) $team['coordinator'])
                                 ->render(); ?>     
@@ -57,11 +57,11 @@ use Yiisoft\Html\Tag\P;
                     <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
                         <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/team/team-img-1.jpg', 'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>    
                         <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>     
-                            <?= H4::tag()
+                            <?= (new H4())
                                 ->addClass('mb-1')
                                 ->content('Cee Dee')
                                 ->render(); ?>
-                            <?= P::tag()
+                            <?= (new P())
                                 ->addClass('text-secondary mb-0')
                                 ->content((string) $team['assistant'])
                                 ->render(); ?>
@@ -76,11 +76,11 @@ use Yiisoft\Html\Tag\P;
                     <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
                         <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/team/team-img-1.jpg', 'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>    
                         <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>     
-                            <?= H4::tag()
+                            <?= (new H4())
                                 ->addClass('mb-1')
                                 ->content('Eee Eff')
                                 ->render(); ?>
-                            <?= P::tag()
+                            <?= (new P())
                                 ->addClass('text-secondary mb-0')
                                 ->content((string) $team['assistant'])
                                 ->render(); ?>
@@ -95,11 +95,11 @@ use Yiisoft\Html\Tag\P;
                     <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
                         <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/team/team-img-1.jpg', 'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>    
                         <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>     
-                            <?= H4::tag()
+                            <?= (new H4())
                                 ->addClass('mb-1')
                                 ->content('Jee Aich')
                                 ->render(); ?>
-                            <?= P::tag()
+                            <?= (new P())
                                 ->addClass('text-secondary mb-0')
                                 ->content((string) $team['assistant'])
                                 ->render(); ?>

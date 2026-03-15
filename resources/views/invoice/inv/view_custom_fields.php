@@ -34,7 +34,7 @@ if ($custom_fields): ?>
                                                 } ?>
                                                 <?php $i++; ?>
                                                 <?php if ($i % 2 != 0): ?>
-                                                    <?php $cvH->print_field_for_view($custom_field, $invCustomForm, $inv_custom_values, $custom_values); ?>
+                                                    <?php $cvH->print_field_for_view($custom_field, $invCustomForm, $inv_custom_values); ?>
                                                 <?php endif; ?>
                                             <?php endforeach; ?>
                                         </div>
@@ -50,7 +50,7 @@ if ($custom_fields): ?>
                                                 } ?>
                                                 <?php $i++; ?>
                                                 <?php if ($i % 2 == 0): ?>
-                                                    <?php $cvH->print_field_for_view($custom_field, $invCustomForm, $inv_custom_values, $custom_values); ?>
+                                                    <?php $cvH->print_field_for_view($custom_field, $invCustomForm, $inv_custom_values); ?>
                                                 <?php endif; ?>
                                             <?php endforeach; ?>
                                         </div>

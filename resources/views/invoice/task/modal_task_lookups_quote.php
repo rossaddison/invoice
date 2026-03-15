@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Button;
                     </div>
                     <div class="modal-footer">
                         <?php
-echo Button::tag()
+echo (new Button())
 ->id('task-modal-submit')
 ->addClass('select-items-confirm-task-quote btn-success')
 ->content($translator->translate('submit'))
@@ -39,7 +39,7 @@ echo Button::tag()
 ->render();
 ?>        
                         <?php
-    echo Button::tag()
+    echo (new Button())
     ->addClass('btn btn-danger')
     ->content($translator->translate('close'))
     ->addAttributes(['data-bs-dismiss' => 'modal'])

@@ -76,7 +76,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'value' => '1',
         'checked' => $body['settings[no_github_continue_button]'] == 1
        ]);
-       echo I::tag()->addClass('bi bi-github')->render() . ' Github';
+       echo (new I())->addClass('bi bi-github')->render() . ' Github';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => 'checkbox']); //6
@@ -94,7 +94,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'value' => '1',
         'checked' => $body['settings[no_google_continue_button]'] == 1
        ]);
-       echo I::tag()->addClass('bi bi-google')->render() . ' Google';
+       echo (new I())->addClass('bi bi-google')->render() . ' Google';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => 'checkbox']); //6
@@ -112,7 +112,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'value' => '1',
         'checked' => $body['settings[no_facebook_continue_button]'] == 1
        ]);
-       echo I::tag()->addClass('bi bi-facebook')->render() . ' Facebook';
+       echo (new I())->addClass('bi bi-facebook')->render() . ' Facebook';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => 'checkbox']); //6
@@ -153,7 +153,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'value' => '1',
         'checked' => $body['settings[no_linkedin_continue_button]'] == 1
        ]);
-       echo I::tag()->addClass('bi bi-linkedin')->render() . ' LinkedIn';
+       echo (new I())->addClass('bi bi-linkedin')->render() . ' LinkedIn';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => 'checkbox']); //6
@@ -171,7 +171,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'value' => '1',
         'checked' => $body['settings[no_microsoftonline_continue_button]'] == 1
        ]);
-       echo I::tag()->addClass('bi bi-microsoft')->render() 
+       echo (new I())->addClass('bi bi-microsoft')->render() 
        . ' Microsoft Online';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
@@ -250,7 +250,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $value
         */
         foreach ($openBankingProviders as $key => $value) {
-        echo Option::tag()
+        echo (new Option())
          ->value($value)
          ->selected($value 
           == $body['settings[open_banking_provider]'])
@@ -274,7 +274,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'value' => '1',
         'checked' => $body['settings[no_openidconnect_continue_button]'] == 1
        ]);
-       echo I::tag()->addClass('bi')->render() . ' Open Id Connect';
+       echo (new I())->addClass('bi')->render() . ' Open Id Connect';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => 'checkbox']); //6
@@ -315,7 +315,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'value' => '1',
         'checked' => $body['settings[no_x_continue_button]'] == 1
        ]);
-       echo I::tag()->addClass('bi bi-twitter')->render() . ' X i.e Twitter';
+       echo (new I())->addClass('bi bi-twitter')->render() . ' X i.e Twitter';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => 'checkbox']); //6

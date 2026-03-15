@@ -227,7 +227,6 @@ class PdfHelper
         ClientRepository $cR,
         CustomValueRepository $cvR,
         CustomFieldRepository $cfR,
-        DeliveryLocationRepository $dlR,
         SalesOrderItemRepository $soiR,
         SalesOrderItemAmountRepository $soiaR,
         SalesOrderItemAllowanceChargeRepository $acsoiR,

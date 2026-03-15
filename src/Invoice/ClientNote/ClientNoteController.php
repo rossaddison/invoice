@@ -46,11 +46,10 @@ final class ClientNoteController extends BaseController
 
     /**
      * @param ClientNoteRepository $clientnoteRepository
-     * @param Request $request
      * @param ClientNoteService $service
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
-    public function index(ClientNoteRepository $clientnoteRepository, Request $request): \Psr\Http\Message\ResponseInterface
+    public function index(ClientNoteRepository $clientnoteRepository): Response
     {
         $paginator = (new OffsetPaginator($clientnoteRepository->findAllPreloaded()));
         $parameters = [

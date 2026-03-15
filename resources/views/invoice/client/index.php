@@ -43,7 +43,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$allVisible = A::tag()
+$allVisible = (new A())
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
         ->addClass('btn btn-warning me-1 ajax-loader')
         ->content('↔️')
@@ -170,7 +170,7 @@ $columns = [
 
                 // Wrap the table in a collapse container so it can be hidden/shown.
                 // We set it to "show" by default. Toggle will collapse/expand it.
-                $collapseHtml = Div::tag()
+                $collapseHtml = (new Div())
                     ->id($collapseId)
                     ->addClass('collapse show mt-2')
                     ->content($tableHtml)
@@ -204,7 +204,7 @@ $columns = [
         property: 'filter_client_name',
         header: $translator->translate('client.name'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return  A::tag()
+            return  (new A())
                     ->content(Html::encode($model->getClient_name()))
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
                     ->addClass('btn btn-warning ms-2');
@@ -222,7 +222,7 @@ $columns = [
         property: 'filter_client_surname',
         header: $translator->translate('client.surname'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return  A::tag()
+            return  (new A())
                     ->content(Html::encode($model->getClient_surname() ?? ''))
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
                     ->addClass('btn btn-warning ms-2');
@@ -282,7 +282,7 @@ $columns = [
             $heading = ($equal ? $translator->translate('client.peppol.add') :
                 $translator->translate('client.peppol.edit'));
             return Html::a(
-                    I::tag()
+                    (new I())
                     ->content($equal ? '➕' : '🖉')
                     ->addAttributes(
                             [
@@ -308,38 +308,38 @@ $grid_summary = $s->grid_summary(
 $tableOrTableResponsive = $visible ? 'table-responsive' : 'table';
 
 $toolbarString
-    = Form::tag()
+    = (new Form())
     ->post($urlGenerator->generate('client/index'))
     ->csrf($csrf)
     ->open()
-    . Div::tag()
+    . (new Div())
         ->addClass('btn-group')
         ->content(
             $allVisible
             . $gridComponents->toolbarReset($urlGenerator)
-            . A::tag()
+            . (new A())
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 2]))
             ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('all'))
             ->render()
-            . A::tag()
+            . (new A())
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 1]))
             ->addClass('btn ' . ($active == 1 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('active'))
             ->render()
-            . A::tag()
+            . (new A())
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 0]))
             ->addClass('btn ' . ($active == 0 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('inactive'))
             ->render()
-            . A::tag()
+            . (new A())
             ->href($urlGenerator->generate('client/add', ['origin' => 'add']))
             ->addClass('btn btn-info')
             ->content('➕')
             ->render(),
         )
         ->encode(false)->render()
-    . Form::tag()->close();
+    . (new Form())->close();
 
 if ($visible) {
     echo '<div class="text-start">';

@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\Form;
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 ?>
 
-<?= Form::tag()
+<?= (new Form())
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -165,4 +165,4 @@ foreach ($customFields as $customField): ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
+<?= (new Form())->close() ?>

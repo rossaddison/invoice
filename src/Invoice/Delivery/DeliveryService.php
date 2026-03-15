@@ -18,8 +18,7 @@ final readonly class DeliveryService
 
     public function saveDelivery(
         Delivery $model,
-        array $array,
-        SettingRepository $s
+        array $array
     ): void {
         $this->persist($model, $array);
         $model->setDate_created(new \DateTimeImmutable());

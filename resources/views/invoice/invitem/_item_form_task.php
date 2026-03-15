@@ -33,7 +33,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 ?>
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
-        <?= I::tag()
+        <?= (new I())
             ->addClass('bi bi-info-circle')
             ->addAttributes([
                 'tooltip' => 'data-bs-toggle',
@@ -42,7 +42,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ->content(' ' . $translator->translate('task'));
 ?>
     <?= Html::closeTag('div'); ?>    
-    <?= Form::tag()
+    <?= (new Form())
 ->post($urlGenerator->generate($actionName, $actionArguments))
 ->enctypeMultipartFormData()
 ->csrf($csrf)
@@ -54,11 +54,11 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                 <?= Html::openTag('tbody', ['id' => 'new_inv_item_row']); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['rowspan' => '2', 'class' => 'td-icon']); ?>
-                            <?= I::tag()
+                            <?= (new I())
                         ->addClass('fa fa-arrows cursor-move'); ?> 
                                 <?php if ($isRecurring) : ?>
                                     <?= Html::tag('br'); ?>
-                                        <?= I::tag()
+                                        <?= (new I())
                                     ->addAttributes([
                                         'title' => $translator->translate('recurring'),
                                         'class' => 'js-item-recurrence-toggler cursor-pointer fa fa-calendar-o text-muted',
@@ -214,6 +214,6 @@ foreach ($taxRates as $taxRate) {
                     ->content($translator->translate('add.new.row')); ?>           
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-    <?= Form::tag()->close(); ?>
+    <?= (new Form())->close(); ?>
     <?= Html::Tag('br'); ?>
 <?= Html::closeTag('div'); ?>

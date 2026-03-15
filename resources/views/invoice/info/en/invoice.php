@@ -50,6 +50,11 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p><s>Payment gateway testing on alpine</s></p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p>15th March 2026</p>
+<p>Apply razvbir's https://github.com/yiisoft/html/pull/264 using regex Find:  (\w+)::tag\(\) and Replace:  (new $1())</p>
+<p>Restructured psalm.xml: Find unused code = true. All error types have been categorized
+and will be reduced with the subsequent code reduction.</p>
+<p>UnusedParam error detection has been completed and functions adjusted.</p>
 <p><b>11th March 2026</b></p>
 <p>The mobile desktop preview will assist in improving bootstrap/mobile views</p>
 <p>Payment Provider javascript has been included in
@@ -1986,7 +1991,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>The login logo previously located under Settings ... General has been moved to Settings...Company Private Details.</p>
 <p>Each Company Private Detail record can now have their own logo/icon</p>
 <p>This is useful for a company logo that evolves with time, older invoices retaining their older logo.</p>
-<p>Use Yii's<code> Form::tag()
+<p>Use Yii's<code> (new Form())
     ->post($urlGenerator->generate(...$action))
     ->enctypeMultipartFormData()
     ->csrf($csrf)

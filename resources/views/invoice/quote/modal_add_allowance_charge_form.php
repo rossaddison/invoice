@@ -21,7 +21,7 @@ use Yiisoft\Html\Tag\Form;
  *      $optionsDataAllowanceCharges
  */
 
-echo Form::tag()
+echo (new Form())
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -71,4 +71,4 @@ echo Form::tag()
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
+<?= (new Form())->close() ?>

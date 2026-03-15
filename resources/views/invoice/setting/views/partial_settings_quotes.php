@@ -56,7 +56,7 @@ echo H::openTag('div', $row); //1
        ], $formControl, $minSearch)); 
 
 
-        echo Option::tag()
+        echo (new Option())
          ->value('')
          ->content($translator->translate('none'));
 
@@ -66,7 +66,7 @@ echo H::openTag('div', $row); //1
         * $invoice_group
         */
         foreach ($invoice_groups as $invoice_group) { 
-        echo Option::tag()
+        echo (new Option())
          ->value($invoice_group->getId())
          ->selected(
           $body['settings[default_quote_group]'] 
@@ -155,14 +155,14 @@ echo H::openTag('div', $row); //1
        ], $formControl, $minSearch)); 
 
 
-        echo Option::tag()
+        echo (new Option())
          ->value('0')
          ->content(
           $translator->translate('no')
          );
 
 
-        echo Option::tag()
+        echo (new Option())
          ->value('1')
          ->selected(
           $body[
@@ -209,14 +209,14 @@ echo H::openTag('div', $row); //1
        ], $formControl, $minSearch)); 
 
 
-        echo Option::tag()
+        echo (new Option())
          ->value('0')
          ->content(
           $translator->translate('no')
          );
 
 
-        echo Option::tag()
+        echo (new Option())
          ->value('1')
          ->selected(
           $body['settings[mark_quotes_sent_pdf]'] 
@@ -286,7 +286,7 @@ echo H::openTag('div', $row); //1
        ], $formControl, $minSearch)); 
 
 
-        echo Option::tag()
+        echo (new Option())
          ->value('')
          ->content($translator->translate('none'));
 
@@ -296,7 +296,7 @@ echo H::openTag('div', $row); //1
         */
         foreach ($pdf_quote_templates 
          as $quote_template) { 
-         echo Option::tag()
+         echo (new Option())
          ->value($quote_template)
          ->selected(
          $body['settings[pdf_quote_template]'] 
@@ -329,7 +329,7 @@ echo H::openTag('div', $row); //1
        ], $formControl, $minSearch)); 
 
 
-        echo Option::tag()
+        echo (new Option())
          ->value('')
          ->content($translator->translate('none'));
 
@@ -339,7 +339,7 @@ echo H::openTag('div', $row); //1
         */
         foreach ($public_quote_templates 
          as $quote_template) { 
-         echo Option::tag()
+         echo (new Option())
          ->value($quote_template)
          ->selected(
          $body[
@@ -376,7 +376,7 @@ echo H::openTag('div', $row); //1
        ], $formControl, $minSearch)); 
 
 
-        echo Option::tag()
+        echo (new Option())
          ->value('')
          ->content($translator->translate('none'));
 
@@ -387,7 +387,7 @@ echo H::openTag('div', $row); //1
         */
         foreach ($email_templates_quote 
          as $email_template) { 
-         echo Option::tag()
+         echo (new Option())
          ->value(
          $email_template
          ->getEmail_template_id()

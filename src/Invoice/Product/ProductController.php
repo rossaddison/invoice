@@ -116,11 +116,12 @@ final class ProductController extends BaseController
      * @param trR $trR
      * @param cvR $cvR
      * @param cfR $cfR
-     * @param pcR $pcR
      * @param upR $upR
      * @return Response
      */
-    public function add(Request $request, FormHydrator $formHydrator, fR $fR, uR $uR, trR $trR, cvR $cvR, cfR $cfR, pcR $pcR, upR $upR): Response
+    public function add(Request $request,
+            FormHydrator $formHydrator, fR $fR, uR $uR, trR $trR, cvR $cvR,
+            cfR $cfR, upR $upR): Response
     {
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
@@ -132,20 +133,25 @@ final class ProductController extends BaseController
             'title' => $this->translator->translate('add'),
             'actionName' => 'product/add',
             'actionArguments' => [],
-            'countries' => $countries->get_country_list((string) $this->session->get('_language')),
+            'countries' =>
+                $countries->get_country_list(
+                        (string) $this->session->get('_language')),
             'alert' => $this->alert(),
             'form' => $form,
             'errors' => [],
             'errorsCustom' => [],
-            'standard_item_identification_schemeids' => $peppolarrays->getIso_6523_icd(),
+            'standard_item_identification_schemeids' =>
+                $peppolarrays->getIso_6523_icd(),
             'item_classification_code_listids' => $peppolarrays->getUncl7143(),
             'families' => $this->families($fR->findAllPreloaded()),
             'units' => $this->units($uR->findAllPreloaded()),
             'taxRates' => $this->taxRates($trR->findAllPreloaded()),
             'unitPeppols' => $this->unit_peppols($upR->findAllPreloaded()),
             // Custom fields and values for product
-            'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'product_custom')['customFields'],
-            'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'product_custom')['customValues'],
+            'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR,
+                    'product_custom')['customFields'],
+            'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR,
+                    'product_custom')['customValues'],
             'cvH' => new CVH($this->sR, $cvR),
             'productCustomValues' => [],
             'productCustomForm' => $productCustomForm,
@@ -167,21 +173,26 @@ final class ProductController extends BaseController
                              */
                             foreach ($custom as $custom_field_id => $value) {
                                 $productCustom = new ProductCustom();
-                                $formProductCustom = new ProductCustomForm($productCustom);
+                                $formProductCustom =
+                                    new ProductCustomForm($productCustom);
                                 $product_custom = [];
                                 $product_custom['product_id'] = $product_id;
                                 $product_custom['custom_field_id'] = $custom_field_id;
                                 $product_custom['value'] = is_array($value) ? serialize($value) : $value;
-                                if ($formHydrator->populateAndValidate($formProductCustom, $product_custom)) {
-                                    $this->productCustomService->saveProductCustom($productCustom, $product_custom);
+                                if ($formHydrator->populateAndValidate(
+                                        $formProductCustom, $product_custom)) {
+                                    $this->productCustomService->saveProductCustom(
+                                            $productCustom, $product_custom);
                                 }
-                                // These two can be used to create customised labels for custom field error validation on the form
-                                // Currently not used.
+// These two can be used to create customised labels for custom field error
+// validation on the form. Currently not used.
                                 $parameters['formProductCustom'] = $formProductCustom;
                                 $parameters['errorsCustom'] = $formProductCustom->getValidationResult()->getErrorMessagesIndexedByProperty();
                             }
                         }
-                        $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
+                        $this->flashMessage('info',
+                                $this->translator->translate(
+                                        'record.successfully.created'));
                         return $this->webService->getRedirectResponse('product/index');
                     }
                 }
@@ -235,11 +246,14 @@ final class ProductController extends BaseController
                     'actionName' => 'product/edit',
                     'actionArguments' => ['id' => $product_id],
                     'alert' => $this->alert(),
-                    'countries' => $countries->get_country_list((string) $this->session->get('_language')),
+                    'countries' =>
+                        $countries->get_country_list(
+                                (string) $this->session->get('_language')),
                     'form' => $form,
                     'errors' => [],
                     'errorsCustom' => [],
-                    'standard_item_identification_schemeids' => $peppolarrays->getIso_6523_icd(),
+                    'standard_item_identification_schemeids' =>
+                        $peppolarrays->getIso_6523_icd(),
                     'item_classification_code_listids' => $peppolarrays->getUncl7143(),
                     'families' => $this->families($fR->findAllPreloaded()),
                     'units' => $this->units($uR->findAllPreloaded()),
@@ -248,7 +262,8 @@ final class ProductController extends BaseController
                     'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'product_custom')['customFields'],
                     'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'product_custom')['customValues'],
                     'cvH' => new CVH($this->sR, $cvR),
-                    'productCustomValues' => $this->product_custom_values($product_id, $pcR),
+                    'productCustomValues' =>
+                        $this->product_custom_values($product_id, $pcR),
                     'productCustomForm' => $productCustomForm,
                     'formFields' => $this->formFields,
                 ];
@@ -259,7 +274,8 @@ final class ProductController extends BaseController
                         $parameters['body'] = $body;
                         if (!$returned_form->isValid()) {
                             $parameters['form'] = $returned_form;
-                            $parameters['errors'] = $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                            $parameters['errors'] =
+            $returned_form->getValidationResult()->getErrorMessagesIndexedByProperty();
                             return $this->webViewRenderer->render('_form', $parameters);
                         }
                         // Only save custom fields if they exist
@@ -269,7 +285,9 @@ final class ProductController extends BaseController
                                 $errorsCustom = [];
                                 /** @var array|string $value */
                                 foreach ($custom as $custom_field_id => $value) {
-                                    $product_custom = $pcR->repoFormValuequery($product_id, (string) $custom_field_id);
+                                    $product_custom =
+                                        $pcR->repoFormValuequery(
+                                            $product_id, (string) $custom_field_id);
 
                                     // If product_custom doesn't exist, create a new one
                                     if (null === $product_custom) {
@@ -282,11 +300,15 @@ final class ProductController extends BaseController
                                         'value' => is_array($value) ? serialize($value) : $value,
                                     ];
 
-                                    $productCustomForm = new ProductCustomForm($product_custom);
-                                    if ($formHydrator->populateAndValidate($productCustomForm, $product_custom_input)) {
-                                        $this->productCustomService->saveProductCustom($product_custom, $product_custom_input);
+                                    $productCustomForm =
+                                            new ProductCustomForm($product_custom);
+                                    if ($formHydrator->populateAndValidate(
+                                        $productCustomForm, $product_custom_input)) {
+                                        $this->productCustomService->saveProductCustom(
+                                            $product_custom, $product_custom_input);
                                     } else {
-                                        $errorsCustom = array_merge($errorsCustom, $productCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty());
+                                        $errorsCustom = array_merge($errorsCustom,                                                       $productCustomForm->getValidationResult()
+                                                ->getErrorMessagesIndexedByProperty());
                                     }
                                     $parameters['productCustomForm'] = $productCustomForm;
                                 } //foreach
@@ -381,7 +403,11 @@ final class ProductController extends BaseController
          * @var \\App\Invoice\Entity\UnitPeppol $unit_peppol
          */
         foreach ($unit_peppols as $unit_peppol) {
-            $array[$unit_peppol->getId()] = $unit_peppol->getCode() . ' --- ' . $unit_peppol->getName() . ' --- ' . $unit_peppol->getDescription();
+            $array[$unit_peppol->getId()] = $unit_peppol->getCode()
+                    . ' --- '
+                    . $unit_peppol->getName()
+                    . ' --- '
+                    . $unit_peppol->getDescription();
         }
         return $array;
     }
@@ -848,7 +874,8 @@ final class ProductController extends BaseController
                         'product' => $pR->repoProductquery($product_id),
                     ],
                 ),
-                'partial_product_properties' => $this->webViewRenderer->renderPartialAsString(
+                'partial_product_properties' =>
+                    $this->webViewRenderer->renderPartialAsString(
                     '//invoice/product/views/partial_product_properties',
                     [
                         'product' => $pR->repoProductquery($product_id),

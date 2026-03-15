@@ -2,13 +2,12 @@
 <psalm
     errorLevel="1"
     findUnusedBaselineEntry="true"
-    findUnusedCode="false"    
+    findUnusedCode="true"    
     strictBinaryOperands="false"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
-<plugins><pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/></plugins>    
     <projectFiles>
         <directory name="config" />
         <directory name="resources/views" />
@@ -21,6 +20,78 @@
         </ignoreFiles>        
     </projectFiles>
     <issueHandlers>
+        <PossiblyUnusedMethod>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </PossiblyUnusedMethod>
+        <PossiblyUnusedProperty>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </PossiblyUnusedProperty>
+        <PossiblyUnusedReturnValue>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </PossiblyUnusedReturnValue>
+        <UnusedMethod>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnusedMethod>
+        <UnusedVariable>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnusedVariable>
+        <UnusedProperty>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnusedProperty>
+        <UnnecessaryVarAnnotation>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnnecessaryVarAnnotation>
+        <UnusedDocblockParam>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnusedDocblockParam>        
+        <UnusedVariable>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnusedVariable>
+        <UnevaluatedCode>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnevaluatedCode>
+        <UnusedFunctionCall>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnusedFunctionCall>   
+        <UnusedReturnValue>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="resources" />
+            </errorLevel>
+        </UnusedReturnValue>         
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <directory name="src/Auth/Client" />

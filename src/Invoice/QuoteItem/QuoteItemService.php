@@ -486,15 +486,13 @@ final readonly class QuoteItemService
      * @param array $array
      * @param string $quote_id
      * @param TaskR $taskR
-     * @param Translator $translator
      * @return int
      */
     public function saveQuoteItemTask(
         QuoteItem $model,
         array $array,
         string $quote_id,
-        TaskR $taskR,
-        Translator $translator
+        TaskR $taskR
     ): int {
         $this->persist($array, $model);
 

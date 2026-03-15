@@ -23,7 +23,7 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataEAS
  */
 ?>
-<?= Form::tag()
+<?= (new Form())
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -37,7 +37,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
-    <?= Html::encode($title). ' '. A::tag()
+    <?= Html::encode($title). ' '. (new A())
                                    ->href($urlGenerator->generate('del/edit', ['id' => $form->getId()]))
                                    ->content('🖉'); ?>
 <?= Html::closeTag('h1'); ?>
@@ -186,4 +186,4 @@ foreach ($electronic_address_scheme as $key => $value) {
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close() ?>
+<?= (new Form())->close() ?>

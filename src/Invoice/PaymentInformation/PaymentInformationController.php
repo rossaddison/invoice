@@ -551,7 +551,6 @@ final class PaymentInformationController
                             (int) $invoice_id,
                             $items_array,
                             $yii_invoice_array,
-                            $payment_method,
                             $disable_form,
                             $is_overdue,
                             $payment_method_name,
@@ -581,7 +580,6 @@ final class PaymentInformationController
         int $invoice_id,
         array $items_array,
         array $yii_invoice_array,
-        array $payment_method,
         bool $disable_form,
         bool $is_overdue,
         string $payment_method_for_this_invoice,
@@ -889,8 +887,7 @@ final class PaymentInformationController
  *  method,
  * but this endpoint exists for consistency and potential webhook handling.
  */
-    public function braintree_complete(Request $request,
-        CurrentRoute $currentRoute): Response
+    public function braintree_complete(CurrentRoute $currentRoute): Response
     {
         $invoice_url_key = $currentRoute->getArgument('url_key');
         if (null !== $invoice_url_key) {

@@ -27,7 +27,7 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?= Form::tag()
+<?= (new Form())
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)

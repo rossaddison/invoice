@@ -36,7 +36,7 @@ declare(strict_types=1);
                                 } ?>
                                 <?php $i++; ?>
                                 <?php if ($i % 2 != 0): ?>
-                                    <?php $cvH->print_field_for_view($customField, $paymentCustomForm, $paymentCustomValues, $customValues); ?>
+                                    <?php $cvH->print_field_for_view($customField, $paymentCustomForm, $paymentCustomValues); ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </div>
@@ -52,7 +52,7 @@ declare(strict_types=1);
                                 } ?>
                                 <?php $i++; ?>
                                 <?php if ($i % 2 == 0): ?>
-                                    <?php $cvH->print_field_for_view($customField, $paymentCustomForm, $paymentCustomValues, $customValues); ?>
+                                    <?php $cvH->print_field_for_view($customField, $paymentCustomForm, $paymentCustomValues); ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </div>

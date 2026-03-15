@@ -63,10 +63,11 @@ final class CustomValueController extends BaseController
      * @param CustomFieldRepository $customfieldRepository
      * @param CustomValueRepository $customvalueRepository
      * @param CurrentRoute $currentRoute
-     * @param CustomValueService $service
      * @return Response
      */
-    public function field(CustomFieldRepository $customfieldRepository, CustomValueRepository $customvalueRepository, CurrentRoute $currentRoute, CustomValueService $service): Response
+    public function field(CustomFieldRepository $customfieldRepository,
+            CustomValueRepository $customvalueRepository,
+            CurrentRoute $currentRoute): Response
     {
         $this->rbac();
         $id = $currentRoute->getArgument('id');

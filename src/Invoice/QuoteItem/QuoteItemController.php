@@ -274,7 +274,7 @@ final class QuoteItemController extends BaseController
                     $price = (float) ($body['price'] ?? 0.00);
                     $discount = (float) ($body['discount_amount'] ?? 0.00);
                     if (is_array($body)) {
-                        $tax_rate_id = $this->quoteitemService->saveQuoteItemTask($quoteItem, $body, $quote_id, $taskR, $this->translator) ?: 1;
+                        $tax_rate_id = $this->quoteitemService->saveQuoteItemTask($quoteItem, $body, $quote_id, $taskR) ?: 1;
                         $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
                         if (null !== $tax_rate_percentage) {
                             /**

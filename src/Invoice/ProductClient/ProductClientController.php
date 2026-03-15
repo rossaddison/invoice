@@ -55,7 +55,7 @@ final class ProductClientController extends BaseController
     
     /**
      * Handle batch association of multiple products from family commalist
-     * Either associate a current client with the product e.g. house or 
+     * Either associate a current client with the product e.g. house or
      * create a new client and associate it with the product.
      * 
      * When the client signsup, use settings 'Invoice User Account' to associate 
@@ -63,14 +63,12 @@ final class ProductClientController extends BaseController
      * invoice/userinv/index table.
      * 
      * @param Request $request
-     * @param FormHydrator $formHydrator 
      * @param ClientRepository $clientRepository
      * @param ProductRepository $productRepository
      * @return Response
      */
     public function associateMultiple(
         Request $request,
-        FormHydrator $formHydrator,
         ClientRepository $clientRepository,
         ProductRepository $productRepository
     ): Response {
@@ -144,7 +142,7 @@ final class ProductClientController extends BaseController
                     
                     // Create association
                     $this->createProductClientAssociation(
-                        $currentProductId, $clientId, $body);
+                        $currentProductId, $clientId);
                     
                     // Move to next product
                     return $this->redirectToNextProduct(
@@ -161,7 +159,7 @@ final class ProductClientController extends BaseController
                 $newClient = $this->createNewClient($body, $suggestedClientGroup);
                 
                 if ($newClient) {
-                    // Save client group for future suggestions  
+                    // Save client group for future suggestions
                     if (strlen($clientGroup = ($newClient->getClient_group() ?? '')) > 0) {
                         $this->saveClientGroupToSession($clientGroup);
                     }
@@ -170,7 +168,7 @@ final class ProductClientController extends BaseController
                     $clientId = $newClient->getClient_id();
                     if ($clientId !== null) {
                         $this->createProductClientAssociation(
-                            $currentProductId, $clientId, $body);
+                            $currentProductId, $clientId);
                     }
                     
                     // Move to next product
@@ -278,9 +276,8 @@ final class ProductClientController extends BaseController
     
     /**
      * Create ProductClient association
-     * @param array<string, mixed> $body
      */
-    private function createProductClientAssociation(int $productId, int $clientId, array $body): void
+    private function createProductClientAssociation(int $productId, int $clientId): void
     {
         try {
             $productClient = new ProductClient();

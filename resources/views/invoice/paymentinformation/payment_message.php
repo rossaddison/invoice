@@ -92,7 +92,7 @@ use Yiisoft\Html\Tag\A;
        <?php if ($s->getSetting('gateway_'
                . lcfirst($gateway)
                . '_sandbox') === '1') {
-                A::tag()
+                (new A())
                 ->href($sandbox_url)
                 ->content($sandbox_url)
                 ->render();

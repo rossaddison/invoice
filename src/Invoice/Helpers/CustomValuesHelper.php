@@ -106,7 +106,7 @@ class CustomValuesHelper
         $customBracketCustomField = 'custom[' . $customFieldId . ']'; 
         $fieldValue = $this->form_value($entity_custom_values, $customFieldId) ?? '';
         $label = $custom_field->getLabel() ?? '';
-        $cfEditableAt = A::tag()
+        $cfEditableAt = (new A())
                 ->href($urlGenerator->generate('customfield/edit', ['id' => $customFieldId]))
                 ->content($translator->translate('custom.field.edit'))
                 ->addAttributes(['style' => 'text-decoration:none'])
@@ -140,11 +140,11 @@ class CustomValuesHelper
                     $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
                 }
 
-                echo Label::tag()
+                echo (new Label())
                 ->forId($customFieldId, )
                 ->content(Html::encode($label)) . $leftArrowCfEditableAt;
 
-                echo Select::tag()
+                echo (new Select())
                 ->addAttributes(
                     [
                         'id' => $customFieldId,
@@ -175,14 +175,14 @@ class CustomValuesHelper
                     $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
                 }
 
-                echo Label::tag()
+                echo (new Label())
                 ->forId($customFieldId)
                 ->content(Html::encode($label)) . $leftArrowCfEditableAt;
 
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $selChoices
                  */
-                echo Select::tag()
+                echo (new Select())
                 ->addAttributes([
                     'class' => 'form-control',
                     'id' => $customFieldId,
@@ -336,13 +336,12 @@ class CustomValuesHelper
      * @param CustomField $custom_field
      * @param FormModel $formModel
      * @param array $entity_custom_values
-     * @param array $custom_value
      */
-    public function print_field_for_view(CustomField $custom_field, FormModel $formModel, array $entity_custom_values, array $custom_value): void
+    public function print_field_for_view(CustomField $custom_field, FormModel $formModel, array $entity_custom_values): void
     {
         $customFieldId = $custom_field->getId();
         $fieldValue = $this->form_value($entity_custom_values, $customFieldId) ?? '';
-        $customBracketCustomField = 'custom[' . $customFieldId . ']'; 
+        $customBracketCustomField = 'custom[' . $customFieldId . ']';
         switch ($custom_field->getType()) {
             case 'DATE':
                 $dateValue = $fieldValue == '' ? '' : $fieldValue;
@@ -500,9 +499,9 @@ class CustomValuesHelper
     public function print_field_for_pdf(Translator $translator, array $entity_custom_values, CustomField $custom_field, cvR $cvR): void
     {
         $customFieldId = $custom_field->getId();
-        echo Br::tag();
-        $content = Label::tag()->content(Html::encode($custom_field->getLabel()));
-        echo B::tag()
+        echo (new Br());
+        $content = (new Label())->content(Html::encode($custom_field->getLabel()));
+        echo (new B())
              ->content($content)
              ->render();
 
@@ -512,15 +511,15 @@ class CustomValuesHelper
         switch ($custom_field->getType()) {
             case 'DATE':
                 $dateValue = $fieldValue == '' ? '' : $fieldValue;
-                echo Label::tag()
+                echo (new Label())
                 ->content((string) $dateValue);
-                echo Br::tag();
-                echo Br::tag();
+                echo (new Br());
+                echo (new Br());
                 break;
             case 'SINGLE-CHOICE':
-                echo Label::tag()
+                echo (new Label())
                 ->content((string) $this->selected_value($entity_custom_values, $customFieldId, $cvR));
-                echo Br::tag();
+                echo (new Br());
                 break;
             case 'MULTIPLE-CHOICE':
                 if ($this->is_serialized($fieldValue, true)) {
@@ -533,36 +532,36 @@ class CustomValuesHelper
                         $custom_value = $cvR->repoCustomValuequery($value);
                         if (null !== $custom_value) {
                             $customValue = $custom_value->getValue();
-                            echo Label::tag()
+                            echo (new Label())
                             ->content($customValue);
-                            echo Br::tag();
+                            echo (new Br());
                         }
                     }
                 }
                 break;
             case 'RADIOLIST-CHOICE':
-                echo Label::tag()
+                echo (new Label())
                 ->content((string) $this->selected_value($entity_custom_values, $customFieldId, $cvR));
-                echo Br::tag();
+                echo (new Br());
                 break;
 
                 break;
             case 'BOOLEAN':
-                echo Label::tag()
+                echo (new Label())
                 ->content(null !== $this->form_value($entity_custom_values, $customFieldId)
                                   ? $translator->translate('true')
                                   : $translator->translate('false'));
-                echo Br::tag();
+                echo (new Br());
                 break;
             case 'NUMBER':
-                echo Div::tag()
+                echo (new Div())
                 ->content(Html::encode($fieldValue));
-                echo Br::tag();
+                echo (new Br());
                 break;
             default:
-                echo Div::tag()
+                echo (new Div())
                 ->content(Html::encode($fieldValue));
-                echo Br::tag();
+                echo (new Br());
         }
         echo Html::closeTag('div');
     }

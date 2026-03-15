@@ -59,15 +59,15 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsClientsDropDownFilter
  */
 
-$toolbarReset = A::tag()
+$toolbarReset = (new A())
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'inv/guest'))
     ->id('btn-reset')
     ->render();
 
-$toolbar = Div::tag();
+$toolbar = (new Div());
 
 /**
  * @var ColumnInterface[] $columns
@@ -80,7 +80,7 @@ $columns = [
         property: 'filterInvNumber',
         header: $translator->translate('number'),
         content: static function (Inv $model) use ($urlGenerator): A {
-            return  A::tag()
+            return  (new A())
                     ->addAttributes(['style' => 'text-decoration:none'])
                     ->content(($model->getNumber() ?? '#') . ' 🔍')
                     ->href($urlGenerator->generate(
@@ -267,7 +267,7 @@ $columns = [
     ),
     // Credit note for the invoice
     new DataColumn(
-        header: Label::tag()->content('💳')->addAttributes(
+        header: (new Label())->content('💳')->addAttributes(
             [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('credit.invoice.for.invoice')
@@ -279,13 +279,13 @@ $columns = [
                                         $model->getCreditinvoice_parent_id());
             if (null !== $visible) {
                 $url = ($visible->getNumber() ?? '#') . '💳';
-                return  A::tag()
+                return  (new A())
                         ->addAttributes(['style' => 'text-decoration:none'])
                         ->content($url)
                         ->href($urlGenerator->generate('inv/view',
                                 ['id' => $model->getCreditinvoice_parent_id()]));
             }
-            return A::tag()->content('')->href('');
+            return (new A())->content('')->href('');
         },
         encodeContent: false,
         filter: DropdownFilter::widget()
@@ -352,7 +352,7 @@ $columns = [
         content: static function (Inv $model) use ($decimalPlaces): Label {
             $invAmountTotal = $model->getInvAmount()->getTotal();
             return
-                Label::tag()
+                (new Label())
                     ->attributes(['class' => $invAmountTotal > 0.00 ?
                             'label label-success' : 'label label-warning'])
                     ->content(Html::encode(null !== $invAmountTotal
@@ -376,7 +376,7 @@ $columns = [
             . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
         content: static function (Inv $model) use ($decimalPlaces): Label {
             $invAmountBalance = $model->getInvAmount()->getBalance();
-            return  Label::tag()
+            return  (new Label())
                     ->attributes(['class' => $invAmountBalance > 0.00 ?
                             'label label-success' : 'label label-warning'])
                     ->content(Html::encode(null !== $invAmountBalance
@@ -408,10 +408,10 @@ $sortedAndPagedPaginator = (new OffsetPaginator($invs))
                     ->withToken(PageToken::next((string) $page));
 
 
-$toolbarString = Form::tag()->post(
+$toolbarString = (new Form())->post(
                 $urlGenerator->generate('inv/guest'))->csrf($csrf)->open()
-        . Div::tag()->addClass('float-start m-3')->content(
-                H4::tag()
+        . (new Div())->addClass('float-start m-3')->content(
+                (new H4())
                     ->addClass('me-3 d-inline-block')
                     ->content($translator->translate('invoice')
                 ) 
@@ -420,7 +420,7 @@ $toolbarString = Form::tag()->post(
                 $urlGenerator, 'client_id', 'warning',
                 $translator->translate('client'), true)
                 )->encode(false)->render()
-        . Form::tag()->close();
+        . (new Form())->close();
 
 $grid_summary = $s->grid_summary(
     $sortedAndPagedPaginator,

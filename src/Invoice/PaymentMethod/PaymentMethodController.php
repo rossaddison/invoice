@@ -40,10 +40,8 @@ final class PaymentMethodController extends BaseController
 
     /**
      * @param PaymentMethodRepository $paymentmethodRepository
-     * @param Request $request
-     * @param PaymentMethodService $service
      */
-    public function index(PaymentMethodRepository $paymentmethodRepository, Request $request, PaymentMethodService $service): \Psr\Http\Message\ResponseInterface
+    public function index(PaymentMethodRepository $paymentmethodRepository): Response
     {
         $canEdit = $this->rbac();
         $parameters = [
@@ -149,9 +147,9 @@ final class PaymentMethodController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param PaymentMethodRepository $paymentmethodRepository
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
-    public function view(CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository): \Psr\Http\Message\ResponseInterface
+    public function view(CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository): Response
     {
         $payment_method = $this->paymentmethod($currentRoute, $paymentmethodRepository);
         $parameters = [];

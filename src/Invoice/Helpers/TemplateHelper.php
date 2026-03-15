@@ -42,7 +42,6 @@ final readonly class TemplateHelper
      * @param string $pk
      * @param bool $isInvoice
      * @param string $body
-     * @param CR $cR
      * &param CVR $cvR
      * @param IR $iR
      * @param IAR $iaR
@@ -52,7 +51,7 @@ final readonly class TemplateHelper
      * @param uiR $uiR
      * @return string
      */
-    public function parse_template(string $pk, bool $isInvoice, string $body, CR $cR, cvR $cvR, IR $iR, IAR $iaR, QR $qR, QAR $qaR, SOR $soR, uiR $uiR)
+    public function parse_template(string $pk, bool $isInvoice, string $body, cvR $cvR, IR $iR, IAR $iaR, QR $qR, QAR $qaR, SOR $soR, uiR $uiR)
     {
         $template_vars = [];
         $var = '';

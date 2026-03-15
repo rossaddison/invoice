@@ -175,7 +175,7 @@ final class AuthController
                     $this->translator, $tR, $uiR, $uR, $_language, $code, $state,
                     (string) $sessionState),
             'openbanking' => $this->callbackOpenBanking($request,
-                    $this->translator, $tR, $uiR, $uR, $_language, $code, $state),
+                    $this->translator, $code, $state),
             'x' => $this->callbackX($request, $this->translator, $tR, $uiR, $uR,
                     $_language, $code, $state),
             'vkontakte' => $this->callbackVKontakte($request, $this->translator,
@@ -320,7 +320,7 @@ final class AuthController
                     true : false,
                 'openBankingAuthUrl' => $openBankingAuthUrl,
                 //Fade-out CSS for TFA badge
-                'styleTagFadeOut' => Style::tag()->content(
+                'styleTagFadeOut' => (new Style())->content(
                     '.fade-out { opacity: 1; transition: opacity 40s ease-in; }'
                         . ' .fade-out.hidden { opacity: 0; }'),
                 'request' => $request,
@@ -362,13 +362,11 @@ final class AuthController
      *         code) and delete it.
      * Step 4: Enter the TOTP (Timed One Time Password) within the limited time
      *
-     * @param ServerRequestInterface $request
      * @param TranslatorInterface $translator
      * @param UserRepository $userRepository
      * @return ResponseInterface
      */
     public function showSetup(
-        ServerRequestInterface $request,
         TranslatorInterface $translator,
         UserRepository $userRepository,
     ): ResponseInterface {
@@ -797,7 +795,7 @@ final class AuthController
             $userInv->setActive(false);
             $userInv->setLanguage($language);
             $uiR->save($userInv);
-            return A::tag()
+            return (new A())
             // When the url is clicked by the user, return to userinv/$provider
             // to activate the user and assign a client to the user
             // depending on whether 'Assign a client to user on signup' has been
@@ -876,7 +874,7 @@ final class AuthController
         return $this->redirectToMain();
     }
 
-    public function regenerateCodes(UserRepository $uR): ResponseInterface
+    public function regenerateCodes(): ResponseInterface
     {
         $this->session->set('regenerate_codes', true);
         return $this->webService->getRedirectResponse('auth/verifyLogin');

@@ -19,19 +19,28 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
 final readonly class GridComponents
 {
-    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator)
+    /**
+     * @psalm-suppress PossiblyUnusedMethod
+     */
+    public function __construct(private CurrentRoute $currentRoute,
+            private Translator $translator)
     {
     }
 
+    /**
+     * @param string $translatorString
+     * @return string
+     * @psalm-suppress PossiblyUnusedMethod
+     */
     public function header(string $translatorString): string
     {
-        return  Div::tag()
+        return  (new Div())
                 ->addClass('row')
                 ->content(
-                    H5::tag()
+                    (new H5())
                         ->addClass('bg-primary text-white p-3 rounded-top')
                         ->content(
-                            I::tag()
+                            (new I())
                             ->addClass('bi bi-receipt')
                             ->content(' ' . $this->translator->translate($translatorString)),
                         ),
@@ -55,10 +64,10 @@ final readonly class GridComponents
     public function toolbarReset(UrlGenerator $generator): string
     {
         $route = $this->currentRoute->getName();
-        return   null !== $route ? A::tag()
+        return   null !== $route ? (new A())
                 ->addAttributes(['type' => 'reset'])
                 ->addClass('btn btn-danger me-1 ajax-loader')
-                ->content(I::tag()->addClass('bi bi-bootstrap-reboot'))
+                ->content((new I())->addClass('bi bi-bootstrap-reboot'))
                 ->href($generator->generate($route))
                 ->id('btn-reset')
                 ->render() : '';
@@ -110,7 +119,6 @@ final readonly class GridComponents
             }
 
             // Tooltip date (safe): guard against missing/invalid date
-            $dateTitle = '';
             $dateObj = $invoice->getDate_created();
 
              try {
@@ -120,7 +128,7 @@ final readonly class GridComponents
              }
 
 
-            $anchorHtml = A::tag()
+            $anchorHtml = (new A())
                 ->addAttributes([
                     // ensure link text is black and no underline
                     'style' => 'color:#000; text-decoration:none;',
@@ -132,7 +140,10 @@ final readonly class GridComponents
                 ->render();
 
             // Each cell has a black border and black text
-            $html .= Html::openTag('td', ['style' => 'border:1px solid #000; padding:0.25rem; color:#000;']) . $anchorHtml . Html::closeTag('td');
+            $html .= Html::openTag('td', [
+                'style' => 'border:1px solid #000; padding:0.25rem; color:#000;'])
+                    . $anchorHtml
+                    . Html::closeTag('td');
 
             $itemCount++;
         }
@@ -141,7 +152,7 @@ final readonly class GridComponents
         $html .= Html::closeTag('table');
 
         return $html;
-    }   
+    }
 
     /**
      * @param Inv $model
@@ -176,7 +187,6 @@ final readonly class GridComponents
             $invSentLogId = $invSentLog->getId();
 
             // Tooltip date (safe)
-            $dateTitle = '';
             $dateObj = $invSentLog->getDate_sent();
             try {
                 $dateTitle = $dateObj->format('m-d');
@@ -184,7 +194,7 @@ final readonly class GridComponents
                 $dateTitle = '';
             }
 
-            $anchorHtml = A::tag()
+            $anchorHtml = (new A())
                 ->addAttributes([
                     // ensure link text is black and no underline
                     'style' => 'color:#000; text-decoration:none;',

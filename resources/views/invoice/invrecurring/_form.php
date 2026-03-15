@@ -25,7 +25,7 @@ use DateTimeImmutable;
  */
 ?>
 
-<?= Form::tag()
+<?= (new Form())
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -86,7 +86,7 @@ foreach ($numberHelper->recur_frequencies() as $key => $value) {
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= A::tag()->href('https://wiki.invoiceplane.com/en/1.6/modules/recurring-invoices')->content('❔')?>
+                    <?= (new A())->href('https://wiki.invoiceplane.com/en/1.6/modules/recurring-invoices')->content('❔')?>
                     <?= Field::date($form, 'start')
         ->label($translator->translate('start.date'))
         ->value(!is_string($start = $form->getStart()) ? $start?->format('Y-m-d') : '');
@@ -118,4 +118,4 @@ foreach ($numberHelper->recur_frequencies() as $key => $value) {
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Form::tag()->close(); ?>
+<?= (new Form())->close(); ?>

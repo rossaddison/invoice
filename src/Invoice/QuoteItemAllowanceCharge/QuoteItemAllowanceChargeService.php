@@ -89,11 +89,8 @@ final readonly class QuoteItemAllowanceChargeService
 
     public function deleteQuoteItemAllowanceCharge(
         QuoteItemAllowanceCharge $model,
-        QAR $qaR,
         QIAR $qiaR,
-        QTRR $qtrR,
-        ACQIR $acqiR,
-        SR $sR
+        ACQIR $acqiR
     ): void {
         // before deleting the allowance/charge, record its 
         // related quote_item_id so that we can update the 

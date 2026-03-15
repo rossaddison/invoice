@@ -41,7 +41,7 @@ if ($invEdit && $invView) {
                         <h5><?= Html::encode($this->getTitle()) ?></h5>
                     </div>
                     <div>
-                        <?= Form::tag()
+                        <?= (new Form())
                            ->post($urlGenerator->generate($actionName, $actionArguments))
                            ->enctypeMultipartFormData()
                            ->csrf($csrf)
@@ -69,7 +69,7 @@ if ($invEdit && $invView) {
                             'name' => 'contact-button',
                         ],
                     ]) ?>
-                        <?= Form::tag()->close() ?>
+                        <?= (new Form())->close() ?>
                     </div>
                 </div>
             </div>

@@ -474,12 +474,6 @@ npm run lint:angular
 pause
 goto menu
 
-:require_checker
-echo Running Composer Require Checker...
-php -d memory_limit=512M vendor/bin/composer-require-checker
-pause
-goto menu
-
 :codeception_tests
 echo Running Codeception Tests...
 php vendor/bin/codecept run
@@ -492,15 +486,21 @@ php vendor/bin/codecept build
 pause
 goto menu
 
+:code_style_make_changes
+echo PHP-CS-Fixer Fix (apply changes)...
+php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php 
+pause
+goto menu
+
 :code_style_suggest_changes
 echo PHP-CS-Fixer Dry Run (see potential changes)...
 php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --show-progress=bar --verbose
 pause
 goto menu
 
-:code_style_make_changes
-echo PHP-CS-Fixer Fix (apply changes)...
-php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php 
+:require_checker
+echo Running Composer Require Checker...
+php -d memory_limit=512M vendor/bin/composer-require-checker
 pause
 goto menu
 

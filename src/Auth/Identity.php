@@ -27,9 +27,7 @@ class Identity implements CookieLoginIdentityInterface
      * A #[HasOne(target: Identity::class)] relationship exists in the User table so no need for a user_id column here as
      * it gets built automatically by the User's HasOne Identity relationship
      */
-    public function __construct(
-        ?User $user = null,
-    ) {
+    public function __construct() {
         $this->authKey = $this->regenerateCookieLoginKey();
     }
 

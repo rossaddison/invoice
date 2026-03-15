@@ -154,7 +154,7 @@ echo Html::script($js5)->type('module');
                     </h1>
                 </div>
                 <div class="card-body p-5 text-center">
-                    <?= Form::tag()
+                    <?= (new Form())
                         ->post($urlGenerator->generate($actionName,
                                 $actionArguments))
                         ->enctypeMultipartFormData()
@@ -374,7 +374,7 @@ echo Html::tag(
         'name' => 'btn_send',
     ],
 ]) ?>
-                    <?= Form::tag()->close(); ?>
+                    <?= (new Form())->close(); ?>
                 </div>                
             </div>
         </div>

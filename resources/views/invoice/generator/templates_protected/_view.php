@@ -45,7 +45,7 @@ echo "<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>" . "\n";
 echo '     <?= $translator->translate(' . "'i.add'); ?>" . "\n";
 echo "<?= Html::closeTag('h1'); ?>" . "\n";
 
-echo "<?= Form::tag()" . "\n";
+echo "<?= (new Form())" . "\n";
 echo '    ->post($urlGenerator->generate($actionName, $actionArguments))' . "\n";
 echo "    ->enctypeMultipartFormData()" . "\n";
 echo '    ->csrf($csrf)' . "\n";

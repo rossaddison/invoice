@@ -29,7 +29,7 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= Form::tag()
+<?= (new Form())
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -126,11 +126,11 @@ use Yiisoft\Html\Tag\Form;
                         continue;
                     } ?>
                     <?= Html::openTag('tr'); ?>
-                        <?= Th::tag()->addAttributes(['id' => 'family-cf-'. $i]); ?> 
+                        <?= (new Th())->addAttributes(['id' => 'family-cf-'. $i]); ?> 
                         <?= Html::openTag('td'); ?>    
                     <?php
                         $familyCustomForm = new FamilyCustomForm(new FamilyCustom());
-$cvH->print_field_for_view($custom_field, $familyCustomForm, $familyCustomValues, $customValues);?>
+$cvH->print_field_for_view($custom_field, $familyCustomForm, $familyCustomValues);?>
                         <?= Html::closeTag('td'); ?>    
                     <?= Html::closeTag('tr'); ?>
                 <?php
@@ -145,4 +145,4 @@ $cvH->print_field_for_view($custom_field, $familyCustomForm, $familyCustomValues
   <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= Form::tag()->close() ?>
+<?= (new Form())->close() ?>
