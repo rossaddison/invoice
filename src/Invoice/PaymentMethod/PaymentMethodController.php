@@ -59,7 +59,7 @@ final class PaymentMethodController extends BaseController
      */
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
-        $form = new PaymentMethodForm new PaymentMethod();
+        $form = new PaymentMethodForm(new PaymentMethod());
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'paymentmethod/add',

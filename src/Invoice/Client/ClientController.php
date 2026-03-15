@@ -704,7 +704,7 @@ final class ClientController extends BaseController
                 }
             }
             foreach ($db_array as $key => $value) {
-                $form = new ClientCustomForm new ClientCustom();
+                $form = new ClientCustomForm(new ClientCustom());
                 $client_custom = [];
                 $client_custom['client_id'] = $cId;
                 $client_custom['custom_field_id'] = $key;
@@ -759,7 +759,7 @@ final class ClientController extends BaseController
             'date' => $date->format('Y-m-d'),
             'note' => $note,
         ];
-        $form = new ClientNoteForm new ClientNote();
+        $form = new ClientNoteForm(new ClientNote());
         if ($formHydrator->populateAndValidate($form, $data)) {
             $cnS->addClientNote(new ClientNote(), $data);
             $parameters = [

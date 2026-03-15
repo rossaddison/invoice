@@ -129,7 +129,7 @@ use Yiisoft\Html\Tag\Form;
                         <?=  new Th()->addAttributes(['id' => 'family-cf-'. $i]); ?> 
                         <?= Html::openTag('td'); ?>    
                     <?php
-                        $familyCustomForm = new FamilyCustomForm new FamilyCustom();
+                        $familyCustomForm = new FamilyCustomForm(new FamilyCustom());
 $cvH->print_field_for_view($custom_field, $familyCustomForm, $familyCustomValues);?>
                         <?= Html::closeTag('td'); ?>    
                     <?= Html::closeTag('tr'); ?>

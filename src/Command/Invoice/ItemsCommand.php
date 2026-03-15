@@ -173,7 +173,7 @@ final class ItemsCommand extends Command
             'Add: Item Tax Total',
             "\033[32m" . $this->format((float) $summaryTableData['Item Tax']) . "\033[0m",
         ]);
-        $table->addRow new TableSeparator();
+        $table->addRow(new TableSeparator());
         $withItemTax = (float) $summaryTableData['After Discount'] + (float) $summaryTableData['Item Tax'];
         $table->addRow([
             'With Item Tax',
@@ -181,7 +181,7 @@ final class ItemsCommand extends Command
         ]);
         
         // Display Invoice Taxes right after 'With Item Tax'
-        $table->addRow new TableSeparator();
+        $table->addRow(new TableSeparator());
         $totalInvTaxRate = 0;
         $taxRates = $this->invTaxRates;
         $firstRate = $taxRates[0];
@@ -196,7 +196,7 @@ final class ItemsCommand extends Command
         ]);
         
         // Add InvAllowanceCharge section (shipping, handling, etc.)
-        $table->addRow new TableSeparator();
+        $table->addRow(new TableSeparator());
         $invAllowanceChargeTotal = 0;
         foreach ($this->invAllowanceCharges as $invAllowanceCharge) {
             $amount = (float) $invAllowanceCharge->getAmount();
@@ -221,7 +221,7 @@ final class ItemsCommand extends Command
         }
         $afterAllowanceCharge = $withItemTax + $totalInvTaxRate + $invAllowanceChargeTotal;
         $beforeDiscountTotal = $afterAllowanceCharge;
-        $table->addRow new TableSeparator();
+        $table->addRow(new TableSeparator());
         $table->addRow([
             'Before Invoice Discount Total',
             $this->format($beforeDiscountTotal),
@@ -232,7 +232,7 @@ final class ItemsCommand extends Command
             "\033[31m" . $this->formatBracketed($discount) . "\033[0m",
         ]);
         $total = $beforeDiscountTotal - $discount;
-        $table->addRow new TableSeparator();
+        $table->addRow(new TableSeparator());
         $table->addRow([
             'Total',
             $this->format($total),
@@ -408,7 +408,7 @@ final class ItemsCommand extends Command
             }
 
             if ($currentIndex < $itemCount - 1) {
-                $table->addRow new TableSeparator();
+                $table->addRow(new TableSeparator());
             }
 
             $currentIndex++;
@@ -417,7 +417,7 @@ final class ItemsCommand extends Command
             $discountedSubTotal += $netDiscount + $itemChargeAmount - $itemAllowanceAmount;
             $itemTaxTotal += $itemTax + $itemChargeTax - $itemAllowanceTax;
         }
-        $table->addRow new TableSeparator();
+        $table->addRow(new TableSeparator());
         $table->addRow(
             [
                 '','','','','','','',
