@@ -149,7 +149,7 @@ echo Html::script($js3)->type('module');
                     <h1 class="fw-normal h3 text-center"><?= $translator->translate('email.quote') . ' #' . ($quote->getNumber() ?? '#') . ' => ' . ($quote->getClient()?->getClient_email() ?? '#') ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
-                    <?= (new Form())
+                    <?=  new Form()
                         ->post($urlGenerator->generate($actionName, $actionArguments))
                         ->enctypeMultipartFormData()
                         ->csrf($csrf)
@@ -331,7 +331,7 @@ echo Html::tag(
         'name' => 'btn_send',
     ],
 ]) ?>
-                    <?= (new Form())->close(); ?>                    
+                    <?=  new Form()->close(); ?>                    
                 </div>                
             </div>
         </div>

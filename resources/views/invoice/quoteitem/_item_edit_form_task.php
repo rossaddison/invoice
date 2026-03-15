@@ -27,7 +27,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 ?>
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
-        <?= (new I())
+        <?=  new I()
             ->addClass('bi bi-info-circle')
             ->addAttributes([
                 'tooltip' => 'data-bs-toggle',
@@ -35,7 +35,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ]);
 ?>
     <?= Html::closeTag('div'); ?>    
-    <?= (new Form())
+    <?=  new Form()
 ->post($urlGenerator->generate($actionName, $actionArguments))
 ->enctypeMultipartFormData()
 ->csrf($csrf)
@@ -140,7 +140,7 @@ foreach ($taxRates as $taxRate) {
                                     'data-bs-toggle' => 'tooltip',
                                     'title' => 'quoteitem/edit_task']);
 ?>
-                                <?= (new I())->addClass('fa fa-plus'); ?>
+                                <?=  new I()->addClass('fa fa-plus'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>
                         <?= Html::closeTag('td'); ?>              
@@ -188,6 +188,6 @@ foreach ($taxRates as $taxRate) {
                     ->content($translator->translate('add.new.row')); ?>           
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-    <?= (new Form())->close(); ?>
+    <?=  new Form()->close(); ?>
     <?= Html::Tag('br'); ?>
 <?= Html::closeTag('div'); ?>

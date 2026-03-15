@@ -123,7 +123,7 @@ $vat = $s->getSetting('enable_vat_registration');
                     /**
                      * Related logic: see src\ViewInjection\LayoutViewInjection.php
                      */
-                    echo (new Img())
+                    echo  new Img()
                          ->width($companyLogoWidth)
                          ->height($companyLogoHeight)
                          ->src($logoPath);

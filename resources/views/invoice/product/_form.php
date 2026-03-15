@@ -39,7 +39,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= $translator->translate('products.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -56,7 +56,7 @@ use Yiisoft\Html\Tag\Form;
 
 <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs']); ?>
     <?= Html::openTag('li', ['class' => 'nav-item']); ?>
-        <?= (new A())
+        <?=  new A()
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'data-bs-target' => '#product-required',
@@ -73,7 +73,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
     <?= Html::closeTag('li'); ?>
     <?= Html::openTag('li', ['class' => 'nav-item']); ?>
-        <?= (new A())
+        <?=  new A()
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'data-bs-target' => '#product-not-required',
@@ -188,7 +188,7 @@ foreach ($customFields as $customField): ?>
 <?= Html::closeTag('div'); ?>
 
 <?= $button::backSave(); ?>
-<?= (new Form())->close(); ?>
+<?=  new Form()->close(); ?>
 
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

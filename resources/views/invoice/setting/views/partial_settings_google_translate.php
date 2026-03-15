@@ -57,7 +57,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[google_translate_locale]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('')
          ->content($translator->translate('none'));
         /**
@@ -65,7 +65,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $value
         */
         foreach ($locales as $key => $value) {
-        echo (new Option())
+        echo  new Option()
          ->value($value)
          ->selected(
           $body['settings[google_translate_locale]'] == $value

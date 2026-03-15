@@ -57,7 +57,7 @@ use Yiisoft\Html\Html;
         echo (string) $error['xpath'];
         echo Html::closeTag('td');
         echo Html::openTag('td');
-        echo (new A())->href($url)->content($rule)->render();
+        echo  new A()->href($url)->content($rule)->render();
         echo Html::closeTag('td');
         echo Html::closeTag('tr');
     };

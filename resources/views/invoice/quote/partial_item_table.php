@@ -79,7 +79,7 @@ foreach ($quoteItems as $item) {
     $productRef = '';
     $taskRef = '';
     if ($productId > 0) {
-        $productRef = (new A())
+        $productRef =  new A()
             ->href($urlGenerator->generate(
                 'product/view',
                 [
@@ -91,7 +91,7 @@ foreach ($quoteItems as $item) {
             ->render();
     }
     if ($taskId > 0) {
-        $taskRef = (new A())
+        $taskRef =  new A()
             ->href($urlGenerator->generate(
                 'task/view',
                 [
@@ -133,28 +133,28 @@ foreach ($quoteItems as $item) {
            'disabled' => true,
        ]); //7
        if ($productId > 0) {
-           echo (new Option())
+           echo  new Option()
                ->value('0')
                ->content($translator->translate('none'));
            /**
             * @var App\Invoice\Entity\Product $product
             */
            foreach ($products as $product) {
-               echo (new Option())
+               echo  new Option()
                    ->value($product->getProduct_id())
                    ->selected($item->getProduct_id() == $product->getProduct_id())
                    ->content($product->getProduct_name() ?? '');
            }
        }
        if ($taskId > 0) {
-           echo (new Option())
+           echo  new Option()
                ->value('0')
                ->content($translator->translate('none'));
            /**
             * @var App\Invoice\Entity\Task $task
             */
            foreach ($tasks as $task) {
-               echo (new Option())
+               echo  new Option()
                    ->value($task->getId())
                    ->selected($item->getTask_id() == $task->getId())
                    ->content($task->getName() ?? '');
@@ -245,7 +245,7 @@ foreach ($quoteItems as $item) {
            'data-bs-toggle' => 'tooltip',
            'title' => 'quote_item->tax_rate_id',
        ]); //7
-       echo (new Option())
+       echo  new Option()
            ->value('0')
            ->content($translator->translate('none'));
        /**
@@ -262,7 +262,7 @@ foreach ($quoteItems as $item) {
                && null !== $taxRateName) {
                $taxRateContent = $taxRatePercent . '% - ' . $taxRateName;
            }
-           echo (new Option())
+           echo  new Option()
                ->value((string) $taxRate->getTaxRateId())
                ->selected($item->getTax_rate_id() == $taxRate->getTaxRateId())
                ->content($taxRateContent);
@@ -758,7 +758,7 @@ echo H::closeTag('br');
      echo H::openTag('tr'); //5
       echo H::openTag('td'); //6
        echo H::openTag('b'); //7
-       echo (new A())->content(
+       echo  new A()->content(
            $vat === '1' ? $translator->translate(
                'allowance.or.charge.shipping.handling.packaging.vat'
            ) :
@@ -821,7 +821,7 @@ if ($vat === '0') {
              echo H::closeTag('input');
             if ($invEdit === true) {
                  echo H::openTag('span'); //8
-                 echo (new A())
+                 echo  new A()
                      ->addAttributes([
                          'class' => 'btn btn-secondary',
                          'style' => 'text-decoration:none',

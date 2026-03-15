@@ -42,7 +42,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $label
         */
         foreach ($options as $value => $label) {
-        echo (new Option())
+        echo  new Option()
          ->value($value)
          ->selected(
           $value == ($body['settings[projects_enabled]'] ?? '0')

@@ -40,16 +40,16 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
    echo H::openTag('div', ['class' => (string) $class[17]]);
     echo H::openTag('p');
      echo $translator->translate($tfa . '.scan');
-     echo (new A())
+     echo  new A()
           ->href('https://getaegis.app')
           ->addAttributes(['target' => '_blank'])   
-          ->content((new Img())
+          ->content( new Img()
                     ->size(60, 60)
                     ->src('/img/aegis.png')
                     ->alt('Opensource Two Factor Authentication Software'))
           ->render();
     echo H::closeTag('p');
-    echo (new Img())
+    echo  new Img()
     ->width(160)
     ->height(240)
     ->src(H::encode($qrDataUri))
@@ -73,7 +73,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
     echo H::closeTag('div');
    echo H::closeTag('div');
    echo H::openTag('div', ['class' => $class[10]]);
-    echo (new Form())
+    echo  new Form()
      ->post($urlGenerator->generate('auth/verifySetup'))
      ->class('form-floating')
      ->csrf($csrf)
@@ -100,7 +100,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
       ->buttonClass('btn btn-primary')
       ->name('code-button')
       ->content($translator->translate('layout.submit'));
-    echo (new Form())->close();
+    echo  new Form()->close();
    echo H::closeTag('div');
    echo H::openTag('div', ['class' => $class[17]]);
      for ($i = 1; $i <= 9; $i++) {

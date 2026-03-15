@@ -50,7 +50,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $country
         */
         foreach ($countries as $cldr => $country) {
-        echo (new Option())
+        echo  new Option()
          ->value($cldr)
          ->selected(
           $cldr == 
@@ -145,7 +145,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          str_repeat("&nbsp;", 2) .
          $tax
         );
-        echo (new Option())
+        echo  new Option()
          ->value($key)
          ->selected(
           $key == 
@@ -179,7 +179,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'data-minimum-results-for-search' => 
         'Infinity'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('Legal')
          ->selected(
           'Legal' == 
@@ -195,7 +195,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          )
         )
         );
-        echo (new Option())
+        echo  new Option()
          ->value('Tax')
          ->selected(
           'Tax' == 

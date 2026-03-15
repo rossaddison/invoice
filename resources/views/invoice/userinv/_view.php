@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -309,4 +309,4 @@ echo Field::select($form, 'language')
     <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= (new Form())->close() ?>
+<?=  new Form()->close() ?>

@@ -40,7 +40,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 ?>
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
-        <?= (new I())
+        <?=  new I()
             ->addClass('bi bi-info-circle')
             ->addAttributes([
                 'tooltip' => 'data-bs-toggle',
@@ -49,7 +49,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ->content(' ' . $translator->translate('product'));
 ?>
     <?= Html::closeTag('div'); ?>    
-    <?= (new Form())
+    <?=  new Form()
 ->post($urlGenerator->generate($actionName, $actionArguments))
 ->enctypeMultipartFormData()
 ->csrf($csrf)
@@ -66,11 +66,11 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td',
                                 ['rowspan' => '2', 'class' => 'td-icon']); ?>
-                            <?= (new I())
+                            <?=  new I()
                                 ->addClass('fa fa-arrows cursor-move'); ?>
                                 <?php if ($isRecurring) : ?>
                                     <?= Html::tag('br'); ?>
-                                        <?= (new I())
+                                        <?=  new I()
                                         ->addAttributes([
                                             'title' => $translator->translate(
                                                     'recurring'),
@@ -213,7 +213,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 'class' => 'btn btn-info',
                                 'data-toggle' => 'tooltip',
                                 'title' => 'invitem/add_product']); ?>
-                                <?= (new I())->addClass('fa fa-plus'); ?>
+                                <?=  new I()->addClass('fa fa-plus'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>
                         <?= Html::closeTag('td'); ?>
@@ -307,6 +307,6 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                     ->content($translator->translate('add.new.row')); ?>           
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-    <?= (new Form())->close(); ?>
+    <?=  new Form()->close(); ?>
     <?= Html::Tag('br'); ?>
 <?= Html::closeTag('div'); ?>

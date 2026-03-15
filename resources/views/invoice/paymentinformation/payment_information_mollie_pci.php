@@ -89,7 +89,7 @@ if ($disable_form === false) {
         echo H::tag('br');
         echo H::openTag('div', ['class' => 'card-body p-5 text-center']);
          echo $alert;
-         echo (new A())
+         echo  new A()
              ->href('https://www.mollie.com/gb/security')
              // open in a separate window
              ->target('_blank')
@@ -101,7 +101,7 @@ if ($disable_form === false) {
           */
          $paymentCheckoutUrl = $payment->getCheckOutUrl();
          if (!empty($paymentCheckOutUrl)) {
-             (new A())
+              new A()
              ->href($paymentCheckoutUrl)
              ->target('_blank')
              ->addClass('btn btn-lg btn-success fa fa-credit-card fa-margin')

@@ -92,7 +92,7 @@ class CountryHelper
         string $name): string
     {
         //https://github.com/thephpleague/iso3166
-        $data = (new ISO3166())->name($name);
+        $data =  new ISO3166()->name($name);
         // return the 2-letter country code
         /** @var string $data['alpha2'] */
         return !empty($data['alpha2']) ? $data['alpha2'] : '';

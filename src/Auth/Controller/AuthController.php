@@ -320,7 +320,7 @@ final class AuthController
                     true : false,
                 'openBankingAuthUrl' => $openBankingAuthUrl,
                 //Fade-out CSS for TFA badge
-                'styleTagFadeOut' => (new Style())->content(
+                'styleTagFadeOut' =>  new Style()->content(
                     '.fade-out { opacity: 1; transition: opacity 40s ease-in; }'
                         . ' .fade-out.hidden { opacity: 0; }'),
                 'request' => $request,
@@ -795,7 +795,7 @@ final class AuthController
             $userInv->setActive(false);
             $userInv->setLanguage($language);
             $uiR->save($userInv);
-            return (new A())
+            return  new A()
             // When the url is clicked by the user, return to userinv/$provider
             // to activate the user and assign a client to the user
             // depending on whether 'Assign a client to user on signup' has been

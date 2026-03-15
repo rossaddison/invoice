@@ -27,7 +27,7 @@ use Yiisoft\Html\Tag\Form;
     <?= (Html::a('cac-AllowanceCharge', 'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-AllowanceCharge/', ['class' => 'btn btn-primary'])); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -149,4 +149,4 @@ foreach ($taxRates as $taxRate) {
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>
-<?= (new Form())->close() ?>
+<?=  new Form()->close() ?>

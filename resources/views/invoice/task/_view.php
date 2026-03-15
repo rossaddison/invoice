@@ -30,7 +30,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= $translator->translate('tasks.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -149,7 +149,7 @@ foreach ($statuses as $key => $status) {
 ?>
 <?= Html::closeTag('div'); ?>     
 <?= $button::back(); ?>
-<?= (new Form())->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

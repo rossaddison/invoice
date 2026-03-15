@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('delivery.form'); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)

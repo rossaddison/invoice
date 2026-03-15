@@ -284,8 +284,8 @@ final class ProductClientController extends BaseController
             $associationData = [
                 'product_id' => $productId,
                 'client_id' => $clientId,
-                'created_at' => (new DateTimeImmutable())->format('Y-m-d'),
-                'updated_at' => (new DateTimeImmutable())->format('Y-m-d'),
+                'created_at' =>  new DateTimeImmutable()->format('Y-m-d'),
+                'updated_at' =>  new DateTimeImmutable()->format('Y-m-d'),
             ];
             
             $this->productclientService->save($productClient, $associationData);

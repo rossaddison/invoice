@@ -1991,7 +1991,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>The login logo previously located under Settings ... General has been moved to Settings...Company Private Details.</p>
 <p>Each Company Private Detail record can now have their own logo/icon</p>
 <p>This is useful for a company logo that evolves with time, older invoices retaining their older logo.</p>
-<p>Use Yii's<code> (new Form())
+<p>Use Yii's<code>  new Form()
     ->post($urlGenerator->generate(...$action))
     ->enctypeMultipartFormData()
     ->csrf($csrf)

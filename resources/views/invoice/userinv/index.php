@@ -40,15 +40,15 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = (new A())
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'userinv/index'))
     ->id('btn-reset')
     ->render();
 
-echo (new A())->content((new H4())->content($translator->translate('client.has.not.assigned')))->href($urlGenerator->generate('client/index'))->render();
+echo  new A()->content( new H4()->content($translator->translate('client.has.not.assigned')))->href($urlGenerator->generate('client/index'))->render();
 echo '<table class="table table-responsive">';
 echo '<thead>';
 echo '<tr><th scope="row">' . $translator->translate('client.name') . ' '
@@ -63,13 +63,13 @@ echo '<tbody>';
 foreach ($unAssignedClientIds as $clientId) {
     echo '<tr>';
     $client = $cR->repoClientquery((string) $clientId);
-    echo (new Td())
+    echo  new Td()
     ->content($client->getClient_full_name())
     ->render();
-    echo (new Td())
+    echo  new Td()
     ->content($client->getClient_phone() ?? '')
     ->render();
-    echo (new Td())
+    echo  new Td()
     ->content($client->getClient_email())
     ->render();
     echo '</tr>';
@@ -80,10 +80,10 @@ echo '<br>';
 $textDecorationNone =  'text-decoration:none';
 ?>
 <?= Html::openTag('div'); ?>
-    <?= (new H5())->content($translator->translate('users'))->render(); ?>
+    <?=  new H5()->content($translator->translate('users'))->render(); ?>
     <?= Html::openTag('div', ['class' => 'btn-group index-options']); ?>
         <?=
-            (new A())
+             new A()
             ->href($urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 2]))
             ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-default'))
             ->addAttributes(
@@ -95,7 +95,7 @@ $textDecorationNone =  'text-decoration:none';
             ->render();
 ?>
         <?=
-    (new A())
+     new A()
     ->href($urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 1]))
     ->addClass('btn ' . ($active == 1 ? 'btn-primary' : 'btn-default'))
     ->addAttributes(
@@ -107,7 +107,7 @@ $textDecorationNone =  'text-decoration:none';
     ->render();
 ?>
         <?=
-    (new A())
+     new A()
     ->href($urlGenerator->generate('userinv/index', ['page' => 1, 'active' => 0]))
     ->addClass('btn ' . ($active == 0 ? 'btn-primary' : 'btn-default'))
     ->addAttributes(
@@ -129,7 +129,7 @@ $textDecorationNone =  'text-decoration:none';
 ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= (new Br()); ?>
+<?=  new Br(); ?>
 <?= Html::openTag('div', ['id' => 'content', 'class' => 'table-content']); ?>
 <?= Html::openTag('div', ['class' => 'card-shadow']); ?>
 <?php
@@ -350,9 +350,9 @@ $grid_summary = $s->grid_summary(
     $translator->translate('user.accounts'),
     '',
 );
-$toolbarString = (new Form())->post($urlGenerator->generate('userinv/index'))->csrf($csrf)->open()
-        . (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-        . (new Form())->close();
+$toolbarString =  new Form()->post($urlGenerator->generate('userinv/index'))->csrf($csrf)->open()
+        .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+        .  new Form()->close();
 /**
  * Related logic: see vendor\yiisoft\yii-dataview\src\GridView.php for the sequence of functions which can effect rendering
  */

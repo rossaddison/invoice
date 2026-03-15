@@ -32,7 +32,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
                         <?= $title; ?>
                     <?= Html::closeTag('h1'); ?>
-                    <?= (new Form())
+                    <?=  new Form()
                         ->post($urlGenerator->generate($actionName, $actionArguments))
                         ->enctypeMultipartFormData()
                         ->csrf($csrf)

@@ -29,7 +29,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -86,7 +86,7 @@ foreach ($allowance_charges as $allowance_charge) {
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>         
 <?= $button::back(); ?>
-<?= (new Form())->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

@@ -276,7 +276,7 @@ endforeach; ?>
                                 <?php if (strlen(($client->getClient_web() ?? '')) > 0) : ?>
                                     <tr>
                                         <th><?= $translator->translate('web'); ?></th>
-                                        <td><?= (new A())->content($client->getClient_web() ?? 'https://no_web_page.com')->href($client->getClient_web() ?? 'https://no_web_page.com')->addAttributes(['target' => '_blank'])->render(); ?></td>
+                                        <td><?=  new A()->content($client->getClient_web() ?? 'https://no_web_page.com')->href($client->getClient_web() ?? 'https://no_web_page.com')->addAttributes(['target' => '_blank'])->render(); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php

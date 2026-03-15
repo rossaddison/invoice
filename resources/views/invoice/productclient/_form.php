@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\Button;
 <?= $translator->translate('i.product_client_association'); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->csrf($csrf)
     ->id('ProductClientForm')
@@ -194,14 +194,14 @@ use Yiisoft\Html\Tag\Button;
 <!-- Form Actions -->
 <?= Html::openTag('div', ['class' => 'row mb-3']); ?>
     <?= Html::openTag('div', ['class' => 'col-sm-12']); ?>
-        <?= (new Button())
+        <?=  new Button()
             ->content($translator->translate('save'))
             ->class('btn btn-success')
             ->type('submit')
             ->render()
         ?>
         
-        <?= (new A())
+        <?=  new A()
             ->addAttributes(['class' => 'btn btn-secondary ms-2'])
             ->content($translator->translate('cancel'))
             ->href($urlGenerator->generate('family/index'))
@@ -210,7 +210,7 @@ use Yiisoft\Html\Tag\Button;
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= (new Form())->close(); ?>
+<?=  new Form()->close(); ?>
 
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

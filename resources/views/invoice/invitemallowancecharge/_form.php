@@ -32,7 +32,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('h1'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::openTag('div', ['class' => 'card-body']); ?>
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -71,7 +71,7 @@ foreach ($allowance_charges as $allowance_charge) {
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
     <?= $button::backSave(); ?>
-<?= (new Form())->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

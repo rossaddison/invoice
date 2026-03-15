@@ -44,7 +44,7 @@ echo "<?= Html::openTag('h1',['class'=>'fw-normal h3 text-center']); ?>";
 echo '<?= $title; ?>';
 echo "<?= Html::closeTag('h1'); ?>";
 
-echo "<?= (new Form())";
+echo "<?=  new Form()";
 echo '->post($urlGenerator->generate($actionName, $actionArguments))';
 echo "->enctypeMultipartFormData()";
 echo '->csrf($csrf)';

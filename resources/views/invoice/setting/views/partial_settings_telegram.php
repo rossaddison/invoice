@@ -225,7 +225,7 @@ echo H::openTag('div', $row); //1
         'id' => 'settings[telegram_test_message_use]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected(
           $body[
@@ -233,7 +233,7 @@ echo H::openTag('div', $row); //1
          ] == '0'
         )
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body[
@@ -279,7 +279,7 @@ echo H::openTag('div', $row); //1
         'settings[telegram_payment_notifications]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected(
           $body[
@@ -287,7 +287,7 @@ echo H::openTag('div', $row); //1
          ] == '0'
         )
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body[

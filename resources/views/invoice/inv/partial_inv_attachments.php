@@ -29,7 +29,7 @@ if ($invEdit && $invView) {
 <div class="panel panel-default no-margin">
     <div class="panel-heading">
         <b>
-            <?= (new I())
+            <?=  new I()
                ->addClass('bi bi-info-circle')
                ->addAttributes([
                    'tooltip' => 'data-bs-toggle',
@@ -48,7 +48,7 @@ if ($invEdit && $invView) {
                         <h5><?= Html::encode($title) ?></h5>
                     </div>
                     <div>
-                        <?= (new Form())
+                        <?=  new Form()
                 ->post($urlGenerator->generate($actionName, $actionArguments))
                 ->enctypeMultipartFormData()
                 ->csrf($csrf)
@@ -78,7 +78,7 @@ if ($invEdit && $invView) {
                             'name' => 'contact-button',
                         ],
                     ]) ?>
-                        <?= (new Form())->close() ?>
+                        <?=  new Form()->close() ?>
                     </div>
                 </div>
             </div>

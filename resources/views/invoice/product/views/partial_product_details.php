@@ -35,7 +35,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
 <?= $translator->translate('products.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= (new Form())
+<?=  new Form()
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('ProductForm')
@@ -44,7 +44,7 @@ use Yiisoft\Html\Tag\Form;
 
 <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs nav-tabs-noborder']); ?>
     <?= Html::openTag('li', ['class' => 'active']); ?>
-        <?= (new A())
+        <?=  new A()
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'style' => 'text-decoration:none',
@@ -57,7 +57,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
     <?= Html::closeTag('li'); ?>
     <?= Html::openTag('li'); ?>
-        <?= (new A())
+        <?=  new A()
     ->addAttributes([
         'data-bs-toggle' => 'tab',
         'style' => 'text-decoration:none',
@@ -289,7 +289,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 
 <?= $button::back(); ?>
-<?= (new Form())->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

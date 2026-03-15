@@ -196,13 +196,13 @@ final class ForgotPasswordController
     {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         if (null !== ($userId = $user->getId())) {
-            $content = (new A())
+            $content =  new A()
                        ->href($this->urlGenerator->generateAbsolute(
                            'auth/resetpassword',
                            ['_language' => $_language, 'token' => $tokenWithMask],
                        ))
                        ->content($this->translator->translate('password.reset.email'));
-            return (new Body())
+            return  new Body()
                        ->content($content)
                        ->render();
         }

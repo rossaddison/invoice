@@ -41,19 +41,19 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = (new A())
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'setting/debug_index'))
     ->id('btn-reset')
     ->render();
 
-$toolbarFilter = (new A())
+$toolbarFilter =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('setting_filters_submit')
     ->addClass('btn btn-info me-1')
-    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href('#setting_filters_submit')
     ->id('setting_filters_submit')
     ->render();
@@ -70,14 +70,14 @@ $columns = [
         header: $translator->translate('setting.key'),
         content: static fn (Setting $model) => Html::encode($model->getSetting_key()),
         withSorting: true,
-        filter: (new DropdownFilter())->optionsData($optionsDataSettingsKeyDropDownFilter),
+        filter:  new DropdownFilter()->optionsData($optionsDataSettingsKeyDropDownFilter),
     ),
     new DataColumn(
         property: 'setting_value',
         header: $translator->translate('setting.value'),
         content: static fn (Setting $model) => Html::encode($model->getSetting_value()),
         withSorting: true,
-        filter: (new DropdownFilter())->optionsData($optionsDataSettingsValueDropDownFilter),
+        filter:  new DropdownFilter()->optionsData($optionsDataSettingsValueDropDownFilter),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -132,15 +132,15 @@ $grid_summary = $s->grid_summary(
     '',
 );
 
-$toolbarString = (new Form())->post($urlGenerator->generate('setting/debug_index'))->csrf($csrf)->open()
-    . (new A())
+$toolbarString =  new Form()->post($urlGenerator->generate('setting/debug_index'))->csrf($csrf)->open()
+    .  new A()
     ->href($urlGenerator->generate('setting/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render()
-    . (new Div())->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
-    . (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . (new Form())->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

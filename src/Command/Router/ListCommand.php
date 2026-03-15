@@ -51,7 +51,7 @@ final class ListCommand extends Command
                 ],
             );
             if (next($routes) !== false) {
-                $table->addRow(new TableSeparator());
+                $table->addRow new TableSeparator();
             }
         }
 

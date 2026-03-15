@@ -35,11 +35,11 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[mpdf_ltr]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected($body['settings[mpdf_ltr]'] == '0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected($body['settings[mpdf_ltr]'] == '1')
          ->content($translator->translate('yes'));
@@ -58,11 +58,11 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[mpdf_cjk]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected($body['settings[mpdf_cjk]'] == '0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected($body['settings[mpdf_cjk]'] == '1')
          ->content($translator->translate('yes'));
@@ -81,13 +81,13 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[mpdf_auto_script_to_lang]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected(
           $body['settings[mpdf_auto_script_to_lang]'] == '0'
          )
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[mpdf_auto_script_to_lang]'] == '1'
@@ -108,13 +108,13 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[mpdf_auto_vietnamese]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected(
           $body['settings[mpdf_auto_vietnamese]'] == '0'
          )
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[mpdf_auto_vietnamese]'] == '1'
@@ -137,13 +137,13 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[mpdf_allow_charset_conversion]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected(
           $body['settings[mpdf_allow_charset_conversion]'] == '0'
          )
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[mpdf_allow_charset_conversion]'] == '1'
@@ -164,11 +164,11 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[mpdf_auto_arabic]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected($body['settings[mpdf_auto_arabic]'] == '0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected($body['settings[mpdf_auto_arabic]'] == '1')
          ->content($translator->translate('yes'));
@@ -187,13 +187,13 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[mpdf_auto_language_to_font]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected(
           $body['settings[mpdf_auto_language_to_font]'] == '0'
          )
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[mpdf_auto_language_to_font]'] == '1'
@@ -214,13 +214,13 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[mpdf_show_image_errors]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected(
           $body['settings[mpdf_show_image_errors]'] == '0'
          )
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[mpdf_show_image_errors]'] == '1'

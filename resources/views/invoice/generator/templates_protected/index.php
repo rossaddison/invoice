@@ -9,7 +9,7 @@ use Yiisoft\Strings\Inflector;
  */
 
 echo "<?php\n";
-$random = (new DateTimeImmutable())->getTimestamp();
+$random =  new DateTimeImmutable()->getTimestamp();
 ?>
 
 declare(strict_types=1);
@@ -49,26 +49,26 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
 ?>
 
 <?php   echo "<?php\n"; ?>
-    $header = (new Div())
+    $header =  new Div()
       ->addClass('row')
       ->content(
-        (new H5())
+         new H5()
         ->addClass('bg-primary text-white p-3 rounded-top')
         ->content(
-          (new I())->addClass('bi bi-receipt')->content(' ' . $translator->translate('put.your.translation.here'))
+           new I()->addClass('bi bi-receipt')->content(' ' . $translator->translate('put.your.translation.here'))
         )
       )
       ->render();
 
-    $toolbarReset = (new A())
+    $toolbarReset =  new A()
       ->addAttributes(['type' => 'reset'])
       ->addClass('btn btn-danger me-1 ajax-loader')
-      ->content((new I())->addClass('bi bi-bootstrap-reboot'))
+      ->content( new I()->addClass('bi bi-bootstrap-reboot'))
       ->href($urlGenerator->generate($currentRoute->getName() ?? '<?= $generator->getSmall_singular_name(); ?>/index'))
       ->id('btn-reset')
       ->render();
 
-    $toolbar = (new Div());
+    $toolbar =  new Div();
     
     $columns = [
         new DataColumn(
@@ -112,9 +112,9 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
             ),
         ]),
     ];
-    $toolbarString = (new Form())->post($urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/index'))->csrf($csrf)->open() .
-        (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
-        (new Form())->close();
+    $toolbarString =  new Form()->post($urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/index'))->csrf($csrf)->open() .
+         new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
+         new Form()->close();
     $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');    
     echo GridView::widget()
       ->bodyRowAttributes(['class' => 'align-middle'])

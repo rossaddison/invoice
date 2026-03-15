@@ -361,7 +361,7 @@ class Inv
 
     public function setDate_created(string $date_created): void
     {
-        $this->date_created = (new DateTimeImmutable())
+        $this->date_created =  new DateTimeImmutable()
         ->createFromFormat('Y-m-d', $date_created)
         ?: new DateTimeImmutable('now');
     }

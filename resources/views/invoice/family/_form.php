@@ -37,7 +37,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
 
 ?>
 
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -167,4 +167,4 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
   <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= (new Form())->close() ?>
+<?=  new Form()->close() ?>

@@ -106,7 +106,7 @@ class CustomValuesHelper
         $customBracketCustomField = 'custom[' . $customFieldId . ']'; 
         $fieldValue = $this->form_value($entity_custom_values, $customFieldId) ?? '';
         $label = $custom_field->getLabel() ?? '';
-        $cfEditableAt = (new A())
+        $cfEditableAt =  new A()
                 ->href($urlGenerator->generate('customfield/edit', ['id' => $customFieldId]))
                 ->content($translator->translate('custom.field.edit'))
                 ->addAttributes(['style' => 'text-decoration:none'])
@@ -140,11 +140,11 @@ class CustomValuesHelper
                     $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
                 }
 
-                echo (new Label())
+                echo  new Label()
                 ->forId($customFieldId, )
                 ->content(Html::encode($label)) . $leftArrowCfEditableAt;
 
-                echo (new Select())
+                echo  new Select()
                 ->addAttributes(
                     [
                         'id' => $customFieldId,
@@ -175,14 +175,14 @@ class CustomValuesHelper
                     $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
                 }
 
-                echo (new Label())
+                echo  new Label()
                 ->forId($customFieldId)
                 ->content(Html::encode($label)) . $leftArrowCfEditableAt;
 
                 /**
                  * @psalm-suppress PossiblyInvalidArgument $selChoices
                  */
-                echo (new Select())
+                echo  new Select()
                 ->addAttributes([
                     'class' => 'form-control',
                     'id' => $customFieldId,
@@ -499,9 +499,9 @@ class CustomValuesHelper
     public function print_field_for_pdf(Translator $translator, array $entity_custom_values, CustomField $custom_field, cvR $cvR): void
     {
         $customFieldId = $custom_field->getId();
-        echo (new Br());
-        $content = (new Label())->content(Html::encode($custom_field->getLabel()));
-        echo (new B())
+        echo  new Br();
+        $content =  new Label()->content(Html::encode($custom_field->getLabel()));
+        echo  new B()
              ->content($content)
              ->render();
 
@@ -511,15 +511,15 @@ class CustomValuesHelper
         switch ($custom_field->getType()) {
             case 'DATE':
                 $dateValue = $fieldValue == '' ? '' : $fieldValue;
-                echo (new Label())
+                echo  new Label()
                 ->content((string) $dateValue);
-                echo (new Br());
-                echo (new Br());
+                echo  new Br();
+                echo  new Br();
                 break;
             case 'SINGLE-CHOICE':
-                echo (new Label())
+                echo  new Label()
                 ->content((string) $this->selected_value($entity_custom_values, $customFieldId, $cvR));
-                echo (new Br());
+                echo  new Br();
                 break;
             case 'MULTIPLE-CHOICE':
                 if ($this->is_serialized($fieldValue, true)) {
@@ -532,36 +532,36 @@ class CustomValuesHelper
                         $custom_value = $cvR->repoCustomValuequery($value);
                         if (null !== $custom_value) {
                             $customValue = $custom_value->getValue();
-                            echo (new Label())
+                            echo  new Label()
                             ->content($customValue);
-                            echo (new Br());
+                            echo  new Br();
                         }
                     }
                 }
                 break;
             case 'RADIOLIST-CHOICE':
-                echo (new Label())
+                echo  new Label()
                 ->content((string) $this->selected_value($entity_custom_values, $customFieldId, $cvR));
-                echo (new Br());
+                echo  new Br();
                 break;
 
                 break;
             case 'BOOLEAN':
-                echo (new Label())
+                echo  new Label()
                 ->content(null !== $this->form_value($entity_custom_values, $customFieldId)
                                   ? $translator->translate('true')
                                   : $translator->translate('false'));
-                echo (new Br());
+                echo  new Br();
                 break;
             case 'NUMBER':
-                echo (new Div())
+                echo  new Div()
                 ->content(Html::encode($fieldValue));
-                echo (new Br());
+                echo  new Br();
                 break;
             default:
-                echo (new Div())
+                echo  new Div()
                 ->content(Html::encode($fieldValue));
-                echo (new Br());
+                echo  new Br();
         }
         echo Html::closeTag('div');
     }

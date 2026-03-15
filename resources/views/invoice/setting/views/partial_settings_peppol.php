@@ -86,10 +86,10 @@ echo H::openTag('div', $row); //1
        'id' => 'settings[peppol_debug_with_emojis]',
        'class' => 'form-control'
       ]);
-       echo (new Option())
+       echo  new Option()
         ->value('0')
         ->content($translator->translate('no'));
-       echo (new Option())
+       echo  new Option()
         ->value('1')
         ->selected(
          $body['settings[peppol_debug_with_emojis]']
@@ -122,10 +122,10 @@ echo H::openTag('div', $row); //1
        'settings[peppol_debug_with_internal_validator]',
        'class' => 'form-control'
       ]);
-       echo (new Option())
+       echo  new Option()
         ->value('0')
         ->content($translator->translate('no'));
-       echo (new Option())
+       echo  new Option()
         ->value('1')
         ->selected(
          $body[
@@ -184,7 +184,7 @@ echo H::openTag('div', $row); //1
        'id' => 'settings[currency_code_from]',
        'class' => 'input-sm form-control'
       ]);
-       echo (new Option())
+       echo  new Option()
         ->value('0')
         ->content($translator->translate('none'));
        /**
@@ -192,7 +192,7 @@ echo H::openTag('div', $row); //1
        * @var string $key
        */
        foreach ($gateway_currency_codes as $val => $key) {
-       echo (new Option())
+       echo  new Option()
         ->value($val)
         ->selected(
          $body['settings[currency_code_from]'] 
@@ -219,7 +219,7 @@ echo H::openTag('div', $row); //1
        'id' => 'settings[currency_code_to]',
        'class' => 'input-sm form-control'
       ]);
-       echo (new Option())
+       echo  new Option()
         ->value('0')
         ->content($translator->translate('none'));
        /**
@@ -227,7 +227,7 @@ echo H::openTag('div', $row); //1
        * @var string $key
        */
        foreach ($gateway_currency_codes as $val => $key) {
-       echo (new Option())
+       echo  new Option()
         ->value($val)
         ->selected(
          $body['settings[currency_code_to]']
@@ -256,7 +256,7 @@ echo H::openTag('div', $row); //1
        'id' => 'settings[peppol_document_currency]',
        'class' => 'input-sm form-control'
       ]);
-       echo (new Option())
+       echo  new Option()
         ->value('0')
         ->content($translator->translate('none'));
        /**
@@ -264,7 +264,7 @@ echo H::openTag('div', $row); //1
        * @var string $key
        */
        foreach ($gateway_currency_codes as $val => $key) {
-       echo (new Option())
+       echo  new Option()
         ->value($val)
         ->selected(
          $body[
@@ -377,7 +377,7 @@ echo H::openTag('div', $row); //1
         * @var string $value['rdf:comment']
         */
         foreach ($stand_in_codes as $key => $value) {
-        echo (new Option())
+        echo  new Option()
          ->value($value['rdf:value'])
          ->selected(
           ($body['settings[stand_in_code]'] 
@@ -394,7 +394,7 @@ echo H::openTag('div', $row); //1
          'href' => 
          'https://invoice.local/w/Peppol-stand-in-code'
         ]);
-         echo (new I())->class(
+         echo  new I()->class(
           'fa fa-question fa-fw'
          );
         echo H::closeTag('a');
@@ -418,10 +418,10 @@ echo H::openTag('div', $row); //1
        'id' => 'settings[peppol_xml_stream]',
        'class' => 'form-control'
       ]);
-       echo (new Option())
+       echo  new Option()
         ->value('0')
         ->content($translator->translate('no'));
-       echo (new Option())
+       echo  new Option()
         ->value('1')
         ->selected(
          $body['settings[peppol_xml_stream]'] == '1'

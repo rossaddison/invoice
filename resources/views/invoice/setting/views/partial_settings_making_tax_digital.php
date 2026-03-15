@@ -26,7 +26,7 @@ echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
   echo H::openTag('div', $panel); //3
    echo H::openTag('div', $panelHead); //4
-    echo (new A())
+    echo  new A()
      ->href('https://github.com/MicrosoftDocs/dynamics365smb-docs/blob/main/business-central/LocalFunctionality/UnitedKingdom/fraud-prevention-data.md')
      ->content($translator->translate('mtd.fph'))
      ->render();
@@ -208,7 +208,7 @@ echo H::openTag('div', $row); //1
        'readonly' => true,
        'value' => $body['settings[fph_gov_client_user_id]'],
       ]);
-      echo (new Button())
+      echo  new Button()
        ->id('btn_fph_generate')
        ->addAttributes(['type' => 'reset', 'name' => 'btn_fph_generate'])
        ->addAttributes([

@@ -1445,7 +1445,7 @@ final class SettingRepository extends Select\Repository
     {
         $aliases = $this->get_invoice_archived_folder_aliases();
         $filehelper = new FileHelper();
-        $filter = (new PathMatcher())
+        $filter =  new PathMatcher()
                    ->doNotCheckFilesystem()
                    ->only($invoice_number . '.pdf');
         return $filehelper::findFiles(

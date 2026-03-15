@@ -43,14 +43,14 @@ echo H::openTag('div', ['class' => 'border border-1 border-primary']); //1
     'id' => 'settings[bootstrap5_offcanvas_placement]',
     'class' => 'form-control',
    ]);
-    echo (new Option())
+    echo  new Option()
      ->value('0')
      ->content($translator->translate('none'));
    /**
     * @var string $placement
     */
     foreach ($placements as $placement) {
-     echo (new Option())
+     echo  new Option()
       ->value($placement)
       ->selected($body['settings[bootstrap5_offcanvas_placement]'] === $placement)
       ->content(ucfirst($placement));

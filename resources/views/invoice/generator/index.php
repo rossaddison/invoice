@@ -30,10 +30,10 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = (new A())
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'generator/index'))
     ->id('btn-reset')
     ->render();
@@ -247,14 +247,14 @@ $columns = [
 ];
 
 $toolbarString
-    = (new Form())->post($urlGenerator->generate('generator/index'))->csrf($csrf)->open()
-    . (new A())
+    =  new Form()->post($urlGenerator->generate('generator/index'))->csrf($csrf)->open()
+    .  new A()
     ->href($urlGenerator->generate('generator/add'))
     ->addClass('btn btn-info')
     ->content('➕')
     ->render()
-    . (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . (new Form())->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 $grid_summary = $s->grid_summary(
     $paginator,

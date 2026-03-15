@@ -140,7 +140,7 @@ class Client
         /**
          * Related logic: see ImportController insertClients function
          */
-        $this->client_date_created = (new DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_created) ?: new DateTimeImmutable('now');
+        $this->client_date_created =  new DateTimeImmutable()->createFromFormat('Y-m-d h:i:s', $client_date_created) ?: new DateTimeImmutable('now');
     }
 
     public function getClient_date_created(): DateTimeImmutable
@@ -158,7 +158,7 @@ class Client
     // Used in ImportController to import Invoiceplane $client_date_modified
     public function setClient_date_modified(string $client_date_modified): void
     {
-        $this->client_date_modified = (new DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $client_date_modified) ?: new DateTimeImmutable('now');
+        $this->client_date_modified =  new DateTimeImmutable()->createFromFormat('Y-m-d h:i:s', $client_date_modified) ?: new DateTimeImmutable('now');
     }
 
     public function getClient_title(): ?string

@@ -46,7 +46,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?><?= $title; ?><?= Html::closeTag('h1'); ?>
-        <?= (new Form())->post($urlGenerator->generate($actionName, $actionArguments))
+        <?=  new Form()->post($urlGenerator->generate($actionName, $actionArguments))
                        ->enctypeMultipartFormData()
                        ->csrf($csrf)
                        ->id('SalesOrderForm')

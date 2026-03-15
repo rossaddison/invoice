@@ -41,10 +41,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[stop_logging_in]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected($body['settings[stop_logging_in]'] == '1')
          ->content($translator->translate('yes'));
@@ -65,10 +65,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[stop_signing_up]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected($body['settings[stop_signing_up]'] == '1')
          ->content($translator->translate('yes'));
@@ -89,10 +89,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[install_test_data]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected($body['settings[install_test_data]'] == '1')
          ->content($translator->translate('yes'));
@@ -113,10 +113,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[use_test_data]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected($body['settings[use_test_data]'] == '1')
          ->content($translator->translate('yes'));
@@ -137,14 +137,14 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[default_language]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('none'));
         /**
         * @var string $language
         */
         foreach ($languages as $language) {
-        echo (new Option())
+        echo  new Option()
          ->value($language)
          ->selected(
           $body['settings[default_language]'] == $language
@@ -167,7 +167,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[time_zone]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('none'));
         /**
@@ -175,7 +175,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $value
         */
         foreach ($time_zones as $key => $value) {
-        echo (new Option())
+        echo  new Option()
          ->value($value)
          ->selected($body['settings[time_zone]'] == $value)
          ->content($value);
@@ -199,10 +199,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[default_country]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('none'));
-        echo (new Option())
+        echo  new Option()
          ->value('')
          ->content($translator->translate('none'));
         /**
@@ -210,7 +210,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $country
         */
         foreach ($countries as $cldr => $country) {
-        echo (new Option())
+        echo  new Option()
          ->value($cldr)
          ->selected(
           $body['settings[default_country]'] == $cldr
@@ -255,10 +255,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[disable_flash_messages]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[disable_flash_messages]'] == '1'
@@ -281,10 +281,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[signup_automatically_assign_client]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body[
@@ -314,10 +314,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'settings[signup_default_age_minimum_eighteen]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body[
@@ -372,7 +372,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'class' => 'form-control',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('before')
          ->selected(
           $body[
@@ -380,7 +380,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'before'
         )
          ->content($translator->translate('before.amount'));
-        echo (new Option())
+        echo  new Option()
          ->value('after')
          ->selected(
           $body[
@@ -388,7 +388,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'after'
         )
          ->content($translator->translate('after.amount'));
-        echo (new Option())
+        echo  new Option()
          ->value('afterspace')
          ->selected(
           $body[
@@ -417,7 +417,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[currency_code]',
         'class' => 'input-sm form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('none'));
         /**
@@ -425,7 +425,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $val
         */
         foreach ($gateway_currency_codes as $key => $val) {
-        echo (new Option())
+        echo  new Option()
          ->value($key)
          ->selected(
           $body['settings[currency_code]'] == $key
@@ -451,16 +451,16 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[tax_rate_decimal_places]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('none'));
-        echo (new Option())
+        echo  new Option()
          ->value('2')
          ->selected(
           $body['settings[tax_rate_decimal_places]'] == '2'
          )
          ->content('2');
-        echo (new Option())
+        echo  new Option()
          ->value('3')
          ->selected(
           $body['settings[tax_rate_decimal_places]'] == '3'
@@ -485,7 +485,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[number_format]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('none'));
         /**
@@ -494,7 +494,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $value['label']
         */
         foreach ($number_formats as $key => $value) {
-        echo (new Option())
+        echo  new Option()
          ->value($key)
          ->selected(
           $body['settings[number_format]'] == 
@@ -531,10 +531,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'class' => 'form-control',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('none'));
-        echo (new Option())
+        echo  new Option()
          ->value('this-month')
          ->selected(
           $body[
@@ -542,7 +542,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'this-month'
         )
          ->content($translator->translate('this.month'));
-        echo (new Option())
+        echo  new Option()
          ->value('last-month')
          ->selected(
           $body[
@@ -550,7 +550,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'last-month'
         )
          ->content($translator->translate('last.month'));
-        echo (new Option())
+        echo  new Option()
          ->value('this-quarter')
          ->selected(
           $body[
@@ -558,7 +558,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'this-quarter'
         )
          ->content($translator->translate('this.quarter'));
-        echo (new Option())
+        echo  new Option()
          ->value('last-quarter')
          ->selected(
           $body[
@@ -566,7 +566,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'last-quarter'
         )
          ->content($translator->translate('last.quarter'));
-        echo (new Option())
+        echo  new Option()
          ->value('this-year')
          ->selected(
           $body[
@@ -574,7 +574,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'this-year'
         )
          ->content($translator->translate('this.year'));
-        echo (new Option())
+        echo  new Option()
          ->value('last-year')
          ->selected(
           $body[
@@ -600,10 +600,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'class' => 'form-control',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('none'));
-        echo (new Option())
+        echo  new Option()
          ->value('this-month')
          ->selected(
           $body[
@@ -611,7 +611,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'this-month'
         )
          ->content($translator->translate('this.month'));
-        echo (new Option())
+        echo  new Option()
          ->value('last-month')
          ->selected(
           $body[
@@ -619,7 +619,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'last-month'
         )
          ->content($translator->translate('last.month'));
-        echo (new Option())
+        echo  new Option()
          ->value('this-quarter')
          ->selected(
           $body[
@@ -627,7 +627,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'this-quarter'
         )
          ->content($translator->translate('this.quarter'));
-        echo (new Option())
+        echo  new Option()
          ->value('last-quarter')
          ->selected(
           $body[
@@ -635,7 +635,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'last-quarter'
         )
          ->content($translator->translate('last.quarter'));
-        echo (new Option())
+        echo  new Option()
          ->value('this-year')
          ->selected(
           $body[
@@ -643,7 +643,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ] == 'this-year'
         )
          ->content($translator->translate('this.year'));
-        echo (new Option())
+        echo  new Option()
          ->value('last-year')
          ->selected(
           $body[
@@ -671,10 +671,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'disable_quickactions',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[disable_quickactions]'] == '1'
@@ -706,10 +706,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[disable_sidebar]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[disable_sidebar]'] == '1'
@@ -754,10 +754,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'class' => 'form-control',
         'id' => 'monospace_amounts'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[monospace_amounts]'] == '1'
@@ -791,10 +791,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[open_reports_in_new_tab]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[open_reports_in_new_tab]'] == '1'
@@ -826,10 +826,10 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => 'settings[bcc_mails_to_admin]',
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[bcc_mails_to_admin]'] == '1'

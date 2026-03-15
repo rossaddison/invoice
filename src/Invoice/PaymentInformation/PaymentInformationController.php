@@ -1030,7 +1030,7 @@ final class PaymentInformationController
 
     private function mollieClientVersionString(): string
     {
-        $array_version = (new MollieClient())->getVersionStrings();
+        $array_version =  new MollieClient()->getVersionStrings();
         return implode($array_version);
     }
 

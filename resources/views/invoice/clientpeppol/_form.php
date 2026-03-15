@@ -57,7 +57,7 @@ use Yiisoft\VarDumper\VarDumper;
     <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
         <?= Html::encode($title) ?>
     <?= Html::closeTag('h1'); ?>
-        <?= (new Form())
+        <?=  new Form()
             ->post($urlGenerator->generate($actionName, $actionArguments))
             ->enctypeMultipartFormData()
             ->csrf($csrf)

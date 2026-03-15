@@ -20,7 +20,7 @@ use Yiisoft\Html\Tag\Form;
 
 ?>
 
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -86,4 +86,4 @@ echo Field::select($form, 'client_id')
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= (new Form())->close() ?>
+<?=  new Form()->close() ?>

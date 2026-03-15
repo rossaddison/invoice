@@ -25,7 +25,7 @@ $title = Html::encode($this->getTitle());
     ->containerAttributes(['class' => 'container'])
     ->listAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
     ->fieldAttributes(['class' => 'col-xl-5'])
-    ->fieldTag((new H2())->class('text-center')->content("<strong>$title</strong>")->encode(false)->render())
+    ->fieldTag( new H2()->class('text-center')->content("<strong>$title</strong>")->encode(false)->render())
     ->fields(
         new DataField(
             property: 'id',
@@ -45,4 +45,4 @@ $title = Html::encode($this->getTitle());
     )
     ->labelAttributes(['class' => 'fw-bold'])
     ->valueAttributes(['class' => 'alert alert-info'])
-    ->valuePresenter(new SimpleValuePresenter());
+    ->valuePresenter new SimpleValuePresenter();

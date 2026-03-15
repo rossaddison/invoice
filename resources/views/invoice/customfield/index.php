@@ -76,7 +76,7 @@ $columns = [
         header: $translator->translate('values'),
         content: static function (CustomField $model) use ($custom_value_fields, $urlGenerator, $translator): string|A {
             if (in_array($model->getType(), $custom_value_fields)) {
-                return (new A())
+                return  new A()
                        ->href($urlGenerator->generate('customvalue/field', ['id' => $model->getId()]))
                        ->addClass('btn btn-default')
                        ->addAttributes([
@@ -123,19 +123,19 @@ $columns = [
 ];
 
 $toolbarString
-    = (new Form())->post($urlGenerator->generate('customfield/index', ['page' => $page]))
+    =  new Form()->post($urlGenerator->generate('customfield/index', ['page' => $page]))
                ->csrf($csrf)
                ->open()
-                . (new A())
+                .  new A()
                     ->href($urlGenerator->generate('customfield/add'))
                     ->addClass('btn btn-info')
                     ->content('➕')
                     ->render()
-                . (new Div())
+                .  new Div()
                     ->addClass('float-end m-3')
                     ->content($gridComponents->toolbarReset($urlGenerator))
                     ->encode(false)->render()
-                . (new Form())->close();
+                .  new Form()->close();
 
 $grid_summary = $s->grid_summary(
     $paginator,

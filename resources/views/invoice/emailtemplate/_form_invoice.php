@@ -38,7 +38,7 @@ use Yiisoft\Html\Tag\Span;
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= $translator->translate('email.template.form'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -200,7 +200,7 @@ use Yiisoft\Html\Tag\Span;
             ->hint($translator->translate('hint.this.field.is.required')); ?>         
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 input-group']); ?>
-        <?php echo (new Select())
+        <?php echo  new Select()
             ->addAttributes([
                 'class' => 'form-control',
             ])
@@ -217,51 +217,51 @@ use Yiisoft\Html\Tag\Span;
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Html::openTag('div', ['class' => 'html-tags btn-group btn-group-sm']); ?>
-            <?= (new Span())
+            <?=  new Span()
         ->addClass('html-tag btn btn-default')
         ->addAttributes(['data-tag-type' => 'text-paragraph'])
-        ->content((new I())->addClass('fa fa-fw fa-paragraph'))
+        ->content( new I()->addClass('fa fa-fw fa-paragraph'))
         ->render();
 ?>
-            <?= (new Span())
+            <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-linebreak'])
     ->content(Html::b(NoEncode::string('&lt;br&gt;')))
     ->render();
 ?> 
-            <?= (new Span())
+            <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-bold'])
-    ->content((new I())->addClass('fa fa-fw fa-bold')->content('b'))
+    ->content( new I()->addClass('fa fa-fw fa-bold')->content('b'))
     ->render();
 ?>
-            <?= (new Span())
+            <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-italic'])
-    ->content((new I())->addClass('fa fa-fw fa-italic'))
+    ->content( new I()->addClass('fa fa-fw fa-italic'))
     ->render();
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'html-tags btn-group btn-group-sm']); ?>
-            <?= (new Span())
+            <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-h1'])
     ->content('H1')
     ->render();
 ?>
-            <?= (new Span())
+            <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-h2'])
     ->content('H2')
     ->render();
 ?>
-            <?= (new Span())
+            <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-h3'])
     ->content('H3')
     ->render();
 ?>
-            <?= (new Span())
+            <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-h4'])
     ->content('H4')
@@ -269,19 +269,19 @@ use Yiisoft\Html\Tag\Span;
 ?>            
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'html-tags btn-group btn-group-sm']); ?>
-            <?= (new Span())
+            <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-code'])
-    ->content((new I())->addClass('fa fa-fw fa-code'))
+    ->content( new I()->addClass('fa fa-fw fa-code'))
     ->render();
 ?>
-            <?= (new Span())
+            <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-hr'])
     ->content(Html::b(NoEncode::string('&lt;hr&gt;')))
     ->render();
 ?>
-            <?= (new Span())
+            <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-css'])
     ->content('CSS')
@@ -312,7 +312,7 @@ use Yiisoft\Html\Tag\Span;
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>
-<?= (new Form())->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

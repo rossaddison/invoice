@@ -31,7 +31,7 @@ $divHeight = (string) 250;
                     Currently I am assisting with the development of OAuth 2.0 Clients and the repository in question is available at ➡ 
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
-                <?= (new A())->content('https://github.com/rossaddison/yii-auth-client')->href('https://github.com/rossaddison/yii-auth-client')->render(); ?>    
+                <?=  new A()->content('https://github.com/rossaddison/yii-auth-client')->href('https://github.com/rossaddison/yii-auth-client')->render(); ?>    
                 <?= Html::closeTag('p'); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
@@ -42,7 +42,7 @@ $divHeight = (string) 250;
                     Currently I am developing a php based invoicing system using the Yii3 Framework and the opensource code is available at ➡️ 
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
-                <?= (new A())->content('https://github.com/rossaddison/invoice')->href('https://github.com/rossaddison/invoice')->render(); ?>
+                <?=  new A()->content('https://github.com/rossaddison/invoice')->href('https://github.com/rossaddison/invoice')->render(); ?>
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
                     This site will be used to demo quote and invoice creation at a future date.
@@ -56,7 +56,7 @@ $divHeight = (string) 250;
                     The Invoicing System uses a structure similar to the Yii3 Demo available at ➡️
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
-                <?= (new A())->content('https://github.com/yiisoft/demo')->href('https://github.com/yiisoft/demo')->render(); ?>
+                <?=  new A()->content('https://github.com/yiisoft/demo')->href('https://github.com/yiisoft/demo')->render(); ?>
                 <?= Html::closeTag('p'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
@@ -81,7 +81,7 @@ $divHeight = (string) 250;
     ->items(
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/step1.jpg')
                         ->size($w, $h)
                         ->render()
@@ -93,7 +93,7 @@ $divHeight = (string) 250;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/step2.jpg')
                         ->size($w, $h)
                         ->render()
@@ -104,7 +104,7 @@ $divHeight = (string) 250;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/step3.jpg')
                         ->size($w, $h)
                         ->render()

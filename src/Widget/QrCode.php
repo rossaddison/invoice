@@ -14,9 +14,9 @@ final class QrCode
         /**
          * @var float|int|string $qrCode
          */
-        $qrCode = (new ChillQrCode())->render($absoluteUrl);
+        $qrCode =  new ChillQrCode()->render($absoluteUrl);
         printf(
-            (new Img())
+             new Img()
             ->addAttributes(['data-bs-toggle' => 'tooltip', 'title' => $directions])
             ->width($pixels)
             ->height($pixels)

@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('setting.company.private'); ?>
 <?= Html::closeTag('h1'); ?>
 
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -136,7 +136,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
-<?= (new Form())->close() ?>
+<?=  new Form()->close() ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

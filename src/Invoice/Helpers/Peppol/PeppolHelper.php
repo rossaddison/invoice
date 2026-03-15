@@ -281,7 +281,7 @@ class PeppolHelper
             // return the $paymentId (ie. a payment reference id)
             $paymentId =
                     'peppol' . ($invoice->getNumber() ?? 'Number unavailable')
-                    . (new DateTime())->format('Y-m-d');
+                    .  new DateTime()->format('Y-m-d');
             $payment_terms = $invoice->getTerms();
 // Related logic:
 // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/

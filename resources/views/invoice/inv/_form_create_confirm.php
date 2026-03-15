@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?><?= $translator->translate('create.invoice'); ?><?= Html::closeTag('h1'); ?>
-        <?= (new Form())
+        <?=  new Form()
             ->post($urlGenerator->generate($actionName, $actionArguments))
             ->enctypeMultipartFormData()
             ->csrf($csrf)->id('InvForm')

@@ -240,7 +240,7 @@ final readonly class QuoteToolbar
         $iconHtml = Html::openTag('i', ['class' => 'fa ' . (string) $button['icon']]) . Html::closeTag('i');
 
         if ((string) $button['type'] === 'link') {
-            return (new A())
+            return  new A()
                 ->href((string) $button['href'])
                 ->addClass($baseClasses)
                 ->id($this->getButtonId($button))
@@ -249,7 +249,7 @@ final readonly class QuoteToolbar
                 ->render();
         } elseif ((string) $button['type'] === 'disabled') {
             // Disabled button with tooltip
-            return (new A())
+            return  new A()
                 ->href('#')
                 ->addClass($baseClasses . ' disabled')
                 ->id($this->getButtonId($button))
@@ -267,7 +267,7 @@ final readonly class QuoteToolbar
                 ? 'text-decoration: none; ' . (string) $button['style']
                 : 'text-decoration: none';
             
-            return (new A())
+            return  new A()
                 ->href((string) $button['href'])
                 ->addClass($baseClasses)
                 ->id($this->getButtonId($button))
@@ -302,14 +302,14 @@ final readonly class QuoteToolbar
             default => $this->translator->translate('unknown'),
         };
 
-        $badges[] = (new Span())
+        $badges[] =  new Span()
             ->addClass('badge ' . $statusClass . ' me-2')
             ->content($statusText)
             ->render();
 
         // SO status indicator if quote has been converted
         if ($quote->getSo_id() !== '0' && !empty($quote->getSo_id())) {
-            $badges[] = (new Span())
+            $badges[] =  new Span()
                 ->addClass('badge bg-info me-2')
                 ->content($this->translator->translate('converted.to.so'))
                 ->render();
@@ -317,7 +317,7 @@ final readonly class QuoteToolbar
 
         // Invoice status indicator if quote has been converted
         if ($quote->getInv_id() !== '0' && !empty($quote->getInv_id())) {
-            $badges[] = (new Span())
+            $badges[] =  new Span()
                 ->addClass('badge bg-success me-2')
                 ->content($this->translator->translate('converted.to.invoice'))
                 ->render();

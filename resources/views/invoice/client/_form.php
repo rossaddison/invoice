@@ -52,7 +52,7 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('client.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?=
-    (new Form())
+     new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -348,7 +348,7 @@ echo Field::date($form, 'client_birthdate')
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>                
-<?= (new Form())->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

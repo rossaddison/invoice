@@ -24,8 +24,8 @@ echo H::openTag('div', ['class' => 'row']); //1
  ]);
   echo H::openTag('div', ['class' => 'panel panel-default']); //3
    echo H::openTag('div', ['class' => 'panel-heading']); //4
-    echo (new H6())->content(
-     (new A())
+    echo  new H6()->content(
+      new A()
      ->attributes(['style' => 'text-decoration:none'])
      ->href('https://php-qrcode.readthedocs.io/en/main/')
      ->content($translator->translate('qr.code'))
@@ -63,7 +63,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $label
         */
         foreach ($ecc_levels as $value => $label) {
-        echo (new Option())
+        echo  new Option()
          ->value($value)
          ->selected($value == ($body['settings[qr_ecc_level]'] ?? '0'))
          ->content(H::encode($label));
@@ -88,7 +88,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        ]);
       echo H::closeTag('div'); //7
       echo H::openTag('div', ['class' => 'panel-heading']); //7
-       echo (new H6())
+       echo  new H6()
         ->attributes(['class' => 'label label-info'])
         ->content($translator->translate('qr.code.1'));
        echo H::openTag('pre');
@@ -112,67 +112,67 @@ echo H::openTag('div', ['class' => 'row']); //1
         $pixels = (isset($body['settings[qr_height_and_width]'])
          && ($body['settings[qr_height_and_width]']))
          ? (int) $body['settings[qr_height_and_width]'] : 60;
-         printf((new Img())
+         printf( new Img()
          ->width($pixels)
          ->height($pixels)
          ->src('%s')
          ->alt($translator->translate('qr.code'))
          ->render(),
-         (string) (new QRCode())->render(
+         (string)  new QRCode()->render(
          'https://invoice.myhost/invoice/inv/view/6'
         )
         );
-        echo (new Table())
+        echo  new Table()
          ->attributes([
           'class' => 'table table-info table-striped table-bordered'
          ])
          ->rows(
-          (new Tr())->headerStrings([
+           new Tr()->headerStrings([
           $translator->translate('qr.code.1'),
           $translator->translate('qr.code.details'),
          ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          $translator->translate('qr.code.source'),
          $translator->translate('qr.code.source.path'),
         ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          '*.php',
          'php $company_logo_and_address',
         ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          'Path',
          '\resources\views\invoice\template\invoice\pdf',
         ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          'Controller/action',
          'inv/pdf -> pdfHelper/generate_inv_pdf',
         ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          'src\invoice\Helpers\pdfHelper',
          'generate_inv_pdf -> generate_inv_html',
         ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          $translator->translate('qr.code.type'),
          $translator->translate('qr.code.type.absolute.url'),
         ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          $translator->translate('qr.absolute.url'),
          'https://invoice.myhost/invoice/inv/view/6',
         ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          $translator->translate('qr.meaning'),
          $translator->translate('qr.meaning.benefit'),
         ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          $translator->translate('qr.code.widget.used'),
          '\src\Widget\QrCode.php',
         ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          $translator->translate('qr.code.level.1'),
          '(new QRCode)->render(' .
          '"http://invoice.myhost/invoice/inv/view/6")',
         ]),
-        (new Tr())->dataStrings([
+         new Tr()->dataStrings([
          $translator->translate('qr.code.settings.effect'),
          $translator->translate(
          'qr.code.settings.effect.explanation'

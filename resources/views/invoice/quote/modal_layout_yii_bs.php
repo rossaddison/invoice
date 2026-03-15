@@ -25,7 +25,7 @@ echo Modal::widget()
 ->scrollable()
 ->triggerButton()
 ->footerAttributes(['class' => 'text-dark'])
-->footer((new Button())->addClass('btn btn-danger')->attribute('data-bs-dismiss', 'modal')->content($translator->translate('close')))
+->footer( new Button()->addClass('btn btn-danger')->attribute('data-bs-dismiss', 'modal')->content($translator->translate('close')))
 ->title('Modal title')
 ->verticalCentered()
 ->render();

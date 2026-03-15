@@ -20,7 +20,7 @@ $divHeight = (string) 500;
     ->items(
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/1.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -32,7 +32,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/2.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -43,7 +43,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/3.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -54,7 +54,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/4.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -65,7 +65,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/5.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -76,7 +76,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/6.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -87,7 +87,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/7.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -98,7 +98,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/8.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -109,7 +109,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/9.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -120,7 +120,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/10.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -131,7 +131,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/11.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -142,7 +142,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/12.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -153,7 +153,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/13.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -164,7 +164,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/14.jpeg')
                         ->size($w, $h)
                         ->render()
@@ -175,7 +175,7 @@ $divHeight = (string) 500;
         ),
         CarouselItem::to(
             content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
-                        . (new Img())
+                        .  new Img()
                         ->src('/img/gallery/15.jpeg')
                         ->size($w, $h)
                         ->render()

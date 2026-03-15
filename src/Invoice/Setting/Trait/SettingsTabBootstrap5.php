@@ -98,7 +98,7 @@ trait SettingsTabBootstrap5
             . H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2'])
             . H::openTag('div', ['class' => 'panel panel-default'])
             . H::openTag('div', ['class' => 'panel-heading'])
-            . (new I())->addClass('bi bi-bootstrap')->render()
+            .  new I()->addClass('bi bi-bootstrap')->render()
             . H::closeTag('div')
             . H::openTag('div', ['class' => 'panel-body'])
             . H::openTag('div', ['class' => 'row'])

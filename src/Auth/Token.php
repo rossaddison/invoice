@@ -89,6 +89,6 @@ class Token
 
     public function setCreated_at(string $created_at): void
     {
-        $this->created_at = (new DateTimeImmutable())->createFromFormat('Y-m-d h:i:s', $created_at) ?: new DateTimeImmutable('now');
+        $this->created_at =  new DateTimeImmutable()->createFromFormat('Y-m-d h:i:s', $created_at) ?: new DateTimeImmutable('now');
     }
 }

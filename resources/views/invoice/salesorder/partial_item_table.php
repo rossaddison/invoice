@@ -71,7 +71,7 @@ foreach ($soItems as $item) {
     $productRef = '';
     $taskRef = '';
     if ($productId > 0) {
-        $productRef = (new A())
+        $productRef =  new A()
            ->href($urlGenerator->generate('product/view', 
                 [
                     '_language' => (string) $session->get('_language'),
@@ -82,7 +82,7 @@ foreach ($soItems as $item) {
            ->render();
     }
     if ($taskId > 0) {
-        $taskRef = (new A())
+        $taskRef =  new A()
            ->href($urlGenerator->generate('task/view',
                    [
                        '_language' => (string) $session->get('_language'),

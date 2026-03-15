@@ -76,7 +76,7 @@ $columns = [
         property: 'client_name',
         header: $translator->translate('client.name'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return  (new A())
+            return   new A()
                     ->content(Html::encode($model->getClient_name()))
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
                     ->addClass('btn btn-warning ms-2');
@@ -88,7 +88,7 @@ $columns = [
         property: 'client_surname',
         header: $translator->translate('client.surname'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return  (new A())
+            return   new A()
                     ->content(Html::encode($model->getClient_surname() ?? ''))
                     ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
                     ->addClass('btn btn-warning ms-2');
@@ -188,32 +188,32 @@ $grid_summary = $s->grid_summary(
 );
 
 $toolbarString
-    = (new Form())
+    =  new Form()
     ->post($urlGenerator->generate('client/index'))
     ->csrf($csrf)
     ->open()
-    . (new Div())
+    .  new Div()
         ->addClass('btn-group')
         ->content(
             $gridComponents->toolbarReset($urlGenerator)
-            . (new A())
+            .  new A()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 2]))
             ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('all'))
             ->render()
-            . (new A())
+            .  new A()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 1]))
             ->addClass('btn ' . ($active == 1 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('active'))
             ->render()
-            . (new A())
+            .  new A()
             ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 0]))
             ->addClass('btn ' . ($active == 0 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('inactive'))
             ->render(),
         )
         ->encode(false)->render()
-    . (new Form())->close();
+    .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

@@ -128,7 +128,7 @@ $this->beginPage();
             // Bootstrap5's Responsive Metatag
             Meta::data('viewport', 'width=device-width, initial-scale=1')
         ?>
-        <?= (new Style())->content('#nprogress .bar {
+        <?=  new Style()->content('#nprogress .bar {
                     height: 2px !important; /* ~2mm */
                     background: #2196f3 !important;
                 }')->render(); ?>
@@ -182,7 +182,7 @@ echo NavBar::widget()
   ->begin();
 
 // Logout
-echo (new Form())
+echo  new Form()
 ->post($urlGenerator->generate('auth/logout'))
 ->csrf($csrf)
 ->open()
@@ -191,7 +191,7 @@ echo (new Form())
         ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))]),
 )
 ->class('btn btn-xs btn-warning')
-. (new Form())->close();
+.  new Form()->close();
 
 
 $ifaq = 'invoice/faq';
@@ -291,7 +291,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 'style' => 'background-color: #ffcccb',
             ])
             ->togglerVariant(ButtonVariant::INFO)
-            ->togglerContent((new Img())
+            ->togglerContent( new Img()
                          ->width(40)
                          ->height(30)
                          ->src('/site/e-invoice-emoji.png'))
@@ -725,7 +725,7 @@ if ((null !== $currentPath) && !$isGuest) {
     ->items(
         NavLink::to(
             //label
-            (new I())->class('fa fa-dashboard'),
+             new I()->class('fa fa-dashboard'),
             // url
             $urlGenerator->generate('invoice/dashboard'),
             // active
@@ -744,7 +744,7 @@ if ((null !== $currentPath) && !$isGuest) {
         // Settings
         Dropdown::widget()
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent((new I())->addClass('fa fa-cogs'))
+        ->togglerContent( new I()->addClass('fa fa-cogs'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('view'),
@@ -857,7 +857,7 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent((new I())->addClass('bi bi-people'))
+        ->togglerContent( new I()->addClass('bi bi-people'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('client.add'),
@@ -934,7 +934,7 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent((new I())->addClass('bi bi-coin'))
+        ->togglerContent( new I()->addClass('bi bi-coin'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('enter.payment'),
@@ -1058,7 +1058,7 @@ if ((null !== $currentPath) && !$isGuest) {
             'url' => '#',
         ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent((new I())->class('bi bi-translate'))
+        ->togglerContent( new I()->class('bi bi-translate'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
 // Related logic: config/web/params, src/ViewInjection/LayoutViewInjection

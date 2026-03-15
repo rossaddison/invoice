@@ -36,17 +36,17 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset = (new A())
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'quote/guest'))
     ->id('btn-reset')
     ->render();
 
-$toolbar = (new Div());
+$toolbar =  new Div();
 
-$statusBar =  (new Div())
+$statusBar =   new Div()
     ->addClass('btn-group index-options')
     ->content(
         Html::a(
@@ -176,10 +176,10 @@ $grid_summary = $s->grid_summary(
 );
 
 $toolbarString
-    = (new Form())->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open()
+    =  new Form()->post($urlGenerator->generate('quote/guest'))->csrf($csrf)->open()
     . $statusBar
-    . (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . (new Form())->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

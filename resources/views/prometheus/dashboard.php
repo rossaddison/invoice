@@ -316,7 +316,7 @@ use Yiisoft\Html\Tag\Li;
                                     'System resource usage',
                                     'Application health status'
                                 ];
-                                (new Ul())->class('small')->items((new Li())->content(...$items))->render() ?>
+                                 new Ul()->class('small')->items( new Li()->content(...$items))->render() ?>
                         <?= Html::closeTag('div') ?>
                         <?= Html::openTag('div', ['class' => 'col-md-4']) ?>
                             <?= Html::tag('h6', '💻 Exporters') ?>
@@ -327,7 +327,7 @@ use Yiisoft\Html\Tag\Li;
                                     'windows_exporter (port 9182)',
                                     'Custom application metrics'
                                 ];
-                                (new Ul())->class('small')->items((new Li())->content(...$items))->render() ?>
+                                 new Ul()->class('small')->items( new Li()->content(...$items))->render() ?>
                         <?= Html::closeTag('div') ?>
                     <?= Html::closeTag('div') ?>
                 <?= Html::closeTag('div') ?>

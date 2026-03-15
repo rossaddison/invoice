@@ -126,7 +126,7 @@ echo H::openTag('div', ['class' => 'container py-4']);
    // Payment Actions
    echo H::openTag('div', ['class' => 'mt-4']);
     if (!empty($authUrl) && !$disable_form) {
-        echo (new A())
+        echo  new A()
         ->addAttributes([
             'class' => 'btn btn-primary btn-lg',
             'rel' => 'noopener noreferrer',
@@ -196,7 +196,7 @@ echo H::openTag('div', ['class' => 'container py-4']);
          echo H::closeTag('div');
         echo H::closeTag('div');
         if ('created' == $status) {
-            echo (new A())
+            echo  new A()
               ->addAttributes([
                     'class' => 'btn btn-success btn-lg',
                     'rel' => 'noopener noreferrer',

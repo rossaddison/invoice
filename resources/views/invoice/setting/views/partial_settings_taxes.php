@@ -49,7 +49,7 @@ echo H::openTag('div', $row) . "\n"; //1
         'id' => 'settings[default_invoice_tax_rate]',
         'class' => 'form-control'
        ]) . "\n";
-        echo (new Option())
+        echo  new Option()
          ->value('')
          ->content($translator->translate('none'))
         . "\n";
@@ -62,7 +62,7 @@ echo H::openTag('div', $row) . "\n"; //1
         $name = $taxRate->getTaxRateName() ?? '';
         $content = $percent . $sign . $name;
         $taxRateId = $taxRate->getTaxRateId();
-        echo (new Option())
+        echo  new Option()
          ->value($taxRateId)
          ->selected(
           $body['settings[default_invoice_tax_rate]']
@@ -88,7 +88,7 @@ echo H::openTag('div', $row) . "\n"; //1
         'id' => 'settings[default_item_tax_rate]',
         'class' => 'form-control'
        ]) . "\n";
-        echo (new Option())
+        echo  new Option()
          ->value('')
          ->content($translator->translate('none'))
         . "\n";
@@ -101,7 +101,7 @@ echo H::openTag('div', $row) . "\n"; //1
         $name = $taxRate->getTaxRateName() ?? '';
         $content = $percent . $sign . $name;
         $taxRateId = $taxRate->getTaxRateId();
-        echo (new Option())
+        echo  new Option()
          ->value($taxRateId)
          ->selected(
           $body['settings[default_item_tax_rate]']
@@ -131,11 +131,11 @@ echo H::openTag('div', $row) . "\n"; //1
         'id' => 'settings[default_include_item_tax]'
        ]
         )) . "\n";
-        echo (new Option())
+        echo  new Option()
          ->value('')
          ->content($translator->translate('none'))
         . "\n";
-        echo (new Option())
+        echo  new Option()
          ->value('0')
          ->selected(
           $body['settings[default_include_item_tax]']
@@ -144,7 +144,7 @@ echo H::openTag('div', $row) . "\n"; //1
          ->content($translator->translate(
           'apply.before.item.tax'
          )) . "\n";
-        echo (new Option())
+        echo  new Option()
          ->value('1')
          ->selected(
           $body['settings[default_include_item_tax]']
@@ -171,7 +171,7 @@ echo H::openTag('div', $row) . "\n"; //1
         'id' => 'settings[this_tax_year_from_date_year]',
         'class' => 'form-control'
        ]) . "\n";
-        echo (new Option())
+        echo  new Option()
          ->value('')
          ->content($translator->translate('none'))
         . "\n";
@@ -181,7 +181,7 @@ echo H::openTag('div', $row) . "\n"; //1
          $years[$y] = ['name' => $y, 'value' => $y];
          }
          foreach ($years as $year) {
-         echo (new Option())
+         echo  new Option()
          ->value($year['value'])
          ->selected(
          $body['settings[this_tax_year_from_date_year]']
@@ -209,7 +209,7 @@ echo H::openTag('div', $row) . "\n"; //1
         'id' => 'settings[this_tax_year_from_date_month]',
         'class' => 'form-control'
        ]) . "\n";
-        echo (new Option())
+        echo  new Option()
          ->value('')
          ->content($translator->translate('none'))
         . "\n";
@@ -218,7 +218,7 @@ echo H::openTag('div', $row) . "\n"; //1
          '07', '08', '09', '10', '11', '12'
         ];
         foreach ($months as $month) {
-        echo (new Option())
+        echo  new Option()
          ->value($month)
          ->selected(
           $body['settings[this_tax_year_from_date_month]']
@@ -245,7 +245,7 @@ echo H::openTag('div', $row) . "\n"; //1
         'id' => 'settings[this_tax_year_from_date_day]',
         'class' => 'form-control'
        ]) . "\n";
-        echo (new Option())
+        echo  new Option()
          ->value('')
          ->content($translator->translate('none'))
         . "\n";
@@ -257,7 +257,7 @@ echo H::openTag('div', $row) . "\n"; //1
          '29', '30', '31'
         ];
         foreach ($days as $day) {
-        echo (new Option())
+        echo  new Option()
          ->value($day)
          ->selected(
           $body['settings[this_tax_year_from_date_day]']

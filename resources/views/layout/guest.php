@@ -241,7 +241,7 @@ if ((null !== $currentPath) && !$isGuest) {
         'style' => $fontSizeStyle,
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent((string) (new I())->addClass('bi bi-coin')
+    ->togglerContent((string)  new I()->addClass('bi bi-coin')
             . ' ' . $translator->translate('payment'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
@@ -261,7 +261,7 @@ if ((null !== $currentPath) && !$isGuest) {
         'style' => 'font-size: 1rem;',
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent((string) (new I())->addClass('fa fa-cogs')
+    ->togglerContent((string)  new I()->addClass('fa fa-cogs')
             . ' ' . $translator->translate('settings'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
@@ -286,7 +286,7 @@ if ((null !== $currentPath) && !$isGuest) {
         'url' => '#',
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent((new I())->addClass('bi bi-translate'))
+    ->togglerContent( new I()->addClass('bi bi-translate'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         // Related logic: config/web/params, src/ViewInjection/LayoutViewInjection
@@ -300,7 +300,7 @@ if (null !== $currentPath && $isGuest) {
     echo Nav::widget()
     ->items(
         NavLink::to(
-            (new Label())
+             new Label()
             ->attributes([
                 'class' => 'bi bi-door-open-fill text-success',
             ])
@@ -311,7 +311,7 @@ if (null !== $currentPath && $isGuest) {
             false,
         ),
         NavLink::to(
-            (new Label())
+             new Label()
             ->attributes(
                 [
                     'class' => 'bi bi-person-plus-fill',
@@ -329,7 +329,7 @@ if (null !== $currentPath && $isGuest) {
 }
 
 if (!$isGuest) {
-    echo (new Form())
+    echo  new Form()
     ->post($urlGenerator->generate('auth/logout'))
     ->csrf($csrf)
     ->open()
@@ -338,7 +338,7 @@ if (!$isGuest) {
         . ' ' . $translator->translate('logout')) : '' . ' '
         . $translator->translate('logout'))->class('btn btn-primary')
     . '</div>'
-    . (new Form())->close();
+    .  new Form()->close();
 }
 echo NavBar::end();
 ?>    

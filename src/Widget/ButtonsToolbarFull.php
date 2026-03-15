@@ -453,7 +453,7 @@ final readonly class ButtonsToolbarFull
 
     private function renderButton(array $button): string
     {
-        $link = (new A())
+        $link =  new A()
             ->id('toolbar-full-' . (string) $button['id'])
             ->addClass('btn', (string) $button['class'], 'btn-sm')
             ->attribute('title', (string) $button['title'])
@@ -499,7 +499,7 @@ final readonly class ButtonsToolbarFull
         ]);
 
         if ($inv->getIs_read_only() === true) {
-            $string .= (new Span())
+            $string .=  new Span()
                 ->addClass('badge bg-danger')
                 ->attribute('style', 'font-size: 0.75rem; padding: 4px 8px;'
                     . ' border-radius: 12px;')
@@ -525,7 +525,7 @@ final readonly class ButtonsToolbarFull
             default => '❓ ' . $this->translator->translate('unknown'),
         };
 
-        $string .= (new Span())
+        $string .=  new Span()
             ->addClass('badge ' . $statusClass)
             ->attribute('style', 'font-size: 0.75rem; padding:'
                 . ' 4px 8px; border-radius: 12px;')
@@ -541,7 +541,7 @@ final readonly class ButtonsToolbarFull
         $string = '';
 
         if ($inv->getIs_read_only() === true) {
-            $string .= (new Span())
+            $string .=  new Span()
                 ->addClass('badge bg-danger')
                 ->attribute('style', 'font-size: 0.7rem; padding:'
                     . ' 3px 6px; border-radius: 10px; margin-right: 6px;')
@@ -567,7 +567,7 @@ final readonly class ButtonsToolbarFull
             default => '❓ ' . $this->translator->translate('unknown'),
         };
 
-        $string .= (new Span())
+        $string .=  new Span()
             ->addClass('badge ' . $statusClass)
             ->attribute('style',
                 'font-size: 0.7rem; padding: 3px 6px; border-radius: 10px;')

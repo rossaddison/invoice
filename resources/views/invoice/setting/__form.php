@@ -31,7 +31,7 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('setting.form'); ?>
 <?= Html::closeTag('h1'); ?>
 <?=
-    (new Form())
+     new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -73,7 +73,7 @@ use Yiisoft\Html\Tag\Form;
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
 <?= Html::closeTag('div'); ?>
-<?= (new Form())->close(); ?>
+<?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

@@ -68,7 +68,7 @@ final class CompanyController extends BaseController
         FormHydrator $formHydrator,
     ): Response {
         $body = $request->getParsedBody() ?? [];
-        $form = new CompanyForm(new Company());
+        $form = new CompanyForm new Company();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'company/add',

@@ -78,7 +78,7 @@ declare(strict_types=1);
 <p>
 <pre>
     public function linkedin(string $linkedInAuthUrl) : string {       
-        return (new A())
+        return  new A()
         ->addClass('btn btn-info bi bi-linkedin')
         ->content(' '.$this->translator->translate('continue.with.linkedin'))
         ->href($linkedInAuthUrl)

@@ -25,22 +25,22 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 
 $this->setTitle($translator->translate('menu.users'));
 
-$toolbarApplyChange = (new Button())
+$toolbarApplyChange =  new Button()
     ->addClass('btn btn-success me-1')
-    ->content((new I())->addClass('bi bi-check-all'))
+    ->content( new I()->addClass('bi bi-check-all'))
     ->id('btn-apply-changes')
     ->type('submit')
     ->render();
 
-$toolbarReset = (new A())
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'user/index'))
     ->id('btn-reset')
     ->render();
 
-$toolbarSelect = (new Select())
+$toolbarSelect =  new Select()
     ->addClass('form-select ms-3')
     ->id('pageSize')
     ->name('pageSize')
@@ -57,7 +57,7 @@ $toolbarSelect = (new Select())
     ->value($paginator->getPageSize())
     ->render();
 
-$toolbar = (new Div());
+$toolbar =  new Div();
 ?>
 
 <div>
@@ -117,10 +117,10 @@ $toolbar = (new Div());
 ?>
 <?php
 $toolbarString
-    = (new Form())->post($urlGenerator->generate('user/index'))->csrf($csrf)->open()
-    . (new Div())->addClass('float-start m-3')->content($toolbarSelect)->encode(false)->render()
-    . (new Div())->addClass('float-end m-3')->content($toolbarApplyChange . $toolbarReset)->encode(false)->render()
-    . (new Form())->close();
+    =  new Form()->post($urlGenerator->generate('user/index'))->csrf($csrf)->open()
+    .  new Div()->addClass('float-start m-3')->content($toolbarSelect)->encode(false)->render()
+    .  new Div()->addClass('float-end m-3')->content($toolbarApplyChange . $toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
 ->tableAttributes(['class' => 'table table-hover'])

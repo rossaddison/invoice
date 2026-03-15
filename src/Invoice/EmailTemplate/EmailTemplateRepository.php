@@ -122,7 +122,7 @@ final class EmailTemplateRepository extends Select\Repository
         $pdf_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/invoice/pdf';
         $public_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/invoice/public';
         $templates = [];
-        $php_only = (new PathMatcher())
+        $php_only =  new PathMatcher()
         ->doNotCheckFilesystem()
         ->only('*.php');
         if ($pdf_or_public === 'pdf') {
@@ -151,7 +151,7 @@ final class EmailTemplateRepository extends Select\Repository
         $pdf_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/quote/pdf';
         $public_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/quote/public';
         $templates = [];
-        $pdf_only = (new PathMatcher())
+        $pdf_only =  new PathMatcher()
         ->doNotCheckFilesystem()
         ->only('*.pdf');
         if ($pdf_or_public === 'pdf') {

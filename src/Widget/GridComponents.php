@@ -34,13 +34,13 @@ final readonly class GridComponents
      */
     public function header(string $translatorString): string
     {
-        return  (new Div())
+        return   new Div()
                 ->addClass('row')
                 ->content(
-                    (new H5())
+                     new H5()
                         ->addClass('bg-primary text-white p-3 rounded-top')
                         ->content(
-                            (new I())
+                             new I()
                             ->addClass('bi bi-receipt')
                             ->content(' ' . $this->translator->translate($translatorString)),
                         ),
@@ -64,10 +64,10 @@ final readonly class GridComponents
     public function toolbarReset(UrlGenerator $generator): string
     {
         $route = $this->currentRoute->getName();
-        return   null !== $route ? (new A())
+        return   null !== $route ?  new A()
                 ->addAttributes(['type' => 'reset'])
                 ->addClass('btn btn-danger me-1 ajax-loader')
-                ->content((new I())->addClass('bi bi-bootstrap-reboot'))
+                ->content( new I()->addClass('bi bi-bootstrap-reboot'))
                 ->href($generator->generate($route))
                 ->id('btn-reset')
                 ->render() : '';
@@ -128,7 +128,7 @@ final readonly class GridComponents
              }
 
 
-            $anchorHtml = (new A())
+            $anchorHtml =  new A()
                 ->addAttributes([
                     // ensure link text is black and no underline
                     'style' => 'color:#000; text-decoration:none;',
@@ -194,7 +194,7 @@ final readonly class GridComponents
                 $dateTitle = '';
             }
 
-            $anchorHtml = (new A())
+            $anchorHtml =  new A()
                 ->addAttributes([
                     // ensure link text is black and no underline
                     'style' => 'color:#000; text-decoration:none;',

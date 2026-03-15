@@ -36,14 +36,14 @@ use Yiisoft\Html\Tag\Button;
 // We diligently apply our skills to the best of our ability
                                (string) $about['we']; ?>
                         <?= Html::closeTag('h3'); ?>
-                        <?= (new P())
+                        <?=  new P()
                             ->addClass('fs-4 mb-5')
                             ->content((string) $about['choose'])
                             ->render(); ?>    
                         <?= Html::openTag('div', ['class' => 'accordion accordion-flush', 'id' => 'accordionExample']); ?>
                             <?= Html::openTag('div', ['class' => 'accordion-item']); ?>   
                                 <?= Html::openTag('h2', ['class' => 'accordion-header', 'id' => 'headingOne']); ?>
-                                    <?= (new Button())
+                                    <?=  new Button()
                                         ->addAttributes(
                                             [
                                                 'class' => 'accordion-button',
@@ -68,7 +68,7 @@ use Yiisoft\Html\Tag\Button;
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div', ['class' => 'accordion-item']); ?>
                                 <?= Html::openTag('h2', ['class' => 'accordion-header', 'id' => 'headingTwo']); ?>
-                                    <?= (new Button())
+                                    <?=  new Button()
                                         ->addAttributes(
                                             [
                                                 'class' => 'accordion-button collapsed',
@@ -91,7 +91,7 @@ use Yiisoft\Html\Tag\Button;
                             <?= Html::closeTag('div'); ?>
                             <?= Html::openTag('div', ['class' => 'accordion-item']); ?>
                                 <?= Html::openTag('h2', ['class' => 'accordion-header', 'id' => 'headingThree']); ?>
-                                    <?= (new Button())
+                                    <?=  new Button()
                                         ->addAttributes(
                                             [
                                                 'class' => 'accordion-button collapsed',
@@ -132,7 +132,7 @@ use Yiisoft\Html\Tag\Button;
                         <?= Html::openTag('h3', ['class' => 'h1 mb-2']); ?>
                             <?= Html::encode('100+'); ?>           
                         <?= Html::closeTag('h3'); ?>
-                        <?= (new P())
+                        <?=  new P()
                             ->addClass('fs-5 mb-0')
 // Happy Customers
                             ->content((string) $about['happy'])
@@ -153,7 +153,7 @@ use Yiisoft\Html\Tag\Button;
                         <?= Html::openTag('h3', ['class' => 'h1 mb-2']); ?>
                                 <?= Html::encode('100+'); ?>           
                         <?= Html::closeTag('h3'); ?>                    
-                        <?= (new P())
+                        <?=  new P()
                                 ->addClass('fs-5 mb-0 text-secondary')
 // Issues Solved
                                 ->content((string) $about['solved'])
@@ -173,7 +173,7 @@ use Yiisoft\Html\Tag\Button;
                         <?= Html::openTag('h3', ['class' => 'h1 mb-2']); ?>
                             <?= Html::encode('100+'); ?>           
                         <?= Html::closeTag('h3'); ?>
-                        <?= (new P())
+                        <?=  new P()
                             ->addClass('fs-5 mb-0 text-secondary')
 // Finished Projects
                             ->content((string) $about['finished'])
@@ -193,7 +193,7 @@ use Yiisoft\Html\Tag\Button;
                         <?= Html::openTag('h3', ['class' => 'h1 mb-2']); ?>
                             <?= Html::encode('100+'); ?>           
                         <?= Html::closeTag('h3'); ?>
-                        <?= (new P())
+                        <?=  new P()
                             ->addClass('fs-5 mb-0 text-secondary')
 // Return Customers
                             ->content((string) $about['return'])
@@ -205,7 +205,7 @@ use Yiisoft\Html\Tag\Button;
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('footer'); ?>
         <?= Html::tag('br'); ?>
-            <?= (new A())
+            <?=  new A()
                 ->href('https://bootstrapbrain.com/template/free-bootstrap-5-multipurpose-one-page-template-wave/#pricing')
 // Acknowledgement to Bootstrap Brain
                 ->content('Acknowledgement to Bootstrap Brain')

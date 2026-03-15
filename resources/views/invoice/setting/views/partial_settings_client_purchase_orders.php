@@ -35,7 +35,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'id' => $settingKey,
         'class' => 'form-control'
        ]);
-        echo (new Option())
+        echo  new Option()
          ->value('')
          ->content($translator->translate('none'));
         /**
@@ -45,7 +45,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         $selected = $body[
          'settings[default_client_purchase_order_group]'
         ] == $invoice_group->getId();
-        echo (new Option())
+        echo  new Option()
          ->value($invoice_group->getId())
          ->selected($selected)
          ->content($invoice_group->getName() ?? '');

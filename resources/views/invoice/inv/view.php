@@ -142,7 +142,7 @@ if ($readOnly === false && $invEdit && $inv->getStatus_id() === 1) {
     echo H::openTag('ul', ['id' => 'product-tabs',
         'class' => 'nav nav-tabs nav-tabs-noborder']);
         echo H::openTag('li', ['class' => 'active']);
-        echo (new A())
+        echo  new A()
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'style' => 'text-decoration:none',
@@ -154,7 +154,7 @@ if ($readOnly === false && $invEdit && $inv->getStatus_id() === 1) {
             ->render();
         echo H::closeTag('li');
         echo H::openTag('li');
-        echo (new A())
+        echo  new A()
             ->addAttributes([
                 'data-bs-toggle' => 'tab',
                 'style' => 'text-decoration:none',
@@ -166,7 +166,7 @@ if ($readOnly === false && $invEdit && $inv->getStatus_id() === 1) {
             ->render();
         echo H::closeTag('li');
         echo H::openTag('li', ['id' => 'back', 'class' => 'tab-pane']);
-        echo (new A())
+        echo  new A()
             ->addAttributes([
                 'type' => 'reset',
                 'onclick' => 'window.history.back()',
@@ -192,7 +192,7 @@ if ($readOnly === false && $invEdit && $inv->getStatus_id() === 1) {
                 'data-bs-toggle' => 'modal',
             ],
          );
-         echo (new I())
+         echo  new I()
             ->addClass('fa fa-list')
             ->addAttributes([
                 'data-bs-toggle' => 'tooltip',
@@ -887,7 +887,7 @@ if ($vat === '1') {
           * @var array $status
           */
          foreach ($inv_statuses as $key => $status) {
-            echo (new Option())
+            echo  new Option()
             ->value($key)
             ->selected($key == (string) $form->getStatus_id())
             ->content(H::encode((string) $status['label']));

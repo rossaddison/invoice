@@ -46,11 +46,11 @@ use Yiisoft\Html\Tag\H5;
                                             <?= (string) $testimonial['worker1']; ?>
                                         <?= Html::closeTag('blockquote'); ?>
                                     <?= Html::openTag('blockquote'); ?>
-                                <?= (new H4())
+                                <?=  new H4()
                                     ->addClass('mb-2')
                                     ->content('')
                                     ->render(); ?>
-                                <?= (new H5())
+                                <?=  new H5()
                                     ->addClass('fs-6 text-secondary mb-0')
                                     ->content('👷')
                                     ->render(); ?>
@@ -72,11 +72,11 @@ use Yiisoft\Html\Tag\H5;
                                 <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
                                     <?= (string) $testimonial['worker2']; ?>
                                 <?= Html::closeTag('blockquote'); ?>
-                                <?= (new H4())
+                                <?=  new H4()
                                     ->addClass('mb-2')
                                     ->content('️')
                                     ->render(); ?>
-                                <?= (new H5())
+                                <?=  new H5()
                                     ->addClass('fs-6 text-secondary mb-0')
                                     ->content('👷‍♀')
                                     ->render(); ?>
@@ -98,11 +98,11 @@ use Yiisoft\Html\Tag\H5;
                                 <?= Html::openTag('blockquote', ['class' => 'mb-4']); ?>
                                     <?= (string) $testimonial['worker3']; ?>
                                 <?= Html::closeTag('blockquote'); ?>
-                                <?= (new H4())
+                                <?=  new H4()
                                     ->addClass('mb-2')
                                     ->content('')
                                     ->render(); ?>
-                                <?= (new H5())
+                                <?=  new H5()
                                     ->addClass('fs-6 text-secondary mb-0')
                                     ->content('👨‍🏭')
                                     ->render(); ?>

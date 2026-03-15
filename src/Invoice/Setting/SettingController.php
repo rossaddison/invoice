@@ -318,7 +318,7 @@ final class SettingController extends BaseController
             'height' => $query_params['height'],
             'scalingFactor' => $query_params['scalingFactor'],
             'colourDepth' => $query_params['colourDepth'],
-            'timestamp' => (new DateTimeImmutable())->getTimestamp(),
+            'timestamp' =>  new DateTimeImmutable()->getTimestamp(),
             'windowSize' => (string) $query_params['windowInnerWidth'] . 'x' . (string) $query_params['windowInnerHeight'],
             'userUuid' => $userUuid,
         ]));

@@ -953,7 +953,7 @@ final class PaymentController extends BaseController
                                         $cfR->repoTablequery('payment_custom')),
             'paymentCustomValues' => $payment_custom_values,
             'cvH' => new CustomValuesHelper($this->sR, $cvR),
-            'paymentCustomForm' => new PaymentCustomForm(new PaymentCustom()),
+            'paymentCustomForm' => new PaymentCustomForm new PaymentCustom(),
         ]);
     }
 }

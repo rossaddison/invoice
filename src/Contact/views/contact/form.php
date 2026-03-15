@@ -31,7 +31,7 @@ $this->setTitle($translator->translate('menu.contact.us'));
                     <h1 class="fw-normal h3 text-center"><?= Html::encode($this->getTitle()) ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
-                    <?= (new Form())
+                    <?=  new Form()
                         ->post($url->generate('contact/interest'))
                         ->enctypeMultipartFormData()
                         ->csrf($csrf)
@@ -71,7 +71,7 @@ $this->setTitle($translator->translate('menu.contact.us'));
             'name' => 'contact-button',
         ],
     ]) ?>
-                    <?= (new Form())->close() ?>
+                    <?=  new Form()->close() ?>
                 </div>
             </div>
         </div>

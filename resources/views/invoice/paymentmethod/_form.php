@@ -19,7 +19,7 @@ use Yiisoft\Html\Tag\Form;
  */
 ?>
 
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -68,4 +68,4 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= (new Form())->close() ?>
+<?=  new Form()->close() ?>

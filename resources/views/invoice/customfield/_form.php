@@ -24,7 +24,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
 
 <?=
-    (new Form())
+     new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -420,5 +420,5 @@ echo Html::script($js)->type('module');
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>                
-<?= (new Form())->close(); ?>
+<?=  new Form()->close(); ?>
 

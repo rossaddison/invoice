@@ -53,17 +53,17 @@ use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-echo (new H6())->content($translator->translate('salesorder'))->render();
+echo  new H6()->content($translator->translate('salesorder'))->render();
 
-$toolbarReset = (new A())
+$toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-primary me-1 ajax-loader')
-    ->content((new I())->addClass('bi bi-bootstrap-reboot'))
+    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'salesorder/index'))
     ->id('btn-reset')
     ->render();
 
-$allVisible = (new A())
+$allVisible =  new A()
     ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('hide.or.unhide.columns')])
     ->addClass('btn btn-warning me-1 ajax-loader')
@@ -90,7 +90,7 @@ $paginator = (new OffsetPaginator($salesorders))
 // && Invoice\Asset\invoice\css\style.css & yii3i.css
 
 $statusBar
-    = (new Div())
+    =  new Div()
         ->addClass('btn-group index-options')
         ->content(
             Html::a(
@@ -386,24 +386,24 @@ if ($enableGrouping) {
     }
 }
 
-$toolbarString = (new Form())->post($urlGenerator->generate(
+$toolbarString =  new Form()->post($urlGenerator->generate(
                                     'salesorder/index'))->csrf($csrf)->open()
-    . (new Div())->addClass('float-start')->content(
+    .  new Div()->addClass('float-start')->content(
         Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
         . $allVisible
         . $toolbarReset
         . Html::closeTag('div')
         . $statusBar
-        . (new Div())
+        .  new Div()
             ->addClass('btn-group ms-3')
             ->addAttributes(['role' => 'group'])
             ->content(
-                (new Label())
+                 new Label()
                     ->addClass(
                        'btn btn-outline-secondary active bi bi-collection me-1')
                     ->content(' ' . $translator->translate('group.by') . ':')
                 .
-                (new Select())
+                 new Select()
                     ->addClass('form-select')
                     ->addAttributes([
                         'style' => 'max-width: 150px;',
@@ -424,33 +424,33 @@ $toolbarString = (new Form())->post($urlGenerator->generate(
             ->encode(false)
             ->render()
         . ($enableGrouping ? 
-            (new Div())
+             new Div()
                 ->addClass('btn-group ms-2')
                 ->addAttributes(['role' => 'group'])
                 ->content(
-                    (new HtmlButton())
+                     new HtmlButton()
                         ->type('button')
                         ->addClass('btn btn-outline-secondary btn-sm')
                         ->addAttributes([
                             'onclick' => 'toggleAllGroups(false)',
                             'title' => 'Collapse All Groups'
                         ])
-                        ->content((new I())->addClass('bi bi-chevron-up')) .
-                    (new HtmlButton())
+                        ->content( new I()->addClass('bi bi-chevron-up')) .
+                     new HtmlButton()
                         ->type('button')
                         ->addClass('btn btn-outline-secondary btn-sm')
                         ->addAttributes([
                             'onclick' => 'toggleAllGroups(true)',
                             'title' => 'Expand All Groups'
                         ])
-                        ->content((new I())->addClass('bi bi-chevron-down'))
+                        ->content( new I()->addClass('bi bi-chevron-down'))
                 )
                 ->encode(false)
                 ->render() : ''
         )
     )->encode(false)->render()
-    . (new Div())->addClass('clearfix')->content('')->render()
-    . (new Form())->close();
+    .  new Div()->addClass('clearfix')->content('')->render()
+    .  new Form()->close();
 
 $gridView = GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])

@@ -64,18 +64,18 @@ $columns = [
     ),
 ];
 
-$toolbarReset = (new A())
+$toolbarReset =  new A()
   ->addAttributes(['type' => 'reset'])
   ->addClass('btn btn-danger me-1 ajax-loader')
-  ->content((new I())->addClass('bi bi-bootstrap-reboot'))
+  ->content( new I()->addClass('bi bi-bootstrap-reboot'))
   ->href($urlGenerator->generate($routeCurrent->getName() ?? 'paymentpeppol/index'))
   ->id('btn-reset')
   ->render();
 
-$toolbarString = (new Form())->post($urlGenerator->generate('paymentpeppol/index'))->csrf($csrf)->open()
+$toolbarString =  new Form()->post($urlGenerator->generate('paymentpeppol/index'))->csrf($csrf)->open()
 
-    . (new Div())->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
-    . (new Form())->close();
+    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Form()->close();
 $grid_summary = $s->grid_summary(
     $paginator,
     $translator,

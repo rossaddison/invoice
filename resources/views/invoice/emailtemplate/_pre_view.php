@@ -26,7 +26,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
      <?= $translator->translate('preview'); ?>
 <?= Html::closeTag('h1'); ?>
-<?= (new Form())
+<?=  new Form()
     ->post($urlGenerator->generate($actionName, $actionArguments))
     ->enctypeMultipartFormData()
     ->csrf($csrf)
@@ -43,7 +43,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('body'); ?>                
                 <?= $form->getEmail_template_body(); ?>
         <?= Html::closeTag('body'); ?>
-        <?= (new Br()); ?>
+        <?=  new Br(); ?>
     <?= Html::closeTag('div'); ?>
     <?= $button::back(); ?>
 <?= Html::closeTag('form'); ?>

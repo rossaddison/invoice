@@ -104,21 +104,21 @@ final readonly class Button
 
     public static function activeLabel(Translator $translator): Span
     {
-        return (new Span())
+        return  new Span()
                 ->addClass('label active')
                 ->content(Html::encode($translator->translate('yes')));
     }
 
     public static function inactiveLabel(Translator $translator): Span
     {
-        return (new Span())
+        return  new Span()
                 ->addClass('label inactive')
                 ->content(Html::encode($translator->translate('no')));
     }
 
     public static function inactiveWithAddUserAccount(UrlGenerator $generator, Translator $translator): Span
     {
-        return (new Span())
+        return  new Span()
                 ->content(
                     Html::a(
                         '',
@@ -135,12 +135,12 @@ final readonly class Button
 
     public static function ascDesc(UrlGenerator $generator, string $field, string $class, string $translated, bool $guest = false): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-' . $class)
         ->content('⬆️')
         ->href($generator->generate('inv/' . ($guest ? 'guest' : 'index'), [], ['sort' => $field]))
         ->id('btn-' . $field . '-asc')
-        ->render() . ' ' . $translated . ' ' . (new A())
+        ->render() . ' ' . $translated . ' ' .  new A()
         ->addClass('btn btn-' . $class)
         ->content('⬇')
         ->href($generator->generate('inv/' . ($guest ? 'guest' : 'index'), [], ['sort' => '-' . $field]))
@@ -155,7 +155,7 @@ final readonly class Button
         string $translated,
         bool $guest = false,
     ): string {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-' . $iR->getSpecificStatusArrayClass($status))
         ->content($iR->getSpecificStatusArrayEmoji($status) . ' ' . $iR->getSpecificStatusArrayLabel((string) $status))
         ->href($generator->generate('inv/' . ($guest ? 'guestmark' : 'indexmark'), ['status' => $status]))
@@ -172,7 +172,7 @@ final readonly class Button
      */
     public static function setOrUnsetAssignClientToUserAutomatically(UrlGenerator $generator, string $_language): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-primary')
         ->content('✎️')
         ->href($generator->generate('setting/auto_client', ['_language' => $_language]))
@@ -182,7 +182,7 @@ final readonly class Button
 
     public static function defaultPaymentMethod(UrlGenerator $generator, Translator $translator): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-success')
         ->href(
             $generator->generate(
@@ -205,7 +205,7 @@ final readonly class Button
      */
     public static function deleteWebhook(UrlGenerator $generator, Translator $translator): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-primary')
         ->content($translator->translate('telegram.bot.api.webhook.delete') . ' ' . '️❌')
         ->href($generator->generate('telegram/delete_webhook', ['_language' => 'en']))
@@ -222,11 +222,11 @@ final readonly class Button
     {
         return
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
-            . (new Img())
+            .  new Img()
             ->src('/img/govuk-opengraph-image.png')
             ->size(90, 60)
             ->addClass('btn btn-dark')
-            ->render() . (new A())
+            ->render() .  new A()
             ->addClass('btn btn-dark')
             ->content($this->translator->translate('continue.with.developersandboxhmrc'))
             ->href($developerSandboxHmrcAuthUrl)
@@ -237,7 +237,7 @@ final readonly class Button
 
     public function facebook(string $facebookAuthUrl): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-primary bi bi-facebook')
         ->content(' ' . $this->translator->translate('continue.with.facebook'))
         ->href($facebookAuthUrl)
@@ -247,7 +247,7 @@ final readonly class Button
 
     public function github(string $githubAuthUrl): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-dark bi bi-github')
         ->content(' ' . $this->translator->translate('continue.with.github'))
         ->href($githubAuthUrl)
@@ -257,7 +257,7 @@ final readonly class Button
 
     public function google(string $googleAuthUrl): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-success bi bi-google')
         ->content(' ' . $this->translator->translate('continue.with.google'))
         ->href($googleAuthUrl)
@@ -276,11 +276,11 @@ final readonly class Button
     {
         return
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
-            . (new Img())
+            .  new Img()
             ->src('/img/govuk-opengraph-image.png')
             ->size(90, 60)
             ->addClass('btn btn-dark')
-            ->render() . (new A())
+            ->render() .  new A()
             ->addClass('btn btn-dark')
             ->content($this->translator->translate('continue.with.govuk'))
             ->href($govukAuthUrl)
@@ -291,7 +291,7 @@ final readonly class Button
 
     public function linkedin(string $linkedInAuthUrl): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-info bi bi-linkedin')
         ->content(' ' . $this->translator->translate('continue.with.linkedin'))
         ->href($linkedInAuthUrl)
@@ -301,7 +301,7 @@ final readonly class Button
 
     public function microsoftonline(string $microsoftOnlineAuthUrl): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-warning bi bi-microsoft')
         ->content(' ' . $this->translator->translate('continue.with.microsoftonline'))
         ->href($microsoftOnlineAuthUrl)
@@ -313,7 +313,7 @@ final readonly class Button
     {
         return
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
-            . (new A())
+            .  new A()
             ->addClass('btn btn-dark')
             ->content('🏦  ' . $this->translator->translate('continue.with.openbanking') . '➡️' . ucfirst($provider))
             ->href($openBankingAuthUrl)
@@ -326,10 +326,10 @@ final readonly class Button
     {
         return
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
-            . (new Img())
+            .  new Img()
             ->src('/img/vkontakte-24.jpg')
             ->addClass('btn btn-dark')
-            ->render() . (new A())
+            ->render() .  new A()
             ->addClass('btn btn-dark')
             ->content($this->translator->translate('continue.with.vkontakte'))
             ->href($vkontakteAuthUrl)
@@ -340,7 +340,7 @@ final readonly class Button
 
     public function x(string $xAuthUrl): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-dark bi bi-twitter')
         ->content(' ' . $this->translator->translate('continue.with.x'))
         ->href($xAuthUrl)
@@ -352,10 +352,10 @@ final readonly class Button
     {
         return
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
-            . (new Img())
+            .  new Img()
             ->src('/img/yandex-24.jpg')
             ->addClass('btn btn-dark disabled')
-            ->render() . (new A())
+            ->render() .  new A()
             ->addClass('btn btn-dark')
             ->content($this->translator->translate('continue.with.yandex'))
             ->href($yandexAuthUrl)
@@ -368,7 +368,7 @@ final readonly class Button
     {
         return
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
-            . (new Img())
+            .  new Img()
             ->size(40, 25)
             ->src('/img/amazon.png')
             ->addClass('btn btn-warning')
@@ -380,7 +380,7 @@ final readonly class Button
     {
         return
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
-            . (new Img())
+            .  new Img()
             ->size(100, 50)
             ->src('/img/braintree.png')
             ->addClass('btn btn-light')
@@ -392,7 +392,7 @@ final readonly class Button
     {
         return
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
-            . (new Img())
+            .  new Img()
             ->size(75, 50)
             ->src('/img/stripe.png')
             ->addClass('btn btn-light')
@@ -404,7 +404,7 @@ final readonly class Button
     {
         return
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
-            . (new Img())
+            .  new Img()
             ->size(75, 50)
             ->src('/img/mollie.png')
             ->addClass('btn btn-light')
@@ -414,7 +414,7 @@ final readonly class Button
 
     public function regenerateRecoveryCodes(string $regenerateCodesUrl): string
     {
-        return (new A())
+        return  new A()
         ->addClass('btn btn-success')
         ->content(' ' . $this->translator->translate('oauth2.backup.recovery.codes.regenerate'))
         ->href($regenerateCodesUrl)
