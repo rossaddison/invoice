@@ -48,7 +48,10 @@ $columns = [
         'client_id',
         header: $translator->translate('client.name'),
         content: static function (PostalAddress $model) use ($cR): string {
-            $clientName = ($cR->repoClientCount($model->getClient_id()) > 0 ? Html::encode(($cR->repoClientquery($model->getClient_id()))->getClient_name()) : '');
+            $clientName = ($cR->repoClientCount($model->getClient_id()) > 0 ?
+                Html::encode(
+                    ($cR->repoClientquery(
+                            $model->getClient_id()))->getClient_name()) : '');
             return $clientName;
         },
     ),
@@ -58,7 +61,9 @@ $columns = [
         content: static function (PostalAddress $model) use ($cR): string {
             $clientId = $model->getClient_id();
             if ($clientId) {
-                $clientSurname = ($cR->repoClientCount($clientId) > 0 ? Html::encode(($cR->repoClientquery($clientId))->getClient_surname()) : '');
+                $clientSurname = ($cR->repoClientCount($clientId) > 0 ?
+                    Html::encode(($cR->repoClientquery($clientId))->getClient_surname())
+                        : '');
                 return $clientSurname;
             }
             return '';
@@ -67,31 +72,38 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('active'),
-        content: static function (PostalAddress $model) use ($cR, $urlGenerator): Yiisoft\Html\Tag\A|string {
+        content: static function (PostalAddress $model)
+            use ($cR, $urlGenerator): Yiisoft\Html\Tag\A|string {
             $client = $cR->repoClientquery($model->getClient_id());
-            if (null !== $client->getPostaladdress_id() && $client->getPostaladdress_id() > 0) {
-                return 'used';
+            if (null !== $client->getPostaladdress_id()
+                    && $client->getPostaladdress_id() > 0) {
+                return 'Postal Address Used';
             } else {
-                return Html::a('Not used - assign postal address to client', $urlGenerator->generate('client/edit', ['id' => $model->getClient_id(), 'origin' => 'inv']));
+                return Html::a('No Postal address', $urlGenerator->generate('client/edit',
+                            ['id' => $model->getClient_id(), 'origin' => 'inv']));
             }
-            return 'no client assigned to postal address';
         },
     ),
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (PostalAddress $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/view', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
+                $urlGenerator->generate('postaladdress/view',
+                    ['id' => $model->getId()]), []);
         },
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (PostalAddress $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('postaladdress/edit', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
+                $urlGenerator->generate('postaladdress/edit',
+                    ['id' => $model->getId()]), []);
         },
     ),
     new DataColumn(
         header: $translator->translate('delete'),
-        content: static function (PostalAddress $model) use ($translator, $urlGenerator): A {
+        content: static function (PostalAddress $model) use ($translator,
+            $urlGenerator): A {
             return Html::a(
                 Html::tag(
                     'button',
@@ -99,10 +111,14 @@ $columns = [
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        'onclick' => "return confirm("
+                        . "'"
+                        . $translator->translate('delete.record.warning')
+                        . "');",
                     ],
                 ),
-                $urlGenerator->generate('postaladdress/delete', ['id' => $model->getId()]),
+                    $urlGenerator->generate('postaladdress/delete',
+                        ['id' => $model->getId()]),
                 [],
             );
         },

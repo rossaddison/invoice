@@ -422,7 +422,6 @@ class PeppolHelper
             } else { // if $invoice->getSo_id() > 0
                 throw new BuyerRefNf();
             }
-            throw new BuyerRefNf();
         } else {
             throw new NLIf($this->t);
         }
@@ -1023,8 +1022,6 @@ $country_helper->get_country_identification_code_with_league(
                 throw new ClientsAccCostNf($this->t);
             }
             return '';
-
-            return '';
         }
         throw new ClientNf($this->t);
     }
@@ -1496,11 +1493,7 @@ $country_helper->get_country_identification_code_with_league(
                 if (null !== $client_peppol) {
                     return $client_peppol->getBuyerReference();
                 }
-                throw new BuyerRefNf();
-            } else {
-                throw new ClientNf($this->t);
             }
-            throw new ClientNf($this->t);
         }
         throw new ClientNf($this->t);
     }

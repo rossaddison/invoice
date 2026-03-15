@@ -37,7 +37,7 @@ class TaxCategory implements XmlSerializable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getId(): ?string
     {
@@ -50,8 +50,9 @@ class TaxCategory implements XmlSerializable
         if ($this->percent <= 21 && $this->percent >= 6) {
             return 'AA';
         }
-        return 'Z';
-
+        if ($this->percent == 0) {
+            return 'Z';
+        }
         return null;
     }
 

@@ -55,6 +55,7 @@
 <p>Restructured psalm.xml: Find unused code = true. All error types have been categorized
 and will be reduced with the subsequent code reduction.</p>
 <p>UnusedParam error detection has been completed and functions adjusted.</p>
+<p>Unevaluated code error detection has been completed and removed. psalm.xml adjusted.</p>
 <p><b>11th March 2026</b></p>
 <p>The mobile desktop preview will assist in improving bootstrap/mobile views</p>
 <p>Payment Provider javascript has been included in

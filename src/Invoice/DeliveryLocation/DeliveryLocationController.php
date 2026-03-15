@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\DeliveryLocation;
 
+use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Entity\DeliveryLocation;
 use App\Invoice\Client\ClientRepository as CR;
@@ -275,11 +276,16 @@ final class DeliveryLocationController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param DeliveryLocationRepository $delRepository
+     * @param UCR $ucR
+     * @param UIR $uiR
      * @return Response
      */
     public function view(
         CurrentRoute $currentRoute,
-        DeliveryLocationRepository $delRepository): Response
+        DeliveryLocationRepository $delRepository,
+        UCR $ucR,
+        UIR $uiR
+    ): Response
     {
         $del = $this->del($currentRoute, $delRepository);
         if ($del) {
@@ -294,19 +300,15 @@ final class DeliveryLocationController extends BaseController
                 'electronic_address_scheme' =>
                 PeppolArrays::electronic_address_scheme(),
             ];
-            return $this->webViewRenderer->render('_view', $parameters);
-            
-            if ($this->rbacObserver(
-                                        $del->getClient_id(), $ucR, $uiR)) {
+            if ($this->rbacObserver($del->getClient_id(), $ucR, $uiR) ||
+                $this->rbacAdmin()) {
                 return $this->webViewRenderer->render('_view', $parameters);
             }
-            
         }
         return $this->webService->getRedirectResponse('delivery_location/index');
     }
     
-    private function rbacObserver(
-                                    string $clientId, UCR $ucR, UIR $uiR): bool {
+    private function rbacObserver(string $clientId, UCR $ucR, UIR $uiR): bool {
         $userClient = $ucR->repoUserquery($clientId);
         if (null!==$userClient) {
             $userId = $userClient->getUser_id();
@@ -316,6 +318,16 @@ final class DeliveryLocationController extends BaseController
             }
         }
         return false;
+    }
+    
+    private function rbacAdmin() : bool {
+        // has observer role
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::EDIT_INV))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //For rbac refer to AccessChecker

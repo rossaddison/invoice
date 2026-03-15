@@ -1287,10 +1287,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                     return $client_peppol->getBuyerReference();
                 }
                 throw new PeppolBuyerReferenceNotFoundException();
-            } else {
-                throw new PeppolClientNotFoundException($this->t);
             }
-            throw new PeppolClientNotFoundException($this->t);
         }
         throw new PeppolClientNotFoundException($this->t);
     }

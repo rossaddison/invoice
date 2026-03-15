@@ -74,12 +74,6 @@
                 <directory name="resources" />
             </errorLevel>
         </UnusedVariable>
-        <UnevaluatedCode>
-            <errorLevel type="suppress">
-                <directory name="src" />
-                <directory name="resources" />
-            </errorLevel>
-        </UnevaluatedCode>
         <UnusedFunctionCall>
             <errorLevel type="suppress">
                 <directory name="src" />

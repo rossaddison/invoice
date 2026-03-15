@@ -578,7 +578,6 @@ class PdfHelper
         } else {
             return '';
         }
-        return '';
     }
 
     private function view_partial_delivery_location(string $_language, DLR $dlr, string $delivery_location_id, WebViewRenderer $webViewRenderer): string

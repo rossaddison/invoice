@@ -544,8 +544,6 @@ class CustomValuesHelper
                 ->content((string) $this->selected_value($entity_custom_values, $customFieldId, $cvR));
                 echo  new Br();
                 break;
-
-                break;
             case 'BOOLEAN':
                 echo  new Label()
                 ->content(null !== $this->form_value($entity_custom_values, $customFieldId)
