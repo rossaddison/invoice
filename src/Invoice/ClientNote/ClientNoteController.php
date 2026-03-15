@@ -46,7 +46,6 @@ final class ClientNoteController extends BaseController
 
     /**
      * @param ClientNoteRepository $clientnoteRepository
-     * @param ClientNoteService $service
      * @return Response
      */
     public function index(ClientNoteRepository $clientnoteRepository): Response
@@ -101,7 +100,6 @@ final class ClientNoteController extends BaseController
      * @param FormHydrator $formHydrator
      * @param ClientNoteRepository $clientnoteRepository
      * @param ClientRepository $clientRepository
-     * @param DateHelper $dateHelper
      * @param CurrentRoute $currentRoute
      * @return Response
      */

@@ -88,7 +88,6 @@ final class ProductPropertyController extends BaseController
     public function index(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): Response
     {
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $productproperty = $productpropertyRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($productproperty))

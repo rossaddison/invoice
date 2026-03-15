@@ -79,9 +79,6 @@ foreach ($relations as $relation) {
 }
 
 // exclude relations or fields ending in '_id'
-/**
- * @var Cycle\Database\ColumnInterface $column
- */
 foreach ($orm_schema->getColumns() as $column) {
     /**
      * If the column is not a relation column ending in _id

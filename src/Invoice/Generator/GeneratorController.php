@@ -655,7 +655,6 @@ class GeneratorController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param GeneratorRepository $generatorRepository
-     * @param DatabaseManager $dbal
      */
     public function view(
         CurrentRoute $currentRoute,

@@ -109,7 +109,6 @@ final class PaymentPeppolController extends BaseController
             PaymentPeppolRepository $paymentpeppolRepository): Response
     {
         $page = (int) $routeCurrent->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paymentpeppols = $paymentpeppolRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($paymentpeppols))

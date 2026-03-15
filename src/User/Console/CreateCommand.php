@@ -40,14 +40,6 @@ final class CreateCommand extends Command
             ->addArgument('isAdmin', InputArgument::OPTIONAL, 'Create user as admin');
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param string $error
-     * @param string $attribute
-     * @throws LogicException
-     * @return int
-     */
     #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

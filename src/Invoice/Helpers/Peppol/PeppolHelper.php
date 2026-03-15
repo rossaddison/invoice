@@ -80,13 +80,8 @@ class PeppolHelper
         $this->documentCurrency =
             $this->s->getSetting('peppol_document_currency');
     }
-
-    /**
-     * @param SRepo $sR
-     * @return Aliases
-     */
-    private function ensure_temp_peppol_folder_and_uploads_folder_exist():
-                                                                         Aliases
+    
+    private function ensure_temp_peppol_folder_and_uploads_folder_exist(): Aliases
     {
         $aliases = new Aliases([
             '@invoice' => dirname(__DIR__, 2),
@@ -201,7 +196,6 @@ class PeppolHelper
                     $taxExclusiveAmount + $this->inv_amount->getItem_tax_total();
 
             // Early settlement discount is an allowance
-            /** @var float $totals_of_line_items_array['discount'] */
             $allowanceTotalAmount = $totals_of_line_items_array['discount'];
             /** @var float $totals_of_line_items_array['total'] */
             $payableAmount = $totals_of_line_items_array['total'];
@@ -250,7 +244,6 @@ class PeppolHelper
             $customer_partyIdentificationId =
                 $party['Party']['PartyIdentification']['ID']['value'] ?? null;
             /**
-             * @var array $party['Party']['PartyIdentification']['ID']
              * @var string $party['Party']['PartyIdentification']['ID']['schemeID']
              */
             $customer_partyIdentificationSchemeId =
@@ -270,7 +263,6 @@ class PeppolHelper
              */
             $customer_endpointID = $party['Party']['EndPointID']['value'] ?? '';
             /**
-             * @var array $party['Party']['EndPointID']
              * @var string $party['Party']['EndPointID']['schemeID']
              */
             $customer_endpointID_schemeID = $party
@@ -1447,7 +1439,6 @@ $country_helper->get_country_identification_code_with_league(
     {
         $config_peppol = $this->s->get_config_peppol();
         /**
-         * @var array $config_peppol
          * @var array $config_peppol['PaymentMeans']
          */
         $config = $config_peppol['PaymentMeans'] ?? [];
@@ -1545,7 +1536,6 @@ $country_helper->get_country_identification_code_with_league(
      */
     public function DocumentCurrencyCode(): string
     {
-        /** @var array $config */
         $config = $this->s->get_config_peppol();
         /** @var string $config['DocumentCurrencyCode'] */
         return $config['DocumentCurrencyCode'] ?? '';

@@ -53,7 +53,6 @@ final class EmailTemplateController extends BaseController
     public function index(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): \Psr\Http\Message\ResponseInterface
     {
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $this->rbac();
         $parameters = [

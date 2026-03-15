@@ -66,7 +66,6 @@ final class ContractController extends BaseController
          */
         $page = (int) ($query_params['page'] ??
                 $currentRoute->getArgument('page', '1'));
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         /** @var string $query_params['sort'] */
         $sort = Sort::only(['id', 'client_id', 'name', 'reference'])

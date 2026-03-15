@@ -293,7 +293,6 @@ echo H::openTag('div', $row); //1
       'class' => 'form-control'
      ]);
       /**
-      * @var array $locales
       * @var string $key
       * @var string $value
       */

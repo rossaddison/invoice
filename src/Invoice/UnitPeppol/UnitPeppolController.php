@@ -55,7 +55,6 @@ final class UnitPeppolController extends BaseController
         UnitRepository $unitRepository,
     ): Response {
         $enece = new Peppol_UNECERec20_11e();
-        /** @var array $enece_array */
         $enece_array = $enece->getUNECERec20_11e();
         $units = $unitRepository->findAllPreloaded();
         $unitPeppol = new UnitPeppol();

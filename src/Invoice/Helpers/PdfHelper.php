@@ -49,7 +49,6 @@ class PdfHelper
     private function locale_to_language(): ?string
     {
         $dropdown_locale = (string) $this->session->get('_language');
-        /** @var array $session_list */
         $session_list = $this->s->locale_language_array();
         /** @var string $session_list[$dropdown_locale] */
         return $session_list[$dropdown_locale] ?? null;
@@ -206,7 +205,6 @@ class PdfHelper
      * @param ClientRepository $cR
      * @param CustomValueRepository $cvR
      * @param CustomFieldRepository $cfR
-     * @param DeliveryLocationRepository $dlR
      * @param SalesOrderItemRepository $soiR
      * @param SalesOrderItemAmountRepository $soiaR
      * @param SalesOrderItemAllowanceChargeRepository $acsoiR

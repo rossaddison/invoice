@@ -46,7 +46,6 @@ final class ProfileController extends BaseController
     public function index(CurrentRoute $currentRoute, ProfileRepository $profileRepository): \Psr\Http\Message\ResponseInterface
     {
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $canEdit = $this->rbac();
         $this->flashMessage('info', $this->translator->translate('profile.new'));

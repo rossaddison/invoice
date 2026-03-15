@@ -171,17 +171,11 @@ final class ImportController extends BaseController
 
     private function ensureMandatoryTaxRatesInstalled(): void
     {
-        /**
-         * @var TaxRate $taxRateService
-         */
         $taxRateService = new TaxRate();
         $taxRateService->setTaxRateName('Zero');
         $taxRateService->setTaxRatePercent(0);
         $taxRateService->setTaxRateDefault(false);
         $this->trR->save($taxRateService);
-        /**
-         * @var TaxRate $taxRateStandard
-         */
         $taxRateStandard = new TaxRate();
         $taxRateStandard->setTaxRateName('Standard');
         $taxRateStandard->setTaxRatePercent(20);

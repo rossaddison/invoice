@@ -238,7 +238,6 @@ final class QuoteItemController extends BaseController
      * @param QIR $qiR
      * @param TRR $trR
      * @param TASKR $taskR
-     * @param QR $qR
      * @param QIAS $qias
      * @param QIAR $qiar
      */
@@ -342,7 +341,6 @@ final class QuoteItemController extends BaseController
         //jQuery parameters from quote.js function delete-items-confirm-quote 'item_ids' and 'quote_id'
         $select_items = $request->getQueryParams();
         $result = false;
-        /** @var array $item_ids */
         $item_ids = (array) ($select_items['item_ids'] ?? []);
 
         // Early return if no items selected

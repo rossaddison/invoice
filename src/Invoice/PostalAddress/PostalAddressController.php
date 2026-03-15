@@ -46,13 +46,6 @@ final class PostalAddressController extends BaseController
         $this->postaladdressService = $postaladdressService;
     }
 
-    /**
-     * @param CurrentRoute $currentRoute
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param ClientRepository $clientRepo
-     * @return Response
-     */
     public function add(
         CurrentRoute $currentRoute,
         Request $request,
@@ -60,9 +53,6 @@ final class PostalAddressController extends BaseController
     ): Response {
         $client_id = $currentRoute->getArgument('client_id');
         $queryParams = $request->getQueryParams();
-        /**
-         * @var array $queryParams
-         */
         $origin = (string) ($queryParams['origin'] ?? '');
         $origin_id = (int) ($queryParams['origin_id'] ?? 0);
         $action = (string) ($queryParams['action'] ?? '');
@@ -198,7 +188,6 @@ final class PostalAddressController extends BaseController
  * Related logic:
  *  see config/common/routes/routes.php
  *   '/postaladdress/edit/{id}[/{origin}/{origin_id}/{action}]'
- * @var array $queryParams
  */
             $origin = (string) ($queryParams['origin'] ?? '');
             $origin_id = (int) ($queryParams['origin_id'] ?? 0);

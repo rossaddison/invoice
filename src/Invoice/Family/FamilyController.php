@@ -82,7 +82,6 @@ final class FamilyController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $families = $this->familys($familyRepository);
         $pageNum = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $query_params = $request->getQueryParams();
         $parameters = [

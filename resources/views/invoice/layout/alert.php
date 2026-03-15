@@ -317,7 +317,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <?php
 /**
- * @var array $flashMessages
  * @var array|string $value
  * @var string $key
  */

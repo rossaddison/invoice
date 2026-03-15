@@ -140,41 +140,6 @@ final class QuoteController extends BaseController
     private readonly NumberHelper $number_helper;
     private readonly PdfHelper $pdf_helper;
 
-    /**
-     *
-     * @param DataResponseFactoryInterface $factory
-     * @param FormFields $formFields
-     * @param InvAllowanceChargeService $inv_allowance_charge_service
-     * @param InvAmountService $inv_amount_service
-     * @param InvService $inv_service
-     * @param InvCustomService $inv_custom_service
-     * @param InvItemService $inv_item_service
-     * @param InvTaxRateService $inv_tax_rate_service
-     * @param LoggerInterface $logger
-     * @param MailerInterface $mailer
-     * @param soAS $so_amount_service
-     * @param soCS $so_custom_service
-     * @param soIS $so_item_service
-     * @param soIACS $so_item_ac_service
-     * @param soS $so_service
-     * @param soTRS $so_tax_rate_service
-     * @param QuoteAmountService $quote_amount_service
-     * @param QuoteCustomService $quote_custom_service
-     * @param QuoteItemService $quote_item_service
-     * @param QuoteItemAllowanceChargeService $quote_item_ac_service
-     * @param QuoteService $quote_service
-     * @param QuoteTaxRateService $quote_tax_rate_service
-     * @param QuoteCustomFieldProcessor $quoteCustomFieldProcessor
-     * @param QuoteToolbar $quoteToolbar
-     * @param UrlGenerator $url_generator
-     * @param Session $session
-     * @param SR $sR
-     * @param Translator $translator
-     * @param UserService $userService
-     * @param WebViewRenderer $webViewRenderer
-     * @param WebControllerService $webService
-     * @param Flash $flash
-     */
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
         private readonly FormFields $formFields,
@@ -217,13 +182,6 @@ final class QuoteController extends BaseController
         $this->pdf_helper = new PdfHelper($sR, $session, $translator);
     }
 
-    /**
-     * @param string $client_id
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return User|null
-     */
     private function active_user(string $client_id, UR $uR, UCR $ucR,
         UIR $uiR): ?User
     {
@@ -244,18 +202,6 @@ final class QuoteController extends BaseController
         return null;
     }
 
-    /**
-     * @param Request $request
-     * @param string $origin
-     * @param FormHydrator $formHydrator
-     * @param CR $clientRepository
-     * @param GR $gR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function add(
         Request $request,
         #[RouteArgument('origin')]
@@ -452,34 +398,6 @@ final class QuoteController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * 
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param ACQIR $acqiR
-     * @param ACQR $acqR
-     * @param ACSOIR $acsoiR
-     * @param CFR $cfR
-     * @param GR $gR
-     * @param soIAS $soiaS
-     * @param PR $pR
-     * @param TASKR $taskR
-     * @param QAR $qaR
-     * @param soAR $soaR
-     * @param QCR $qcR
-     * @param soIAR $soiaR
-     * @param QIR $qiR
-     * @param QR $qR
-     * @param QTRR $qtrR
-     * @param SOR $soR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param UNR $unR
-     * @return Response
-     * @throws GroupException
-     */
     public function approve(
         Request $request,
         FormHydrator $formHydrator,
@@ -606,13 +524,6 @@ final class QuoteController extends BaseController
         return $this->webService->getNotFoundResponse();
     } // approve_with
 
-    /**
-     * @param string $url_key
-     * @param QR $qR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function reject(#[RouteArgument('url_key')] string $url_key, QR $qR,
             UCR $ucR, UIR $uiR):
         Response
@@ -639,10 +550,6 @@ final class QuoteController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param Quote $quote
-     * @return array
-     */
     private function body(Quote $quote): array
     {
         return [
@@ -672,14 +579,6 @@ final class QuoteController extends BaseController
     /**
      * Data fed from quote.js->$(document).on('click',
      * '#quote_create_confirm', function () {
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param GR $gR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return Response
      */
     public function create_confirm(Request $request, FormHydrator $formHydrator,
         GR $gR, TRR $trR, UR $uR, UCR $ucR, UIR $uiR):
@@ -785,11 +684,6 @@ final class QuoteController extends BaseController
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    /**
-     * @param Quote $quote
-     * @param TRR $trR
-     * @param FormHydrator $formHydrator
-     */
     public function default_taxes(
         Quote $quote, TRR $trR, FormHydrator $formHydrator): void
     {
@@ -804,11 +698,6 @@ final class QuoteController extends BaseController
         }
     }
 
-    /**
-     * @param TaxRate|null $taxrate
-     * @param Quote $quote
-     * @param FormHydrator $formHydrator
-     */
     public function default_tax_quote(
         ?TaxRate $taxrate, Quote $quote, FormHydrator $formHydrator): void
     {
@@ -837,19 +726,6 @@ final class QuoteController extends BaseController
         }
     }
 
-    /**
-     * @param int $id
-     * @param QuoteRepository $quoteRepo
-     * @param QCR $qcR
-     * @param QuoteCustomService $qcS
-     * @param QIR $qiR
-     * @param QuoteItemService $qiS
-     * @param QTRR $qtrR
-     * @param QuoteTaxRateService $qtrS
-     * @param QAR $qaR
-     * @param QuoteAmountService $qaS
-     * @return Response
-     */
     public function delete(
         #[RouteArgument('id')]
         int $id,
@@ -890,11 +766,6 @@ final class QuoteController extends BaseController
         }
     }
 
-    /**
-     * @param int $id
-     * @param QIR $qiR
-     * @return Response
-     */
     public function delete_quote_item(#[RouteArgument('id')] int $id, QIR $qiR):
         Response
     {
@@ -929,11 +800,6 @@ final class QuoteController extends BaseController
         ));
     }
 
-    /**
-     * @param int $id
-     * @param QTRR $quotetaxrateRepository
-     * @return Response
-     */
     public function delete_quote_tax_rate(
         #[RouteArgument('id')] int $id, QTRR $quotetaxrateRepository):
         Response
@@ -957,24 +823,6 @@ final class QuoteController extends BaseController
         ));
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @param FormHydrator $formHydrator
-     * @param QR $quoteRepo
-     * @param IR $invRepo
-     * @param CR $clientRepo
-     * @param ContractRepo $contractRepo
-     * @param DLR $delRepo
-     * @param GR $groupRepo
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param QCR $qcR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function edit(
         Request $request,
         #[RouteArgument('id')]
@@ -1077,31 +925,11 @@ final class QuoteController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-
-
-    /**
-     * @psalm-param 'pdf' $type
-     */
     public function email_get_quote_templates(string $type = 'pdf'): array
     {
         return $this->sR->get_quote_templates($type);
     }
 
-    /**
-     * @param WebViewRenderer $head
-     * @param int $id
-     * @param CCR $ccR
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param ETR $etR
-     * @param ICR $icR
-     * @param QR $qR
-     * @param PCR $pcR
-     * @param SOCR $socR
-     * @param QCR $qcR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function email_stage_0(
         WebViewRenderer $head,
         #[RouteArgument('id')]
@@ -1210,10 +1038,6 @@ final class QuoteController extends BaseController
         return $this->webService->getRedirectResponse('quote/index');
     }
 
-    /**
-     * @param EmailTemplate $email_template
-     * @return array
-     */
     public function get_inject_email_template_array(
         EmailTemplate $email_template): array
     {
@@ -1253,35 +1077,6 @@ final class QuoteController extends BaseController
         return $data;
     }
 
-    /**
-     * @param string|null $quote_id
-     * @param array $from
-     * @param string $to
-     * @param string $subject
-     * @param string $email_body
-     * @param string $cc
-     * @param string $bcc
-     * @param array $attachFiles
-     * @param CR $cR
-     * @param CCR $ccR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param CVR $cvR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param QIAR $qiaR
-     * @param QIR $qiR
-     * @param IR $iR
-     * @param QTRR $qtrR
-     * @param PCR $pcR
-     * @param SOCR $socR
-     * @param QR $qR
-     * @param QAR $qaR
-     * @param QCR $qcR
-     * @param UIR $uiR
-     * @param WebViewRenderer $webViewRenderer
-     * @return bool
-     */
     public function email_stage_1(
         ?string $quote_id,
         array $from,
@@ -1327,7 +1122,6 @@ final class QuoteController extends BaseController
                 $qR->repoQuoteUnLoadedquery($quote_id) : null;
             if ($quote_entity) {
                 $stream = false;
-                /** @var string $pdf_template_target_path */
                 $pdf_template_target_path =
                     $this->pdf_helper->generate_quote_pdf(
                         $quote_id, $quote_entity->getUser_id(), $stream, true,
@@ -1380,30 +1174,6 @@ final class QuoteController extends BaseController
         return false;
     }
 
-    /**
-     * @param Request $request
-     * @param int $quote_id
-     * @param CR $cR
-     * @param CCR $ccR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param CVR $cvR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param QIAR $qiaR
-     * @param ICR $icR
-     * @param QIR $qiR
-     * @param IR $iR
-     * @param QTRR $qtrR
-     * @param PCR $pcR
-     * @param SOCR $socR
-     * @param QR $qR
-     * @param QAR $qaR
-     * @param QCR $qcR
-     * @param SOR $soR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function email_stage_2(
         Request $request,
         #[RouteArgument('id')]
@@ -1518,12 +1288,6 @@ final class QuoteController extends BaseController
                 'quote/view', ['id' => $quote_id]);
     }
 
-    /**
-     * @param string $quote_id
-     * @param QR $qR
-     * @param SR $sR
-     * @param GR $gR
-     */
     public function generate_quote_number_if_applicable(
         string $quote_id, QR $qR, SR $sR, GR $gR): void
     {
@@ -1542,18 +1306,6 @@ final class QuoteController extends BaseController
         }
     }
 
-    // users with viewInv permission access this function
-
-    /**
-     * @param Request $request
-     * @param QAR $qaR
-     * @param QR $qR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param int $page
-     * @param int $status
-     * @return Response
-     */
     public function guest(
         Request $request,
         QAR $qaR,
@@ -1680,20 +1432,6 @@ final class QuoteController extends BaseController
     // Only users with editInv permission can access this index.
     // Refer to config/routes accesschecker.
 
-    /**
-     * @param Request $request
-     * @param QAR $qaR
-     * @param QR $quoteRepo
-     * @param CR $clientRepo
-     * @param GR $groupRepo
-     * @param SOR $soR
-     * @param sR $sR
-     * @param UCR $ucR
-     * @param string $_language
-     * @param string $page
-     * @param string $status
-     * @return Response
-     */
     public function index(
         Request $request,
         QAR $qaR,
@@ -1858,10 +1596,6 @@ final class QuoteController extends BaseController
     // Data parsed from quote.js:$(document).on('click',
     // '#client_change_confirm', function () {
 
-    /**
-     * @param Request $request
-     * @param CR $cR
-     */
     public function modal_change_client(Request $request, CR $cR):
         Response
     {
@@ -1901,24 +1635,6 @@ final class QuoteController extends BaseController
 
     // Called from quote.js quote_to_pdf_confirm_with_custom_fields
 
-    /**
-     * @param int $include
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param GR $gR
-     * @param QAR $qaR
-     * @param ACQIR $acqiR
-     * @param QCR $qcR
-     * @param QIR $qiR
-     * @param QIAR $qiaR
-     * @param QR $qR
-     * @param QTRR $qtrR
-     * @param SR $sR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function pdf(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, GR $gR, QAR $qaR, ACQIR $acqiR,
         QCR $qcR, QIR $qiR, QIAR $qiaR, QR $qR, QTRR $qtrR, SR $sR,
@@ -1964,23 +1680,6 @@ final class QuoteController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param int $quote_id
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param GR $gR
-     * @param QAR $qaR
-     * @param ACQIR $acqiR
-     * @param QCR $qcR
-     * @param QIR $qiR
-     * @param QIAR $qiaR
-     * @param QR $qR
-     * @param QTRR $qtrR
-     * @param SR $sR
-     * @param UIR $uiR
-     */
     public function pdf_dashboard_include_cf(
         #[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR,
             DLR $dlR, GR $gR, QAR $qaR, ACQIR $acqiR, QCR $qcR, QIR $qiR,
@@ -2018,23 +1717,6 @@ final class QuoteController extends BaseController
         } //quote_id
     }
 
-    /**
-     * @param int $quote_id
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param GR $gR
-     * @param QAR $qaR
-     * @param ACQIR $acqiR
-     * @param QCR $qcR
-     * @param QIR $qiR
-     * @param QIAR $qiaR
-     * @param QR $qR
-     * @param QTRR $qtrR
-     * @param SR $sR
-     * @param UIR $uiR
-     */
     public function pdf_dashboard_exclude_cf(
         #[RouteArgument('id')] int $quote_id, CR $cR, CVR $cvR, CFR $cfR,
             DLR $dlR, GR $gR, QAR $qaR, ACQIR $acqiR, QCR $qcR, QIR $qiR,
@@ -2072,12 +1754,6 @@ final class QuoteController extends BaseController
         } // quote_id
     }
 
-    /**
-     * @param int $id
-     * @param QuoteRepository $quoteRepo
-     * @param bool $unloaded
-     * @return Quote|null
-     */
     private function quote(
         int $id,
         QR $quoteRepo,
@@ -2130,11 +1806,6 @@ final class QuoteController extends BaseController
                      ->withSort($sort);
     }
 
-    /**
-     * @param string $quote_id
-     * @param qcR $qcR
-     * @return array
-     */
     public function quote_custom_values(string $quote_id, QCR $qcR): array
     {
         // Get all the custom fields that have been registered with this
@@ -2154,11 +1825,6 @@ final class QuoteController extends BaseController
         return $custom_field_form_values;
     }
 
-    /**
-     * @param int $id
-     * @param QIR $quoteitemRepository
-     * @return QuoteItem|null
-     */
     private function quote_item(int $id, QIR $quoteitemRepository): ?QuoteItem
     {
         if ($id) {
@@ -2174,30 +1840,6 @@ final class QuoteController extends BaseController
     // Data fed from quote.js->$(document).on('click',
     // '#quote_to_invoice_confirm', function () {
 
-    /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param ACIIR $aciiR
-     * @param ACQIR $acqiR
-     * @param ACQR $acqR
-     * @param CFR $cfR
-     * @param GR $gR
-     * @param IIAR $iiaR
-     * @param InvItemAmountservice $iiaS
-     * @param PR $pR
-     * @param QAR $qaR
-     * @param QCR $qcR
-     * @param QIR $qiR
-     * @param QR $qR
-     * @param QTRR $qtrR
-     * @param TRR $trR
-     * @param UNR $unR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     *
-     * @return Response
-     */
     public function quote_to_invoice_confirm(
         Request $request,
         FormHydrator $formHydrator,
@@ -2324,28 +1966,6 @@ final class QuoteController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param ACQIR $acqiR
-     * @param CFR $cfR
-     * @param GR $gR
-     * @param soIAS $soiaS
-     * @param PR $pR
-     * @param TASKR $taskR
-     * @param QAR $qaR
-     * @param soAR $soaR
-     * @param QCR $qcR
-     * @param soIAR $soiaR
-     * @param QIR $qiR
-     * @param QR $qR
-     * @param QTRR $qtrR
-     * @param TRR $trR
-     * @param UNR $unR
-     * @param UCR $ucR
-     * @param UR $uR
-     * @return Response
-     */
     public function quote_to_so_confirm(
         Request $request,
         FormHydrator $formHydrator,
@@ -2479,20 +2099,6 @@ final class QuoteController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param string $quote_id
-     * @param string $inv_id
-     * @param ACQIR $acqiR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param InvItemAmountService $iiaS
-     * @param PR $pR
-     * @param QIR $qiR
-     * @param QIAR $qiaR
-     * @param TRR $trR
-     * @param FormHydrator $formHydrator
-     * @param UNR $unR
-     */
     private function quote_to_invoice_quote_items(string $quote_id,
         string $inv_id, ACQIR $acqiR, ACIIR $aciiR, IIAR $iiaR,
             InvItemAmountService $iiaS,
@@ -2560,12 +2166,6 @@ final class QuoteController extends BaseController
         } // items
     }
 
-    /**
-     * @param string $quote_id
-     * @param string|null $inv_id
-     * @param QTRR $qtrR
-     * @param FormHydrator $formHydrator
-     */
     private function quote_to_invoice_quote_tax_rates(string $quote_id,
         ?string $inv_id, QTRR $qtrR, FormHydrator $formHydrator): void
     {
@@ -2589,12 +2189,6 @@ final class QuoteController extends BaseController
         } // foreach
     }
 
-    /**
-     * @param string $quote_id
-     * @param string|null $so_id
-     * @param QTRR $qtrR
-     * @param FormHydrator $formHydrator
-     */
     private function quote_to_so_quote_tax_rates(
         string $quote_id, ?string $so_id, QTRR $qtrR,
             FormHydrator $formHydrator): void
@@ -2621,13 +2215,6 @@ final class QuoteController extends BaseController
         } // foreach
     }
 
-    /**
-     * @param string $quote_id
-     * @param string|null $inv_id
-     * @param QCR $qcR
-     * @param CFR $cfR
-     * @param FormHydrator $formHydrator
-     */
     private function quote_to_invoice_quote_custom(
         string $quote_id,
         ?string $inv_id,
@@ -2677,13 +2264,6 @@ final class QuoteController extends BaseController
         } // foreach
     }
 
-    /**
-     * @param string $quote_id
-     * @param string|null $so_id
-     * @param QCR $qcR
-     * @param CFR $cfR
-     * @param FormHydrator $formHydrator
-     */
     private function quote_to_so_quote_custom(
         string $quote_id,
         ?string $so_id,
@@ -2731,12 +2311,6 @@ final class QuoteController extends BaseController
         } // foreach
     }
 
-    /**
-     * @param string $quote_id
-     * @param string|null $inv_id
-     * @param QAR $qaR
-     * @param FormHydrator $formHydrator
-     */
     private function quote_to_invoice_quote_amount(string $quote_id,
         ?string $inv_id, QAR $qaR, FormHydrator $formHydrator): void
     {
@@ -2791,9 +2365,6 @@ final class QuoteController extends BaseController
      * automatically in the Quote Entity Construct
      * so pass the qaR to find this new Quote Amount
      * Related logic: InvController function inv_to_inv_inv_amount()
-     * @param int $quoteId
-     * @param int $copiedId
-     * @param  QAR $qaR
      */
     private function quote_to_quote_quote_amount(int $quoteId, int $copiedId,
         QAR $qaR): void
@@ -2817,15 +2388,6 @@ final class QuoteController extends BaseController
         }
     }
 
-    /**
-     * Note: hasOne
-     * @param string $quote_id
-     * @param string $copy_id
-     * @param QAR $qaR
-     * @param soAR $soaR
-     * @param SOR $soR
-     * @return void
-     */
     private function quote_to_so_quote_amount(string $quote_id,
         string $copy_id, QAR $qaR, soAR $soaR, SOR $soR): void
     {
@@ -2855,28 +2417,6 @@ final class QuoteController extends BaseController
 
     // Data fed from quote.js->$(document).on('click',
     // '#quote_to_quote_confirm', function () {
-
-    /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param ACQR $acqR
-     * @param ACQIR $acqiR
-     * @param GR $gR
-     * @param QIAS $qiaS
-     * @param PR $pR
-     * @param TASKR $taskR
-     * @param QAR $qaR
-     * @param QCR $qcR
-     * @param QIAR $qiaR
-     * @param QIR $qiR
-     * @param QR $qR
-     * @param QTRR $qtrR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param UNR $unR
-     */
     public function quote_to_quote_confirm(
         Request $request,
         FormHydrator $formHydrator,
@@ -2975,12 +2515,6 @@ final class QuoteController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param string $quote_id
-     * @param string|null $copy_id
-     * @param QCR $qcR
-     * @param FormHydrator $formHydrator
-     */
     private function quote_to_quote_quote_custom(string $quote_id,
         ?string $copy_id, QCR $qcR, FormHydrator $formHydrator): void
     {
@@ -3001,19 +2535,6 @@ final class QuoteController extends BaseController
         }
     }
 
-    /**
-     * @param string $quote_id
-     * @param string $copy_id
-     * @param ACQIR $acqiR
-     * @param QIAR $qiaR
-     * @param QIAS $qiaS
-     * @param PR $pR
-     * @param TASKR $taskR
-     * @param QIR $qiR
-     * @param TRR $trR
-     * @param UNR $unR
-     * @param FormHydrator $formHydrator
-     */
     private function quote_to_quote_quote_items(string $quote_id,
         string $new_quote_id, ACQIR $acqiR, QIAR $qiaR, QIAS $qiaS, PR $pR,
         TASKR $taskR, QIR $qiR, TRR $trR, UNR $unR,
@@ -3185,12 +2706,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         }
     }
 
-    /**
-     * @param string $quote_id
-     * @param string|null $copy_id
-     * @param QTRR $qtrR
-     * @param FormHydrator $formHydrator
-     */
     private function quote_to_quote_quote_tax_rates(string $quote_id,
         ?string $copy_id, QTRR $qtrR, FormHydrator $formHydrator): void
     {
@@ -3268,11 +2783,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         }
     }
 
-    /**
-     * @param int $id
-     * @param QTRR $quotetaxrateRepository
-     * @return QuoteTaxRate|null
-     */
     private function quotetaxrate(int $id, QTRR $quotetaxrateRepository):
         ?QuoteTaxRate
     {
@@ -3287,10 +2797,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         return null;
     }
 
-    /**
-     * @param array $files
-     * @return mixed
-     */
     private function remove_extension(array $files): mixed
     {
         /**
@@ -3306,10 +2812,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
     // quote/view => '#btn_save_quote_custom_fields' => quote_custom_field.js
     // => /invoice/quote/save_custom";
 
-    /**
-     * @param FormHydrator $formHydrator
-     * @param Request $request
-     */
     public function save_custom(FormHydrator $formHydrator, Request $request): Response
     {
         $parameters = [
@@ -3328,10 +2830,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
 
     // '#quote_tax_submit' => quote.js
 
-    /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     */
     public function save_quote_tax_rate(Request $request,
         FormHydrator $formHydrator): Response
     {
@@ -3487,35 +2985,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param int $id
-     * @param string $_language
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param DLR $dlR
-     * @param PIR $piR
-     * @param PR $pR
-     * @param PROJECTR $projectR
-     * @param QAR $qaR
-     * @param QIAR $qiaR
-     * @param QIR $qiR
-     * @param QR $qR
-     * @param QTRR $qtrR
-     * @param TASKR $taskR
-     * @param TRR $trR
-     * @param FR $fR
-     * @param UNR $uR
-     * @param ACR $acR,
-     * @param ACQR $acqR,
-     * @param ACQIR $acqiR,
-     * @param CR $cR
-     * @param GR $gR
-     * @param QCR $qcR
-     * @param SOR $soR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function view(
         #[RouteArgument('id')]
         int $id,
@@ -3870,10 +3339,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
      * to users 1. with the observer role's VIEW_INV permission and 2. supervise a
      * client requested quote and are an active current user for these client's
      * invoices.
-     * @param Quote $quote
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return bool
      */
     private function rbacObserver(Quote $quote, UCR $ucR, UIR $uiR) : bool {
         $statusId = $quote->getStatus_id();
@@ -3918,17 +3383,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         }
     }
 
-    /**
-     * @param Quote $quote
-     * @param int $client_id
-     * @param CR $clientRepo
-     * @param ContractRepo $contractRepo
-     * @param DLR $delRepo
-     * @param GR $groupRepo
-     * @param QR $quoteRepo
-     * @param UCR $ucR
-     * @return array
-     */
     private function editOptionsData(
         Quote $quote,
         int $client_id,
@@ -4007,10 +3461,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         ];
     }
 
-    /**
-     * @param QR $qR
-     * @return array
-     */
     public function optionsDataClients(QR $qR): array
     {
         $optionsDataClients = [];
@@ -4033,10 +3483,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         return $optionsDataClients;
     }
 
-    /**
-     * @param QR $qR
-     * @return array
-     */
     public function optionsDataClientGroup(QR $qR): array
     {
         $clientGroup = [];
@@ -4056,10 +3502,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         return $clientGroup;
     }
 
-    /**
-     * @param QR $qR
-     * @return array
-     */
     public function optionsDataQuoteNumber(QR $qR): array
     {
         $optionsDataQuoteNumbers = [];
@@ -4078,10 +3520,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         return $optionsDataQuoteNumbers;
     }
 
-    /**
-     * @param QR $qR
-     * @return array
-     */
     public function optionsDataStatuses(QR $qR): array
     {
         $optionsDataStatus = [];
@@ -4089,8 +3527,6 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         
         /** @var array<int, array<string, string>> $statuses */
         foreach ($statuses as $statusId => $statusData) {
-            /** @var int $statusId */
-            /** @var array<string, string> $statusData */
             $label = $qR->getSpecificStatusArrayLabel((string) $statusId);
             $optionsDataStatus[$statusId] = $label;
         }

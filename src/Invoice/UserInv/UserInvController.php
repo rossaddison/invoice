@@ -481,11 +481,12 @@ final class UserInvController extends BaseController
     }
 
     /**
-     * After the user has clicked on their received email link in their email account, their hyperlink takes them to this function
-     *
+     * After the user has clicked on their received email link in their
+     * email account, their hyperlink takes them to this function
      * @param string $_language
      * @param string $language
-     * @param string $token
+     * @param string $tokenMasked
+     * @param string $tokenType
      * @param cR $cR
      * @param uiR $uiR
      * @param ucR $ucR

@@ -293,9 +293,7 @@ $vat = $s->getSetting('enable_vat_registration');
                              */
                             foreach ($items as $item) : 
                                 // Show Peppol fields if they have been entered
-                                /** @var string|null $peppolItemId */
                                 $peppolItemId = $item->getPeppol_po_itemid();
-                                /** @var string|null $peppolLineId */
                                 $peppolLineId = $item->getPeppol_po_lineid();
                             ?>
                             <tr>

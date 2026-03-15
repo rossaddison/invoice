@@ -119,9 +119,6 @@ final class DeliveryLocationController extends BaseController
          * of creating the delivery location by creating a return $url
          */
         $queryParams = $request->getQueryParams();
-        /**
-         * @var array $queryParams
-         */
         $origin = (string) $queryParams['origin'];
         $origin_id = (int) $queryParams['origin_id'];
         $action = (string) $queryParams['action'];
@@ -194,9 +191,6 @@ final class DeliveryLocationController extends BaseController
         if ($del) {
             $queryParams = $request->getQueryParams();
 
-            /**
-             * @var array $queryParams
-             */
             $origin = (string) $queryParams['origin'];
             $origin_id = (int) $queryParams['origin_id'];
             $action = (string) $queryParams['action'];

@@ -133,7 +133,6 @@ trait Callback
                 $languageArray = $this->sR->locale_language_array();
                 /**
                  * @see Trait\Oauth2 function getAccessToken
-                 * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
@@ -227,9 +226,6 @@ trait Callback
         }
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\Facebook $facebook */
         $oAuthTokenType = $facebook->fetchAccessToken($request, $code, $params = []);
-        /**
-         * @var array $userArray
-         */
         $userArray = $facebook->getCurrentUserJsonArray($oAuthTokenType);
         /**
          * @var int $userArray['id']
@@ -271,7 +267,6 @@ trait Callback
                     $languageArray = $this->sR->locale_language_array();
                     /**
                      * @see Trait\Oauth2 function getFacebookAccessToken
-                     * @var array $languageArray
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
@@ -404,7 +399,6 @@ trait Callback
                     $languageArray = $this->sR->locale_language_array();
                     /**
                      * @see Trait\Oauth2 function getAccessToken
-                     * @var array $languageArray
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
@@ -473,9 +467,6 @@ trait Callback
             'grant_type' => 'authorization_code',
         ]);
 
-        /**
-         * @var array $userArray
-         */
         $userArray = $google->getCurrentUserJsonArray($oAuthTokenType);
 
         /**
@@ -525,7 +516,6 @@ trait Callback
                 $languageArray = $this->sR->locale_language_array();
                 /**
                  * @see Trait\Oauth2 function getGoogleAccessToken
-                 * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
@@ -589,9 +579,6 @@ trait Callback
         }
         /** @psalm-var \App\Auth\Client\GovUk $govUk */
         $oAuthTokenType = $govUk->fetchAccessToken($request, $code, $params = []);
-        /**
-         * @var array $userArray
-         */
         $userArray = $govUk->getCurrentUserJsonArray($oAuthTokenType);
         /**
          * @var int $userArray['id']
@@ -627,7 +614,6 @@ trait Callback
                 $languageArray = $this->sR->locale_language_array();
                 /**
                  * @see Trait\Oauth2 function getAccessToken
-                 * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
@@ -693,9 +679,6 @@ trait Callback
         ];
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\LinkedIn $linkedIn */
         $oAuthTokenType = $linkedIn->fetchAccessToken($request, $code, $params);
-        /**
-         * @var array $userArray
-         */
         $userArray = $linkedIn->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
          * eg. [
@@ -744,7 +727,6 @@ trait Callback
                 $languageArray = $this->sR->locale_language_array();
                 /**
                  * @see Trait\Oauth2 function getLinkedInAccessToken
-                 * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
@@ -816,9 +798,6 @@ trait Callback
             'grant_type' => 'authorization_code',
             'redirect_uri' => 'https://yii3i.co.uk/callbackMicrosoftOnline',
         ]);
-        /**
-         * @var array $userArray
-         */
         $userArray = $microsoftOnline->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
         /**
          * @var int $userArray['id']
@@ -854,7 +833,6 @@ trait Callback
                 $languageArray = $this->sR->locale_language_array();
                 /**
                  * @see Trait\Oauth2 function getMicrosoftOnlineAccessToken
-                 * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
@@ -1024,7 +1002,6 @@ trait Callback
                     $languageArray = $this->sR->locale_language_array();
                     /**
                      * @see Trait\Oauth2 function getXAccessToken
-                     * @var array $languageArray
                      * @var string $language
                      */
                     $language = $languageArray[$_language];
@@ -1136,7 +1113,6 @@ trait Callback
          *          'verified' => false
          *          'birthday' => '09.09.1999'
          *       ]
-         * @var array $userArray
          * @psalm-var \Yiisoft\Yii\AuthClient\Client\VKontakte $vkontakte
          */
         $userArray = $vkontakte->step8ObtainingUserDataArrayWithClientId($oAuthTokenType, $vkontakte->getClientId(), $this->configWebDiAuthGuzzle, $this->requestFactory);
@@ -1195,7 +1171,6 @@ trait Callback
                 $languageArray = $this->sR->locale_language_array();
                 /**
                  * @see Trait\Oauth2 function getYandexAccessToken
-                 * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];
@@ -1279,7 +1254,6 @@ trait Callback
         ];
         $oAuthTokenType = $yandex->fetchAccessTokenWithCodeVerifier($request, $code, $params);
         /**
-         * @var array $userArray
          * @psalm-var \Yiisoft\Yii\AuthClient\Client\Yandex $yandex
          */
         $userArray = $yandex->getCurrentUserJsonArray($oAuthTokenType, $this->configWebDiAuthGuzzle, $this->requestFactory);
@@ -1320,7 +1294,6 @@ trait Callback
                 $languageArray = $this->sR->locale_language_array();
                 /**
                  * @see Trait\Oauth2 function getYandexAccessToken
-                 * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];

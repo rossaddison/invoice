@@ -16,7 +16,6 @@ use Yiisoft\Html\Tag\Form;
  * @var string $actionName
  * @var string $csrf
  * @var string $title
- * @var string $actionName
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsDataUnits

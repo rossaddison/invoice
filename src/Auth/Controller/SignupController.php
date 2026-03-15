@@ -184,7 +184,6 @@ final class SignupController
                 $_language = $currentRoute->getArgument('_language');
                 /**
                  * @var string $_language
-                 * @var array $languageArray
                  * @var string $language
                  */
                 $language = $languageArray[$_language];

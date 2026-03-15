@@ -71,7 +71,6 @@ $this->beginPage();
     </tr>
     <?php
         /**
-         * @var array $dueInvoices
          * @var array $dueInvoice
          * @var int $dueInvoice['range_index']
          * @var int $dueInvoice['invoice_balance']

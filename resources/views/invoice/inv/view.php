@@ -435,7 +435,6 @@ if ((in_array($inv->getStatus_id(), [2, 3])
         && $invAmountBalance > 0)
         && $paymentView) {
     /**
-     * @var array $enabled_gateways
      * @var string $gateway
      */
     foreach ($enabled_gateways as $gateway) {
@@ -882,7 +881,6 @@ if ($vat === '1') {
              'class' => 'form-control'
          ]);
          /**
-          * @var array $inv_statuses
           * @var string $key
           * @var array $status
           */

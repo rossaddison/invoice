@@ -468,7 +468,7 @@ final readonly class InvItemService
      * @param string $inv_id
      * @param PR $pr
      * @param taskR $taskR
-     * @param UNR $unR
+     * @param UNR $uR
      * @param Translator $translator
      */
     public function addInvItemProductTask(InvItem $model, array $array,
@@ -557,8 +557,6 @@ final readonly class InvItemService
      * @param float $quantity
      * @param float $price
      * @param float $discount
-     * @param float $charge
-     * @param float $allowance
      * @param float $tax_rate_percentage
      * @param IIAS $iias
      * @param IIAR $iiar

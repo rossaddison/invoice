@@ -106,9 +106,6 @@ final class OpenBankingPaymentService
              */
             foreach ($company->getCompanyPrivates() as $companyPrivate) {
                 if ($companyPrivate->isActiveToday()) {
-                    /**
-                     * @var CompanyPrivate $activeCompanyPrivate
-                     */
                     $activeCompanyPrivate = $companyPrivate;
                     break; // Stop at the first active one
                 }

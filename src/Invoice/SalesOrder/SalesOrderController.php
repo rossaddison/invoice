@@ -167,9 +167,6 @@ final class SalesOrderController extends BaseController
                     $paginator = (new OffsetPaginator($salesOrders))
                     ->withPageSize($this->sR->positiveListLimit())
                     ->withCurrentPage($currentPageNeverZero);
-                    /**
-                     * @var array $so_statuses
-                     */
                     $so_statuses = $soR->getStatuses($this->translator);
                     $parameters = [
                         'alert' => $this->alert(),
@@ -215,7 +212,6 @@ final class SalesOrderController extends BaseController
         $this->session->set('_language', $currentRoute->getArgument('_language'));
         $query_params = $request->getQueryParams();
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         //status 0 => 'all';
         $status = (int) $currentRoute->getArgument('status', '0');
@@ -276,9 +272,6 @@ final class SalesOrderController extends BaseController
                     $so_id = $so->getId();
                     $so->setStatus_id(3);
                     $soR->save($so);
-                    /**
-                     * @var array $so_statuses
-                     */
                     $so_statuses = $soR->getStatuses($this->translator);
                     /*  @var string $status_id */
                     $status_id = $so->getStatus_id();
@@ -425,9 +418,7 @@ final class SalesOrderController extends BaseController
         foreach ($item_ids as $item_id) {
             $item = $soiR->repoSalesOrderItemquery($item_id);
             if ($item && $item->getSales_order_id() === $salesorder->getId()) {
-                /** @var string $peppol_po_itemid */
                 $peppol_po_itemid = $peppol_po_itemids[$item_id] ?? '';
-                /** @var string $peppol_po_lineid */
                 $peppol_po_lineid = $peppol_po_lineids[$item_id] ?? '';
                 
                 // Update the item with Peppol data
@@ -1176,21 +1167,6 @@ final class SalesOrderController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param string $so_id
-     * @param string $inv_id
-     * @param ACIIR $aciiR
-     * @param ACSOIR $acsoiR
-     * @param IIAR $iiaR
-     * @param IIAS $iiaS
-     * @param PR $pR
-     * @param TASKR $taskR
-     * @param SOIR $soiR
-     * @param TRR $trR
-     * @param FormHydrator $formHydrator
-     * @param SettingRepository $sR
-     * @param UNR $unR
-     */
     private function so_to_invoice_so_items(string $so_id, string $new_inv_id,
         ACIIR $aciiR, ACSOIR $acsoiR, IIAR $iiaR, IIAS $iiaS, PR $pR, TASKR $taskR,
             SoIAR $soiaR, SoIR $soiR, TRR $trR, FormHydrator $formHydrator,
@@ -1381,13 +1357,7 @@ final class SalesOrderController extends BaseController
     private function so_to_invoice_so_amount(
                                     SalesOrder $so, Inv $inv, InvRepo $iR): void
     {
-        /**
-         * @var SalesOrderAmount $soA
-         */
         $soA = $so->getSales_order_amount();
-        /**
-         * @var InvAmount $iA
-         */
         $iA = $inv->getInvAmount();
         // hydrate
         $iA->setInv_id((int) $inv->getId());

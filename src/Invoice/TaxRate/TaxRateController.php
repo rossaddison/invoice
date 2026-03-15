@@ -91,14 +91,6 @@ final class TaxRateController extends BaseController
         return $this->webViewRenderer->render('__form', $parameters);
     }
 
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param SettingRepository $settingRepository
-     * @param TaxRateRepository $taxrateRepository
-     * @param FormHydrator $formHydrator
-     * @return Response
-     */
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,

@@ -83,9 +83,6 @@ final class SalesOrderAmountRepository extends Select\Repository
         );
     }
 
-    /**
-     * @param string $so_id
-     */
     public function repoSalesOrderAmountCount(string $sales_order_id): int
     {
         return $this->select()

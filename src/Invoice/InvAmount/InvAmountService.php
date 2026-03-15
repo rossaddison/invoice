@@ -98,7 +98,6 @@ final readonly class InvAmountService
     /**
      * @param InvAmount $model
      * @param array $array
-     * @param InvAmountForm $form
      */
     public function saveInvAmount(
         InvAmount $model,

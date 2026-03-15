@@ -25,7 +25,6 @@ final readonly class ZugFerdHelper
     }
 
     /**
-     * @param SRepo $sR
      * @return Aliases
      */
     private function ensure_temp_zugferd_folder_and_uploads_folder_exist(): Aliases

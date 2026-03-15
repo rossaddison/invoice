@@ -86,7 +86,6 @@ final class InvAllowanceChargeController extends BaseController
     }
 
     /**
-     * @param InvAllowanceChargeRepository $invallowancechargeRepository
      * @return Response
      */
     public function index(
@@ -175,16 +174,7 @@ final class InvAllowanceChargeController extends BaseController
             return $this->webService->getRedirectResponse('invallowancecharge/index');
         }
     }
-
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param FormHydrator $formHydrator
-     * @param AllowanceChargeRepository $allowanceChargeRepository
-     * @param InvAllowanceChargeRepository $invAllowanceChargeRepository
-     * @param InvAmountRepository $iaR
-     * @return Response
-     */
+    
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,

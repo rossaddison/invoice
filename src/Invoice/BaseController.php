@@ -217,7 +217,6 @@ abstract class BaseController
                 continue;
             }
 
-            /** @var array{name: mixed, value: mixed, ...} $item */
             $item = $rawItem;
 
             // Type guard: ensure name is convertible to string
@@ -248,7 +247,6 @@ abstract class BaseController
         $processedCustom = [];
 
         /**
-         * @var string $key
          * @var string|int|float|bool|array<mixed>|null $value
          */
         foreach ($values as $key => $value) {

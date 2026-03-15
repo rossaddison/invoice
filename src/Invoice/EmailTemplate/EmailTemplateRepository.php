@@ -144,7 +144,9 @@ final class EmailTemplateRepository extends Select\Repository
     }
 
     /**
-     * @psalm-param 'pdf' $type
+     * 
+     * @param string $pdf_or_public
+     * @return array
      */
     public function get_quote_templates(string $pdf_or_public): array
     {

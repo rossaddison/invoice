@@ -38,7 +38,6 @@ final class ZugferdXml
      */
     public function xml(): string
     {
-        /** @var DOMDocument $doc */
         $doc = new DOMDocument('1.0', 'UTF-8');
         $doc->formatOutput = true;
         $root = $doc->createElement('rsm:CrossIndustryDocument');

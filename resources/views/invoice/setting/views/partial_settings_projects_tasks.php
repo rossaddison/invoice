@@ -39,7 +39,6 @@ echo H::openTag('div', ['class' => 'row']); //1
         ];
         /**
         * @var string $value
-        * @var string $label
         */
         foreach ($options as $value => $label) {
         echo  new Option()

@@ -87,7 +87,10 @@ use App\Widget\{
     Bootstrap5ModalTranslatorMessageWithoutAction
 };
 use Yiisoft\{
-    Data\Paginator\OffsetPaginator, Data\Reader\Sort,
+    Data\Paginator\OffsetPaginator,
+    Data\Reader\Sort, Data\Reader\DataReaderInterface as DRI,
+    Data\Reader\SortableDataInterface as SDI,
+    Data\Cycle\Reader\EntityReader,
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
     FormModel\FormHydrator, Http\Method, Html\Html,
     Input\Http\Attribute\Parameter\Query, Json\Json,
@@ -109,28 +112,6 @@ final class InvController extends BaseController
     private readonly NumberHelper $number_helper;
     private readonly PdfHelper $pdf_helper;
 
-    /**
-     *
-     * @param DataResponseFactoryInterface $factory
-     * @param DelRepo $delRepo
-     * @param InvAllowanceChargeService $inv_allowance_charge_service
-     * @param InvAmountService $inv_amount_service
-     * @param InvService $inv_service
-     * @param InvCustomService $inv_custom_service
-     * @param InvItemService $inv_item_service
-     * @param InvItemAllowanceChargeService $aciis
-     * @param InvTaxRateService $inv_tax_rate_service
-     * @param LoggerInterface $logger
-     * @param MailerInterface $mailer
-     * @param UrlGenerator $url_generator
-     * @param SessionInterface $session
-     * @param SR $sR
-     * @param TranslatorInterface $translator
-     * @param UserService $userService
-     * @param WebViewRenderer $webViewRenderer
-     * @param WebControllerService $webService
-     * @param Flash $flash
-     */
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
         private readonly FormFields $formFields,
@@ -162,13 +143,6 @@ final class InvController extends BaseController
         $this->pdf_helper = new PdfHelper($sR, $session, $translator);
     }
 
-    /**
-     * @param string $client_id
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return User|null
-     */
     private function active_user(string $client_id, UR $uR, UCR $ucR, UIR $uiR):
         ?User
     {
@@ -189,10 +163,6 @@ final class InvController extends BaseController
         return null;
     }
 
-    /**
-     * @param Request $request
-     * @return Response
-     */
     public function archive(Request $request): Response
     {
         $invoice_archive = [];
@@ -229,15 +199,6 @@ final class InvController extends BaseController
         return $this->webViewRenderer->render('archive', $parameters);
     }
 
-    /**
-     * @param string $tmp
-     * @param string $target
-     * @param int $client_id
-     * @param string $url_key
-     * @param string $fileName
-     * @param UPR $uPR
-     * @return bool
-     */
     private function attachment_move_to(
         string $tmp,
         string $target,
@@ -283,10 +244,6 @@ final class InvController extends BaseController
         return false;
     }
 
-    /**
-     * @param int $inv_id
-     * @return string
-     */
     private function attachment_not_writable(int $inv_id): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -300,10 +257,6 @@ final class InvController extends BaseController
         );
     }
 
-    /**
-     * @param int $inv_id
-     * @return string
-     */
     private function attachment_successfully_created(int $inv_id): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -316,10 +269,6 @@ final class InvController extends BaseController
         );
     }
 
-    /**
-     * @param int $inv_id
-     * @return string
-     */
     private function attachment_no_file_uploaded(int $inv_id): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -332,12 +281,6 @@ final class InvController extends BaseController
         );
     }
 
-    /**
-     * @param int $inv_id
-     * @param IR $iR
-     * @param UPR $uPR
-     * @return Response
-     */
     public function attachment(#[RouteArgument('id')] int $inv_id, IR $iR,
             UPR $uPR): Response
     {
@@ -390,8 +333,6 @@ $original_file_name = preg_replace(
 
     /**
      * Used to display values in the view function
-     * @param Inv $inv
-     * @return array
      */
     private function body(Inv $inv): array
     {
@@ -431,17 +372,6 @@ $original_file_name = preg_replace(
     /**
      * Related logic: see config/common/routes.php search 'inv/add'
      * Only the admin has the EDIT_INV permission and can add an invoice.
-     *
-     * @param Request $request
-     * @param string $origin
-     * @param FormHydrator $formHydrator
-     * @param CR $clientRepository
-     * @param GR $gR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return Response
      */
     public function add(
         Request $request,
@@ -649,17 +579,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     // Reverse an invoice with a credit invoice /debtor/client/customer
     // credit note
 
-    /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param CR $clientRepository
-     * @param GR $gR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function credit(
         Request $request,
         FormHydrator $formHydrator,
@@ -772,16 +691,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * Related logic: see src/Invoice/Asset/rebuild1.13/js/inv.js function
      *  $(document).on('click', '#create-credit-confirm', function ()
      * Related logic: see resources/views/invoice/inv/modal_create_credit
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param IR $iR
-     * @param GR $gR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param UR $uR
-     * @return Response
      */
     public function create_credit_confirm(Request $request,
             FormHydrator $formHydrator, IR $iR, GR $gR, IIR $iiR, IIAR $iiaR,
@@ -852,11 +761,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ]));
     }
 
-    /**
-     * @param Inv $inv
-     * @param TRR $trR
-     * @param FormHydrator $formHydrator
-     */
     public function default_taxes(Inv $inv, TRR $trR,
         FormHydrator $formHydrator): void
     {
@@ -870,11 +774,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         }
     }
 
-    /**
-     * @param TaxRate $taxrate
-     * @param Inv $inv
-     * @param FormHydrator $formHydrator
-     */
     public function default_tax_inv(TaxRate $taxrate, Inv $inv,
             FormHydrator $formHydrator): void
     {
@@ -898,22 +797,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             new InvTaxRate(), $inv_tax_rate) : '';
     }
 
-    /**
-     * @param int $id
-     * @param InvRepository $invRepo
-     * @param ACIR $aciR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param ICR $icR
-     * @param InvCustomService $icS
-     * @param IIR $iiR
-     * @param InvItemService $iiS
-     * @param ITRR $itrR
-     * @param InvTaxRateService $itrS
-     * @param IAR $iaR
-     * @param InvAmountService $iaS
-     * @return Response
-     */
     public function delete(
         #[RouteArgument('id')]
         int $id,
@@ -948,14 +831,8 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         }
     }
 
-    /**
-     * @param int $id
-     * @param IIR $iiR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @return Response
-     */
-    public function delete_inv_item(#[RouteArgument('id')] int $id, IIR $iiR, ACIIR $aciiR, IIAR $iiaR):
+    public function delete_inv_item(#[RouteArgument('id')] int $id, IIR $iiR,
+            ACIIR $aciiR, IIAR $iiaR):
         Response
     {
         try {
@@ -996,11 +873,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ));
     }
 
-    /**
-     * @param int $id
-     * @param ITRR $invtaxrateRepository
-     * @return Response
-     */
     public function delete_inv_tax_rate(#[RouteArgument('id')] int $id,
             ITRR $invtaxrateRepository):
         Response {
@@ -1045,16 +917,13 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @return never
      */
     public function download_file(#[RouteArgument('upload_id')] int $upload_id,
-        IR $iR, UCR $ucR, UIR $uiR, UPR $upR)
+        IR $iR, UCR $ucR, UIR $uiR, UPR $upR) : never
     {
         $cC = 'Cache-Control: public, must-revalidate, post-check=0, pre-check=0';
         if ($upload_id) {
             $upload = $upR->repoUploadquery((string) $upload_id);
             if (null !== $upload) {
                 $url_key = $upload->getUrl_key();
-                /**
-                 * @var Inv|null $inv
-                 */
                 $inv = $iR->repoUrl_key_guest_loaded($url_key);
                 if (null!==$inv) {
                     if (!($this->rbacObserver($inv, $ucR, $uiR))) {
@@ -1101,9 +970,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         exit;
     }
 
-    /**
-     * @param string $invoice
-     */
     public function download(#[RouteArgument('invoice')] string $invoice): void
     {
         $aliases = $this->sR->get_invoice_archived_folder_aliases();
@@ -1134,10 +1000,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         return $inputAttributesUrlKey;
     }
 
-    /**
-     * @param InvForm $form
-     * @return array
-     */
     private function editInputAttributesPaymentMethod(InvForm $form): array
     {
         $inputAttributesPaymentMethod = [];
@@ -1156,21 +1018,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         return $inputAttributesPaymentMethod;
     }
 
-    /**
-     * @param PeppolArrays $peppol_array
-     * @param Inv $inv
-     * @param int $client_id
-     * @param CR $clientRepo
-     * @param ContractRepo $contractRepo
-     * @param DelRepo $deliveryRepo
-     * @param DLR $delRepo
-     * @param GR $groupRepo
-     * @param IR $invRepo
-     * @param paR $paR
-     * @param PMR $pmRepo
-     * @param UCR $ucR
-     * @return array
-     */
     private function editOptionsData(
         PeppolArrays $peppol_array,
         Inv $inv,
@@ -1298,25 +1145,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ];
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @param FormHydrator $formHydrator
-     * @param IR $invRepo
-     * @param CR $clientRepo
-     * @param ContractRepo $contractRepo
-     * @param DelRepo $deliveryRepo
-     * @param DLR $delRepo
-     * @param GR $groupRepo
-     * @param PMR $pmRepo
-     * @param UR $userRepo
-     * @param IAR $iaR
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param ICR $icR
-     * @param paR $paR
-     * @return Response
-     */
     public function edit(
         Request $request,
         #[RouteArgument('id')]
@@ -1455,11 +1283,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         return $this->webService->getRedirectResponse('inv/index');
     }
 
-    /**
-     * @param IAR $iaR
-     * @param int $inv_id
-     * @return bool
-     */
     public function edit_check_status_reconciling_with_balance(IAR $iaR,
         int $inv_id): bool
     {
@@ -1471,19 +1294,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         }
         return false;
     }
-
-    /**
-     * @param array|object|null $body
-     * @param int $id
-     * @param FormHydrator $formHydrator
-     * @param IR $invRepo
-     * @param GR $groupRepo
-     * @param IAR $iaR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return InvForm|null
-     */
+    
     public function edit_save_form_fields(array|object|null $body, int $id,
         FormHydrator $formHydrator, IR $invRepo, GR $groupRepo, UR $uR,
             UCR $ucR, UIR $uiR): ?InvForm
@@ -1505,33 +1316,12 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         }  // $inv
         return null;
     }
-
-
-
-    /**
-     * @param string $type
-     * @return array
-     */
+    
     public function email_get_invoice_templates(string $type = 'pdf'): array
     {
         return $this->sR->get_invoice_templates($type);
     }
 
-    /**
-     * @param WebViewRenderer $head
-     * @param int $id
-     * @param CCR $ccR
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param ETR $etR
-     * @param ICR $icR
-     * @param IR $iR
-     * @param PCR $pcR
-     * @param SOCR $socR
-     * @param QCR $qcR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function email_stage_0(
         WebViewRenderer $head,
         #[RouteArgument('id')]
@@ -1647,10 +1437,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         return $this->webService->getRedirectResponse('inv/index');
     }
 
-    /**
-     * @param EmailTemplate $email_template
-     * @return array
-     */
     public function get_inject_email_template_array(EmailTemplate $email_template):
         array
     {
@@ -1686,38 +1472,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         return $data;
     }
 
-    /**
-     * @param string|null $inv_id
-     * @param array $from
-     * @param string $to
-     * @param string $subject
-     * @param string $email_body
-     * @param string $cc
-     * @param string $bcc
-     * @param array $attachFiles
-     * @param CR $cR
-     * @param CCR $ccR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @apram ACIR $aciR
-     * @param CVR $cvR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIAR $iiaR
-     * @param ACIIR $aciiR
-     * @param IIR $iiR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param PCR $pcR
-     * @param SOCR $socR
-     * @param QR $qR
-     * @param QAR $qaR
-     * @param QCR $qcR
-     * @param SOR $soR
-     * @param UIR $uiR
-     * @param WebViewRenderer $webViewRenderer
-     * @return bool
-     */
     public function email_stage_1(
         ?string $inv_id,
         array $from,
@@ -1832,36 +1586,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         } // inv_id
         return false;
     }
-
-    // The views/invoice/inv/mailer_inv form is submitted
-
-    /**
-     * @param Request $request
-     * @param int $inv_id
-     * @param CR $cR
-     * @param CCR $ccR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param ACIR $aciR
-     * @param CVR $cvR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param PCR $pcR
-     * @param SOCR $socR
-     * @param QR $qR
-     * @param QAR $qaR
-     * @param QCR $qcR
-     * @param SOR $soR
-     * @param UIR $uiR
-     * @param ISLR $islR
-     * @return Response
-     */
+    
     public function email_stage_2(
         Request $request,
         #[RouteArgument('id')]
@@ -2035,10 +1760,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ));
     }
 
-    /**
-     * @param Inv $invoice
-     * @param ISLR $islR
-     */
     private function emailedThereforeAddLog(Inv $invoice, ISLR $islR): void
     {
         $invSentLog = new InvSentLog();
@@ -2052,23 +1773,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * Related logic:
      *  see Route::get('/client_invoices[/page/{page:\d+}[/status/{status:\d+}]]')
      *  status and page are digits
-     * @param IAR $iaR
-     * @param IRR $irR
-     * @param IR $iR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param string $page
-     * @param string $status
-     * @param string $queryPage
-     * @param string $querySort
-     * @param string $queryFilterClient
-     * @param string $queryFilterInvNumber
-     * @param string $queryFilterCreditInvNumber
-     * @param string $queryFilterInvAmountTotal
-     * @param string $queryFilterInvAmountPaid
-     * @param string $queryFilterInvAmountBalance
-     * @param string $queryFilterStatus
-     * @return Response
      */
     public function guest(
         IAR $iaR,
@@ -2213,23 +1917,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param int $include
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param ACIR $aciR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param UIR $uiR
-     * @return Response
-     */
     public function html(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, IAR $iaR, ICR $icR,
             IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
@@ -2276,33 +1963,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 Json::encode(['success' => 0]));
     }
 
-    /**
-     * @param IR $invRepo
-     * @param IRR $irR
-     * @param ISLR $islR
-     * @param CR $clientRepo
-     * @param GR $groupRepo
-     * @param QR $qR
-     * @param PMR $pmR
-     * @param SOR $soR
-     * @param DLR $dlR
-     * @param UCR $ucR
-     * @param string $_language
-     * @param string $page
-     * @param string $status
-     * @param string $queryPage
-     * @param string $querySort
-     * @param string $queryFilterInvNumber
-     * @param string $queryFilterCreditInvNumber
-     * @param string $queryFilterClient
-     * @param string $queryFilterInvAmountTotal
-     * @param string $queryFilterInvAmountPaid
-     * @param string $queryFilterInvAmountBalance
-     * @param string $queryFilterClientGroup
-     * @param string $queryFilterClientAddress1
-     * @param string $queryFilterDateCreatedYearMonth
-     * @return Response
-     */
     public function index(
         IR $invRepo,
         IRR $irR,
@@ -2509,16 +2169,10 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     }
 
     /**
-     * @param IR $iR
-     * @param int $status
-     * @param Sort $sort
-     *
-     * @return \Yiisoft\Data\Reader\DataReaderInterface
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader<array-key, array<array-key, mixed>|object>
+     * @psalm-return EntityReader<array-key, array<array-key, mixed>|object>
      */
     private function invs_status(IR $iR, int $status):
-        \Yiisoft\Data\Reader\DataReaderInterface
+        DRI
     {
         return $iR->findAllWithStatus($status);
     }
@@ -2527,14 +2181,12 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
      * @param IR $iR
      * @param mixed $status
      * @param array $user_clients
-     * @param Sort $sort
+     * @return DRI&SDI
      *
-     * @return \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface
-     *
-     * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Inv>
+     * @psalm-return SDI&DRI<int, Inv>
      */
     private function invs_status_guest(IR $iR, mixed $status,
-        array $user_clients): \Yiisoft\Data\Reader\SortableDataInterface
+        array $user_clients): SDI
     {
         return $iR->repoGuest_Clients_Post_Draft((int) $status, $user_clients);
     }
@@ -2542,26 +2194,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
     // Called from
     // ..src\Invoice\Asset\rebuild\js\inv.js inv_to_pdf_confirm_with_custom_fields
 
-    /**
-     * @param int $include
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param ACIR $aciR
-     * @param GR $gR
-     * @param SOR $soR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param UIR $uiR
-     * @param Request $request
-     * @throw
-     */
     public function pdf(#[RouteArgument('include')] int $include, CR $cR,
         CVR $cvR, CFR $cfR, DLR $dlR, ACIR $aciR, GR $gR, SOR $soR, IAR $iaR,
             ICR $icR, IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
@@ -2615,9 +2247,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         }
     }
 
-    /**
-     * @return Response
-     */
     public function pdf_archive_message(): Response
     {
         if ($this->sR->getSetting('pdf_archive_inv') == '1') {
@@ -2636,26 +2265,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         ));
     }
 
-    /**
-     * @param int $inv_id
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param ACIR $aciR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param SOR $soR
-     * @throw
-     */
     public function pdf_dashboard_include_cf(
             #[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR,
             DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR,
@@ -2699,25 +2308,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         } //$inv_id
     }
 
-    /**
-     * @param int $inv_id
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param ACIR $aciR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param SOR $soR
-     */
     public function pdf_dashboard_exclude_cf(
         #[RouteArgument('id')] int $inv_id, CR $cR, CVR $cvR, CFR $cfR,
             DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR,
@@ -2761,26 +2351,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         } // inv_id
     }
 
-    /**
-     * @param string $url_key
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param ACIR $aciR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param UPR $upR
-     * @return mixed
-     */
     public function pdf_download_include_cf(
         #[RouteArgument('url_key')] string $url_key, CR $cR, CVR $cvR, CFR $cfR,
             DLR $dlR, ACIR $aciR, GR $gR, SOR $soR, IAR $iaR, ICR $icR,
@@ -2827,7 +2397,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                             null);
                         // Because the invoice is not streamed an aliase of
                         // temporary folder file location is returned
-                        /** @var string $temp_aliase */
                         $temp_aliase = $pdfhelper->generate_inv_pdf(
                             $inv_id, $inv->getUser_id(), $stream, $c_f, $so,
                                 $inv_amount, $inv_custom_values, $cR, $cvR,
@@ -2877,26 +2446,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         exit;
     }
 
-    /**
-     * @param string $urlKey
-     * @param CR $cR
-     * @param CVR $cvR
-     * @param CFR $cfR
-     * @param DLR $dlR
-     * @param ACIR $aciR
-     * @param GR $gR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIR $iiR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param UPR $upR
-     * @return mixed
-     */
     public function pdf_download_exclude_cf(
         #[RouteArgument('url_key')] string $urlKey, CR $cR, CVR $cvR, CFR $cfR,
             DLR $dlR, ACIR $aciR, GR $gR, IAR $iaR, ICR $icR, IIR $iiR,
@@ -2941,7 +2490,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                         $so = $soR->repoSalesOrderLoadedquery($inv->getSo_id());
                         // Because the invoice is not streamed an aliase of
                         // temporary folder file location is returned
-                        /** @var string $temp_aliase */
                         $temp_aliase = $pdfhelper->generate_inv_pdf(
                             $inv_id, $inv->getUser_id(), $stream, $c_f, $so,
                                 $inv_amount, $inv_custom_values, $cR, $cvR,
@@ -2991,21 +2539,6 @@ echo file_get_contents($temp_aliase, true);
         exit;
     }
 
-    /**
-     * @param ISLR $islR
-     * @param IRR $irR
-     * @param IIAR $iiaR
-     * @param IAR $iaR
-     * @param ITRR $itrR
-     * @param IIR $iiR
-     * @param ICR $icR
-     * @param ACIIR $aciiR
-     * @param ACIR $aciR
-     * @param PCR $pcR
-     * @param PYMR $pymR
-     * @param IR $iR
-     * @return Response
-     */
     public function flush(
         ISLR $islR,
         IRR $irR,
@@ -3073,12 +2606,6 @@ echo file_get_contents($temp_aliase, true);
         return $this->webService->getRedirectResponse('inv/index');
     }
     
-    /**
-     * @param string|null $inv_id
-     * @param IR $iR
-     * @param SR $sR
-     * @param GR $gR
-     */
     public function generate_inv_number_if_applicable(?string $inv_id, IR $iR,
         SR $sR, GR $gR): void
     {
@@ -3098,13 +2625,6 @@ echo file_get_contents($temp_aliase, true);
         }
     }
 
-    /**
-     * @param string $group_id
-     * @param SR $sR
-     * @param IR $iR
-     * @param GR $gR
-     * @return mixed $inv_number
-     */
     public function generate_inv_get_number(string $group_id, SR $sR, IR $iR,
         GR $gR): mixed
     {
@@ -3116,12 +2636,6 @@ echo file_get_contents($temp_aliase, true);
         return $inv_number;
     }
 
-    /**
-     * @param int $id
-     * @param InvRepository $invRepo
-     * @param bool $unloaded
-     * @return Inv|null
-     */
     private function inv(int $id, IR $invRepo, bool $unloaded = false): ?Inv
     {
         if ($id) {
@@ -3136,12 +2650,11 @@ echo file_get_contents($temp_aliase, true);
     }
 
     /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
+     * @return EntityReader
      *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
+     * @psalm-return EntityReader
      */
-    private function invs(IR $invRepo, int $status):
-        \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function invs(IR $invRepo, int $status): EntityReader
     {
         return $invRepo->findAllWithStatus($status);
     }
@@ -3174,11 +2687,6 @@ echo file_get_contents($temp_aliase, true);
         return [];
     }
 
-    /**
-     * @param int $id
-     * @param IIR $invitemRepository
-     * @return InvItem|null
-     */
     private function inv_item(int $id, IIR $invitemRepository): ?InvItem
     {
         if ($id) {
@@ -3217,11 +2725,6 @@ echo file_get_contents($temp_aliase, true);
         }
     }
 
-    /**
-     * @param int $invId
-     * @param int $copiedId
-     * @param IAR $iaR
-     */
     private function inv_to_inv_inv_amount(int $invId, int $copiedId, IAR $iaR):
         void
     {
@@ -3245,26 +2748,8 @@ echo file_get_contents($temp_aliase, true);
     }
 
     /**
-     * Related logic: see Data fed from inv.js->$(document).on('click', '#inv_to_inv_confirm', function () {
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     * @param ACIIR $aciiR
-     * @param ACIR $aciR
-     * @param GR $gR
-     * @param IIAS $iiaS
-     * @param PR $pR
-     * @param TASKR $taskR
-     * @param IAR $iaR
-     * @param ICR $icR
-     * @param IIAR $iiaR
-     * @param IIR $iiR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param TRR $trR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param UNR $unR
+     * Related logic: see Data fed from
+     *  inv.js->$(document).on('click', '#inv_to_inv_confirm', function () {
      */
     public function inv_to_inv_confirm(
         Request $request,
@@ -3382,8 +2867,6 @@ echo file_get_contents($temp_aliase, true);
 
     /**
      * This procedure is used solely for making identical copies of invoices
-     * and is used in inv_to_inv_confirm
-     * @param string $copy_id
      */
     private function inv_to_inv_inv_items(
         string $inv_id,
@@ -3558,11 +3041,6 @@ echo file_get_contents($temp_aliase, true);
         }
     }
 
-    /**
-     * @param int $id
-     * @param ITRR $invtaxrateRepository
-     * @return InvTaxRate|null
-     */
     private function invtaxrate(int $id, ITRR $invtaxrateRepository): ?InvTaxRate
     {
         if ($id) {
@@ -3575,12 +3053,6 @@ echo file_get_contents($temp_aliase, true);
         return null;
     }
 
-    /**
-     * @param Request $request
-     * @param IR $iR
-     * @param GR $gR
-     * @return Response
-     */
     public function mark_as_sent(Request $request, IR $iR, GR $gR):
         Response
     {
@@ -3633,11 +3105,6 @@ echo file_get_contents($temp_aliase, true);
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    /**
-    * @param Request $request
-    * @param IR $iR
-    * @return Response
-    */
     public function mark_sent_as_draft(Request $request, IR $iR):
         Response
     {
@@ -3692,10 +3159,6 @@ echo file_get_contents($temp_aliase, true);
         return $this->factory->createResponse(Json::encode($parameters));
     }
 
-    /**
-     * @param Request $request
-     * @param FormHydrator $formHydrator
-     */
     public function multiplecopy(
         Request $request,
         FormHydrator $formHydrator,
@@ -3821,10 +3284,6 @@ echo file_get_contents($temp_aliase, true);
         return $this->factory->createResponse(Json::encode(['success' => 0]));
     }
 
-    /**
-     * @param array $files
-     * @return mixed
-     */
     private function remove_extension(array $files): mixed
     {
         /**
@@ -3839,10 +3298,6 @@ echo file_get_contents($temp_aliase, true);
     // inv/view => '#btn_save_inv_custom_fields' => inv_custom_field.js =>
     //  /invoice/inv/save_custom";
 
-    /**
-     * @param FormHydrator $formHydrator
-     * @param Request $request
-     */
     public function save_custom(FormHydrator $formHydrator, Request $request): Response
     {
         $parameters = [
@@ -3862,8 +3317,6 @@ echo file_get_contents($temp_aliase, true);
     
     /**
      * Related logic: see src/Invoice/Asset/rebuild-1.13/js/inv.js
-     * @param Request $request
-     * @param FormHydrator $formHydrator
      */
     public function save_inv_tax_rate(Request $request,
         FormHydrator $formHydrator): Response
@@ -3891,25 +3344,7 @@ echo file_get_contents($temp_aliase, true);
         //return response to inv.js to reload page at location
         return $this->factory->createResponse(Json::encode($parameters));
     }
-
-    /**
-     * @param string $urlKey
-     * @param string $clientChosenGateway
-     * @param string $_language
-     * @param CurrentUser $currentUser
-     * @param CFR $cfR
-     * @param IAR $iaR
-     * @param IIAR $iiaR
-     * @param IIR $iiR
-     * @param IR $iR
-     * @param ITRR $itrR
-     * @param UR $uR
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @param PMR $pmR
-     * @param UPR $upR
-     * @return Response
-     */
+    
     public function url_key(
         #[RouteArgument('url_key')]
         string $urlKey,
@@ -4046,10 +3481,6 @@ echo file_get_contents($temp_aliase, true);
         return $this->webService->getNotFoundResponse();
     }
 
-    /**
-     * @param bool $read_only
-     * @return bool
-     */
     private function display_edit_delete_buttons(bool $read_only): bool
     {
         if (($read_only === false)
@@ -4060,9 +3491,6 @@ echo file_get_contents($temp_aliase, true);
         return $this->sR->getSetting('disable_read_only') === (string) 1;
     }
 
-    /**
-     * @param array $enabled_gateways
-     */
     private function flash_no_enabled_gateways(
         array $enabled_gateways, string $message): void
     {
@@ -4071,12 +3499,6 @@ echo file_get_contents($temp_aliase, true);
         }
     }
 
-    /**
-     * Check to make sure that the invoice's client has full peppol details
-     * setup before engaging peppol
-     * @param string $client_id
-     * @return bool
-     */
     private function peppol_client_fully_setup(string $client_id, cpR $cpR): bool
     {
         $passed = false;
@@ -4174,26 +3596,6 @@ echo file_get_contents($temp_aliase, true);
     /**
      * Purpose: Generate OpenPeppol Ubl Invoice 3.0.15 XML file to 1. screen
      * or 2. file
-     * @param int $id
-     * @param CurrentUser $currentUser
-     * @param cpR $cpR
-     * @param IAR $iaR
-     * @param IIAR $iiaR
-     * @param IIR $iiR
-     * @param IR $invRepo
-     * @param ContractRepo $contractRepo
-     * @param DelRepo $delRepo
-     * @param DelPartyRepo $delPartyRepo
-     * @param DLR $dlR
-     * @param paR $paR
-     * @param SOR $soR
-     * @param unpR $unpR
-     * @param upR $upR
-     * @param ACIR $aciR
-     * @param ACIIR $aciiR
-     * @param SOIR $soiR
-     * @param TRR $trR
-     * @return Response
      */
     public function peppol(
         #[RouteArgument('id')]
@@ -4337,9 +3739,6 @@ echo file_get_contents($temp_aliase, true);
      * Settings ... Peppol Electronic Invoicing ... Document Currency changes
      * with each toggle on the View ... options
      * View: resources/views/invoice/inv/view.php Options Dropdown
-     * @param int $id
-     * @param CurrentUser $currentUser
-     * @return Response
      */
     public function peppol_doc_currency_toggle(
         #[RouteArgument('id')]
@@ -4399,9 +3798,6 @@ echo file_get_contents($temp_aliase, true);
      * stream Ubl invoice to screen or alternatively output to file
      *
      * View: resources/views/invoice/inv/view.php
-     * @param int $id
-     * @param CurrentUser $currentUser
-     * @return Response
      */
     public function peppol_stream_toggle(
         #[RouteArgument('id')]
@@ -4434,25 +3830,6 @@ echo file_get_contents($temp_aliase, true);
      * Related logic: see https://www.storecove.com/docs#_json_object
      * Related logic: see StoreCove API key stored under Online Payment keys
      * under Settings...View...Online Payment
-     * @param int $id
-     * @param CurrentUser $currentUser
-     * @param cpR $cpR
-     * @param IIAR $iiaR
-     * @param IR $invRepo
-     * @param ContractRepo $contractRepo
-     * @param DelRepo $delRepo
-     * @param DelPartyRepo $delPartyRepo
-     * @param DLR $dlR
-     * @param paR $paR
-     * @param ppR $ppR
-     * @param unpR $unpR
-     * @param SOR $soR
-     * @param UPR $upR
-     * @param ACIR $aciR
-     * @param ACIIR $aciiR
-     * @param SOIR $soiR
-     * @param TRR $trR
-     * @return Response
      */
     public function storecove(
         #[RouteArgument('id')]
@@ -4537,11 +3914,6 @@ echo file_get_contents($temp_aliase, true);
         exit;
     }
 
-    /**
-     * @param upR $upR
-     * @param string $uploads_temp_peppol_absolute_path_dot_xml
-     * @return false|string
-     */
     private function peppol_output(UPR $upR,
         string $uploads_temp_peppol_absolute_path_dot_xml): false|string
     {
@@ -4581,38 +3953,6 @@ echo file_get_contents($temp_aliase, true);
     // The accesschecker in config/routes ensures that only users with viewInv
     // permission can reach this 
 
-    /**
-     * @param WebViewRenderer $head
-     * @param int $id
-     * @param string $_language
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param PR $pR
-     * @param PIR $piR
-     * @param IAR $iaR
-     * @param IIAR $iiaR
-     * @param IIR $iiR
-     * @param IR $iR
-     * @param IRR $irR
-     * @param ITRR $itrR
-     * @param PMR $pmR
-     * @param TRR $trR
-     * @param FR $fR
-     * @param UNR $uR
-     * @param ACR $acR
-     * @param ACIR $aciR
-     * @param CR $cR
-     * @param GR $gR
-     * @param ICR $icR
-     * @param PYMR $pymR
-     * @param TASKR $taskR
-     * @param PRJCTR $prjctR
-     * @param UIR $uiR
-     * @param UCR $ucR
-     * @param UPR $upR
-     * @param DLR $dlR
-     * @return Response
-     */
     public function view(
         WebViewRenderer $head,
         #[RouteArgument('id')]
@@ -4933,10 +4273,6 @@ echo file_get_contents($temp_aliase, true);
      * to users 1. with the observer role's VIEW_INV permission and 2. supervise a 
      * client requested invoice and are an active current user for these client's
      * invoices.
-     * @param Inv $inv
-     * @param UCR $ucR
-     * @param UIR $uiR
-     * @return bool
      */
     private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
         $statusId = $inv->getStatus_id();
@@ -4996,10 +4332,6 @@ echo file_get_contents($temp_aliase, true);
         }
     }
  
-    /**
-     * @param IRR $irR
-     * @return string
-     */
     private function index_modal_create_recurring_multiple(IRR $irR): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -5008,21 +4340,12 @@ echo file_get_contents($temp_aliase, true);
         ]);
     }
 
-    /**
-     * @return string
-     */
     private function index_modal_copy_inv_multiple(): string
     {
         return $this->webViewRenderer->renderPartialAsString(
             '//invoice/inv/modal_copy_inv_multiple');
     }
 
-    /**
-     * @param CFR $cfR
-     * @param CVR $cvR
-     * @param array $inv_custom_values
-     * @return string
-     */
     private function view_custom_fields(
         CFR $cfR, CVR $cvR, array $inv_custom_values): string
     {
@@ -5038,12 +4361,6 @@ echo file_get_contents($temp_aliase, true);
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param CR $cR
-     * @param IR $iR
-     * @return string
-     */
     private function view_modal_change_client(int $id, CR $cR, IR $iR): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -5053,12 +4370,6 @@ echo file_get_contents($temp_aliase, true);
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param GR $gR
-     * @param IR $iR
-     * @return string
-     */
     private function view_modal_create_credit(int $id, GR $gR, IR $iR): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -5069,10 +4380,6 @@ echo file_get_contents($temp_aliase, true);
         ]);
     }
 
-    /**
-     * @param string $_language
-     * @return string
-     */
     private function view_modal_delete_inv(string $_language): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -5083,10 +4390,6 @@ echo file_get_contents($temp_aliase, true);
         ]);
     }
 
-    /**
-     * @param IIR $iiR
-     * @return string
-     */
     private function view_modal_delete_items(IIR $iiR): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -5100,11 +4403,6 @@ echo file_get_contents($temp_aliase, true);
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param IR $iR
-     * @return string
-     */
     private function view_modal_inv_to_pdf(int $id, IR $iR): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -5113,11 +4411,6 @@ echo file_get_contents($temp_aliase, true);
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param IR $iR
-     * @return string
-     */
     private function view_modal_inv_to_modal_pdf(int $id, IR $iR): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -5126,11 +4419,6 @@ echo file_get_contents($temp_aliase, true);
         ]);
     }
 
-    /**
-     * @param int $id
-     * @param IR $iR
-     * @return string
-     */
     private function view_modal_inv_to_html(int $id, IR $iR): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -5139,13 +4427,6 @@ echo file_get_contents($temp_aliase, true);
         ]);
     }
 
-    /**
-     * @param string $_language
-     * @param string $url_key
-     * @param int $client_id
-     * @param UPR $upR
-     * @return string
-     */
     private function view_partial_inv_attachments(
         string $_language, string $url_key, int $client_id, UPR $upR): string
     {
@@ -5170,24 +4451,6 @@ echo file_get_contents($temp_aliase, true);
         ]);
     }
     
-    /**
-     * @param bool $show_buttons
-     * @param int $id
-     * @param ACIR $aciR
-     * @param ACIIR $aciiR
-     * @param PR $pR
-     * @param PIR $piR
-     * @param TaskR $taskR
-     * @param IIR $iiR
-     * @param IIAR $iiaR
-     * @param IR $iR
-     * @param TRR $trR
-     * @param UNR $uR
-     * @param ITRR $itrR
-     * @param InvAmount|null $invAmount
-     * @param bool $so_exists
-     * @return string
-     */
     private function view_partial_item_table(bool $show_buttons, int $id,
         ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TASKR $taskR, IIR $iiR,
             IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR,
@@ -5239,7 +4502,6 @@ echo file_get_contents($temp_aliase, true);
 
     /**
      * Use: Toggle Button on Flash message reminder
-     * @param string $_language
      */
     private function draft_flash(string $_language): void
     {
@@ -5272,7 +4534,6 @@ echo file_get_contents($temp_aliase, true);
      * Purpose: Warning: Setting 'Mark invoices as sent when copy' should
      * only be ON during development
      * Use: Toggle Button on Flash message reminder
-     * @param string $_language
      */
     private function mark_sent_flash(string $_language): void
     {
@@ -5310,10 +4571,6 @@ echo file_get_contents($temp_aliase, true);
         $this->flashMessage($level, $message);
     }
     
-    /**
-     * @param IR $iR
-     * @return array
-     */
     public function optionsDataClientsFilter(IR $iR): array
     {
         $optionsDataClients = [];
@@ -5338,9 +4595,6 @@ echo file_get_contents($temp_aliase, true);
 
     /**
      * If one user pays for more than one client, find all clients
-     * @param UCR $ucR
-     * @param string $userId
-     * @return array
      */
     public function optionsDataUserClientsFilter(UCR $ucR, string $userId): array
     {
@@ -5398,10 +4652,6 @@ echo file_get_contents($temp_aliase, true);
         return $clientGroup;
     }
 
-    /**
-     * @param IR $iR
-     * @return array
-     */
     public function optionsDataInvNumberFilter(IR $iR): array
     {
         $optionsDataInvNumbers = [];
@@ -5422,10 +4672,6 @@ echo file_get_contents($temp_aliase, true);
         return $optionsDataInvNumbers;
     }
     
-    /**
-     * @param IR $iR
-     * @return array
-     */
     public function optionsDataFamilyNameFilter(IR $iR): array
     {
         $optionsDataFamilyNames = [];
@@ -5449,9 +4695,7 @@ echo file_get_contents($temp_aliase, true);
     /**
      * Note function invs_status_with_sort_guest(
      *         $iR, $status, $user_clients, $sort)
-     * has been used to generate $invs
-     * @param \Yiisoft\Data\Reader\DataReaderInterface&\Yiisoft\Data\Reader\SortableDataInterface $invs
-     * @return array
+     * has been used to generate 
      */
     public function optionsDataCreditInvNumberFilter(IR $iR): array
     {
@@ -5473,13 +4717,13 @@ echo file_get_contents($temp_aliase, true);
     }
 
     /**
-     * @param \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface $invs
+     * @param SDI&DRI $invs
      * @param IR $iR
      * @return array
      */
     public function optionsDataCreditInvNumberGuestFilter(
-        \Yiisoft\Data\Reader\SortableDataInterface
-            &\Yiisoft\Data\Reader\DataReaderInterface $invs,
+        SDI
+            &DRI $invs,
         IR $iR): array
     {
         $optionsData = [];
@@ -5500,8 +4744,8 @@ echo file_get_contents($temp_aliase, true);
     }
 
     public function optionsDataInvNumberGuestFilter(
-        \Yiisoft\Data\Reader\SortableDataInterface
-            &\Yiisoft\Data\Reader\DataReaderInterface $invs): array
+        SDI
+            &DRI $invs): array
     {
         $optionsDataInvNumbers = [];
         /**
@@ -5518,11 +4762,6 @@ echo file_get_contents($temp_aliase, true);
         return $optionsDataInvNumbers;
     }
 
-    /**
-     * Generate status filter options with emojis
-     * @param IR $iR
-     * @return array
-     */
     public function optionsDataStatusFilter(IR $iR): array
     {
         $optionsDataStatus = [];
@@ -5530,8 +4769,6 @@ echo file_get_contents($temp_aliase, true);
         
         /** @var array<int, array<string, string>> $statuses */
         foreach ($statuses as $statusId => $statusData) {
-            /** @var int $statusId */
-            /** @var array<string, string> $statusData */
             $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
             $optionsDataStatus[$statusId] = $emoji . ' ' . $label;

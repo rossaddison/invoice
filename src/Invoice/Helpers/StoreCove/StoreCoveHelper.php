@@ -700,10 +700,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                              * @var InvItemAllowanceCharge $acii
                              */
                             foreach ($inv_item_allowance_charges as $acii) {
-                                /**
-                                 * @var array $invoiceLines[$item_id]
-                                 * @var array $item_line
-                                 */
                                 $item_line = $invoiceLines[$item_id];
                                 /**
                                  * @var array $item_line['allowanceCharges']
@@ -1157,7 +1153,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
     {
         $config_peppol = $this->s->get_config_peppol();
         /**
-         * @var array $config_peppol
          * @var array $config_peppol['PaymentMeans']
          */
         $config = $config_peppol['PaymentMeans'] ?? [];
@@ -1535,9 +1530,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         if (null !== $invoice_id) {
             $references = $this->build_references_array($invoice, $contractRepo,
                                                             $cpR, $soiR, $soR);
-            /**
-             * @var array $config_peppol
-             */
             $config_peppol = $this->s->get_config_peppol();
             /**
              * @var array $config_peppol['PartyLegalEntity']
@@ -1643,9 +1635,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
             // $inv_amount->getItem_tax_total() : 0.00);
             //$taxAmounts_item_subtotal = $this->TaxAmounts(
             //$supp_tax_cc_tax_amount);
-            /**
-             * @var array $taxSubtotal
-             */
             $taxSubtotal = $this->build_TaxSubtotal_array($invoice, $iiaR, $trR);
             /**
              * @var float $taxSubtotal['TaxableAmounts']

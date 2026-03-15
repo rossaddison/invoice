@@ -402,7 +402,6 @@ final class InvItemController extends BaseController
      * @param ITRR $itrR
      * @param PYMR $pymR
      * @param TRR $trR
-     * @param PR $pR
      * @param TaskR $taskR
      * @param UR $uR
      * @param IR $iR

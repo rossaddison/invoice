@@ -75,7 +75,6 @@ final class DeliveryPartyController extends BaseController
 
     /**
      * @param DeliveryPartyRepository $deliverypartyRepository
-     * @param DeliveryPartyService $service
      * @return Response
      */
     public function index(DeliveryPartyRepository $deliverypartyRepository): Response

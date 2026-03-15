@@ -77,7 +77,6 @@ final class InvRecurringController extends BaseController
     public function index(CurrentRoute $currentRoute, IRR $irR): \Psr\Http\Message\ResponseInterface
     {
         $pageNum = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $pageNum > 0 ? $pageNum : 1;
         $paginator = (new OffsetPaginator($this->invrecurrings($irR)))
         ->withPageSize($this->sR->positiveListLimit())

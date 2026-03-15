@@ -460,7 +460,6 @@ final class AuthController
                         } elseif (!$this->isValidTotpCode($inputCode)) {
                             $error = $translator->translate($tfaicf);
                         } else {
-                            /** @var non-empty-string $tempSecret */
                             $totp = TOTP::create($tempSecret);
                             if ($totp->verify($inputCode)) {
                                 $user->setTotpSecret($tempSecret);
@@ -486,12 +485,10 @@ final class AuthController
 
                         // Re-render the setup page with error and QR code
                         $safeSecret = $tempSecret ?? TOTP::create()->getSecret();
-                        /** @var non-empty-string $safeSecret */
                         $totp = TOTP::create($safeSecret);
                         // Set the label again here!
                         $userEmail = $user->getEmail();
                         if ($userEmail !== '') {
-                            /** @var non-empty-string $userEmail */
                             $totp->setLabel($userEmail);
                         }
 
@@ -596,7 +593,6 @@ final class AuthController
                             if ($totpSec !== null
                                     && $this->isValidTotpCode($inputCode)) {
                                 $tokenApplySec = TokenMask::apply($totpSec);
-                                /** @var non-empty-string $totpSec */
                                 $totp = TOTP::create($totpSec);
                                 if ($totp->verify($inputCode)) {
                                     if ($this->sR->getSetting($etwd) == '1') {
@@ -683,7 +679,6 @@ final class AuthController
         }
 
         // Verify session has required 2FA data
-        /** @var int $verifiedUserId */
         $verifiedUserId = (int) $this->session->get('verified_2fa_user_id');
 
         return $verifiedUserId === $userId;
@@ -1108,7 +1103,6 @@ final class AuthController
         // Overwrite sensitive variables with random data before unsetting
         /** @var string[] $sensitiveVars */
         foreach ($sensitiveVars as &$var) {
-            /** @var string $var */
             $var = str_repeat('0', strlen($var));
             $var = Random::string(strlen($var));
             unset($var);

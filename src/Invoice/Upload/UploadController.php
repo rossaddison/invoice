@@ -62,9 +62,9 @@ final class UploadController extends BaseController
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param UploadRepository $uploadRepository
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
-    public function index(Request $request, CurrentRoute $currentRoute, UploadRepository $uploadRepository): \Psr\Http\Message\ResponseInterface
+    public function index(Request $request, CurrentRoute $currentRoute, UploadRepository $uploadRepository): Response
     {
         $query_params = $request->getQueryParams();
         /**
@@ -198,13 +198,7 @@ final class UploadController extends BaseController
         return $this->webService->getRedirectResponse('upload/index');
     }
 
-    /**
-     * @param Request $request
-     * @param CurrentRoute $currentRoute
-     * @param ClientRepository $clientRepository
-     * @param UploadRepository $uploadRepository
-     */
-    public function view(CurrentRoute $currentRoute, ClientRepository $clientRepository, UploadRepository $uploadRepository): \Psr\Http\Message\ResponseInterface
+    public function view(CurrentRoute $currentRoute, ClientRepository $clientRepository, UploadRepository $uploadRepository): Response
     {
         $upload = $this->upload($currentRoute, $uploadRepository);
         if ($upload) {

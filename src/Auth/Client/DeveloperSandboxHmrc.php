@@ -193,7 +193,6 @@ final class DeveloperSandboxHmrc extends OAuth2
             ],
         );
 
-        /** @var ResponseInterface $response */
         $response = $this->sendRequest($request);
 
         // Decode response body into an associative array

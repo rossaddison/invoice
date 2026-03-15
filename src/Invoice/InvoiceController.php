@@ -867,19 +867,6 @@ final class InvoiceController extends BaseController
         return $this->webViewRenderer->render('curl/api_result', $parameters);
     }
 
-    /**
-     * @param SessionInterface $session
-     * @param ClientRepository $cR
-     * @param InvRepository $iR
-     * @param InvAmountRepository $iaR
-     * @param InvRecurringRepository $irR
-     * @param QuoteRepository $qR
-     * @param QuoteAmountRepository $qaR
-     * @param SettingRepository $sR
-     * @param TaskRepository $taskR
-     * @param ProjectRepository $prjctR
-     * @param TranslatorInterface $translator
-     */
     public function dashboard(
         ClientRepository $cR,
         InvRepository $iR,

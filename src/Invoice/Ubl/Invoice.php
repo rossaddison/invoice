@@ -431,7 +431,6 @@ class Invoice implements XmlSerializable
         /**
          * Related logic: see src/Invoice/Helpers/Peppol/PeppolHelper function
             build_invoice_lines_array
-         * @var array $this->invoiceLines
          * @var array $invoiceLine
          */
         foreach ($this->invoiceLines as $invoiceLine) {
@@ -448,7 +447,6 @@ class Invoice implements XmlSerializable
     {
         $merged_array = [];
         /**
-         * @var array $this->taxSubTotal
          * @var array $value
          */
         foreach ($this->taxSubTotal as $value) {

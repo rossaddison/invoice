@@ -585,7 +585,6 @@ final class PaymentController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $query_params = $request->getQueryParams();
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         /** @psalm-suppress MixedAssignment $sort */
         $sort = $query_params['sort'] ?? '-inv_id';
@@ -645,7 +644,6 @@ final class PaymentController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $query_params = $request->getQueryParams();
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         // Clicking on the gridview's Inv_id column hyperlink generates
         // the query_param called 'sort' which is seen in the url
@@ -756,7 +754,6 @@ final class PaymentController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $query_params = $request->getQueryParams();
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         /**
          * @var string|null $query_params['sort']

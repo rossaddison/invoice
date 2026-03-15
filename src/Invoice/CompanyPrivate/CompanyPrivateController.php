@@ -243,7 +243,6 @@ final class CompanyPrivateController extends BaseController
                     if ($after_save) {
                         // A new file upload must replace the previous one or keep existing file
                         /**
-                         * @var array $_FILES['logo_filename']
                          * @var string $_FILES['logo_filename']['tmp_name']
                          */
                         $tmp_name = $_FILES['logo_filename']['tmp_name'];
@@ -274,7 +273,6 @@ final class CompanyPrivateController extends BaseController
     }
 
     /**
-     * @param SessionInterface $session
      * @param CurrentRoute $currentRoute
      * @param CompanyPrivateRepository $companyprivateRepository
      * @return Response

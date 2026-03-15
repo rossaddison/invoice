@@ -55,7 +55,7 @@ final class UserClientController extends BaseController
      * @param IR $iR
      * @param QR $qR
      * @param SOR $soR
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return Response
      */
     public function delete(
         CurrentRoute $currentRoute,
@@ -64,7 +64,7 @@ final class UserClientController extends BaseController
         IR $iR,
         QR $qR,
         SOR $soR    
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $user_client = $this->userclient($currentRoute, $userclientRepository);
         if (null !== $user_client) {
             $user_id = (int) $user_client->getUser_Id();

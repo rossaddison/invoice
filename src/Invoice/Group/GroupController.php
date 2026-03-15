@@ -47,7 +47,6 @@ final class GroupController extends BaseController
     public function index(GroupRepository $groupRepository, Request $request): Response
     {
         $page = (int) $request->getAttribute('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paginator = (new DataOffsetPaginator($this->groups($groupRepository)))
         ->withPageSize($this->sR->positiveListLimit())

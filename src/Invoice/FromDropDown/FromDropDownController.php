@@ -73,7 +73,6 @@ final class FromDropDownController extends BaseController
     public function index(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): Response
     {
         $page = (int) $currentRoute->getArgument('page', '1');
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $from = $fromRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($from))

@@ -56,6 +56,9 @@
 and will be reduced with the subsequent code reduction.</p>
 <p>UnusedParam error detection has been completed and functions adjusted.</p>
 <p>Unevaluated code error detection has been completed and removed. psalm.xml adjusted.</p>
+<p>UnnecessaryVarAnnotation, UnusedDocBlockParam, UnusedVariable errors removed.</p>
+<p>An _html_php_conventions.php file has been put in the root for vs_code to consult
+when converting from html to php. This will be updated.</p>
 <p><b>11th March 2026</b></p>
 <p>The mobile desktop preview will assist in improving bootstrap/mobile views</p>
 <p>Payment Provider javascript has been included in

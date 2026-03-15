@@ -27,7 +27,6 @@ use Yiisoft\Router\CurrentRoute;
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $quoteAllowanceCharges
  * @var Yiisoft\Data\Paginator\OffsetPaginator $sortedAndPagedPaginator
  * @var Yiisoft\Data\Reader\Sort $sort
- * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Yii\DataView\YiiRouter\UrlCreator $urlCreator

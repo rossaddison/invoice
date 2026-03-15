@@ -68,9 +68,6 @@ class PeppolValidator
     private ?string $documentCurrencyCode = null;
     private ?string $documentType = null;
     
-    /**
-     * @param TranslatorInterface $translator
-     */
     public function __construct(
         private readonly TranslatorInterface $t
     )

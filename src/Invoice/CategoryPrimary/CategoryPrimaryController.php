@@ -83,7 +83,6 @@ final class CategoryPrimaryController extends BaseController
         int $page = 1,
     ): Response {
         $categoryPrimary = $categoryPrimaryRepository->findAllPreloaded();
-        /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $paginator = (new OffsetPaginator($categoryPrimary))
         ->withPageSize($settingRepository->positiveListLimit())
@@ -189,7 +188,6 @@ final class CategoryPrimaryController extends BaseController
 
     /**
      * @param CategoryPrimaryRepository $categoryPrimaryRepository
-     * @param SettingRepository $settingRepository
      * @param int id
      * @return \Psr\Http\Message\ResponseInterface
      */

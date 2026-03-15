@@ -56,24 +56,6 @@
                 <directory name="resources" />
             </errorLevel>
         </UnusedProperty>
-        <UnnecessaryVarAnnotation>
-            <errorLevel type="suppress">
-                <directory name="src" />
-                <directory name="resources" />
-            </errorLevel>
-        </UnnecessaryVarAnnotation>
-        <UnusedDocblockParam>
-            <errorLevel type="suppress">
-                <directory name="src" />
-                <directory name="resources" />
-            </errorLevel>
-        </UnusedDocblockParam>        
-        <UnusedVariable>
-            <errorLevel type="suppress">
-                <directory name="src" />
-                <directory name="resources" />
-            </errorLevel>
-        </UnusedVariable>
         <UnusedFunctionCall>
             <errorLevel type="suppress">
                 <directory name="src" />

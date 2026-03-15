@@ -129,7 +129,6 @@ echo H::openTag('div', ['class' => 'row']); //1
         $translator->translate(
          'storecove.not.available'
         );
-        /** @var string $content */
         $content = ucfirst(
          $region .
          str_repeat("&nbsp;", 2) .

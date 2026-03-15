@@ -15,9 +15,6 @@ declare(strict_types=1);
 $alerts;
 
 if (!$isGuest) {
-    /**
-     * @var Cycle\Database\TableInterface $table
-     */
     foreach ($tables as $table) {
         echo '<div>';
         echo '<br>';

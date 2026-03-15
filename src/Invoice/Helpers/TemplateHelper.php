@@ -475,7 +475,6 @@ final readonly class TemplateHelper
                             }
                             /**
                              * @var array<array-key, float|int|string>|string $replace
-                             * @var CustomValue|null $custom_value
                              */
                             $replace = null !== $custom_value ? $custom_value->getValue() : '';
                         } // if preg_match

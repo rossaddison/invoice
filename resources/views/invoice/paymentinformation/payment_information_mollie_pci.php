@@ -96,9 +96,6 @@ if ($disable_form === false) {
              ->addClass('btn btn-lg btn-primary bi bi-info-circle')
              ->content(' ' . $translator->translate('read.this.please'))
              ->render();
-         /**
-          * @var string|null $paymentCheckoutUrl
-          */
          $paymentCheckoutUrl = $payment->getCheckOutUrl();
          if (!empty($paymentCheckOutUrl)) {
               new A()
