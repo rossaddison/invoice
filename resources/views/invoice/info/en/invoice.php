@@ -52,6 +52,7 @@
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
 <p>19th March 2026</p>
 <p>Psalm UnusedVariable code reduction</p>
+<p>Php8.4 Setup - md created. yii3i.online converted to php8.4</p>
 <p>Bugfix: Download file attached to invoice. Rbac influencing this.</p>
 <p>Bugfix: Attaching file to invoice workflow factory response replaced with web redirects.</p>
 <p>15th March 2026</p>

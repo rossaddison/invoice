@@ -41,6 +41,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 [Mobile-Desktop Toggle Toolbar](docs/MOBILE_DESKTOP_TOOLBAR.md) (March 2026)
 
+[Php 8.4 Alpine Setup](docs/PHP84_ALPINE_SETUP.md) (March 2026)
+
 [ssl.conf explained](docs/SSL_CONF_EXPLAINED.md) (March 2026)
 
 [Why Apache?](docs/WHY_APACHE.md) (March 2026)
