@@ -126,7 +126,6 @@ trait Callback
                     $this->manager->revokeAll($userId);
                     $this->manager->assign('observer', $userId);
                 }
-                $login = $user->getLogin();
                 /**
                  * @var array $this->sR->locale_language_array()
                  */
@@ -260,7 +259,6 @@ trait Callback
                         $this->manager->revokeAll($userId);
                         $this->manager->assign('observer', $userId);
                     }
-                    $login = $user->getLogin();
                     /**
                      * @var array $this->sR->locale_language_array()
                      */
@@ -392,7 +390,6 @@ trait Callback
                         $this->manager->revokeAll($userId);
                         $this->manager->assign('observer', $userId);
                     }
-                    $login = $user->getLogin();
                     /**
                      * @var array $this->sR->locale_language_array()
                      */
@@ -509,7 +506,6 @@ trait Callback
                     $this->manager->revokeAll($userId);
                     $this->manager->assign('observer', $userId);
                 }
-                $login = $user->getLogin();
                 /**
                  * @var array $this->sR->locale_language_array()
                  */
@@ -607,7 +603,6 @@ trait Callback
                     $this->manager->revokeAll($userId);
                     $this->manager->assign('observer', $userId);
                 }
-                $login = $user->getLogin();
                 /**
                  * @var array $this->sR->locale_language_array()
                  */
@@ -720,7 +715,6 @@ trait Callback
                     $this->manager->revokeAll($userId);
                     $this->manager->assign('observer', $userId);
                 }
-                $login = $user->getLogin();
                 /**
                  * @var array $this->sR->locale_language_array()
                  */
@@ -826,7 +820,6 @@ trait Callback
                     $this->manager->revokeAll($userId);
                     $this->manager->assign('observer', $userId);
                 }
-                $login = $user->getLogin();
                 /**
                  * @var array $this->sR->locale_language_array()
                  */
@@ -995,7 +988,6 @@ trait Callback
                         $this->manager->revokeAll($userId);
                         $this->manager->assign('observer', $userId);
                     }
-                    $login = $user->getLogin();
                     /**
                      * @var array $this->sR->locale_language_array()
                      */
@@ -1164,7 +1156,6 @@ trait Callback
                     $this->manager->revokeAll($userId);
                     $this->manager->assign('observer', $userId);
                 }
-                $login = $user->getLogin();
                 /**
                  * @var array $this->sR->locale_language_array()
                  */
@@ -1287,7 +1278,6 @@ trait Callback
                     $this->manager->revokeAll($userId);
                     $this->manager->assign('observer', $userId);
                 }
-                $login = $user->getLogin();
                 /**
                  * @var array $this->sR->locale_language_array()
                  */

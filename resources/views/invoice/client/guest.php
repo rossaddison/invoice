@@ -179,7 +179,7 @@ $columns = [
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $userInv->getListLimit(),
@@ -235,7 +235,7 @@ echo GridView::widget()
 ->id('w34-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'client', ($userInv->getListLimit() ?? 10)))
+->summaryTemplate($pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'client', ($userInv->getListLimit() ?? 10)) . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

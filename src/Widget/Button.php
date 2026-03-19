@@ -45,7 +45,6 @@ final readonly class Button
 
     public static function back(): string
     {
-        $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
                 //$translator->translate('back'),
@@ -56,14 +55,14 @@ final readonly class Button
                 'value' => '1',
             ],
         ];
-        $string .= (string) Field::buttongroup()
-            ->buttonsData($buttonsDataArray);
-        return $string .= Html::closeTag('div');
+        return Html::openTag('div', ['class' => 'headerbar-item pull-right'])
+                . (string) Field::buttongroup()
+                        ->buttonsData($buttonsDataArray)
+                .  Html::closeTag('div');
     }
 
     public static function backSave(): string
     {
-        $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
                 '',
@@ -80,14 +79,14 @@ final readonly class Button
                 'value' => '1',
             ],
         ];
-        $string .= (string) Field::buttongroup()
-            ->buttonsData($buttonsDataArray);
-        return $string .= Html::closeTag('div');
+        return Html::openTag('div', ['class' => 'headerbar-item pull-right'])
+                . (string) Field::buttongroup()
+                    ->buttonsData($buttonsDataArray)
+                .  Html::closeTag('div');
     }
 
     public static function save(): string
     {
-        $string = Html::openTag('div', ['class' => 'headerbar-item pull-right']);
         $buttonsDataArray = [
             [
                 //$translator->translate('save'),
@@ -97,9 +96,10 @@ final readonly class Button
                 'value' => '1',
             ],
         ];
-        $string .= (string) Field::buttongroup()
-            ->buttonsData($buttonsDataArray);
-        return $string .= Html::closeTag('div');
+        return html::openTag('div', ['class' => 'headerbar-item pull-right'])
+            . (string) Field::buttongroup()
+                ->buttonsData($buttonsDataArray)
+            .  Html::closeTag('div');
     }
 
     public static function activeLabel(Translator $translator): Span

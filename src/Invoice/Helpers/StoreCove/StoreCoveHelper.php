@@ -1188,8 +1188,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         $array = [];
         // For each tax rate, build the taxable amount array
         $taxRates = $trR->findAllPreloaded();
-        $tax_percent = 0.00;
-        $tax_category = '';
         /**
          * @var TaxRate $taxRate
          */

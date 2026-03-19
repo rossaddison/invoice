@@ -117,7 +117,6 @@ final class ForgotPasswordController
                         /**
                          * @var array $this->sR->locale_language_array()
                          */
-                        $languageArray = $this->sR->locale_language_array();
                         $_language = $currentRoute->getArgument('_language');
 
                         /**

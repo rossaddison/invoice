@@ -84,7 +84,7 @@ $columns = [
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -109,5 +109,5 @@ echo GridView::widget()
 /**
  * Related logic: see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in payment/index
  */
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'payment') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'payment') . ' ' . $gridSummary)
 ->toolbar($toolbarString);

@@ -345,7 +345,6 @@ final readonly class QuoteItemService
 
         // If the user has changed the description on the
         // form => override default task description
-        $description = '';
         if (isset($array['description'])) {
             $description = (string) $array['description'];
         } else {
@@ -530,7 +529,6 @@ final readonly class QuoteItemService
 
         // If the user has changed the description on the
         // form => override default task description
-        $description = '';
         if (isset($array['description'])) {
             $description = (string) $array['description'];
         } else {

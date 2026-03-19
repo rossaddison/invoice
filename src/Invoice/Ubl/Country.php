@@ -28,13 +28,6 @@ class Country implements XmlSerializable
     #[\Override]
     public function xmlSerialize(Writer $writer): void
     {
-        $attributes = [];
-
-        if (null !== $this->listId) {
-            // Alpha 2 => 2 digit country code
-            $attributes['listID'] = 'ISO3166-1:Alpha2';
-        }
-
         $writer->write([
             'name' => Schema::CBC . 'IdentificationCode',
             'value' => $this->identificationCode,
@@ -46,7 +39,6 @@ class Country implements XmlSerializable
              * Error message: [UBL-CR-660]-A UBL invoice should not include the
                   Country Identification code listID
              */
-            //'attributes' => $attributes
         ]);
     }
 }

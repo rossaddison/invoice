@@ -54,8 +54,6 @@ $vat = $s->getSetting('enable_vat_registration');
     <?php
         $clienthelper = new ClientHelper($s);
         $countryhelper = new CountryHelper();
-        $datehelper = new DateHelper($s);
-        $numberhelper = new NumberHelper($s);
         echo $modal_salesorder_to_pdf;
         echo $modal_so_to_invoice;
     ?>
@@ -66,7 +64,7 @@ $vat = $s->getSetting('enable_vat_registration');
 <input type="hidden"
        id="_csrf"
        name="_csrf"
-       value="<?= $csrf ?>">   
+       value="<?= $csrf ?>">
 <div id="headerbar">
     <h1 class="headerbar-title">
     <?php

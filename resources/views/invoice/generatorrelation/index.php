@@ -94,7 +94,7 @@ $toolbarString =
      new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
      new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -112,7 +112,7 @@ echo GridView::widget()
 ->id('w73-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

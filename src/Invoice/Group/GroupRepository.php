@@ -111,7 +111,6 @@ final class GroupRepository extends Select\Repository
     private function parse_identifier_format(string $identifier_format = '', int $next_id = 1, int $left_pad = 1): string
     {
         $template_vars = [];
-        $var = '';
         if (preg_match_all('/{{{([^{|}]*)}}}/', $identifier_format, $template_vars) > 0) {
             foreach ($template_vars[1] as $var) {
                 $replace = match ($var) {

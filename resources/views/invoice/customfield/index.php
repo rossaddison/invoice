@@ -74,7 +74,8 @@ $columns = [
     new DataColumn(
         'type',
         header: $translator->translate('values'),
-        content: static function (CustomField $model) use ($custom_value_fields, $urlGenerator, $translator): string|A {
+        content: static function (CustomField $model) use ($custom_value_fields,
+                $urlGenerator): string|A {
             if (in_array($model->getType(), $custom_value_fields)) {
                 return  new A()
                        ->href($urlGenerator->generate('customvalue/field', ['id' => $model->getId()]))
@@ -137,7 +138,7 @@ $toolbarString
                     ->encode(false)->render()
                 .  new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -155,7 +156,7 @@ echo GridView::widget()
 ->id('w75-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'customfield') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'customfield') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

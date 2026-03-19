@@ -144,9 +144,6 @@ final readonly class SalesOrderAmountService
                 $packHandleShipTotal = 0.00;
                 $packHandleShipTax = 0.00;
                 $taxTotal = 0.00;
-                $discount = 0.00;
-                $charge = 0.00;
-                $allowance = 0.00;
                 /**
                  * @var SoItem $item
                  */
@@ -162,15 +159,6 @@ final readonly class SalesOrderAmountService
                             ?? 0.00;
                         $taxTotal +=
                             $salesorderItemAmount->getTax_total()
-                            ?? 0.00;
-                        $discount +=
-                            $salesorderItemAmount->getDiscount()
-                            ?? 0.00;
-                        $charge +=
-                            $salesorderItemAmount->getCharge()
-                            ?? 0.00;
-                        $allowance +=
-                            $salesorderItemAmount->getAllowance()
                             ?? 0.00;
                     }
                 }

@@ -733,7 +733,6 @@ final readonly class NumberHelper
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         $total = $quote_total;
         $discount_amount = 0.00;
-        $discount_percent = 0.00;
         if ($quote) {
             $discount_amount = (float) $quote->getDiscount_amount();
         }
@@ -742,7 +741,7 @@ final readonly class NumberHelper
 // exclude the other. Discount amount is the user inputed amount on the quote
 // representing a cash discount. Discount percent is the user inputed 
 // percentage on the quote representing a cash percentage
-        return $trimmed_total = $total - $discount_amount;
+        return $total - $discount_amount;
     }
     
     /**
@@ -760,7 +759,7 @@ final readonly class NumberHelper
         if ($salesorder) {
             $discount_amount = (float) $salesorder->getDiscount_amount();
         }
-        return $trimmed_total = $total - $discount_amount;
+        return $total - $discount_amount;
     }
 
     /**
@@ -803,7 +802,6 @@ final readonly class NumberHelper
 
 // First check to see if there are any quote taxes applied
         $total_quote_tax_rate_amount = 0.00;
-        $quote_tax_rate_amount = 0.00;
         $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
         $quote_tax_rates_count = $qtrR->repoCount($quote_id);
 // At least one quote tax rate has been set and the quote has amounts that
@@ -848,7 +846,6 @@ final readonly class NumberHelper
         string $salesorder_id, SOTRR $sotrR, SOAR $soaR): float
     {
         $total_salesorder_tax_rate_amount = 0.00;
-        $salesorder_tax_rate_amount = 0.00;
         $salesorder_tax_rates = $sotrR->repoSalesOrderquery($salesorder_id);
         $salesorder_tax_rates_count = $sotrR->repoCount($salesorder_id);
         if (($salesorder_tax_rates_count > 0)
@@ -896,7 +893,6 @@ final readonly class NumberHelper
 
 // First check to see if there are any invoice taxes applied
         $total_inv_tax_rate_amount = 0.00;
-        $inv_tax_rate_amount = 0.00;
         $inv_tax_rates = $itrR->repoInvquery($inv_id);
         $inv_tax_rates_count = $itrR->repoCount($inv_id);
 // At least one invoice tax rate has been set and the invoice has amounts that

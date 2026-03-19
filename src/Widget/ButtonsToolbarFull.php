@@ -49,7 +49,6 @@ final readonly class ButtonsToolbarFull
     ): string {
         $invId = $inv->getId();
         $primaryButtons = [];
-        $advancedButtons = [];
 
         // View originating quote (if exists)
         if (!empty($inv->getQuote_id()) && $inv->getQuote_id() !== '0') {

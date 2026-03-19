@@ -80,9 +80,10 @@ $columns = [
         /**
          * Related logic: see header checkbox: name: 'checkbox-selection-all'
          */
-        content: static function (Checkbox $input, DataContext $context) use ($translator): string {
+        content: static function (Checkbox $input, DataContext $context): string {
             $family = $context->data;
-            if (($family instanceof Family) && (null !== ($id = $family->getFamily_id()))) {
+            if (($family instanceof Family)
+                    && (null !== ($id = $family->getFamily_id()))) {
                 return  new Input()
                        ->type('checkbox')
                        ->addAttributes([
@@ -91,7 +92,9 @@ $columns = [
                            'data-bs-toggle' => 'tooltip'
                         ])
                        ->value($id)
-                       ->disabled(null!== $family->getFamily_commalist() && null !== $family->getFamily_productprefix() ? false : true)
+                       ->disabled(null!== $family->getFamily_commalist()
+                               && null !== $family->getFamily_productprefix()
+                               ? false : true)
                        ->render();
             }
             return '';
@@ -107,21 +110,24 @@ $columns = [
     new DataColumn(
         property: 'family_name',
         header: $translator->translate('family'),
-        content: static fn (Family $model) => '<span data-family-name>' . Html::encode($model->getFamily_name() ?? '') . '</span>',
+        content: static fn (Family $model) => '<span data-family-name>'
+            . Html::encode($model->getFamily_name() ?? '') . '</span>',
         encodeContent: false,
         withSorting: true,
     ),
     new DataColumn(
         property: 'family_commalist',
         header: $translator->translate('family.comma.list'),
-        content: static fn (Family $model) => '<span data-family-commalist>' . Html::encode($model->getFamily_commalist() ?? '') . '</span>',
+        content: static fn (Family $model) => '<span data-family-commalist>'
+            . Html::encode($model->getFamily_commalist() ?? '') . '</span>',
         encodeContent: false,
         withSorting: true,
     ),
     new DataColumn(
         property: 'family_productprefix',
         header: $translator->translate('family.product.prefix'),
-        content: static fn (Family $model) => '<span data-family-prefix>' . Html::encode($model->getFamily_productprefix() ?? '') . '</span>',
+        content: static fn (Family $model) => '<span data-family-prefix>'
+            . Html::encode($model->getFamily_productprefix() ?? '') . '</span>',
         encodeContent: false,
         withSorting: true,
     ),
@@ -131,8 +137,9 @@ $columns = [
         content: static function (Family $model) use ($cpR, $translator): string {
             $categoryPrimaryId = $model->getCategory_primary_id();
             $categoryPrimary = $cpR->repoCategoryPrimaryQuery($categoryPrimaryId);
-            return null !== $categoryPrimary ? ($categoryPrimary->getName() ?? $translator->translate('not.set'))
-                                           : $translator->translate('not.set');
+            return null !== $categoryPrimary ?
+                    ($categoryPrimary->getName() ?? $translator->translate('not.set'))
+                        : $translator->translate('not.set');
         },
     ),
     new DataColumn(
@@ -141,7 +148,8 @@ $columns = [
         content: static function (Family $model) use ($csR, $translator): string {
             $categorySecondaryId = $model->getCategory_secondary_id();
             $categorySecondary = $csR->repoCategorySecondaryQuery($categorySecondaryId);
-            return null !== $categorySecondary ? $categorySecondary->getName() ?? $translator->translate('not.set')
+            return null !== $categorySecondary ?
+                    $categorySecondary->getName() ?? $translator->translate('not.set')
                                              : $translator->translate('not.set');
         },
     ),
@@ -149,7 +157,8 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Family $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('family/view', ['id' => $model->getFamily_id()]);
+                return $urlGenerator->generate('family/view',
+                    ['id' => $model->getFamily_id()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -159,7 +168,8 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Family $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('family/edit', ['id' => $model->getFamily_id()]);
+                return $urlGenerator->generate('family/edit',
+                    ['id' => $model->getFamily_id()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -169,11 +179,15 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Family $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('family/delete', ['id' => $model->getFamily_id()]);
+                return $urlGenerator->generate('family/delete',
+                    ['id' => $model->getFamily_id()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
-                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                'onclick' => "return confirm("
+                    . "'"
+                    . $translator->translate('delete.record.warning')
+                    . "');",
             ],
         ),
     ]),
@@ -202,7 +216,7 @@ $sortedAndPagedPaginator = (new OffsetPaginator($families))
     ->withSort($sort)
     ->withToken(PageToken::next((string) $page));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -223,7 +237,7 @@ echo GridView::widget()
 ->id('w4-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

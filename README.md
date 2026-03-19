@@ -31,6 +31,14 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Future Peppol Mena](docs/FUTURE_PEPPOL_MENA.md)
+
+[Future Peppol Nigeria](docs/FUTURE_PEPPOL_NIGERIA.md)
+
+[Future Peppol Republic of South Africa](docs/FUTURE_PEPPOL_RSA.md)
+
+[Future Peppol UK](docs/FUTURE_PEPPOL_UK.md)
+
 [Mobile-Desktop Toggle Toolbar](docs/MOBILE_DESKTOP_TOOLBAR.md) (March 2026)
 
 [ssl.conf explained](docs/SSL_CONF_EXPLAINED.md) (March 2026)
@@ -116,45 +124,12 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 **Installing with Composer in Windows**
 *````composer update````*
 
-## 🚀 Quick Setup with Interactive Installer
-
-For new installations, use one of these interactive installers:
-
-### Option 1: Standalone Installer (Recommended for first-time setup)
-```bash
-php install.php
-```
-This works without any dependencies and guides you through the complete setup.
-
-### Option 2: Full-Featured Installer (After dependencies are installed)
-```bash
-# Using the convenience script
-php install_writable.php
-
-# Or using the yii console directly  
-./yii install
-```
-
-Note: install.php and install_writable must be removed after installation.
-Remember to setup your ssl.conf under apache properly. Refer to above ssl.conf
-md. 
-
-Both installers will:
-- ✅ Perform preflight checks (PHP version, extensions, Composer)
-- 📦 Install dependencies with `composer install` (with your confirmation)
-- 🗄️ Parse database configuration and create the database if needed
-- 📋 Provide a checklist for final manual steps
-
-After running either installer, you'll need to manually:
+After a composer update, you'll need to manually:
 1. Set `BUILD_DATABASE=true` in your `.env` file
 2. Start the application to trigger table creation
-3. Reset `BUILD_DATABASE=false` for better performance
+3. Reset `BUILD_DATABASE=` for better performance
 
-## Manual Installation
-
-If you prefer manual setup or encounter issues with the installer:
-
-**Installing npm_modules folder containing bootstrap as mentioned in package.json**
+**Installing npm_modules**
 * Step 1: Download node.js at https://nodejs.org/en/download
 * Step 2: Ensure C:\ProgramFiles\nodejs is in environment variable path. Search ... edit the system environment variables
 * Step 3: Run ````npm i```` in ````c:\wamp64\invoice```` folder. This will install @popperjs, Bootstrap 5, and TypeScript 
@@ -165,7 +140,7 @@ If you prefer manual setup or encounter issues with the installer:
 * Step 1: Wampserver ... Php {version} ... Php Settings ... xdebug.mode = off
 * Step 2:                                               ... Maximum Execution Time = 360
 
-Installing the database in mySql
+**Installing the database in mySql**
 1. Create a database in mySql called yii3_i.
 2. The BUILD_DATABASE=true setting in the config/common/params.php file will ensure a firstrun setup of tables.
 3. After the setup of tables, ensure that this setting is changed back to false otherwise you will get performance issues.

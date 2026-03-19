@@ -20,11 +20,17 @@ namespace <?= $generator->getNamespace_path() . '\Entity'; ?>;
 <?php
 
 /**
- * Related logic: see The namespace path normally begins with 'App' so alphabetically first
+ * Related logic: see The namespace path normally begins with 'App' so
+ *  alphabetically first
  * @var App\Invoice\Entity\GentorRelation $relation
  */
 foreach ($relations as $relation) {
-    echo 'use ' . $generator->getNamespace_path() . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . ($relation->getCamelcase_name() ?? '#') . ';' . "\n";
+    echo 'use '
+        . $generator->getNamespace_path()
+        . DIRECTORY_SEPARATOR
+        . 'Entity'
+        . DIRECTORY_SEPARATOR
+        . ($relation->getCamelcase_name() ?? '#') . ';' . "\n";
 } ?>
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -44,11 +50,28 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 ?>
 
  <?php
-    echo '#[Entity(repository: ' . DIRECTORY_SEPARATOR . $generator->getNamespace_path() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . 'Repository::class)]' . "\n";
-if ($generator->isCreated_include() || $generator->isUpdated_include() || $generator->isModified_include()) {
-    echo($generator->isCreated_include() ? '#[Behavior\CreatedAt(field: ' . "'" . 'date_created' . "',column:'" . 'date_created' . ')]' : '');
-    echo($generator->isUpdated_include() ? '#[Behavior\UpdatedAt(field: ' . "'" . 'date_updated' . "',column:'" . 'date_updated' . ')]' : '');
-    echo($generator->isModified_include() ? '#[Behavior\ModifiedAt(field: ' . "'" . 'date_modified' . "',column:'" . 'date_modified' . ')]' : '');
+    echo '#[Entity(repository: '
+            . DIRECTORY_SEPARATOR
+            . $generator->getNamespace_path()
+            . DIRECTORY_SEPARATOR
+            . $generator->getCamelcase_capital_name()
+            . DIRECTORY_SEPARATOR
+            . $generator->getCamelcase_capital_name()
+            . 'Repository::class)]' . "\n";
+if ($generator->isCreated_include()
+        || $generator->isUpdated_include()
+                || $generator->isModified_include()) {
+    echo($generator->isCreated_include() ?
+            '#[Behavior\CreatedAt(field: '
+            . "'"
+            . 'date_created'
+            . "',column:'"
+            . 'date_created'
+            . ')]' : '');
+    echo($generator->isUpdated_include() ? '#[Behavior\UpdatedAt(field: ' . "'"
+            . 'date_updated' . "',column:'" . 'date_updated' . ')]' : '');
+    echo($generator->isModified_include() ? '#[Behavior\ModifiedAt(field: ' . "'"
+            . 'date_modified' . "',column:'" . 'date_modified' . ')]' : '');
 }
 ?>
  
@@ -59,8 +82,11 @@ class <?= $generator->getCamelcase_capital_name() . "\n"; ?>
        * @var App\Invoice\Entity\GentorRelation $relation
        */
        foreach ($relations as $relation) {
-           echo '    #[BelongsTo(target:' . ($relation->getCamelcase_name() ?? '') . "::class, nullable: false, fkAction:" . "'NO ACTION'" . ")]" . "\n";
-           echo '    private ?' . ($relation->getCamelcase_name() ?? '') . " $" . ($relation->getLowercase_name() ?? '') . ' = null;' . "\n";
+           echo '    #[BelongsTo(target:' . ($relation->getCamelcase_name() ?? '')
+                   . "::class, nullable: false, fkAction:" . "'NO ACTION'" . ")]"
+                   . "\n";
+           echo '    private ?' . ($relation->getCamelcase_name() ?? '') . " $"
+                   . ($relation->getLowercase_name() ?? '') . ' = null;' . "\n";
            echo '    ' . "\n";
        } ?>
     
@@ -70,7 +96,6 @@ class <?= $generator->getCamelcase_capital_name() . "\n"; ?>
  * @var Cycle\Database\Schema\AbstractColumn $column
  */
 foreach ($orm_schema->getColumns() as $column) {
-    $result = '';
     if ($column->IsNullable()) {
         $nullable = 'true';
         $questionmark = '?';
@@ -107,19 +132,20 @@ foreach ($orm_schema->getColumns() as $column) {
             break;
     }
     $ab = '';
-    $default = '';
     switch ($column->getAbstractType()) {
         //Special column type, usually mapped as integer + auto-incrementing flag
         //and added as table primary index column.
         //You can define only one primary column in your table
         //(you can still create a compound primary key, see below).
         case 'primary':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . "')]" . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . "')]"
+                . "\n";
             $ate_or_lic = 'private ';
             break;
             //Same as primary but uses bigInteger to store its values.
         case 'bigPrimary':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . "')]" . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . "')]"
+                . "\n";
             $ate_or_lic = 'private ';
             break;
             //Boolean type, some databases store it as an integer (1/0).
@@ -135,100 +161,167 @@ foreach ($orm_schema->getColumns() as $column) {
             //Database specific integer (usually 32 bits).
         case 'integer':
             $result = (string) $column->getSize();
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . '(' . $result . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . '('
+                    . $result
+                    . ")', nullable: " . $nullable
+                    . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
             //Small/tiny integer, check your DBMS to check its size.
         case 'tinyInteger':
             $result = (string) $column->getSize();
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . '(' . $result . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                    . '(' . $result . ")', nullable: " . $nullable
+                    . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             break;
             //Big/long integer (usually 64 bits), check your DBMS to check its size.
         case 'bigInteger':
             $result = (string) $column->getSize();
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . '(' . $result . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . '('
+                    . $result . ")', nullable: " . $nullable
+                    . ((string) $column->hasDefaultvalue() ? ',default: ' 
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
-            //length:255] String with specified length, a perfect type for emails and usernames as it can be indexed.
+            //length:255] String with specified length, a perfect type for emails
+            // and usernames as it can be indexed.
         case 'string':
             $result = (string) $column->getSize();
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . '(' . $result . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . '('
+                    . $result . ")', nullable: " . $nullable
+                    . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
             //Database specific type to store text data. Check DBMS to find size limitations.
         case 'text':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
             //Tiny text, same as "text" for most of the databases. Differs only in MySQL.
         case 'tinyText':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
             //Long text, same as "text" for most of the databases. Differs only in MySQL.
         case 'longText':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]')
+            . "\n";
             $ate_or_lic = 'private ';
             break;
             //[Double precision number.] (https://en.wikipedia.org/wiki/Double-precision_floating-point_format)
         case 'double':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
             //Single precision number, usually mapped into "real" type in the database.
         case 'float':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
             //precision, [scale:0]	Number with specified precision and scale.
         case 'decimal':
-            $result = (string) $column->getPrecision() . ',' . (string) $column->getScale();
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . '(' . $result . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $result = (string) $column->getPrecision() . ','
+                . (string) $column->getScale();
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                    . '(' . $result . ")', nullable: " . $nullable
+                    . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
-            //To store specific date and time, DBAL will automatically force UTC timezone for such columns.
+            //To store specific date and time, DBAL will automatically force
+            // UTC timezone for such columns.
         case 'datetime':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . "', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . "', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
             //To store date only, DBAL will automatically force UTC timezone for such columns.
         case 'date':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
             //To store time only.
         case 'time':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . '"' . (string) $column->getDefaultvalue() . '"' . ")]" : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . '"' . (string) $column->getDefaultvalue() . '"' . ")]"
+                    : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
-            //Timestamp without a timezone, DBAL will automatically convert incoming values into UTC timezone.
-            //Do not use such column in your objects to store time (use DateTime instead) as timestamps will behave very specific to select DBMS.
+            //Timestamp without a timezone, DBAL will automatically convert
+            // incoming values into UTC timezone.
+            //Do not use such column in your objects to store time
+            // (use DateTime instead) as timestamps will behave very specific
+            //  to select DBMS.
         case 'timestamp':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
             //To store binary data. Check specific DBMS to find size limitations.
         case 'binary':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
-            //Tiny binary, same as "binary" for most of the databases. Differs only in MySQL.
+            //Tiny binary, same as "binary" for most of the databases. Differs
+            // only in MySQL.
         case 'tinyBinary':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
-            //Long binary, same as "binary" for most of the databases. Differs only in MySQL.
+            //Long binary, same as "binary" for most of the databases.
+            //  Differs only in MySQL.
         case 'longBinary':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ((string) $column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable
+                . ((string) $column->hasDefaultvalue() ? ',default: '
+                    . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
-            //To store JSON structures, usually mapped to "text", only Postgres supports it natively.
+            //To store JSON structures, usually mapped to "text", only
+            // Postgres supports it natively.
         case 'json':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . ")', nullable: " . $nullable . ($column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . ")', nullable: " . $nullable . ($column->hasDefaultvalue()
+                    ? ',default: ' . (string) $column->getDefaultvalue()
+                    . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
         case 'enum':
-            $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . "(-1,1)', nullable: " . $nullable . ($column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
+            $ab = '    #[Column(type:' . "'" . $column->getAbstractType()
+                . "(-1,1)', nullable: " . $nullable . ($column->hasDefaultvalue() ? ',default: ' . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
     }
@@ -237,23 +330,35 @@ foreach ($orm_schema->getColumns() as $column) {
         $questionmark = '?';
     }
     if ($column->getAbstractType() === 'boolean') {
-        echo '    ' . ($ate_or_lic ?? '') . $questionmark . "bool" . " $" . $column->getName() . ' =  ' . (string) $init . ';' . "\n";
-        $construct .= "    bool" . " $" . $column->getName() . ' = ' . (string) $init . ',' . "\n    ";
+        echo '    ' . ($ate_or_lic ?? '') . $questionmark . "bool" . " $"
+                . $column->getName() . ' =  ' . (string) $init . ';' . "\n";
+        $construct .= "    bool" . " $" . $column->getName() . ' = '
+                . (string) $init . ',' . "\n    ";
     }
 
     if ($column->getAbstractType() === 'datetime') {
-        echo '     ' . ($ate_or_lic ?? '') . 'DateTimeImmutable' . " $" . $column->getName() . ';' . "\n";
-        $construct .= "      $" . $column->getName() . ' = ' . (string) $init . ',' . "\n    ";
+        echo '     ' . ($ate_or_lic ?? '') . 'DateTimeImmutable' . " $"
+                . $column->getName() . ';' . "\n";
+        $construct .= "      $" . $column->getName() . ' = '
+                . (string) $init . ',' . "\n    ";
     }
 
     if ($column->getAbstractType() === 'date') {
-        echo '    ' . ($ate_or_lic ?? '') . " mixed $" . $column->getName() . ';' . "\n";
-        $construct .= "     $" . $column->getName() . ' = ' . (string) $init . ',' . "\n    ";
+        echo '    ' . ($ate_or_lic ?? '') . " mixed $" . $column->getName()
+                . ';' . "\n";
+        $construct .= "     $" . $column->getName() . ' = ' . (string) $init
+                . ',' . "\n    ";
     }
 
-    if (($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'datetime') && ($column->getAbstractType() <> 'boolean')) {
-        echo '    ' . ($ate_or_lic ?? '') . $questionmark . $column->getType() . " $" . $column->getName() . ' =  ' . (string) $init . ';' . "\n";
-        $construct .= "    " . $column->getType() . " $" . $column->getName() . ' = ' . (string) $init . ',' . "\n    ";
+    if (($column->getAbstractType() <> 'date')
+            && ($column->getAbstractType() <> 'datetime')
+                    && ($column->getAbstractType() <> 'boolean')) {
+        echo '    ' . ($ate_or_lic ?? '')
+                . $questionmark . $column->getType()
+                . " $" . $column->getName() . ' =  '
+                . (string) $init . ';' . "\n";
+        $construct .= "    " . $column->getType() . " $"
+                . $column->getName() . ' = ' . (string) $init . ',' . "\n    ";
     }
 
     echo '    ' . "\n";
@@ -263,11 +368,14 @@ echo '    ' . rtrim($construct, ",\n    ") . "\n";
 echo '    )' . "\n";
 echo '    {' . "\n";
 foreach ($orm_schema->getColumns() as $column) {
-    if (($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'datetime')) {
-        echo '       $this->' . $column->getName() . ' = $' . $column->getName() . ';' . "\n";
+    if (($column->getAbstractType() <> 'date')
+            && ($column->getAbstractType() <> 'datetime')) {
+        echo '       $this->' . $column->getName()
+                . ' = $' . $column->getName() . ';' . "\n";
     }
     if ($column->getAbstractType() == 'datetime') {
-        echo '       $this->' . $column->getName() . " = new DateTimeImmutable('now');" . "\n";
+        echo '       $this->' . $column->getName()
+                . " = new DateTimeImmutable('now');" . "\n";
     }
 }
 echo '    }' . "\n";
@@ -277,14 +385,20 @@ echo '    }' . "\n";
  */
 foreach ($relations as $relation) {
     echo '   ' . "\n";
-    echo '   public function get' . ($relation->getCamelcase_name() ?? '#') . '() : ?' . ($relation->getCamelcase_name() ?? '#') . "\n";
+    echo '   public function get'
+    . ($relation->getCamelcase_name() ?? '#')
+            . '() : ?' . ($relation->getCamelcase_name() ?? '#') . "\n";
     echo '   {' . "\n";
-    echo '     return $this->' . ($relation->getLowercase_name() ?? '#') . ';' . "\n";
+    echo '     return $this->'
+    . ($relation->getLowercase_name() ?? '#') . ';' . "\n";
     echo '   }' . "\n";
     echo '   ' . "\n";
-    echo '   public function set' . ($relation->getCamelcase_name() ?? '#') . '(?' . ($relation->getCamelcase_name() ?? '#') . ' $' . ($relation->getCamelcase_name() ?? '#') . '): void' . "\n";
+    echo '   public function set' . ($relation->getCamelcase_name() ?? '#')
+            . '(?' . ($relation->getCamelcase_name() ?? '#') . ' $'
+            . ($relation->getCamelcase_name() ?? '#') . '): void' . "\n";
     echo '   {' . "\n";
-    echo '     $this->' . ($relation->getLowercase_name() ?? '#') . ' = $' . ($relation->getLowercase_name() ?? '#') . ';' . "\n";
+    echo '     $this->' . ($relation->getLowercase_name() ?? '#')
+            . ' = $' . ($relation->getLowercase_name() ?? '#') . ';' . "\n";
     echo '   }' . "\n";
 }
 
@@ -294,25 +408,36 @@ foreach ($relations as $relation) {
 foreach ($orm_schema->getColumns() as $column) {
     echo '   ' . "\n";
     if (substr($column->getName(), -2) === 'id') {
-        echo '   public function get' . ucfirst($column->getName()) . '(): ' . ($column->isNullable() ? $questionmark : '') . 'string' . "\n";
+        echo '   public function get' . ucfirst($column->getName())
+                . '(): ' . ($column->isNullable() ? $questionmark : '') . 'string' . "\n";
         echo '   {' . "\n";
-        echo '    return (string)$this->' . $column->getName() . ';' . "\n";
+        echo '    return (string)$this->' . $column->getName()
+                . ';' . "\n";
     } else {
         /**
          * Related logic: see Entity/Client
-         * mySql 'date' interpreted as DateTimeImmutable or string or null i.e. mixed with Cycle
-         * Preferable to specifically use 'DateTimeImmutable|string|null' instead of 'mixed'
+         * mySql 'date' interpreted as DateTimeImmutable or string or null i.e.
+         * mixed with Cycle
+         * Preferable to specifically use 'DateTimeImmutable|string|null'
+         *  instead of 'mixed'
          * so as to define what variables make up the 'mixed'
          */
 
         if ($column->getAbstractType() === 'date') {
-            echo '   public function get' . ucfirst($column->getName()) . '(): ' . ($column->isNullable() ? $questionmark : '') . 'DateTimeImmutable|string' . "\n";
+            echo '   public function get' . ucfirst($column->getName())
+                    . '(): ' . ($column->isNullable() ? $questionmark : '')
+                    . 'DateTimeImmutable|string' . "\n";
         }
         if ($column->getAbstractType() === 'datetime') {
-            echo '   public function get' . ucfirst($column->getName()) . '(): ' . ($column->isNullable() ? $questionmark : '') . 'DateTimeImmutable' . "\n";
+            echo '   public function get' . ucfirst($column->getName())
+                    . '(): ' . ($column->isNullable() ? $questionmark : '')
+                    . 'DateTimeImmutable' . "\n";
         }
-        if (($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'datetime')) {
-            echo '   public function get' . ucfirst($column->getName()) . '(): ' . ($column->isNullable() ? $questionmark : '') . $column->getType() . "\n";
+        if (($column->getAbstractType() <> 'date')                
+                && ($column->getAbstractType() <> 'datetime')) {
+            echo '   public function get' . ucfirst($column->getName())
+                    . '(): ' . ($column->isNullable() ? $questionmark : '')
+                    . $column->getType() . "\n";
         }
         echo '   {' . "\n";
         echo '      return $this->' . $column->getName() . ';' . "\n";
@@ -324,13 +449,17 @@ foreach ($orm_schema->getColumns() as $column) {
         echo '   public function set' . ucfirst($column->getName()) . '(DateTimeImmutable|string|null $' . $column->getName() . ') : void' . "\n";
     }
     if ($column->getAbstractType() === 'datetime') {
-        echo '   public function set' . ucfirst($column->getName()) . '(DateTimeImmutable $' . $column->getName() . ') : void' . "\n";
+        echo '   public function set' . ucfirst($column->getName())
+                . '(DateTimeImmutable $' . $column->getName() . ') : void' . "\n";
     }
     if (($column->getAbstractType() <> 'date') && ($column->getAbstractType() <> 'datetime')) {
-        echo '   public function set' . ucfirst($column->getName()) . '(' . $column->getType() . ' $' . $column->getName() . ') : void' . "\n";
+        echo '   public function set' . ucfirst($column->getName())
+                . '(' . $column->getType() . ' $' . $column->getName()
+                . ') : void' . "\n";
     }
     echo '   {' . "\n";
-    echo '     $this->' . $column->getName() . ' =  $' . $column->getName() . ';' . "\n";
+    echo '     $this->' . $column->getName() . ' =  $' . $column->getName()
+            . ';' . "\n";
     echo '   }' . "\n";
 }
 ?>

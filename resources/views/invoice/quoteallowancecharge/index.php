@@ -166,7 +166,7 @@ $sortedAndPagedPaginator = (new OffsetPaginator($quoteAllowanceCharges))
     ->withSort($sort)
     ->withToken(PageToken::next((string) $page));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
     $defaultPageSizeOffsetPaginator,
@@ -200,7 +200,7 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate(
     $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator,
-        'quoteallowancecharge') . ' ' . $grid_summary)
+        'quoteallowancecharge') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

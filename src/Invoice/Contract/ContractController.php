@@ -105,7 +105,6 @@ final class ContractController extends BaseController
         $contract = new Contract();
         // To pass the client id variable to the form, set it first in the entity
         $contract->setClient_id((int) $client_id);
-        $title = '';
         $form = new ContractForm($contract);
         if (null !== $client_id) {
             $title = $cR->repoClientquery($client_id)->getClient_name();
@@ -127,8 +126,7 @@ final class ContractController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    $this->contractService->saveContract(
-                                                    $contract, $body, $this->sR);
+                    $this->contractService->saveContract($contract, $body);
                     return $this->webService->getRedirectResponse('contract/index');
                 }
             }
@@ -165,8 +163,7 @@ final class ContractController extends BaseController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
-                        $this->contractService->saveContract(
-                                                    $contract, $body, $this->sR);
+                        $this->contractService->saveContract($contract, $body);
                         return $this->webService->getRedirectResponse(
                                                                 'contract/index');
                     }

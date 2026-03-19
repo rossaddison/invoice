@@ -330,9 +330,6 @@ foreach ($types as $type) {
  * @psalm-var array|string|null $valueSelected
  */
 
-// Normalize $positions into an array for use in the view
-$positionsArray = [];
-
 if (is_string($positions)) {
     /**
      * json_decode may return array|null|scalar. Tell Psalm the expected decoded shape.

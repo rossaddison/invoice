@@ -54,7 +54,6 @@ final readonly class TemplateHelper
     public function parse_template(string $pk, bool $isInvoice, string $body, cvR $cvR, IR $iR, IAR $iaR, QR $qR, QAR $qaR, SOR $soR, uiR $uiR)
     {
         $template_vars = [];
-        $var = '';
         if (preg_match_all('/{{{([^{|}]*)}}}/', $body, $template_vars) > 0) {
             foreach ($template_vars[1] as $var) {
                 $userinv = new UserInv();

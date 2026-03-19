@@ -781,7 +781,6 @@ class PeppolHelper
      */
     public function DescriptionCode(Inv $invoice, DelRepo $delRepo): string
     {
-        $description_code = '';
         if ($this->s->getSetting('include_delivery_period') == '1'
                             && !empty($this->s->getSetting('stand_in_code'))) {
             if ($invoice->getDelivery_location_id() > 0) {
@@ -1064,7 +1063,6 @@ $country_helper->get_country_identification_code_with_league(
          * and a comparison string instead of the actual amount will be
          * displayed.
          */
-        $compareStrings = true;
         $client = $invoice->getClient();
         if ($client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
@@ -1618,7 +1616,6 @@ $country_helper->get_country_identification_code_with_league(
     private function SupplierAssignedAccountId(Inv $invoice, cpR $cpR): string
     {
         $client = $invoice->getClient();
-        $supplier_assigned_account_id = '';
         if (null !== $client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
                     (string) $client->getClient_id());
@@ -1835,8 +1832,6 @@ $country_helper->get_country_identification_code_with_league(
                 $item_tax_rates[] = $item->getTax_rate_id();
             }
         }
-        $tax_percent = 0.00;
-        $tax_category = '';
         foreach ($item_tax_rates as $id) {
             $taxRate = $trR->repoTaxRatequery($id);
             if (null !== $taxRate) {

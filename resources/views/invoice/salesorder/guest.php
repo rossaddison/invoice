@@ -187,7 +187,7 @@ $columns = [
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static function (SalesOrder $model) use ($dateHelper): string {
+        content: static function (SalesOrder $model): string {
 /**
  * @psalm-suppress PossiblyInvalidMethodCall $model->getDate_created()->format('Y-m-d')
  */
@@ -230,8 +230,8 @@ $columns = [
     ),
 ];
 
-$grid_summary
-    = $s->grid_summary(
+$gridSummary
+    = $s->gridSummary(
         $paginator,
         $translator,
         (int) $s->getSetting('default_list_limit'),
@@ -260,7 +260,7 @@ echo GridView::widget()
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->summaryTemplate($pageSizeLimiter::buttons(
         $currentRoute, $s, $translator, $urlGenerator, 'salesorder')
-        . ' ' . $grid_summary)
+        . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

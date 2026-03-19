@@ -22,11 +22,9 @@ $panel = ['class' => 'panel panel-default'];
 $panelHead = ['class' => 'panel-heading'];
 $panelBody = ['class' => 'panel-body'];
 $formGroup = ['class' => 'form-group'];
-$formControl = ['class' => 'form-control'];
 $checkbox = ['class' => 'checkbox'];
 $inputGroup = ['class' => 'input-group'];
 $inputGroupText = ['class' => 'input-group-text'];
-$inputSm = ['class' => 'input-sm form-control'];
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
 

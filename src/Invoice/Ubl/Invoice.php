@@ -357,10 +357,6 @@ class Invoice implements XmlSerializable
          */
         $supp_tax_cc_tax_amount = $tst['supp_tax_cc_tax_amount'] ?: 0.00;
         /**
-         * @var float $tst['doc_cc_tax_amount']
-         */
-        $doc_cc_tax_amount = $tst['doc_cc_tax_amount'] ?: 0.00;
-        /**
          * @var string $tst['supp_tax_cc']
          */
         $supp_cc = $tst['supp_tax_cc'] ?? '';
@@ -391,8 +387,6 @@ class Invoice implements XmlSerializable
                 ],
             ]);
         } else {
-// https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
-// Suppliers Tax Amount in Suppliers Currency without subtotal breakdown
             $writer->write([
                 [
                     'name' => Schema::CAC . 'TaxTotal',
@@ -411,17 +405,6 @@ class Invoice implements XmlSerializable
                     ],
                 ],
             ]);
-            // Document Recipients TaxAmount in Document Recipient's Currency
-            ////$writer->write([
-            ////    [
-            ////        'name' => Schema::CBC . 'TaxAmount',
-            ////        'value' => number_format((float) (string) $doc_cc_tax_amount
-            ////                                                ?: 0.00, 2, '.', ''),
-            ////        'attributes' => [
-            ////            'currencyID' => $doc_cc,
-            ////        ],
-            ////    ],
-            ////]);
         } // elseif
 
         $writer->write([

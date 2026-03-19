@@ -155,7 +155,6 @@ final class InvRecurringController extends BaseController
     public function multiple(Request $request, FormHydrator $formHydrator, IR $iR): \Psr\Http\Message\ResponseInterface
     {
         $data = $request->getQueryParams();
-        $parameters = ['success' => 0];
         /**
          * Purpose: Provide a list of ids from inv/index checkbox column as an array
          * @var array $data['keylist']

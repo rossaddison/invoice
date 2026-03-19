@@ -343,7 +343,7 @@ $paginator = (new OffsetPaginator($userinvs))
     ->withCurrentPage($page)
     ->withToken(PageToken::next((string) $page));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -367,7 +367,7 @@ echo GridView::widget()
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
 ->id('w5-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'userinv') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'userinv') . ' ' . $gridSummary)
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->emptyCell($translator->translate('no.records'), ['class' => 'card-header bg-warning text-black'])
 ->toolbar($toolbarString);

@@ -134,9 +134,8 @@ final class InvRecurringRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function active(SettingRepository $s): EntityReader
+    public function active(): EntityReader
     {
-        $datehelper = new DateHelper($s);
         $query = $this->select()
                       ->where('next_date', '<', date('Y-m-d'))
                       ->orWhere('end_date', '>', date('Y-m-d'))
@@ -144,9 +143,8 @@ final class InvRecurringRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function CountActive(SettingRepository $s): int
+    public function CountActive(): int
     {
-        $datehelper = new DateHelper($s);
         return $this->select()
                       ->where('next_date', '<', date('Y-m-d'))
                       ->orWhere('end_date', '>', date('Y-m-d'))

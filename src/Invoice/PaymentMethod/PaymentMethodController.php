@@ -152,7 +152,6 @@ final class PaymentMethodController extends BaseController
     public function view(CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository): Response
     {
         $payment_method = $this->paymentmethod($currentRoute, $paymentmethodRepository);
-        $parameters = [];
         if ($payment_method) {
             $form = new PaymentMethodForm($payment_method);
             $parameters = [

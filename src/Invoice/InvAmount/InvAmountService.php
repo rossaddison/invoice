@@ -188,9 +188,6 @@ final readonly class InvAmountService
                 $packHandleShipTotal = 0.00;
                 $packHandleShipTax = 0.00;
                 $taxTotal = 0.00;
-                $discount = 0.00;
-                $charge = 0.00;
-                $allowance = 0.00;
                 /**
                  * @var InvItem $item
                  */
@@ -201,9 +198,6 @@ final readonly class InvAmountService
                         if ($invItemAmount) {
                             $subtotal += $invItemAmount->getSubtotal() ?? 0.00;
                             $taxTotal += $invItemAmount->getTax_total() ?? 0.00;
-                            $discount += $invItemAmount->getDiscount() ?? 0.00;
-                            $charge += $invItemAmount->getCharge() ?? 0.00;
-                            $allowance += $invItemAmount->getAllowance() ?? 0.00;
                         }
                     }
                 }

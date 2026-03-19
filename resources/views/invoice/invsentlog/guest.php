@@ -79,7 +79,7 @@ $columns = [
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     $defaultPageSizeOffsetPaginator,
@@ -103,6 +103,6 @@ echo GridView::widget()
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
   ->summaryTemplate(($viewInv
                        ? $pageSizeLimiter::buttonsGuest($userInv, $urlGenerator, $translator, 'invsentlog', $defaultPageSizeOffsetPaginator) : '') . ' '
-                       . $grid_summary)->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
+                       . $gridSummary)->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
   ->noResultsText($translator->translate('no.records'))
   ->toolbar($toolbarString);

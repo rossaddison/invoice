@@ -74,7 +74,7 @@ $columns = [
         content: static fn (InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
     ),
 ];
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -96,7 +96,7 @@ echo GridView::widget()
   ->id('w10463-grid')
   ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-  ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'invsentlog') . ' ' . $grid_summary)
+  ->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'invsentlog') . ' ' . $gridSummary)
   ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
   ->noResultsText($translator->translate('no.records'))
   ->toolbar($toolbarString);

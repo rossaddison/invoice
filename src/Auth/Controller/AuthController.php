@@ -454,7 +454,6 @@ final class AuthController
                         $tempSecretRaw = $this->session->get('2fa_temp_secret');
                         $tempSecret = (\is_string($tempSecretRaw)
                                 && $tempSecretRaw !== '') ? $tempSecretRaw : null;
-                        $error = '';
                         if ($tempSecret === null) {
                             $error = $translator->translate($tfans);
                         } elseif (!$this->isValidTotpCode($inputCode)) {
@@ -589,7 +588,6 @@ final class AuthController
                             $totpSec = (\is_string($totpSecretRaw)
                                     && $totpSecretRaw !== '')
                                     ? $totpSecretRaw : null;
-                            $error = '';
                             if ($totpSec !== null
                                     && $this->isValidTotpCode($inputCode)) {
                                 $tokenApplySec = TokenMask::apply($totpSec);

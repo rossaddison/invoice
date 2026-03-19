@@ -563,7 +563,10 @@ final class InvoiceController extends BaseController
                 'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
             // World ie. GB,  to Germany a.k.a "World to DE"
-            $data = '{
+            /**
+             * @psalm-suppress UnusedVariable $dataWorldTo
+             */
+            $dataWorldTo = '{
                 "legalEntityId": ' . (string) $legal_entity_id_as_integer . ',
                 "routing": {
                   "emails": [
@@ -1391,7 +1394,6 @@ final class InvoiceController extends BaseController
         QuoteRepository $qR,
         InvRepository $iR,
     ): \Psr\Http\Message\ResponseInterface {
-        $flash = '';
         if ($sR->repoCount('use_test_data') > 0
                                 && $sR->getSetting('use_test_data') == '0') {
             // Only remove the test data if the user's test quotes and
@@ -1414,6 +1416,7 @@ final class InvoiceController extends BaseController
         $data = [
             'alerts' => $this->alert(),
         ];
+        $this->flashMessage('info', $flash);
         return $this->webViewRenderer->render('index', $data);
     }
 
@@ -1437,7 +1440,6 @@ final class InvoiceController extends BaseController
         InvRepository $iR,
         TaxRateRepository $trR,
     ): \Psr\Http\Message\ResponseInterface {
-        $flash = '';
         if ($sR->repoCount('install_test_data') > 0 && $sR->getSetting(
                 'install_test_data') == 1) {
             // Only remove the test data if the user's test quotes and invoices

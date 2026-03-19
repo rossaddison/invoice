@@ -1,4 +1,8 @@
-<?php declare(strict_types=1); $lang = array (
+<?php
+
+declare(strict_types=1);
+
+return [
   'allowance.or.charge.allowance.tax' => 'Tax on allowance',
   'allowance.or.charge.charge.tax' => 'Tax on charge',
   'allowance.or.charge.inv.add' => 'Add Invoice Allowance or Charge',
@@ -56,4 +60,4 @@
   'approval.required' => 'Approval Required',
   'quote.approval.required' => 'Quote approval required',
   'quote.must.be.approved.first' => 'Quote must be approved before conversion',
-);
+];

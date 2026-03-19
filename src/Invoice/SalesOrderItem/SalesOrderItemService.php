@@ -206,14 +206,6 @@ final readonly class SalesOrderItemService
         $array['sales_order_id'] = $sales_order_id;
         $this->persist($model, $array);
 
-        $product_id = ((isset($array['product_id']))
-            ? (int) $array['product_id']
-            : null);
-        
-        $task_id = ((isset($array['task_id']))
-            ? (int) $array['task_id']
-            : null);
-
         if (isset($array['product_id'])) {
             $product = $pr->repoProductquery(
                 (string) $array['product_id']
@@ -350,19 +342,15 @@ final readonly class SalesOrderItemService
         $discount_total = $quantity * $discount;
         // Fetch all allowance/charges for this item
         $all_charges = 0.00;
-        $all_charges_vat_or_tax = 0.00;
         $all_allowances = 0.00;
-        $all_allowances_vat_or_tax = 0.00;
         $acsois = $this->acsoiR->repoSalesOrderItemquery(
                                                 (string)$sales_order_item_id);
         /** @var \App\Invoice\Entity\SalesOrderItemAllowanceCharge $acsoi */
         foreach ($acsois as $acsoi) {
             if ($acsoi->getAllowanceCharge()?->getIdentifier() == '1') {
                 $all_charges += (float) $acsoi->getAmount();
-                $all_charges_vat_or_tax += (float) $acsoi->getVatOrTax();
             } else {
                 $all_allowances += (float) $acsoi->getAmount();
-                $all_allowances_vat_or_tax += (float) $acsoi->getVatOrTax();
             }
         }
         $sopInvAc = $sub_total + $all_charges - $all_allowances;

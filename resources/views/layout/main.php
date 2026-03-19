@@ -81,7 +81,6 @@ $this->addJsFiles($assetManager->getJsFiles());
 $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
 
-$currentRouteName = $currentRoute->getName() ?? '';
 $isGuest = $user === null || $user->getId() === null;
 $session->set('_language', $currentRoute->getArgument('_language'));
 $this->beginPage();

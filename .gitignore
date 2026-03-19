@@ -31,6 +31,7 @@ phpunit.phar
 /resources/rbac/assignments.php
 
 # Codeception
+# If the .env YII_C3 is set to true, composer will automatically update c3.php
 c3.php
 
 #assets

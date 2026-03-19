@@ -20,7 +20,6 @@ $panel = ['class' => 'panel panel-default'];
 $panelHead = ['class' => 'panel-heading'];
 $panelBody = ['class' => 'panel-body'];
 $formGroup = ['class' => 'form-group'];
-$formControl = ['class' => 'form-control'];
 $checkbox = ['class' => 'checkbox'];
 $pullRight = ['class' => 'pull-right'];
 $noMargin = ['class' => 'checkbox no-margin'];
@@ -170,7 +169,6 @@ echo H::openTag('div', $row); //1
     echo H::closeTag('div'); //5
 
     else : 
-    $inputValue = '';
     if ($setting['type'] == 'password') {
     $inputValue = (string) (strlen((string) 
      $body['settings[gateway_' . $d . '_' . 

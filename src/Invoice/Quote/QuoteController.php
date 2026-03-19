@@ -226,47 +226,7 @@ final class QuoteController extends BaseController
             $ucR,
             $form,
         );
-        $layoutWithForm =
-            $bootstrap5ModalQuote->renderPartialLayoutWithFormAsString($origin,
-                $errors);
-        $layoutParameters = [];
-        $parametersNonModalForm = [];
-        // do not use a modal if originating from the main menu or from
-        // the dashboard
-        if (($origin == 'main') || ($origin == 'dashboard')) {
-            $parametersNonModalForm = [
-                'form' => $bootstrap5ModalQuote->getFormParameters(),
-                /**
-                 * Purpose: To build the delivery location route
-                 * A delivery location can be added from the quote form when a
-                 * quote is being added or edited
-                 * Once the delivery location is added, use the below action
-                 * to return back to this form
-                 */
-                'return_url_action' => 'add',
-            ];
-        }
-        // use a modal if originating from the quote/view
-        if ($origin == 'quote') {
-            $layoutParameters = [
-                // use type to id the quote\modal_layout.php eg.
-                // ->options(['id' => 'modal-add-'.$type,
-                'type' => 'quote',
-                'form' => $layoutWithForm,
-                'return_url_action' => 'add',
-            ];
-        }
-        // otherwise it will be a client number eg. 25
-        if (($origin != 'main')
-                && ($origin != 'quote')
-                && ($origin != 'dashboard')) {
-            $layoutParameters = [
-                'type' => 'client',
-                'form' => $layoutWithForm,
-                'return_url_action' => 'add',
-            ];
-        }
-
+        
         // A quote can originate and be added from the following pages:
         // 1. Main Menu e.g /invoice
         // 2. Client Menu e.g. /invoice/client/view/25
@@ -342,7 +302,9 @@ final class QuoteController extends BaseController
                         } //$model_id
                         $this->flashMessage('success',
                             $this->translator->translate(
-                                'record.successfully.created'));
+                                'record.successfully.created')
+                                . '➡️ '
+                                . $client_fullname);
                         if ($origin == 'main' || $origin == 'quote') {
                             return $this->webService->getRedirectResponse(
                                 'quote/view', ['id' => $model_id]);
@@ -1400,7 +1362,7 @@ final class QuoteController extends BaseController
                         // guests will not have access to the pageListLimiter
                         'editInv' => $this->userService->hasPermission(
                             Permissions::EDIT_INV),
-                        'grid_summary' => $this->sR->grid_summary(
+                        'gridSummary' => $this->sR->gridSummary(
                             $paginator,
                             $this->translator,
                             (int) $this->sR->getSetting('default_list_limit'),
@@ -1470,18 +1432,6 @@ final class QuoteController extends BaseController
         $this->session->set('_language', $_language);
         $active_clients = $ucR->getClients_with_user_accounts();
         if (!$active_clients == []) {
-            $clients = $clientRepo->repoUserClient($active_clients);
-            $optionsDataActive = [];
-            /**
-             * @var \App\Invoice\Entity\Client $client
-             */
-            foreach ($clients as $client) {
-                $client_id = $client->getClient_id();
-                if (null !== $client_id) {
-                    $optionsDataActive[$client_id] =
-                        $client->getClient_full_name();
-                }
-            }
             $query_params = $request->getQueryParams();
             /**
              * @var string $query_params['page']
@@ -1558,7 +1508,7 @@ final class QuoteController extends BaseController
                     $this->optionsDataQuoteNumber($quoteRepo),
                 'optionsDataStatusDropDownFilter' =>
                     $this->optionsDataStatuses($quoteRepo),
-                'grid_summary' => $sR->grid_summary(
+                'gridSummary' => $sR->gridSummary(
                     $paginator,
                     $this->translator,
                     (int) $sR->getSetting('default_list_limit'),
@@ -3452,7 +3402,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         foreach ($quoteRepo->getStatuses($this->translator) as $key => $status) {
             $optionsDataQuoteStatus[$key] = (string) $status['label'];
         }
-        return $optionsData = [
+        return [
             'client' => $clientRepo->optionsData($ucR),
             'contract' => $optionsDataContract,
             'deliveryLocation' => $optionsDataDeliveryLocations,
@@ -3525,7 +3475,10 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         $optionsDataStatus = [];
         $statuses = $qR->getStatuses($this->translator);
         
-        /** @var array<int, array<string, string>> $statuses */
+        /** 
+         * @var array<int, array<string, string>> $statuses
+         * @psalm-suppress UnusedVariable $statusDate 
+         */
         foreach ($statuses as $statusId => $statusData) {
             $label = $qR->getSpecificStatusArrayLabel((string) $statusId);
             $optionsDataStatus[$statusId] = $label;

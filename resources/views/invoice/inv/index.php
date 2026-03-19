@@ -411,7 +411,6 @@ $columns = [
                     $iRO = $inv->getIs_read_only();
                     $dRO = $s->getSetting('disable_read_only');
                     $status = $inv->getStatus_id();
-                    $icon = '';
                     $iconMap = [
                         /** editable draft */
                         'false' => [
@@ -453,7 +452,6 @@ $columns = [
                     $iRO = $inv->getIs_read_only();
                     $dRO = $s->getSetting('disable_read_only');
                     $status = $inv->getStatus_id();
-                    $url = '';
                     $urlMap = [
                         /** editable draft **/
                         'false' => [
@@ -581,7 +579,7 @@ $columns = [
         buttons: [
             new ActionButton(
                 url: static function (Inv $inv)
-                                    use ($translator, $urlGenerator): string {
+                                    use ($urlGenerator): string {
                     return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf',
                             ['id' => $inv->getId()]);
                 },
@@ -594,7 +592,7 @@ $columns = [
                 ],
             ),
             new ActionButton(
-                url: static function (Inv $inv) use ($translator, $urlGenerator):
+                url: static function (Inv $inv) use ($urlGenerator):
                 string {
                     return $urlGenerator->generate('inv/pdf_dashboard_include_cf',
                             ['id' => $inv->getId()]);
@@ -659,7 +657,7 @@ $columns = [
     new DataColumn(
         property: 'filterFamilyName',
         header: $translator->translate('family.name'),
-        content: static function (Inv $model) use ($urlGenerator): string {
+        content: static function (Inv $model): string {
             // List the family of the first item on the invoice
             // as a reminder e.g. On a window cleaning run the
             // first product on the invoice (only one anyway)
@@ -766,7 +764,7 @@ $columns = [
             ])->render(),
         encodeHeader: false,
         property: 'id',    
-        content: static function (Inv $model) use ($urlGenerator, $translator): A {
+        content: static function (Inv $model) use ($urlGenerator): A {
             return  new A()
                 ->addAttributes([
                     'style' => 'text-decoration:none',                            
@@ -825,7 +823,7 @@ $columns = [
             ])->render(),
         encodeHeader: false,
         content: static function (Inv $model)
-    use ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
+    use ($islR, $toggleColumnInvSentLog ): string|A {
             $modelId = $model->getId();
             if (null !== $modelId) {
              $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
@@ -849,7 +847,7 @@ $columns = [
             ])->render(),
         encodeHeader: false,
         content: static function (Inv $model) use
-        ($islR, $toggleColumnInvSentLog, $urlGenerator, $translator): string|A {
+        ($islR, $urlGenerator, $translator): string|A {
             $modelId = $model->getId();
             if (null !== $modelId) {
                 $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
@@ -985,7 +983,7 @@ $columns = [
     new DataColumn(
         'date_modified',
         header: $translator->translate('datetime.immutable.date.modified'),
-        content: static function (Inv $model) use ($dateHelper): Label {
+        content: static function (Inv $model): Label {
             if ($model->getDate_modified() <> $model->getDate_created()) {
                 return  new Label()
                        ->attributes(['class' => 'label label-danger'])
@@ -1004,7 +1002,7 @@ $columns = [
     new DataColumn(
         'date_due',
         header: $translator->translate('due.date'),
-        content: static function (Inv $model) use ($dateHelper): Label {
+        content: static function (Inv $model): Label {
             $now = new \DateTimeImmutable('now');
             return  new Label()
                     ->attributes(
@@ -1337,7 +1335,7 @@ $toolbarString
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
     $defaultPageSizeOffsetPaginator,
@@ -1507,7 +1505,7 @@ echo $gridView
 ->summaryTemplate('<div class="d-flex align-items-center">'
         . $pageSizeLimiter::buttons(
             $currentRoute, $s, $translator, $urlGenerator, 'inv')
-        . ' ' . $grid_summary . '</div>')
+        . ' ' . $gridSummary . '</div>')
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

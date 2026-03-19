@@ -36,7 +36,7 @@ $toolbarReset =  new A()
   ->id('btn-reset')
   ->render();
 
-$toolbar =  new Div();
+echo new Div();
 
 $columns = [
     new DataColumn(
@@ -92,7 +92,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate('categoryprimary/inde
     .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
     .  new Form()->close();
 
-$grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default.list.limit'), $translator->translate('plural'), '');
+$gridSummary = $s->gridSummary($paginator, $translator, (int) $s->getSetting('default.list.limit'), $translator->translate('plural'), '');
 
 echo GridView::widget()
   ->bodyRowAttributes(['class' => 'align-middle'])
@@ -104,7 +104,7 @@ echo GridView::widget()
   ->id('w194-grid')
   ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
   ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-  ->summaryTemplate($grid_summary)
+  ->summaryTemplate($gridSummary)
   ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
   ->noResultsText($translator->translate('no.records'))
   ->toolbar($toolbarString);

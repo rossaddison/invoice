@@ -67,12 +67,11 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('quote.delivery.location.index.button.list'),
-        content: static function (DeliveryLocation $model) use ($urlGenerator, $qR, $dateHelper): string {
+        content: static function (DeliveryLocation $model) use ($urlGenerator, $qR): string {
             $deliveryLocationId = $model->getId();
             if (null !== $deliveryLocationId) {
                 $quotes = $qR->findAllWithDeliveryLocation($deliveryLocationId);
                 $buttons = '';
-                $button = '';
                 /**
                  * @var App\Invoice\Entity\Quote $quote
                  */
@@ -102,12 +101,11 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('delivery.location.index.button.list'),
-        content: static function (DeliveryLocation $model) use ($urlGenerator, $iR, $dateHelper): string {
+        content: static function (DeliveryLocation $model) use ($urlGenerator, $iR): string {
             $deliveryLocationId = $model->getId();
             if (null !== $deliveryLocationId) {
                 $invoices = $iR->findAllWithDeliveryLocation($deliveryLocationId);
                 $buttons = '';
-                $button = '';
                 /**
                  * @var App\Invoice\Entity\Inv $invoice
                  */
@@ -217,7 +215,7 @@ $sortedAndPagedPaginator = (new OffsetPaginator($dels))
     ->withSort($sort)
     ->withToken(PageToken::next((string) $page));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -246,7 +244,7 @@ echo GridView::widget()
 ->header($translator->translate('delivery.location'))
 ->id('w341-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'del') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

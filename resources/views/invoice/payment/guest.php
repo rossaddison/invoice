@@ -34,7 +34,7 @@ $toolbarReset =  new A()
     ->id('btn-reset')
     ->render();
 
-$toolbar =  new Div();
+echo new Div();
 
 $columns = [
     new DataColumn(

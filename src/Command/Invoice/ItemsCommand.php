@@ -650,9 +650,9 @@ final class ItemsCommand extends Command
             $allowanceCharge = $this->allowanceCharges[$offSet] ?? null;
             $isCharge = $allowanceCharge?->getIdentifier() ?? false;
             if ($isCharge) {
-                $invAllowanceChargeTotal += $amount;
+                $invAllowanceChargeTotal = $invAllowanceChargeTotal + $amount;
             } else {
-                $invAllowanceChargeTotal -= $amount;
+                $invAllowanceChargeTotal = $invAllowanceChargeTotal - $amount;
             }
         }
         

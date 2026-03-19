@@ -218,6 +218,7 @@ final class TaxRateController extends BaseController
         $optionsDataPeppolTaxRateCode = [];
         /**
          * @var array $value
+         * @psalm-suppress UnusedVariable $value
          */
         foreach ($peppolTaxRateCodeArray as $key => $value) {
             /**
@@ -236,6 +237,9 @@ final class TaxRateController extends BaseController
     private function optionsDataStoreCoveTaxType(): array
     {
         $optionsDataStoreCoveTaxType = [];
+        /**
+         * @psalm-suppress UnusedVariable $key
+         */
         foreach (array_column(StoreCoveTaxType::cases(), 'value') as $key => $value) {
             $optionsDataStoreCoveTaxType[$value] = str_replace('_', ' ', ucfirst($value));
         }

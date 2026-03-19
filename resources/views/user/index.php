@@ -57,7 +57,7 @@ $toolbarSelect =  new Select()
     ->value($paginator->getPageSize())
     ->render();
 
-$toolbar =  new Div();
+echo new Div();
 ?>
 
 <div>

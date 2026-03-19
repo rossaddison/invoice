@@ -73,7 +73,7 @@ final class PrometheusController extends BaseController
             $errorMetrics = $this->getErrorMetrics();
             
             return $this->responseFactory->createResponse($errorMetrics, 500)
-                                        ->withHeader('Content-Type', $this->prometheusService->getContentType());
+                                         ->withHeader('Content-Type', $this->prometheusService->getContentType());
         }
     }
 
@@ -194,7 +194,7 @@ final class PrometheusController extends BaseController
     }
 
     /**
-     * 
+     *
      * @param string $serviceName
      * @return bool
      * @psalm-suppress UnusedParam $serviceName
@@ -203,7 +203,7 @@ final class PrometheusController extends BaseController
     {
         // Mock implementation - replace with actual Windows service checking
         // You might use `sc query` command or Windows API
-        return $serviceName = true;
+        return true;
     }
 
     private function checkDatabaseHealth(): array

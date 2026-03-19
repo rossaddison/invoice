@@ -88,7 +88,7 @@ trait Oauth2
         $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
         $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
         $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
-        return $providers = [
+        return [
             'developersandboxhmrc' => [
                 'noflag' => $noDeveloperSandboxHmrcContinueButton,
                 'params' => [

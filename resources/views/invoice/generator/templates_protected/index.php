@@ -68,7 +68,7 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
       ->id('btn-reset')
       ->render();
 
-    $toolbar =  new Div();
+    echo new Div();
     
     $columns = [
         new DataColumn(
@@ -115,7 +115,7 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
     $toolbarString =  new Form()->post($urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/index'))->csrf($csrf)->open() .
          new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
          new Form()->close();
-    $grid_summary = $s->grid_summary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');    
+    $gridSummary = $s->gridSummary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');    
     echo GridView::widget()
       ->bodyRowAttributes(['class' => 'align-middle'])
       ->tableAttributes(['class' => 'table table-striped text-center h-<?= $random; ?>', 'id' => 'table-<?= $generator->getSmall_singular_name(); ?>'])
@@ -126,7 +126,7 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
       ->id('w<?= $random; ?>-grid')
       ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
       ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-      ->summaryTemplate($grid_summary)
+      ->summaryTemplate($gridSummary)
       ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
       ->noResultsText($translator->translate('no.records'))
       ->toolbar($toolbarString);

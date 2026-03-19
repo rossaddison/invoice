@@ -48,7 +48,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('generator.relations'),
-        content: static function (Gentor $model) use ($urlGenerator, $translator, $grR): string {
+        content: static function (Gentor $model) use ($urlGenerator, $grR): string {
             $div_open_tag = Html::openTag('div', ['class' => 'btn-group']);
 
             $entity_name_render = Html::a(
@@ -256,7 +256,7 @@ $toolbarString
     .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
     .  new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -274,7 +274,7 @@ echo GridView::widget()
 ->id('w21-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($grid_summary)
+->summaryTemplate($gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

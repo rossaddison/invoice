@@ -320,7 +320,7 @@ final class SignupController
         $tokenString = $token->getToken();
         $timeString = (string) $token->getCreated_at()->getTimestamp();
         // build the token
-        return $emailVerificationToken = null !== $tokenString ?
+        return null !== $tokenString ?
             ($tokenString . '_' . $timeString) : '';
     }
 }

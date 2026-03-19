@@ -1565,7 +1565,7 @@ final class SalesOrderController extends BaseController
             $key => $status) {
             $optionsDataSalesOrderStatus[$key] = (string) $status['label'];
         }
-        return $optionsData = [
+        return [
             'client' => $clientRepo->optionsData($ucR),
             'deliveryLocation' => $optionsDataDeliveryLocations,
             'group' => $optionsDataGroup,

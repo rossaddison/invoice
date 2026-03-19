@@ -20,7 +20,6 @@ $panel = ['class' => 'panel panel-default'];
 $panelHead = ['class' => 'panel-heading'];
 $panelBody = ['class' => 'panel-body'];
 $formGroup = ['class' => 'form-group'];
-$formControl = ['class' => 'form-control'];
 $checkbox = ['class' => 'checkbox'];
 
 echo H::openTag('div', $row); //1

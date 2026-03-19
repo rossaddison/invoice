@@ -125,7 +125,7 @@ $columns = [
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default_list_limit'),
@@ -146,6 +146,6 @@ echo GridView::widget()
 ->header($translator->translate('client.postaladdress'))
 ->id('w3-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
-->summaryTemplate($pageSizeLimiter::buttons($routeCurrent, $s, $translator, $urlFastRouteGenerator, 'postaladdress') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($routeCurrent, $s, $translator, $urlFastRouteGenerator, 'postaladdress') . ' ' . $gridSummary)
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
 ->toolbar($toolbarString);

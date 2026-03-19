@@ -27,7 +27,6 @@ $panel = ['class' => 'panel panel-default'];
 $panelHead = ['class' => 'panel-heading'];
 $panelBody = ['class' => 'panel-body'];
 $formGroup = ['class' => 'form-group'];
-$formControl = ['class' => 'form-control'];
 $helpBlock = ['class' => 'help-block'];
 
 echo H::openTag('div', $row); //1

@@ -33,22 +33,21 @@
         "ext-sodium": "*",
         "ext-zend-opcache": "*",
         "amzn/amazon-pay-api-sdk-php": "^2.7.0",
-        "azjezz/psl": "4.3.0",
         "braintree/braintree_php": "^6.32",
         "brick/math": ">=0.14.8",
         "brick/money": ">=0.11.2",
         "cebe/markdown": "^1.2.1@dev",
         "chillerlan/php-qrcode": "^5.0.5",
         "cycle/annotated": "^4.4.0",
-        "cycle/database": "^2.15.2",
+        "cycle/database": "^2.16.0",
         "cycle/entity-behavior": "^1.7.1",
-        "cycle/orm": "^2.14.3",
+        "cycle/orm": "^2.15.0",
         "cycle/schema-provider": "^1.0",
         "digitalbazaar/json-ld": "^0.4.8",
         "doctrine/collections": ">2.6.0",
         "doctrine/inflector": ">=2.2.0",
         "fakerphp/faker": "^1.24.1",
-        "google/cloud-translate": "^2.1.2",
+        "google/cloud-translate": "^2.2.0",
         "guzzlehttp/guzzle": ">=7.10.0",
         "guzzlehttp/psr7": ">=2.9.0",
         "httpsoft/http-message": "^1.1.6",
@@ -60,7 +59,8 @@
         "php-http/curl-client": "^2.4.0",
         "php-http/guzzle7-adapter": "^1.1",
         "phpbench/phpbench": ">=84",
-        "phpseclib/phpseclib": ">=3.0.49",
+        "phpseclib/phpseclib": ">=3.0.50",
+        "php-standard-library/php-standard-library": ">=5.5",
         "phptg/bot-api": "^0.17",
         "promphp/prometheus_client_php": ">=2.14.1",
         "psalm/plugin-symfony": "^5.3.0",
@@ -132,8 +132,8 @@
         "yiisoft/user": "^2.3.2",
         "yiisoft/validator": "^2.5.1",
         "yiisoft/var-dumper": "^1.7.1",
-        "yiisoft/view": "^12.2.3",
-        "yiisoft/widget": "^2.2.1",
+        "yiisoft/view": "^12.2.4",
+        "yiisoft/widget": "^2.2.2",
         "yiisoft/yii-console": "^2.4.2",
         "yiisoft/yii-cycle": ">=2",
         "yiisoft/yii-dataview": ">=1",
@@ -142,7 +142,7 @@
         "yiisoft/yii-middleware": "^1.1.2",
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
-        "yiisoft/yii-view-renderer": "^7.4.0",
+        "yiisoft/yii-view-renderer": "^7.4.1",
         "zircote/swagger-php": ">=6.0.6"
     },    
     "require-dev": {
@@ -154,14 +154,14 @@
         "friendsofphp/php-cs-fixer": "^3.94.2",
         "guzzlehttp/promises": ">=2.3",
         "phpunit/phpunit": ">=12.5.14",
-        "rector/rector": "^2.3.8",
+        "rector/rector": "^2.3.9",
         "roave/better-reflection": "^6.69",
         "roave/infection-static-analysis-plugin": ">=1.43",
         "roave/security-advisories": "dev-latest",
         "shipmonk/composer-dependency-analyser": "^1.8.4",
         "spatie/phpunit-watcher": ">=1.24.4",
         "squizlabs/php_codesniffer": ">=4.0.1",
-        "vimeo/psalm": "^6.15.1||^7.0.0",
+        "vimeo/psalm": "^6.16.1||^7.0.0",
         "yiisoft/translator-extractor": "^2.1.1"
     },      
     "autoload": {
@@ -173,13 +173,6 @@
         "serve": [
             "Composer\\Config::disableProcessTimeout",
             "./yii serve"
-        ],
-        "post-update-cmd": [
-            "App\\Installer::postUpdate",
-            "App\\Installer::copyEnvFile"
-        ],
-        "post-create-project-cmd": [
-            "App\\Installer::copyEnvFile"
         ],
         "test": "codecept run",
         "test-watch": "phpunit-watcher watch"
@@ -211,6 +204,9 @@
             "php-http/discovery": false
         }
     },
+    "replace": {
+       "azjezz/psl": "*"
+    },
     "repositories": [
     {
         "type": "composer",
@@ -223,10 +219,6 @@
     {
         "type": "vcs",
         "url": "https://github.com/rossaddison/yii-gii"
-    },
-    {
-        "type": "vcs",
-        "url": "https://github.com/rossaddison/yii-sentry"
     }
 ]
 }

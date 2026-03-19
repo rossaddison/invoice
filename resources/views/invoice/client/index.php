@@ -239,7 +239,7 @@ $columns = [
     new DataColumn(
         'client_birthdate',
         header: $translator->translate('birthdate'),
-        content: static function (Client $model) use ($dateHelper): string {
+        content: static function (Client $model): string {
             $clientBirthDate = $model->getClient_birthdate();
             /**
              * Related logic: see App\Invoice\Entity\Client function getClient_birthdate()
@@ -296,7 +296,7 @@ $columns = [
     ),
 ];
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     (int) $s->getSetting('default.list.limit'),
@@ -365,7 +365,7 @@ echo GridView::widget()
 ->id('w34-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'client') . ' ' . $grid_summary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'client') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

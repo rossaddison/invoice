@@ -481,7 +481,7 @@ $columns = [
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
     $defaultPageSizeOffsetPaginator,
@@ -683,7 +683,7 @@ echo $gridView
 /**
  * Related logic: see config/common/params.php `yiisoft/view` => ['parameters' => ['pageSizeLimiter' ... No need to be in quote/index
  */
-->summaryTemplate('<div class="d-flex align-items-center">' . $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') . ' ' . $grid_summary . '</div>')
+->summaryTemplate('<div class="d-flex align-items-center">' . $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'quote') . ' ' . $gridSummary . '</div>')
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

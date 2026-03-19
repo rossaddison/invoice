@@ -78,9 +78,6 @@ use Yiisoft\Html\Tag\Li;
                                 foreach ($health['checks'] as $checkName => $checkData): ?>
                                 <?= Html::openTag('div', ['class' => 'col-md-4 mb-2']) ?>
                                     <?= Html::openTag('div', ['class' => 'd-flex align-items-center']) ?>
-                                        <?php
-                                        $iconClass = 'fas fa-' . ($checkData['status'] === 'ok' ? 'check-circle text-success' : ($checkData['status'] === 'warning' ? 'exclamation-triangle text-warning' : 'times-circle text-danger')) . ' mr-2';
-                                        ?>
                                         <?php $checkNameStr = is_string($checkName) ? $checkName : 'check_' . $checkName; ?>
                                         <?= Html::tag('strong', ucfirst(str_replace('_', ' ', $checkNameStr)) . ':') ?>
                                         <?= Html::tag('span', ($checkData['status'] ?? 'unknown'), ['class' => 'ml-2']) ?>
@@ -152,12 +149,10 @@ use Yiisoft\Html\Tag\Li;
                     <?php if (!empty($metrics)): ?>
                         <div class="row">
                             <?php
-                            $metricType = '';
                             $metricTypes = ['counter' => 0, 'gauge' => 0, 'histogram' => 0, 'summary' => 0];
                             $metricTypesCounter = $metricTypes['counter'];
                             $metricTypesGauge = $metricTypes['gauge'];
                             $metricTypesHistogram = $metricTypes['histogram'];
-                            $metricTypesSummary = $metricTypes['summary'];
 
                             /**
                              * @var array $metric

@@ -143,12 +143,10 @@ final class UploadController extends BaseController
             if ($upload) {
                 $this->uploadService->deleteUpload($upload, $this->sR);
                 $inv_id = (string) $this->session->get('inv_id');
-                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                return $this->factory->createResponse($this->webViewRenderer->renderPartialAsString(
-                    '//invoice/setting/inv_message',
-                    ['heading' => '', 'message' => $this->translator->translate('record.successfully.deleted'), 'url' => 'inv/view', 'id' => $inv_id],
-                ));
-            }
+                $this->flashMessage('info',
+                    $this->translator->translate('record.successfully.deleted'));
+                return $this->webService->getRedirectResponse('inv/view',
+                        ['id' => $inv_id]);            }
             return $this->webService->getRedirectResponse('upload/index');
         } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());

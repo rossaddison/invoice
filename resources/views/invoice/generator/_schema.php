@@ -44,22 +44,21 @@ if (!$isGuest) {
              * @var array $enumValues
              * @var string $enum
              */
-            foreach (($enumValues = $column->getEnumValues()) as $enum) {
-                $temp = $enum;
-                $temp .= " " . $temp;
+            foreach ($column->getEnumValues() as $enum) {
+                $temp .= " " . $enum;
             }
             echo '<td>' . $temp . '</td>';
+            
             $var = '';
 
             /**
              * @var array $columnConstraints
              * @var string $constraint
              */
-            foreach (($columnConstraints = $column->getConstraints()) as $constraint) {
-                $var = $constraint;
-                $var .= " " . $var;
+            foreach ($column->getConstraints() as $constraint) {
+                $var .= " " . $constraint;
             }
-            echo '<td>' . $temp . '</td>';
+            echo '<td>' . $var . '</td>';
             echo '</tr>';
         }
         echo '</tbody>';

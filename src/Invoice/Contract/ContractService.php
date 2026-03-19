@@ -20,16 +20,12 @@ final readonly class ContractService
     /**
      * @param Contract $model
      * @param array $array
-     * @param SR $s
      */
     public function saveContract(
         Contract $model,
-        array $array,
-        SR $s
+        array $array
     ): void {
         $this->persist($model, $array);
-        $datehelper = new DateHelper($s);
-
         $datetime_immutable_period_start = new \DateTimeImmutable();
         $period_start =
             $datetime_immutable_period_start::createFromFormat(

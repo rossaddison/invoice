@@ -361,7 +361,6 @@ final readonly class InvItemService
 
         // If the user has changed the description on the form => override
         // default task description
-        $description = '';
         if (isset($array['description'])) {
             $description = (string) $array['description'];
         } else {
@@ -435,7 +434,6 @@ final readonly class InvItemService
 
         // If the user has changed the description on the form => override
         //  default task description
-        $description = '';
         if (isset($array['description'])) {
             $description = (string) $array['description'];
         } else {
@@ -578,18 +576,14 @@ final readonly class InvItemService
         $discount_total = ($quantity * $discount);
         // Fetch all allowance/charges for this item
         $all_charges = 0.00;
-        $all_charges_vat_or_tax = 0.00;
         $all_allowances = 0.00;
-        $all_allowances_vat_or_tax = 0.00;
         $aciis = $this->aciiR->repoInvItemquery((string)$inv_item_id);
         /** @var \App\Invoice\Entity\InvItemAllowanceCharge $acii */
         foreach ($aciis as $acii) {
             if ($acii->getAllowanceCharge()?->getIdentifier() == '1') {
                 $all_charges += (float) $acii->getAmount();
-                $all_charges_vat_or_tax += (float) $acii->getVatOrTax();
             } else {
                 $all_allowances += (float) $acii->getAmount();
-                $all_allowances_vat_or_tax += (float) $acii->getVatOrTax();
             }
         }
         $ipInvAc = $sub_total + $all_charges - $all_allowances;

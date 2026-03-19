@@ -50,6 +50,10 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p><s>Payment gateway testing on alpine</s></p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p>19th March 2026</p>
+<p>Psalm UnusedVariable code reduction</p>
+<p>Bugfix: Download file attached to invoice. Rbac influencing this.</p>
+<p>Bugfix: Attaching file to invoice workflow factory response replaced with web redirects.</p>
 <p>15th March 2026</p>
 <p>Apply razvbir's https://github.com/yiisoft/html/pull/264 using regex Find:  (\w+)::tag\(\) and Replace:  (new $1())</p>
 <p>Restructured psalm.xml: Find unused code = true. All error types have been categorized

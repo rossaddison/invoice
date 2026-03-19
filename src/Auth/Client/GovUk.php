@@ -180,7 +180,7 @@ class GovUk extends OAuth2
      */
     protected function splitIdTokenIntoJwtHeader(string $id_token): string
     {
-        return $jwtHeader = explode('.', $id_token)[0];
+        return explode('.', $id_token)[0];
     }
 
     /**

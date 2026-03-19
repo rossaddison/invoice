@@ -34,8 +34,6 @@ use Yiisoft\Html\Tag\A;
  * @var string $excluded
  */
 
-$t_charge = $translator->translate('allowance.or.charge.charge');
-$t_allowance = $translator->translate('allowance.or.charge.allowance');
 $vat = $s->getSetting('enable_vat_registration');
 
 echo H::openTag('div');

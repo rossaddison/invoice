@@ -130,7 +130,7 @@ final class CompanyPrivateController extends BaseController
 
                     // Process form data
                     if ($formHydrator->populateAndValidate($form, $body)) {
-                        $this->companyPrivateService->saveCompanyPrivate($company_private, $body, $this->sR);
+                        $this->companyPrivateService->saveCompanyPrivate($company_private, $body);
                         $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                         return $this->webService->getRedirectResponse('companyprivate/index');
                     }
@@ -149,37 +149,26 @@ final class CompanyPrivateController extends BaseController
      * @return bool
      */
     public function file_uploading_errors(
-        string $tmp,
-        string $target_file_name,
-        string $target_public_logo,
-    ): bool {
-        $return = true;
-        if (is_uploaded_file($tmp)) {
-            $return = false;
-        } else {
+    string $tmp,
+    string $target_file_name,
+    string $target_public_logo): bool {
+        if (!is_uploaded_file($tmp)) {
             return true;
         }
-        if (!file_exists($target_file_name)) {
-            $return = false;
-        } else {
+        if (file_exists($target_file_name)) {
             return true;
         }
-        if (!file_exists($target_public_logo)) {
-            $return = false;
-        } else {
+        if (file_exists($target_public_logo)) {
             return true;
         }
-        if (move_uploaded_file($tmp, $target_file_name)) {
-            $return = false;
-        } else {
+        if (!move_uploaded_file($tmp, $target_file_name)) {
             return true;
         }
-        if (copy($target_file_name, $target_public_logo)) {
-            $return = false;
-        } else {
+        if (!copy($target_file_name, $target_public_logo)) {
             return true;
         }
-        return $return;
+
+        return false;
     }
 
     /**
@@ -236,7 +225,7 @@ final class CompanyPrivateController extends BaseController
                     $target_file_name = $targetPath . '/' . $modified_original_file_name;
                     $target_public_logo = $targetPublicPath . '/' . $modified_original_file_name;
                     // Save the body including the logo_filename field
-                    $this->companyPrivateService->saveCompanyPrivate($company_private, $body, $this->sR);
+                    $this->companyPrivateService->saveCompanyPrivate($company_private, $body);
 
                     // Prepare the after save for the logo_filename field
                     $after_save = $companyprivateRepository->repoCompanyPrivatequery((string) $company_private->getId());

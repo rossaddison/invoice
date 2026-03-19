@@ -53,7 +53,7 @@ final class SalesOrderRepository extends Select\Repository
      */
     public function countAllWithUserClient(int $user_id, int $client_id): int
     {
-        return $query = $this->select()
+        return $this->select()
                 ->load(['user', 'client'])
                 ->where(['user.id' => $user_id])
                 ->andWhere(['client.id' => $client_id])

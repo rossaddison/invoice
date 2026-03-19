@@ -82,36 +82,6 @@ $s->getSetting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsse
 $assetManager->register(stripe_v10_Asset::class);
 $assetManager->register(amazon_pay_v2_7_Asset::class);
 $assetManager->register(braintree_dropin_1_33_7_Asset::class);
-// The InvoiceController/index receives the $session->get('_language') or 'drop-down' locale user selection and saves it into a setting called 'cldr'
-// The $s value is configured for the layout in config/params.php yii-soft/view Reference::to and NOT by means of the InvoiceController
-
-$locale = match ($currentRoute->getArgument('_language')) {
-    'af-ZA' => 'AfrikaansSouthAfrican',
-    'ar-BH' => 'ArabicBahrainian',
-    'az' => 'Azerbaijani',
-    'bs' => 'Bosnian',
-    'de' => 'German',
-    'en' => 'English',
-    'fil' => 'Filipino',
-    'fr' => 'French',
-    'id' => 'Indonesian',
-    'it' => 'Italian',
-    'ja' => 'Japanese',
-    'pl-PL' => 'Polish',
-    'pt-BR' => 'PortugeseBrazil',
-    'nl' => 'Dutch',
-    'ru' => 'Russian',
-    'sk' => 'Slovakian',
-    'sl' => 'Slovenian',
-    'es' => 'Spanish',
-    'uk' => 'Ukrainian',
-    'uz' => 'Uzbek',
-    'vi' => 'Vietnamese',
-    'zh-CN' => 'ChineseSimplified',
-    'zh-TW' => 'TiawaneseMandarin',
-    'zu-ZA' => 'ZuluSouthAfrican',
-    default   => 'English',
-};
 
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
@@ -119,8 +89,6 @@ $this->addJsFiles($assetManager->getJsFiles());
 
 $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
-
-$currentRouteName = $currentRoute->getName() ?? '';
 
 $isGuest = $user === null || $user->getId() === null;
 $fontSizeStyle = 'font-size: 1.5rem; color: cornflowerblue;';
@@ -157,7 +125,6 @@ echo NavBar::widget()
     ->brandImageAttributes(['margin' => $companyLogoMargin,
         'width' => $companyLogoWidth,
         'height' => $companyLogoHeight])
-    //->brandText(str_repeat('&nbsp;', 7).$brandLabel)
     ->brandUrl($urlGenerator->generate('site/index'))
     ->class()
     ->container(false)

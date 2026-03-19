@@ -247,7 +247,7 @@ final class DeveloperSandboxHmrc extends OAuth2
      */
     public function getTestUserArray(): array
     {
-        return $testUser = [
+        return [
             'userId' => '341862201113',
             'password' => Random::string(12),
             'userFullName' => 'Fay Izzard',
@@ -335,7 +335,7 @@ final class DeveloperSandboxHmrc extends OAuth2
         $timezone = date_default_timezone_get();
         $dateTimeZone = new DateTimeZone($timezone);
         $offset = $dateTimeZone->getOffset(new DateTime('now', $dateTimeZone)) / 3600;
-        return $formattedOffset = ($offset >= 0 ? 'UTC+' : 'UTC') . sprintf('%02d:00', abs($offset));
+        return ($offset >= 0 ? 'UTC+' : 'UTC') . sprintf('%02d:00', abs($offset));
     }
 
     public function getAuthorizedIpAddressEndpoints(): array

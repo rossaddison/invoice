@@ -6,8 +6,6 @@ namespace App\Invoice\CompanyPrivate;
 
 use App\Invoice\Entity\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository as CR;
-use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Setting\SettingRepository;
 
 final readonly class CompanyPrivateService
 {
@@ -20,17 +18,12 @@ final readonly class CompanyPrivateService
     /**
      * @param CompanyPrivate $model
      * @param array $array
-     * @param SettingRepository $s
      */
     public function saveCompanyPrivate(
-        CompanyPrivate $model,
-        array $array,
-        SettingRepository $s
-    ): void {
+        CompanyPrivate $model, array $array): void {
         $this->persist($model, $array);
         isset($array['company_id']) ?
             $model->setCompany_id((int) $array['company_id']) : '';
-
         isset($array['vat_id']) ?
             $model->setVat_id((string) $array['vat_id']) : '';
         isset($array['tax_code']) ?
@@ -50,23 +43,18 @@ final readonly class CompanyPrivateService
             $model->setLogo_height((int) $array['logo_height']) : '';
         isset($array['logo_margin']) ?
             $model->setLogo_margin((int) $array['logo_margin']) : '';
-
-        $datehelper = new DateHelper($s);
-
         $datetime_start_date = new \DateTime();
         isset($array['start_date']) ?
             $model->setStart_date(
                 $datetime_start_date::createFromFormat(
                     'Y-m-d',
                     (string) $array['start_date'])) : '';
-
         $datetime_end_date = new \DateTime();
         isset($array['end_date']) ?
             $model->setEnd_date(
                 $datetime_end_date::createFromFormat(
                     'Y-m-d',
                     (string) $array['end_date'])) : '';
-
         $this->repository->save($model);
     }
 

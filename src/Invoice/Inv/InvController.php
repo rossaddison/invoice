@@ -186,6 +186,7 @@ final class InvController extends BaseController
                     $this->sR->get_invoice_archived_files_with_filter('');
             $flash_message = '';
         }
+        $this->flashMessage('info', $flash_message);
         $parameters = [
             'partial_inv_archive' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/inv/partial_inv_archive',
@@ -244,41 +245,28 @@ final class InvController extends BaseController
         return false;
     }
 
-    private function attachment_not_writable(int $inv_id): string
+    private function attachment_not_writable(int $inv_id): Response
     {
-        return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            [
-                'heading' => $this->translator->translate('errors'),
-                'message' => $this->translator->translate('path')
-                             . $this->translator->translate('is.not.writable'),
-                'url' => 'inv/view', 'id' => $inv_id,
-            ],
-        );
+        $this->flashMessage('danger', $this->translator->translate('path')
+                . $this->translator->translate('is.not.writable'));
+        return $this->webService->getRedirectResponse('inv/view',
+                ['id' => $inv_id]);
     }
 
-    private function attachment_successfully_created(int $inv_id): string
+    private function attachment_successfully_created(int $inv_id): Response
     {
-        return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            [
-                'heading' => '',
-                'message' =>
-                $this->translator->translate('record.successfully.created'),
-                'url' => 'inv/view', 'id' => $inv_id],
-        );
+        $this->flashMessage('success',
+                $this->translator->translate('record.successfully.created'));
+        return $this->webService->getRedirectResponse('inv/view',
+                ['id' => $inv_id]);
     }
 
-    private function attachment_no_file_uploaded(int $inv_id): string
+    private function attachment_no_file_uploaded(int $inv_id): Response
     {
-        return $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            [
-                'heading' => $this->translator->translate('errors'),
-                'message' => $this->translator->translate('no.file.uploaded'),
-                'url' => 'inv/view', 'id' => $inv_id,
-            ],
-        );
+        $this->flashMessage('warning',
+                $this->translator->translate('no.file.uploaded'));
+        return $this->webService->getRedirectResponse('inv/view',
+                ['id' => $inv_id]);
     }
 
     public function attachment(#[RouteArgument('id')] int $inv_id, IR $iR,
@@ -288,8 +276,7 @@ final class InvController extends BaseController
         $targetPath = $aliases->get('@customer_files');
         if ($inv_id) {
             if (!is_writable($targetPath)) {
-                return $this->factory->createResponse(
-                        $this->attachment_not_writable($inv_id));
+                return $this->attachment_not_writable($inv_id);
             }
             $invoice = $iR->repoInvLoadedquery((string) $inv_id) ?: null;
             if ($invoice instanceof Inv) {
@@ -314,15 +301,12 @@ $original_file_name = preg_replace(
                                     $target_path_with_filename, $client_id,
                                         $url_key,
                                     $original_file_name, $uPR)) {
-                                return $this->factory->createResponse(
-                                 $this->attachment_successfully_created($inv_id));
+                                return $this->attachment_successfully_created($inv_id);
                             }
-                            return $this->factory->createResponse(
-                                $this->attachment_no_file_uploaded($inv_id));
+                            return $this->attachment_no_file_uploaded($inv_id);
                         }
                     } else {
-                        return $this->factory->createResponse(
-                                $this->attachment_no_file_uploaded($inv_id));
+                        return $this->attachment_no_file_uploaded($inv_id);
                     }
                 } // $client_id
             } // $invoice
@@ -397,39 +381,6 @@ $original_file_name = preg_replace(
             $ucR,
             $form,
         );
-
-        $layoutWithForm =
-            $bootstrap5ModalInv->renderPartialLayoutWithFormAsString(
-                $origin, $errors);
-        $layoutParameters = [];
-        $parametersNonModalForm = [];
-        // do not use a modal from main menu selection and dashboard selection
-        if (($origin == 'main') || ($origin == 'dashboard')) {
-            $parametersNonModalForm = [
-                'form' => $bootstrap5ModalInv->getFormParameters(),
-                'return_url_action' => 'add',
-            ];
-        }
-        // use a modal from the invoice view
-        if ($origin == 'inv') {
-            $layoutParameters = [
-                // use type to id the quote\modal_layout.php eg.
-                // ->options(['id' => 'modal-add-'.$type,
-                'type' => 'inv',
-                'form' => $layoutWithForm,
-                'return_url_action' => 'add',
-            ];
-        }
-        // otherwise it will be a client number
-        // use a modal from the client view
-        if (($origin != 'main') && ($origin != 'inv')
-                && ($origin != 'dashboard')) {
-            $layoutParameters = [
-                'type' => 'client',
-                'form' => $layoutWithForm,
-                'return_url_action' => 'add',
-            ];
-        }
         // An invoice can originate and be added from the following pages:
         // 1. Main Menu e.g /invoice
         // 2. Client Menu e.g. /invoice/client/view/25
@@ -451,13 +402,7 @@ $original_file_name = preg_replace(
                     $user_client = $ucR->repoUserquery($client_id);
                     if (null !== $user_client && null !==
                             $user_client->getClient()) {
-                        $client_first_name =
-                            $user_client->getClient()?->getClient_name();
-                        $client_surname =
-                            $user_client->getClient()?->getClient_surname();
-                        $client_fullname = ($client_first_name ?? '')
-                                         . ' '
-                                         . ($client_surname ?? '');
+                        // no warning necessary a user client relationship exists
                     } else {
                         $this->flashMessage('danger',
                             $clientRepository->repoClientquery(
@@ -467,7 +412,7 @@ $original_file_name = preg_replace(
                     }
 // Ensure that the client has only one (paying) user account otherwise reject
 // this invoice
-// Related logic: see UserClientRepository function 
+// Related logic: see UserClientRepository function
 // get_not_assigned_to_user which ensures that only clients that have   NOT
 // been assigned to a user account are presented in the dropdown box for
 // available clients. So this line is an extra measure to ensure that the
@@ -670,7 +615,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                     } //null!==$user
                     // In the event of the database being manually edited
                     // (highly unlikely) present this warning anyway
-                    $message = '';
                     if (!empty($client_fullname)) {
                         $message = $this->translator->translate(
                             'user.inv.more.than.one.assigned')
@@ -926,7 +870,9 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
                 $url_key = $upload->getUrl_key();
                 $inv = $iR->repoUrl_key_guest_loaded($url_key);
                 if (null!==$inv) {
-                    if (!($this->rbacObserver($inv, $ucR, $uiR))) {
+                    if (($this->rbacObserver($inv, $ucR, $uiR))
+                        || ($this->rbacAdmin())) {
+                    } else {
                         exit;
                     }
                 }
@@ -1002,7 +948,6 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
 
     private function editInputAttributesPaymentMethod(InvForm $form): array
     {
-        $inputAttributesPaymentMethod = [];
         if ($form->getIsReadOnly() == true && $form->getStatus_id() == 4) {
             $inputAttributesPaymentMethod = [
                 'class' => 'form-control',
@@ -1132,7 +1077,7 @@ $user = $this->active_user($client_id, $uR, $ucR, $uiR);
         foreach ($invRepo->getStatuses($this->translator) as $key => $status) {
             $optionsDataInvoiceStatus[$key] = (string) $status['label'];
         }
-        return $optionsData = [
+        return [
             'client' => $clientRepo->optionsData($ucR),
             'contract' => $optionsDataContract,
             'delivery' => $optionsDataDelivery,
@@ -2887,7 +2832,6 @@ echo file_get_contents($temp_aliase, true);
          * @var InvItem $inv_item
          */
         foreach ($items as $inv_item) {
-            $copy_item = [];
             $copy_item = [
                 // Follow sequence of InvItem construct
                 //id
@@ -2941,15 +2885,6 @@ echo file_get_contents($temp_aliase, true);
                             $this->inv_item_service->addInvItem_allowance_charges(
                                 $copy_id, $originalInvItemId, $newInvItemId,
                                     $aciiR);
-                            // build a total of the existing inv item allowance
-                            // or charges to be included in the new copy's
-                            // inv item amount record
-                            $accumulativeChargeTotal =
-                            $this->inv_item_service->accumulativeChargeTotal(
-                                    $newInvItemId, $aciiR);
-                            $accumulativeAllowanceTotal =
-                            $this->inv_item_service->accumulativeAllowanceTotal(
-                                    $newInvItemId, $aciiR);
                             if (($invItem->getQuantity() >=  0.00)
                                 && ($invItem->getPrice() >= 0.00)
                                 && ($invItem->getDiscount_amount() >= 0.00)
@@ -2976,13 +2911,6 @@ echo file_get_contents($temp_aliase, true);
                         if (null !== $newInvItemId) {
                             $this->inv_item_service->addInvItem_allowance_charges(
                             $copy_id, $originalInvItemId, $newInvItemId, $aciiR);
-                            // build a total of the existing inv item allowance or charges to be included in the new copy's inv item amount record
-                            $accumulativeChargeTotal =
-                            $this->inv_item_service->accumulativeChargeTotal(
-                                $newInvItemId, $aciiR);
-                            $accumulativeAllowanceTotal =
-                            $this->inv_item_service->accumulativeAllowanceTotal(
-                                $newInvItemId, $aciiR);
                             if (($invItem->getQuantity() >=  0.00)
                                 && ($invItem->getPrice() >= 0.00)
                                 && ($invItem->getDiscount_amount() >= 0.00)
@@ -3002,7 +2930,7 @@ echo file_get_contents($temp_aliase, true);
                         }
                     }
                 } else {
-                    if (!empty($errors =
+                    if (!empty(
                         $form->getValidationResult()
                              ->getErrorMessagesIndexedByProperty())) {
                         $this->flashMessage('danger',
@@ -3186,7 +3114,6 @@ echo file_get_contents($temp_aliase, true);
          * @var array $data['keylist']
          */
         $keyList = $data['keylist'] ?? [];
-        $datetimeCreated = new \DateTimeImmutable();
         if (!empty($keyList)) {
             /**
              * @var string $key
@@ -3196,7 +3123,6 @@ echo file_get_contents($temp_aliase, true);
                 $invId = $value;
                 $original = $iR->repoInvUnloadedquery($invId);
                 if ($original) {
-                    $group_id = $original->getGroup_id();
                     $invoice_body = [
                         'client_id' => $original->getClient_id(),
                         'group_id' => $original->getGroup_id(),
@@ -4004,7 +3930,6 @@ echo file_get_contents($temp_aliase, true);
             $invAllowanceCharge = new InvAllowanceCharge();
             $invAllowanceChargeForm =
                 new InvAllowanceChargeForm($invAllowanceCharge, (int) $invoice);
-            $is_recurring = false;
             $read_only = $inv->getIs_read_only();
             $this->session->set('inv_id', $inv->getId());
             $this->number_helper->calculate_inv(
@@ -4510,7 +4435,6 @@ echo file_get_contents($temp_aliase, true);
         // Get the setting_id to allow for editing
         $setting = $this->sR->withKey('generate_invoice_number_for_draft');
         $setting_url = '';
-        $setting_id = '';
         if (null !== $setting) {
             $setting_id = $setting->getSetting_id();
             // The route name has been simplified and differs from the action
@@ -4542,7 +4466,6 @@ echo file_get_contents($temp_aliase, true);
         // Get the setting_id to allow for editing
         $setting = $this->sR->withKey('mark_invoices_sent_copy');
         $setting_url = '';
-        $setting_id = '';
         if (null !== $setting) {
             $setting_id = $setting->getSetting_id();
             $setting_url = $this->url_generator->generate('setting/mark_sent',

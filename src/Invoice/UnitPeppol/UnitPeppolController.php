@@ -113,7 +113,7 @@ final class UnitPeppolController extends BaseController
         $parameters = [
             'alert' => $this->alert(),
             'unitpeppols' => $this->unitpeppols($unitpeppolRepository),
-            'grid_summary' => $this->sR->grid_summary(
+            'gridSummary' => $this->sR->gridSummary(
                 $paginator,
                 $this->translator,
                 (int) $this->sR->getSetting('default_list_limit'),

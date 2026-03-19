@@ -205,7 +205,6 @@ use Yiisoft\Html\Html;
                     </thead>
                     <tbody>
                     <?php
-                        $i = 1;
                         /**
                          * @var array $total
                          */
@@ -224,8 +223,8 @@ use Yiisoft\Html\Html;
                                 </span>
                             </td>
                         </tr>
-                    <?php $i = $i + 1;
-} ?>                </tbody>
+                    <?php } ?>
+                    </tbody>
                 </table>
             </div>
         </div>

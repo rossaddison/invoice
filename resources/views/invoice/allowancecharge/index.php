@@ -163,7 +163,7 @@ $columns = [
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $paginator,
     $translator,
     $defaultPageSizeOffsetPaginator,
@@ -189,7 +189,7 @@ echo GridView::widget()
     ->id('w3-grid')
     ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
     ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-    ->summaryTemplate($grid_summary)
+    ->summaryTemplate($gridSummary)
     ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
     ->noResultsText($translator->translate('no.records'))
     ->toolbar($toolbarString);

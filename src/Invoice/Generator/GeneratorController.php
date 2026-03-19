@@ -152,10 +152,17 @@ class GeneratorController extends BaseController
             throw new GoogleTranslateDiffEmptyException();
         }
 
-        $content = '<?php declare(strict_types=1); $lang = ' . var_export($diff, true) . ';';
-        $diffFileLocation = $this->aliases->get('@English') . DIRECTORY_SEPARATOR . 'diff_lang.php';
+        $content = '<?php declare(strict_types=1); $lang = '
+                . var_export($diff, true)
+                . ';';
+        $diffFileLocation = $this->aliases->get('@English')
+                . DIRECTORY_SEPARATOR . 'diff_lang.php';
         file_put_contents($diffFileLocation, $content);
-        $this->flashMessage('success', $fileEnAppPath . ' minus ' . $targetLangFileAppPath . ' at ' . $diffFileLocation);
+        $this->flashMessage('success', $fileEnAppPath
+                . ' minus '
+                . $targetLangFileAppPath
+                . ' at '
+                . $diffFileLocation);
     }
 
     /**
@@ -1131,7 +1138,8 @@ class GeneratorController extends BaseController
      */
     private function getContent(View $view, Gentor $generator, \Yiisoft\Data\Reader\DataReaderInterface $relations, \Cycle\Database\TableInterface $orm_schema, string $file): string
     {
-        return $content = $view->render('//invoice/generator/templates_protected/' . $file, ['generator' => $generator,
+        return $view->render('//invoice/generator/templates_protected/'
+                . $file, ['generator' => $generator,
             'relations' => $relations,
             'orm_schema' => $orm_schema,
             'body' => $this->body($generator)]);

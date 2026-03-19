@@ -546,7 +546,7 @@ final class SettingRepository extends Select\Repository
             /**
              * @psalm-var positive-int $positiveInt
              */
-            return $positiveInt = $defaultListLimit;
+            return $defaultListLimit;
         }
         return  1;
     }
@@ -648,7 +648,7 @@ final class SettingRepository extends Select\Repository
         $aliases = $yiisoftAliases['aliases'];
         /** @var array<string, string> $aliases */
         $allAliases = new Aliases($aliases);
-        return $specificAliase = $allAliases->get($key);
+        return $allAliases->get($key);
     }
 
     /**
@@ -2241,7 +2241,6 @@ final class SettingRepository extends Select\Repository
         $tooltip = $this->tooltip_array();
         $why = '';
         $where = '';
-        $reference = '';
         /**
          * @var array $value
          * @var string $key
@@ -2258,9 +2257,6 @@ final class SettingRepository extends Select\Repository
                     }
                     if ($_key === 'where') {
                         $where = $_value;
-                    }
-                    if ($_key === 'reference') {
-                        $reference = $_value;
                     }
                 }
             }
@@ -2631,7 +2627,7 @@ final class SettingRepository extends Select\Repository
      * @param string $status_string
      * @return string
      */
-    public function grid_summary(
+    public function gridSummary(
         OffsetPaginator $paginator, TranslatorInterface $translator,
                 int $max, string $entity_plural, string $status_string): string
     {

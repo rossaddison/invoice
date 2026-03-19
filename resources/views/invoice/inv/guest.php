@@ -67,7 +67,7 @@ $toolbarReset =  new A()
     ->id('btn-reset')
     ->render();
 
-$toolbar =  new Div();
+echo new Div();
 
 /**
  * @var ColumnInterface[] $columns
@@ -169,7 +169,7 @@ $columns = [
                 ['class' => 'btn-group', 'role' => 'group']),    
         buttons: [
             new ActionButton(
-                url: static function (Inv $inv) use ($translator, $urlGenerator): string {
+                url: static function (Inv $inv) use ($urlGenerator): string {
                     return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf',
                             ['id' => $inv->getId()]);
                 },
@@ -182,7 +182,7 @@ $columns = [
                 ],
             ),
             new ActionButton(
-                url: static function (Inv $inv) use ($translator, $urlGenerator):
+                url: static function (Inv $inv) use ($urlGenerator):
                 string {
                     return $urlGenerator->generate('inv/pdf_dashboard_include_cf',
                             ['id' => $inv->getId()]);
@@ -331,8 +331,7 @@ $columns = [
     new DataColumn(
         'date_due',
         header: $translator->translate('due.date'),
-        content: static function (Inv $model) use ($dateHelper):
-                                                    Yiisoft\Html\Tag\CustomTag {
+        content: static function (Inv $model): Yiisoft\Html\Tag\CustomTag {
             $now = new \DateTimeImmutable('now');
             return Html::tag('label')
                     ->attributes([
@@ -422,7 +421,7 @@ $toolbarString =  new Form()->post(
                 )->encode(false)->render()
         .  new Form()->close();
 
-$grid_summary = $s->grid_summary(
+$gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
     !empty($userInvListLimit) ? $userInvListLimit : 10,
@@ -461,7 +460,7 @@ echo GridView::widget()
     ->summaryTemplate(($viewInv
                        ? $pageSizeLimiter::buttonsGuest(
                                  $userInv, $urlGenerator, $translator, 'inv',                                                       $defaultPageSizeOffsetPaginator) : '') . ' '
-                       . $grid_summary)
+                       . $gridSummary)
     ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
     ->noResultsText($translator->translate('no.records'))
     ->toolbar($toolbarString);

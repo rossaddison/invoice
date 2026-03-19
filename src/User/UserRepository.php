@@ -60,19 +60,6 @@ final class UserRepository extends Select\Repository
     }
 
     /**
-     * @param array $scope
-     * @param array $orderBy
-     * @return EntityReader
-     */
-    public function findAllUsers(array $scope = [], array $orderBy = []): EntityReader
-    {
-        return new EntityReader($this
-            ->select()
-            ->where($scope)
-            ->orderBy($orderBy));
-    }
-
-    /**
      * @param string $email
      *
      * @return User|null

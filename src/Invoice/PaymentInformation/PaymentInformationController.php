@@ -371,7 +371,6 @@ final class PaymentInformationController
         $url_key        = $currentRoute->getArgument('url_key');
         $query_params   = $request->getQueryParams();
         $code           = (string) $query_params['code'];
-        $state          = (string) $query_params['state'];
         $codeVerifier   = (string) $this->session->get('code_verifier');
         $provider       = $this->sR->getSetting('open_banking_provider');
         $providerConfig = $provider ?
@@ -391,18 +390,6 @@ final class PaymentInformationController
 
             // Exchange code for token
             try {
-                $token = $this->openBankingOauthClient->fetchAccessTokenWithCodeVerifier(
-                    $request,
-                    $code,
-                    [
-                        'redirect_uri'  =>
-                        $this->urlGenerator->generateAbsolute(
-                                'paymentinformation/openbanking_oauth_complete',
-                                ['url_key' => $url_key]),
-                        'code_verifier' => $codeVerifier,
-                    ],
-                );
-                // You now have $token, proceed with further Open Banking API
                 //  calls (e.g., to initiate payment)
 
                 $this->flashMessage('success', 'Open Banking authentication successful.');
@@ -475,7 +462,6 @@ final class PaymentInformationController
             if (null !== $url_key) {
                 $sandbox_url_array = $this->sR->sandbox_url_array();
                 $d                 = strtolower($client_chosen_gateway);
-                $datehelper        = new DateHelper($this->sR);
                 // initialize disable_form variable
                 $disable_form = false;
                 $invoice      = $this->iR->repoUrl_key_guest_loaded($url_key);
@@ -537,9 +523,7 @@ final class PaymentInformationController
                     if ($balance > 0 && $total > 0) {
                         $payment_method_name = null !== $payment_method_for_this_invoice
                             ? ($payment_method_for_this_invoice->getName() ?? '')
-                            : '';
-                        $payment_method =
-                            $this->sR->mollieSupportedPaymentMethodArray();
+                            : '';                        
                         return $this->pciCompliantGatewayInForms(
                             $d,
                             $request,
@@ -1112,8 +1096,6 @@ final class PaymentInformationController
     {
         // Redirect to the invoice using the url key
         $url_key               = $currentRoute->getArgument('url_key');
-        $heading               = '';
-        $payment_method        = 1;
         $metadataInvoiceUrlKey = '';
         if (null !== $url_key) {
             $sandbox_url_array = $this->sR->sandbox_url_array();
@@ -1228,7 +1210,6 @@ final class PaymentInformationController
 //    4 Card / Direct-debit - Succeeded,
 //     5 Card / Direct-debit - Processing,
 //      6 Card / Direct-debit - Customer Ready
-                    $payment_method = 5;
                     $invoice->setPayment_method(5);
                     $heading = sprintf(
                         $this->translator->translate(
