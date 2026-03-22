@@ -389,9 +389,83 @@ find /var/www/invoice -user root -not -path "*/vendor/*" -ls
 
 ---
 
+## Controller Cleanup — Redundant Constructor Assignments
+
+As part of the refactoring that accompanied the RBAC mutation fix, several Auth
+controllers were found to have redundant constructor property assignments and
+missing `readonly` modifiers. These are unrelated to RBAC but were introduced
+during the same session and are documented here for completeness.
+
+**Pattern to avoid:**
+
+```php
+// ❌ Redundant — constructor promotion already assigns these
+public function __construct(
+    private Translator $translator,
+    private LoggerInterface $logger,
+) {
+    $this->translator = $translator; // unnecessary
+    $this->logger = $logger;         // unnecessary
+}
+```
+
+**Correct pattern:**
+
+```php
+// ✅ Promoted properties with readonly — no reassignment needed
+public function __construct(
+    private readonly Translator $translator,
+    private readonly LoggerInterface $logger,
+) {
+    // Only reassign when withControllerName() returns a new instance
+    $this->webViewRenderer = $webViewRenderer->withControllerName('auth');
+}
+```
+
+**Controllers fixed:**
+
+- `ResetPasswordController` — redundant assignments removed, properties marked
+  `readonly`, double-translate bug fixed (`translate(translate(...))`)
+- `ForgotPasswordController` — redundant assignments removed, properties marked
+  `readonly`, unused `Permissions` and `uiR` imports removed
+- `ChangePasswordController` — redundant assignments removed, unused `Session`
+  injection removed, unused `Identity` import removed, properties marked
+  `readonly`
+- `SignupController` — `Manager` now injected directly instead of being
+  constructed manually from `Assignment`, `ItemStorage` and `Rule`;
+  `assignRoleAndVerify()` guard added
+
+**The `SignupController` change is the most significant** — it previously
+constructed `Manager` manually:
+
+```php
+// ❌ Old — manual construction, Assignment/ItemStorage/Rule all injected
+public function __construct(
+    private Assignment $assignment,
+    private ItemStorage $itemstorage,
+    Rule $rule,
+    // ...
+) {
+    $this->manager = new Manager($this->itemstorage, $this->assignment, $rule);
+}
+```
+
+```php
+// ✅ New — Manager injected directly, matches AuthController pattern
+public function __construct(
+    private readonly Manager $manager,
+    // ...
+) {
+}
+```
+
+This aligns `SignupController` with how `AuthController` already uses the
+`Manager` and removes three unnecessary constructor dependencies.
+
+---
+
 ## Things Still To Do
 
-- Remove all temporary `LogLevel::INFO` debug lines added during diagnosis
 - Remove `LoggerInterface` from `BaseController` if not needed permanently
 - Switch from `PhpManager` to `DbManager` to eliminate file permission
   fragility permanently — assignments stored in the database cannot be broken

@@ -23,22 +23,23 @@ final class ResetPasswordController
     public const string REQUEST_PASSWORD_RESET_TOKEN = 'request-password-reset';
 
     public function __construct(
-        private WebControllerService $webService,
+        private readonly WebControllerService $webService,
         private WebViewRenderer $webViewRenderer,
-        private UrlGenerator $urlGenerator,
-        private TranslatorInterface $translator,
-        private LoggerInterface $logger,
+        private readonly UrlGenerator $urlGenerator,
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->webService = $webService;
-        $this->webViewRenderer = $webViewRenderer->withControllerName('resetpassword');
-        $this->urlGenerator = $urlGenerator;
-        $this->translator = $translator;
-        $this->logger = $logger;
+        // withControllerName returns a new instance so reassignment is needed
+        $this->webViewRenderer = $webViewRenderer->withControllerName(
+            'resetpassword');
     }
 
     /**
-     * Note: After the user has clicked on their inbox link, the returned masked token will be unmasked. Only once the
-     * 32bit random string has been compared with the unmasked request-password-reset token is the resetPasswordForm presented to the user
+     * Note: After the user has clicked on their inbox link, the returned
+     *  masked token will be unmasked. Only once the
+     *  32bit random string has been compared with the unmasked
+     *  request-password-reset token, is the resetPasswordForm presented
+     *  to the user
      * @param string $maskedToken
      * @param FormHydrator $formHydrator
      * @param ServerRequestInterface $request
@@ -61,39 +62,58 @@ final class ResetPasswordController
         if ($positionFromUnderscore > -1) {
             $timestamp = substr($unMaskedToken, $positionFromUnderscore + 1);
             $lengthTimeStamp = strlen($timestamp);
-            $tokenRandomStringOnly = substr($unMaskedToken, 0, -($lengthTimeStamp + 1));
+            $tokenRandomStringOnly = substr($unMaskedToken,
+                0, -($lengthTimeStamp + 1));
             if ((int) $timestamp + 3600 >= time()) {
-                $identity = $tR->findIdentityByToken($tokenRandomStringOnly, self::REQUEST_PASSWORD_RESET_TOKEN);
+                $identity = $tR->findIdentityByToken(
+                    $tokenRandomStringOnly,
+                    self::REQUEST_PASSWORD_RESET_TOKEN);
                 if (null !== $identity) {
-                    if (null !== ($user = $identity->getUser()) && null !== ($identityId = $identity->getId())) {
-                        if ($formHydrator->populateFromPostAndValidate($resetPasswordForm, $request)) {
-                            /**
-                             * Following algorithm:
-                             * 1.) setPassword in User
-                             * 2.) nullify PasswordResetToken by setting the Token:token to null but retaining the Token:type
-                             *     so that the token(Random::string(32)) for this type can be reset
-                             * 3.) generateAuthKey in Identity
-                             * Related logic: see https://github.com/yiisoft/yii2-app-advanced/blob/master/frontend/models/ResetPasswordForm.php
-                             */
-                            //1.)
-                            $user->setPassword($resetPasswordForm->getNewPassword());
-                            //2.)
-                            $tokenRecord = $tR->findTokenByIdentityIdAndType($identityId, self::REQUEST_PASSWORD_RESET_TOKEN);
+                    if (null !== ($user = $identity->getUser())
+                        && null !== ($identityId = $identity->getId())) {
+                        if ($formHydrator->populateFromPostAndValidate(
+                                $resetPasswordForm, $request)) {
+/**
+ * Following algorithm:
+ * 1.) setPassword in User
+ * 2.) nullify PasswordResetToken by setting the Token:token to null but
+ *     retaining the Token:type
+ *     so that the token(Random::string(32)) for this type can be reset
+ * 3.) generateAuthKey in Identity
+ * Related logic: see https://github.com/yiisoft/yii2-app-advanced/blob/master/
+ *  frontend/models/ResetPasswordForm.php
+ */
+                            // 1.)
+                            $user->setPassword(
+                                $resetPasswordForm->getNewPassword());
+                            // 2.)
+                            $tokenRecord = $tR->findTokenByIdentityIdAndType(
+                                $identityId,
+                                self::REQUEST_PASSWORD_RESET_TOKEN);
                             if (null !== $tokenRecord) {
                                 $tokenRecord->setToken('');
                                 $tR->save($tokenRecord);
-                                //3.)
+                                // 3.)
                                 $identity->generateAuthKey();
                                 $idR->save($identity);
                             }
-                            return $this->webService->getRedirectResponse('site/resetpasswordsuccess');
+                            return $this->webService->getRedirectResponse(
+                                'site/resetpasswordsuccess');
                         }
-                        return $this->webViewRenderer->render('resetpassword', ['formModel' => $resetPasswordForm, 'token' => $maskedToken]);
+                        return $this->webViewRenderer->render(
+                            'resetpassword',
+                            [
+                                'formModel' => $resetPasswordForm,
+                                'token' => $maskedToken,
+                            ]
+                        );
                     }
                 }
             }
         }
-        $this->logger->error($this->translator->translate($this->translator->translate('password.reset.failed')));
+        // ✅ Translate once — original code translated twice (bug)
+        $this->logger->error(
+            $this->translator->translate('password.reset.failed'));
         return $this->webService->getRedirectResponse('site/resetpasswordfailed');
     }
 }
