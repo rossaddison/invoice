@@ -50,6 +50,8 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p><s>Payment gateway testing on alpine</s></p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p>22nd March 2026</p>
+<p>Avoiding RBAC Mutation: see md</p>
 <p>19th March 2026</p>
 <p>Psalm UnusedVariable code reduction</p>
 <p>Php8.4 Setup - md created. yii3i.online converted to php8.4</p>

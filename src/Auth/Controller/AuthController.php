@@ -243,7 +243,7 @@ final class AuthController
                     if (null !== $user) {
                         // if using two-factor-authentication
                         if ($this->sR->getSetting('enable_tfa') == '1') {
-                            $this->tfaIsEnabledBlockBaseController($userId);
+                            $this->tfaIsEnabledBlockBaseController();
                             $enabled = $user->is2FAEnabled();
                             // setup if not enabled already
                             if ($enabled == false) {
@@ -256,7 +256,7 @@ final class AuthController
                             return $this->webService->getRedirectResponse(
                                         'auth/verifyLogin');
                         }
-                        $this->tfaNotEnabledUnblockBaseController($userId);
+                        $this->tfaNotEnabledUnblockBaseController();
 /**
  * Related logic: see UserInvController function signup where the userinv
  * active field is made active i.e. true upon a positive email verification
@@ -280,6 +280,7 @@ final class AuthController
                             }
 // Regenerate session ID on successful login
                             $this->session->regenerateId();
+		            $this->session->set('tfa_verified', true);		
                             if ($identity instanceof CookieLoginIdentityInterface
                                     && $loginForm->getPropertyValue('rememberMe')) {
                                 return $cookieLogin->addCookie($identity,
@@ -651,16 +652,10 @@ final class AuthController
             $this->session->clear();
             return;
         }
-        $notbc = Permissions::NO_ENTRY_TO_BASE_CONTROLLER;
-        $etbc = Permissions::ENTRY_TO_BASE_CONTROLLER;
         $this->session->remove('pending_2fa_user_id');
         $this->session->remove('backup_recovery_codes');
         $this->session->remove('verified_2fa_user_id');
-        $roles = $this->manager->getRolesByUserId($verifiedUserId);
-        foreach ($roles as $role) {
-            $this->manager->removeChild($role->getName(), $notbc);
-            $this->manager->addChild($role->getName(), $etbc);
-        }
+        $this->session->set('tfa_verified', true);
     }
 
     /**
@@ -845,24 +840,10 @@ final class AuthController
             }
             $this->session->remove('verified_2fa_user_id');
         }
-
-        if (null !== $userId) {
-            if ($this->manager->userHasPermission(
-                    $userId, Permissions::ENTRY_TO_BASE_CONTROLLER)) {
-                $roles = $this->manager->getRolesByUserId($userId);
-                foreach ($roles as $role) {
-                    $this->manager->removeChild(
-                        $role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
-                }
-            }
-        }
-
-        // Secure cleanup of session data
-        $this->secureClearSensitiveData();
-
-        // Clear all session data completely for security
+         // prevent session fixation 
+        $this->session->regenerateId();
+        // Current — only clears data, keeps session alive
         $this->session->clear();
-
         $this->authService->logout();
         return $this->redirectToMain();
     }
@@ -873,54 +854,14 @@ final class AuthController
         return $this->webService->getRedirectResponse('auth/verifyLogin');
     }
 
-    private function tfaIsEnabledBlockBaseController(string $userId): void
+    private function tfaIsEnabledBlockBaseController(): void
     {
-        // see config/common/routes.php Permissions::ENTRY_TO_BASE_CONTROLLER
-        // Prevent access to the BaseController during tfa with an additional
-        // permission Permissions::NO_ENTRY_TO_BASE_CONTROLLER
-        // which has been incorporated in the BaseController
-        // Replace this permission with Permissions::ENTRY_TO_BASE_CONTROLLER
-        // on completion
-        if (!$this->manager->userHasPermission(
-                $userId, Permissions::NO_ENTRY_TO_BASE_CONTROLLER)) {
-            $roles = $this->manager->getRolesByUserId($userId);
-            foreach ($roles as $role) {
-                $this->manager->addChild(
-                    $role->getName(), Permissions::NO_ENTRY_TO_BASE_CONTROLLER);
-            }
-        }
-        if ($this->manager->userHasPermission(
-                   $userId, Permissions::ENTRY_TO_BASE_CONTROLLER)) {
-            $roles = $this->manager->getRolesByUserId($userId);
-            foreach ($roles as $role) {
-                $this->manager->removeChild(
-                    $role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
-            }
-        }
+        $this->session->set('tfa_verified', false);
     }
 
-    private function tfaNotEnabledUnblockBaseController(string $userId): void
+    private function tfaNotEnabledUnblockBaseController(): void
     {
-        // If tfa is not being used, the Permissions::NO_ENTRY_TO_BASE_CONTROLLER
-        // must be removed
-        if ($this->manager->userHasPermission(
-                $userId, Permissions::NO_ENTRY_TO_BASE_CONTROLLER)) {
-            $roles = $this->manager->getRolesByUserId($userId);
-            foreach ($roles as $role) {
-                $this->manager->removeChild(
-                    $role->getName(), Permissions::NO_ENTRY_TO_BASE_CONTROLLER);
-            }
-        }
-        // If tfa is not being used, the Permissions::ENTRY_TO_BASE_CONTROLLER
-        // permission can be added now
-        if (!$this->manager->userHasPermission(
-                $userId, Permissions::ENTRY_TO_BASE_CONTROLLER)) {
-            $roles = $this->manager->getRolesByUserId($userId);
-            foreach ($roles as $role) {
-                $this->manager->addChild(
-                        $role->getName(), Permissions::ENTRY_TO_BASE_CONTROLLER);
-            }
-        }
+        $this->session->set('tfa_verified', true);
     }
 
     private function redirectToMain(): ResponseInterface

@@ -11,7 +11,8 @@ use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 
 trait Oauth2
 {
-    public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
+    public const string DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN =
+            'developersandboxhmrc-access';
 
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
 
@@ -43,28 +44,36 @@ trait Oauth2
          * and generates a button on the auth/login view
          * at config/web/yii-auth-client
          *
-         * Related logic: see https://entra.microsoft.com/#view/Microsoft_AAD_IAM/TenantOverview.ReactView
-         * Rebuild the authUrl and tokenUrl to include the tenant (default: 'common') which can be
+         * Related logic: see https://entra.microsoft.com/#view/
+         *  Microsoft_AAD_IAM/TenantOverview.ReactView
+         * Rebuild the authUrl and tokenUrl to include the tenant
+         *  (default: 'common') which can be
          * 'common', 'organisation', 'consumers', or ID. ID is used here.
-         * The tenant can be acquired from Microsoft Entra Admin Centre ... Identity Overview ... Tenant
+         * The tenant can be acquired from Microsoft Entra Admin Centre ...
+         *  Identity Overview ... Tenant
          * and is inserted into the root's .env file.
          */
 
         /** @psalm-var \Yiisoft\Yii\AuthClient\Client\MicrosoftOnline $microsoftOnline */
         $microsoftOnline = (AuthChoice::widget())->getClient('microsoftonline');
 
-        $authUrl = $microsoftOnline->getAuthUrlWithTenantInserted($microsoftOnline->getTenant());
+        $authUrl =
+            $microsoftOnline->getAuthUrlWithTenantInserted(
+                    $microsoftOnline->getTenant());
 
         $microsoftOnline->setAuthUrl($authUrl);
 
-        $tokenUrl = $microsoftOnline->getTokenUrlWithTenantInserted($microsoftOnline->getTenant());
+        $tokenUrl =
+            $microsoftOnline->getTokenUrlWithTenantInserted(
+                    $microsoftOnline->getTenant());
         $microsoftOnline->setTokenUrl($tokenUrl);
     }
 
     private function initializeOauth2IdentityProviderDualUrls(): void
     {
         $authChoice = AuthChoice::widget();
-        $developerSandboxHmrc = $authChoice->getClient('developersandboxhmrc');
+        $developerSandboxHmrc =
+            $authChoice->getClient('developersandboxhmrc');
         /** @psalm-var \App\Auth\Client\DeveloperSandboxHmrc $developerSandboxHmrc */
         
         if ($this->sR->getEnv() == 'dev') {
@@ -77,17 +86,39 @@ trait Oauth2
     // IdentityProviderList
     private function idpList(string $codeChallenge): array
     {
-        $noDeveloperSandboxHmrcContinueButton = $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button') == '1' ? true : false;
-        $noGithubContinueButton = $this->sR->getSetting('no_github_continue_button') == '1' ? true : false;
-        $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
-        $noGovUkContinueButton = $this->sR->getSetting('no_govuk_continue_button') == '1' ? true : false;
-        $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
-        $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
-        $noMicrosoftOnlineContinueButton = $this->sR->getSetting('no_microsoftonline_continue_button') == '1' ? true : false;
-        $noOidcContinueButton = $this->sR->getSetting('no_openidconnect_continue_button') == '1' ? true : false;
-        $noVKontakteContinueButton = $this->sR->getSetting('no_vkontakte_continue_button') == '1' ? true : false;
-        $noXContinueButton = $this->sR->getSetting('no_x_continue_button') == '1' ? true : false;
-        $noYandexContinueButton = $this->sR->getSetting('no_yandex_continue_button') == '1' ? true : false;
+        $noDeveloperSandboxHmrcContinueButton =
+            $this->sR->getSetting('no_developer_sandbox_hmrc_continue_button')
+                == '1' ? true : false;
+        $noGithubContinueButton =
+            $this->sR->getSetting('no_github_continue_button')
+                == '1' ? true : false;
+        $noGoogleContinueButton =
+            $this->sR->getSetting('no_google_continue_button')
+                == '1' ? true : false;
+        $noGovUkContinueButton =
+            $this->sR->getSetting('no_govuk_continue_button')
+                == '1' ? true : false;
+        $noFacebookContinueButton =
+            $this->sR->getSetting('no_facebook_continue_button')
+                == '1' ? true : false;
+        $noLinkedInContinueButton =
+            $this->sR->getSetting('no_linkedin_continue_button')
+                == '1' ? true : false;
+        $noMicrosoftOnlineContinueButton =
+            $this->sR->getSetting('no_microsoftonline_continue_button')
+                == '1' ? true : false;
+        $noOidcContinueButton =
+            $this->sR->getSetting('no_openidconnect_continue_button')
+                == '1' ? true : false;
+        $noVKontakteContinueButton =
+            $this->sR->getSetting('no_vkontakte_continue_button')
+                == '1' ? true : false;
+        $noXContinueButton =
+            $this->sR->getSetting('no_x_continue_button')
+                == '1' ? true : false;
+        $noYandexContinueButton =
+            $this->sR->getSetting('no_yandex_continue_button')
+                == '1' ? true : false;
         return [
             'developersandboxhmrc' => [
                 'noflag' => $noDeveloperSandboxHmrcContinueButton,
@@ -95,22 +126,26 @@ trait Oauth2
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ],
-                'buttonName' => $this->translator->translate('continue.with.developersandboxhmrc'),
+                'buttonName' =>
+                  $this->translator->translate('continue.with.developersandboxhmrc'),
             ],
             'facebook' => [
                 'noflag' => $noFacebookContinueButton,
                 'params' => [],
-                'buttonName' => $this->translator->translate('continue.with.facebook'),
+                'buttonName' =>
+                 $this->translator->translate('continue.with.facebook'),
             ],
             'github' => [
                 'noflag' => $noGithubContinueButton,
                 'params' => [],
-                'buttonName' => $this->translator->translate('continue.with.github'),
+                'buttonName' =>
+                 $this->translator->translate('continue.with.github'),
             ],
             'google' => [
                 'noflag' => $noGoogleContinueButton,
                 'params' => [],
-                'buttonName' => $this->translator->translate('continue.with.google'),
+                'buttonName' =>
+                 $this->translator->translate('continue.with.google'),
             ],
             'govuk' => [
                 'noflag' => $noGovUkContinueButton,
@@ -119,22 +154,26 @@ trait Oauth2
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ],
-                'buttonName' => $this->translator->translate('continue.with.govuk'),
+                'buttonName' =>
+                 $this->translator->translate('continue.with.govuk'),
             ],
             'linkedin' => [
                 'noflag' => $noLinkedInContinueButton,
                 'params' => [],
-                'buttonName' => $this->translator->translate('continue.with.linkedin'),
+                'buttonName' =>
+                 $this->translator->translate('continue.with.linkedin'),
             ],
             'microsoftonline' => [
                 'noflag' => $noMicrosoftOnlineContinueButton,
                 'params' => [],
-                'buttonName' => $this->translator->translate('continue.with.microsoftonline'),
+                'buttonName' =>
+                 $this->translator->translate('continue.with.microsoftonline'),
             ],
             'oidc' => [
                 'noflag' => $noOidcContinueButton,
                 'params' => [],
-                'buttonName' => $this->translator->translate('continue.with.oidc'),
+                'buttonName' =>
+                 $this->translator->translate('continue.with.oidc'),
             ],
             'vkontakte' => [
                 'noflag' => $noVKontakteContinueButton,
@@ -142,7 +181,8 @@ trait Oauth2
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ],
-                'buttonName' => $this->translator->translate('continue.with.vkontakte'),
+                'buttonName' =>
+                 $this->translator->translate('continue.with.vkontakte'),
             ],
             'x' => [
                 'noflag' => $noXContinueButton,
@@ -150,7 +190,8 @@ trait Oauth2
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ],
-                'buttonName' => $this->translator->translate('continue.with.x'),
+                'buttonName' =>
+                 $this->translator->translate('continue.with.x'),
             ],
             'yandex' => [
                 'noflag' => $noYandexContinueButton,
@@ -158,7 +199,8 @@ trait Oauth2
                     'code_challenge' => $codeChallenge,
                     'code_challenge_method' => 'S256',
                 ],
-                'buttonName' => $this->translator->translate('continue.with.yandex'),
+                'buttonName' =>
+                 $this->translator->translate('continue.with.yandex'),
             ],
         ];
     }
@@ -169,13 +211,16 @@ trait Oauth2
      * @param string $self
      * @return string
      */
-    private function getAccessToken(User $user, TokenRepository $tR, string $self): string
+    private function getAccessToken(User $user,
+            TokenRepository $tR, string $self): string
     {
         $identity = $user->getIdentity();
         $identityId = (int) $identity->getId();
-        // This records the fact that the user has signed up with e.g. a Github 'access-token'
+        // This records the fact that the user has signed up with
+        //  e.g. a Github 'access-token'
         $token = new Token($identityId, $self);
-        // store the token amongst all the other types of tokens e.g. password-rest, email-verification, github-access
+        // store the token amongst all the other types of tokens
+        //  e.g. password-rest, email-verification, github-access
         $tR->save($token);
         $tokenString = $token->getToken();
         $timeString = (string) $token->getCreated_at()->getTimestamp();

@@ -85,7 +85,6 @@ $pEP = Permissions::EDIT_PAYMENT;
 $pVP = Permissions::VIEW_PAYMENT;
 $pECP = Permissions::EDIT_CLIENT_PEPPOL;
 $pEUI = Permissions::EDIT_USER_INV;
-$pNETBC = Permissions::NO_ENTRY_TO_BASE_CONTROLLER;
 $pETBC = Permissions::ENTRY_TO_BASE_CONTROLLER;
 $mG = Method::GET;
 $mP = Method::POST;
@@ -261,8 +260,7 @@ return [
         ->name('auth/verifyLogin'),
     Route::methods([$mG, $mP], '/regenerateCodes')
         ->middleware(fn (
-            AC $checker) => $checker->withPermission($pVI)
-                                    ->withPermission($pNETBC))
+            AC $checker) => $checker->withPermission($pVI))
         ->action([AuthController::class, 'regenerateCodes'])
         ->name('auth/regenerateCodes'),
     Route::methods([$mG, $mP], '/forgotpassword')

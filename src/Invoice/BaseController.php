@@ -26,6 +26,8 @@ abstract class BaseController
 
     // New property for controller name
     protected string $controllerName = 'base';
+    
+    private string $spinner = '@views/invoice/layout/fullpage-loader.php';
 
     public function __construct(
         protected WebControllerService $webService,
@@ -44,30 +46,28 @@ abstract class BaseController
      */
     protected function initializeViewRenderer(): void
     {
+        error_log('BaseController — session id: '
+        . ($this->session->getId() ?? ' null')
+        . ' tfa_verified: '
+        . var_export($this->session->get('tfa_verified'), true));
         if (!$this->userService->hasPermission(Permissions::VIEW_INV)
                 && !$this->userService->hasPermission(Permissions::EDIT_INV)) {
             $this->webViewRenderer =
             $this->webViewRenderer->withControllerName($this->controllerName)
-                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
+                     ->withLayout($this->spinner)
                      ->withLayout('@views/layout/templates/soletrader/main.php');
         } elseif ($this->userService->hasPermission(Permissions::VIEW_INV)
             && !$this->userService->hasPermission(Permissions::EDIT_INV)
-            && !$this->userService->hasPermission(
-                    Permissions::NO_ENTRY_TO_BASE_CONTROLLER)
-            && $this->userService->hasPermission(
-                    Permissions::ENTRY_TO_BASE_CONTROLLER)) {
+            && $this->session->get('tfa_verified') === true) {
             $this->webViewRenderer =
             $this->webViewRenderer->withControllerName($this->controllerName)
-                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
+                     ->withLayout($this->spinner)
                      ->withLayout('@views/layout/guest.php');
         } elseif ($this->userService->hasPermission(Permissions::EDIT_INV)
-            && !$this->userService->hasPermission(
-                    Permissions::NO_ENTRY_TO_BASE_CONTROLLER)
-            && $this->userService->hasPermission(
-                    Permissions::ENTRY_TO_BASE_CONTROLLER)) {
+            && $this->session->get('tfa_verified') === true) {
             $this->webViewRenderer =
             $this->webViewRenderer->withControllerName($this->controllerName)
-                     ->withLayout('@views/invoice/layout/fullpage-loader.php')
+                     ->withLayout($this->spinner)
                      ->withLayout('@views/layout/invoice.php');
         }
     }

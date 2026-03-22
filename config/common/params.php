@@ -80,11 +80,11 @@ return [
         'fileTarget' => [
             'file' => '@runtime/logs/app.log',
             'levels' => [
-                //LogLevel::EMERGENCY,
-                //LogLevel::ERROR,
-                //LogLevel::WARNING,
+                LogLevel::EMERGENCY,
+                LogLevel::ERROR,
+                LogLevel::WARNING,
                 LogLevel::INFO,
-                //LogLevel::DEBUG,
+                LogLevel::DEBUG,
             ],
             'dirMode' => 0o755,
             'fileMode' => null,
