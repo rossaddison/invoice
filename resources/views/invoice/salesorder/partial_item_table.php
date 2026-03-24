@@ -66,8 +66,8 @@ $count = 1;
  * @var App\Invoice\Entity\SalesOrderItem $item
  */
 foreach ($soItems as $item) {
-    $productId = $item->getProduct_id();
-    $taskId = $item->getTask_id();
+    $productId = $item->getProductId();
+    $taskId = $item->getTaskId();
     $productRef = '';
     $taskRef = '';
     if ($productId > 0) {
@@ -98,7 +98,7 @@ foreach ($soItems as $item) {
                     <td class="td-text" style="background-color: lightgreen">
                         <b>
                             <div class="input-group">                                
-<?php echo $count . '-' . $item->getSales_order_id() . '-' . $item->getId() . '-'
+<?php echo $count . '-' . $item->getSalesOrderId() . '-' . $item->getId() . '-'
     . ($productId > 0 ? $productRef : '') . ($taskId > 0 ? $taskRef : ''); ?>
                                 
                             </div>
@@ -114,7 +114,7 @@ foreach ($soItems as $item) {
                                        maxlength="8"
                                        size="8"
                                        name="item_peppol_po_itemid"
-                                       value="<?= $item->getPeppol_po_itemid();?>"
+                                       value="<?= $item->getPeppolPoItemid();?>"
                                        data-bs-toggle = "tooltip"
                                        title="salesorder_item->peppol_po_itemid">
 
@@ -128,7 +128,7 @@ foreach ($soItems as $item) {
                                        maxlength="8"
                                        size="8"
                                        name="item_peppol_po_lineid"
-                                       value="<?= $item->getPeppol_po_lineid();?>"
+                                       value="<?= $item->getPeppolPoLineid();?>"
                                        data-bs-toggle = "tooltip"
                                        title="salesorder_item->peppol_po_lineid">
                             </div>
@@ -138,14 +138,14 @@ foreach ($soItems as $item) {
                         <div class="input-group">
                             <span class="input-group-text">
                                 <b>
-<?= $item->getProduct_id() > 0 ? $translator->translate('item') :
+<?= $item->getProductId() > 0 ? $translator->translate('item') :
         $translator->translate('tasks') ; ?>
                                 </b>
                             </span>
                             <select name="item_name"
                                     class="form-control"
                                     disabled>
-                            <?php if ($item->getProduct_id() > 0) { ?>    
+                            <?php if ($item->getProductId() > 0) { ?>    
                                 <option value="0">
                                     <?= $translator->translate('none'); ?>
                                 </option>
@@ -155,14 +155,14 @@ foreach ($soItems as $item) {
                                  */
                                 foreach ($products as $product) { ?>
                                     <option value="
-                                        <?php echo $product->getProduct_id(); ?>"
-    <?php if ($item->getProduct_id() == $product->getProduct_id()) { ?>
+                                        <?php echo $product->getProductId(); ?>"
+    <?php if ($item->getProductId() == $product->getProductId()) { ?>
                                         selected="selected"<?php } ?>>
-<?php echo $product->getProduct_name(); ?>
+<?php echo $product->getProductName(); ?>
                                     </option>
                                 <?php } ?>
                             <?php } ?>
-                            <?php if ($item->getTask_id() > 0) { ?>    
+                            <?php if ($item->getTaskId() > 0) { ?>    
                                 <option value="0">
                                 <?= $translator->translate('none'); ?></option>
                                 <?php
@@ -171,7 +171,7 @@ foreach ($soItems as $item) {
                                  */
                                 foreach ($tasks as $task) { ?>
                                     <option value="<?php echo $task->getId(); ?>"
-    <?php if ($item->getTask_id() == $task->getId()) { ?>
+    <?php if ($item->getTaskId() == $task->getId()) { ?>
                                             selected="selected"<?php } ?>>
                                         <?php echo $task->getName(); ?>
                                     </option>
@@ -194,7 +194,7 @@ foreach ($soItems as $item) {
                                    data-bs-toggle = "tooltip"
                                    title="sales_order_item->quantity"
                                    value="
-    <?= $numberHelper->format_amount($item->getQuantity()); ?>">
+    <?= $numberHelper->formatAmount($item->getQuantity()); ?>">
                         </div>
                     </td>
                     <td class="td-amount">
@@ -212,7 +212,7 @@ foreach ($soItems as $item) {
                                  data-bs-toggle = "tooltip"
                                  title="sales_order_item->price"
                                  value="
-    <?= $numberHelper->format_amount($item->getPrice()); ?>">
+    <?= $numberHelper->formatAmount($item->getPrice()); ?>">
                       </div>
                     </td>
                     <td class="td-amount ">
@@ -231,7 +231,7 @@ foreach ($soItems as $item) {
                                    data-bs-toggle = "tooltip"
                                    title="sales_order_item->discount_amount"
                                    value="
-    <?= $numberHelper->format_amount($item->getDiscount_amount()); ?>"
+    <?= $numberHelper->formatAmount($item->getDiscountAmount()); ?>"
                                    data-bs-toggle = "tooltip"
                                    data-placement="bottom"
                                    title="
@@ -262,10 +262,10 @@ foreach ($soItems as $item) {
     foreach ($taxRates as $taxRate) { ?>
                                     <option value="
     <?php echo $taxRate->getTaxRateId(); ?>"
-        <?php if ($item->getTax_rate_id() == $taxRate->getTaxRateId()) { ?>
+        <?php if ($item->getTaxRateId() == $taxRate->getTaxRateId()) { ?>
                                         selected="selected"<?php } ?>>
                 <?php
-                    $taxRatePercent = $numberHelper->format_amount(
+                    $taxRatePercent = $numberHelper->formatAmount(
                             $taxRate->getTaxRatePercent());
                                 $taxRateName = $taxRate->getTaxRateName();
                                 if ($taxRatePercent >= 0.00
@@ -282,12 +282,12 @@ foreach ($soItems as $item) {
 <?php // Buttons for line item start here?>
                     <td class="td-vert-middle btn-group">                  
                         <?php if ($invEdit === true) { ?>
-<?php if ($piR->repoCount((int) $item->getProduct_id()) > 0) { ?>
+<?php if ($piR->repoCount((int) $item->getProductId()) > 0) { ?>
                             <span data-bs-toggle="tooltip"
                                   title="
     <?= $translator->translate('productimage.gallery') .
-            (($item->getProduct_id() > 0) ?
-                ($item->getProduct()?->getProduct_name() ?? '') :
+            (($item->getProductId() > 0) ?
+                ($item->getProduct()?->getProductName() ?? '') :
                     ($item->getTask()?->getName() ?? '')); ?>">
                                 <a class="btn btn-info fa fa-eye"
                                    data-bs-toggle="modal"
@@ -313,17 +313,17 @@ foreach ($soItems as $item) {
                                                            name="_csrf"
                                                            value="<?= $csrf ?>">
     <?php $productImages =
-        $piR->repoProductImageProductquery((int) $item->getProduct_id()); ?>
+        $piR->repoProductImageProductquery((int) $item->getProductId()); ?>
     <?php
     /**
      * @var App\Invoice\Entity\ProductImage $productImage
      */
     foreach ($productImages as $productImage) { ?>
-        <?php if (!empty($productImage->getFile_name_original())) { ?> 
+        <?php if (!empty($productImage->getFileNameOriginal())) { ?> 
                                                     <a data-bs-toggle="modal"
                                                        class="col-sm-4">
                                                     <img src="
-                <?= '/products/' . $productImage->getFile_name_original(); ?>"
+                <?= '/products/' . $productImage->getFileNameOriginal(); ?>"
                                                             class="img-fluid">
                                                     </a>
         <?php } ?> 
@@ -375,7 +375,7 @@ foreach ($soItems as $item) {
                     </td>
                     <td class="td-amount">
                         <div class="input-group">
-                        <?php if ($item->getProduct_id() > 0) { ?>
+                        <?php if ($item->getProductId() > 0) { ?>
                             <span class="input-group-text">
                                 <b>
                                 <?= $translator->translate('product.unit');?>
@@ -383,10 +383,10 @@ foreach ($soItems as $item) {
                             </span>
                             <span class="input-group-text"
                                   name="item_product_unit">
-                                    <?= $item->getProduct_unit();?>
+                                    <?= $item->getProductUnit();?>
                             </span>
                         <?php } ?>
-                        <?php if ($item->getTask_id() > 0) { ?>
+                        <?php if ($item->getTaskId() > 0) { ?>
                             <span class="input-group-text">
                                 <b>
                                     <?= $item->getTask()?->getName(); ?>
@@ -395,16 +395,16 @@ foreach ($soItems as $item) {
                             <span class="input-group-text"
                                   name="item_task_unit">
                         <?= !is_string(
-                            $finishDate = $item->getTask()?->getFinish_date()) ?
+                            $finishDate = $item->getTask()?->getFinishDate()) ?
                                 $finishDate?->format('Y-m-d') : '';?>
                             </span>
                         <?php } ?>
                         </div>
                     </td>
                     <td class="td-amount">
-                        <?php if ($item->getProduct_id() > 0) { ?>
+                        <?php if ($item->getProductId() > 0) { ?>
                         <b>
-  <?= $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+  <?= $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
                                   * ($item->getPrice() ?? 0.00)); ?>
                         </b>
                         <?php } ?>
@@ -412,7 +412,7 @@ foreach ($soItems as $item) {
                     <td class="td-amount"></td>
                     <td class="td-amount">
                         <b>
-  <?= $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+  <?= $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
                                  * ($item->getPrice() ?? 0.00)
                                  * ($item->getTaxRate()?->getTaxRatePercent()
                                                                         ?? 0.00)
@@ -452,14 +452,14 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                             </td>
                             <td class="td-amount">
                                 <b>
-                <?= ($isCharge ? '' : '(') . $numberHelper->format_currency(
+                <?= ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
                     $acsoi->getAmount()) . ($isCharge ? '' : ')') ; ?>
                                 </b>
                             </td>
                             <td class="td-amount"></td>
                             <td class="td-amount">
                                 <b>
-                    <?= ($isCharge ? '' : '(') . $numberHelper->format_currency(
+                    <?= ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
                         $acsoi->getVatOrTax()) . ($isCharge ? '' : ')'); ?>
                                 </b>
                             </td>   
@@ -481,7 +481,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                               class="amount"
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount">
-                        <?= $numberHelper->format_currency(
+                        <?= $numberHelper->formatCurrency(
                                 $soiaR->repoSalesOrderItemAmountquery(
                                         $item->getId())?->getSubtotal()); ?>
                         </span>
@@ -498,7 +498,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                               class="amount"
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->discount">
-                        (<?= $numberHelper->format_currency(
+                        (<?= $numberHelper->formatCurrency(
                                 $soiaR->repoSalesOrderItemAmountquery(
                                         $item->getId())?->getDiscount()); ?>)
                         </span>
@@ -516,8 +516,8 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                               class="amount"
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->tax_total">
-                            <?= $numberHelper->format_currency(
-    $soiaR->repoSalesOrderItemAmountquery($item->getId())?->getTax_total()); ?>
+                            <?= $numberHelper->formatCurrency(
+    $soiaR->repoSalesOrderItemAmountquery($item->getId())?->getTaxTotal()); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle"
@@ -532,7 +532,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                               class="amount"
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->total">
-                            <?= $numberHelper->format_currency(
+                            <?= $numberHelper->formatCurrency(
     $soiaR->repoSalesOrderItemAmountquery($item->getId())?->getTotal()); ?>
                         </span>
                     </td>
@@ -579,9 +579,9 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                         id="amount_subtotal"
                         data-bs-toggle = "tooltip"
                         title="<?= $subtotalTooltip; ?>">
-                            <?php echo $numberHelper->format_currency(
-                                    $soAmount->getItem_subtotal() > 0.00 ?
-                                    $soAmount->getItem_subtotal() : 0.00); ?>
+                            <?php echo $numberHelper->formatCurrency(
+                                    $soAmount->getItemSubtotal() > 0.00 ?
+                                    $soAmount->getItemSubtotal() : 0.00); ?>
                     </td>
                 </tr>
                 <tr>
@@ -599,9 +599,9 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                         data-bs-toggle = "tooltip"
                         id="amount_item_tax_total"
                         title="sales_order_amount->item_tax_total">
-                            <?php echo $numberHelper->format_currency(
-                                    $soAmount->getItem_tax_total() > 0 ?
-                                    $soAmount->getItem_tax_total() : 0.00); ?>
+                            <?php echo $numberHelper->formatCurrency(
+                                    $soAmount->getItemTaxTotal() > 0 ?
+                                    $soAmount->getItemTaxTotal() : 0.00); ?>
                     </td>
                 </tr>
                 <tr>
@@ -614,7 +614,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                         id="amount_sales_order_allowance_charge_total"
                         data-bs-toggle = "tooltip"
                         title="sales_order_amount->packhandleship_total">
-                        <b><?php echo $numberHelper->format_currency(
+                        <b><?php echo $numberHelper->formatCurrency(
                             $packHandleShipTotal['totalAmount'] ?? 0.00); ?>
                         </b>
                     </td>
@@ -632,7 +632,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                         id="amount_sales_order_allowance_charge_tax"
                         data-bs-toggle = "tooltip"
                         title="sales_order_amount->packhandleship_tax">
-                        <b><?php echo $numberHelper->format_currency(
+                        <b><?php echo $numberHelper->formatCurrency(
                             $packHandleShipTotal['totalTax'] ?? 0.00); ?>
                         </b>
                     </td>
@@ -652,14 +652,14 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                         foreach ($soTaxRates as $soTaxRate) { ?>
                             <div data-bs-toggle="tooltip"
                                  title="
-    <?= $soTaxRate->getInclude_item_tax() == '1' ? $included : $excluded; ?>">
+    <?= $soTaxRate->getIncludeItemTax() == '1' ? $included : $excluded; ?>">
                                     <input type="hidden"
                                            name="_csrf"
                                            value="<?= $csrf ?>">
                                     <span class="text-muted">
         <?php
             $taxRatePercent = $soTaxRate->getTaxRate()?->getTaxRatePercent();
-            $numberPercent = $numberHelper->format_amount($taxRatePercent);
+            $numberPercent = $numberHelper->formatAmount($taxRatePercent);
             $taxRateName = $soTaxRate->getTaxRate()?->getTaxRateName();
             if ($taxRatePercent >= 0.00 && null !== $taxRateName
                     && $numberPercent >= 0.00 &&
@@ -676,18 +676,18 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                                           data-bs-toggle = "tooltip"
                                           title=
                             "sales_order_tax_rate->sales_order_tax_rate_amount">
-<?= $numberHelper->format_currency($soTaxRate->getSales_order_tax_rate_amount()); ?>
+<?= $numberHelper->formatCurrency($soTaxRate->getSalesOrderTaxRateAmount()); ?>
                                     </span>
                                     <br>
                             </div>        
                             <?php }
                             } else {
-                                echo $numberHelper->format_currency('0');
+                                echo $numberHelper->formatCurrency('0');
                             } ?>
                     </td>
                 </tr>
                 <?php } ?>
-                <?php if (($so->getDiscount_amount() ?? 0.00) != 0.00) { ?>
+                <?php if (($so->getDiscountAmount() ?? 0.00) != 0.00) { ?>
                 <tr>
                     <td class="td-vert-middle">
                         <b>(<?= $translator->translate('discount'); ?>)</b>
@@ -695,7 +695,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                     <td class="clearfix">
                         <div class="discount-field">
                             <div class="input-group input-group">
-      <?= $numberHelper->format_currency($so->getDiscount_amount() ?? 0.00); ?>
+      <?= $numberHelper->formatCurrency($so->getDiscountAmount() ?? 0.00); ?>
                             </div>
                         </div>
                     </td>
@@ -711,7 +711,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                         data-bs-toggle = "tooltip"
                         title="sales_order_amount->total">
                         <b>
-        <?= $numberHelper->format_currency($soAmount->getTotal() ?? 0.00); ?>
+        <?= $numberHelper->formatCurrency($soAmount->getTotal() ?? 0.00); ?>
                         </b>
                     </td>
                 </tr>

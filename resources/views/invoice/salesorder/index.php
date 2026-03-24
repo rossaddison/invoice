@@ -234,7 +234,7 @@ $columns = [
         header: $translator->translate('status'),
         content: static function (SalesOrder $model) use ($soR, $urlGenerator):
             Yiisoft\Html\Tag\CustomTag {
-            $statusId = $model->getStatus_id();
+            $statusId = $model->getStatusId();
             if (null !== $statusId) {
                 $span = $soR->getSpecificStatusArrayLabel((string) $statusId);
                 $class = $soR->getSpecificStatusArrayClass($statusId);
@@ -281,7 +281,7 @@ $columns = [
         header: $translator->translate('invoice'),
         content: static function (SalesOrder $model) use ($urlGenerator, $iR):
             string|A {
-            $invId = $model->getInv_id();
+            $invId = $model->getInvId();
             if ($invId !== null && $invId !== '' && $invId !== '0') {
                 $inv = $iR->repoInvUnloadedquery($invId);
                 return ($inv
@@ -298,10 +298,10 @@ $columns = [
         header: $translator->translate('date.created'),
         content: static function (SalesOrder $model): string {
             /**
-             * @psalm-suppress PossiblyInvalidMethodCall $model->getDate_created()->format('Y-m-d')
+             * @psalm-suppress PossiblyInvalidMethodCall $model->getDateCreated()->format('Y-m-d')
              */
-            return $model->getDate_created() instanceof \DateTimeImmutable
-                    ? $model->getDate_created()->format('Y-m-d')
+            return $model->getDateCreated() instanceof \DateTimeImmutable
+                    ? $model->getDateCreated()->format('Y-m-d')
                     : '';
         },
         encodeContent: true,
@@ -311,7 +311,7 @@ $columns = [
         property: 'filterClient',
         header: $translator->translate('client'),
         content: static function (SalesOrder $model): string {
-            return Html::encode($model->getClient()?->getClient_full_name() ?? '');
+            return Html::encode($model->getClient()?->getClientFullName() ?? '');
         },
         encodeContent: false,
         filter: DropdownFilter::widget()
@@ -330,7 +330,7 @@ $columns = [
             $so_amount = (($soaR->repoSalesOrderAmountCount(
                 (string) $so_id) > 0) ? $soaR->repoSalesOrderquery(
                         (string) $so_id) : null);
-            return $s->format_currency(null !== $so_amount ?
+            return $s->formatCurrency(null !== $so_amount ?
                                                 $so_amount->getTotal() : 0.00);
         },
         visible: $visible,
@@ -352,13 +352,13 @@ $previousGroupValue = '';
 $getGroupValue = static function (SalesOrder $salesorder) use ($groupBy, $soR):
         string {
     return match ($groupBy) {
-        'client' => $salesorder->getClient()?->getClient_full_name()
+        'client' => $salesorder->getClient()?->getClientFullName()
                 ?? 'Unknown Client',
         'status' => $soR->getSpecificStatusArrayLabel(
-                                            (string) $salesorder->getStatus_id()),
-        'month' => $salesorder->getDate_created()->format('Y-m'),
-        'year' => $salesorder->getDate_created()->format('Y'),
-        'date' => $salesorder->getDate_created()->format('Y-m-d'),
+                                            (string) $salesorder->getStatusId()),
+        'month' => $salesorder->getDateCreated()->format('Y-m'),
+        'year' => $salesorder->getDateCreated()->format('Y'),
+        'date' => $salesorder->getDateCreated()->format('Y-m-d'),
         default => 'No Group'
     };
 };

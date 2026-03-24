@@ -26,97 +26,97 @@ class EmailTemplate
     {
     }
 
-    public function getEmail_template_id(): ?int
+    public function getEmailTemplateId(): ?int
     {
         return $this->id;
     }
 
-    public function getEmail_template_title(): ?string
+    public function getEmailTemplateTitle(): ?string
     {
         return $this->email_template_title;
     }
 
-    public function setEmail_template_title(string $email_template_title): void
+    public function setEmailTemplateTitle(string $email_template_title): void
     {
         $this->email_template_title = $email_template_title;
     }
 
-    public function getEmail_template_type(): ?string
+    public function getEmailTemplateType(): ?string
     {
         return $this->email_template_type;
     }
 
-    public function setEmail_template_type(string $email_template_type): void
+    public function setEmailTemplateType(string $email_template_type): void
     {
         $this->email_template_type = $email_template_type;
     }
 
-    public function getEmail_template_body(): string
+    public function getEmailTemplateBody(): string
     {
         return $this->email_template_body;
     }
 
-    public function setEmail_template_body(string $email_template_body): void
+    public function setEmailTemplateBody(string $email_template_body): void
     {
         $this->email_template_body = $email_template_body;
     }
 
-    public function getEmail_template_subject(): ?string
+    public function getEmailTemplateSubject(): ?string
     {
         return $this->email_template_subject;
     }
 
-    public function setEmail_template_subject(string $email_template_subject): void
+    public function setEmailTemplateSubject(string $email_template_subject): void
     {
         $this->email_template_subject = $email_template_subject;
     }
 
-    public function getEmail_template_from_name(): ?string
+    public function getEmailTemplateFromName(): ?string
     {
         return $this->email_template_from_name;
     }
 
-    public function setEmail_template_from_name(string $email_template_from_name): void
+    public function setEmailTemplateFromName(string $email_template_from_name): void
     {
         $this->email_template_from_name = $email_template_from_name;
     }
 
-    public function getEmail_template_from_email(): ?string
+    public function getEmailTemplateFromEmail(): ?string
     {
         return $this->email_template_from_email;
     }
 
-    public function setEmail_template_from_email(string $email_template_from_email): void
+    public function setEmailTemplateFromEmail(string $email_template_from_email): void
     {
         $this->email_template_from_email = $email_template_from_email;
     }
 
-    public function getEmail_template_cc(): ?string
+    public function getEmailTemplateCc(): ?string
     {
         return $this->email_template_cc;
     }
 
-    public function setEmail_template_cc(string $email_template_cc): void
+    public function setEmailTemplateCc(string $email_template_cc): void
     {
         $this->email_template_cc = $email_template_cc;
     }
 
-    public function getEmail_template_bcc(): ?string
+    public function getEmailTemplateBcc(): ?string
     {
         return $this->email_template_bcc;
     }
 
-    public function setEmail_template_bcc(string $email_template_bcc): void
+    public function setEmailTemplateBcc(string $email_template_bcc): void
     {
         $this->email_template_bcc = $email_template_bcc;
     }
 
-    public function getEmail_template_pdf_template(): ?string
+    public function getEmailTemplatePdfTemplate(): ?string
     {
         return $this->email_template_pdf_template;
     }
 
-    public function setEmail_template_pdf_template(string $email_template_pdf_template): void
+    public function setEmailTemplatePdfTemplate(string $email_template_pdf_template): void
     {
         $this->email_template_pdf_template = $email_template_pdf_template;
     }

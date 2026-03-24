@@ -99,12 +99,12 @@ class SalesOrderItem
         $this->task = $task;
     }
 
-    public function getSales_order(): ?SalesOrder
+    public function getSalesOrder(): ?SalesOrder
     {
         return $this->sales_order;
     }
 
-    public function setSales_order(?SalesOrder $sales_order): void
+    public function setSalesOrder(?SalesOrder $sales_order): void
     {
         $this->sales_order = $sales_order;
     }
@@ -119,83 +119,83 @@ class SalesOrderItem
         $this->id = $id;
     }
 
-    public function getSales_order_id(): string
+    public function getSalesOrderId(): string
     {
         return (string) $this->sales_order_id;
     }
 
-    public function setSales_order_id(int $sales_order_id): void
+    public function setSalesOrderId(int $sales_order_id): void
     {
         $this->sales_order_id = $sales_order_id;
     }
     
-    public function getQuote_item_id(): string
+    public function getQuoteItemId(): string
     {
         return (string) $this->quote_item_id;
     }
 
-    public function setQuote_item_id(int $quote_item_id): void
+    public function setQuoteItemId(int $quote_item_id): void
     {
         $this->quote_item_id = $quote_item_id;
     }
 
-    public function getPeppol_po_itemid(): ?string
+    public function getPeppolPoItemid(): ?string
     {
         return $this->peppol_po_itemid;
     }
 
-    public function setPeppol_po_itemid(string $peppol_po_itemid): void
+    public function setPeppolPoItemid(string $peppol_po_itemid): void
     {
         $this->peppol_po_itemid = $peppol_po_itemid;
     }
 
-    public function getPeppol_po_lineid(): ?string
+    public function getPeppolPoLineid(): ?string
     {
         return $this->peppol_po_lineid;
     }
 
-    public function setPeppol_po_lineid(string $peppol_po_lineid): void
+    public function setPeppolPoLineid(string $peppol_po_lineid): void
     {
         $this->peppol_po_lineid = $peppol_po_lineid;
     }
 
-    public function getTax_rate_id(): string
+    public function getTaxRateId(): string
     {
         return (string) $this->tax_rate_id;
     }
 
-    public function setTax_rate_id(int $tax_rate_id): void
+    public function setTaxRateId(int $tax_rate_id): void
     {
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getProduct_id(): string
+    public function getProductId(): string
     {
         return (string) $this->product_id;
     }
 
-    public function setProduct_id(int $product_id): void
+    public function setProductId(int $product_id): void
     {
         $this->product_id = $product_id;
     }
     
-    public function getTask_id(): string
+    public function getTaskId(): string
     {
         return (string) $this->task_id;
     }
     
-    public function setTask_id(int $task_id): void
+    public function setTaskId(int $task_id): void
     {
         $this->task_id = $task_id;
     }
 
-    public function getDate_added(): DateTimeImmutable
+    public function getDateAdded(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->date_added */
         return $this->date_added;
     }
 
-    public function setDate_added(DateTime $date_added): void
+    public function setDateAdded(DateTime $date_added): void
     {
         $this->date_added = $date_added;
     }
@@ -240,12 +240,12 @@ class SalesOrderItem
         $this->price = $price;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function setDiscount_amount(float $discount_amount): void
+    public function setDiscountAmount(float $discount_amount): void
     {
         $this->discount_amount = $discount_amount;
     }
@@ -260,22 +260,22 @@ class SalesOrderItem
         $this->order = $order;
     }
     
-    public function getProduct_unit(): ?string
+    public function getProductUnit(): ?string
     {
         return $this->product_unit;
     }
 
-    public function setProduct_unit(string $product_unit): void
+    public function setProductUnit(string $product_unit): void
     {
         $this->product_unit = $product_unit;
     }
 
-    public function getProduct_unit_id(): string
+    public function getProductUnitId(): string
     {
         return (string) $this->product_unit_id;
     }
 
-    public function setProduct_unit_id(int $product_unit_id): void
+    public function setProductUnitId(int $product_unit_id): void
     {
         $this->product_unit_id = $product_unit_id;
     }

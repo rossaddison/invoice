@@ -51,12 +51,12 @@ class Token
         $this->id = $id;
     }
 
-    public function getIdentity_id(): string
+    public function getIdentityId(): string
     {
         return (string) $this->identity_id;
     }
 
-    public function setIdentity_id(int $identity_id): void
+    public function setIdentityId(int $identity_id): void
     {
         $this->identity_id = $identity_id;
     }
@@ -81,13 +81,13 @@ class Token
         $this->type = $type;
     }
 
-    public function getCreated_at(): DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->created_at */
         return $this->created_at;
     }
 
-    public function setCreated_at(string $created_at): void
+    public function setCreatedAt(string $created_at): void
     {
         $this->created_at =  new DateTimeImmutable()->createFromFormat('Y-m-d h:i:s', $created_at) ?: new DateTimeImmutable('now');
     }

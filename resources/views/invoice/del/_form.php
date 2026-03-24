@@ -54,7 +54,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'date_created')
                     ->label($translator->translate('common.date.created'))
-                    ->value(Html::encode(($form->getDate_created())->format('Y-m-d')))
+                    ->value(Html::encode(($form->getDateCreated())->format('Y-m-d')))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('common.date.created'),
                         'readonly' => 'readonly',
@@ -64,7 +64,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'date_modified')
                     ->label($translator->translate('common.date.modified'))
-                    ->value(Html::encode(($form->getDate_modified())->format('Y-m-d')))
+                    ->value(Html::encode(($form->getDateModified())->format('Y-m-d')))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('common.date.modified'),
                         'readonly' => 'readonly',
@@ -96,7 +96,7 @@ use Yiisoft\Html\Tag\Form;
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('street.address'),
                     ])
-                    ->value(Html::encode($form->getAddress_1() ?? ''))
+                    ->value(Html::encode($form->getAddress1() ?? ''))
                     ->hint($translator->translate('hint.this.field.is.required'));
                 ?>
             <?= Html::closeTag('div'); ?>
@@ -105,7 +105,7 @@ use Yiisoft\Html\Tag\Form;
                     ->label($translator->translate('street.address.2'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('street.address.2'),
-                        'value' => Html::encode($form->getAddress_2() ?? ''),
+                        'value' => Html::encode($form->getAddress2() ?? ''),
                     ])
                     ->hint($translator->translate('hint.this.field.is.required'));
                 ?>
@@ -160,7 +160,7 @@ use Yiisoft\Html\Tag\Form;
                     ->label($translator->translate('delivery.location.global.location.number'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('delivery.location.global.location.number'),
-                        'value' => Html::encode($form->getGlobal_location_number() ?? ''),
+                        'value' => Html::encode($form->getGlobalLocationNumber() ?? ''),
                     ])                                                                                 ->hint($translator->translate('hint.this.field.is.not.required'));
                 ?>
             <?= Html::closeTag('div'); ?>
@@ -168,7 +168,7 @@ use Yiisoft\Html\Tag\Form;
                 <?php
                     $optionsDataEAS = [];
                     /**
-                     * Related logic: see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronic_address_scheme
+                     * Related logic: see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronicAddressScheme
                      * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/
                      * @var int $key
                      * @var array $value

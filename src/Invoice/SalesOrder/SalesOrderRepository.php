@@ -187,7 +187,7 @@ final class SalesOrderRepository extends Select\Repository
      * @param string $url_key
      * @return SalesOrder|null
      */
-    public function repoUrl_key_guest_loaded(string $url_key): ?SalesOrder
+    public function repoUrlKeyGuestLoaded(string $url_key): ?SalesOrder
     {
         $query = $this->select()
                        ->load('client')
@@ -199,7 +199,7 @@ final class SalesOrderRepository extends Select\Repository
      * @param string $url_key
      * @return int
      */
-    public function repoUrl_key_guest_count(string $url_key): int
+    public function repoUrlKeyGuestCount(string $url_key): int
     {
         return $this->select()
                       ->where(['url_key' => $url_key])
@@ -211,7 +211,7 @@ final class SalesOrderRepository extends Select\Repository
      * @param array $user_client
      * @return int
      */
-    public function repoClient_guest_count(string $salesorder_id, array $user_client = []): int
+    public function repoClientGuestCount(string $salesorder_id, array $user_client = []): int
     {
         return $this->select()
                       ->where(['id' => $salesorder_id])
@@ -347,15 +347,15 @@ final class SalesOrderRepository extends Select\Repository
      * @param string $group_id
      * @return mixed
      */
-    public function get_salesorder_number(string $group_id, GR $gR): mixed
+    public function getSalesorderNumber(string $group_id, GR $gR): mixed
     {
-        return $gR->generate_number((int) $group_id);
+        return $gR->generateNumber((int) $group_id);
     }
 
     /**
      * @psalm-return Select<TEntity>
      */
-    public function guest_visible(): Select
+    public function guestVisible(): Select
     {
         return $this->select()->where(['status_id' => ['in' => new Parameter([2,3,4,5])]]);
     }
@@ -365,7 +365,7 @@ final class SalesOrderRepository extends Select\Repository
      *
      * @psalm-return Select<TEntity>
      */
-    public function by_client(int $client_id): Select
+    public function byClient(int $client_id): Select
     {
         return $this->select()
                       ->where(['client_id' => $client_id]);
@@ -377,7 +377,7 @@ final class SalesOrderRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function by_client_salesorder_status(int $client_id, int $status_id): EntityReader
+    public function byClientSalesorderStatus(int $client_id, int $status_id): EntityReader
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id])
@@ -390,7 +390,7 @@ final class SalesOrderRepository extends Select\Repository
      * @param int $status_id
      * @return int
      */
-    public function by_client_salesorder_status_count(int $client_id, int $status_id): int
+    public function byClientSalesorderStatusCount(int $client_id, int $status_id): int
     {
         return $this->select()
                       ->where(['client_id' => $client_id])
@@ -403,7 +403,7 @@ final class SalesOrderRepository extends Select\Repository
      *
      * @psalm-return Select<TEntity>
      */
-    public function approve_or_reject_salesorder_by_key(string $url_key): Select
+    public function approveOrRejectSalesorderByKey(string $url_key): Select
     {
         return $this->select()
                       ->where(['status_id' => ['in' => new Parameter([2,3,4,5, 6])]])
@@ -414,7 +414,7 @@ final class SalesOrderRepository extends Select\Repository
      * @param string $id
      * @return Select
      */
-    public function approve_or_reject_salesorder_by_id(string $id): Select
+    public function approveOrRejectSalesorderById(string $id): Select
     {
         return $this->select()
                       ->where(['status_id' => ['in' => new Parameter([2])]])

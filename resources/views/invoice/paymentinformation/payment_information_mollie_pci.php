@@ -55,12 +55,12 @@ if ($disable_form === false) {
           echo $companyLogo;
           echo $translator->translate('online.payment.for.invoice') . ' # ';
           echo H::encode($invoice->getNumber() ?? '') . ' => '
-           . H::encode($invoice->getClient()?->getClient_name() ?? '') . ' '
-           . H::encode($invoice->getClient()?->getClient_surname() ?? '') . ' '
-           . $numberHelper->format_currency($balance);
+           . H::encode($invoice->getClient()?->getClientName() ?? '') . ' '
+           . H::encode($invoice->getClient()?->getClientSurname() ?? '') . ' '
+           . $numberHelper->formatCurrency($balance);
          echo H::closeTag('h2');
          echo H::openTag('a', [
-             'href' => $urlGenerator->generate('inv/pdf_download_include_cf',
+             'href' => $urlGenerator->generate('inv/pdfDownloadIncludeCf',
                      ['url_key' => $inv_url_key]),
              'class' => 'btn btn-sm btn-primary fw-normal h3 text-center',
              'style' => 'text-decoration:none'
@@ -72,7 +72,7 @@ if ($disable_form === false) {
                   . ' ' . $translator->translate('custom.fields');
          echo H::closeTag('a');
          echo H::openTag('a', [
-             'href' => $urlGenerator->generate('inv/pdf_download_exclude_cf',
+             'href' => $urlGenerator->generate('inv/pdfDownloadExcludeCf',
                      ['url_key' => $inv_url_key]),
              'class' => 'btn btn-sm btn-danger fw-normal h3 text-center',
              'style' => 'text-decoration:none'
@@ -103,12 +103,12 @@ if ($disable_form === false) {
              ->target('_blank')
              ->addClass('btn btn-lg btn-success fa fa-credit-card fa-margin')
              ->content(' ' . $translator->translate('pay.now')
-                     . ': ' . $numberHelper->format_currency($balance))
+                     . ': ' . $numberHelper->formatCurrency($balance))
              ->render();
          }
          echo H::tag('br');
          echo H::openTag('div', ['class' => 'card-header']);
-          echo H::encode($clientHelper->format_client($client_on_invoice));
+          echo H::encode($clientHelper->formatClient($client_on_invoice));
           echo H::tag('br');
           echo $partial_client_address;
          echo H::closeTag('div');
@@ -122,7 +122,7 @@ if ($disable_form === false) {
               echo $translator->translate('date');
              echo H::closeTag('td');
              echo H::openTag('td', ['class' => 'text-right']);
-              echo H::encode($invoice->getDate_created()->format('Y-m-d'));
+              echo H::encode($invoice->getDateCreated()->format('Y-m-d'));
              echo H::closeTag('td');
             echo H::closeTag('tr');
             echo H::openTag('tr', ['class' => ($is_overdue ? 'overdue' : '')]);
@@ -130,7 +130,7 @@ if ($disable_form === false) {
               echo $translator->translate('due.date');
              echo H::closeTag('td');
              echo H::openTag('td', ['class' => 'text-right']);
-              echo H::encode($invoice->getDate_due()->format('Y-m-d'));
+              echo H::encode($invoice->getDateDue()->format('Y-m-d'));
              echo H::closeTag('td');
             echo H::closeTag('tr');
             echo H::openTag('tr', ['class' => ($is_overdue ? 'overdue' : '')]);
@@ -138,7 +138,7 @@ if ($disable_form === false) {
               echo $translator->translate('total');
              echo H::closeTag('td');
              echo H::openTag('td', ['class' => 'text-right']);
-              echo H::encode($numberHelper->format_currency($total));
+              echo H::encode($numberHelper->formatCurrency($total));
              echo H::closeTag('td');
             echo H::closeTag('tr');
             echo H::openTag('tr', ['class' => ($is_overdue ? 'overdue' : '')]);
@@ -146,7 +146,7 @@ if ($disable_form === false) {
               echo $translator->translate('balance');
              echo H::closeTag('td');
              echo H::openTag('td', ['class' => 'text-right']);
-              echo H::encode($numberHelper->format_currency($balance));
+              echo H::encode($numberHelper->formatCurrency($balance));
              echo H::closeTag('td');
             echo H::closeTag('tr');
             if ($invoice_payment_method) {
@@ -164,7 +164,7 @@ if ($disable_form === false) {
          echo H::closeTag('div');
          if (!empty($invoice->getTerms())) {
              echo H::openTag('div', ['class' => 'col-xs-12 text-muted']);
-              $paymentTermArray = $s->get_payment_term_array($translator);
+              $paymentTermArray = $s->getPaymentTermArray($translator);
               echo H::tag('br');
               echo H::openTag('h4');
                echo $translator->translate('terms');

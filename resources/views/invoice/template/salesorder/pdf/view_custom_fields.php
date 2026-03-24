@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see This will appear at the bottom of pdf\salesorder.php
- * Related logic: see App\Invoice\Helpers\PdfHelper function generate_salesorder_pdf
+ * Related logic: see App\Invoice\Helpers\PdfHelper function generateSalesorderPdf
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\CustomValue\CustomValueRepository $cvR
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -23,7 +23,7 @@ declare(strict_types=1);
         continue;
     } ?>
     <div class="col-md-4">
-          <?php $cvH->print_field_for_pdf($translator, $salesorder_custom_values, $custom_field, $cvR); ?>
+          <?php $cvH->printFieldForPdf($translator, $salesorder_custom_values, $custom_field, $cvR); ?>
     </div>    
     <?php endforeach; ?>        
 </div> 

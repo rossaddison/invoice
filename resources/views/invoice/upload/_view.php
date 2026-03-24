@@ -51,21 +51,21 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'url_key')
     ->label($translator->translate('upload.url.key'))
-    ->value(Html::encode($form->getUrl_key()))
+    ->value(Html::encode($form->getUrlKey()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'file_name_original')
     ->label($translator->translate('upload.filename.original'))
-    ->value(Html::encode($form->getFile_name_original()))
+    ->value(Html::encode($form->getFileNameOriginal()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'file_name_new')
     ->label($translator->translate('upload.filename.new'))
-    ->value(Html::encode($form->getFile_name_new()))
+    ->value(Html::encode($form->getFileNameNew()))
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
@@ -80,7 +80,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::date($form, 'uploaded_date')
     ->label($translator->translate('date'))
     ->required(true)
-    ->value($form->getUploaded_date() instanceof \DateTimeImmutable ? ($form->getUploaded_date())->format('Y-m-d') : '')
+    ->value($form->getUploadedDate() instanceof \DateTimeImmutable ? ($form->getUploadedDate())->format('Y-m-d') : '')
     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>

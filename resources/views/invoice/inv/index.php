@@ -88,7 +88,7 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('default.invoice.group'),
          url: $urlGenerator->generate(
-             'setting/tab_index',
+             'setting/tabIndex',
              [],
              ['active' => 'invoices'],
              'settings[default_invoice_group]',
@@ -103,7 +103,7 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('default.terms'),
          url: $urlGenerator->generate(
-             'setting/tab_index',
+             'setting/tabIndex',
              [],
              ['active' => 'invoices'],
              'settings[default_invoice_terms]',
@@ -119,7 +119,7 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('default.payment.method'),
          url: $urlGenerator->generate(
-             'setting/tab_index',
+             'setting/tabIndex',
              [],
              ['active' => 'invoices'],
              'settings[invoice_default_payment_method]',
@@ -135,7 +135,7 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('invoices.due.after'),
          url: $urlGenerator->generate(
-             'setting/tab_index',
+             'setting/tabIndex',
              [],
              ['active' => 'invoices'],
              'settings[invoices_due_after]',
@@ -151,7 +151,7 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('generate.invoice.number.for.draft'),
          url: $urlGenerator->generate(
-             'setting/tab_index',
+             'setting/tabIndex',
              [],
              ['active' => 'invoices'],
              'settings[generate_invoice_number_for_draft]',
@@ -174,7 +174,7 @@ echo Breadcrumbs::widget()
              . $iR->getSpecificStatusArrayEmoji(
                 (int) $s->getSetting('read_only_toggle')),
          url: $urlGenerator->generate(
-             'setting/tab_index',
+             'setting/tabIndex',
              [],
              ['active' => 'invoices'],
              'settings[read_only_toggle]',
@@ -408,9 +408,9 @@ $columns = [
 // is_read_only true, disable_read_only 0, status  sent2 => 🚫, disabled
 // is_read_only true, disable_read_only 1, status sent2 => ❗, not disabled
                 content: static function (Inv $inv) use ($s): string {
-                    $iRO = $inv->getIs_read_only();
+                    $iRO = $inv->getIsReadOnly();
                     $dRO = $s->getSetting('disable_read_only');
-                    $status = $inv->getStatus_id();
+                    $status = $inv->getStatusId();
                     $iconMap = [
                         /** editable draft */
                         'false' => [
@@ -449,9 +449,9 @@ $columns = [
                     return !empty($icon) ? $icon : '🚫';
                 },
                 url: static function (Inv $inv) use ($s, $urlGenerator): string {
-                    $iRO = $inv->getIs_read_only();
+                    $iRO = $inv->getIsReadOnly();
                     $dRO = $s->getSetting('disable_read_only');
-                    $status = $inv->getStatus_id();
+                    $status = $inv->getStatusId();
                     $urlMap = [
                         /** editable draft **/
                         'false' => [
@@ -498,9 +498,9 @@ $columns = [
                     return $urlMap[$iROString][$dRO][$status] ?? '';
                 },
                 attributes: static function (Inv $inv) use ($s, $translator): array {
-                    $iRO = $inv->getIs_read_only();
+                    $iRO = $inv->getIsReadOnly();
                     $dRO = $s->getSetting('disable_read_only');
-                    $status = $inv->getStatus_id();
+                    $status = $inv->getStatusId();
                     $attributesMap = [
                         /** editable draft **/
                         'false' => [
@@ -580,7 +580,7 @@ $columns = [
             new ActionButton(
                 url: static function (Inv $inv)
                                     use ($urlGenerator): string {
-                    return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf',
+                    return $urlGenerator->generate('inv/pdfDashboardExcludeCf',
                             ['id' => $inv->getId()]);
                 },
                 attributes: [
@@ -594,7 +594,7 @@ $columns = [
             new ActionButton(
                 url: static function (Inv $inv) use ($urlGenerator):
                 string {
-                    return $urlGenerator->generate('inv/pdf_dashboard_include_cf',
+                    return $urlGenerator->generate('inv/pdfDashboardIncludeCf',
                             ['id' => $inv->getId()]);
                 },
                 attributes: [
@@ -610,8 +610,8 @@ $columns = [
                 content: '📨',
                 url: static function (Inv $inv) use ($urlGenerator): string {
                     // draft invoices cannot be emailed
-                    if ($inv->getStatus_id() !== 1) {
-                        return $urlGenerator->generate('inv/email_stage_0',
+                    if ($inv->getStatusId() !== 1) {
+                        return $urlGenerator->generate('inv/emailStage0',
                                                         ['id' => $inv->getId()]);
                     }
                     return '';
@@ -684,7 +684,7 @@ $columns = [
         header: $translator->translate(
             'datetime.immutable.date.created.mySql.format.year.month.filter'),
         content: static fn (Inv $model):
-                        string => ($model->getDate_created())->format('Y-m-d'),
+                        string => ($model->getDateCreated())->format('Y-m-d'),
         filter: DropdownFilter::widget()
             ->addAttributes([
                 'id'         => 'filter-year-month',
@@ -720,7 +720,7 @@ $columns = [
         encodeHeader: false,
         content: static function (Inv $model) use ($iR, $s, $irR, $translator):
                                                                         string {
-            $statusId = $model->getStatus_id();
+            $statusId = $model->getStatusId();
             if ($statusId === null) {
                 return '<span class="label label-default">N/A</span>';
             }
@@ -728,7 +728,7 @@ $columns = [
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
             
             // Add read-only indicator
-            if (($model->getIs_read_only())
+            if (($model->getIsReadOnly())
                                 && $s->getSetting('disable_read_only') == '0') {
                 $label .= ' 🚫';
             }
@@ -770,9 +770,9 @@ $columns = [
                     'style' => 'text-decoration:none',                            
                 ])    
                 ->href($urlGenerator->generate('client/edit',
-                    ['id' => $model->getClient()?->getClient_id(),
+                    ['id' => $model->getClient()?->getClientId(),
                         'origin' => 'inv']))
-                ->content($model->getClient()?->getClient_active() ? '✅' : '❌'
+                ->content($model->getClient()?->getClientActive() ? '✅' : '❌'
             );
         },
     ),
@@ -787,14 +787,14 @@ $columns = [
         property: 'filterCreditInvNumber',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
             $visible = $iR->repoInvUnLoadedquery(
-                                        $model->getCreditinvoice_parent_id());
+                                        $model->getCreditinvoiceParentId());
             if (null !== $visible) {
                 $url = ($visible->getNumber() ?? '#') . '💳';
                 return   new A()
                         ->addAttributes(['style' => 'text-decoration:none'])
                         ->content($url)
                         ->href($urlGenerator->generate('inv/view',
-                                ['id' => $model->getCreditinvoice_parent_id()]));
+                                ['id' => $model->getCreditinvoiceParentId()]));
             }
             return  new A()->content('')->href('');
         },
@@ -914,7 +914,7 @@ $columns = [
         property: 'filterClient',
         header: $translator->translate('client'),
         content: static fn (Inv $model):
-            string => Html::encode($model->getClient()?->getClient_full_name()),
+            string => Html::encode($model->getClient()?->getClientFullName()),
         encodeContent: false,
         filter: DropdownFilter::widget()
                 ->addAttributes([
@@ -931,14 +931,14 @@ $columns = [
         'client_number',
         header: $translator->translate('client.number'),
         content: static fn (Inv $model):
-                string => Html::encode($model->getClient()?->getClient_number()),
+                string => Html::encode($model->getClient()?->getClientNumber()),
         encodeContent: false,
     ),
     new DataColumn(
         property: 'filterClientAddress1',
         header: $translator->translate('street.address'),
         content: static fn (Inv $model):
-            string => Html::encode($model->getClient()?->getClient_address_1()),
+            string => Html::encode($model->getClient()?->getClientAddress1()),
         encodeContent: false,
         filter: TextInputFilter::widget()
                 ->addAttributes([
@@ -953,14 +953,14 @@ $columns = [
         'client_address_2',
         header: $translator->translate('street.address.2'),
         content: static fn (Inv $model):
-            string => Html::encode($model->getClient()?->getClient_address_2()),
+            string => Html::encode($model->getClient()?->getClientAddress2()),
         encodeContent: false,
     ),
         new DataColumn(
         property: 'filterClientGroup',
         header: $translator->translate('client.group'),
         content: static fn (Inv $model):
-                        string => $model->getClient()?->getClient_group() ?? '',
+                        string => $model->getClient()?->getClientGroup() ?? '',
         filter: DropdownFilter::widget()
             ->addAttributes([
                 'id'         => 'filter-client-group',
@@ -977,23 +977,23 @@ $columns = [
         header: $translator->translate('datetime.immutable.time.created'),
         // Show only the time of the DateTimeImmutable
         content: static fn (Inv $model):
-                        string => ($model->getTime_created())->format('H:i:s'),
+                        string => ($model->getTimeCreated())->format('H:i:s'),
         visible: $visible,
     ),
     new DataColumn(
         'date_modified',
         header: $translator->translate('datetime.immutable.date.modified'),
         content: static function (Inv $model): Label {
-            if ($model->getDate_modified() <> $model->getDate_created()) {
+            if ($model->getDateModified() <> $model->getDateCreated()) {
                 return  new Label()
                        ->attributes(['class' => 'label label-danger'])
                        ->content(
-                    Html::encode($model->getDate_modified()->format('Y-m-d')));
+                    Html::encode($model->getDateModified()->format('Y-m-d')));
             } else {
                 return  new Label()
                        ->attributes(['class' => 'label label-success'])
                        ->content(
-                    Html::encode($model->getDate_modified()->format('Y-m-d')));
+                    Html::encode($model->getDateModified()->format('Y-m-d')));
             }
         },
         encodeContent: false,
@@ -1007,10 +1007,10 @@ $columns = [
             return  new Label()
                     ->attributes(
                         [
-                            'class' => $model->getDate_due() > $now
+                            'class' => $model->getDateDue() > $now
                             ? 'label label-success' : 'label label-warning'])
                     ->content(Html::encode(
-                            !is_string($dateDue = $model->getDate_due())
+                            !is_string($dateDue = $model->getDateDue())
                             ? $dateDue->format('Y-m-d') : ''));
         },
         encodeContent: false,
@@ -1133,7 +1133,7 @@ $columns = [
  * Related logic: see config/common/routes/routes.php Route::methods([Method::GET,
  *  Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
  */
-                    'client_id' => $model->getClient_id(),
+                    'client_id' => $model->getClientId(),
                 ],
                 [
                     'origin' => 'inv',
@@ -1150,10 +1150,10 @@ $columns = [
         'quote_id',
         header: $translator->translate('quote.number.status'),
         content: static function (Inv $model) use ($urlGenerator, $qR): string|A {
-            $quote_id = $model->getQuote_id();
+            $quote_id = $model->getQuoteId();
             $quote = $qR->repoQuoteUnloadedquery($quote_id);
             if (null !== $quote) {
-                $statusId = $quote->getStatus_id();
+                $statusId = $quote->getStatusId();
                 if (null !== $statusId) {
                     return Html::a(
                         ($quote->getNumber() ?? '#')
@@ -1177,10 +1177,10 @@ $columns = [
         'so_id',
         header: $translator->translate('salesorder.number.status'),
         content: static function (Inv $model) use ($urlGenerator, $soR): string|A {
-            $so_id = $model->getSo_id();
+            $so_id = $model->getSoId();
             $so = $soR->repoSalesOrderUnloadedquery($so_id);
             if (null !== $so) {
-                $statusId = $so->getStatus_id();
+                $statusId = $so->getStatusId();
                 if (null !== $statusId) {
                     return Html::a(($so->getNumber() ?? '#')
                      . ' ' . $soR->getSpecificStatusArrayLabel((string) $statusId),
@@ -1200,9 +1200,9 @@ $columns = [
         'delivery_location_id',
         header: $translator->translate('delivery.location.global.location.number'),
         content: static function (Inv $model) use ($dlR): string {
-            $delivery_location_id = $model->getDelivery_location_id();
+            $delivery_location_id = $model->getDeliveryLocationId();
             $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery($delivery_location_id) : null);
-            return null !== $delivery_location ? Html::encode($delivery_location->getGlobal_location_number()) : '';
+            return null !== $delivery_location ? Html::encode($delivery_location->getGlobalLocationNumber()) : '';
         },
         encodeContent: false,
         visible: $visible,
@@ -1216,21 +1216,21 @@ $columns = [
             new ActionButton(
                 content: '🗑️',
                 url: static function (Inv $model) use ($s, $urlGenerator): string {
-                    return $model->getIs_read_only() === false
+                    return $model->getIsReadOnly() === false
                             && $s->getSetting('disable_read_only')
                             === (string) 0
-                            && $model->getSo_id() === '0'
-                            && $model->getQuote_id() === '0'
+                            && $model->getSoId() === '0'
+                            && $model->getQuoteId() === '0'
                         ? $urlGenerator->generate('inv/delete', [
                             'id' => $model->getId()])
                         : '';
                 },
                 attributes: static function (Inv $model)
                                                     use ($s, $translator): array {
-                    if ($model->getIs_read_only() === false
+                    if ($model->getIsReadOnly() === false
                             && $s->getSetting('disable_read_only') === (string) 0
-                            && $model->getSo_id() === '0'
-                            && $model->getQuote_id() === '0') {
+                            && $model->getSoId() === '0'
+                            && $model->getQuoteId() === '0') {
                         return [
                             'data-bs-toggle' => 'tooltip',
                             'title' => $translator->translate('delete'),
@@ -1359,14 +1359,14 @@ $previousGroupValue = '';
 // Function to get group value based on selected field
 $getGroupValue = static function (Inv $invoice) use ($groupBy, $iR): string {
     return match ($groupBy) {
-        'client' => $invoice->getClient()?->getClient_full_name()
+        'client' => $invoice->getClient()?->getClientFullName()
                                                             ?? 'Unknown Client',
         'status' => $iR->getSpecificStatusArrayLabel(
-                                             (string) $invoice->getStatus_id()),
-        'month' => $invoice->getDate_created()->format('Y-m'),
-        'year' => $invoice->getDate_created()->format('Y'),
-        'date' => $invoice->getDate_created()->format('Y-m-d'),
-        'client_group' => $invoice->getClient()?->getClient_group() ?? 'No Group',
+                                             (string) $invoice->getStatusId()),
+        'month' => $invoice->getDateCreated()->format('Y-m'),
+        'year' => $invoice->getDateCreated()->format('Y'),
+        'date' => $invoice->getDateCreated()->format('Y-m-d'),
+        'client_group' => $invoice->getClient()?->getClientGroup() ?? 'No Group',
         'amount_range' => match (true) {
             ($invoice->getInvAmount()->getTotal() ?? 0) < 100 => '< $100',
             ($invoice->getInvAmount()->getTotal() ?? 0) < 500 => '$100 - $500',

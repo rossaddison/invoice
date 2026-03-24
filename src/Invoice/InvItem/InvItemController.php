@@ -72,7 +72,7 @@ final class InvItemController extends BaseController
      * @param IIR $iiR
      * @return \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\ResponseInterface
      */
-    public function add_product(
+    public function addProduct(
         Request $request,
         FormHydrator $formHydrator,
         PR $pR,
@@ -88,7 +88,7 @@ final class InvItemController extends BaseController
         $form = new InvItemForm($invitem, (int) $inv_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => 'invitem/add_product',
+            'actionName' => 'invitem/addProduct',
             'errors' => [],
             'form' => $form,
             'inv_id' => $inv_id,
@@ -102,7 +102,7 @@ final class InvItemController extends BaseController
             $body = $request->getParsedBody() ?? [];
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                    $this->invitemService->addInvItem_product($invitem, $body, $inv_id, $pR, $trR, new IIAS($iiar, $iiR),  $iiar, $this->sR, $uR);
+                    $this->invitemService->addInvItemProduct($invitem, $body, $inv_id, $pR, $trR, new IIAS($iiar, $iiR),  $iiar, $this->sR, $uR);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                 }
@@ -122,7 +122,7 @@ final class InvItemController extends BaseController
      * @param IRR $irR
      * @param IIAR $iiar
      */
-    public function add_task(
+    public function addTask(
         Request $request,
         FormHydrator $formHydrator,
         TaskR $taskR,
@@ -138,7 +138,7 @@ final class InvItemController extends BaseController
         $form = new InvItemForm($invitem, (int) $inv_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => 'invitem/add_task',
+            'actionName' => 'invitem/addTask',
             'errors' => [],
             'form' => $form,
             'inv_id' => $inv_id,
@@ -153,7 +153,7 @@ final class InvItemController extends BaseController
             $body = $request->getParsedBody();
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 if (is_array($body)) {
-                    $this->invitemService->addInvItem_task($invitem, $body,
+                    $this->invitemService->addInvItemTask($invitem, $body,
                             $inv_id, $taskR, $trR, new IIAS($iiar, $iiR), $iiar);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
@@ -166,11 +166,11 @@ final class InvItemController extends BaseController
     }
 
     /**
-     * Used with function edit_product
+     * Used with function editProduct
      * @param EntityReader $inv_item_allowances_charges
      * @return float
      */
-    public function accumulative_allowances(EntityReader $inv_item_allowances_charges): float
+    public function accumulativeAllowances(EntityReader $inv_item_allowances_charges): float
     {
         $allowances = 0.00;
         /** @var InvItemAllowanceCharge $acii */
@@ -183,11 +183,11 @@ final class InvItemController extends BaseController
     }
 
     /**
-     * Used with function edit_product
+     * Used with function editProduct
      * @param EntityReader $inv_item_allowances_charges
      * @return float
      */
-    public function accumulative_charges(EntityReader $inv_item_allowances_charges): float
+    public function accumulativeCharges(EntityReader $inv_item_allowances_charges): float
     {
         $charges = 0.00;
         /** @var InvItemAllowanceCharge $acii */
@@ -220,7 +220,7 @@ final class InvItemController extends BaseController
      * @param ACIIR $aciiR
      * @return \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\ResponseInterface
      */
-    public function edit_product(
+    public function editProduct(
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
@@ -250,7 +250,7 @@ final class InvItemController extends BaseController
             $inv_item_allowances_charges = $aciiR->repoInvItemquery((string) $inv_item_id);
             $parameters = [
                 'title' => $this->translator->translate('product.edit'),
-                'actionName' => 'invitem/edit_product',
+                'actionName' => 'invitem/editProduct',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'addItemActionName' => 'invitemallowancecharge/add',
                 'addItemActionArguments' => ['inv_item_id' => $inv_item_id],
@@ -283,13 +283,13 @@ final class InvItemController extends BaseController
                     $discount = (float) ($body['discount_amount'] ?? 0.00);
                     // Goal: Accumulate all charges from invitemallowancecharge
                     // and save in invitemamount->charge
-                    $charge = $this->accumulative_charges($inv_item_allowances_charges) ?: 0.00;
+                    $charge = $this->accumulativeCharges($inv_item_allowances_charges) ?: 0.00;
                     // Goal: Accumulate all allowances from invitemallowancecharge
                     // and save in invitemamount->allowance
-                    $allowance = $this->accumulative_allowances($inv_item_allowances_charges) ?: 0.00;
+                    $allowance = $this->accumulativeAllowances($inv_item_allowances_charges) ?: 0.00;
                     if (is_array($body)) {
-                        $tax_rate_id = $this->invitemService->saveInvItem_product($inv_item, $body, $inv_id, $pR, $uR) ?: 1;
-                        $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
+                        $tax_rate_id = $this->invitemService->saveInvItemProduct($inv_item, $body, $inv_id, $pR, $uR) ?: 1;
+                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $trR);
                         if (null !== $tax_rate_percentage) {
                             /**
                              * @psalm-suppress PossiblyNullReference getId
@@ -308,7 +308,7 @@ final class InvItemController extends BaseController
                                 $this->sR,
                             );
                             $numberHelper = new NumberHelper($this->sR);
-                            $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+                            $numberHelper->calculateInv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
                             $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }
@@ -327,7 +327,7 @@ final class InvItemController extends BaseController
      * @param TRR $trr
      * @return float|null
      */
-    public function taxrate_percentage(int $id, TRR $trr): ?float
+    public function taxratePercentage(int $id, TRR $trr): ?float
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {
@@ -409,7 +409,7 @@ final class InvItemController extends BaseController
      * @param IIAR $iiaR
      * @return \Psr\Http\Message\ResponseInterface|\Psr\Http\Message\ResponseInterface
      */
-    public function edit_task(
+    public function editTask(
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
@@ -434,7 +434,7 @@ final class InvItemController extends BaseController
             $form = new InvItemForm($inv_item, (int) $inv_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
-                'actionName' => 'invitem/edit_task',
+                'actionName' => 'invitem/editTask',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
                 // if null inv_item, initialize it => prevent psalm PossiblyNullArgument error
@@ -456,18 +456,18 @@ final class InvItemController extends BaseController
                     // Goal: Accumulate all charges from invitemallowancecharge
                     // and save in invitemamount->charge
                     $inv_item_allowances_charges = $aciiR->repoInvItemquery((string) $inv_item->getId());
-                    $charge = $this->accumulative_charges($inv_item_allowances_charges) ?: 0.00;
+                    $charge = $this->accumulativeCharges($inv_item_allowances_charges) ?: 0.00;
                     // Goal: Accumulate all allowances from invitemallowancecharge
                     // and save in invitemamount->allowance
-                    $allowance = $this->accumulative_allowances($inv_item_allowances_charges) ?: 0.00;
+                    $allowance = $this->accumulativeAllowances($inv_item_allowances_charges) ?: 0.00;
                     if (is_array($body)) {
-                        $tax_rate_id = $this->invitemService->saveInvItem_task($inv_item, $body, $inv_id, $taskR) ?: 1;
-                        $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
+                        $tax_rate_id = $this->invitemService->saveInvItemTask($inv_item, $body, $inv_id, $taskR) ?: 1;
+                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $trR);
                         if (null !== $tax_rate_percentage) {
                             $request_inv_item = (int) $inv_item->getId();
                             $this->saveInvItemAmount($request_inv_item, $quantity, $price, $discount, $charge, $allowance, $tax_rate_percentage, $iias, $iiaR, $this->sR);
                             $numberHelper = new NumberHelper($this->sR);
-                            $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+                            $numberHelper->calculateInv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
                             $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
                             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
                         }

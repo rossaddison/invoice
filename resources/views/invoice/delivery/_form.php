@@ -80,7 +80,7 @@ Field::hidden($form, 'date_created')
     'role' => 'presentation',
     'autocomplete' => 'off',
 ])
-->value(!is_string($createdDate = $form->getDate_created()) ?
+->value(!is_string($createdDate = $form->getDateCreated()) ?
         $createdDate->format('Y-m-d') : '')
 ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
@@ -97,7 +97,7 @@ Field::hidden($form, 'date_created')
             'role' => 'presentation',
             'autocomplete' => 'off',
         ])
-        ->value(!is_string($modifiedDate = $form->getDate_modified()) ?
+        ->value(!is_string($modifiedDate = $form->getDateModified()) ?
                 $modifiedDate->format('Y-m-d') : '')
         ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
@@ -108,7 +108,7 @@ Field::hidden($form, 'date_created')
     ->label($translator->translate('delivery.start.date')
             . ' (' . $dateHelper->display() . ')')
     ->required(true)
-    ->value(!is_string($startDate = $form->getStart_date()) ?
+    ->value(!is_string($startDate = $form->getStartDate()) ?
             $startDate->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
@@ -119,7 +119,7 @@ Field::hidden($form, 'date_created')
     ->label($translator->translate('delivery.actual.delivery.date')
             . ' (' . $dateHelper->display() . ')')
     ->required(true)
-    ->value(!is_string($actualDeliveryDate = $form->getActual_delivery_date())
+    ->value(!is_string($actualDeliveryDate = $form->getActualDeliveryDate())
             ? $actualDeliveryDate->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
@@ -130,7 +130,7 @@ Field::hidden($form, 'date_created')
     ->label($translator->translate('delivery.end.date')
             . ' (' . $dateHelper->display() . ')')
     ->required(true)
-    ->value(!is_string($endDate = $form->getEnd_date()) ?
+    ->value(!is_string($endDate = $form->getEndDate()) ?
             $endDate->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
@@ -144,8 +144,8 @@ Field::hidden($form, 'date_created')
          */
         foreach ($dels as $del) {
             if (null !== $delId = $del->getId()) {
-                $optionsDataDel[$delId] = ($del->getAddress_1() ?? '')
-                        . ', ' . ($del->getAddress_2() ?? '')
+                $optionsDataDel[$delId] = ($del->getAddress1() ?? '')
+                        . ', ' . ($del->getAddress2() ?? '')
                         . ', ' . ($del->getCity() ?? '')
                         . ', ' . ($del->getZip() ?? '');
             }
@@ -157,13 +157,13 @@ Field::hidden($form, 'date_created')
             'id' => 'delivery_location_id',
         ])
         ->optionsData($optionsDataDel)
-        ->value(Html::encode($form->getDelivery_location_id()));
+        ->value(Html::encode($form->getDeliveryLocationId()));
     } else {
         echo Html::a(
             $translator->translate('delivery.location.add'),
             $urlGenerator->generate(
                 'del/add',
-                ['client_id' => $inv->getClient_id()],
+                ['client_id' => $inv->getClientId()],
                 ['origin' => 'delivery',
                     'origin_id' => $currentRoute->getArgument('inv_id'),
                     'action' => 'add'],

@@ -50,7 +50,7 @@ use Yiisoft\Html\Tag\Form;
                 'class' => 'form-control',
                 'disabled' => 'disabled',
             ])
-            ->value($form->getCategory_primary_id())
+            ->value($form->getCategoryPrimaryId())
             ->prompt($translator->translate('none'))
             ->optionsData($category_primarys)
 ?>

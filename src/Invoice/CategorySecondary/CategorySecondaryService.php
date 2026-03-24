@@ -21,7 +21,7 @@ final readonly class CategorySecondaryService
     ): void {
         $this->persist($model, $array);
         isset($array['category_primary_id']) ?
-            $model->setCategory_primary_id(
+            $model->setCategoryPrimaryId(
                 (int) $array['category_primary_id']) : '';
         isset($array['name']) ?
             $model->setName((string) $array['name']) : '';

@@ -35,7 +35,7 @@ final readonly class SalesOrderItemAllowanceChargeService
         );
         if ($allowance_charge) {
             $model->setAllowanceCharge($allowance_charge);
-            $model->setAllowance_charge_id(
+            $model->setAllowanceChargeId(
                 (int) $allowance_charge->getId()
             );
         }
@@ -44,7 +44,7 @@ final readonly class SalesOrderItemAllowanceChargeService
         );
         if ($sales_order_item) {
             $model->setSalesOrderItem($sales_order_item);
-            $model->setSales_order_item_id(
+            $model->setSalesOrderItemId(
                 (int) $sales_order_item->getId()
             );
         }
@@ -53,7 +53,7 @@ final readonly class SalesOrderItemAllowanceChargeService
         );
         if ($sales_order) {
             $model->setSalesOrder($sales_order);
-            $model->setSales_order_id((int) $sales_order->getId());
+            $model->setSalesOrderId((int) $sales_order->getId());
         }
     }
 
@@ -80,7 +80,7 @@ final readonly class SalesOrderItemAllowanceChargeService
         SOIAR $soiaR,
         ACSOIR $acsoiR,
     ): void {
-        $salesorder_item_id = $model->getSales_order_item_id();
+        $salesorder_item_id = $model->getSalesOrderItemId();
         $this->repository->delete($model);
         $salesorder_item_amount =
             $soiaR->repoSalesOrderItemAmountquery(
@@ -122,7 +122,7 @@ final readonly class SalesOrderItemAllowanceChargeService
                 ?->getPrice() ?? 0.00;
             $discount_per_item =
                 $salesorder_item_amount->getSalesOrderItem()
-                ?->getDiscount_amount() ?? 0.00;
+                ?->getDiscountAmount() ?? 0.00;
             $quantity_price = $current_item_quantity
                 * $current_item_price;
             $current_discount_item_total = $current_item_quantity
@@ -141,7 +141,7 @@ final readonly class SalesOrderItemAllowanceChargeService
             $salesorder_item_amount->setDiscount(
                 $current_discount_item_total
             );
-            $salesorder_item_amount->setTax_total($new_tax_total);
+            $salesorder_item_amount->setTaxTotal($new_tax_total);
             $overall_total = $qpIncAc - $current_discount_item_total
                 + $new_tax_total;
             $salesorder_item_amount->setTotal($overall_total);

@@ -55,22 +55,22 @@ class InvCustom
         $this->id = $id;
     }
 
-    public function getInv_id(): string
+    public function getInvId(): string
     {
         return (string) $this->inv_id;
     }
 
-    public function setInv_id(int $inv_id): void
+    public function setInvId(int $inv_id): void
     {
         $this->inv_id = $inv_id;
     }
 
-    public function getCustom_field_id(): string
+    public function getCustomFieldId(): string
     {
         return (string) $this->custom_field_id;
     }
 
-    public function setCustom_field_id(int $custom_field_id): void
+    public function setCustomFieldId(int $custom_field_id): void
     {
         $this->custom_field_id = $custom_field_id;
     }

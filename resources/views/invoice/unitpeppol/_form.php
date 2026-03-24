@@ -59,7 +59,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::select($form, 'unit_id')
     ->label($translator->translate('id'))
     ->optionsData($optionsDataUnits)
-    ->value(Html::encode($form->getUnit_id() ?? ''))
+    ->value(Html::encode($form->getUnitId() ?? ''))
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>

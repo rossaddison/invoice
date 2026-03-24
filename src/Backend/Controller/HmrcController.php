@@ -219,7 +219,7 @@ final class HmrcController extends BaseController
      * @param string $govVendorVersion
      * @return array
      */
-    public function WebAppViaServerBuildArrayFromStrings(
+    public function webAppViaServerBuildArrayFromStrings(
         string $govClientConnectionMethod,
         string $govClientBrowserJsUserAgent,
         string $govClientDeviceID,

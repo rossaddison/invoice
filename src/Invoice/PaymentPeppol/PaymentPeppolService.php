@@ -25,7 +25,7 @@ final readonly class PaymentPeppolService
     ): void {
         $this->persist($model, $array);
         isset($array['inv_id']) ? 
-            $model->setInv_id((int) $array['inv_id']) : '';
+            $model->setInvId((int) $array['inv_id']) : '';
         isset($array['id']) ? 
             $model->setId((int) $array['id']) : '';
         isset($array['provider']) ? 
@@ -34,7 +34,7 @@ final readonly class PaymentPeppolService
         $timestamp = (new \DateTimeImmutable())
             ->setTimestamp((int) $array['auto_reference'])
             ->getTimestamp();
-        $model->setAuto_reference($timestamp);
+        $model->setAutoReference($timestamp);
 
         $this->repository->save($model);
     }

@@ -76,13 +76,13 @@ use Yiisoft\Html\Tag\Form;
                         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                             <?= Field::text($form, 'logo_filename')
                                 ->readonly(true)
-                                ->value($form->getLogo_filename()); ?>
+                                ->value($form->getLogoFilename()); ?>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                             <?= Field::image()
-                               ->src('/logo/' . ($form->getLogo_filename() ?? '#'))
-                               ->height($form->getLogo_height())
-                               ->width($form->getLogo_width()); ?>
+                               ->src('/logo/' . ($form->getLogoFilename() ?? '#'))
+                               ->height($form->getLogoHeight())
+                               ->width($form->getLogoWidth()); ?>
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>  
                 <?= Html::Tag('br'); ?> 
@@ -109,7 +109,7 @@ use Yiisoft\Html\Tag\Form;
                                     'disabled' => 'disabled',
                                 ],
                             )
-                            ->value(Html::encode(!is_string($startdate = $form->getStart_date()) && null !== $startdate
+                            ->value(Html::encode(!is_string($startdate = $form->getStartDate()) && null !== $startdate
                                                 ? $startdate->format('Y-m-d')
                                                 : (new \DateTimeImmutable('now'))->format('Y-m-d')));
 ?>
@@ -126,7 +126,7 @@ use Yiisoft\Html\Tag\Form;
             'disabled' => 'disabled',
         ],
     )
-    ->value(Html::encode(!is_string($enddate = $form->getEnd_date()) && null !== $enddate
+    ->value(Html::encode(!is_string($enddate = $form->getEndDate()) && null !== $enddate
                         ? $enddate->format('Y-m-d')
                         : (new \DateTimeImmutable('now'))->format('Y-m-d')));
 ?>

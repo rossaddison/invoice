@@ -64,7 +64,7 @@ use Yiisoft\Html\Tag\Form;
         'id' => 'user_id',
     ])
     ->hideLabel(true)
-    ->value(Html::encode($form->getUser_id() ?? ''));
+    ->value(Html::encode($form->getUserId() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -102,7 +102,7 @@ echo Field::select($form, 'type')
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::hidden($form, 'all_clients')
 ->hideLabel(true)
-->value(Html::encode($form->getAll_clients()));
+->value(Html::encode($form->getAllClients()));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group no-margin']); ?>
@@ -161,7 +161,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'address_1',
     ])
-    ->value(Html::encode($form->getAddress_1() ?? ''))
+    ->value(Html::encode($form->getAddress1() ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -173,7 +173,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'address_2',
     ])
-    ->value(Html::encode($form->getAddress_2() ?? ''))
+    ->value(Html::encode($form->getAddress2() ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>
@@ -294,7 +294,7 @@ echo Field::select($form, 'language')
         'class' => 'form-control',
         'id' => 'tax_code',
     ])
-    ->value(Html::encode($form->getTax_code() ?? ''))
+    ->value(Html::encode($form->getTaxCode() ?? ''))
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
         <?= Html::closeTag('div'); ?>

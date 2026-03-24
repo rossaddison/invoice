@@ -74,14 +74,14 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Product $model) => Html::encode($model->getProduct_id()),
+        content: static fn (Product $model) => Html::encode($model->getProductId()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'family_id',
         header: $translator->translate('family.name'),
         encodeHeader: true,
-        content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamily_name() ?? ''),
+        content: static fn (Product $model): string => Html::encode($model->getFamily()?->getFamilyName() ?? ''),
         filter: DropdownFilter::widget()
                 ->addAttributes([
                     'name' => 'family_id',
@@ -95,7 +95,7 @@ $columns = [
         property: 'product_name',
         header: $translator->translate('product.name'),
         encodeHeader: true,
-        content: static fn (Product $model): string => Html::encode($model->getProduct_name()),
+        content: static fn (Product $model): string => Html::encode($model->getProductName()),
         visible: true,
         withSorting: false,
     ),
@@ -103,7 +103,7 @@ $columns = [
         property: 'product_sku',
         header: $translator->translate('product.sku'),
         encodeHeader: true,
-        content: static fn (Product $model): string => Html::encode($model->getProduct_sku()),
+        content: static fn (Product $model): string => Html::encode($model->getProductSku()),
         filter: DropdownFilter::widget()
                 ->addAttributes([
                     'name' => 'product_sku',
@@ -116,14 +116,14 @@ $columns = [
     new DataColumn(
         property: 'product_description',
         header: $translator->translate('product.description'),
-        content: static fn (Product $model): string => Html::encode(ucfirst($model->getProduct_description() ?? '')),
+        content: static fn (Product $model): string => Html::encode(ucfirst($model->getProductDescription() ?? '')),
         visible: true,
         withSorting: true,
     ),
     new DataColumn(
         property: 'product_price',
         header: $translator->translate('product.price') . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
-        content: static fn (Product $model): string => Html::encode($model->getProduct_price()),
+        content: static fn (Product $model): string => Html::encode($model->getProductPrice()),
         filter: TextInputFilter::widget()
                 ->addAttributes([
                     'style' => 'max-width: 50px',
@@ -135,14 +135,14 @@ $columns = [
     new DataColumn(
         property: 'product_price_base_quantity',
         header: $translator->translate('product.price.base.quantity'),
-        content: static fn (Product $model): string => Html::encode($model->getProduct_price_base_quantity()),
+        content: static fn (Product $model): string => Html::encode($model->getProductPriceBaseQuantity()),
         visible: $visible,
         withSorting: true,
     ),
     new DataColumn(
         property: 'product_unit',
         header: $translator->translate('product.unit'),
-        content: static fn (Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnit_name() ?? ''))),
+        content: static fn (Product $model): string => Html::encode((ucfirst($model->getUnit()?->getUnitName() ?? ''))),
         visible: true,
     ),
     new DataColumn(
@@ -159,7 +159,7 @@ $columns = [
         content: static function (Product $model) use ($urlGenerator): A {
             return Html::a(
                 Html::tag('i', '', ['class' => 'fa fa-plus fa-margin dropdown-button text-decoration-none']),
-                $urlGenerator->generate('productproperty/add', ['product_id' => $model->getProduct_id()]),
+                $urlGenerator->generate('productproperty/add', ['product_id' => $model->getProductId()]),
                 [],
             );
         },
@@ -174,7 +174,7 @@ $columns = [
             content: '🔎',
             url: function (Product $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/view', ['id' => $model->getProduct_id()]);
+                return $urlGenerator->generate('product/view', ['id' => $model->getProductId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -186,7 +186,7 @@ $columns = [
             content: '✎',
             url: function (Product $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/edit', ['id' => $model->getProduct_id()]);
+                return $urlGenerator->generate('product/edit', ['id' => $model->getProductId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -198,7 +198,7 @@ $columns = [
             content: '❌',
             url: function (Product $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/delete', ['id' => $model->getProduct_id()]);
+                return $urlGenerator->generate('product/delete', ['id' => $model->getProductId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

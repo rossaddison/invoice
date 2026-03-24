@@ -19,28 +19,28 @@ final class InvTaxRateForm extends FormModel
 
     public function __construct(InvTaxRate $invTaxRate)
     {
-        $this->inv_id = $invTaxRate->getInv_id();
-        $this->tax_rate_id = $invTaxRate->getTax_rate_id();
-        $this->include_item_tax = $invTaxRate->getInclude_item_tax();
-        $this->inv_tax_rate_amount = $invTaxRate->getInv_tax_rate_amount();
+        $this->inv_id = $invTaxRate->getInvId();
+        $this->tax_rate_id = $invTaxRate->getTaxRateId();
+        $this->include_item_tax = $invTaxRate->getIncludeItemTax();
+        $this->inv_tax_rate_amount = $invTaxRate->getInvTaxRateAmount();
     }
 
-    public function getInv_id(): ?string
+    public function getInvId(): ?string
     {
         return $this->inv_id;
     }
 
-    public function getTax_rate_id(): ?string
+    public function getTaxRateId(): ?string
     {
         return $this->tax_rate_id;
     }
 
-    public function getInclude_item_tax(): ?int
+    public function getIncludeItemTax(): ?int
     {
         return $this->include_item_tax;
     }
 
-    public function getInv_tax_rate_amount(): ?float
+    public function getInvTaxRateAmount(): ?float
     {
         return $this->inv_tax_rate_amount;
     }

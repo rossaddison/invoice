@@ -82,7 +82,7 @@ foreach ($companies as $company) {
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?> 
                     <?= Html::openTag('label'); ?>
-                        <?= Html::encode($form->getLogo_filename()); ?>
+                        <?= Html::encode($form->getLogoFilename()); ?>
                     <?= Html::closeTag('label'); ?>
                     <?= $formFields->companyPrivateFileField($form, 'logo_filename'); ?>
                 <?= Html::closeTag('div'); ?>

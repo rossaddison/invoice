@@ -49,8 +49,8 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             if ($company->getCurrent() == '1') {
                 $companyName = $company->getName();
                 $companyWeb = $company->getWeb();
-                $companyAddress1 = $company->getAddress_1();
-                $companyAddress2 = $company->getAddress_2();
+                $companyAddress1 = $company->getAddress1();
+                $companyAddress2 = $company->getAddress2();
                 $companyCity = $company->getCity();
                 $companyState = $company->getState();
                 $companyZip = $company->getZip();
@@ -64,13 +64,13 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompany_id() == (string) $company->getId()) {
+                    if ($private->getCompanyId() == (string) $company->getId()) {
                         // site's logo: take the first logo where the current date falls within the logo's start and end dates
-                        if (($private->getStart_date()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEnd_date()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
-                            $companyLogoFileName = $private->getLogo_filename();
-                            $companyLogoWidth = $private->getLogo_width();
-                            $companyLogoHeight = $private->getLogo_height();
-                            $companyStartDate = $private->getStart_date()?->format('Y-m-d');
+                        if (($private->getStartDate()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEndDate()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
+                            $companyLogoFileName = $private->getLogoFilename();
+                            $companyLogoWidth = $private->getLogoWidth();
+                            $companyLogoHeight = $private->getLogoHeight();
+                            $companyStartDate = $private->getStartDate()?->format('Y-m-d');
                             //  break;
                         }
                     }
@@ -80,7 +80,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
         $logoPath = (
             (isset($companyLogoFileName) && !empty($companyLogoFileName))
                                       ? '/logo/' . $companyLogoFileName
-                                      : '/site/' . $this->settingRepository->public_logo() . '.png'
+                                      : '/site/' . $this->settingRepository->publicLogo() . '.png'
         );
 
         return [

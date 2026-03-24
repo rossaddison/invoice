@@ -40,7 +40,7 @@ class LegalMonetaryTotal implements XmlSerializable
              */
             [
                 'name' => Schema::CBC . 'LineExtensionAmount',
-                'value' => $this->s->currency_converter(number_format(
+                'value' => $this->s->currencyConverter(number_format(
                         $this->lineExtensionAmount
                         ?: 0.00, 2, '.', '')),
                 'attributes' => [
@@ -49,7 +49,7 @@ class LegalMonetaryTotal implements XmlSerializable
             ],
             [
                 'name' => Schema::CBC . 'TaxExclusiveAmount',
-                'value' => $this->s->currency_converter(number_format(
+                'value' => $this->s->currencyConverter(number_format(
                         $this->taxExclusiveAmount
                         ?: 0.00, 2, '.', '')),
                 'attributes' => [
@@ -58,7 +58,7 @@ class LegalMonetaryTotal implements XmlSerializable
             ],
             [
                 'name' => Schema::CBC . 'TaxInclusiveAmount',
-                'value' => $this->s->currency_converter(number_format(
+                'value' => $this->s->currencyConverter(number_format(
                         $this->taxInclusiveAmount
                         ?: 0.00, 2, '.', '')),
                 'attributes' => [
@@ -67,7 +67,7 @@ class LegalMonetaryTotal implements XmlSerializable
             ],
             [
                 'name' => Schema::CBC . 'AllowanceTotalAmount',
-                'value' => $this->s->currency_converter(number_format(
+                'value' => $this->s->currencyConverter(number_format(
                         $this->allowanceTotalAmount
                         ?: 0.00, 2, '.', '')),
                 'attributes' => [
@@ -76,7 +76,7 @@ class LegalMonetaryTotal implements XmlSerializable
             ],
             [
                 'name' => Schema::CBC . 'PayableAmount',
-                'value' => $this->s->currency_converter(number_format(
+                'value' => $this->s->currencyConverter(number_format(
                         $this->payableAmount
                         ?: 0.00, 2, '.', '')),
                 'attributes' => [

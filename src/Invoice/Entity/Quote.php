@@ -142,17 +142,17 @@ class Quote
         $this->id = $id;
     }
 
-    public function getUser_id(): string
+    public function getUserId(): string
     {
         return (string) $this->user_id;
     }
 
-    public function setUser_id(int $user_id): void
+    public function setUserId(int $user_id): void
     {
         $this->user_id = $user_id;
     }
 
-    public function getSo_id(): string
+    public function getSoId(): string
     {
         return (string) $this->so_id;
     }
@@ -160,12 +160,12 @@ class Quote
     /**
      * @param int|string|null $so_id
      */
-    public function setSo_id(string|int|null $so_id): void
+    public function setSoId(string|int|null $so_id): void
     {
         $so_id === null ? $this->so_id = null : $this->so_id = (int) $so_id ;
     }
 
-    public function getInv_id(): string
+    public function getInvId(): string
     {
         return (string) $this->inv_id;
     }
@@ -173,52 +173,52 @@ class Quote
     /**
      * @param int|string|null $inv_id
      */
-    public function setInv_id(string|int|null $inv_id): void
+    public function setInvId(string|int|null $inv_id): void
     {
         $inv_id === null ? $this->inv_id = null : $this->inv_id = (int) $inv_id ;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
 
-    public function getGroup_id(): string
+    public function getGroupId(): string
     {
         return (string) $this->group_id;
     }
 
-    public function setGroup_id(int $group_id): void
+    public function setGroupId(int $group_id): void
     {
         $this->group_id = $group_id;
     }
 
-    public function getDelivery_location_id(): string
+    public function getDeliveryLocationId(): string
     {
         return (string) $this->delivery_location_id;
     }
 
-    public function setDelivery_location_id(int $delivery_location_id): void
+    public function setDeliveryLocationId(int $delivery_location_id): void
     {
         $this->delivery_location_id = $delivery_location_id;
     }
 
-    public function getContract_id(): string
+    public function getContractId(): string
     {
         return (string) $this->contract_id;
     }
 
-    public function setContract_id(int $contract_id): void
+    public function setContractId(int $contract_id): void
     {
         $this->contract_id = $contract_id;
     }
 
-    public function getStatus_id(): ?int
+    public function getStatusId(): ?int
     {
         return $this->status_id;
     }
@@ -237,27 +237,27 @@ class Quote
         };
     }
 
-    public function setStatus_id(int $status_id): void
+    public function setStatusId(int $status_id): void
     {
         !in_array($status_id, [1,2,3,4,5,6,7]) ? $this->status_id = 1 : $this->status_id = $status_id ;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function setDate_created(DateTimeImmutable $date_created): void
+    public function setDateCreated(DateTimeImmutable $date_created): void
     {
         $this->date_created = $date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
 
-    public function setDate_expires(sR $sR): void
+    public function setDateExpires(sR $sR): void
     {
         $days = 30;
         if ($sR->repoCount('quotes_expire_after') == 0) {
@@ -265,23 +265,23 @@ class Quote
         } else {
             $setting = $sR->withKey('quotes_expire_after');
             if ($setting) {
-                $days = $setting->getSetting_value() ?: 30;
+                $days = $setting->getSettingValue() ?: 30;
             }
         }
         $this->date_expires = (new DateTimeImmutable('now'))->add(new \DateInterval('P' . (string) $days . 'D'));
     }
 
-    public function getDate_expires(): DateTimeImmutable
+    public function getDateExpires(): DateTimeImmutable
     {
         return $this->date_expires;
     }
 
-    public function setDate_required(DateTimeImmutable $date_required): void
+    public function setDateRequired(DateTimeImmutable $date_required): void
     {
         $this->date_required = $date_required;
     }
 
-    public function getDate_required(): DateTimeImmutable
+    public function getDateRequired(): DateTimeImmutable
     {
         return $this->date_required;
     }
@@ -296,22 +296,22 @@ class Quote
         $this->number = $number;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function setDiscount_amount(float $discount_amount): void
+    public function setDiscountAmount(float $discount_amount): void
     {
         $this->discount_amount = $discount_amount;
     }
     
-    public function getUrl_key(): string
+    public function getUrlKey(): string
     {
         return $this->url_key;
     }
 
-    public function setUrl_key(string $url_key): void
+    public function setUrlKey(string $url_key): void
     {
         $this->url_key = $url_key;
     }

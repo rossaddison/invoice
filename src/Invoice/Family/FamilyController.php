@@ -97,7 +97,7 @@ final class FamilyController extends BaseController
              */
             'cpR' => $cpR,
             'csR' => $csR,
-            'modal_generate_products' => $this->index_modal_generate_products($taxRateRepository, $unitRepository),
+            'modal_generate_products' => $this->indexModalGenerateProducts($taxRateRepository, $unitRepository),
             'defaultPageSizeOffsetPaginator' => (int) $this->sR->getSetting('default_list_limit'),
         ];
         return $this->webViewRenderer->render('index', $parameters);
@@ -166,7 +166,7 @@ final class FamilyController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->familyService->saveFamily($family, $body);
-                    if (null !== $family_id = $family->getFamily_id()) {
+                    if (null !== $family_id = $family->getFamilyId()) {
                         if (isset($body['custom'])) {
                             // Retrieve the custom array
                             /** @var array $custom */
@@ -293,7 +293,7 @@ final class FamilyController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'family/edit',
-                'actionArguments' => ['id' => $familyId = $family->getFamily_id()],
+                'actionArguments' => ['id' => $familyId = $family->getFamilyId()],
                 'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
                 'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
                 'errors' => [],
@@ -302,13 +302,13 @@ final class FamilyController extends BaseController
                 'form' => $form,
                 'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom')['customFields'],
                 'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom')['customValues'],
-                'familyCustomValues' => $this->family_custom_values((string) $familyId, $fcR),
+                'familyCustomValues' => $this->familyCustomValues((string) $familyId, $fcR),
                 'familyCustomForm' => $familyCustomForm,
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    $returned_form = $this->save_form_fields($body, $form, $family, $formHydrator);
+                    $returned_form = $this->saveFormFields($body, $form, $family, $formHydrator);
                     $parameters['body'] = $body;
                     if (!$returned_form->isValid()) {
                         $parameters['form'] = $returned_form;
@@ -339,7 +339,7 @@ final class FamilyController extends BaseController
      * @param FormHydrator $formHydrator
      * @return FamilyForm
      */
-    public function save_form_fields(array $body, FamilyForm $form, Family $family, FormHydrator $formHydrator): FamilyForm
+    public function saveFormFields(array $body, FamilyForm $form, Family $family, FormHydrator $formHydrator): FamilyForm
     {
         if ($formHydrator->populateAndValidate($form, $body)) {
             $this->familyService->saveFamily($family, $body);
@@ -352,7 +352,7 @@ final class FamilyController extends BaseController
      * @param fcR $fcR
      * @return array
      */
-    public function family_custom_values(string $family_id, fcR $fcR): array
+    public function familyCustomValues(string $family_id, fcR $fcR): array
     {
         $custom_field_form_values = [];
         if ($fcR->repoFamilyCount($family_id) > 0) {
@@ -412,8 +412,8 @@ final class FamilyController extends BaseController
                 'customValues' => $cvR->fixCfValueToCf($cfR->repoTablequery('family_custom')),
                 'cpR' => $cpR,
                 'actionName' => 'family/view',
-                'actionArguments' => ['id' => $familyId = $family->getFamily_id()],                
-                'familyCustomValues' => $this->family_custom_values((string) $familyId, $fcR),
+                'actionArguments' => ['id' => $familyId = $family->getFamilyId()],                
+                'familyCustomValues' => $this->familyCustomValues((string) $familyId, $fcR),
                 'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
                 'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
                 'errors' => [],
@@ -442,7 +442,7 @@ final class FamilyController extends BaseController
      * @param pR $productRepository
      * @return Response
      */
-    public function generate_products(
+    public function generateProducts(
         Request $request,
         fR $familyRepository,
         pR $productRepository
@@ -477,11 +477,11 @@ final class FamilyController extends BaseController
                         continue;
                     }
                     
-                    $commalist = $family->getFamily_commalist();
-                    $productPrefix = $family->getFamily_productprefix();
+                    $commalist = $family->getFamilyCommalist();
+                    $productPrefix = $family->getFamilyProductprefix();
                     
                     if (strlen($cl = $commalist ?? '') === 0 || strlen($pp = $productPrefix ?? '') === 0) {
-                        $errors[] = "Family '{$family->getFamily_name()}' missing comma list or product prefix";
+                        $errors[] = "Family '{$family->getFamilyName()}' missing comma list or product prefix";
                         continue;
                     }
                     
@@ -502,17 +502,17 @@ final class FamilyController extends BaseController
                         
                         // Create new product
                         $product = new Product();
-                        $product->setProduct_name($productName);
-                        $product->setProduct_description($productName);
-                        $product->setProduct_price(0.00);
-                        $product->setFamily_id((int) $familyId);
-                        $product->setTax_rate_id((int) $taxRateId);
-                        $product->setUnit_id((int) $unitId);
-                        $product->setProduct_sku($item); // Use the item as SKU
+                        $product->setProductName($productName);
+                        $product->setProductDescription($productName);
+                        $product->setProductPrice(0.00);
+                        $product->setFamilyId((int) $familyId);
+                        $product->setTaxRateId((int) $taxRateId);
+                        $product->setUnitId((int) $unitId);
+                        $product->setProductSku($item); // Use the item as SKU
                         
                         $productRepository->save($product);
-                        if ($product->getProduct_id()) {
-                            $newProductIds[] = $product->getProduct_id();
+                        if ($product->getProductId()) {
+                            $newProductIds[] = $product->getProductId();
                         }
                         $generatedCount++;
                     }
@@ -565,7 +565,7 @@ final class FamilyController extends BaseController
     /**
      * Generate the product generation modal
      */
-    private function index_modal_generate_products(trR $taxRateRepository, uR $unitRepository): string
+    private function indexModalGenerateProducts(trR $taxRateRepository, uR $unitRepository): string
     {
         return $this->webViewRenderer->renderPartialAsString('//invoice/family/modal_generate_products', [
             'taxRates' => $taxRateRepository->findAllPreloaded(),

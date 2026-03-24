@@ -18,7 +18,7 @@ final class DeliveryPartyForm extends FormModel
         $this->party_name = $delivery_party->getPartyName();
     }
 
-    public function getParty_name(): ?string
+    public function getPartyName(): ?string
     {
         return $this->party_name;
     }

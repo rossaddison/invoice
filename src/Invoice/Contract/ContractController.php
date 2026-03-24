@@ -73,7 +73,7 @@ final class ContractController extends BaseController
             // - => 'desc'  so -id => default descending on id
             // Show the latest quotes first => -id
             ->withOrderString($query_params['sort'] ?? '-id');
-        $contracts = $this->contracts_with_sort($contractR, $sort);
+        $contracts = $this->contractsWithSort($contractR, $sort);
         $this->flashMessage('info', $this->translator->translate('contract.create'));
         $paginator = (new OffsetPaginator($contracts))
         ->withPageSize($this->sR->positiveListLimit())
@@ -104,10 +104,10 @@ final class ContractController extends BaseController
         $client_id = $currentRoute->getArgument('client_id');
         $contract = new Contract();
         // To pass the client id variable to the form, set it first in the entity
-        $contract->setClient_id((int) $client_id);
+        $contract->setClientId((int) $client_id);
         $form = new ContractForm($contract);
         if (null !== $client_id) {
-            $title = $cR->repoClientquery($client_id)->getClient_name();
+            $title = $cR->repoClientquery($client_id)->getClientName();
         } else {
             $title = $this->translator->translate('not.available');
         }
@@ -237,7 +237,7 @@ final class ContractController extends BaseController
                 'errors' => [],
                 'form' => $form,
             ];
-            if ($this->rbacObserver($contract->getClient_id(),
+            if ($this->rbacObserver($contract->getClientId(),
                                                                 $ucR, $uiR)) {
                 return $this->webViewRenderer->render('_view', $parameters);
             }
@@ -249,7 +249,7 @@ final class ContractController extends BaseController
                                     string $clientId, UCR $ucR, UIR $uiR): bool {
         $userClient = $ucR->repoUserquery($clientId);
         if (null!==$userClient) {
-            $userId = $userClient->getUser_id();
+            $userId = $userClient->getUserId();
             $userInv = $uiR->repoUserInvUserIdquery($userId);
             if (null !== $userInv && $userInv->getActive()) {
                 return true;
@@ -283,7 +283,7 @@ final class ContractController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Contract>
      */
-    private function contracts_with_sort(contractR $cR, Sort $sort):
+    private function contractsWithSort(contractR $cR, Sort $sort):
                                     \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $cR->findAllPreloaded()

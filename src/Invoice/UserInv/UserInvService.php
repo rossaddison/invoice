@@ -22,7 +22,7 @@ final readonly class UserInvService
         );
         if ($user) {
             $model->setUser($user);
-            $model->setUser_id((int) $user->getId());
+            $model->setUserId((int) $user->getId());
         }
     }
 
@@ -42,7 +42,7 @@ final readonly class UserInvService
         isset($array['language'])
             ? $model->setLanguage((string) $array['language'])
             : '';
-        $model->setAll_clients(
+        $model->setAllClients(
             $array['all_clients'] === '1' ? true : false
         );
         isset($array['name'])
@@ -52,10 +52,10 @@ final readonly class UserInvService
             ? $model->setCompany((string) $array['company'])
             : '';
         isset($array['address_1'])
-            ? $model->setAddress_1((string) $array['address_1'])
+            ? $model->setAddress1((string) $array['address_1'])
             : '';
         isset($array['address_2 '])
-            ? $model->setAddress_2((string) $array['address_2'])
+            ? $model->setAddress2((string) $array['address_2'])
             : '';
         isset($array['city'])
             ? $model->setCity((string) $array['city'])
@@ -82,10 +82,10 @@ final readonly class UserInvService
             ? $model->setWeb((string) $array['web'])
             : '';
         isset($array['vat_id'])
-            ? $model->setVat_id((string) $array['vat_id'])
+            ? $model->setVatId((string) $array['vat_id'])
             : '';
         isset($array['tax_code'])
-            ? $model->setTax_code((string) $array['tax_code'])
+            ? $model->setTaxCode((string) $array['tax_code'])
             : '';
         isset($array['subscribernumber'])
             ? $model->setSubscribernumber(

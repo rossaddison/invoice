@@ -46,10 +46,10 @@ class PdfHelper
     /**
      * @return string|null
      */
-    private function locale_to_language(): ?string
+    private function localeToLanguage(): ?string
     {
         $dropdown_locale = (string) $this->session->get('_language');
-        $session_list = $this->s->locale_language_array();
+        $session_list = $this->s->localeLanguageArray();
         /** @var string $session_list[$dropdown_locale] */
         return $session_list[$dropdown_locale] ?? null;
     }
@@ -58,13 +58,13 @@ class PdfHelper
      * @param array|object $quote_or_inv
      * @return mixed
      */
-    private function get_print_language(array|object $quote_or_inv): mixed
+    private function getPrintLanguage(array|object $quote_or_inv): mixed
     {
-        $locale_lang = $this->locale_to_language();
+        $locale_lang = $this->localeToLanguage();
         // Get the client language if set : otherwise use the locale as basis
         if ($quote_or_inv instanceof \App\Invoice\Entity\Quote
             || $quote_or_inv instanceof Inv) {
-            return $quote_or_inv->getClient()?->getClient_language() ?? $locale_lang;
+            return $quote_or_inv->getClient()?->getClientLanguage() ?? $locale_lang;
         }
         return 'English';
     }
@@ -88,7 +88,7 @@ class PdfHelper
      * @param WebViewRenderer $webViewRenderer
      * @return string
      */
-    public function generate_quote_pdf(
+    public function generateQuotePdf(
         ?string $quote_id,
         string $user_id,
         bool $stream,
@@ -122,13 +122,13 @@ class PdfHelper
 
                 // e-invoicing requirement
                 /** @var string $client_number */
-                $client_number = $quote->getClient()?->getClient_number();
+                $client_number = $quote->getClient()?->getClientNumber();
                 $show_item_discounts = false;
                 // Determine if any of the items have a discount, if so then the discount amount row will have to be shown.
                 if (null !== $items) {
                     /** @var QuoteItem $item */
                     foreach ($items as $item) {
-                        if ($item->getDiscount_amount() !== 0.00) {
+                        if ($item->getDiscountAmount() !== 0.00) {
                             $show_item_discounts = true;
                         }
                     }
@@ -165,7 +165,7 @@ class PdfHelper
                     ]),
                     'company_logo_and_address' => $webViewRenderer->renderPartialAsString(
                         '//invoice/setting/company_logo_and_address.php',
-                        ['company' => $company = $this->s->get_config_company_details(),
+                        ['company' => $company = $this->s->getConfigCompanyDetails(),
                             'document_number' => $quote->getNumber(),
                             'client_number' => $client_number,
                             'isInvoice' => false,
@@ -173,12 +173,12 @@ class PdfHelper
                             'isSalesOrder' => false,
                         ],
                     ),
-                    'delivery_location' => $this->view_partial_delivery_location((string) $_language, $dlR, $quote->getDelivery_location_id(), $webViewRenderer),
+                    'delivery_location' => $this->viewPartialDeliveryLocation((string) $_language, $dlR, $quote->getDeliveryLocationId(), $webViewRenderer),
                     'userInv' => $userinv,
-                    'client' => $cR->repoClientquery((string) $quote->getClient()?->getClient_id()),
+                    'client' => $cR->repoClientquery((string) $quote->getClient()?->getClientId()),
                     'quote_amount' => $quote_amount,
                     // Use the temporary print language to define cldr
-                    'cldr' => array_search($this->get_print_language($quote), $this->s->locale_language_array()),
+                    'cldr' => array_search($this->getPrintLanguage($quote), $this->s->localeLanguageArray()),
                 ];
                 // Quote Template will be either 'quote' or a custom designed quote in the folder.
                 $html = $webViewRenderer->renderPartialAsString('//invoice/template/quote/pdf/' . $quote_template, $data);
@@ -189,7 +189,7 @@ class PdfHelper
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
                 $filename = $this->s->getSetting('quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string) random_int(0, 10));
-                return $mpdfhelper->pdf_create($html, $filename, $stream, $quote->getPassword(), $this->s, null, null, false, false, [], $quote);
+                return $mpdfhelper->pdfCreate($html, $filename, $stream, $quote->getPassword(), $this->s, null, null, false, false, [], $quote);
             }
         }
         return '';
@@ -215,7 +215,7 @@ class PdfHelper
      * @param Translator $translator
      * @return string
      */
-    public function generate_salesorder_pdf(
+    public function generateSalesorderPdf(
         ?string $so_id,
         string $user_id,
         bool $stream,
@@ -248,13 +248,13 @@ class PdfHelper
                 $items = ($soiR->repoCount($so_id) > 0 ? $soiR->repoSalesOrderItemIdquery($so_id) : null);
                 // e-invoicing requirement
                 /** @var string $client_number */
-                $client_number = $so->getClient()?->getClient_number();
+                $client_number = $so->getClient()?->getClientNumber();
                 $show_item_discounts = false;
                 // Determine if any of the items have a discount, if so then the discount amount row will have to be shown.
                 if (null !== $items) {
                     /** @var SalesOrderItem $item */
                     foreach ($items as $item) {
-                        if ($item->getDiscount_amount() !== 0.00) {
+                        if ($item->getDiscountAmount() !== 0.00) {
                             $show_item_discounts = true;
                         }
                     }
@@ -289,7 +289,7 @@ class PdfHelper
                     ]),
                     'company_logo_and_address' => $webViewRenderer->renderPartialAsString(
                         '//invoice/setting/company_logo_and_address.php',
-                        ['company' => $company = $this->s->get_config_company_details(),
+                        ['company' => $company = $this->s->getConfigCompanyDetails(),
                             'document_number' => $so->getNumber(),
                             'client_number' => $client_number,
                             'isInvoice' => false,
@@ -298,10 +298,10 @@ class PdfHelper
                         ],
                     ),
                     'userInv' => $userinv,
-                    'client' => $cR->repoClientquery((string) $so->getClient()?->getClient_id()),
+                    'client' => $cR->repoClientquery((string) $so->getClient()?->getClientId()),
                     'so_amount' => $so_amount,
                     // Use the temporary print language to define cldr
-                    'cldr' => array_search($this->get_print_language($so), $this->s->locale_language_array()),
+                    'cldr' => array_search($this->getPrintLanguage($so), $this->s->localeLanguageArray()),
                 ];
                 // Sales Order Template will be either 'salesorder' or a custom designed salesorder in the folder.
                 $html = $webViewRenderer->renderPartialAsString('//invoice/template/salesorder/pdf/' . $salesorder_template, $data);
@@ -312,7 +312,7 @@ class PdfHelper
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
                 $filename = $translator->translate('salesorder') . '_' . str_replace(['\\', '/'], '_', $so->getNumber() ?? (string) random_int(0, 10));
-                return $mpdfhelper->pdf_create($html, $filename, $stream, $so->getPassword(), $this->s, null, null, false, false, [], $so);
+                return $mpdfhelper->pdfCreate($html, $filename, $stream, $so->getPassword(), $this->s, null, null, false, false, [], $so);
             }
         }
         return '';
@@ -340,7 +340,7 @@ class PdfHelper
      * @param WebViewRenderer $webViewRenderer
      * @return string
      */
-    public function generate_inv_html(
+    public function generateInvHtml(
         ?string $inv_id,
         string $user_id,
         bool $custom,
@@ -364,12 +364,12 @@ class PdfHelper
             // If userinv details have been filled, use these details
             $userinv = ($uiR->repoUserInvcount($user_id) > 0 ? $uiR->repoUserInvquery($user_id) : null);
             // 'draft' => status_id => 1
-            $inv_template = $this->generate_inv_pdf_template_normal_paid_overdue_watermark($inv->getStatus_id() ?? 1);
+            $inv_template = $this->generateInvPdfTemplateNormalPaidOverdueWatermark($inv->getStatusId() ?? 1);
             // Determine if discounts should be displayed if there are items on the invoice
             $items = ($iiR->repoCount($inv_id) > 0 ? $iiR->repoInvItemIdquery($inv_id) : null);
             // e-invoicing requirement
-            //$client_number = $inv->getClient()?->getClient_number();
-            $client_purchase_order_number = ($so ? $so->getClient_po_number() : '');
+            //$client_number = $inv->getClient()?->getClientNumber();
+            $client_purchase_order_number = ($so ? $so->getClientPoNumber() : '');
             $date_helper = new DateHelper($this->s);
             $_language = $this->session->get('_language');
             $show_item_discounts = false;
@@ -378,7 +378,7 @@ class PdfHelper
             if (null !== $items) {
                 /** @var InvItem $item */
                 foreach ($items as $item) {
-                    if ($item->getDiscount_amount() !== 0.00) {
+                    if ($item->getDiscountAmount() !== 0.00) {
                         $show_item_discounts = true;
                     }
                 }
@@ -417,13 +417,13 @@ class PdfHelper
                     '//invoice/setting/company_logo_and_address.php',
                     [
                         // if there is no active company with private details, use the config params company details
-                        'company' => !$this->s->get_private_company_details() == []
-                                    ? $this->s->get_private_company_details()
-                                    : $this->s->get_config_company_details(),
+                        'company' => !$this->s->getPrivateCompanyDetails() == []
+                                    ? $this->s->getPrivateCompanyDetails()
+                                    : $this->s->getConfigCompanyDetails(),
                         'document_number' => $inv->getNumber(),
                         //'client_number'=> $client_number,
                         'client_purchase_order_number' => $client_purchase_order_number,
-                        'date_tax_point' => $date_helper->date_from_mysql($inv->getDate_tax_point()),
+                        'date_tax_point' => $date_helper->dateFromMysql($inv->getDateTaxPoint()),
                         '_language' => $_language,
                         'inv_id' => $inv_id,
                         'isInvoice' => true,
@@ -431,11 +431,11 @@ class PdfHelper
                         'isSalesOrder' => false,
                     ],
                 ),
-                'inv_allowance_charges' => $this->view_partial_inv_allowance_charges($inv_id, $vat, $aciR, $webViewRenderer),
-                'delivery_location' => $this->view_partial_delivery_location((string) $_language, $dlR, $inv->getDelivery_location_id(), $webViewRenderer),
-                'client' => $cR->repoClientquery((string) $inv->getClient()?->getClient_id()),
+                'inv_allowance_charges' => $this->viewPartialInvAllowanceCharges($inv_id, $vat, $aciR, $webViewRenderer),
+                'delivery_location' => $this->viewPartialDeliveryLocation((string) $_language, $dlR, $inv->getDeliveryLocationId(), $webViewRenderer),
+                'client' => $cR->repoClientquery((string) $inv->getClient()?->getClientId()),
                 'inv_amount' => $inv_amount,
-                'cldr' => array_search($this->get_print_language($inv), $this->s->locale_language_array()),
+                'cldr' => array_search($this->getPrintLanguage($inv), $this->s->localeLanguageArray()),
             ];
             // Inv Template will be either 'inv' or a custom designed inv in the folder.
             return $webViewRenderer->renderPartialAsString('//invoice/template/invoice/pdf/' . $inv_template, $data);
@@ -464,7 +464,7 @@ class PdfHelper
      * @param WebViewRenderer $webViewRenderer
      * @return string
      */
-    public function generate_inv_pdf(
+    public function generateInvPdf(
         ?string $inv_id,
         string $user_id,
         bool $stream,
@@ -488,7 +488,7 @@ class PdfHelper
         if (null !== $inv_id) {
             $inv = $iR->repoCount($inv_id) > 0 ? $iR->repoInvLoadedquery($inv_id) : null;
             if ($inv) {
-                $html = $this->generate_inv_html($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $inv, $itrR, $uiR, $webViewRenderer);
+                $html = $this->generateInvHtml($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $inv, $itrR, $uiR, $webViewRenderer);
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
@@ -502,7 +502,7 @@ class PdfHelper
                             'description' => 'ZUGFeRD Invoice',
                             'AFRelationship' => 'Alternative',
                             'mime' => 'text/xml',
-                            'path' => $z->generate_invoice_zugferd_xml_temp_file($inv, $iiaR, $inv_amount),
+                            'path' => $z->generateInvoiceZugferdXmlTempFile($inv, $iiaR, $inv_amount),
                         ],
                     ];
                 } else {
@@ -512,7 +512,7 @@ class PdfHelper
                 //$isInvoice is assigned to true as it is an invoice
                 // If stream is true return the pdf as a string using mpdf otherwise save to local file and
                 // return the filename inclusive target_path to be used to attach to email attachments
-                return $mpdfhelper->pdf_create($html, $filename, $stream, $inv->getPassword(), $this->s, $iiaR, $inv_amount, true, $include_zugferd, $associatedFiles, $inv);
+                return $mpdfhelper->pdfCreate($html, $filename, $stream, $inv->getPassword(), $this->s, $iiaR, $inv_amount, true, $include_zugferd, $associatedFiles, $inv);
             } // if $inv
         }
         return '';
@@ -523,7 +523,7 @@ class PdfHelper
      * @param int $status_id
      * @return string
      */
-    public function generate_inv_pdf_template_normal_paid_overdue_watermark(int $status_id): string
+    public function generateInvPdfTemplateNormalPaidOverdueWatermark(int $status_id): string
     {
         return match (true) {
             $status_id == 4 && !empty($this->s->getSetting('pdf_invoice_template_paid')) => $this->s->getSetting('pdf_invoice_template_paid'),
@@ -542,7 +542,7 @@ class PdfHelper
      * @param WebViewRenderer $webViewRenderer
      * @return string
      */
-    private function view_partial_inv_allowance_charges(
+    private function viewPartialInvAllowanceCharges(
         string $inv_id,
         string $vat,
         \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository $aciR,
@@ -578,7 +578,7 @@ class PdfHelper
         }
     }
 
-    private function view_partial_delivery_location(string $_language, DLR $dlr, string $delivery_location_id, WebViewRenderer $webViewRenderer): string
+    private function viewPartialDeliveryLocation(string $_language, DLR $dlr, string $delivery_location_id, WebViewRenderer $webViewRenderer): string
     {
         if (!empty($delivery_location_id)) {
             $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
@@ -588,12 +588,12 @@ class PdfHelper
                     'actionArguments' => ['_language' => $_language, 'id' => $delivery_location_id],
                     'title' => $this->translator->translate('delivery.location'),
                     'building_number' => $del->getBuildingNumber(),
-                    'address_1' => $del->getAddress_1(),
-                    'address_2' => $del->getAddress_2(),
+                    'address_1' => $del->getAddress1(),
+                    'address_2' => $del->getAddress2(),
                     'city' => $del->getCity(),
                     'state' => $del->getZip(),
                     'country' => $del->getCountry(),
-                    'global_location_number' => $del->getGlobal_location_number(),
+                    'global_location_number' => $del->getGlobalLocationNumber(),
                 ]);
             } //null!==$del
         } else {

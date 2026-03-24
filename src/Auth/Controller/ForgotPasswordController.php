@@ -104,7 +104,7 @@ final class ForgotPasswordController
                         $tokenString = $tokenRecord->getToken();
                         if (null !== $tokenString) {
                             $timeStamp =
-                                $tokenRecord->getCreated_at()->getTimestamp();
+                                $tokenRecord->getCreatedAt()->getTimestamp();
                             // check if token Random string is still valid
                             // by checking the timestamp
                             if ($timeStamp + 3600 >= time()) {
@@ -130,7 +130,7 @@ final class ForgotPasswordController
                         $to = $user->getEmail();
                         $login = $user->getLogin();
                         /**
-                         * @var array $this->sR->locale_language_array()
+                         * @var array $this->sR->localeLanguageArray()
                          */
                         $_language = $currentRoute->getArgument('_language');
                         /**
@@ -216,7 +216,7 @@ final class ForgotPasswordController
         $tokenString = $newTokenRecord->getToken();
         if (null !== $tokenString) {
             $timeStamp = (string) $newTokenRecord
-                ->getCreated_at()
+                ->getCreatedAt()
                 ->getTimestamp();
             $requestPasswordResetToken = $tokenString . '_' . $timeStamp;
         }

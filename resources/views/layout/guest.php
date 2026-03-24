@@ -5,9 +5,9 @@ declare(strict_types=1);
 use App\Invoice\Asset\InvoiceAsset;
 use App\Invoice\Asset\MonospaceAsset;
 // PCI Compliant Payment Gateway Assets
-use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
-use App\Invoice\Asset\pciAsset\amazon_pay_v2_7_Asset;
-use App\Invoice\Asset\pciAsset\braintree_dropin_1_33_7_Asset;
+use App\Invoice\Asset\pciAsset\StripeVersionTenAsset;
+use App\Invoice\Asset\pciAsset\AmazonPayTwoSevenAsset;
+use App\Invoice\Asset\pciAsset\BraintreeDropInOneThirtyThreeSevenAsset;
 use App\Asset\AppAsset;
 use App\Widget\PerformanceMetrics;
 use Yiisoft\Html\Html;
@@ -78,10 +78,11 @@ use Yiisoft\Bootstrap5\NavStyle;
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
 $assetManager->register(Yiisoft\Bootstrap5\Assets\BootstrapAsset::class);
-$s->getSetting('monospace_amounts') == 1 ? $assetManager->register(MonospaceAsset::class) : '';
-$assetManager->register(stripe_v10_Asset::class);
-$assetManager->register(amazon_pay_v2_7_Asset::class);
-$assetManager->register(braintree_dropin_1_33_7_Asset::class);
+$s->getSetting('monospace_amounts') == 1 ?
+        $assetManager->register(MonospaceAsset::class) : '';
+$assetManager->register(StripeVersionTenAsset::class);
+$assetManager->register(AmazonPayTwoSevenAsset::class);
+$assetManager->register(BraintreeDropInOneThirtyThreeSevenAsset::class);
 
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
@@ -216,7 +217,7 @@ if ((null !== $currentPath) && !$isGuest) {
             $urlGenerator->generate('payment/guest'),
             itemAttributes: $itemFontArray),
         DropdownItem::link($translator->translate('online.log'),
-            $urlGenerator->generate('payment/guest_online_log'),
+            $urlGenerator->generate('payment/guestOnlineLog'),
             itemAttributes: $itemFontArray),
     )
     ->render();

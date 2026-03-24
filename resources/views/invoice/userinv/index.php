@@ -59,18 +59,18 @@ echo '</thead>';
 echo '<tbody>';
 ?> 
 <?php
-    $unAssignedClientIds = $ucR->get_not_assigned_to_any_user($cR);
+    $unAssignedClientIds = $ucR->getNotAssignedToAnyUser($cR);
 foreach ($unAssignedClientIds as $clientId) {
     echo '<tr>';
     $client = $cR->repoClientquery((string) $clientId);
     echo  new Td()
-    ->content($client->getClient_full_name())
+    ->content($client->getClientFullName())
     ->render();
     echo  new Td()
-    ->content($client->getClient_phone() ?? '')
+    ->content($client->getClientPhone() ?? '')
     ->render();
     echo  new Td()
-    ->content($client->getClient_email())
+    ->content($client->getClientEmail())
     ->render();
     echo '</tr>';
 }
@@ -144,7 +144,7 @@ $columns = [
         'all_clients',
         header: $translator->translate('user.all.clients'),
         content: static function (UserInv $model): string {
-            return $model->getAll_clients() ? '✔️' : '❌';
+            return $model->getAllClients() ? '✔️' : '❌';
         },
     ),
     new DataColumn(
@@ -185,11 +185,11 @@ $columns = [
         'user_id',
         header: $translator->translate('user.inv.role.observer'),
         content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): string|Yiisoft\Html\Tag\CustomTag|A {
-            if ($manager->getPermissionsByUserId($model->getUser_id())
+            if ($manager->getPermissionsByUserId($model->getUserId())
               === $manager->getPermissionsByRoleName('observer')) {
                 return Html::tag('span', $translator->translate('general.yes'), ['class' => 'label active']);
             } else {
-                return $model->getUser_id() !== '1' ? Html::a(
+                return $model->getUserId() !== '1' ? Html::a(
                     Html::tag(
                         'button',
                         Html::tag('span', $translator->translate('general.no'), ['class' => 'label inactive']),
@@ -199,7 +199,7 @@ $columns = [
                             'onclick' => "return confirm(" . "'" . $translator->translate('user.inv.role.warning.role') . "');",
                         ],
                     ),
-                    $urlGenerator->generate('userinv/observer', ['user_id' => $model->getUser_id()], []),
+                    $urlGenerator->generate('userinv/observer', ['user_id' => $model->getUserId()], []),
                 ) : '';
             }
         },
@@ -209,11 +209,11 @@ $columns = [
         'user_id',
         header: $translator->translate('user.inv.role.accountant'),
         content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): Yiisoft\Html\Tag\CustomTag|A|string {
-            if ($manager->getPermissionsByUserId($model->getUser_id())
+            if ($manager->getPermissionsByUserId($model->getUserId())
               === $manager->getPermissionsByRoleName('accountant')) {
                 return Html::tag('span', $translator->translate('general.yes'), ['class' => 'label active'])->render();
             } else {
-                return $model->getUser_id() !== '1' ? Html::a(
+                return $model->getUserId() !== '1' ? Html::a(
                     Html::tag(
                         'button',
                         Html::tag('span', $translator->translate('general.no'), ['class' => 'label inactive']),
@@ -223,7 +223,7 @@ $columns = [
                             'onclick' => "return confirm(" . "'" . $translator->translate('user.inv.role.warning.role') . "');",
                         ],
                     ),
-                    $urlGenerator->generate('userinv/accountant', ['user_id' => $model->getUser_id()], []),
+                    $urlGenerator->generate('userinv/accountant', ['user_id' => $model->getUserId()], []),
                 ) : '';
             }
         },
@@ -233,11 +233,11 @@ $columns = [
         'user_id',
         header: $translator->translate('user.inv.role.administrator'),
         content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): Yiisoft\Html\Tag\CustomTag|A|string {
-            if ($manager->getPermissionsByUserId($model->getUser_id())
+            if ($manager->getPermissionsByUserId($model->getUserId())
               === $manager->getPermissionsByRoleName('admin')) {
                 return Html::tag('span', $translator->translate('general.yes'), ['class' => 'label active']);
             } else {
-                if (!$model->getUser_id() == '1') {
+                if (!$model->getUserId() == '1') {
                     return Html::a(
                         Html::tag(
                             'button',
@@ -248,7 +248,7 @@ $columns = [
                                 'onclick' => "return confirm(" . "'" . $translator->translate('user.inv.role.warning.role') . "');",
                             ],
                         ),
-                        $urlGenerator->generate('userinv/admin', ['user_id' => $model->getUser_id()], []),
+                        $urlGenerator->generate('userinv/admin', ['user_id' => $model->getUserId()], []),
                     );
                 } // not id == 1 => use AssignRole console command to assign the admin role
                 return '';
@@ -261,7 +261,7 @@ $columns = [
         'user_id',
         header: $translator->translate('user.inv.role.revoke.all'),
         content: static function (UserInv $model) use ($manager, $translator, $urlGenerator): A|string {
-            if (!empty($manager->getPermissionsByUserId($model->getUser_id())) && $model->getUser_id() !== '1') {
+            if (!empty($manager->getPermissionsByUserId($model->getUserId())) && $model->getUserId() !== '1') {
                 return Html::a(
                     Html::tag(
                         'button',
@@ -272,7 +272,7 @@ $columns = [
                             'onclick' => "return confirm(" . "'" . $translator->translate('user.inv.role.warning.revoke.all') . "');",
                         ],
                     ),
-                    $urlGenerator->generate('userinv/revoke', ['user_id' => $model->getUser_id()], []),
+                    $urlGenerator->generate('userinv/revoke', ['user_id' => $model->getUserId()], []),
                 );
             } else {
                 return '';
@@ -293,11 +293,11 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'i',
-                    str_repeat(' ', 1) . (string) count($ucR->get_assigned_to_user($model->getUser_id())),
+                    str_repeat(' ', 1) . (string) count($ucR->getAssignedToUser($model->getUserId())),
                     ['class' => 'fa fa-list fa-margin'],
                 ),
                 $urlGenerator->generate('userinv/client', ['id' => $model->getId()]),
-                ['class' => count($ucR->get_assigned_to_user($model->getUser_id())) > 0
+                ['class' => count($ucR->getAssignedToUser($model->getUserId())) > 0
                         ? 'btn btn-success'
                         : 'btn btn-danger'],
             );

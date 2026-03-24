@@ -55,14 +55,14 @@ $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn (Client $model) => (string) $model->getClient_id(),
+        content: static fn (Client $model) => (string) $model->getClientId(),
         withSorting: true,
     ),
     new DataColumn(
         'client_active',
         header: $translator->translate('active'),
         content: static function (Client $model) use ($button, $translator): Span {
-            return $model->getClient_active() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
+            return $model->getClientActive() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
         },
         encodeContent: false,
     ),
@@ -70,7 +70,7 @@ $columns = [
         'id',
         header: 'Peppol',
         content: static function (Client $model) use ($cpR, $button, $translator): Span {
-            return ($cpR->repoClientCount((string) $model->getClient_id()) !== 0)
+            return ($cpR->repoClientCount((string) $model->getClientId()) !== 0)
                     ? $button::activeLabel($translator)
                     : $button::inactiveLabel($translator);
         },
@@ -81,7 +81,7 @@ $columns = [
         'id',
         header: $translator->translate('client.has.user.account'),
         content: static function (Client $model) use ($canEdit, $ucR, $button, $translator, $urlGenerator): Span {
-            return ($ucR->repoUserqueryCount((string) $model->getClient_id()) !== 0  && $canEdit)
+            return ($ucR->repoUserqueryCount((string) $model->getClientId()) !== 0  && $canEdit)
                    ? $button::activeLabel($translator)
                    : $button::inactiveWithAddUserAccount($urlGenerator, $translator);
         },
@@ -91,14 +91,14 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('client/view', ['id' => $model->getClient_id()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('client/view', ['id' => $model->getClientId()]), []);
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('client/edit', ['id' => $model->getClient_id(), 'origin' => 'edit']), []);
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('client/edit', ['id' => $model->getClientId(), 'origin' => 'edit']), []);
         },
         encodeContent: false,
     ),
@@ -115,7 +115,7 @@ $columns = [
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('client/delete', ['id' => $model->getClient_id()]),
+                $urlGenerator->generate('client/delete', ['id' => $model->getClientId()]),
                 [],
             );
         },
@@ -124,7 +124,7 @@ $columns = [
     new DataColumn(
         'invs',
         content: static function (Client $model) use ($iR, $iaR, $urlGenerator, $gridComponents): string {
-            if (null !== ($clientId = $model->getClient_id())) {
+            if (null !== ($clientId = $model->getClientId())) {
                 $invoices = $iR->findAllWithClient($clientId);
                 // Initialize a new empty ArrayCollection without the need to create a new entity
                 $model->setInvs();
@@ -188,7 +188,7 @@ $columns = [
         'client_email',
         header: $translator->translate('email'),
         content: static function (Client $model): string {
-            return Html::encode($model->getClient_email() ?: '');
+            return Html::encode($model->getClientEmail() ?: '');
         },
         withSorting: false,
     ),
@@ -196,7 +196,7 @@ $columns = [
         'client_mobile',
         header: $translator->translate('mobile.number'),
         content: static function (Client $model): string {
-            return Html::encode($model->getClient_mobile() ?? '');
+            return Html::encode($model->getClientMobile() ?? '');
         },
         withSorting: true,
     ),
@@ -205,8 +205,8 @@ $columns = [
         header: $translator->translate('client.name'),
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
-                    ->content(Html::encode($model->getClient_name()))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
+                    ->content(Html::encode($model->getClientName()))
+                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClientId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -223,8 +223,8 @@ $columns = [
         header: $translator->translate('client.surname'),
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
-                    ->content(Html::encode($model->getClient_surname() ?? ''))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
+                    ->content(Html::encode($model->getClientSurname() ?? ''))
+                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClientId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -240,9 +240,9 @@ $columns = [
         'client_birthdate',
         header: $translator->translate('birthdate'),
         content: static function (Client $model): string {
-            $clientBirthDate = $model->getClient_birthdate();
+            $clientBirthDate = $model->getClientBirthdate();
             /**
-             * Related logic: see App\Invoice\Entity\Client function getClient_birthdate()
+             * Related logic: see App\Invoice\Entity\Client B)
              */
             if (null !== $clientBirthDate && !is_string($clientBirthDate)) {
                 return Html::encode($clientBirthDate->format('Y-m-d'));
@@ -255,7 +255,7 @@ $columns = [
         'client_phone',
         header: $translator->translate('phone'),
         content: static function (Client $model): string {
-            return Html::encode($model->getClient_phone() ?? '');
+            return Html::encode($model->getClientPhone() ?? '');
         },
         withSorting: true,
     ),
@@ -263,8 +263,8 @@ $columns = [
         'client_id',
         header: $translator->translate('balance') . ' (' . $s->getSetting('currency_symbol') . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
-            if (null !== ($clientId = $model->getClient_id())) {
-                return Html::encode($s->format_currency($iR->with_total_balance($clientId, $iaR)));
+            if (null !== ($clientId = $model->getClientId())) {
+                return Html::encode($s->formatCurrency($iR->withTotalBalance($clientId, $iaR)));
             } else {
                 return '';
             }
@@ -274,11 +274,11 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator,
                                                         $translator, $cpR): A {
             $addUrl = $urlGenerator->generate('clientpeppol/add',
-                    ['client_id' => $model->getClient_id()]);
+                    ['client_id' => $model->getClientId()]);
             $editUrl = $urlGenerator->generate('clientpeppol/edit',
-                    ['client_id' => $model->getClient_id(), 'origin' => 'edit']);
+                    ['client_id' => $model->getClientId(), 'origin' => 'edit']);
             $equal = ($cpR->repoClientCount(
-                    (string) $model->getClient_id()) === 0 ? true : false);
+                    (string) $model->getClientId()) === 0 ? true : false);
             $heading = ($equal ? $translator->translate('client.peppol.add') :
                 $translator->translate('client.peppol.edit'));
             return Html::a(

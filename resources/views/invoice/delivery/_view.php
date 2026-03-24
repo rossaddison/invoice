@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
                 'role' => 'presentation',
                 'autocomplete' => 'off',
             ])
-            ->value(!is_string($createdDate = $form->getDate_created()) ? $createdDate->format('Y-m-d') : '');
+            ->value(!is_string($createdDate = $form->getDateCreated()) ? $createdDate->format('Y-m-d') : '');
 ?>
             <?=
     Field::hidden($form, 'date_modified')
@@ -71,28 +71,28 @@ use Yiisoft\Html\Tag\Form;
         'role' => 'presentation',
         'autocomplete' => 'off',
     ])
-    ->value(!is_string($modifiedDate = $form->getDate_modified()) ? $modifiedDate->format('Y-m-d') : '')
+    ->value(!is_string($modifiedDate = $form->getDateModified()) ? $modifiedDate->format('Y-m-d') : '')
 ?>
             
             <?=
     Field::date($form, 'start_date')
     ->label($translator->translate('delivery.start.date') . ' (' . $dateHelper->display() . ')')
     ->required(true)
-    ->value(!is_string($startDate = $form->getStart_date()) ? $startDate->format('Y-m-d') : '')
+    ->value(!is_string($startDate = $form->getStartDate()) ? $startDate->format('Y-m-d') : '')
     ->readonly(true);
 ?>    
            
             <?=
     Field::date($form, 'actual_delivery_date')
     ->label($translator->translate('delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')')
-    ->value(Html::encode(!is_string($actualDeliveryDate = $form->getActual_delivery_date()) ? $actualDeliveryDate->format('Y-m-d') : ''))
+    ->value(Html::encode(!is_string($actualDeliveryDate = $form->getActualDeliveryDate()) ? $actualDeliveryDate->format('Y-m-d') : ''))
     ->hint($translator->translate('hint.this.field.is.not.required'))
     ->readonly(true);
 ?>
             <?=
     Field::date($form, 'end_date')
     ->label($translator->translate('delivery.end.date') . ' (' . $dateHelper->display() . ')')
-    ->value(Html::encode(!is_string($endDate = $form->getEnd_date()) ? $endDate->format('Y-m-d') : ''))
+    ->value(Html::encode(!is_string($endDate = $form->getEndDate()) ? $endDate->format('Y-m-d') : ''))
     ->readonly(true)
 ?>
             <?= Field::hidden($form, 'id')
@@ -107,7 +107,7 @@ use Yiisoft\Html\Tag\Form;
         'form-control',
         'id' => 'inv_id',
     ])
-    ->value(Html::encode($form->getInv_id()))
+    ->value(Html::encode($form->getInvId()))
 ?>
             <?php
     if ($del_count > 0) {
@@ -117,7 +117,7 @@ use Yiisoft\Html\Tag\Form;
          */
         foreach ($dels as $del) {
             if (null !== $delId = $del->getId()) {
-                $optionsDataDel[$delId] = ($del->getAddress_1() ?? '') . ', ' . ($del->getAddress_2() ?? '') . ', ' . ($del->getCity() ?? '') . ', ' . ($del->getZip() ?? '');
+                $optionsDataDel[$delId] = ($del->getAddress1() ?? '') . ', ' . ($del->getAddress2() ?? '') . ', ' . ($del->getCity() ?? '') . ', ' . ($del->getZip() ?? '');
             }
         }
         echo Field::select($form, 'delivery_location_id')
@@ -127,9 +127,9 @@ use Yiisoft\Html\Tag\Form;
             'id' => 'delivery_location_id',
         ])
         ->optionsData($optionsDataDel)
-        ->value(Html::encode($form->getDelivery_location_id()));
+        ->value(Html::encode($form->getDeliveryLocationId()));
     } else {
-        echo Html::a($translator->translate('delivery.location.add'), $urlGenerator->generate('del/add', ['client_id' => $inv->getClient_id()]), ['class' => 'btn btn-danger btn-lg mt-3']);
+        echo Html::a($translator->translate('delivery.location.add'), $urlGenerator->generate('del/add', ['client_id' => $inv->getClientId()]), ['class' => 'btn btn-danger btn-lg mt-3']);
     }
 ?>
         <?= Html::closeTag('div'); ?>

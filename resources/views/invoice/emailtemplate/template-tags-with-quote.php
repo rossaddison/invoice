@@ -130,8 +130,8 @@ declare(strict_types=1);
                 <!--
                 <optgroup label="<//?//= $translator->translate('custom.fields'); ?>">
                     <//?php// foreach ($custom_fields['user_custom'] as $custom) { ?>
-                        <option value="{{{<//?//= 'cf_' . $custom->getCustom_field_id(); ?>}}}">
-                            <//?//= $custom->getCustom_field_label() . ' (ID ' . $custom->getCustom_field_id() . ')'; ?>
+                        <option value="{{{<//?//= 'cf_' . $custom->getCustomFieldId(); ?>}}}">
+                            <//?//= $custom->getCustomFieldLabel() . ' (ID ' . $custom->getCustomFieldId() . ')'; ?>
                         </option>
                     <//?//php// } ?>
                 </optgroup>

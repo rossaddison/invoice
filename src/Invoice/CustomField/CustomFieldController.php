@@ -70,10 +70,11 @@ final class CustomFieldController extends BaseController
         $parameters = [
             'page' => $page,
             'paginator' => $paginator,
-            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                  ? (int) $this->sR->getSetting('default_list_limit') : 1,
-            'custom_tables' => $this->custom_tables(),
-            'custom_value_fields' => self::custom_value_fields(),
+            'defaultPageSizeOffsetPaginator' =>
+                $this->sR->getSetting('default_list_limit') ?
+                    (int) $this->sR->getSetting('default_list_limit') : 1,
+            'custom_tables' => $this->customTables(),
+            'custom_value_fields' => self::customValueFields(),
             'alert' => $this->alert(),
         ];
         return $this->webViewRenderer->render('index', $parameters);
@@ -111,9 +112,9 @@ final class CustomFieldController extends BaseController
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-            'tables' => $this->custom_tables(),
-            'user_input_types' => $this->user_input_types(),
-            'custom_value_fields' => $this->custom_value_fields(),
+            'tables' => $this->customTables(),
+            'user_input_types' => $this->userInputTypes(),
+            'custom_value_fields' => $this->customValueFields(),
             // Create an array for "moduled" ES6 jquery script. The script is "moduled" and therefore deferred by default to avoid
             // the $ undefined reference error in the DOM.
             'positions' => $this->positions(),
@@ -154,9 +155,9 @@ final class CustomFieldController extends BaseController
                 'actionArguments' => ['id' => $custom_field->getId()],
                 'errors' => [],
                 'form' => $form,
-                'tables' => $this->custom_tables(),
-                'user_input_types' => $this->user_input_types(),
-                'custom_value_fields' => $this->custom_value_fields(),
+                'tables' => $this->customTables(),
+                'user_input_types' => $this->userInputTypes(),
+                'custom_value_fields' => $this->customValueFields(),
                 'positions' => $this->positions(),
             ];
             if ($request->getMethod() === Method::POST) {
@@ -184,7 +185,7 @@ final class CustomFieldController extends BaseController
     {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field instanceof CustomField) {
-            $custom_values = $customvalueRepository->repoCustomFieldquery_count((int) $custom_field->getId());
+            $custom_values = $customvalueRepository->repoCustomFieldqueryCount((int) $custom_field->getId());
             // Make sure all custom values associated with the custom field have been deleted first before commencing
             if (!($custom_values > 0)) {
                 $this->customFieldService->deleteCustomField($custom_field);
@@ -211,7 +212,7 @@ final class CustomFieldController extends BaseController
                 'actionArguments' => ['id' => $custom_field->getId()],
                 'errors' => [],
                 'form' => $form,
-                'custom_tables' => $this->custom_tables(),
+                'custom_tables' => $this->customTables(),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
@@ -305,7 +306,7 @@ final class CustomFieldController extends BaseController
     /**
      * @return array
      */
-    private function custom_tables(): array
+    private function customTables(): array
     {
         return [
             'client_custom' => 'client',
@@ -324,7 +325,7 @@ final class CustomFieldController extends BaseController
      *
      * @psalm-return list{'SINGLE-CHOICE', 'MULTIPLE-CHOICE', 'RADIOLIST-CHOICE'}
      */
-    public static function custom_value_fields(): array
+    public static function customValueFields(): array
     {
         return [
             'SINGLE-CHOICE',
@@ -346,7 +347,7 @@ final class CustomFieldController extends BaseController
             'URL'
         }
      */
-    public function user_input_types(): array
+    public function userInputTypes(): array
     {
         return [
             'BOOLEAN',

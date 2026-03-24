@@ -1,4 +1,4 @@
-import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
+﻿import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
 
 // Secure navigation helper to prevent Open Redirect vulnerabilities
 function secureReload(): void {
@@ -192,7 +192,7 @@ export class QuoteHandler {
         }
 
         try {
-            const url = `${location.origin}/invoice/quote/delete_item/${encodeURIComponent(id)}`;
+            const url = `${location.origin}/invoice/quote/deleteItem/${encodeURIComponent(id)}`;
             const response = await getJson<ApiResponse>(url, { id });
             const data = parsedata(response);
 
@@ -306,7 +306,7 @@ export class QuoteHandler {
     }
 
     private async handleQuoteCreateConfirm(): Promise<void> {
-        const url = `${location.origin}/invoice/quote/create_confirm`;
+        const url = `${location.origin}/invoice/quote/createConfirm`;
         const btn = document.querySelector('.quote_create_confirm') as HTMLElement;
         const originalHtml = btn?.innerHTML || '';
 
@@ -375,7 +375,7 @@ export class QuoteHandler {
     }
 
     private async handleQuoteToInvoiceConfirm(toInvoice: HTMLElement): Promise<void> {
-        const url = `${location.origin}/invoice/quote/quote_to_invoice_confirm`;
+        const url = `${location.origin}/invoice/quote/quoteToInvoiceConfirm`;
         const btn =
             (document.querySelector('.quote_to_invoice_confirm') as HTMLElement) || toInvoice;
         const originalHtml = btn?.innerHTML || '';
@@ -420,7 +420,7 @@ export class QuoteHandler {
     }
 
     private async handleQuoteToSalesOrderConfirm(toSo: HTMLElement): Promise<void> {
-        const url = `${location.origin}/invoice/quote/quote_to_so_confirm`;
+        const url = `${location.origin}/invoice/quote/quoteToSoConfirm`;
         const btn = (document.querySelector('.quote_to_so_confirm') as HTMLElement) || toSo;
         const originalHtml = btn?.innerHTML || '';
 
@@ -463,7 +463,7 @@ export class QuoteHandler {
     }
 
     private async handleQuoteToQuoteConfirm(toQuote: HTMLElement): Promise<void> {
-        const url = `${location.origin}/invoice/quote/quote_to_quote_confirm`;
+        const url = `${location.origin}/invoice/quote/quoteToQuoteConfirm`;
         const btn = (document.querySelector('.quote_to_quote_confirm') as HTMLElement) || toQuote;
         const originalHtml = btn?.innerHTML || '';
 
@@ -517,8 +517,8 @@ export class QuoteHandler {
         const saveBtn = target.closest('#save_client_note');
         if (!saveBtn) return;
 
-        const url = `${location.origin}/invoice/client/save_client_note`;
-        const loadUrl = `${location.origin}/invoice/client/load_client_notes`;
+        const url = `${location.origin}/invoice/client/saveClientNoteNew`;
+        const loadUrl = `${location.origin}/invoice/client/loadClientNotes`;
 
         try {
             const payload: ClientNoteData = {
@@ -577,7 +577,7 @@ export class QuoteHandler {
         const submit = target.closest('#quote_tax_submit');
         if (!submit) return;
 
-        const url = `${location.origin}/invoice/quote/save_quote_tax_rate`;
+        const url = `${location.origin}/invoice/quote/saveQuoteTaxRate`;
         const btn =
             (document.querySelector('.quote_tax_submit') as HTMLElement) || (submit as HTMLElement);
 

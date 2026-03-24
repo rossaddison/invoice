@@ -180,7 +180,7 @@ final class MerchantController extends BaseController
     /**
      * @param MerchantRepository $mR
      */
-    public function online_log(MerchantRepository $mR): \Psr\Http\Message\ResponseInterface
+    public function onlineLog(MerchantRepository $mR): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'payment_logs' => $mR->findAllPreloaded(),

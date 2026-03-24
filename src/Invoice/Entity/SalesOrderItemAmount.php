@@ -46,12 +46,12 @@ class SalesOrderItemAmount
         $this->id = $id;
     }
 
-    public function getSales_order_item_id(): string
+    public function getSalesOrderItemId(): string
     {
         return (string) $this->sales_order_item_id;
     }
 
-    public function setSales_order_item_id(int $sales_order_item_id): void
+    public function setSalesOrderItemId(int $sales_order_item_id): void
     {
         $this->sales_order_item_id = $sales_order_item_id;
     }
@@ -66,12 +66,12 @@ class SalesOrderItemAmount
         $this->subtotal = $subtotal;
     }
 
-    public function getTax_total(): ?float
+    public function getTaxTotal(): ?float
     {
         return $this->tax_total;
     }
 
-    public function setTax_total(float $tax_total): void
+    public function setTaxTotal(float $tax_total): void
     {
         $this->tax_total = $tax_total;
     }

@@ -20,49 +20,49 @@ use App\Widget\LabelSwitch;
 
 <div class="col-xs-12 col-sm-6 col-md-5">
     <h3>
-        <a href="<?= $urlGenerator->generate('client/view', ['_language' => $_language, 'id' => (int) $quote->getClient()?->getClient_id()]); ?>">
-        <?= Html::encode($clientHelper->format_client($quote->getClient())); ?>
+        <a href="<?= $urlGenerator->generate('client/view', ['_language' => $_language, 'id' => (int) $quote->getClient()?->getClientId()]); ?>">
+        <?= Html::encode($clientHelper->formatClient($quote->getClient())); ?>
         </a>
     </h3>
     <br>
-    <div id="pre_save_client_id" value="<?php echo $quote->getClient()?->getClient_id(); ?>" hidden></div>
+    <div id="pre_save_client_id" value="<?php echo $quote->getClient()?->getClientId(); ?>" hidden></div>
     <div class="client-address">
         <span class="client-address-street-line-1">
-            <?php echo null !== $quote->getClient()?->getClient_address_1() ? Html::encode($quote->getClient()?->getClient_address_1()) . '<br>' : ''; ?>
+            <?php echo null !== $quote->getClient()?->getClientAddress1() ? Html::encode($quote->getClient()?->getClientAddress1()) . '<br>' : ''; ?>
         </span>
         <span class="client-address-street-line-2">
-            <?php echo null !== $quote->getClient()?->getClient_address_2() ? Html::encode($quote->getClient()?->getClient_address_2()) . '<br>' : ''; ?>
+            <?php echo null !== $quote->getClient()?->getClientAddress2() ? Html::encode($quote->getClient()?->getClientAddress2()) . '<br>' : ''; ?>
         </span>
         <span class="client-address-town-line">
-            <?php echo null !== $quote->getClient()?->getClient_city() ? Html::encode($quote->getClient()?->getClient_city()) . '<br>' : ''; ?>
-            <?php echo null !== $quote->getClient()?->getClient_state() ? Html::encode($quote->getClient()?->getClient_state()) . '<br>' : ''; ?>
-            <?php echo null !== $quote->getClient()?->getClient_zip() ? Html::encode($quote->getClient()?->getClient_zip()) : ''; ?>
+            <?php echo null !== $quote->getClient()?->getClientCity() ? Html::encode($quote->getClient()?->getClientCity()) . '<br>' : ''; ?>
+            <?php echo null !== $quote->getClient()?->getClientState() ? Html::encode($quote->getClient()?->getClientState()) . '<br>' : ''; ?>
+            <?php echo null !== $quote->getClient()?->getClientZip() ? Html::encode($quote->getClient()?->getClientZip()) : ''; ?>
         </span>
         <span class="client-address-country-line">
             <?php
-                $countryName = $quote->getClient()?->getClient_country();
+                $countryName = $quote->getClient()?->getClientCountry();
                 if (null !== $countryName) {
-                    echo '<br>' . $countryHelper->get_country_name($translator->translate('cldr'), $countryName);
+                    echo '<br>' . $countryHelper->getCountryName($translator->translate('cldr'), $countryName);
                 } ?>
         </span>
     </div>
     <hr>
-    <?php if (null !== $quote->getClient()?->getClient_phone()): ?>
+    <?php if (null !== $quote->getClient()?->getClientPhone()): ?>
         <div class="client-phone">
             <?= $translator->translate('phone'); ?>:&nbsp;
-            <?= Html::encode($quote->getClient()?->getClient_phone()); ?>
+            <?= Html::encode($quote->getClient()?->getClientPhone()); ?>
         </div>
     <?php endif; ?>
-    <?php if (null !== $quote->getClient()?->getClient_mobile()): ?>
+    <?php if (null !== $quote->getClient()?->getClientMobile()): ?>
         <div class="client-mobile">
             <?= $translator->translate('mobile'); ?>:&nbsp;
-            <?= Html::encode($quote->getClient()?->getClient_mobile()); ?>
+            <?= Html::encode($quote->getClient()?->getClientMobile()); ?>
         </div>
     <?php endif; ?>
-    <?php if (null !== $quote->getClient()?->getClient_email()): ?>
+    <?php if (null !== $quote->getClient()?->getClientEmail()): ?>
         <div class='client-email'>
             <?= $translator->translate('email'); ?>:&nbsp;
-            <?php echo $quote->getClient()?->getClient_email(); ?>
+            <?php echo $quote->getClient()?->getClientEmail(); ?>
         </div>
     <?php endif; ?>
     <br>

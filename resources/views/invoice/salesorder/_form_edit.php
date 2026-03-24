@@ -80,7 +80,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     <?= Field::select($form, 'client_id')
                                         ->label($translator->translate('user.account.clients'))
                                         ->addInputAttributes(['class' => 'form-control'])
-                                        ->value($form->getClient_id())
+                                        ->value($form->getClientId())
                                         ->prompt($translator->translate('none'))
                                         ->optionsData($optionsData['client'])
                                         ->hint($translator->translate('hint.this.field.is.required'));
@@ -90,7 +90,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     <?= Field::select($form, 'group_id')
     ->label($translator->translate('salesorder.default.group'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value($form->getGroup_id() ?? $defaultGroupId)
+    ->value($form->getGroupId() ?? $defaultGroupId)
     ->prompt($translator->translate('none'))
     ->optionsData($optionsData['group'])
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -116,10 +116,10 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                                      */
                                                         foreach ($dels as $del) { ?>
     <option value="<?php echo $del->getId(); ?>"
-        <?php $s->check_select(Html::encode($del->getId() ?? $del->getId()),
+        <?php $s->checkSelect(Html::encode($del->getId() ?? $del->getId()),
                 $del->getId()); ?>>
-        <?php $delAddress1 =  $del->getAddress_1();
-        $delAddress2 = $del->getAddress_2();
+        <?php $delAddress1 =  $del->getAddress1();
+        $delAddress2 = $del->getAddress2();
         $delCity = $del->getCity();
         $delZip = $del->getZip();
         echo (null !== $delAddress1 ? $delAddress1 : '') . ', '
@@ -139,11 +139,11 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             <?= Field::date($form, 'date_created')
                                 ->label($translator->translate('date.issued'))
                                 ->value(
-                                    Html::encode($form->getDate_created() instanceof \DateTimeImmutable
-                                    ? $form->getDate_created()->format('Y-m-d') : (is_string(
-                                        $form->getDate_created(),
+                                    Html::encode($form->getDateCreated() instanceof \DateTimeImmutable
+                                    ? $form->getDateCreated()->format('Y-m-d') : (is_string(
+                                        $form->getDateCreated(),
                                     )
-                                    ? $form->getDate_created() : '')),
+                                    ? $form->getDateCreated() : '')),
                                 )
                                 ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -161,7 +161,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             <?= Field::select($form, 'status_id')
     ->label($translator->translate('status'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value($form->getStatus_id())
+    ->value($form->getStatusId())
     ->prompt($translator->translate('none'))
     ->optionsData($optionsData['salesOrderStatus'])
     ->hint($translator->translate('hint.this.field.is.not.required'));
@@ -169,12 +169,12 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('div'); ?>
                         <?php // If the quote is in draft status; do not show the url_key
-                            if ($form->getStatus_id() == 1) { ?>
+                            if ($form->getStatusId() == 1) { ?>
                                <?= Field::hidden($form, 'url_key')
                                    ->hideLabel(true);
                                 ?>
                         <?php } ?>
-                        <?php if ($form->getStatus_id() > 1) { ?>
+                        <?php if ($form->getStatusId() > 1) { ?>
                             <?= Field::text($form, 'url_key')
                                 ->hideLabel(false)
                                 ->label($translator->translate('guest.url'));
@@ -188,8 +188,8 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 ->label($translator->translate('discount')
                                     . ' ' . $s->getSetting('currency_symbol'))
                                 ->addInputAttributes(['class' => 'form-control'])
-                                ->value($s->format_amount(
-                                    ($form->getDiscount_amount() ?? 0.00)))
+                                ->value($s->formatAmount(
+                                    ($form->getDiscountAmount() ?? 0.00)))
                                 ->placeholder($translator->translate('discount'));
                         ?>
                         <?= Html::closeTag('div'); ?>
@@ -205,7 +205,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
     $custom_values = $cvR->fixCfValueToCf(
             $cfR->repoTablequery('salesorder_custom'));
-    $cvH->print_field_for_form($customField, $salesOrderCustomForm, $translator,
+    $cvH->printFieldForForm($customField, $salesOrderCustomForm, $translator,
             $urlGenerator, $so_custom_values, $custom_values);
 }
 ?>

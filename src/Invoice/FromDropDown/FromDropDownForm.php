@@ -21,7 +21,7 @@ final class FromDropDownForm extends FormModel
     {
         $this->email = $from->getEmail();
         $this->include = $from->getInclude();
-        $this->default_email = $from->getDefault_email();
+        $this->default_email = $from->getDefaultEmail();
     }
 
     public function getEmail(): ?string
@@ -34,7 +34,7 @@ final class FromDropDownForm extends FormModel
         return $this->include;
     }
 
-    public function getDefault_email(): ?bool
+    public function getDefaultEmail(): ?bool
     {
         return $this->default_email;
     }

@@ -26,14 +26,14 @@ final readonly class QuoteTaxRateService
         );
         if ($quote) {
             $model->setQuote($quote);
-            $model->setQuote_id((int) $quote->getId());
+            $model->setQuoteId((int) $quote->getId());
         }
         $tax_rate = $this->taxRateRepository->repoTaxRatequery(
             (string) $array['tax_rate_id']
         );
         if ($tax_rate) {
             $model->setTaxRate($tax_rate);
-            $model->setTax_rate_id(
+            $model->setTaxRateId(
                 (int) $tax_rate->getTaxRateId()
             );
         }
@@ -48,11 +48,11 @@ final readonly class QuoteTaxRateService
         array $array
     ): void {
         $this->persist($model, $array);
-        $model->setInclude_item_tax(
+        $model->setIncludeItemTax(
             (int) $array['include_item_tax'] ?: 0
         );
         isset($array['tax_rate_amount'])
-            ? $model->setQuote_tax_rate_amount(
+            ? $model->setQuoteTaxRateAmount(
                 (float) $array['quote_tax_rate_amount']
             )
             : '';

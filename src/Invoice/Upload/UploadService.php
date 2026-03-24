@@ -23,7 +23,7 @@ final readonly class UploadService
             (string) $array['client_id']
         );
         $model->setClient($client);
-        $model->setClient_id((int) $client->getClient_id());
+        $model->setClientId((int) $client->getClientId());
     }
 
     /**
@@ -34,15 +34,15 @@ final readonly class UploadService
     {
         $this->persist($model, $array);
         isset($array['url_key'])
-            ? $model->setUrl_key((string) $array['url_key'])
+            ? $model->setUrlKey((string) $array['url_key'])
             : '';
         isset($array['file_name_original'])
-            ? $model->setFile_name_original(
+            ? $model->setFileNameOriginal(
                 (string) $array['file_name_original']
             )
             : '';
         isset($array['file_name_new'])
-            ? $model->setFile_name_new(
+            ? $model->setFileNameNew(
                 (string) $array['file_name_new']
             )
             : '';
@@ -50,7 +50,7 @@ final readonly class UploadService
             'Y-m-d',
             (string) $array['uploaded_date']
         );
-        $uploadedDate ? $model->setUploaded_date($uploadedDate) : '';
+        $uploadedDate ? $model->setUploadedDate($uploadedDate) : '';
         isset($array['description'])
             ? $model->setDescription((string) $array['description'])
             : '';
@@ -65,10 +65,10 @@ final readonly class UploadService
         Upload $model,
         SettingRepository $sR
     ): void {
-        $aliases = $sR->get_customer_files_folder_aliases();
+        $aliases = $sR->getCustomerFilesFolderAliases();
         $targetPath = $aliases->get('@customer_files');
         $file_path = $targetPath . '/' .
-            $model->getFile_name_new();
+            $model->getFileNameNew();
         // see vendor/yiisoft/files/src/FileHelper::unlink will delete the file
         $realTargetPath = realpath($targetPath);
         $realFilePath = realpath($file_path);

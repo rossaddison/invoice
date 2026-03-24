@@ -68,52 +68,52 @@ final class ProductClientForm extends FormModel
     }
     
     // Getters and setters for new client fields
-    public function getNew_client_name(): string
+    public function getNewClientName(): string
     {
         return $this->new_client_name;
     }
     
-    public function setNew_client_name(string $value): void
+    public function setNewClientName(string $value): void
     {
         $this->new_client_name = $value;
     }
     
-    public function getNew_client_surname(): string
+    public function getNewClientSurname(): string
     {
         return $this->new_client_surname;
     }
     
-    public function setNew_client_surname(string $value): void
+    public function setNewClientSurname(string $value): void
     {
         $this->new_client_surname = $value;
     }
     
-    public function getNew_client_email(): string
+    public function getNewClientEmail(): string
     {
         return $this->new_client_email;
     }
     
-    public function setNew_client_email(string $value): void
+    public function setNewClientEmail(string $value): void
     {
         $this->new_client_email = $value;
     }
     
-    public function getNew_client_mobile(): string
+    public function getNewClientMobile(): string
     {
         return $this->new_client_mobile;
     }
     
-    public function setNew_client_mobile(string $value): void
+    public function setNewClientMobile(string $value): void
     {
         $this->new_client_mobile = $value;
     }
     
-    public function getNew_client_group(): string
+    public function getNewClientGroup(): string
     {
         return $this->new_client_group;
     }
     
-    public function setNew_client_group(string $value): void
+    public function setNewClientGroup(string $value): void
     {
         $this->new_client_group = $value;
     }

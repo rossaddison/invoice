@@ -6,9 +6,9 @@ use App\Invoice\Asset\InvoiceAsset;
 use App\Invoice\Asset\MonospaceAsset;
 use App\Invoice\Asset\NProgressAsset;
 // PCI Compliant Payment Gateway Assets
-use App\Invoice\Asset\pciAsset\stripe_v10_Asset;
-use App\Invoice\Asset\pciAsset\amazon_pay_v2_7_Asset;
-use App\Invoice\Asset\pciAsset\braintree_dropin_1_33_7_Asset;
+use App\Invoice\Asset\pciAsset\StripeVersionTenAsset;
+use App\Invoice\Asset\pciAsset\AmazonPayTwoSevenAsset;
+use App\Invoice\Asset\pciAsset\BraintreeDropInOneThirtyThreeSevenAsset;
 use App\Asset\AppAsset;
 use App\Widget\PerformanceMetrics;
 use Yiisoft\Bootstrap5\ButtonSize;
@@ -101,9 +101,9 @@ $assetManager->register(NProgressAsset::class);
 $assetManager->register(Yiisoft\Bootstrap5\Assets\BootstrapAsset::class);
 $s->getSetting('monospace_amounts') == 1 ?
     $assetManager->register(MonospaceAsset::class) : '';
-$assetManager->register(stripe_v10_Asset::class);
-$assetManager->register(amazon_pay_v2_7_Asset::class);
-$assetManager->register(braintree_dropin_1_33_7_Asset::class);
+$assetManager->register(StripeVersionTenAsset::class);
+$assetManager->register(AmazonPayTwoSevenAsset::class);
+$assetManager->register(BraintreeDropInOneThirtyThreeSevenAsset::class);
 $vat = ($s->getSetting('enable_vat_registration') == '0');
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addCssStrings($assetManager->getCssStrings());
@@ -235,7 +235,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     $itemFontArray),
                 // File Location
                 DropdownItem::text('File Location ➡️ '
-                    . $s->debug_mode_file_location(0), $itemFontArray),
+                    . $s->debugModeFileLocation(0), $itemFontArray),
             ),
             // FAQ's
             Dropdown::widget()
@@ -382,7 +382,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 ),
                 DropdownItem::link(
                     $t->translate('development.schema'),
-                    $urlGenerator->generate('generator/quick_view_schema'),
+                    $urlGenerator->generate('generator/quickViewSchema'),
                     false,
                     false,
                 ),
@@ -395,7 +395,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 // Get your downloaded Json file from 
                 DropdownItem::link(
                     $t->translate('generator.google.translate.app'),
-                    $urlGenerator->generate('generator/google_translate_lang',
+                    $urlGenerator->generate('generator/googleTranslateLang',
                         ['type' => 'app']),
                     false,
                     false,
@@ -405,7 +405,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 ),
                 DropdownItem::link(
                     $t->translate('generator.google.translate.diff'),
-                    $urlGenerator->generate('generator/google_translate_lang',
+                    $urlGenerator->generate('generator/googleTranslateLang',
                         ['type' => 'diff']),
                     false,
                     false,
@@ -415,7 +415,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 ),
                 DropdownItem::link(
                     $t->translate('generator.google.translate.info'),
-                    $urlGenerator->generate('generator/google_translate_info'),
+                    $urlGenerator->generate('generator/googleTranslateInfo'),
                     false,
                     false,
                     ['data-bs-toggle' => 'tooltip',
@@ -425,7 +425,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 ),
                 DropdownItem::link(
                     $t->translate('test.reset.setting'),
-                    $urlGenerator->generate('invoice/setting_reset'),
+                    $urlGenerator->generate('invoice/settingReset'),
                     false,
                     false,
                     ['data-bs-toggle' => 'tooltip',
@@ -434,7 +434,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 ),
                 DropdownItem::link(
                     $t->translate('test.reset'),
-                    $urlGenerator->generate('invoice/test_data_reset'),
+                    $urlGenerator->generate('invoice/testDataReset'),
                     false,
                     false,
                     ['data-bs-toggle' => 'tooltip',
@@ -443,7 +443,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 ),
                 DropdownItem::link(
                     $t->translate('test.remove'),
-                    $urlGenerator->generate('invoice/test_data_remove'),
+                    $urlGenerator->generate('invoice/testDataRemove'),
                     false,
                     false,
                     ['data-bs-toggle' => 'tooltip',
@@ -748,7 +748,7 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('view'),
-                $urlGenerator->generate('setting/debug_index'),
+                $urlGenerator->generate('setting/debugIndex'),
                     false, !$debugMode,
                         ['style' => 'background-color: #ffcccb',
                          'hidden' => !$debugMode]),
@@ -763,7 +763,7 @@ if ((null !== $currentPath) && !$isGuest) {
                         ['style' => 'background-color: #ffcccb; ',
                          'hidden' => !$debugMode]),
             DropdownItem::link($t->translate('view'),
-                $urlGenerator->generate('setting/tab_index'),
+                $urlGenerator->generate('setting/tabIndex'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate((
                 ($s->getSetting('install_test_data') == '1') 
@@ -772,7 +772,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     (($s->getSetting('install_test_data') == '1'
                         && $s->getSetting('use_test_data') == '1')
                 ? $urlGenerator->generate('invoice/index') :
-                $urlGenerator->generate('setting/tab_index')),
+                $urlGenerator->generate('setting/tabIndex')),
                     ($s->getSetting('install_test_data') == '1'
                         && $s->getSetting('use_test_data') == '1'),
                 itemAttributes: $itemFontArray),
@@ -840,13 +840,13 @@ if ((null !== $currentPath) && !$isGuest) {
                 'https://www.storecove.com/register/',
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.store.cove.1.1.2'),
-                $urlGenerator->generate('setting/tab_index'),
+                $urlGenerator->generate('setting/tabIndex'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.store.cove.1.1.3'),
-                $urlGenerator->generate('invoice/store_cove_call_api'),
+                $urlGenerator->generate('invoice/storeCoveCallApi'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.store.cove.1.1.4'),
-                $urlGenerator->generate('invoice/store_cove_send_test_json_invoice'),
+                $urlGenerator->generate('invoice/storeCoveSendTestJsonInvoice'),
                 itemAttributes: $itemFontArray    
             ),
         ),
@@ -944,7 +944,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 $urlGenerator->generate('payment/index'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('payment.logs'),
-                $urlGenerator->generate('payment/online_log'),
+                $urlGenerator->generate('payment/onlineLog'),
                 itemAttributes: $itemFontArray),
         ),
         // Product
@@ -1027,22 +1027,22 @@ if ((null !== $currentPath) && !$isGuest) {
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('sales.by.client'),
-                $urlGenerator->generate('report/sales_by_client_index'),
+                $urlGenerator->generate('report/salesByClientIndex'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('report.sales.by.product'),
-                $urlGenerator->generate('report/sales_by_product_index'),
+                $urlGenerator->generate('report/salesByProductIndex'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('report.sales.by.task'),
-                $urlGenerator->generate('report/sales_by_task_index'),
+                $urlGenerator->generate('report/salesByTaskIndex'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('sales.by.date'),
-                $urlGenerator->generate('report/sales_by_year_index'),
+                $urlGenerator->generate('report/salesByYearIndex'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('payment.history'),
-                $urlGenerator->generate('report/payment_history_index'),
+                $urlGenerator->generate('report/paymentHistoryIndex'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('aging'),
-                $urlGenerator->generate('report/invoice_aging_index'),
+                $urlGenerator->generate('report/invoiceAgingIndex'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate(
                     'report.test.fraud.prevention.headers.api'),

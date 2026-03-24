@@ -39,7 +39,7 @@ use Yiisoft\Security\Random;
         <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
             <?= Field::hidden($form, 'user_id')
                     ->inputId('user_id-' . Random::string(10))
-                    ->value($userinv->getUser_id()); ?>
+                    ->value($userinv->getUserId()); ?>
                 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
                     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
                         <?= Html::encode($userinv->getName()); ?>
@@ -75,9 +75,9 @@ if ($clients) {
      * @var App\Invoice\Entity\Client $client
      */
     foreach ($clients as $client) {
-        $clientId = $client->getClient_id();
+        $clientId = $client->getClientId();
         if (null !== $clientId) {
-            $optionsDataClient[$clientId] = Html::encode($clientHelper->format_client($client));
+            $optionsDataClient[$clientId] = Html::encode($clientHelper->formatClient($client));
         }
     }
     echo Field::select($form, 'client_id')
@@ -86,7 +86,7 @@ if ($clients) {
         'id' => 'client_id',
         'class' => 'form-control',
         'autofocus' => 'autofocus',
-        'selected' => $s->check_select(Html::encode($body['client_id'] ?? ''), $client->getClient_id()),
+        'selected' => $s->checkSelect(Html::encode($body['client_id'] ?? ''), $client->getClientId()),
     ])
     ->optionsData($optionsDataClient);
 

@@ -390,17 +390,17 @@ echo H::openTag('div', $row); //1
          echo  new Option()
          ->value(
          $email_template
-         ->getEmail_template_id()
+         ->getEmailTemplateId()
         )
          ->selected(
           $body[
           'settings[email_quote_template]'
          ] == $email_template
-         ->getEmail_template_id()
+         ->getEmailTemplateId()
         )
          ->content(
           $email_template
-          ->getEmail_template_title() 
+          ->getEmailTemplateTitle() 
           ?? ''
          );
         } 

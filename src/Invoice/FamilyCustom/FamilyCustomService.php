@@ -27,9 +27,9 @@ final readonly class FamilyCustomService
     ): void {
         $this->persist($model, $array);
         isset($array['family_id']) ?
-            $model->setFamily_id((int) $array['family_id']) : '';
+            $model->setFamilyId((int) $array['family_id']) : '';
         isset($array['custom_field_id']) ?
-            $model->setCustom_field_id(
+            $model->setCustomFieldId(
                 (int) $array['custom_field_id']) : '';
         isset($array['value']) ?
             $model->setValue((string) $array['value']) : '';

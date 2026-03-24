@@ -136,7 +136,7 @@ final class ProductClientController extends BaseController
                 
                 if ($clientRepository->repoClientCount((string) $clientId) > 0) {
                     // Save client group for future suggestions
-                    if (strlen($clientGroup = ($client->getClient_group() ?? '')) > 0) {
+                    if (strlen($clientGroup = ($client->getClientGroup() ?? '')) > 0) {
                         $this->saveClientGroupToSession($clientGroup);
                     }
                     
@@ -160,12 +160,12 @@ final class ProductClientController extends BaseController
                 
                 if ($newClient) {
                     // Save client group for future suggestions
-                    if (strlen($clientGroup = ($newClient->getClient_group() ?? '')) > 0) {
+                    if (strlen($clientGroup = ($newClient->getClientGroup() ?? '')) > 0) {
                         $this->saveClientGroupToSession($clientGroup);
                     }
                     
                     // Create association
-                    $clientId = $newClient->getClient_id();
+                    $clientId = $newClient->getClientId();
                     if ($clientId !== null) {
                         $this->createProductClientAssociation(
                             $currentProductId, $clientId);
@@ -508,13 +508,13 @@ final class ProductClientController extends BaseController
          * @var Client $client
          */
         foreach ($clients as $client) {
-            $status = $client->getClient_active() ?
+            $status = $client->getClientActive() ?
                 $this->translator->translate('active') :
                 $this->translator->translate('inactive');
-            $options[(string) $client->getClient_id()] =
-                $client->getClient_name()
+            $options[(string) $client->getClientId()] =
+                $client->getClientName()
                     . ' '
-                    . ($client->getClient_surname()
+                    . ($client->getClientSurname()
                         ?? $this->translator->translate('not.set.yet'))
                     . ' ' . ($status ?: $this->translator->translate('inactive'));
         }

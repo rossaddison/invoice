@@ -1,4 +1,4 @@
-import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
+﻿import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
 
 // Family-specific interfaces
 interface FamilySecondaryRequest extends RequestParams {
@@ -332,7 +332,7 @@ export class FamilyHandler {
                 _csrf: csrfToken
             };
 
-            const response = await fetch(`${location.origin}/invoice/family/generate_products`, {
+            const response = await fetch(`${location.origin}/invoice/family/generateProducts`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

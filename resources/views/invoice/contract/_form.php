@@ -44,7 +44,7 @@ use Yiisoft\Html\Tag\Form;
 ?>
     <?= Field::text($form, 'client_id')
     ->readonly(true)
-    ->value(Html::encode($form->getClient_id() ?? $client_id))
+    ->value(Html::encode($form->getClientId() ?? $client_id))
 ?>    
     <?= Field::text($form, 'reference')
    ->label($translator->translate('contract.reference'))
@@ -68,7 +68,7 @@ use Yiisoft\Html\Tag\Form;
         'role' => 'presentation',
         'autocomplete' => 'off',
     ])
-    ->value(Html::encode(Html::encode($form->getPeriod_start()->format('Y-m-d'))))
+    ->value(Html::encode(Html::encode($form->getPeriodStart()->format('Y-m-d'))))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -77,7 +77,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'autocomplete' => 'off',
     ])
-    ->value(Html::encode(Html::encode($form->getPeriod_end()->format('Y-m-d'))))
+    ->value(Html::encode(Html::encode($form->getPeriodEnd()->format('Y-m-d'))))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>

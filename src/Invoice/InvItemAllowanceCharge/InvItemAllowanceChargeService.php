@@ -36,12 +36,12 @@ final readonly class InvItemAllowanceChargeService
     ): void {
         $this->persist($model, $array);
         isset($array['inv_id']) ? 
-            $model->setInv_id((int) $array['inv_id']) : '';
+            $model->setInvId((int) $array['inv_id']) : '';
         isset($array['inv_item_id']) ? 
-            $model->setInv_item_id(
+            $model->setInvItemId(
                 (int) $array['inv_item_id']) : '';
         isset($array['allowance_charge_id']) ? 
-            $model->setAllowance_charge_id(
+            $model->setAllowanceChargeId(
                 (int) $array['allowance_charge_id']) : '';
         isset($array['amount']) ? 
             $model->setAmount((int) $array['amount']) : '';
@@ -86,7 +86,7 @@ final readonly class InvItemAllowanceChargeService
         // before deleting the allowance/charge, 
         // record its related inv_item_id so that we can 
         // update the inv_item_amount record
-        $inv_item_id = $model->getInv_item_id();
+        $inv_item_id = $model->getInvItemId();
         // delete the allowance / charge
         $this->repository->delete($model);
         $inv_item_amount = $iiaR->repoInvItemAmountquery(
@@ -131,7 +131,7 @@ final readonly class InvItemAllowanceChargeService
                     ?->getPrice() ?? 0.00;
             $discount_per_item = 
                 $inv_item_amount->getInvItem()
-                    ?->getDiscount_amount() ?? 0.00;
+                    ?->getDiscountAmount() ?? 0.00;
             $quantity_price = 
                 $current_item_quantity * $current_item_price;
             $current_discount_item_total = 
@@ -153,7 +153,7 @@ final readonly class InvItemAllowanceChargeService
             $inv_item_amount->setSubtotal($qpIncAc);
             $inv_item_amount->setDiscount(
                 $current_discount_item_total);
-            $inv_item_amount->setTax_total($new_tax_total);
+            $inv_item_amount->setTaxTotal($new_tax_total);
             $overall_total = $qpIncAc 
                 - $current_discount_item_total 
                 + $new_tax_total;

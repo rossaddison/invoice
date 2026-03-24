@@ -62,22 +62,22 @@ class QuoteCustom
         $this->id = $id;
     }
 
-    public function getQuote_id(): string
+    public function getQuoteId(): string
     {
         return (string) $this->quote_id;
     }
 
-    public function setQuote_id(int $quote_id): void
+    public function setQuoteId(int $quote_id): void
     {
         $this->quote_id = $quote_id;
     }
 
-    public function getCustom_field_id(): string
+    public function getCustomFieldId(): string
     {
         return (string) $this->custom_field_id;
     }
 
-    public function setCustom_field_id(int $custom_field_id): void
+    public function setCustomFieldId(int $custom_field_id): void
     {
         $this->custom_field_id = $custom_field_id;
     }

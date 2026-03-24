@@ -20,12 +20,12 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('email.templates'); ?></h1>
     <div class="headerbar-item pull-right">
-        <a class="btn btn-sm btn-primary" href="<?php echo $urlGenerator->generate('emailtemplate/add_invoice'); ?>">
+        <a class="btn btn-sm btn-primary" href="<?php echo $urlGenerator->generate('emailtemplate/addInvoice'); ?>">
             <i class="fa fa-plus"></i> <?= $translator->translate('invoice'); ?>
         </a>
         <br>
         <br>
-        <a class="btn btn-sm btn-secondary" href="<?php echo $urlGenerator->generate('emailtemplate/add_quote'); ?>">
+        <a class="btn btn-sm btn-secondary" href="<?php echo $urlGenerator->generate('emailtemplate/addQuote'); ?>">
             <i class="fa fa-plus"></i> <?= $translator->translate('quote'); ?>
         </a>
     </div>
@@ -59,13 +59,13 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
      */
     foreach ($email_templates as $email_template) { ?>
             <tr>
-                <td><?= Html::encode($email_template->getEmail_template_title()); ?></td>
-                <td><?= ucfirst($email_template->getEmail_template_type() ?? 'invoice'); ?></td>
+                <td><?= Html::encode($email_template->getEmailTemplateTitle()); ?></td>
+                <td><?= ucfirst($email_template->getEmailTemplateType() ?? 'invoice'); ?></td>
                 <td><?=  new A()
                 ->href(
                     $urlGenerator->generate(
                         'emailtemplate/preview',
-                        ['email_template_id' => $email_template->getEmail_template_id()],
+                        ['email_template_id' => $email_template->getEmailTemplateId()],
                     ),
                 )
                 ->content('🖼️');
@@ -86,7 +86,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
                                 <a class="dropdown-item" href="
                                     <?= $urlGenerator->generate(
                                         'emailtemplate/view',
-                                        ['email_template_id' => $email_template->getEmail_template_id()],
+                                        ['email_template_id' => $email_template->getEmailTemplateId()],
                                     ); ?>" style="text-decoration: none ">
                                             <i class="fa fa-eye fa-margin"></i><?= $translator->translate('view'); ?>
                                 </a>
@@ -94,8 +94,8 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
                             <li>
                                 <a class="dropdown-item" href="
                                     <?= $urlGenerator->generate(
-                                        'emailtemplate/edit' . ($email_template->getEmail_template_type() == 'Invoice' ? '_invoice' : '_quote'),
-                                        ['email_template_id' => $email_template->getEmail_template_id()],
+                                        'emailtemplate/edit' . ($email_template->getEmailTemplateType() == 'Invoice' ? '_invoice' : '_quote'),
+                                        ['email_template_id' => $email_template->getEmailTemplateId()],
                                     ); ?>" style="text-decoration: none ">
                                             <i class="fa fa-edit fa-margin"></i><?= $translator->translate('edit'); ?>
                                 </a>
@@ -104,7 +104,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
                                 <a class="dropdown-item" href="
                                     <?= $urlGenerator->generate(
                                         'emailtemplate/delete',
-                                        ['email_template_id' => $email_template->getEmail_template_id()],
+                                        ['email_template_id' => $email_template->getEmailTemplateId()],
                                     ); ?>" style="text-decoration: none ">
                                             <i class="fa fa-trash fa-margin"></i><?= $translator->translate('delete'); ?>
                                 </a>

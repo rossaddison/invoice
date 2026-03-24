@@ -34,12 +34,12 @@ class CategorySecondary
         $this->id = $id;
     }
 
-    public function getCategory_primary_id(): ?int
+    public function getCategoryPrimaryId(): ?int
     {
         return $this->category_primary_id;
     }
 
-    public function setCategory_primary_id(int $category_primary_id): void
+    public function setCategoryPrimaryId(int $category_primary_id): void
     {
         $this->category_primary_id = $category_primary_id;
     }

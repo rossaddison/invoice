@@ -72,9 +72,9 @@ $columns = [
         content: static function (InvItemAllowanceCharge $model) use ($numberHelper): string {
             // show the charge in brackets
             if ($model->getAllowanceCharge()?->getIdentifier() == 0) {
-                return '(' . $numberHelper->format_currency($model->getAmount()) . ')';
+                return '(' . $numberHelper->formatCurrency($model->getAmount()) . ')';
             } else {
-                return $numberHelper->format_currency($model->getAmount());
+                return $numberHelper->formatCurrency($model->getAmount());
             }
         },
     ),
@@ -83,9 +83,9 @@ $columns = [
         content: static function (InvItemAllowanceCharge $model) use ($numberHelper): string {
             // show the charge in brackets
             if ($model->getAllowanceCharge()?->getIdentifier() == 0) {
-                return '(' . $numberHelper->format_currency($model->getVatOrTax()) . ')';
+                return '(' . $numberHelper->formatCurrency($model->getVatOrTax()) . ')';
             } else {
-                return $numberHelper->format_currency($model->getVatOrTax());
+                return $numberHelper->formatCurrency($model->getVatOrTax());
             }
         },
     ),

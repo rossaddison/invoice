@@ -51,8 +51,8 @@ $columns = [
         'client_id',
         header: $translator->translate('client'),
         content: static function (Project $model): string {
-            $clientName = $model->getClient()?->getClient_name() ?? '';
-            $clientSurname = $model->getClient()?->getClient_surname() ?? '';
+            $clientName = $model->getClient()?->getClientName() ?? '';
+            $clientSurname = $model->getClient()?->getClientSurname() ?? '';
             if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0)) {
                 return Html::encode($clientName . ' ' . $clientSurname);
             } else {

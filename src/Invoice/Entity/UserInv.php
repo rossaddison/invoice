@@ -110,12 +110,12 @@ class UserInv
         return $this->user;
     }
 
-    public function getUser_id(): string
+    public function getUserId(): string
     {
         return (string) $this->user_id;
     }
 
-    public function setUser_id(int $user_id): void
+    public function setUserId(int $user_id): void
     {
         $this->user_id = $user_id;
     }
@@ -150,12 +150,12 @@ class UserInv
         $this->active = $active;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
@@ -190,22 +190,22 @@ class UserInv
         $this->company = $company;
     }
 
-    public function getAddress_1(): ?string
+    public function getAddress1(): ?string
     {
         return $this->address_1;
     }
 
-    public function setAddress_1(string $address_1): void
+    public function setAddress1(string $address_1): void
     {
         $this->address_1 = $address_1;
     }
 
-    public function getAddress_2(): ?string
+    public function getAddress2(): ?string
     {
         return $this->address_2;
     }
 
-    public function setAddress_2(string $address_2): void
+    public function setAddress2(string $address_2): void
     {
         $this->address_2 = $address_2;
     }
@@ -285,32 +285,32 @@ class UserInv
         $this->web = $web;
     }
 
-    public function getVat_id(): string
+    public function getVatId(): string
     {
         return (string) $this->vat_id;
     }
 
-    public function setVat_id(string $vat_id): void
+    public function setVatId(string $vat_id): void
     {
         $this->vat_id = $vat_id;
     }
 
-    public function getTax_code(): ?string
+    public function getTaxCode(): ?string
     {
         return $this->tax_code;
     }
 
-    public function setTax_code(string $tax_code): void
+    public function setTaxCode(string $tax_code): void
     {
         $this->tax_code = $tax_code;
     }
 
-    public function getAll_clients(): ?bool
+    public function getAllClients(): ?bool
     {
         return $this->all_clients;
     }
 
-    public function setAll_clients(bool $all_clients): void
+    public function setAllClients(bool $all_clients): void
     {
         $this->all_clients = $all_clients;
     }

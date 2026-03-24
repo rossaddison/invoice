@@ -18,7 +18,7 @@ final class QuoteItemAmountForm extends FormModel
     private ?float $discount = null;
     private ?float $total = null;
 
-    public function getQuote_item_id(): ?int
+    public function getQuoteItemId(): ?int
     {
         return $this->quote_item_id;
     }
@@ -28,7 +28,7 @@ final class QuoteItemAmountForm extends FormModel
         return $this->subtotal;
     }
 
-    public function getTax_total(): ?float
+    public function getTaxTotal(): ?float
     {
         return $this->tax_total;
     }

@@ -64,7 +64,7 @@ final class QuoteItemController extends BaseController
      * @param TRR $trR
      * @param QIAR $qiar
      */
-    public function add_product(
+    public function addProduct(
         Request $request,
         FormHydrator $formHydrator,
         PR $pR,
@@ -79,7 +79,7 @@ final class QuoteItemController extends BaseController
         $form = new QuoteItemForm($quoteItem, $quote_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => 'quoteitem/add_product',
+            'actionName' => 'quoteitem/addProduct',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
@@ -115,7 +115,7 @@ final class QuoteItemController extends BaseController
      * @param QIAR $qiar
      * @param QIAS $qias
      */
-    public function add_task(
+    public function addTask(
         Request $request,
         FormHydrator $formHydrator,
         TaskR $taskR,
@@ -128,7 +128,7 @@ final class QuoteItemController extends BaseController
         $form = new QuoteItemForm($quoteItem, $quote_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => 'quoteitem/add_task',
+            'actionName' => 'quoteitem/addTask',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
@@ -166,7 +166,7 @@ final class QuoteItemController extends BaseController
      * @param QIAS $qias
      * @param QIAR $qiar
      */
-    public function edit_product(
+    public function editProduct(
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
@@ -184,7 +184,7 @@ final class QuoteItemController extends BaseController
             $form = new QuoteItemForm($quoteItem, $quote_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
-                'actionName' => 'quoteitem/edit_product',
+                'actionName' => 'quoteitem/editProduct',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
                 'form' => $form,
@@ -203,7 +203,7 @@ final class QuoteItemController extends BaseController
                     $discount = (float) ($body['discount_amount'] ?? 0.00);
                     if (is_array($body)) {
                         $tax_rate_id = $this->quoteitemService->saveQuoteItemProduct($quoteItem, $body, $quote_id, $pR, $uR, $this->translator) ?: 1;
-                        $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
+                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $trR);
                         if (null !== $tax_rate_percentage) {
                             /**
                              * @psalm-suppress PossiblyNullReference getId
@@ -241,7 +241,7 @@ final class QuoteItemController extends BaseController
      * @param QIAS $qias
      * @param QIAR $qiar
      */
-    public function edit_task(
+    public function editTask(
         CurrentRoute $currentRoute,
         Request $request,
         FormHydrator $formHydrator,
@@ -257,7 +257,7 @@ final class QuoteItemController extends BaseController
             $form = new QuoteItemForm($quoteItem, $quote_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
-                'actionName' => 'quoteitem/edit_task',
+                'actionName' => 'quoteitem/editTask',
                 'actionArguments' => ['id' => $currentRoute->getArgument('id')],
                 'errors' => [],
                 'form' => $form,
@@ -274,7 +274,7 @@ final class QuoteItemController extends BaseController
                     $discount = (float) ($body['discount_amount'] ?? 0.00);
                     if (is_array($body)) {
                         $tax_rate_id = $this->quoteitemService->saveQuoteItemTask($quoteItem, $body, $quote_id, $taskR) ?: 1;
-                        $tax_rate_percentage = $this->taxrate_percentage($tax_rate_id, $trR);
+                        $tax_rate_percentage = $this->taxratePercentage($tax_rate_id, $trR);
                         if (null !== $tax_rate_percentage) {
                             /**
                              * @psalm-suppress PossiblyNullReference getId
@@ -307,7 +307,7 @@ final class QuoteItemController extends BaseController
      * @param TRR $trr
      * @return float|null
      */
-    public function taxrate_percentage(int $id, TRR $trr): ?float
+    public function taxratePercentage(int $id, TRR $trr): ?float
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {
@@ -371,7 +371,7 @@ final class QuoteItemController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $quoteItem = $this->quoteitem($currentRoute, $qiR);
         if ($quoteItem) {
-            $form = new QuoteItemForm($quoteItem, $quoteItem->getQuote_id());
+            $form = new QuoteItemForm($quoteItem, $quoteItem->getQuoteId());
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'action' => ['quoteitem/edit', ['id' => $quoteItem->getId()]],

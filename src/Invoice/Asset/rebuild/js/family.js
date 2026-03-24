@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
     "use strict";
 
     // Robust parse helper (matches original parsedata behaviour)
@@ -201,7 +201,7 @@
         }
         
         // Send request to generate products
-        fetch('/invoice/family/generate_products', {
+        fetch('/invoice/family/generateProducts', {
             method: 'POST',
             body: formData,
             headers: {

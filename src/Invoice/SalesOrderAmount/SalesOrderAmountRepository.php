@@ -148,8 +148,8 @@ final class SalesOrderAmountRepository extends Select\Repository
          */
         $query = $this->select()
                       ->where(['sales_order.status_id' => $key])
-                      ->andWhere('sales_order.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('sales_order.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']));
+                      ->andWhere('sales_order.date_created', '>=', $datehelper->dateFromMysqlWithoutStyle($range['lower']))
+                      ->andWhere('sales_order.date_created', '<=', $datehelper->dateFromMysqlWithoutStyle($range['upper']));
         return $this->prepareDataReader($query);
     }
 
@@ -159,7 +159,7 @@ final class SalesOrderAmountRepository extends Select\Repository
      * @param SR $sR
      * @return int
      */
-    public function repoStatusTotals_Num_Total(int $key, array $range, SR $sR): int
+    public function repoStatusTotalsNumTotal(int $key, array $range, SR $sR): int
     {
         $datehelper = new DateHelper($sR);
         /**
@@ -169,8 +169,8 @@ final class SalesOrderAmountRepository extends Select\Repository
         return $this->select()
                       ->load('sales_order')
                       ->where(['sales_order.status_id' => $key])
-                      ->andWhere('sales_order.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('sales_order.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
+                      ->andWhere('sales_order.date_created', '>=', $datehelper->dateFromMysqlWithoutStyle($range['lower']))
+                      ->andWhere('sales_order.date_created', '<=', $datehelper->dateFromMysqlWithoutStyle($range['upper']))
                       ->count();
     }
 
@@ -181,7 +181,7 @@ final class SalesOrderAmountRepository extends Select\Repository
      * @param string $period
      * @return array
      */
-    public function get_status_totals(SOR $soR, SR $sR, Translator $translator, string $period): array
+    public function getStatusTotals(SOR $soR, SR $sR, Translator $translator, string $period): array
     {
         $return = [];
         // $period eg. this-month, last-month derived from $sR->getSetting('invoice or so_overview_period')
@@ -204,7 +204,7 @@ final class SalesOrderAmountRepository extends Select\Repository
                 'label' => $status['label'],
                 'href' => (string) $status['href'],
                 'sum_total' => $total,
-                'num_total' => $this->repoStatusTotals_Num_Total($key, $range, $sR) ?: 0,
+                'num_total' => $this->repoStatusTotalsNumTotal($key, $range, $sR) ?: 0,
             ];
         }
         return $return;

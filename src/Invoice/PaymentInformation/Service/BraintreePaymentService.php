@@ -47,7 +47,7 @@ class BraintreePaymentService
     {
         $gateway = $this->createGateway();
         $customerGateway = new CustomerGateway($gateway);
-        $clientId = $invoice->getClient_id();
+        $clientId = $invoice->getClientId();
 
         try {
             // Try to find existing customer
@@ -61,9 +61,9 @@ class BraintreePaymentService
             try {
                 $result = $customerGateway->create([
                     'id' => $clientId,
-                    'firstName' => $invoice->getClient()?->getClient_name(),
-                    'lastName' => $invoice->getClient()?->getClient_surname(),
-                    'email' => $invoice->getClient()?->getClient_email(),
+                    'firstName' => $invoice->getClient()?->getClientName(),
+                    'lastName' => $invoice->getClient()?->getClientSurname(),
+                    'email' => $invoice->getClient()?->getClientEmail(),
                 ]);
 
                 if ($result->success) {

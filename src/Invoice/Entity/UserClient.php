@@ -58,22 +58,22 @@ class UserClient
         $this->id = $id;
     }
 
-    public function getUser_id(): string
+    public function getUserId(): string
     {
         return (string) $this->user_id;
     }
 
-    public function setUser_id(int $user_id): void
+    public function setUserId(int $user_id): void
     {
         $this->user_id = $user_id;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }

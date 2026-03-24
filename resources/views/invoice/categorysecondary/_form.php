@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
                                        <?= Html::openTag('div'); ?>
                                              <?= Field::select($form, 'category_primary_id')
                                                 ->addInputAttributes(['class' => 'form-control'])
-                                                ->value($form->getCategory_primary_id())
+                                                ->value($form->getCategoryPrimaryId())
                                                 ->prompt($translator->translate('none'))
                                                 ->optionsData($category_primarys); ?>
                                        <?= Html::closeTag('div'); ?>

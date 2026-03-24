@@ -152,8 +152,8 @@ final class QuoteAmountRepository extends Select\Repository
         $query = $this->select()
                       ->load('quote')
                       ->where(['quote.status_id' => $key])
-                      ->andWhere('quote.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('quote.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']));
+                      ->andWhere('quote.date_created', '>=', $datehelper->dateFromMysqlWithoutStyle($range['lower']))
+                      ->andWhere('quote.date_created', '<=', $datehelper->dateFromMysqlWithoutStyle($range['upper']));
         return $this->prepareDataReader($query);
     }
 
@@ -163,7 +163,7 @@ final class QuoteAmountRepository extends Select\Repository
      * @param SR $sR
      * @return int
      */
-    public function repoStatusTotals_Num_Total(int $key, array $range, SR $sR): int
+    public function repoStatusTotalsNumTotal(int $key, array $range, SR $sR): int
     {
         $datehelper = new DateHelper($sR);
         /**
@@ -173,8 +173,8 @@ final class QuoteAmountRepository extends Select\Repository
         return $this->select()
                       ->load('quote')
                       ->where(['quote.status_id' => $key])
-                      ->andWhere('quote.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('quote.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
+                      ->andWhere('quote.date_created', '>=', $datehelper->dateFromMysqlWithoutStyle($range['lower']))
+                      ->andWhere('quote.date_created', '<=', $datehelper->dateFromMysqlWithoutStyle($range['upper']))
                       ->count();
     }
 
@@ -185,7 +185,7 @@ final class QuoteAmountRepository extends Select\Repository
      * @param string $period
      * @return array
      */
-    public function get_status_totals(QR $qR, SR $sR, Translator $translator, string $period): array
+    public function getStatusTotals(QR $qR, SR $sR, Translator $translator, string $period): array
     {
         $return = [];
         // $period eg. this-month, last-month derived from $sR->getSetting('invoice or quote_overview_period')
@@ -208,7 +208,7 @@ final class QuoteAmountRepository extends Select\Repository
                 'label' => $status['label'],
                 'href' => (string) $status['href'],
                 'sum_total' => $total,
-                'num_total' => $this->repoStatusTotals_Num_Total($key, $range, $sR) ?: 0,
+                'num_total' => $this->repoStatusTotalsNumTotal($key, $range, $sR) ?: 0,
             ];
         }
         return $return;

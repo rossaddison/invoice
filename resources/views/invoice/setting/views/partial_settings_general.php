@@ -770,7 +770,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          'style' => 'font-family: Monaco, Lucida Console, ' .
          'monospace'
         ]);
-         echo $s->format_currency(123456.78);
+         echo $s->formatCurrency(123456.78);
         echo H::closeTag('span');
        echo H::closeTag('p');
       echo H::closeTag('div'); //7

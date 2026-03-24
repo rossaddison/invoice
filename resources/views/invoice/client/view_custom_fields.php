@@ -34,7 +34,7 @@ use Yiisoft\Html\Html;
                                 } ?>
                                 <?php $i++; ?>
                                 <?php if ($i % 2 != 0): ?>
-                                    <?php $cvH->print_field_for_view($custom_field, $client_custom_form, $client_custom_values); ?>
+                                    <?php $cvH->printFieldForView($custom_field, $client_custom_form, $client_custom_values); ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </div>
@@ -48,7 +48,7 @@ use Yiisoft\Html\Html;
                                 } ?>
                                 <?php $i++; ?>
                                 <?php if ($i % 2 == 0): ?>
-                                    <?php $cvH->print_field_for_view($custom_field, $client_custom_form, $client_custom_values); ?>
+                                    <?php $cvH->printFieldForView($custom_field, $client_custom_form, $client_custom_values); ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </div>

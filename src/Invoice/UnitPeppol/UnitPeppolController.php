@@ -55,7 +55,7 @@ final class UnitPeppolController extends BaseController
         UnitRepository $unitRepository,
     ): Response {
         $enece = new Peppol_UNECERec20_11e();
-        $enece_array = $enece->getUNECERec20_11e();
+        $enece_array = $enece->getUNECERec2011e();
         $units = $unitRepository->findAllPreloaded();
         $unitPeppol = new UnitPeppol();
         $form = new UnitPeppolForm($unitPeppol);
@@ -166,7 +166,7 @@ final class UnitPeppolController extends BaseController
         $unitPeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
         $units = $unitRepository->findAllPreloaded();
         $enece = new Peppol_UNECERec20_11e();
-        $enece_array = $enece->getUNECERec20_11e();
+        $enece_array = $enece->getUNECERec2011e();
         if ($unitPeppol) {
             $form = new UnitPeppolForm($unitPeppol);
             $parameters = [
@@ -235,7 +235,7 @@ final class UnitPeppolController extends BaseController
         $unitPeppol = $this->unitpeppol($currentRoute, $unitpeppolRepository);
         $units = $unitRepository->findAllPreloaded();
         $enece = new Peppol_UNECERec20_11e();
-        $eneceArray = $enece->getUNECERec20_11e();
+        $eneceArray = $enece->getUNECERec2011e();
         if ($unitPeppol) {
             $form = new UnitPeppolForm($unitPeppol);
             $parameters = [
@@ -292,8 +292,8 @@ final class UnitPeppolController extends BaseController
          * @var Unit $unit
          */
         foreach ($units as $unit) {
-            $key = $unit->getUnit_id();
-            null !== $key ? $optionsDataUnits[$key] = $unit->getUnit_name() . ' ' . $unit->getUnit_name_plrl() : '';
+            $key = $unit->getUnitId();
+            null !== $key ? $optionsDataUnits[$key] = $unit->getUnitName() . ' ' . $unit->getUnitNamePlrl() : '';
         }
         return $optionsDataUnits;
     }

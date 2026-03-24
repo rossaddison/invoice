@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Asset\pciAsset;
 
-class braintree_dropin_1_33_7_Asset extends __Asset
+class BraintreeDropInOneThirtyThreeSevenAsset extends Asset
 {
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [

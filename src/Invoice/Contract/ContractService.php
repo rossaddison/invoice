@@ -33,7 +33,7 @@ final readonly class ContractService
                 (string) $array['period_start'],
             );
 
-        $period_start ? $model->setPeriod_start($period_start) : '';
+        $period_start ? $model->setPeriodStart($period_start) : '';
 
         $datetime_immutable_period_end = new \DateTimeImmutable();
         $period_end =
@@ -42,10 +42,10 @@ final readonly class ContractService
                 (string) $array['period_end'],
             );
 
-        $period_end ? $model->setPeriod_end($period_end) : '';
+        $period_end ? $model->setPeriodEnd($period_end) : '';
 
         isset($array['client_id']) ?
-            $model->setClient_id((int) $array['client_id']) : '';
+            $model->setClientId((int) $array['client_id']) : '';
         isset($array['name']) ?
             $model->setName((string) $array['name']) : '';
         isset($array['reference']) ?

@@ -19,7 +19,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\<?= $generator->getCamelcase_capital_name(); ?>\<?= $generator->getCamelcase_capital_name(); ?>Form $form
+ * @var App\Invoice\<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?>Form $form
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -28,7 +28,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
- * @psalm-var array<array-key, array<array-key, string>|string> $<?= $generator->getSmall_singular_name(); ?>         
+ * @psalm-var array<array-key, array<array-key, string>|string> $<?= $generator->getSmallSingularName(); ?>         
  */
 
 <?php
@@ -48,7 +48,7 @@ echo "<?=  new Form()";
 echo '->post($urlGenerator->generate($actionName, $actionArguments))';
 echo "->enctypeMultipartFormData()";
 echo '->csrf($csrf)';
-echo "->id('" . $generator->getCamelcase_capital_name() . "Form')";
+echo "->id('" . $generator->getCamelcaseCapitalName() . "Form')";
 echo "->open()";
 echo "?>";
 echo '<?= $button::backSave(); ?>';
@@ -65,13 +65,13 @@ echo "      <?= Html::closeTag('h5'); ?>";
  */
 foreach ($relations as $relation) {
     echo "    <?= Html::openTag('div'); ?>";
-    echo '    <?= Field::select($' . 'form, ' . "'" . ($relation->getLowercase_name() ?? '') . "_id')";
+    echo '    <?= Field::select($' . 'form, ' . "'" . ($relation->getLowercaseName() ?? '') . "_id')";
     echo "      ->addInputAttributes([";
     echo "           'class' => 'form-control'";
     echo "      ])";
-    echo '      ->value($form->get' . ucfirst($relation->getLowercase_name() ?? '') . "_id())";
+    echo '      ->value($form->get' . ucfirst($relation->getLowercaseName() ?? '') . "_id())";
     echo '      ->prompt($translator->translate(\'i.none\'))';
-    echo '      ->optionsData($' . ($relation->getLowercase_name() ?? '') . 's)';
+    echo '      ->optionsData($' . ($relation->getLowercaseName() ?? '') . 's)';
     echo '    ?>';
 }
 echo '      <?= Html::closeTag(\'div\'); ?>';
@@ -124,7 +124,7 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '    ->addInputAttributes([';
             echo "        'class' => 'form-control'";
             echo '    ])';
-            echo '    ->value($s->format_amount((float)($form->get' . ucfirst($column->getName()) . '() ?? 0.00)))';
+            echo '    ->value($s->formatAmount((float)($form->get' . ucfirst($column->getName()) . '() ?? 0.00)))';
             echo '    ->placeholder($translator->translate(' . "'" . $column->getName() . '))';
             echo '?>';
             echo '<?= Html::closeTag(\'div\'); ?>';

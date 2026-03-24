@@ -49,12 +49,12 @@ class Merchant
         $this->id = $id;
     }
 
-    public function getInv_id(): string
+    public function getInvId(): string
     {
         return (string) $this->inv_id;
     }
 
-    public function setInv_id(int $inv_id): void
+    public function setInvId(int $inv_id): void
     {
         $this->inv_id = $inv_id;
     }

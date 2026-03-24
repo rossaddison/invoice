@@ -22,7 +22,7 @@ if ($invEdit && $invView) {
   <div class="panel-heading">
       <i tooltip="data-bs-toggle" title="<?= $s->isDebugMode(9);?>">
         <?= $translator->translate('productimage.gallery'); ?>
-        <?= $product->getProduct_name(); ?></i>
+        <?= $product->getProductName(); ?></i>
   </div>
   <div class="panel-body clearfix">
     <div class="container">
@@ -34,7 +34,7 @@ if ($invEdit && $invView) {
                 */
                foreach ($productImages as $productImage) { ?>
                 <a data-bs-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
-                    <img src="<?= '/products/' . $productImage->getFile_name_original(); ?>"   class="img-fluid">
+                    <img src="<?= '/products/' . $productImage->getFileNameOriginal(); ?>"   class="img-fluid">
                 </a>
              <?php } ?> 
         </div>

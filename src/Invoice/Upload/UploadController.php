@@ -79,7 +79,7 @@ final class UploadController extends BaseController
                 // - => 'desc'  so -id => default descending on id
                 // Show the latest uploads first => -id
                 ->withOrderString($query_params['sort'] ?? '-id');
-        $uploads = $this->uploads_with_sort($uploadRepository, $sort);
+        $uploads = $this->uploadsWithSort($uploadRepository, $sort);
         $paginator = (new OffsetPaginator($uploads))
                 ->withPageSize($this->sR->positiveListLimit())
                 ->withCurrentPage($currentPageNeverZero)
@@ -247,7 +247,7 @@ final class UploadController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, Upload>
      */
-    private function uploads_with_sort(UploadRepository $uploadRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    private function uploadsWithSort(UploadRepository $uploadRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $uploadRepository->findAllPreloaded()
                 ->withSort($sort);
@@ -264,8 +264,8 @@ final class UploadController extends BaseController
          * @var Client $client
          */
         foreach ($clients as $client) {
-            $key = $client->getClient_id();
-            null !== $key ? $optionsDataClients[$key] = $client->getClient_full_name() : '';
+            $key = $client->getClientId();
+            null !== $key ? $optionsDataClients[$key] = $client->getClientFullName() : '';
         }
         return $optionsDataClients;
     }

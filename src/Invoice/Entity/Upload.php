@@ -57,32 +57,32 @@ class Upload
         $this->id = $id;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
 
-    public function getUrl_key(): string
+    public function getUrlKey(): string
     {
         return $this->url_key;
     }
 
-    public function setUrl_key(string $url_key): void
+    public function setUrlKey(string $url_key): void
     {
         $this->url_key = $url_key;
     }
 
-    public function getFile_name_original(): string
+    public function getFileNameOriginal(): string
     {
         return $this->file_name_original;
     }
 
-    public function setFile_name_original(string $file_name_original): void
+    public function setFileNameOriginal(string $file_name_original): void
     {
         $this->file_name_original = $file_name_original;
     }
@@ -97,23 +97,23 @@ class Upload
         $this->description = $description;
     }
 
-    public function getFile_name_new(): string
+    public function getFileNameNew(): string
     {
         return $this->file_name_new;
     }
 
-    public function setFile_name_new(string $file_name_new): void
+    public function setFileNameNew(string $file_name_new): void
     {
         $this->file_name_new = $file_name_new;
     }
 
-    public function getUploaded_date(): DateTimeImmutable
+    public function getUploadedDate(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->uploaded_date */
         return $this->uploaded_date;
     }
 
-    public function setUploaded_date(DateTimeImmutable $uploaded_date): void
+    public function setUploadedDate(DateTimeImmutable $uploaded_date): void
     {
         $this->uploaded_date = $uploaded_date;
     }

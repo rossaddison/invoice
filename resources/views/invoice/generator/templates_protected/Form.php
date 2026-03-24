@@ -18,9 +18,9 @@ echo "<?php\n";
 
 declare(strict_types=1);
 
-namespace <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name(); ?>;
+namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName(); ?>;
 
-use App\Invoice\Entity\<?= $generator->getCamelcase_capital_name();?>;
+use App\Invoice\Entity\<?= $generator->getCamelcaseCapitalName();?>;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 <?php
@@ -33,7 +33,7 @@ foreach ($orm_schema->getColumns() as $column) {
 }
 ?>
 
-final class <?= $generator->getCamelcase_capital_name();?>Form extends FormModel
+final class <?= $generator->getCamelcaseCapitalName();?>Form extends FormModel
 {    
     <?php
     echo "\n";
@@ -79,7 +79,7 @@ foreach ($orm_schema->getColumns() as $column) {
 }
 ?>
 
-    public function __construct(<?= $generator->getCamelcase_capital_name();?> $<?= $generator->getSmall_singular_name();?>) 
+    public function __construct(<?= $generator->getCamelcaseCapitalName();?> $<?= $generator->getSmallSingularName();?>) 
     {
     <?php
     echo "\n";
@@ -90,7 +90,7 @@ $bo = '';
 foreach ($orm_schema->getColumns() as $column) {
     // Ignore the id field
     if ($column->getAbstractType() <> 'primary') {
-        $bo .= '        $this->' . $column->getName() . " = $" . $generator->getSmall_singular_name() . "->get" . ucfirst($column->getName()) . "();\n";
+        $bo .= '        $this->' . $column->getName() . " = $" . $generator->getSmallSingularName() . "->get" . ucfirst($column->getName()) . "();\n";
     }
 }
 echo rtrim($bo, ",\n") . "\n";

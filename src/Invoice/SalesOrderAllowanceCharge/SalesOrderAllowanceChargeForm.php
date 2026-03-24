@@ -24,7 +24,7 @@ final class SalesOrderAllowanceChargeForm extends FormModel
             private readonly ?int $salesorder_id)
     {
         $this->allowance_charge_id =
-                (int) $salesorderAllowanceCharge->getAllowance_charge_id();
+                (int) $salesorderAllowanceCharge->getAllowanceChargeId();
         $this->amount = (int) $salesorderAllowanceCharge->getAmount();
         $this->vat_or_tax = (int) $salesorderAllowanceCharge->getVatOrTax();
     }
@@ -34,12 +34,12 @@ final class SalesOrderAllowanceChargeForm extends FormModel
         return $this->id;
     }
 
-    public function getSalesorder_id(): ?int
+    public function getSalesorderId(): ?int
     {
         return $this->salesorder_id;
     }
 
-    public function getAllowance_charge_id(): ?int
+    public function getAllowanceChargeId(): ?int
     {
         return $this->allowance_charge_id;
     }

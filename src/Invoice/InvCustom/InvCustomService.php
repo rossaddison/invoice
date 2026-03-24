@@ -27,9 +27,9 @@ final readonly class InvCustomService
     ): void {
         $this->persist($model, $array);
         isset($array['inv_id']) ?
-            $model->setInv_id((int) $array['inv_id']) : '';
+            $model->setInvId((int) $array['inv_id']) : '';
         isset($array['custom_field_id']) ?
-            $model->setCustom_field_id(
+            $model->setCustomFieldId(
                 (int) $array['custom_field_id']) : '';
         isset($array['value']) ?
             $model->setValue((string) $array['value']) : '';

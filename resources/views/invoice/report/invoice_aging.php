@@ -46,19 +46,19 @@ $this->beginPage();
         <td><?= Html::encode($result['client']); ?></td>
         <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
             <?= $result['range_1'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($numberHelper->format_currency($result['range_1'])); ?>
+            <?= Html::encode($numberHelper->formatCurrency($result['range_1'])); ?>
         </td>
         <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
             <?= $result['range_2'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($numberHelper->format_currency($result['range_2'])); ?>
+            <?= Html::encode($numberHelper->formatCurrency($result['range_2'])); ?>
         </td>
         <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
             <?= $result['range_3'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($numberHelper->format_currency($result['range_3'])); ?>
+            <?= Html::encode($numberHelper->formatCurrency($result['range_3'])); ?>
         </td>
         <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
             <?= $result['total_balance'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($numberHelper->format_currency($result['total_balance'])); ?>
+            <?= Html::encode($numberHelper->formatCurrency($result['total_balance'])); ?>
         </td>
     </tr>
     <?php } ?>
@@ -80,15 +80,15 @@ $this->beginPage();
         <td><?= Html::encode($dueInvoice['invoice_number']); ?></td>
         <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
             <?= $dueInvoice['invoice_balance'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($dueInvoice['range_index'] == 1 ? $numberHelper->format_currency($dueInvoice['invoice_balance']) : ''); ?>
+            <?= Html::encode($dueInvoice['range_index'] == 1 ? $numberHelper->formatCurrency($dueInvoice['invoice_balance']) : ''); ?>
         </td>
         <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
             <?= $dueInvoice['invoice_balance'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($dueInvoice['range_index'] == 2 ? $numberHelper->format_currency($dueInvoice['invoice_balance']) : ''); ?>
+            <?= Html::encode($dueInvoice['range_index'] == 2 ? $numberHelper->formatCurrency($dueInvoice['invoice_balance']) : ''); ?>
         </td>
         <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
             <?= $dueInvoice['invoice_balance'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($dueInvoice['range_index'] == 3 ? $numberHelper->format_currency($dueInvoice['invoice_balance']) : ''); ?>
+            <?= Html::encode($dueInvoice['range_index'] == 3 ? $numberHelper->formatCurrency($dueInvoice['invoice_balance']) : ''); ?>
         </td>
         <td style="width:15%;text-align:right;border-bottom: 1px solid black;"></td>
     </tr>

@@ -175,7 +175,7 @@ final readonly class Button
         return  new A()
         ->addClass('btn btn-primary')
         ->content('✎️')
-        ->href($generator->generate('setting/auto_client', ['_language' => $_language]))
+        ->href($generator->generate('setting/autoClient', ['_language' => $_language]))
         ->id('btn-primary')
         ->render();
     }
@@ -186,7 +186,7 @@ final readonly class Button
         ->addClass('btn btn-success')
         ->href(
             $generator->generate(
-                'setting/tab_index',
+                'setting/tabIndex',
                 ['language' => 'en'],
                 ['active' => 'invoices'],
                 'settings[invoice_default_payment_method]',
@@ -197,7 +197,7 @@ final readonly class Button
     }
 
     /**
-     * Related logic: see TelegramController function delete_webhook
+     * Related logic: see TelegramController function deleteWebhook
      * Related logic: see ..config/common/routes/routes.php
      * @param UrlGenerator $generator
      * @param Translator $translator
@@ -208,7 +208,7 @@ final readonly class Button
         return  new A()
         ->addClass('btn btn-primary')
         ->content($translator->translate('telegram.bot.api.webhook.delete') . ' ' . '️❌')
-        ->href($generator->generate('telegram/delete_webhook', ['_language' => 'en']))
+        ->href($generator->generate('telegram/deleteWebhook', ['_language' => 'en']))
         ->id('btn-primary')
         ->render();
     }

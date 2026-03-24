@@ -88,7 +88,7 @@ final class InvRecurringController extends BaseController
             'canEdit' => $canEdit,
             'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
                                                       ? (int) $this->sR->getSetting('default_list_limit') : 1,
-            'recur_frequencies' => $numberhelper->recur_frequencies(),
+            'recur_frequencies' => $numberhelper->recurFrequencies(),
             'invrecurrings' => $this->invrecurrings($irR),
             'alert' => $this->alert(),
         ];
@@ -115,8 +115,8 @@ final class InvRecurringController extends BaseController
             $baseInvoice = $iR->repoInvUnloadedquery($inv_id);
             if (null !== $baseInvoice) {
                 // Only invoices with a status of sent can be  made recurring
-                if ($baseInvoice->getStatus_id() == 2) {
-                    $invDateCreated = $baseInvoice->getDate_created();
+                if ($baseInvoice->getStatusId() == 2) {
+                    $invDateCreated = $baseInvoice->getDateCreated();
                     $parameters = [
                         'title' => $this->translator->translate('add'),
                         'actionName' => 'invrecurring/add',
@@ -168,7 +168,7 @@ final class InvRecurringController extends BaseController
             foreach ($keyList as $key => $value) {
                 $baseInvoice = $iR->repoInvUnloadedquery($value);
                 if (null !== $baseInvoice) {
-                    if ($baseInvoice->getStatus_id() == '2') {
+                    if ($baseInvoice->getStatusId() == '2') {
                         $invRecurring = new InvRecurring();
                         $form = new InvRecurringForm($invRecurring, (int) $value);
                         $body_array = [
@@ -232,10 +232,10 @@ final class InvRecurringController extends BaseController
     ): Response {
         $inv_recurring = $this->invrecurring($currentRoute, $invrecurringRepository);
         if ($inv_recurring) {
-            $form = new InvRecurringForm($inv_recurring, (int) $inv_recurring->getInv_id());
-            $base_invoice = $iR->repoInvUnloadedquery($inv_recurring->getInv_id());
+            $form = new InvRecurringForm($inv_recurring, (int) $inv_recurring->getInvId());
+            $base_invoice = $iR->repoInvUnloadedquery($inv_recurring->getInvId());
             if (null !== $base_invoice) {
-                $invDateCreated = $base_invoice->getDate_created();
+                $invDateCreated = $base_invoice->getDateCreated();
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
                     'actionName' => 'invrecurring/start',
@@ -328,7 +328,7 @@ final class InvRecurringController extends BaseController
      * @param IR $iR
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get_recur_start_date(Request $request, IR $iR): \Psr\Http\Message\ResponseInterface
+    public function getRecurStartDate(Request $request, IR $iR): \Psr\Http\Message\ResponseInterface
     {
         $body = $request->getQueryParams();
         /**
@@ -337,14 +337,14 @@ final class InvRecurringController extends BaseController
         $inv_id = $body['inv_id'];
         $base_invoice = $iR->repoInvUnloadedquery((string) $inv_id);
         if (null !== $base_invoice) {
-            $immutable_invoice_date = $base_invoice->getDate_created();
+            $immutable_invoice_date = $base_invoice->getDateCreated();
             // see InvRecurringRepository recur_frequencies eg. '8M' => 'calendar_month_8',
             $recur_frequency = (string) $body['frequency'];
             $dateHelper = new DateHelper($this->sR);
             $parameters = [
                 'success' => 1,
                 // Show the recur_start_date in Y-m-d format
-                'start_date' => $dateHelper->add_to_immutable($immutable_invoice_date, $recur_frequency),
+                'start_date' => $dateHelper->addToImmutable($immutable_invoice_date, $recur_frequency),
             ];
             return $this->factory->createResponse(Json::encode($parameters));
         }
@@ -366,10 +366,10 @@ final class InvRecurringController extends BaseController
         if ($inv_recurring) {
             $invRecurringId = $inv_recurring->getId();
             $form = new InvRecurringForm($inv_recurring, (int) $invRecurringId);
-            $invId = $inv_recurring->getInv_id();
+            $invId = $inv_recurring->getInvId();
             $base_invoice = $iR->repoInvUnloadedquery($invId);
             if (null !== $base_invoice) {
-                $invDateCreated = $base_invoice->getDate_created();
+                $invDateCreated = $base_invoice->getDateCreated();
                 $parameters = [
                     'title' => $this->translator->translate('view'),
                     'actionName' => 'invrecurring/view',

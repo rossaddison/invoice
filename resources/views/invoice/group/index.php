@@ -51,17 +51,17 @@ $columns = [
     new DataColumn(
         'identifier_format',
         header: $translator->translate('identifier.format'),
-        content: static fn (Group $model) => Html::encode($model->getIdentifier_format()),
+        content: static fn (Group $model) => Html::encode($model->getIdentifierFormat()),
     ),
     new DataColumn(
         'left_pad',
         header: $translator->translate('left.pad'),
-        content: static fn (Group $model) => Html::encode($model->getLeft_pad()),
+        content: static fn (Group $model) => Html::encode($model->getLeftPad()),
     ),
     new DataColumn(
         'next_id',
         header: $translator->translate('next.id'),
-        content: static fn (Group $model) => Html::encode($model->getNext_id()),
+        content: static fn (Group $model) => Html::encode($model->getNextId()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

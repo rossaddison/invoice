@@ -40,8 +40,8 @@ final readonly class SalesOrderItemService
                     (string) $array['sales_order_id']
                 );
             if ($sales_order) {
-                $model->setSales_order($sales_order);
-                $model->setSales_order_id(
+                $model->setSalesOrder($sales_order);
+                $model->setSalesOrderId(
                     (int) $sales_order->getId()
                 );
             }
@@ -52,7 +52,7 @@ final readonly class SalesOrderItemService
             );
             if ($tax_rate) {
                 $model->setTaxRate($tax_rate);
-                $model->setTax_rate_id(
+                $model->setTaxRateId(
                     (int) $tax_rate->getTaxRateId()
                 );
             }
@@ -63,8 +63,8 @@ final readonly class SalesOrderItemService
             );
             if ($product) {
                 $model->setProduct($product);
-                $model->setProduct_id(
-                    (int) $product->getProduct_id()
+                $model->setProductId(
+                    (int) $product->getProductId()
                 );
             }
         }
@@ -74,7 +74,7 @@ final readonly class SalesOrderItemService
             );
             if ($task) {
                 $model->setTask($task);
-                $model->setTask_id((int) $task->getId());
+                $model->setTaskId((int) $task->getId());
             }
         }
     }
@@ -116,7 +116,7 @@ final readonly class SalesOrderItemService
             if (isset($array['product_id'])
                 && $pr->repoCount((string) $product_id) > 0
             ) {
-                $name = $product->getProduct_name();
+                $name = $product->getProductName();
             }
             null !== $name
                 ? $model->setName($name)
@@ -125,7 +125,7 @@ final readonly class SalesOrderItemService
             // => override default product description
             $description = ((isset($array['description']))
                 ? (string) $array['description']
-                : $product->getProduct_description());
+                : $product->getProductDescription());
             null !== $description
                 ? $model->setDescription($description)
                 : $model->setDescription(
@@ -165,10 +165,10 @@ final readonly class SalesOrderItemService
             ? $model->setPrice((float) $array['price'])
             : $model->setPrice(0.00);
         isset($array['discount_amount'])
-            ? $model->setDiscount_amount(
+            ? $model->setDiscountAmount(
                 (float) $array['discount_amount']
             )
-            : $model->setDiscount_amount(0.00);
+            : $model->setDiscountAmount(0.00);
         isset($array['order'])
             ? $model->setOrder((int) $array['order'])
             : $model->setOrder(0);
@@ -178,9 +178,9 @@ final readonly class SalesOrderItemService
             (string) $array['product_unit_id']
         );
         if ($unit) {
-            $model->setProduct_unit($unit->getUnit_name());
+            $model->setProductUnit($unit->getUnitName());
         }
-        $model->setProduct_unit_id((int) $array['product_unit_id']);
+        $model->setProductUnitId((int) $array['product_unit_id']);
         $this->repository->save($model);
         return $model;
     }
@@ -212,15 +212,15 @@ final readonly class SalesOrderItemService
             );
             if ($product) {
                 $name = (((isset($array['product_id']))
-                    && ($pr->repoCount($product->getProduct_id()) > 0))
-                    ? $product->getProduct_name()
+                    && ($pr->repoCount($product->getProductId()) > 0))
+                    ? $product->getProductName()
                     : '');
                 $model->setName($name ?? '');
                 // If the user has changed the description on the form
                 // => override default product description
                 $description = ((isset($array['description']))
                     ? (string) $array['description']
-                    : $product->getProduct_description());
+                    : $product->getProductDescription());
                 $model->setDescription($description ?? '');
             }
         }
@@ -231,20 +231,20 @@ final readonly class SalesOrderItemService
             ? $model->setPrice((float) $array['price'])
             : '';
         isset($array['discount_amount'])
-            ? $model->setDiscount_amount(
+            ? $model->setDiscountAmount(
                 (float) $array['discount_amount']
             )
-            : $model->setDiscount_amount(0.00);
+            : $model->setDiscountAmount(0.00);
         isset($array['peppol_po_itemid'])
-            ? $model->setPeppol_po_itemid(
+            ? $model->setPeppolPoItemid(
                 (string) $array['peppol_po_itemid']
             )
-            : $model->setPeppol_po_itemid('');
+            : $model->setPeppolPoItemid('');
         isset($array['peppol_po_lineid'])
-            ? $model->setPeppol_po_lineid(
+            ? $model->setPeppolPoLineid(
                 (string) $array['peppol_po_lineid']
             )
-            : $model->setPeppol_po_lineid('');
+            : $model->setPeppolPoLineid('');
         isset($array['order'])
             ? $model->setOrder((int) $array['order'])
             : '';
@@ -254,9 +254,9 @@ final readonly class SalesOrderItemService
             (string) $array['product_unit_id']
         );
         if ($unit) {
-            $model->setProduct_unit($unit->getUnit_name());
+            $model->setProductUnit($unit->getUnitName());
         }
-        $model->setProduct_unit_id((int) $array['product_unit_id']);
+        $model->setProductUnitId((int) $array['product_unit_id']);
         $this->repository->save($model);
         // pass the tax_rate_id so that we can save the
         // sales order item amount
@@ -272,12 +272,12 @@ final readonly class SalesOrderItemService
      * @param array $array
      * @return bool
      */
-    public function savePeppol_po_itemid(
+    public function savePeppolPoItemid(
         SalesOrderItem $model,
         array $array
     ): bool {
         isset($array['peppol_po_itemid'])
-            ? $model->setPeppol_po_itemid(
+            ? $model->setPeppolPoItemid(
                 (string) $array['peppol_po_itemid']
             )
             : '';
@@ -290,12 +290,12 @@ final readonly class SalesOrderItemService
      * @param array $array
      * @return bool
      */
-    public function savePeppol_po_lineid(
+    public function savePeppolPoLineid(
         SalesOrderItem $model,
         array $array
     ): bool {
         isset($array['peppol_po_lineid'])
-            ? $model->setPeppol_po_lineid(
+            ? $model->setPeppolPoLineid(
                 (string) $array['peppol_po_lineid']
             )
             : '';
@@ -307,7 +307,7 @@ final readonly class SalesOrderItemService
      * @param TRR $trr
      * @return float|null
      */
-    public function taxrate_percentage(
+    public function taxratePercentage(
         int $id,
         TRR $trr
     ): ?float {

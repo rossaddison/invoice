@@ -208,7 +208,7 @@ final class QuoteAllowanceChargeController extends BaseController
     ): Response {
         $quoteAllowanceCharge = $this->quoteallowancecharge($currentRoute, $acqR);
         if ($quoteAllowanceCharge) {
-            $quote_id = $quoteAllowanceCharge->getQuote_id();
+            $quote_id = $quoteAllowanceCharge->getQuoteId();
             $form = new QuoteAllowanceChargeForm($quoteAllowanceCharge,
                 (int) $quote_id);
             $parameters = [
@@ -282,7 +282,7 @@ final class QuoteAllowanceChargeController extends BaseController
         $quoteAllowanceCharge = $this->quoteallowancecharge(
             $currentRoute, $acqR);
         if ($quoteAllowanceCharge) {
-            $quote_id = $quoteAllowanceCharge->getQuote_id();
+            $quote_id = $quoteAllowanceCharge->getQuoteId();
             $form = new QuoteAllowanceChargeForm($quoteAllowanceCharge,
                 (int) $quote_id);
             $parameters = [

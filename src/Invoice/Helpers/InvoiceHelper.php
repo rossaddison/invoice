@@ -25,7 +25,7 @@ class InvoiceHelper
         return $flash;
     }
 
-    public function invoice_logo(): string
+    public function invoiceLogo(): string
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@img' => dirname(__DIR__) . DIRECTORY_SEPARATOR
@@ -41,7 +41,7 @@ class InvoiceHelper
      *
      * @return string
      */
-    public function invoice_logo_pdf()
+    public function invoiceLogoPdf()
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@img' => dirname(__DIR__) . DIRECTORY_SEPARATOR
@@ -66,7 +66,7 @@ class InvoiceHelper
      * @param mixed $subNumb
      * @return string
      */
-    public function invoice_genCodeline(string $slipType, mixed $amount, string $rnumb, mixed $subNumb): string
+    public function invoiceGenCodeline(string $slipType, mixed $amount, string $rnumb, mixed $subNumb): string
     {
         $isEur = false;
 
@@ -83,7 +83,7 @@ class InvoiceHelper
         }
 
         $amountLine = sprintf('%010d', (float) $amount * 100.00);
-        $checkSlAmount = $this->invoice_recMod10($slipType . $amountLine);
+        $checkSlAmount = $this->invoiceRecMod10($slipType . $amountLine);
 
         if (!preg_match("/\d{2}-\d{1,6}-\d{1}/", (string) $subNumb)) {
             $this->flash('danger', $this->s->trans('Invalid subscriber number'));
@@ -103,7 +103,7 @@ class InvoiceHelper
      *
      * @param string $in
      */
-    public function invoice_recMod10($in): int
+    public function invoiceRecMod10($in): int
     {
         $line = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5];
         $carry = 0;

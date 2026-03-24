@@ -71,7 +71,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'price')
     ->label($translator->translate('price'))
     ->placeholder($translator->translate('price'))
-    ->value(Html::encode($s->format_amount($form->getPrice() ?? 0.00)))
+    ->value(Html::encode($s->formatAmount($form->getPrice() ?? 0.00)))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>

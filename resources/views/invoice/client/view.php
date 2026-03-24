@@ -57,7 +57,7 @@ use Yiisoft\Html\Tag\A;
 <h1><?= Html::encode($title)?></h1>
 
 <div id="headerbar">
-    <h1 class="headerbar-title"><?= Html::encode($clientHelper->format_client($client)); ?></h1>
+    <h1 class="headerbar-title"><?= Html::encode($clientHelper->formatClient($client)); ?></h1>
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
@@ -67,23 +67,23 @@ use Yiisoft\Html\Tag\A;
                 <a href="#modal-add-inv" data-bs-toggle="modal" class="btn btn-success"  style="text-decoration:none">
                    <i class="fa fa-file-text"></i><?= $translator->translate('create.invoice'); ?>
                 </a>
-                <?php if ($cpR->repoClientCount($clientId = (string) $client->getClient_id()) === 0 && strlen($clientId) > 0) { ?>
-                <a href="<?= $urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $client->getClient_id()]); ?>" 
+                <?php if ($cpR->repoClientCount($clientId = (string) $client->getClientId()) === 0 && strlen($clientId) > 0) { ?>
+                <a href="<?= $urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $client->getClientId()]); ?>" 
                    class="btn btn-info" style="text-decoration:none">
                      <i class="fa fa-plus"></i> <?= $translator->translate('client.peppol.add'); ?>
                 </a>
                 <?php } ?>
-                <?php if ($cpR->repoClientCount($clientId = (string) $client->getClient_id()) > 0 && strlen($clientId) > 0) { ?>
-                <a href="<?= $urlGenerator->generate('clientpeppol/edit', ['client_id' => $client->getClient_id()]); ?>" 
+                <?php if ($cpR->repoClientCount($clientId = (string) $client->getClientId()) > 0 && strlen($clientId) > 0) { ?>
+                <a href="<?= $urlGenerator->generate('clientpeppol/edit', ['client_id' => $client->getClientId()]); ?>" 
                    class="btn btn-warning" style="text-decoration:none">
                      <i class="fa fa-edit"></i> <?= $translator->translate('client.peppol.edit'); ?>
                 </a>
                 <?php } ?>
-                <a href="<?= null !== ($clientIdEdit = $client->getClient_id()) ? $urlGenerator->generate('client/edit', ['id' => $clientIdEdit, 'origin' => 'edit']) : ''; ?>"
+                <a href="<?= null !== ($clientIdEdit = $client->getClientId()) ? $urlGenerator->generate('client/edit', ['id' => $clientIdEdit, 'origin' => 'edit']) : ''; ?>"
                    class="btn btn-danger" style="text-decoration:none">
                     <i class="fa fa-edit"></i><?= $translator->translate('edit'); ?>
                 </a>
-                <a href="<?= null !== ($clientIdPostalAdd = $client->getClient_id())
+                <a href="<?= null !== ($clientIdPostalAdd = $client->getClientId())
                             ? $urlGenerator->generate(
                                 'postaladdress/add',
                                 // Argument parameters
@@ -104,7 +104,7 @@ use Yiisoft\Html\Tag\A;
                    class="btn btn-primary" style="text-decoration:none">
                     <i class="fa fa-plus"></i><?= $translator->translate('client.postaladdress.add'); ?>
                 </a>
-                <a href="<?= null !== ($clientIdDelAdd = $client->getClient_id()) ? $urlGenerator->generate(
+                <a href="<?= null !== ($clientIdDelAdd = $client->getClientId()) ? $urlGenerator->generate(
                     'del/add',
                     ['client_id' => $clientIdDelAdd],
                     ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view'],
@@ -113,7 +113,7 @@ use Yiisoft\Html\Tag\A;
                    <i class="fa fa-plus fa-margin"></i><?= $translator->translate('delivery.location.add'); ?>
                 </a>
                 <a class="btn btn-danger"
-                   href="<?= $urlGenerator->generate('client/delete', ['id' => $client->getClient_id()]); ?>"
+                   href="<?= $urlGenerator->generate('client/delete', ['id' => $client->getClientId()]); ?>"
                    onclick="return confirm('<?= $translator->translate('delete.client.warning'); ?>');" style="text-decoration:none">
                    <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('delete'); ?>
                 </a>
@@ -159,7 +159,7 @@ use Yiisoft\Html\Tag\A;
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6">
 
-                    <h3><?= Html::encode($clientHelper->format_client($client)); ?></h3>
+                    <h3><?= Html::encode($clientHelper->formatClient($client)); ?></h3>
                     <p>
                         <?= $partial_client_address; ?>
                     </p>
@@ -177,7 +177,7 @@ foreach ($custom_fields as $custom_field) : ?>
                             <tr>
                                 <?php
                                     $column = $custom_field->getLabel();
-    $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
+    $value = $cvH->formValue($clientCustomValues, $custom_field->getId())
     ?>
                                 <th id="<?= 'cf-col' . $i; ?>"><?= Html::encode($column); ?></th>
                                 <td id="<?= 'cf-val' . $i; ?>"><?= Html::encode($value); ?></td>
@@ -196,7 +196,7 @@ endforeach; ?>
                                 <?= $translator->translate('language'); ?>
                             </th>
                             <td class="td-amount">
-                                <?= ucfirst($client->getClient_language() ?? ''); ?>
+                                <?= ucfirst($client->getClientLanguage() ?? ''); ?>
                             </td>
                         </tr>
                         <tr>
@@ -204,7 +204,7 @@ endforeach; ?>
                                 <?= $translator->translate('total.billed'); ?>
                             </th>
                             <td class="td-amount">
-                                <?= null !== ($clientIdTotal = $client->getClient_id()) ? $s->format_currency($iR->with_total($clientIdTotal, $iaR)) : ''; ?>
+                                <?= null !== ($clientIdTotal = $client->getClientId()) ? $s->formatCurrency($iR->withTotal($clientIdTotal, $iaR)) : ''; ?>
                             </td>
                         </tr>
                         <tr>
@@ -212,7 +212,7 @@ endforeach; ?>
                                 <?= $translator->translate('total.paid'); ?>
                             </th>
                             <td class="td-amount">
-                                <?= null !== ($clientIdPaid = $client->getClient_id()) ? $s->format_currency($iR->with_total_paid($clientIdPaid, $iaR)) : ''; ?>
+                                <?= null !== ($clientIdPaid = $client->getClientId()) ? $s->formatCurrency($iR->withTotalPaid($clientIdPaid, $iaR)) : ''; ?>
                             </td>
                         </tr>
                         <tr>
@@ -220,7 +220,7 @@ endforeach; ?>
                                 <?= $translator->translate('total.balance'); ?>
                             </th>
                             <td class="td-amount">
-                                <?= null !== ($clientIdBalance = $client->getClient_id()) ? $s->format_currency($iR->with_total_balance($clientIdBalance, $iaR)) : ''; ?>
+                                <?= null !== ($clientIdBalance = $client->getClientId()) ? $s->formatCurrency($iR->withTotalBalance($clientIdBalance, $iaR)) : ''; ?>
                             </td>
                         </tr>
                     </table>
@@ -249,34 +249,34 @@ endforeach; ?>
                         <div class="panel-heading"><?= $translator->translate('contact.information'); ?></div>
                         <div class="panel-body table-content">
                             <table class="table no-margin">
-                                <?php if ($client->getClient_email()) : ?>
+                                <?php if ($client->getClientEmail()) : ?>
                                     <tr>
                                         <th><?= $translator->translate('email'); ?></th>
-                                        <td><?= Html::mailto($client->getClient_email()); ?></td>
+                                        <td><?= Html::mailto($client->getClientEmail()); ?></td>
                                     </tr>
                                 <?php endif; ?>
-                                <?php if (strlen(($client->getClient_phone() ?? '')) > 0) : ?>
+                                <?php if (strlen(($client->getClientPhone() ?? '')) > 0) : ?>
                                     <tr>
                                         <th><?= $translator->translate('phone'); ?></th>
-                                        <td><?= Html::encode($client->getClient_phone()); ?></td>
+                                        <td><?= Html::encode($client->getClientPhone()); ?></td>
                                     </tr>
                                 <?php endif; ?>
-                                <?php if (strlen(($client->getClient_mobile() ?? '')) > 0) : ?>
+                                <?php if (strlen(($client->getClientMobile() ?? '')) > 0) : ?>
                                     <tr>
                                         <th><?= $translator->translate('mobile'); ?></th>
-                                        <td><?= Html::encode($client->getClient_mobile()); ?></td>
+                                        <td><?= Html::encode($client->getClientMobile()); ?></td>
                                     </tr>
                                 <?php endif; ?>
-                                <?php if (strlen(($client->getClient_fax() ?? '')) > 0) : ?>
+                                <?php if (strlen(($client->getClientFax() ?? '')) > 0) : ?>
                                     <tr>
                                         <th><?= $translator->translate('fax'); ?></th>
-                                        <td><?= Html::encode($client->getClient_fax()); ?></td>
+                                        <td><?= Html::encode($client->getClientFax()); ?></td>
                                     </tr>
                                 <?php endif; ?>
-                                <?php if (strlen(($client->getClient_web() ?? '')) > 0) : ?>
+                                <?php if (strlen(($client->getClientWeb() ?? '')) > 0) : ?>
                                     <tr>
                                         <th><?= $translator->translate('web'); ?></th>
-                                        <td><?=  new A()->content($client->getClient_web() ?? 'https://no_web_page.com')->href($client->getClient_web() ?? 'https://no_web_page.com')->addAttributes(['target' => '_blank'])->render(); ?></td>
+                                        <td><?=  new A()->content($client->getClientWeb() ?? 'https://no_web_page.com')->href($client->getClientWeb() ?? 'https://no_web_page.com')->addAttributes(['target' => '_blank'])->render(); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php
@@ -290,7 +290,7 @@ endforeach; ?>
                                     <tr>
                                         <?php
                                             $column = $custom_field->getLabel();
-           $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
+           $value = $cvH->formValue($clientCustomValues, $custom_field->getId())
            ?>
                                         <th><?= Html::encode($column); ?></th>
                                         <td><?= Html::encode($value); ?></td>
@@ -307,13 +307,13 @@ endforeach; ?>
                         <div class="panel-heading"><?= $translator->translate('tax.information'); ?></div>
                         <div class="panel-body table-content">
                             <table class="table no-margin">
-                                <?php if ($client->getClient_vat_id()) : ?>
+                                <?php if ($client->getClientVatId()) : ?>
                                     <tr>
                                         <th><?= $translator->translate('vat.id'); ?></th>
-                                        <td><?= Html::encode($client->getClient_vat_id()); ?></td>
+                                        <td><?= Html::encode($client->getClientVatId()); ?></td>
                                     </tr>
                                 <?php endif; ?>
-                                <?php if (strlen(($clientTaxCode = $client->getClient_tax_code() ?? '')) > 0) : ?>
+                                <?php if (strlen(($clientTaxCode = $client->getClientTaxCode() ?? '')) > 0) : ?>
                                     <tr>
                                         <th><?= $translator->translate('tax.code'); ?></th>
                                         <td><?= Html::encode($clientTaxCode); ?></td>
@@ -331,7 +331,7 @@ endforeach; ?>
                                     <tr>
                                         <?php
                                             $column = $custom_field->getLabel();
-                                        $value = $cvH->form_value($clientCustomValues, $custom_field->getId())
+                                        $value = $cvH->formValue($clientCustomValues, $custom_field->getId())
                                         ?>
                                         <th><?= Html::encode($column); ?></th>
                                         <td><?= Html::encode($value); ?></td>
@@ -343,7 +343,7 @@ endforeach; ?>
                 </div>
             </div>
 
-            <?php if ($client->getClient_surname() !== ""): ?>
+            <?php if ($client->getClientSurname() !== ""): ?>
                 <hr>
 
                 <div class="row">
@@ -360,15 +360,15 @@ endforeach; ?>
                                         <th><?= $translator->translate('birthdate'); ?></th>
                                         
                                         <td><?=
-                                              !is_string($clientBirthdate = $client->getClient_birthdate())
+                                              !is_string($clientBirthdate = $client->getClientBirthdate())
                                                && null !== $clientBirthdate
                                                          ? $clientBirthdate->format('Y-m-d') : '';
                 ?></td>
                                     </tr>
                                     <tr>
                                         <th><?= $translator->translate('gender'); ?></th>
-                                        <td><?= null !== ($clientGender = $client->getClient_gender())
-                    ? $clientHelper->format_gender($clientGender, $translator) : ''; ?></td>
+                                        <td><?= null !== ($clientGender = $client->getClientGender())
+                    ? $clientHelper->formatGender($clientGender, $translator) : ''; ?></td>
                                     </tr>
                                     <?php
                                             /**
@@ -378,7 +378,7 @@ endforeach; ?>
                                                 <?php if ($custom_field->getLocation() !== 3) {
                                                     continue;
                                                 } ?>
-                                                <?php $cvH->print_field_for_view($custom_field, $clientCustomForm, $clientCustomValues); ?>
+                                                <?php $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues); ?>
                                          <?php endforeach; ?>   
                                 </table>
                             </div>
@@ -415,7 +415,7 @@ endforeach; ?>
                                             <td>    
                                             <?php
                                             $clientCustomForm = new ClientCustomForm(new ClientCustom());
-                    $cvH->print_field_for_view($custom_field, $clientCustomForm, $clientCustomValues);?>
+                    $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues);?>
                                             </td>    
                                         </tr>
                                     <?php
@@ -443,7 +443,7 @@ endforeach; ?>
                                 <?php echo $partial_notes; ?>
                             </div>
                             <input type="hidden" name="client_id" id="client_id"
-                                   value="<?= $client->getClient_id(); ?>">
+                                   value="<?= $client->getClientId(); ?>">
                             <div class="input-group">
                                 <textarea id="client_note" class="form-control" rows="2" style="resize:none"></textarea>
                                 <span id="save_client_note_new" class="input-text-addon btn btn-info">
@@ -562,7 +562,7 @@ endforeach; ?>
      * Related logic: see ClientController/view function 'client_modal_layout_quote' => [ .... ]
      * Related logic: see views\invoice\quote\modal_layout.php
      * Related logic: see views\invoice\quote\modal_add_quote_form.php contained in above file.
-     * Note: 'action' is equivalent to $urlGenerator->generate('quote/add', [], ['origin' => $client->getClient_id() or 'quote' or 'main'])
+     * Note: 'action' is equivalent to $urlGenerator->generate('quote/add', [], ['origin' => $client->getClientId() or 'quote' or 'main'])
      * Note: If origin is a client number, quote/add/{origin} route will return to url client/view/{origin}
      * Note: If origin is 'quote', quote/add/{origin} route will return to url quote/index
      * Note: If origin is 'main', quote/add/{origin} route will return to url invoice/

@@ -53,7 +53,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::select($form, 'unit_id')
     ->label($translator->translate('id'))
     ->optionsData($optionsDataUnits)
-    ->value(Html::encode($form->getUnit_id() ?? ''))
+    ->value(Html::encode($form->getUnitId() ?? ''))
     ->disabled(true)
 ?>
                 <?= Html::closeTag('div'); ?>

@@ -1,4 +1,4 @@
-// salesorder.js - Complete functionality restored from pre_jquery_deletion branch
+﻿// salesorder.js - Complete functionality restored from pre_jquery_deletion branch
 // Systematically converted from jQuery to vanilla JavaScript
 // All original selectors and event handlers preserved
 
@@ -57,7 +57,7 @@
         // 3. SALES ORDER TO INVOICE CONFIRM - #so_to_invoice_confirm
         document.addEventListener('click', function (e) {
             if (e.target.matches('#so_to_invoice_confirm') || e.target.closest('#so_to_invoice_confirm')) {
-                var url = getOrigin() + "/invoice/salesorder/so_to_invoice_confirm";
+                var url = getOrigin() + "/invoice/salesorder/soToInvoiceConfirm";
                 var btn = document.querySelector('.so_to_invoice_confirm');
                 var absoluteUrl = new URL(window.location.href);
                 if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';

@@ -1,4 +1,4 @@
-// quote.js - Complete functionality restored from pre_jquery_deletion branch
+﻿// quote.js - Complete functionality restored from pre_jquery_deletion branch
 // Systematically converted from jQuery to vanilla JavaScript
 // All original selectors and event handlers preserved
 
@@ -70,7 +70,7 @@
                     var itemRow = btn.closest('.item');
                     if (itemRow) itemRow.remove();
                 } else {
-                    var url = getOrigin() + "/invoice/quote/delete_item/" + id;
+                    var url = getOrigin() + "/invoice/quote/deleteItem/" + id;
                     
                     fetch(url, {
                         method: 'GET',
@@ -269,8 +269,8 @@
         // 7. SAVE CLIENT NOTE - #save_client_note
         document.addEventListener('click', function (e) {
             if (e.target.matches('#save_client_note') || e.target.closest('#save_client_note')) {
-                var url = getOrigin() + "/invoice/client/save_client_note";
-                var load = getOrigin() + "/invoice/client/load_client_notes";
+                var url = getOrigin() + "/invoice/client/saveClientNoteNew";
+                var load = getOrigin() + "/invoice/client/loadClientNotes";
                 var client_id = document.getElementById('client_id');
                 var client_note = document.getElementById('client_note');
 
@@ -365,7 +365,7 @@
         // 8. QUOTE TAX SUBMIT - #quote_tax_submit
         document.addEventListener('click', function (e) {
             if (e.target.matches('#quote_tax_submit') || e.target.closest('#quote_tax_submit')) {
-                var url = getOrigin() + "/invoice/quote/save_quote_tax_rate";
+                var url = getOrigin() + "/invoice/quote/saveQuoteTaxRate";
                 var btn = document.querySelector('.quote_tax_submit');
                 var absoluteUrl = new URL(window.location.href);
                 if (btn) {
@@ -413,7 +413,7 @@
         // 9. QUOTE CREATE CONFIRM - #quote_create_confirm
         document.addEventListener('click', function (e) {
             if (e.target.matches('#quote_create_confirm') || e.target.closest('#quote_create_confirm')) {
-                var url = getOrigin() + "/invoice/quote/create_confirm";
+                var url = getOrigin() + "/invoice/quote/createConfirm";
                 var btn = document.querySelector('.quote_create_confirm');
                 var absoluteUrl = new URL(window.location.href);
                 setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-spin fa-spinner');
@@ -501,7 +501,7 @@
         // 11. QUOTE TO INVOICE CONFIRM - #quote_to_invoice_confirm
         document.addEventListener('click', function (e) {
             if (e.target.matches('#quote_to_invoice_confirm') || e.target.closest('#quote_to_invoice_confirm')) {
-                var url = getOrigin() + "/invoice/quote/quote_to_invoice_confirm";
+                var url = getOrigin() + "/invoice/quote/quoteToInvoiceConfirm";
                 var btn = document.querySelector('.quote_to_invoice_confirm');
                 var absoluteUrl = new URL(window.location.href);
                 setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-spin fa-spinner');
@@ -552,7 +552,7 @@
         // 12. QUOTE TO SALES ORDER CONFIRM - #quote_to_so_confirm
         document.addEventListener('click', function (e) {
             if (e.target.matches('#quote_to_so_confirm') || e.target.closest('#quote_to_so_confirm')) {
-                var url = getOrigin() + "/invoice/quote/quote_to_so_confirm";
+                var url = getOrigin() + "/invoice/quote/quoteToSoConfirm";
                 var btn = document.querySelector('.quote_to_so_confirm');
                 var absoluteUrl = new URL(window.location.href);
                 setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-spin fa-spinner');
@@ -607,7 +607,7 @@
         // 13. QUOTE TO QUOTE CONFIRM - #quote_to_quote_confirm (Copy quote)
         document.addEventListener('click', function (e) {
             if (e.target.matches('#quote_to_quote_confirm') || e.target.closest('#quote_to_quote_confirm')) {
-                var url = getOrigin() + "/invoice/quote/quote_to_quote_confirm";
+                var url = getOrigin() + "/invoice/quote/quoteToQuoteConfirm";
                 var btn = document.querySelector('.quote_to_quote_confirm');
                 var absoluteUrl = new URL(window.location.href);
                 setSecureButtonContent(btn, 'h6', 'text-center', 'fa fa-spin fa-spinner');

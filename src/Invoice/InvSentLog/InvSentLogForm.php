@@ -20,8 +20,8 @@ final class InvSentLogForm extends FormModel
     {
         $this->id = $invsentlog->getId();
         $this->inv = $invsentlog->getInv();
-        $this->inv_id = $invsentlog->getInv_id();
-        $this->date_sent = $invsentlog->getDate_sent();
+        $this->inv_id = $invsentlog->getInvId();
+        $this->date_sent = $invsentlog->getDateSent();
     }
 
     public function getId(): ?int
@@ -29,7 +29,7 @@ final class InvSentLogForm extends FormModel
         return $this->id;
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }
@@ -39,7 +39,7 @@ final class InvSentLogForm extends FormModel
         return $this->inv;
     }
 
-    public function getDate_sent(): string|DateTimeImmutable|null
+    public function getDateSent(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string $this->date_sent

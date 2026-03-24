@@ -70,11 +70,11 @@ final class SalesOrderItemController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $so_item = $this->salesorderitem($currentRoute, $soiR);
         if ($so_item) {
-            $so = $so_item->getSales_order();
+            $so = $so_item->getSalesOrder();
             if (null!== $so && ($this->rbacObserver($so, $ucR, $uiR)
              || $this->rbacAccountant()
              || $this->rbacAdmin())) {
-                $so_id = $so_item->getSales_order_id();
+                $so_id = $so_item->getSalesOrderId();
                 $form = new SalesOrderItemForm($so_item, $so_id);
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
@@ -96,9 +96,9 @@ final class SalesOrderItemController extends BaseController
                         if (is_array($body)) {
     // The only item that is different from the quote is the customer's purchase
     // order number
-                            $this->salesorderitemService->savePeppol_po_itemid(
+                            $this->salesorderitemService->savePeppolPoItemid(
                                                                     $so_item, $body);
-                            $this->salesorderitemService->savePeppol_po_lineid(
+                            $this->salesorderitemService->savePeppolPoLineid(
                                                                     $so_item, $body);
                             return $this->factory->createResponse(
                                         $this->webViewRenderer->renderPartialAsString(
@@ -109,7 +109,7 @@ final class SalesOrderItemController extends BaseController
                                     'message' => $this->translator->translate(
                                                         'record.successfully.updated'),
                                     'url' => 'salesorder/view',
-                                    'id' => $so_item->getSales_order_id(),
+                                    'id' => $so_item->getSalesOrderId(),
                                 ],
                             ));
                         } // is_array
@@ -137,7 +137,7 @@ final class SalesOrderItemController extends BaseController
      * @return bool
      */
     private function rbacObserver(SalesOrder $so, UCR $ucR, UIR $uiR) : bool {
-        $statusId = $so->getStatus_id();
+        $statusId = $so->getStatusId();
         if (null!==$statusId) {
             // has observer role
             if ($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -146,10 +146,10 @@ final class SalesOrderItemController extends BaseController
                 // in the observer user's guest index
                 && !($statusId === 1)
                 // the salesorder is intended for the current user
-                && ($so->getUser_id() === $this->userService->getUser()?->getId())
+                && ($so->getUserId() === $this->userService->getUser()?->getId())
                 // the salesorder client is associated with the above user
-                && ($ucR->repoUserClientqueryCount($so->getUser_id(),
-                                                $so->getClient_id()) > 0)) {
+                && ($ucR->repoUserClientqueryCount($so->getUserId(),
+                                                $so->getClientId()) > 0)) {
                 $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {
@@ -198,7 +198,7 @@ final class SalesOrderItemController extends BaseController
         return null;
     }
 
-    public function taxrate_percentage(int $id, TRR $trr): ?float
+    public function taxratePercentage(int $id, TRR $trr): ?float
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {

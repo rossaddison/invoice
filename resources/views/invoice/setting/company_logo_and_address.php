@@ -54,7 +54,7 @@ use App\Widget\QrCode as QrCodeWidget;
      *
      * Aliases @base, @company_private_logos, @public, @public\logo
      */
-                        $aliases = $s->get_company_private_logos_folder_aliases();
+                        $aliases = $s->getCompanyPrivateLogosFolderAliases();
 /**
  * @var string $company['logofilenamewithsuffix']
  */
@@ -132,7 +132,7 @@ echo '<div>' . Html::encode($company['city'] ? $translator->translate('city') . 
 echo '<div>' . Html::encode($company['state'] ? $translator->translate('state') . ': ' . $company['state'] : '') . '</div>';
 echo '<div>' . Html::encode($company['zip'] ? $translator->translate('zip') . ': ' . $company['zip'] : '') . '</div>';
 echo '</div>';
-echo '<div>' . $countryHelper->get_country_name($translator->translate('cldr'), ($company['country'] ?? 'United Kingdom')) . '</div>';
+echo '<div>' . $countryHelper->getCountryName($translator->translate('cldr'), ($company['country'] ?? 'United Kingdom')) . '</div>';
 echo '<br/>';
 echo '<div>' . $translator->translate('phone.abbr') . ': ' . Html::encode($company['phone'] ?? '') . '</div>';
 echo '<div>' . $translator->translate('fax.abbr') . ': ' . Html::encode($company['fax'] ?? '') . '</div>';

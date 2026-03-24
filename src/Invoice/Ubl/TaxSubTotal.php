@@ -14,7 +14,7 @@ class TaxSubTotal
     private float $taxCategoryPercent = 0.00;
     private string $documentCurrency = '';
 
-    // Used in src\Invoice\Ubl\Invoice.php function build_tax_sub_totals_array()
+    // Used in src\Invoice\Ubl\Invoice.php A)
     // The array passed here is a sub-array ie. one of many subtotals
     // - a subtotal is generated for each tax category.
     public function __construct(
@@ -23,7 +23,7 @@ class TaxSubTotal
     {        
     }
 
-    public function load_values_from_array(): void
+    public function loadValuesFromArray(): void
     {
         $array = $this->taxSubtotal;
         /**
@@ -48,15 +48,15 @@ class TaxSubTotal
         $this->documentCurrency = $array['DocumentCurrency'] ?: '';
     }
 
-    public function build_pre_serialized_array(): array
+    public function buildPreSerializedArray(): array
     {
-        $this->load_values_from_array();
+        $this->loadValuesFromArray();
         return [
             'name' => Schema::CAC . 'TaxSubtotal',
             'value' => [
                 [
                     'name' => Schema::CBC . 'TaxableAmount',
-                    'value' => $this->s->currency_converter(
+                    'value' => $this->s->currencyConverter(
                       number_format($this->taxableAmounts ?: 0.00, 2, '.', '')),
                     'attributes' => [
                         'currencyID' => $this->documentCurrency,
@@ -64,7 +64,7 @@ class TaxSubTotal
                 ],
                 [
                     'name' => Schema::CBC . 'TaxAmount',
-                    'value' => $this->s->currency_converter(
+                    'value' => $this->s->currencyConverter(
                            number_format($this->taxAmount ?: 0.00, 2, '.', '')),
                     'attributes' => [
                         'currencyID' => $this->documentCurrency,

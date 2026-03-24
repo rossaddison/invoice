@@ -60,24 +60,24 @@ final class ClientPeppolForm extends FormModel
     public function __construct(ClientPeppol $client_peppol)
     {
         $this->id = (int) $client_peppol->getId();
-        $this->client_id = (int) $client_peppol->getClient_id();
+        $this->client_id = (int) $client_peppol->getClientId();
         $this->accounting_cost = $client_peppol->getAccountingCost();
         $this->buyer_reference = $client_peppol->getBuyerReference();
         $this->endpointid = $client_peppol->getEndpointid();
-        $this->endpointid_schemeid = $client_peppol->getEndpointid_schemeid();
+        $this->endpointid_schemeid = $client_peppol->getEndpointidSchemeid();
         $this->financial_institution_branchid =
-                $client_peppol->getFinancial_institution_branchid();
+                $client_peppol->getFinancialInstitutionBranchid();
         $this->identificationid = $client_peppol->getIdentificationid();
         $this->identificationid_schemeid =
-                $client_peppol->getIdentificationid_schemeid();
+                $client_peppol->getIdentificationidSchemeid();
         $this->legal_entity_registration_name =
-                $client_peppol->getLegal_entity_registration_name();
+                $client_peppol->getLegalEntityRegistrationName();
         $this->legal_entity_companyid =
-                $client_peppol->getLegal_entity_companyid();
+                $client_peppol->getLegalEntityCompanyid();
         $this->legal_entity_companyid_schemeid =
-                $client_peppol->getLegal_entity_companyid_schemeid();
+                $client_peppol->getLegalEntityCompanyidSchemeid();
         $this->legal_entity_company_legal_form =
-                $client_peppol->getLegal_entity_company_legal_form();
+                $client_peppol->getLegalEntityCompanyLegalForm();
         $this->taxschemecompanyid = $client_peppol->getTaxschemecompanyid();
         $this->taxschemeid = $client_peppol->getTaxschemeid();
         $this->supplier_assigned_accountid =
@@ -89,17 +89,17 @@ final class ClientPeppolForm extends FormModel
         return $this->id;
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function getAccounting_cost(): ?string
+    public function getAccountingCost(): ?string
     {
         return $this->accounting_cost;
     }
 
-    public function getBuyer_reference(): ?string
+    public function getBuyerReference(): ?string
     {
         return $this->buyer_reference;
     }
@@ -109,12 +109,12 @@ final class ClientPeppolForm extends FormModel
         return $this->endpointid;
     }
 
-    public function getEndpointid_schemeid(): ?string
+    public function getEndpointidSchemeid(): ?string
     {
         return $this->endpointid_schemeid;
     }
 
-    public function getFinancial_institution_branchid(): ?string
+    public function getFinancialInstitutionBranchid(): ?string
     {
         return $this->financial_institution_branchid;
     }
@@ -124,27 +124,27 @@ final class ClientPeppolForm extends FormModel
         return $this->identificationid;
     }
 
-    public function getIdentificationid_schemeid(): ?string
+    public function getIdentificationidSchemeid(): ?string
     {
         return $this->identificationid_schemeid;
     }
 
-    public function getLegal_entity_registration_name(): ?string
+    public function getLegalEntityRegistrationName(): ?string
     {
         return $this->legal_entity_registration_name;
     }
 
-    public function getLegal_entity_companyid(): ?string
+    public function getLegalEntityCompanyid(): ?string
     {
         return $this->legal_entity_companyid;
     }
 
-    public function getLegal_entity_companyid_schemeid(): ?string
+    public function getLegalEntityCompanyidSchemeid(): ?string
     {
         return $this->legal_entity_companyid_schemeid;
     }
 
-    public function getLegal_entity_company_legal_form(): ?string
+    public function getLegalEntityCompanyLegalForm(): ?string
     {
         return $this->legal_entity_company_legal_form;
     }

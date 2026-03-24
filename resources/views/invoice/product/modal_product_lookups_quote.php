@@ -37,11 +37,11 @@ use Yiisoft\Html\Tag\Button;
                                          * @var App\Invoice\Entity\Family $family
                                          */
                                         foreach ($families as $family) { ?>
-                                        <option value="<?= $family->getFamily_id(); ?>"
-                                            <?php if (isset($filter_family) && $family->getFamily_id() == $filter_family) {
+                                        <option value="<?= $family->getFamilyId(); ?>"
+                                            <?php if (isset($filter_family) && $family->getFamilyId() == $filter_family) {
                                                 echo ' selected="selected"';
                                             } ?>>
-                                            <?= $family->getFamily_name() ?? ''; ?>
+                                            <?= $family->getFamilyName() ?? ''; ?>
                                         </option>
                                     <?php } ?>
                                 </select>

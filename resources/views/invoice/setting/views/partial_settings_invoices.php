@@ -671,18 +671,18 @@ echo H::openTag('div', $row); //1
          echo  new Option()
          ->value(
          $email_template
-         ->GetEmail_template_id()
+         ->GetEmailTemplateId()
         )
          ->selected(
           $body[
           'settings[email_invoice_'
           . 'template]'
          ] == $email_template
-         ->getEmail_template_id()
+         ->getEmailTemplateId()
         )
          ->content(
           $email_template
-          ->getEmail_template_title()
+          ->getEmailTemplateTitle()
           ?? ''
          );
         } 
@@ -725,18 +725,18 @@ echo H::openTag('div', $row); //1
          echo  new Option()
          ->value(
          $email_template
-         ->getEmail_template_id()
+         ->getEmailTemplateId()
         )
          ->selected(
           $body[
           'settings[email_invoice_'
           . 'template_paid]'
          ] == $email_template
-         ->getEmail_template_id()
+         ->getEmailTemplateId()
         )
          ->content(
           $email_template
-          ->getEmail_template_title()
+          ->getEmailTemplateTitle()
           ?? ''
          );
         } 
@@ -784,18 +784,18 @@ echo H::openTag('div', $row); //1
          echo  new Option()
          ->value(
          $email_template
-         ->getEmail_template_id()
+         ->getEmailTemplateId()
         )
          ->selected(
           $body[
           'settings[email_invoice_'
           . 'template_overdue]'
          ] == $email_template
-         ->getEmail_template_id()
+         ->getEmailTemplateId()
         )
          ->content(
           $email_template
-          ->getEmail_template_title()
+          ->getEmailTemplateTitle()
           ?? ''
          );
         } 

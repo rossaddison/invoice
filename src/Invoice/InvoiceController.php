@@ -65,7 +65,7 @@ final class InvoiceController extends BaseController
      * @param SessionInterface $session
      * @param SettingRepository $sR
      */
-    private function install_default_settings_on_first_run(
+    private function installDefaultSettingsOnFirstRun(
                         SessionInterface $session, SettingRepository $sR): void
     {
         $default_settings = [
@@ -223,7 +223,7 @@ final class InvoiceController extends BaseController
             'thousands_separator' => ',',
             'time_zone' => 'Europe/London',
         ];
-        $this->install_default_settings($default_settings, $sR);
+        $this->installDefaultSettings($default_settings, $sR);
     }
 
     public function faq(#[RouteArgument('topic')] string $topic): Response
@@ -268,7 +268,7 @@ final class InvoiceController extends BaseController
      * document UBL format
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function store_cove_call_api(): \Psr\Http\Message\ResponseInterface
+    public function storeCoveCallApi(): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'result' => '',
@@ -321,7 +321,7 @@ final class InvoiceController extends BaseController
      * Related logic: see https://www.storecove.com/docs/
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function store_cove_call_api_get_legal_entity_id():
+    public function storeCoveCallApiGetLegalEntityId():
                                             \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
@@ -369,10 +369,10 @@ final class InvoiceController extends BaseController
      * Related logic: see https://www.storecove.com/docs/
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function store_cove_call_api_legal_entity_identifier():
+    public function storeCoveCallApiLegalEntityIdentifier():
                                             \Psr\Http\Message\ResponseInterface
     {
-        // Obtain from above function store_cove_call_api_legal_entity()
+        // Obtain from above A)
         // store-cove regex: ^GB(\d{9}(\d{3})?$|^[A-Z]{2}\d{3})$ will match eg.
         // GB000123456 eg. GB obtained from setting view storecove
         $legal = $this->sR->getSetting('storecove_country');
@@ -425,7 +425,7 @@ final class InvoiceController extends BaseController
      * Paste json copy into $data
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function store_cove_send_test_json_invoice():
+    public function storeCoveSendTestJsonInvoice():
                                             \Psr\Http\Message\ResponseInterface
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
@@ -535,7 +535,7 @@ final class InvoiceController extends BaseController
         return $this->webViewRenderer->render('curl/api_result', $parameters);
     }
 
-    public function store_cove_send_actual_json_invoice():
+    public function storeCoveSendActualJsonInvoice():
                                             \Psr\Http\Message\ResponseInterface
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
@@ -893,14 +893,14 @@ final class InvoiceController extends BaseController
 
             // All invoices and quotes
             'invoices' => $iR->findAllPreloaded(),
-            'overdueInvoices' => $iR->is_overdue(),
+            'overdueInvoices' => $iR->isOverdue(),
             'quotes' => $qR->findAllPreloaded(),
 
             // Totals for status eg. draft, sent, viewed...
-            'invoice_status_totals' => $iaR->get_status_totals(
+            'invoice_status_totals' => $iaR->getStatusTotals(
                     $iR, $sR, $translator, $sR->getSetting(
                             'invoice_overview_period') ?: 'this-month'),
-            'quote_status_totals' => $qaR->get_status_totals(
+            'quote_status_totals' => $qaR->getStatusTotals(
                     $qR, $sR, $translator, $sR->getSetting(
                             'quote_status_period') ?: 'this-month'),
 
@@ -984,15 +984,15 @@ final class InvoiceController extends BaseController
             }
         }
         $gR->repoCountAll() === 0 ?
-                $this->install_default_invoice_and_quote_group($gR) : '';
+                $this->installDefaultInvoiceAndQuoteGroup($gR) : '';
         $pmR->count() === 0 ?
-                $this->install_default_payment_methods($pmR) : '';
+                $this->installDefaultPaymentMethods($pmR) : '';
         // If you want to reinstall the default settings, remove the
         // default_settings_exist setting => its count will be zero
         $sR->repoCount('default_settings_exist') === 0 ?
-                $this->install_default_settings_on_first_run(
+                $this->installDefaultSettingsOnFirstRun(
                     $session, $sR) : '';
-        $this->install_check_for_preexisting_test_data(
+        $this->installCheckForPreexistingTestData(
                                                 $sR, $fR, $uR, $pR, $trR, $cR);
         $session->set('_language', $currentRoute->getArgument('_language'));
         $parameters = [
@@ -1009,7 +1009,7 @@ final class InvoiceController extends BaseController
      * @param TaxRateRepository $trR
      * @param ClientRepository $cR
      */
-    private function install_check_for_preexisting_test_data(
+    private function installCheckForPreexistingTestData(
         SettingRepository $sR,
         FamilyRepository $fR,
         UnitRepository $uR,
@@ -1027,7 +1027,7 @@ final class InvoiceController extends BaseController
                 // Settings...View
                 && $sR->getSetting('install_test_data') == '1') {
             // The user wants the test data to be installed
-            $this->install_test_data($trR, $uR, $fR, $pR, $cR);
+            $this->installTestData($trR, $uR, $fR, $pR, $cR);
         } else {
             // Test Data Already exists => Settings...View install_test_data
             // must be set back to No
@@ -1037,7 +1037,7 @@ final class InvoiceController extends BaseController
                                     'install.test.data.exists.already')) : '';
             $setting = $sR->withKey('install_test_data');
             if (null !== $setting) {
-                $setting->setSetting_value('0');
+                $setting->setSettingValue('0');
                 $sR->save($setting);
             }
         }
@@ -1047,19 +1047,19 @@ final class InvoiceController extends BaseController
      * @param array $default_settings
      * @param SettingRepository $sR
      */
-    private function install_default_settings(array $default_settings,
+    private function installDefaultSettings(array $default_settings,
         SettingRepository $sR): void
     {
-        $this->remove_all_settings($sR);
+        $this->removeAllSettings($sR);
         /**
          * @var string $key
          * @var string $value
          */
         foreach ($default_settings as $key => $value) {
             $setting = new Setting();
-            $setting->setSetting_key($key);
+            $setting->setSettingKey($key);
             /** @psalm-suppress RedundantCastGivenDocblockType */
-            $setting->setSetting_value((string) $value);
+            $setting->setSettingValue((string) $value);
             $sR->save($setting);
         }
     }
@@ -1071,7 +1071,7 @@ final class InvoiceController extends BaseController
      * @param ProductRepository $pR
      * @param ClientRepository $cR
      */
-    private function install_test_data(TaxRateRepository $trR,
+    private function installTestData(TaxRateRepository $trR,
         UnitRepository $uR, FamilyRepository $fR, ProductRepository $pR,
             ClientRepository $cR): void
     {
@@ -1089,26 +1089,26 @@ final class InvoiceController extends BaseController
         FamilyRepository $fR, ProductRepository $pR, ClientRepository $cR): void
     {
         // Tax
-        $this->install_zero_rate($trR);
-        $this->install_standard_rate($trR);
+        $this->installZeroRate($trR);
+        $this->installStandardRate($trR);
         // Unit
-        $this->install_product_unit($uR);
-        $this->install_service_unit($uR);
+        $this->installProductUnit($uR);
+        $this->installServiceUnit($uR);
         // Family
-        $this->install_product_family($fR);
-        $this->install_service_family($fR);
+        $this->installProductFamily($fR);
+        $this->installServiceFamily($fR);
         // Product
-        $this->install_product($pR);
-        $this->install_service($pR);
+        $this->installProduct($pR);
+        $this->installService($pR);
         // Client
-        $this->install_foreign_client($cR);
-        $this->install_non_foreign_client($cR);
+        $this->installForeignClient($cR);
+        $this->installNonForeignClient($cR);
     }
 
     /**
      * @param TaxRateRepository $trR
      */
-    private function install_zero_rate(TaxRateRepository $trR): void
+    private function installZeroRate(TaxRateRepository $trR): void
     {
         // Only allow two tax rates initially
         // These tax rates will not be deleted when test data is reset because
@@ -1125,7 +1125,7 @@ final class InvoiceController extends BaseController
     /**
      * @param TaxRateRepository $trR
      */
-    private function install_standard_rate(TaxRateRepository $trR): void
+    private function installStandardRate(TaxRateRepository $trR): void
     {
         // Only allow two tax rates initially
         // These tax rates will not be deleted when test data is reset because
@@ -1142,155 +1142,155 @@ final class InvoiceController extends BaseController
     /**
      * @param UnitRepository $uR
      */
-    private function install_product_unit(UnitRepository $uR): void
+    private function installProductUnit(UnitRepository $uR): void
     {
         $unit = new Unit();
-        $unit->setUnit_name('unit');
-        $unit->setUnit_name_plrl('units');
+        $unit->setUnitName('unit');
+        $unit->setUnitNamePlrl('units');
         $uR->save($unit);
     }
 
     /**
      * @param UnitRepository $uR
      */
-    private function install_service_unit(UnitRepository $uR): void
+    private function installServiceUnit(UnitRepository $uR): void
     {
         $unit = new Unit();
-        $unit->setUnit_name('service');
-        $unit->setUnit_name_plrl('services');
+        $unit->setUnitName('service');
+        $unit->setUnitNamePlrl('services');
         $uR->save($unit);
     }
 
     /**
      * @param FamilyRepository $fR
      */
-    private function install_product_family(FamilyRepository $fR): void
+    private function installProductFamily(FamilyRepository $fR): void
     {
         $family = new Family();
-        $family->setFamily_name('Product');
+        $family->setFamilyName('Product');
         $fR->save($family);
     }
 
     /**
      * @param FamilyRepository $fR
      */
-    private function install_service_family(FamilyRepository $fR): void
+    private function installServiceFamily(FamilyRepository $fR): void
     {
         $family = new Family();
-        $family->setFamily_name('Service');
+        $family->setFamilyName('Service');
         $fR->save($family);
     }
 
     /**
      * @param ProductRepository $pR
      */
-    private function install_product(ProductRepository $pR): void
+    private function installProduct(ProductRepository $pR): void
     {
         $product = new Product();
-        $product->setProduct_sku('12345678rgfyr');
-        $product->setProduct_name('Tuch Padd');
-        $product->setProduct_description('Description of Touch Pad');
-        $product->setProduct_price(100.00);
-        $product->setPurchase_price(30.00);
-        $product->setProvider_name('We Provide');
-        $product->setTax_rate_id(2);
-        $product->setUnit_id(1);
-        $product->setFamily_id(1);
+        $product->setProductSku('12345678rgfyr');
+        $product->setProductName('Tuch Padd');
+        $product->setProductDescription('Description of Touch Pad');
+        $product->setProductPrice(100.00);
+        $product->setPurchasePrice(30.00);
+        $product->setProviderName('We Provide');
+        $product->setTaxRateId(2);
+        $product->setUnitId(1);
+        $product->setFamilyId(1);
         $pR->save($product);
     }
 
     /**
      * @param ProductRepository $pR
      */
-    private function install_service(ProductRepository $pR): void
+    private function installService(ProductRepository $pR): void
     {
         $service = new Product();
-        $service->setProduct_sku('d234ds678rgfyr');
-        $service->setProduct_name('Cleen Screans');
-        $service->setProduct_description('Clean a screen');
-        $service->setProduct_price(5.00);
-        $service->setPurchase_price(0.00);
-        $service->setProvider_name('Employee');
+        $service->setProductSku('d234ds678rgfyr');
+        $service->setProductName('Cleen Screans');
+        $service->setProductDescription('Clean a screen');
+        $service->setProductPrice(5.00);
+        $service->setPurchasePrice(0.00);
+        $service->setProviderName('Employee');
         // Zero => tax_rate_id => 1
-        $service->setTax_rate_id(1);
+        $service->setTaxRateId(1);
         // Service => unit_id = 2; Product => unit_id = 1
-        $service->setUnit_id(2);
+        $service->setUnitId(2);
         // Service => family_id 2; Product => family_id = 1
-        $service->setFamily_id(2);
+        $service->setFamilyId(2);
         $pR->save($service);
     }
 
     /**
      * @param ClientRepository $cR
      */
-    private function install_foreign_client(ClientRepository $cR): void
+    private function installForeignClient(ClientRepository $cR): void
     {
         $client = new Client();
-        $client->setClient_active(true);
-        $client->setClient_name('Foreign');
-        $client->setClient_surname('Client');
-        $client->setClient_email('email@email.com');
-        $client->setClient_language('Japanese');
-        $client->setClient_birthdate(new \DateTime());
-        $client->setClient_gender(2);
+        $client->setClientActive(true);
+        $client->setClientName('Foreign');
+        $client->setClientSurname('Client');
+        $client->setClientEmail('email@email.com');
+        $client->setClientLanguage('Japanese');
+        $client->setClientBirthdate(new \DateTime());
+        $client->setClientGender(2);
         $cR->save($client);
     }
 
     /**
      * @param ClientRepository $cR
      */
-    private function install_non_foreign_client(ClientRepository $cR): void
+    private function installNonForeignClient(ClientRepository $cR): void
     {
         $client = new Client();
-        $client->setClient_active(true);
-        $client->setClient_name('Non');
-        $client->setClient_surname('Foreign');
-        $client->setClient_email('email@foreign.com');
-        $client->setClient_language('English');
-        $client->setClient_birthdate(new \DateTime());
-        $client->setClient_gender(2);
+        $client->setClientActive(true);
+        $client->setClientName('Non');
+        $client->setClientSurname('Foreign');
+        $client->setClientEmail('email@foreign.com');
+        $client->setClientLanguage('English');
+        $client->setClientBirthdate(new \DateTime());
+        $client->setClientGender(2);
         $cR->save($client);
     }
 
     /**
      * @param GroupRepository $gR
      */
-    private function install_default_invoice_and_quote_group(
+    private function installDefaultInvoiceAndQuoteGroup(
                                                     GroupRepository $gR): void
     {
         $i_group = new Group();
         $i_group->setName('Invoice Group');
-        $i_group->setIdentifier_format('INV{{{id}}}');
-        $i_group->setNext_id(1);
-        $i_group->setLeft_pad(0);
+        $i_group->setIdentifierFormat('INV{{{id}}}');
+        $i_group->setNextId(1);
+        $i_group->setLeftPad(0);
         $gR->save($i_group);
 
         $q_group = new Group();
         $q_group->setName('Quote Group');
-        $q_group->setIdentifier_format('QUO{{{id}}}');
-        $q_group->setNext_id(1);
-        $q_group->setLeft_pad(0);
+        $q_group->setIdentifierFormat('QUO{{{id}}}');
+        $q_group->setNextId(1);
+        $q_group->setLeftPad(0);
         $gR->save($q_group);
 
         $so_group = new Group();
         $so_group->setName('Sales Order Group');
-        $so_group->setIdentifier_format('SO{{{id}}}');
-        $so_group->setNext_id(1);
-        $so_group->setLeft_pad(0);
+        $so_group->setIdentifierFormat('SO{{{id}}}');
+        $so_group->setNextId(1);
+        $so_group->setLeftPad(0);
         $gR->save($so_group);
 
         $icn_group = new Group();
         $icn_group->setName('Credit Note Group');
-        $icn_group->setIdentifier_format('CN{{{id}}}');
-        $icn_group->setNext_id(1);
-        $icn_group->setLeft_pad(0);
+        $icn_group->setIdentifierFormat('CN{{{id}}}');
+        $icn_group->setNextId(1);
+        $icn_group->setLeftPad(0);
         $gR->save($icn_group);
     }
 
     /**
      * @param PaymentMethodRepository $pmR
      */
-    private function install_default_payment_methods(
+    private function installDefaultPaymentMethods(
                                             PaymentMethodRepository $pmR): void
     {
         // 1
@@ -1353,7 +1353,7 @@ final class InvoiceController extends BaseController
     /**
      * @param SettingRepository $sR
      */
-    private function remove_all_settings(SettingRepository $sR): void
+    private function removeAllSettings(SettingRepository $sR): void
     {
         // Completely remove any currently existing settings
         $settings = $sR->findAllPreloaded();
@@ -1367,11 +1367,11 @@ final class InvoiceController extends BaseController
      * @param SettingRepository $sR
      * @return Response
      */
-    public function setting_reset(SettingRepository $sR): Response
+    public function settingReset(SettingRepository $sR): Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if ($canEdit) {
-            $this->remove_all_settings($sR);
+            $this->removeAllSettings($sR);
         }
         return $this->webService->getRedirectResponse('invoice/index');
     }
@@ -1385,7 +1385,7 @@ final class InvoiceController extends BaseController
      * @param QuoteRepository $qR
      * @param InvRepository $iR
      */
-    public function test_data_remove(
+    public function testDataRemove(
         SettingRepository $sR,
         UnitRepository $uR,
         FamilyRepository $fR,
@@ -1405,7 +1405,7 @@ final class InvoiceController extends BaseController
             // Note: The Tax Rates are not deleted because you must have at
             // least one zero tax rate and one standard rate
             // for the quotes and invoices to function corrrectly
-                $this->test_data_delete($uR, $fR, $pR, $cR);
+                $this->testDataDelete($uR, $fR, $pR, $cR);
                 $flash = $this->translator->translate('deleted');
             }
         } else {
@@ -1430,7 +1430,7 @@ final class InvoiceController extends BaseController
      * @param InvRepository $iR
      * @param TaxRateRepository $trR
      */
-    public function test_data_reset(
+    public function testDataReset(
         SettingRepository $sR,
         UnitRepository $uR,
         FamilyRepository $fR,
@@ -1447,8 +1447,8 @@ final class InvoiceController extends BaseController
             if (($qR->repoCountAll() > 0) || ($iR->repoCountAll() > 0)) {
                 $flash = $this->translator->translate('first.reset');
             } else {
-                $this->test_data_delete($uR, $fR, $pR, $cR);
-                $this->install_test_data($trR, $uR, $fR, $pR, $cR);
+                $this->testDataDelete($uR, $fR, $pR, $cR);
+                $this->installTestData($trR, $uR, $fR, $pR, $cR);
                 $flash = $this->translator->translate('reset');
             }
         } else {
@@ -1467,7 +1467,7 @@ final class InvoiceController extends BaseController
      * @param ProductRepository $pR
      * @param ClientRepository $cR
      */
-    private function test_data_delete(UnitRepository $uR, FamilyRepository $fR,
+    private function testDataDelete(UnitRepository $uR, FamilyRepository $fR,
                             ProductRepository $pR, ClientRepository $cR): void
     {
         // Products

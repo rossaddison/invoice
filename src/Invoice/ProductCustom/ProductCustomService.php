@@ -27,10 +27,10 @@ final readonly class ProductCustomService
     ): void {
         $this->persist($model, $array);
         $array['product_id'] ? 
-            $model->setProduct_id(
+            $model->setProductId(
                 (int) $array['product_id']) : '';
         $array['custom_field_id'] ? 
-            $model->setCustom_field_id(
+            $model->setCustomFieldId(
                 (int) $array['custom_field_id']) : '';
         $array['value'] ? 
             $model->setValue((string) $array['value']) : '';

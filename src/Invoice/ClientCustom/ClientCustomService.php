@@ -27,9 +27,9 @@ final readonly class ClientCustomService
     ): void {
         $this->persist($model, $array);
         isset($array['client_id']) ?
-            $model->setClient_id((int) $array['client_id']) : '';
+            $model->setClientId((int) $array['client_id']) : '';
         isset($array['custom_field_id']) ?
-            $model->setCustom_field_id(
+            $model->setCustomFieldId(
                 (int) $array['custom_field_id']) : '';
         isset($array['value']) ?
             $model->setValue((string) $array['value']) : '';

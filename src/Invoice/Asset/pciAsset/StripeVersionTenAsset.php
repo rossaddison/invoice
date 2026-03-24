@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Asset\pciAsset;
 
-class stripe_v10_Asset extends __Asset
+class StripeVersionTenAsset extends Asset
 {
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [

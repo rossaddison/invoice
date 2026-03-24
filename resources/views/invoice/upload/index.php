@@ -43,17 +43,17 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('client'),
-        content: static fn (Upload $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
+        content: static fn (Upload $model): string => Html::encode($model->getClient()?->getClientName() ?? ''),
     ),
     new DataColumn(
         'file_name_original',
         header: $translator->translate('upload.filename.original'),
-        content: static fn (Upload $model): string => Html::encode($model->getFile_name_original()),
+        content: static fn (Upload $model): string => Html::encode($model->getFileNameOriginal()),
     ),
     new DataColumn(
         'file_name_new',
         header: $translator->translate('upload.filename.new'),
-        content: static fn (Upload $model): string => Html::encode($model->getFile_name_new()),
+        content: static fn (Upload $model): string => Html::encode($model->getFileNameNew()),
     ),
     new DataColumn(
         'description',

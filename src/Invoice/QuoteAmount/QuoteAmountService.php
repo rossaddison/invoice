@@ -45,12 +45,12 @@ final readonly class QuoteAmountService
         QuoteAmount $model,
         int $quote_id
     ): void {
-        $model->setQuote_id($quote_id);
-        $model->setItem_subtotal(0.00);
-        $model->setItem_tax_total(0.00);
-        $model->setPackhandleship_total(0.00);
-        $model->setPackhandleship_tax(0.00);
-        $model->setTax_total(0.00);
+        $model->setQuoteId($quote_id);
+        $model->setItemSubtotal(0.00);
+        $model->setItemTaxTotal(0.00);
+        $model->setPackhandleshipTotal(0.00);
+        $model->setPackhandleshipTax(0.00);
+        $model->setTaxTotal(0.00);
         $model->setTotal(0.00);
         $this->repository->save($model);
     }
@@ -63,21 +63,21 @@ final readonly class QuoteAmountService
         QuoteAmount $model,
         QuoteAmountForm $form
     ): void {
-        null !== $form->getQuote_id() ?
-            $model->setQuote_id($form->getQuote_id()) : '';
-        $model->setItem_subtotal(
-            $form->getItem_subtotal() ?? 0.00
+        null !== $form->getQuoteId() ?
+            $model->setQuoteId($form->getQuoteId()) : '';
+        $model->setItemSubtotal(
+            $form->getItemSubtotal() ?? 0.00
         );
-        $model->setItem_tax_total(
-            $form->getItem_tax_total() ?? 0.00
+        $model->setItemTaxTotal(
+            $form->getItemTaxTotal() ?? 0.00
         );
-        $model->setPackhandleship_total(
-            (float) $form->getPackhandleship_total()
+        $model->setPackhandleshipTotal(
+            (float) $form->getPackhandleshipTotal()
         );
-        $model->setPackhandleship_tax(
-            (float) $form->getPackhandleship_tax()
+        $model->setPackhandleshipTax(
+            (float) $form->getPackhandleshipTax()
         );
-        $model->setTax_total($form->getTax_total() ?? 0.00);
+        $model->setTaxTotal($form->getTaxTotal() ?? 0.00);
         $model->setTotal($form->getTotal() ?? 0.00);
         $this->repository->save($model);
     }
@@ -99,16 +99,16 @@ final readonly class QuoteAmountService
          * @var float $array['tax_total']
          * @var float $array['total']
          */
-        $model->setQuote_id($array['quote_id']);
-        $model->setItem_subtotal($array['item_subtotal']);
-        $model->setItem_tax_total($array['item_taxtotal']);
-        $model->setPackhandleship_total(
+        $model->setQuoteId($array['quote_id']);
+        $model->setItemSubtotal($array['item_subtotal']);
+        $model->setItemTaxTotal($array['item_taxtotal']);
+        $model->setPackhandleshipTotal(
             (float) $array['packhandleship_total']
         );
-        $model->setPackhandleship_tax(
+        $model->setPackhandleshipTax(
             (float) $array['packhandleship_tax']
         );
-        $model->setTax_total($array['tax_total']);
+        $model->setTaxTotal($array['tax_total']);
         $model->setTotal($array['total']);
         $this->repository->save($model);
     }
@@ -160,20 +160,20 @@ final readonly class QuoteAmountService
                         $subtotal +=
                             $quoteItemAmount->getSubtotal() ?? 0.00;
                         $taxTotal +=
-                            $quoteItemAmount->getTax_total() ?? 0.00;
+                            $quoteItemAmount->getTaxTotal() ?? 0.00;
                     }
                 }
-                $model->setItem_subtotal($subtotal);
-                $model->setItem_tax_total($taxTotal);
-                $model->setPackhandleship_total($packHandleShipTotal);
-                $model->setPackhandleship_tax($packHandleShipTax);
+                $model->setItemSubtotal($subtotal);
+                $model->setItemTaxTotal($taxTotal);
+                $model->setPackhandleshipTotal($packHandleShipTotal);
+                $model->setPackhandleshipTax($packHandleShipTax);
                 $additionalTaxTotal =
-                    $numberHelper->calculate_quote_taxes(
+                    $numberHelper->calculateQuoteTaxes(
                         (string) $quote_id,
                         $qtrR,
                         $qaR
                     );
-                $model->setTax_total($additionalTaxTotal);
+                $model->setTaxTotal($additionalTaxTotal);
                 $model->setTotal(
                     $subtotal + $taxTotal + $additionalTaxTotal
                 );

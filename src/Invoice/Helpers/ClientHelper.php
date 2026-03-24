@@ -14,11 +14,11 @@ class ClientHelper
     {
     }
 
-    public function format_client(array|object|null $client): string
+    public function formatClient(array|object|null $client): string
     {
         if ($client instanceof Client) {
-            $trimmedName = trim($client->getClient_name());
-            $trimmedSurname = trim($client->getClient_surname() ?? '');
+            $trimmedName = trim($client->getClientName());
+            $trimmedSurname = trim($client->getClientSurname() ?? '');
             $ln = strlen($trimmedName);
             $ls = strlen($trimmedSurname);
             $ns = trim($trimmedName . ' ' . $trimmedSurname);
@@ -33,7 +33,7 @@ class ClientHelper
         return '';
     }
 
-    public function format_gender(int $gender, Translator $t): string
+    public function formatGender(int $gender, Translator $t): string
     {
         if ($gender == 0) {
             return $t->translate('gender.male');

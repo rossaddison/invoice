@@ -89,7 +89,7 @@ use Yiisoft\VarDumper\VarDumper;
                                 <?= Html::closeTag('div'); ?>
                                 
                                 <?= Field::hidden($form, 'client_id')
-                                    ->value($form->getClient_id() ?? $client_id)
+                                    ->value($form->getClientId() ?? $client_id)
                                 ?>
                                 
                                 <?= Field::hidden($form, 'id')
@@ -124,9 +124,9 @@ use Yiisoft\VarDumper\VarDumper;
                         'class' => 'form-control',
                         'id' => 'endpointid_schemeid',
                     ])
-                    ->value($form->getEndpointid_schemeid() !== ''
-                            && $form->getEndpointid_schemeid() !== null ?
-                            $form->getEndpointid_schemeid() :
+                    ->value($form->getEndpointidSchemeid() !== ''
+                            && $form->getEndpointidSchemeid() !== null ?
+                            $form->getEndpointidSchemeid() :
                         ($defaults ? $pep['endpointid_schemeid']['eg'] : '0088'))
                     ->optionsData(array_combine(
                         /** @var list<string> */
@@ -171,9 +171,9 @@ use Yiisoft\VarDumper\VarDumper;
                         'id' => 'identificationid_schemeid',
                         'maxlength' => 4,
                     ])
-                    ->value($form->getIdentificationid_schemeid() !== ''
-                            && $form->getIdentificationid_schemeid() !== null ?
-                            $form->getIdentificationid_schemeid() :
+                    ->value($form->getIdentificationidSchemeid() !== ''
+                            && $form->getIdentificationidSchemeid() !== null ?
+                            $form->getIdentificationidSchemeid() :
                         ($defaults ?
                                 $pep['identificationid_schemeid']['eg'] : ''))
                     ->required(true)
@@ -246,9 +246,9 @@ use Yiisoft\VarDumper\VarDumper;
                         'id' => 'legal_entity_registration_name',
                         'maxlength' => 100,
                     ])
-                    ->value($form->getLegal_entity_registration_name() !== ''
-                        && $form->getLegal_entity_registration_name() !== null ?
-                            $form->getLegal_entity_registration_name() :
+                    ->value($form->getLegalEntityRegistrationName() !== ''
+                        && $form->getLegalEntityRegistrationName() !== null ?
+                            $form->getLegalEntityRegistrationName() :
                 ($defaults ? $pep['legal_entity_registration_name']['eg'] : ''))
                     ->required(true)
                     ->hint($translator->translate('hint.this.field.is.required'))
@@ -263,9 +263,9 @@ use Yiisoft\VarDumper\VarDumper;
                         'class' => 'form-control',
                         'id' => 'legal_entity_companyid',
                     ])
-                    ->value($form->getLegal_entity_companyid() !== ''
-                            && $form->getLegal_entity_companyid() !== null ?
-                                        $form->getLegal_entity_companyid() : '')
+                    ->value($form->getLegalEntityCompanyid() !== ''
+                            && $form->getLegalEntityCompanyid() !== null ?
+                                        $form->getLegalEntityCompanyid() : '')
                     ->optionsData(array_combine(
                         /** @var list<string> */
                         array_column($iso_6523_array, 'Id'),
@@ -299,9 +299,9 @@ use Yiisoft\VarDumper\VarDumper;
                         'class' => 'form-control',
                         'id' => 'legal_entity_companyid_schemeid',
                     ])
-                    ->value($form->getLegal_entity_companyid_schemeid() !== '' &&
-                        $form->getLegal_entity_companyid_schemeid() !== null ?
-                            $form->getLegal_entity_companyid_schemeid() : '')
+                    ->value($form->getLegalEntityCompanyidSchemeid() !== '' &&
+                        $form->getLegalEntityCompanyidSchemeid() !== null ?
+                            $form->getLegalEntityCompanyidSchemeid() : '')
                     ->optionsData(array_combine(
                         /** @var list<string> */
                         array_column($iso_6523_array, 'Id'),
@@ -335,9 +335,9 @@ use Yiisoft\VarDumper\VarDumper;
                         'id' => 'legal_entity_company_legal_form',
                         'maxlength' => 50,
                     ])
-                    ->value($form->getLegal_entity_company_legal_form() !== '' &&
-                        $form->getLegal_entity_company_legal_form() !== null ?
-                            $form->getLegal_entity_company_legal_form() :
+                    ->value($form->getLegalEntityCompanyLegalForm() !== '' &&
+                        $form->getLegalEntityCompanyLegalForm() !== null ?
+                            $form->getLegalEntityCompanyLegalForm() :
                ($defaults ? $pep['legal_entity_company_legal_form']['eg'] : ''))
                     ->required(true)
                     ->hint($translator->translate(
@@ -354,10 +354,10 @@ use Yiisoft\VarDumper\VarDumper;
                         'id' => 'financial_institution_branchid',
                         'maxlength' => 20,
                     ])
-                    ->value($form->getFinancial_institution_branchid() !== ''
-                            && $form->getFinancial_institution_branchid()
+                    ->value($form->getFinancialInstitutionBranchid() !== ''
+                            && $form->getFinancialInstitutionBranchid()
                                 !== null ?
-                            $form->getFinancial_institution_branchid() :
+                            $form->getFinancialInstitutionBranchid() :
                 ($defaults ? $pep['financial_institution_branchid']['eg'] : ''))
                     ->required(true)
                     ->hint($translator->translate('hint.this.field.is.required'))
@@ -373,9 +373,9 @@ use Yiisoft\VarDumper\VarDumper;
                         'id' => 'accounting_cost',
                         'maxlength' => 30,
                     ])
-                    ->value($form->getAccounting_cost() !== '' &&
-                            $form->getAccounting_cost() !== null ?
-                            $form->getAccounting_cost() : ($defaults ?
+                    ->value($form->getAccountingCost() !== '' &&
+                            $form->getAccountingCost() !== null ?
+                            $form->getAccountingCost() : ($defaults ?
                                     $pep['accounting_cost']['eg'] : ''))
                     ->required(true)
                     ->hint($translator->translate('hint.this.field.is.required'))
@@ -393,9 +393,9 @@ use Yiisoft\VarDumper\VarDumper;
                         'id' => 'buyer_reference',
                         'maxlength' => 20,
                     ])
-                    ->value($form->getBuyer_reference() !== '' &&
-                            $form->getBuyer_reference() !== null ?
-                            $form->getBuyer_reference() :
+                    ->value($form->getBuyerReference() !== '' &&
+                            $form->getBuyerReference() !== null ?
+                            $form->getBuyerReference() :
                         ($defaults ? $pep['buyer_reference']['eg'] : ''))
                     ->required(true)
                     ->hint($translator->translate('hint.this.field.is.required'))

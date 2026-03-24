@@ -33,16 +33,16 @@ final class TaskForm extends FormModel
 
     public function __construct(Task $task)
     {
-        $this->project_id = (int) $task->getProject_id();
+        $this->project_id = (int) $task->getProjectId();
         $this->name = $task->getName();
         $this->description = $task->getDescription();
         $this->price = $task->getPrice();
-        $this->finish_date = $task->getFinish_date();
+        $this->finish_date = $task->getFinishDate();
         $this->status = $task->getStatus();
-        $this->tax_rate_id = (int) $task->getTax_rate_id();
+        $this->tax_rate_id = (int) $task->getTaxRateId();
     }
 
-    public function getProject_id(): ?int
+    public function getProjectId(): ?int
     {
         return $this->project_id;
     }
@@ -62,7 +62,7 @@ final class TaskForm extends FormModel
         return $this->price;
     }
 
-    public function getFinish_date(): string|DateTimeImmutable|null
+    public function getFinishDate(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->finish_date
@@ -75,7 +75,7 @@ final class TaskForm extends FormModel
         return $this->status;
     }
 
-    public function getTax_rate_id(): ?int
+    public function getTaxRateId(): ?int
     {
         return $this->tax_rate_id;
     }

@@ -61,12 +61,12 @@ class Profile
         $this->id = $id;
     }
 
-    public function getCompany_id(): string
+    public function getCompanyId(): string
     {
         return (string) $this->company_id;
     }
 
-    public function setCompany_id(int $company_id): void
+    public function setCompanyId(int $company_id): void
     {
         $this->company_id = $company_id;
     }
@@ -111,12 +111,12 @@ class Profile
         $this->description = $description;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
         return $this->date_modified;
     }

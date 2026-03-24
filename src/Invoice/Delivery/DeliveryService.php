@@ -21,8 +21,8 @@ final readonly class DeliveryService
         array $array
     ): void {
         $this->persist($model, $array);
-        $model->setDate_created(new \DateTimeImmutable());
-        $model->setDate_modified(new \DateTimeImmutable());
+        $model->setDateCreated(new \DateTimeImmutable());
+        $model->setDateModified(new \DateTimeImmutable());
 
         $datetime = new \DateTimeImmutable();
         $d = $datetime::createFromFormat(
@@ -36,20 +36,20 @@ final readonly class DeliveryService
         $d3 = $datetime3::createFromFormat(
             'Y-m-d',
             (string) $array['end_date']);
-        $d ? $model->setStart_date($d) : '';
-        $d2 ? $model->setActual_delivery_date($d2) : '';
-        $d3 ? $model->setEnd_Date($d3) : '';
+        $d ? $model->setStartDate($d) : '';
+        $d2 ? $model->setActualDeliveryDate($d2) : '';
+        $d3 ? $model->setEndDate($d3) : '';
 
         isset($array['delivery_location_id']) ?
-            $model->setDelivery_location_id(
+            $model->setDeliveryLocationId(
                 (int) $array['delivery_location_id']) : '';
         isset($array['delivery_party_id']) ?
-            $model->setDelivery_party_id(
+            $model->setDeliveryPartyId(
                 (int) $array['delivery_party_id']) : '';
         isset($array['inv_id']) ?
-            $model->setInv_id((int) $array['inv_id']) : '';
+            $model->setInvId((int) $array['inv_id']) : '';
         isset($array['inv_item_id']) ?
-            $model->setInv_item_id((int) $array['inv_item_id']) : '';
+            $model->setInvItemId((int) $array['inv_item_id']) : '';
 
         $this->repository->save($model);
     }
@@ -60,7 +60,7 @@ final readonly class DeliveryService
     ): Delivery {
         $delivery_location = 'delivery_location_id';
         if (isset($array[$delivery_location])) {
-            $model->setDelivery_location(
+            $model->setDeliveryLocation(
                 $this->dlR->repoDeliveryLocationquery(
                     (string) $array[$delivery_location]));
         }

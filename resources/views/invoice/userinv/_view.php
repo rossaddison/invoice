@@ -68,7 +68,7 @@ echo Field::select($form, 'user_id')
     'readonly' => 'readonly',
 ])
 ->optionsData($optionsDataUser)
-->value(Html::encode($form->getUser_id() ?? ''))
+->value(Html::encode($form->getUserId() ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -160,7 +160,7 @@ echo Field::select($form, 'language')
         'id' => 'address_1',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getAddress_1() ?? ''))
+    ->value(Html::encode($form->getAddress1() ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -171,7 +171,7 @@ echo Field::select($form, 'language')
         'id' => 'address_2',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getAddress_2() ?? ''))
+    ->value(Html::encode($form->getAddress2() ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -268,7 +268,7 @@ echo Field::select($form, 'language')
         'id' => 'tax_code',
         'readonly' => 'readonly',
     ])
-    ->value(Html::encode($form->getTax_code() ?? ''))
+    ->value(Html::encode($form->getTaxCode() ?? ''))
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>

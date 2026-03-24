@@ -76,8 +76,8 @@ $count = 1;
  * @var App\Invoice\Entity\InvItem $item
  */
 foreach ($invItems as $item) {
-    $productId = $item->getProduct_id();
-    $taskId = $item->getTask_id();
+    $productId = $item->getProductId();
+    $taskId = $item->getTaskId();
     $productRef = '';
     $taskRef = '';
     if ($productId !== null) {
@@ -111,7 +111,7 @@ foreach ($invItems as $item) {
        echo H::openTag('b');
         echo H::openTag('div', ['class' => 'input-group']);
          echo (string) $count
-             . '-' . $item->getInv_id() . '-'
+             . '-' . $item->getInvId() . '-'
              . (string) $item->getId() . '-'
              . (null !== $productId ? $productRef : '')
              . (null !== $taskId ? $taskRef : '');
@@ -122,7 +122,7 @@ foreach ($invItems as $item) {
        echo H::openTag('div', ['class' => 'input-group']);
         echo H::openTag('span', ['class' => 'input-group-text']);
          echo H::openTag('b');
-          echo (null !== $item->getProduct_id() ?
+          echo (null !== $item->getProductId() ?
               $translator->translate('item') :
               $translator->translate('tasks'));
          echo H::closeTag('b');
@@ -132,7 +132,7 @@ foreach ($invItems as $item) {
             'class' => 'form-control',
             'disabled' => true
         ]);
-        if (null !== $item->getProduct_id()) {
+        if (null !== $item->getProductId()) {
             echo H::openTag('option', ['value' => '0']);
              echo $translator->translate('none');
             echo H::closeTag('option');
@@ -140,16 +140,16 @@ foreach ($invItems as $item) {
              * @var App\Invoice\Entity\Product $product
              */
             foreach ($products as $product) {
-                $selected = ($item->getProduct_id() == $product->getProduct_id());
+                $selected = ($item->getProductId() == $product->getProductId());
                 echo H::openTag('option', [
-                    'value' => $product->getProduct_id(),
+                    'value' => $product->getProductId(),
                     'selected' => $selected ? 'selected' : null
                 ]);
-                 echo $product->getProduct_name();
+                 echo $product->getProductName();
                 echo H::closeTag('option');
             }
         }
-        if (null !== $item->getTask_id()) {
+        if (null !== $item->getTaskId()) {
             echo H::openTag('option', ['value' => '0']);
              echo $translator->translate('none');
             echo H::closeTag('option');
@@ -157,7 +157,7 @@ foreach ($invItems as $item) {
              * @var App\Invoice\Entity\Task $task
              */
            foreach ($tasks as $task) {
-                $selected = ($item->getTask_id() == $task->getId());
+                $selected = ($item->getTaskId() == $task->getId());
                 echo H::openTag('option', [
                     'value' => $task->getId(),
                     'selected' => $selected ? 'selected' : null
@@ -185,7 +185,7 @@ foreach ($invItems as $item) {
             'class' => 'input-sm form-control amount',
             'data-bs-toggle' => 'tooltip',
             'title' => 'inv_item->quantity',
-            'value' => $numberHelper->format_amount($item->getQuantity())
+            'value' => $numberHelper->formatAmount($item->getQuantity())
         ]);
         echo H::closeTag('input');
        echo H::closeTag('div');
@@ -207,7 +207,7 @@ foreach ($invItems as $item) {
             'class' => 'input-sm form-control amount',
             'data-bs-toggle' => 'tooltip',
             'title' => 'inv_item->price',
-            'value' => $numberHelper->format_amount($item->getPrice())
+            'value' => $numberHelper->formatAmount($item->getPrice())
         ]);
         echo H::closeTag('input');
        echo H::closeTag('div');
@@ -231,7 +231,7 @@ foreach ($invItems as $item) {
             'title' => $s->getSetting('currency_symbol') . ' ' .
                 $translator->translate('per.item'),
             'data-placement' => 'bottom',
-            'value' => $numberHelper->format_amount($item->getDiscount_amount())
+            'value' => $numberHelper->formatAmount($item->getDiscountAmount())
         ]);
         echo H::closeTag('input');
        echo H::closeTag('div');
@@ -260,12 +260,12 @@ foreach ($invItems as $item) {
           * @var App\Invoice\Entity\TaxRate $taxRate
           */
          foreach ($taxRates as $taxRate) {
-             $selected = ($item->getTax_rate_id() == $taxRate->getTaxRateId());
+             $selected = ($item->getTaxRateId() == $taxRate->getTaxRateId());
              echo H::openTag('option', [
                  'value' => $taxRate->getTaxRateId(),
                  'selected' => $selected ? 'selected' : null
              ]);
-              $taxRatePercent = $numberHelper->format_amount(
+              $taxRatePercent = $numberHelper->formatAmount(
                   $taxRate->getTaxRatePercent());
               $taxRateName = $taxRate->getTaxRateName();
               if ($taxRatePercent >= 0.00
@@ -283,13 +283,13 @@ foreach ($invItems as $item) {
        if ($showButtons === true && $userCanEdit === true
            && $draft === true
 // Do not show the buttons if the invoice is linked to a sales order    
-           && strlen($inv->getSo_id()) == 0) {
-           if ($piR->repoCount((int) $item->getProduct_id()) > 0) {
+           && strlen($inv->getSoId()) == 0) {
+           if ($piR->repoCount((int) $item->getProductId()) > 0) {
                echo H::openTag('span', [
                    'data-bs-toggle' => 'tooltip',
                    'title' => $translator->translate('productimage.gallery')
-                       . (null !== ($item->getProduct_id())
-                           ? ($item->getProduct()?->getProduct_name()
+                       . (null !== ($item->getProductId())
+                           ? ($item->getProduct()?->getProductName()
                                ?? '') : ($item->getTask()?->getName()
                                    ?? ''))
                ]);
@@ -329,19 +329,19 @@ foreach ($invItems as $item) {
                      ]);
                      echo H::closeTag('input');
                      $productImages = $piR->repoProductImageProductquery(
-                         (int) $item->getProduct_id());
+                         (int) $item->getProductId());
                      /**
                       * @var App\Invoice\Entity\ProductImage $productImage
                       */
                      foreach ($productImages as $productImage) {
-                         if (!empty($productImage->getFile_name_original())) {
+                         if (!empty($productImage->getFileNameOriginal())) {
                              echo H::openTag('a', [
                                  'data-bs-toggle' => 'modal',
                                  'class' => 'col-sm-4'
                              ]);
                               echo H::openTag('img', [
                                   'src' => '/products/' .
-                                      $productImage->getFile_name_original(),
+                                      $productImage->getFileNameOriginal(),
                                   'class' => 'img-fluid',
                                   'alt' => 'Original File Name'
                               ]);
@@ -386,7 +386,7 @@ foreach ($invItems as $item) {
                echo H::closeTag('a');
            }
            echo H::openTag('a', [
-               'href' => $urlGenerator->generate('inv/delete_inv_item', [
+               'href' => $urlGenerator->generate('inv/deleteInvItem', [
                    'id' => $item->getId(),
                    '_language' => $currentRoute->getArgument('_language')]),
                'class' => 'btn btn-secondary btn',
@@ -395,9 +395,9 @@ foreach ($invItems as $item) {
            ]);
             echo '❌';
            echo H::closeTag('a');
-           if (null !== $item->getTask_id()) {
+           if (null !== $item->getTaskId()) {
                echo H::openTag('a', [
-                   'href' => $urlGenerator->generate('invitem/edit_task', [
+                   'href' => $urlGenerator->generate('invitem/editTask', [
                        'id' => $item->getId(),
                        '_language' => $currentRoute->getArgument('_language')]),
                    'class' => 'btn btn-success btn'
@@ -405,9 +405,9 @@ foreach ($invItems as $item) {
                 echo '🖉';
                echo H::closeTag('a');
            }
-           if (null !== $item->getProduct_id()) {
+           if (null !== $item->getProductId()) {
                echo H::openTag('a', [
-                   'href' => $urlGenerator->generate('invitem/edit_product', [
+                   'href' => $urlGenerator->generate('invitem/editProduct', [
                        'id' => $item->getId(),
                        '_language' => $currentRoute->getArgument('_language')]),
                    'class' => 'btn btn-success btn'
@@ -464,7 +464,7 @@ foreach ($invItems as $item) {
       echo H::closeTag('td');
       echo H::openTag('td', ['class' => 'td-amount']);
        echo H::openTag('div', ['class' => 'input-group']);
-        if (null !== $item->getProduct_id()) {
+        if (null !== $item->getProductId()) {
             echo H::openTag('span', ['class' => 'input-group-text']);
              echo H::openTag('b');
               echo $translator->translate('product.unit');
@@ -474,10 +474,10 @@ foreach ($invItems as $item) {
                 'class' => 'input-group-text',
                 'name' => 'item_product_unit'
             ]);
-             echo $item->getProduct_unit();
+             echo $item->getProductUnit();
             echo H::closeTag('span');
         }
-        if (null !== $item->getTask_id()) {
+        if (null !== $item->getTaskId()) {
             echo H::openTag('span', ['class' => 'input-group-text']);
              echo H::openTag('b');
               echo $item->getTask()?->getName();
@@ -489,16 +489,16 @@ foreach ($invItems as $item) {
             ]);
              echo !is_string(
                  $finishDate =
-                     $item->getTask()?->getFinish_date()) ?
+                     $item->getTask()?->getFinishDate()) ?
                          $finishDate?->format('Y-m-d') : '';
             echo H::closeTag('span');
         }
        echo H::closeTag('div');
       echo H::closeTag('td');
       echo H::openTag('td', ['class' => 'td-amount']);
-        if ($item->getProduct_id() > 0) {
+        if ($item->getProductId() > 0) {
             echo H::openTag('b');
-             echo $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+             echo $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
                                                * ($item->getPrice() ?? 0.00));
             echo H::closeTag('b');
         }
@@ -507,7 +507,7 @@ foreach ($invItems as $item) {
       echo H::closeTag('td');
       echo H::openTag('td', ['class' => 'td-amount']);
        echo H::openTag('b');
-        echo $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+        echo $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
                                           * ($item->getPrice() ?? 0.00)
                                           * ($item->getTaxRate()?->getTaxRatePercent()
                                           ?? 0.00) / 100);
@@ -550,7 +550,7 @@ foreach ($invItems as $item) {
               echo H::closeTag('td');
               echo H::openTag('td', ['class' => 'td-amount']);
                echo H::openTag('b');
-                echo ($isCharge ? '' : '(') . $numberHelper->format_currency(
+                echo ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
                     $invItemAllowanceCharge->getAmount()) . ($isCharge ? '' : ')');
                echo H::closeTag('b');
               echo H::closeTag('td');
@@ -558,7 +558,7 @@ foreach ($invItems as $item) {
               echo H::closeTag('td');
               echo H::openTag('td', ['class' => 'td-amount']);
                echo H::openTag('b');
-                echo ($isCharge ? '' : '(') . $numberHelper->format_currency(
+                echo ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
                     $invItemAllowanceCharge->getVatOrTax()) . ($isCharge ? '' : ')');
                echo H::closeTag('b');
               echo H::closeTag('td');
@@ -595,7 +595,7 @@ foreach ($invItems as $item) {
         echo "\n";
         echo '    <!-- This subtotal is worked out in' . "\n";
         echo '        InvItemController/edit_product->saveInvItemAmount function -->' . "\n";
-        echo $numberHelper->format_currency($invItemAmountR->repoInvItemAmountquery(
+        echo $numberHelper->formatCurrency($invItemAmountR->repoInvItemAmountquery(
             (string) $item->getId())?->getSubtotal());
        echo H::closeTag('span');
       echo H::closeTag('td');
@@ -614,7 +614,7 @@ foreach ($invItems as $item) {
            'data-bs-toggle' => 'tooltip',
            'title' => 'inv_item_amount->discount'
        ]);
-        echo '(' . $numberHelper->format_currency(
+        echo '(' . $numberHelper->formatCurrency(
             $invItemAmountR->repoInvItemAmountquery(
                 (string) $item->getId())?->getDiscount()) . ')';
        echo H::closeTag('span');
@@ -637,9 +637,9 @@ foreach ($invItems as $item) {
            'data-bs-toggle' => 'tooltip',
            'title' => 'inv_item_amount->tax_total'
        ]);
-        echo $numberHelper->format_currency(
+        echo $numberHelper->formatCurrency(
             $invItemAmountR->repoInvItemAmountquery(
-                (string) $item->getId())?->getTax_total());
+                (string) $item->getId())?->getTaxTotal());
        echo H::closeTag('span');
       echo H::closeTag('td');
       echo H::openTag('td', [
@@ -659,7 +659,7 @@ foreach ($invItems as $item) {
            'data-bs-toggle' => 'tooltip',
            'title' => 'inv_item_amount->total'
        ]);
-        echo $numberHelper->format_currency(
+        echo $numberHelper->formatCurrency(
             $invItemAmountR->repoInvItemAmountquery(
                 (string) $item->getId())?->getTotal());
        echo H::closeTag('span');
@@ -726,7 +726,7 @@ foreach ($invItems as $item) {
            'title' => 'inv_amount->item_subtotal=inv_item(s)->
                             subtotal - inv_item(s)->discount + inv_item(s)->charge'
        ]);
-        echo $numberHelper->format_currency($invAmount->getItem_subtotal() ?: 0.00);
+        echo $numberHelper->formatCurrency($invAmount->getItemSubtotal() ?: 0.00);
        echo H::closeTag('td');
       echo H::closeTag('tr');
       echo H::openTag('tr');
@@ -745,7 +745,7 @@ foreach ($invItems as $item) {
            'id' => 'amount_item_tax_total',
            'title' => 'inv_amount->item_tax_total'
        ]);
-        echo $numberHelper->format_currency($invAmount->getItem_tax_total() ?: 0.00);
+        echo $numberHelper->formatCurrency($invAmount->getItemTaxTotal() ?: 0.00);
        echo H::closeTag('td');
       echo H::closeTag('tr');
       echo H::openTag('tr');
@@ -761,7 +761,7 @@ foreach ($invItems as $item) {
            'title' => 'inv_amount->packhandleship_total'
        ]);
         echo H::openTag('b');
-         echo $numberHelper->format_currency(
+         echo $numberHelper->formatCurrency(
              $packHandleShipTotal['totalAmount'] ?? 0.00);
         echo H::closeTag('b');
        echo H::closeTag('td');
@@ -786,7 +786,7 @@ foreach ($invItems as $item) {
            'title' => 'inv_amount->packhandleship_tax'
        ]);
         echo H::openTag('b');
-         echo $numberHelper->format_currency(
+         echo $numberHelper->formatCurrency(
              $packHandleShipTotal['totalTax'] ?? 0.00);
         echo H::closeTag('b');
        echo H::closeTag('td');
@@ -797,8 +797,8 @@ foreach ($invItems as $item) {
             echo H::openTag('b');
              if ($showButtons === true
                 && $userCanEdit === true
-                && strlen($inv->getQuote_id()) === 0
-                && strlen($inv->getSo_id()) === 0
+                && strlen($inv->getQuoteId()) === 0
+                && strlen($inv->getSoId()) === 0
                 && $draft === true) {
                  echo H::openTag('a', [
                      'href' => '#add-inv-tax',
@@ -820,7 +820,7 @@ foreach ($invItems as $item) {
                 foreach ($invTaxRates as $invTaxRate) {
                     echo H::openTag('div', [
                         'data-bs-toggle' => 'tooltip',
-                        'title' => $invTaxRate->getInclude_item_tax()
+                        'title' => $invTaxRate->getIncludeItemTax()
                             == '1' ? $included : $excluded,
                         'tabindex' => '0'
                     ]);
@@ -832,8 +832,8 @@ foreach ($invItems as $item) {
                      echo H::closeTag('input');
                      if ($showButtons === true
                              && $userCanEdit === true
-                             && strlen($inv->getQuote_id()) === 0
-                             && strlen($inv->getSo_id()) === 0
+                             && strlen($inv->getQuoteId()) === 0
+                             && strlen($inv->getSoId()) === 0
                              && $draft === true) {
                          echo H::openTag('span');
                           echo  new A()
@@ -844,7 +844,7 @@ foreach ($invItems as $item) {
                                   'title' => $translator->translate('delete'),
                               ])
                               ->content('❌')
-                              ->href($urlGenerator->generate('inv/delete_inv_tax_rate', [
+                              ->href($urlGenerator->generate('inv/deleteInvTaxRate', [
                                   '_language' => $currentRoute->getArgument('_language'),
                                   'id'        => $invTaxRate->getId()
                               ]));
@@ -852,7 +852,7 @@ foreach ($invItems as $item) {
                      }
                      echo H::openTag('span', ['class' => 'text-muted']);
                       $taxRatePercent = $invTaxRate->getTaxRate()?->getTaxRatePercent();
-                      $numberPercent = $numberHelper->format_amount($taxRatePercent);
+                      $numberPercent = $numberHelper->formatAmount($taxRatePercent);
                       $taxRateName = $invTaxRate->getTaxRate()?->getTaxRateName();
                       if ($taxRatePercent >= 0.00
                               && null !== $taxRateName
@@ -869,19 +869,19 @@ foreach ($invItems as $item) {
                          'data-bs-toggle' => 'tooltip',
                          'title' => 'inv_tax_rate->inv_tax_rate_amount'
                      ]);
-                      echo $numberHelper->format_currency($invTaxRate->getInv_tax_rate_amount());
+                      echo $numberHelper->formatCurrency($invTaxRate->getInvTaxRateAmount());
                      echo H::closeTag('span');
                      echo H::openTag('br');
                      echo H::closeTag('br');
                     echo H::closeTag('div');
                 }
             } else {
-                echo $numberHelper->format_currency('0');
+                echo $numberHelper->formatCurrency('0');
             }
            echo H::closeTag('td');
           echo H::closeTag('tr');
       }
-      if (($inv->getDiscount_amount() ?? 0.00) != 0.00) {
+      if (($inv->getDiscountAmount() ?? 0.00) != 0.00) {
           echo H::openTag('tr');
            echo H::openTag('td', ['class' => 'td-vert-middle']);
             echo H::openTag('b');
@@ -891,7 +891,7 @@ foreach ($invItems as $item) {
            echo H::openTag('td', ['class' => 'clearfix']);
             echo H::openTag('div', ['class' => 'discount-field']);
              echo H::openTag('div', ['class' => 'input-group input-group']);
-              echo $numberHelper->format_currency($inv->getDiscount_amount() ?? 0.00);
+              echo $numberHelper->formatCurrency($inv->getDiscountAmount() ?? 0.00);
              echo H::closeTag('div');
             echo H::closeTag('div');
            echo H::closeTag('td');
@@ -911,7 +911,7 @@ foreach ($invItems as $item) {
            'title' => 'inv_amount->total'
        ]);
         echo H::openTag('b');
-         echo $numberHelper->format_currency($invAmount->getTotal() ?? 0.00);
+         echo $numberHelper->formatCurrency($invAmount->getTotal() ?? 0.00);
         echo H::closeTag('b');
        echo H::closeTag('td');
       echo H::closeTag('tr');

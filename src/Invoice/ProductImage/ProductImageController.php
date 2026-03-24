@@ -69,7 +69,7 @@ final class ProductImageController extends BaseController
                 // - => 'desc'  so -id => default descending on id
                 // Show the latest uploads first => -id
                 ->withOrderString($query_params['sort'] ?? '-id');
-        $productimages = $this->productimages_with_sort($productimageRepository, $sort);
+        $productimages = $this->productimagesWithSort($productimageRepository, $sort);
         $paginator = (new OffsetPaginator($productimages))
                 ->withPageSize($this->sR->positiveListLimit());
 
@@ -82,7 +82,7 @@ final class ProductImageController extends BaseController
     }
 
     /**
-     * Related logic: see Alternative currently used: ProductController function image_attachment_move_to
+     * Related logic: see Alternative currently used: ProductController function imageAttachmentMoveTo
      * Related logic: see This function is not currently used but can be adapted for use
      * @param Request $request
      * @param CurrentRoute $currentRoute
@@ -136,7 +136,7 @@ final class ProductImageController extends BaseController
             $productimage = $this->productimage($currentRoute, $productimageRepository);
             if ($productimage) {
                 $this->productimageService->deleteProductImage($productimage, $this->sR);
-                $product_id = (string) $productimage->getProduct()?->getProduct_id();
+                $product_id = (string) $productimage->getProduct()?->getProductId();
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->factory->createResponse($this->webViewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
@@ -172,7 +172,7 @@ final class ProductImageController extends BaseController
     ): Response {
         $productImage = $this->productimage($currentRoute, $productimageRepository);
         if ($productImage) {
-            $product_id = $productImage->getProduct_id();
+            $product_id = $productImage->getProductId();
             $form = new ProductImageForm($productImage, (int) $product_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
@@ -211,7 +211,7 @@ final class ProductImageController extends BaseController
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'productimage/view',
                 'actionArguments' => ['id' => $productImage->getId()],
-                'form' => new ProductImageForm($productImage, (int) $productImage->getProduct_id()),
+                'form' => new ProductImageForm($productImage, (int) $productImage->getProductId()),
                 'productimage' => $productimageRepository->repoProductImagequery($productImage->getId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
@@ -253,7 +253,7 @@ final class ProductImageController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Reader\SortableDataInterface&\Yiisoft\Data\Reader\DataReaderInterface<int, ProductImage>
      */
-    private function productimages_with_sort(ProductImageRepository $productimageRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    private function productimagesWithSort(ProductImageRepository $productimageRepository, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $productimageRepository->findAllPreloaded()
                 ->withSort($sort);

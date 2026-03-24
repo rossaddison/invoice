@@ -25,7 +25,7 @@ final readonly class MerchantService
     ): void {
         $this->persist($model, $array);
         isset($array['inv_id']) ? 
-            $model->setInv_id((int) $array['inv_id']) : '';
+            $model->setInvId((int) $array['inv_id']) : '';
         $model->setSuccessful((bool) $array['successful']);
 
         $datetime = new \DateTime();
@@ -65,12 +65,12 @@ final readonly class MerchantService
      * @param Merchant $model
      * @param array $array
      */
-    public function saveMerchant_via_payment_handler(
+    public function saveMerchantViaPaymentHandler(
         Merchant $model,
         array $array
     ): void {
         $this->persist($model, $array);
-        $model->setInv_id((int) $array['inv_id']);
+        $model->setInvId((int) $array['inv_id']);
         /** @var bool $array['merchant_response_successful'] */
         $model->setSuccessful(
             $array['merchant_response_successful']);

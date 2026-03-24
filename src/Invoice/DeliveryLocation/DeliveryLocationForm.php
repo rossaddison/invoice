@@ -56,21 +56,21 @@ final class DeliveryLocationForm extends FormModel
     public function __construct(DeliveryLocation $del)
     {
         $this->id = $del->getId();
-        $this->date_created = $del->getDate_created();
-        $this->date_modified = $del->getDate_modified();
-        $this->client_id = $del->getClient_id();
+        $this->date_created = $del->getDateCreated();
+        $this->date_modified = $del->getDateModified();
+        $this->client_id = $del->getClientId();
         $this->name = $del->getName();
         $this->building_number = $del->getBuildingNumber();
-        $this->address_1 = $del->getAddress_1();
-        $this->address_2 = $del->getAddress_2();
+        $this->address_1 = $del->getAddress1();
+        $this->address_2 = $del->getAddress2();
         $this->city = $del->getCity();
         $this->state = $del->getState();
         $this->zip = $del->getZip();
         $this->country = $del->getCountry();
         // 13 digit code
-        $this->global_location_number = $del->getGlobal_location_number();
+        $this->global_location_number = $del->getGlobalLocationNumber();
         // the key of the array is saved
-        $this->electronic_address_scheme = $del->getElectronic_address_scheme();
+        $this->electronic_address_scheme = $del->getElectronicAddressScheme();
     }
     
     public function getId(): ?int
@@ -78,17 +78,17 @@ final class DeliveryLocationForm extends FormModel
         return $this->id;
     }    
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
 
-    public function getClient_id(): ?string
+    public function getClientId(): ?string
     {
         return $this->client_id;
     }
@@ -103,12 +103,12 @@ final class DeliveryLocationForm extends FormModel
         return $this->building_number;
     }
 
-    public function getAddress_1(): ?string
+    public function getAddress1(): ?string
     {
         return $this->address_1;
     }
 
-    public function getAddress_2(): ?string
+    public function getAddress2(): ?string
     {
         return $this->address_2;
     }
@@ -133,12 +133,12 @@ final class DeliveryLocationForm extends FormModel
         return $this->country;
     }
 
-    public function getGlobal_location_number(): ?string
+    public function getGlobalLocationNumber(): ?string
     {
         return $this->global_location_number;
     }
 
-    public function getElectronic_address_scheme(): ?string
+    public function getElectronicAddressScheme(): ?string
     {
         return $this->electronic_address_scheme;
     }

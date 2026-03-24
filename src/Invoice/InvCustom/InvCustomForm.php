@@ -15,17 +15,17 @@ final class InvCustomForm extends FormModel
 
     public function __construct(InvCustom $invCustom)
     {
-        $this->inv_id = (int) $invCustom->getInv_id();
-        $this->custom_field_id = (int) $invCustom->getCustom_field_id();
+        $this->inv_id = (int) $invCustom->getInvId();
+        $this->custom_field_id = (int) $invCustom->getCustomFieldId();
         $this->value = $invCustom->getValue();
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getCustom_field_id(): ?int
+    public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;
     }

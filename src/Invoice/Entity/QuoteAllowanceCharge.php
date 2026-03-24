@@ -57,22 +57,22 @@ class QuoteAllowanceCharge
         $this->id = $id;
     }
 
-    public function getQuote_id(): string
+    public function getQuoteId(): string
     {
         return (string) $this->quote_id;
     }
 
-    public function setQuote_id(int $quote_id): void
+    public function setQuoteId(int $quote_id): void
     {
         $this->quote_id = $quote_id;
     }
 
-    public function getAllowance_charge_id(): string
+    public function getAllowanceChargeId(): string
     {
         return (string) $this->allowance_charge_id;
     }
 
-    public function setAllowance_charge_id(int $allowance_charge_id): void
+    public function setAllowanceChargeId(int $allowance_charge_id): void
     {
         $this->allowance_charge_id = $allowance_charge_id;
     }

@@ -22,23 +22,23 @@ final class QuoteItemAllowanceChargeForm extends FormModel
         QuoteItemAllowanceCharge $quoteItemAllowanceCharge,
         private readonly ?int $quote_item_id)
     {
-        $this->quote_id = (int) $quoteItemAllowanceCharge->getQuote_id();
-        $this->allowance_charge_id = (int) $quoteItemAllowanceCharge->getAllowance_charge_id();
+        $this->quote_id = (int) $quoteItemAllowanceCharge->getQuoteId();
+        $this->allowance_charge_id = (int) $quoteItemAllowanceCharge->getAllowanceChargeId();
         $this->amount = (float) $quoteItemAllowanceCharge->getAmount();
         $this->vat_or_tax = (float) $quoteItemAllowanceCharge->getVatOrTax();
     }
 
-    public function getQuote_id(): ?int
+    public function getQuoteId(): ?int
     {
         return $this->quote_id;
     }
 
-    public function getQuote_item_id(): ?int
+    public function getQuoteItemId(): ?int
     {
         return $this->quote_item_id;
     }
 
-    public function getAllowance_charge_id(): ?int
+    public function getAllowanceChargeId(): ?int
     {
         return $this->allowance_charge_id;
     }

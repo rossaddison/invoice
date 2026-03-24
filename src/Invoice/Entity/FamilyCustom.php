@@ -55,22 +55,22 @@ class FamilyCustom
         $this->id = $id;
     }
 
-    public function getFamily_id(): string
+    public function getFamilyId(): string
     {
         return (string) $this->family_id;
     }
 
-    public function setFamily_id(int $family_id): void
+    public function setFamilyId(int $family_id): void
     {
         $this->family_id = $family_id;
     }
 
-    public function getCustom_field_id(): string
+    public function getCustomFieldId(): string
     {
         return (string) $this->custom_field_id;
     }
 
-    public function setCustom_field_id(int $custom_field_id): void
+    public function setCustomFieldId(int $custom_field_id): void
     {
         $this->custom_field_id = $custom_field_id;
     }

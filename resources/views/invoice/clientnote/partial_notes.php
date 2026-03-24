@@ -29,7 +29,7 @@ use Yiisoft\Html\Html;
             </button>
         </div>
         <div class="panel-footer text-muted">
-            <?= !is_string($dateNote = $client_note->getDate_note()) ? $dateNote->format('Y-m-d') : ''; ?>
+            <?= !is_string($dateNote = $client_note->getDateNote()) ? $dateNote->format('Y-m-d') : ''; ?>
         </div>
     </div>
 <?php endforeach; ?>

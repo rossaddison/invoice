@@ -40,7 +40,7 @@ declare(strict_types=1);
                                     foreach ($taxRates as $taxRate) { ?>
                                     <option value="<?= $taxRate->getTaxRateId(); ?>">
                                         <?php
-                                                $taxRatePercent = $numberHelper->format_amount($taxRate->getTaxRatePercent());
+                                                $taxRatePercent = $numberHelper->formatAmount($taxRate->getTaxRatePercent());
                                         $taxRateName = $taxRate->getTaxRateName();
                                         if ($taxRatePercent >= 0.00 && null !== $taxRatePercent && null !== $taxRateName) {
                                             echo $taxRatePercent . '% - ' . ($taxRateName);

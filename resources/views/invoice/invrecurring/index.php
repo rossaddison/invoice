@@ -64,7 +64,7 @@ $columns = [
             return  new A()
                     ->addClass('style', 'text-decoration:none')
                     ->content($model->getInv()?->getNumber() ?? '#')
-                    ->href($urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]));
+                    ->href($urlGenerator->generate('inv/view', ['id' => $model->getInvId()]));
         },
         encodeContent: false,
     ),
@@ -72,7 +72,7 @@ $columns = [
         'id',
         header: $translator->translate('date.created'),
         content: static fn (InvRecurring $model)
-        => Html::encode(!is_string($dateCreated = $model->getInv()?->getDate_created()) && null !== $dateCreated ? $dateCreated->format('Y-m-d') : ''),
+        => Html::encode(!is_string($dateCreated = $model->getInv()?->getDateCreated()) && null !== $dateCreated ? $dateCreated->format('Y-m-d') : ''),
         withSorting: false,
     ),
     new DataColumn(

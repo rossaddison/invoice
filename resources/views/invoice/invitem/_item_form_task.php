@@ -91,7 +91,7 @@ foreach ($tasks as $task) {
 ?>
                                 <?= Field::select($form, 'task_id')
     ->optionsData($optionsDataTask)
-    ->value(Html::encode($form->getTask_id())); ?>
+    ->value(Html::encode($form->getTaskId())); ?>
                             <?= Html::closeTag('div'); ?> 
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-quality']); ?>
@@ -99,7 +99,7 @@ foreach ($tasks as $task) {
                                 <?= Field::number($form, 'quantity')
     ->label($translator->translate('quantity'))
     ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
-    ->value($numberHelper->format_amount($form->getQuantity()))
+    ->value($numberHelper->formatAmount($form->getQuantity()))
     ->hint($translator->translate('hint.greater.than.zero.please'));
 ?>
                             <?= Html::closeTag('div'); ?>
@@ -109,7 +109,7 @@ foreach ($tasks as $task) {
                                 <?= Field::text($form, 'price')
      ->label($translator->translate('price'))
      ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
-     ->value($numberHelper->format_amount($form->getPrice() ?? 0.00))
+     ->value($numberHelper->formatAmount($form->getPrice() ?? 0.00))
      ->hint($translator->translate('hint.greater.than.zero.please')); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
@@ -123,7 +123,7 @@ foreach ($tasks as $task) {
          'data-placement' => 'bottom',
          'title' => $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'),
      ])
-     ->value($numberHelper->format_amount($form->getDiscount_amount() ?? 0.00)); ?>
+     ->value($numberHelper->formatAmount($form->getDiscountAmount() ?? 0.00)); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>                        
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
@@ -137,7 +137,7 @@ foreach ($taxRates as $taxRate) {
     $taxRateId = $taxRate->getTaxRateId();
     $taxRatePercent = $taxRate->getTaxRatePercent() ?? 0.00;
     $taxRateName = $taxRate->getTaxRateName() ?? '';
-    $formattedNumber = $numberHelper->format_amount($taxRatePercent);
+    $formattedNumber = $numberHelper->formatAmount($taxRatePercent);
     if ((null !== $taxRateId) && ($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0) && $formattedNumber >= 0.00) {
         $optionsDataTaxRate[$taxRateId] = (string) $formattedNumber . '% - ' . $taxRateName;
     }
@@ -147,7 +147,7 @@ foreach ($taxRates as $taxRate) {
     ->label($vat === false ? $translator->translate('tax.rate') : $translator->translate('vat.rate'))
     ->addInputAttributes(['class' => 'form-control'])
     ->optionsData($optionsDataTaxRate)
-    ->value(Html::encode($form->getTax_rate_id()))
+    ->value(Html::encode($form->getTaxRateId()))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>        
                             <?= Html::closeTag('div'); ?>
@@ -158,7 +158,7 @@ foreach ($taxRates as $taxRate) {
                                 'type' => 'submit',
                                 'class' => 'btn btn-info fa fa-plus',
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => 'invitem/edit_task']);
+                                'title' => 'invitem/editTask']);
 ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>

@@ -87,7 +87,7 @@ use Yiisoft\Html\Tag\Form;
         ->addInputAttributes([
             'class' => 'form-control  alert alert-warning',
         ])
-        ->value($form->getFamily_id())
+        ->value($form->getFamilyId())
         ->prompt($translator->translate('none'))
         ->optionsData($families)
         ->disabled(true)
@@ -99,7 +99,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-warning',
     ])
-    ->value($form->getUnit_id())
+    ->value($form->getUnitId())
     ->prompt($translator->translate('none'))
     ->optionsData($units)
     ->disabled(true)
@@ -112,7 +112,7 @@ use Yiisoft\Html\Tag\Form;
         'class' => 'form-control  alert alert-warning',
     ])
     ->optionsData($tax_rates)
-    ->value($form->getTax_rate_id())
+    ->value($form->getTaxRateId())
     ->prompt($translator->translate('none'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -124,7 +124,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-warning',
     ])
-    ->value(Html::encode($form->getProduct_sku()))
+    ->value(Html::encode($form->getProductSku()))
     ->placeholder($translator->translate('product.sku'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.required')); ?>
@@ -134,8 +134,8 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-warning',
     ])
-    ->value($s->format_amount($form->getPurchase_price() >= 0.00
-                              ? $form->getPurchase_price() : 0.00))
+    ->value($s->formatAmount($form->getPurchasePrice() >= 0.00
+                              ? $form->getPurchasePrice() : 0.00))
     ->placeholder($translator->translate('purchase.price'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.required')); ?>         
@@ -147,8 +147,8 @@ use Yiisoft\Html\Tag\Form;
         'class' => 'form-control  alert alert-warning',
     ])
     ->disabled(true)
-    ->value($s->format_amount(($form->getProduct_price() >= 0.00
-                               ? $form->getProduct_price() : 0.00)))
+    ->value($s->formatAmount(($form->getProductPrice() >= 0.00
+                               ? $form->getProductPrice() : 0.00)))
     ->placeholder($translator->translate('product.price'))
 
         ->hint($translator->translate('hint.this.field.is.required')); ?>         
@@ -160,8 +160,8 @@ use Yiisoft\Html\Tag\Form;
         'class' => 'form-control  alert alert-warning',
     ])
     ->disabled(true)
-    ->value($s->format_amount(($form->getProduct_price_base_quantity() >= 0.00
-                               ? $form->getProduct_price_base_quantity() : 0.00)))
+    ->value($s->formatAmount(($form->getProductPriceBaseQuantity() >= 0.00
+                               ? $form->getProductPriceBaseQuantity() : 0.00)))
     ->placeholder($translator->translate('product.price.base.quantity'))
     ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
@@ -176,7 +176,7 @@ use Yiisoft\Html\Tag\Form;
     ])
     ->prompt($translator->translate('none'))
     ->optionsData($unit_peppols)
-    ->value(Html::encode($form->getUnit_peppol_id()))
+    ->value(Html::encode($form->getUnitPeppolId()))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
             <?= Html::tag('br'); ?>
@@ -185,7 +185,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-success',
     ])
-    ->value(Html::encode($form->getProduct_sii_id()))
+    ->value(Html::encode($form->getProductSiiId()))
     ->placeholder($translator->translate('product.sii.id'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
@@ -195,7 +195,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-success',
     ])
-    ->value(Html::encode($form->getProduct_sii_schemeid()))
+    ->value(Html::encode($form->getProductSiiSchemeid()))
     ->placeholder($translator->translate('product.sii.schemeid'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
@@ -205,7 +205,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-success',
     ])
-    ->value(Html::encode($form->getProduct_icc_listid()))
+    ->value(Html::encode($form->getProductIccListid()))
     ->placeholder($translator->translate('product.icc.listid'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
@@ -215,7 +215,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-success',
     ])
-    ->value(Html::encode($form->getProduct_icc_listversionid()))
+    ->value(Html::encode($form->getProductIccListversionid()))
     ->placeholder($translator->translate('product.icc.listversionid'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
@@ -225,7 +225,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-success',
     ])
-    ->value(Html::encode($form->getProduct_icc_id()))
+    ->value(Html::encode($form->getProductIccId()))
     ->placeholder($translator->translate('product.icc.id'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
@@ -235,7 +235,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-success',
     ])
-    ->value(Html::encode($form->getProduct_country_of_origin_code()))
+    ->value(Html::encode($form->getProductCountryOfOriginCode()))
     ->placeholder($translator->translate('product.country.of.origin.code') . $s->where('default_country'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
@@ -245,7 +245,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-success',
     ])
-    ->value(Html::encode($form->getProduct_additional_item_property_name()))
+    ->value(Html::encode($form->getProductAdditionalItemPropertyName()))
     ->placeholder($translator->translate('product.additional.item.property.name'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
@@ -255,7 +255,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-success',
     ])
-    ->value(Html::encode($form->getProduct_additional_item_property_value()))
+    ->value(Html::encode($form->getProductAdditionalItemPropertyValue()))
     ->placeholder($translator->translate('product.additional.item.property.value'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.not.required')); ?>         
@@ -265,7 +265,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control  alert alert-success',
     ])
-    ->value(Html::encode($form->getProvider_name()))
+    ->value(Html::encode($form->getProviderName()))
     ->placeholder($translator->translate('provider.name'))
     ->disabled(true)
     ->hint($translator->translate('hint.this.field.is.not.required')); ?>             
@@ -283,7 +283,7 @@ use Yiisoft\Html\Tag\Form;
          * @var App\Invoice\Entity\CustomField $customField
          */
         foreach ($custom_fields as $customField): ?>
-          <?php $cvH->print_field_for_view($customField, $productCustomForm, $product_custom_values); ?>
+          <?php $cvH->printFieldForView($customField, $productCustomForm, $product_custom_values); ?>
       <?php endforeach; ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

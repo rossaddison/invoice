@@ -111,22 +111,22 @@ class Company
         $this->name = $name;
     }
 
-    public function getAddress_1(): ?string
+    public function getAddress1(): ?string
     {
         return $this->address_1;
     }
 
-    public function setAddress_1(string $address_1): void
+    public function setAddress1(string $address_1): void
     {
         $this->address_1 = $address_1;
     }
 
-    public function getAddress_2(): ?string
+    public function getAddress2(): ?string
     {
         return $this->address_2;
     }
 
-    public function setAddress_2(string $address_2): void
+    public function setAddress2(string $address_2): void
     {
         $this->address_2 = $address_2;
     }
@@ -281,12 +281,12 @@ class Company
         $this->arbitrationJurisdiction = $arbitrationJurisdiction;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
         return $this->date_modified;
     }

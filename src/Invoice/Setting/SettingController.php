@@ -79,7 +79,7 @@ final class SettingController extends BaseController
      *
      * @param CurrentRoute $currentRoute
      */
-    public function debug_index(
+    public function debugIndex(
         FastRouteGenerator $urlFastRouteGenerator,
         CurrentRoute $currentRoute,
         Request $request,
@@ -96,10 +96,10 @@ final class SettingController extends BaseController
         $currentPageNeverZero = (int) $currentPage > 0 ? (int) $currentPage : 1;
         $settings = $this->settings();
         if (isset($query_params['setting_key']) && !empty($query_params['setting_key'])) {
-            $settings = $sR->filter_setting_key((string) $query_params['setting_key']);
+            $settings = $sR->filterSettingKey((string) $query_params['setting_key']);
         }
         if (isset($query_params['setting_value']) && !empty($query_params['setting_value'])) {
-            $settings = $sR->filter_setting_value((string) $query_params['setting_value']);
+            $settings = $sR->filterSettingValue((string) $query_params['setting_value']);
         }
         $parameters = [
             'alert' => $this->alert(),
@@ -126,7 +126,7 @@ final class SettingController extends BaseController
      * @param TR $tR
      * @return Response
      */
-    public function tab_index(
+    public function tabIndex(
         Request $request,
         WebViewRenderer $head,
         ER $eR,
@@ -143,10 +143,10 @@ final class SettingController extends BaseController
         $numberhelper = new NumberHelper($this->sR);
         $countries = new CountryHelper();
         $peppol_arrays = new PeppolArrays();
-        $languages = $this->sR->locale_language_array();
+        $languages = $this->sR->localeLanguageArray();
         $body = $request->getParsedBody();
         $parameters = [
-            'actionName' => 'setting/tab_index',
+            'actionName' => 'setting/tabIndex',
             'actionArguments' => [],
             /**
              * Make the 'general' tab active by default unless through an outside urlGenerator query Parameter e.g.
@@ -164,26 +164,26 @@ final class SettingController extends BaseController
                  */
                 'languages' => $languages,
                 'first_days_of_weeks' => ['0' => $this->sR->lang('i.sunday'), '1' => $this->sR->lang('i.monday')],
-                'date_formats' => $datehelper->date_formats(),
+                'date_formats' => $datehelper->dateFormats(),
                 // Used in ClientForm
                 'time_zones' => DateTimeZone::listIdentifiers(),
-                'countries' => $countries->get_country_list((string) $this->session->get('_language')),
+                'countries' => $countries->getCountryList((string) $this->session->get('_language')),
                 'gateway_currency_codes' => CurrencyHelper::all(),
-                'number_formats' => $this->sR->number_formats(),
+                'number_formats' => $this->sR->numberFormats(),
                 'current_date' => new \DateTime(),
                 'icon' => $aliases->get('@icon'),
             ]),
             'invoices' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoices', [
                 'invoice_groups' => $gR->findAllPreloaded(),
                 'payment_methods' => $pm->findAllPreloaded(),
-                'public_invoice_templates' => $this->sR->get_invoice_templates('public'),
-                'pdf_invoice_templates' => $this->sR->get_invoice_templates('pdf'),
+                'public_invoice_templates' => $this->sR->getInvoiceTemplates('public'),
+                'pdf_invoice_templates' => $this->sR->getInvoiceTemplates('pdf'),
                 'email_templates_invoice' => $eR->repoEmailTemplateType('invoice'),
             ]),
             'quotes' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_quotes', [
                 'invoice_groups' => $gR->findAllPreloaded(),
-                'public_quote_templates' => $this->sR->get_quote_templates('public'),
-                'pdf_quote_templates' => $this->sR->get_quote_templates('pdf'),
+                'public_quote_templates' => $this->sR->getQuoteTemplates('public'),
+                'pdf_quote_templates' => $this->sR->getQuoteTemplates('pdf'),
                 'email_templates_quote' => $eR->repoEmailTemplateType('quote'),
             ]),
             'salesorders' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_client_purchase_orders', [
@@ -200,9 +200,9 @@ final class SettingController extends BaseController
                 'locales' => $this->sR->locales(),
             ]),
             'online_payment' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_online_payment', [
-                'gateway_drivers' => $this->sR->active_payment_gateways(),
+                'gateway_drivers' => $this->sR->activePaymentGateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
-                'gateway_regions' => $this->sR->amazon_regions(),
+                'gateway_regions' => $this->sR->amazonRegions(),
                 'openBankingProviders' => $this->getOpenBankingProviderNames(),
                 'payment_methods' => $pm->findAllPreloaded(),
             ]),
@@ -211,7 +211,7 @@ final class SettingController extends BaseController
             'projects_tasks' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_projects_tasks'),
             'vat_registered' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_vat_registered'),
             'peppol_electronic_invoicing' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_peppol', [
-                'config_tax_currency' => $this->sR->get_config_peppol()['TaxCurrencyCode'] ?: $this->sR->get_config_company_details()['tax_currency'],
+                'config_tax_currency' => $this->sR->getConfigPeppol()['TaxCurrencyCode'] ?: $this->sR->getConfigCompanyDetails()['tax_currency'],
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 // if delivery/invoice periods are used, a tax point date cannot be determined
                 // because goods have not been delivered ie. no date supplied, and no invoice has been issued ie. no date issued/created after the goods have been delivered
@@ -222,8 +222,8 @@ final class SettingController extends BaseController
                 'stand_in_codes' => $peppol_arrays->getUncl2005subset(),
             ]),
             'storecove' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_storecove', [
-                'countries' => $countries->get_country_list((string) $this->session->get('_language')),
-                'sender_identifier_array' => StoreCoveArrays::store_cove_sender_identifier_array(),
+                'countries' => $countries->getCountryList((string) $this->session->get('_language')),
+                'sender_identifier_array' => StoreCoveArrays::storeCoveSenderIdentifierArray(),
             ]),
             'invoiceplane' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoiceplane', [
                 'actionTestConnectionName' => 'import/testconnection',
@@ -249,13 +249,13 @@ final class SettingController extends BaseController
                  */
                 foreach ($settings as $key => $value) {
                     $key === 'tax_rate_decimal_places' && (int) $value !== 2 ?
-                            $this->tab_index_change_decimal_column((int) $value) : '';
+                            $this->tabIndexChangeDecimalColumn((int) $value) : '';
                     // Deal with existing keys after first installation
                     if ($this->sR->repoCount($key) > 0) {
                         // Warn if duplicates
                         if ($this->sR->repoCount($key) > 1) {
                             $this->flashMessage('danger', $this->translator->translate('setting.duplicate.key') . $key);
-                            return $this->webService->getRedirectResponse('setting/tab_index');
+                            return $this->webService->getRedirectResponse('setting/tabIndex');
                         }
                         if (str_contains($key, 'field_is_password') || str_contains($key, 'field_is_amount')) {
                             // Skip all meta fields
@@ -267,18 +267,18 @@ final class SettingController extends BaseController
                         }
                         if (isset($settings[$key . '_field_is_password']) && $value !== '') {
                             // Encrypt passwords but don't save empty passwords
-                            $this->tab_index_settings_save($key, (string) $this->sR->encode(trim($value)));
+                            $this->tabIndexSettingsSave($key, (string) $this->sR->encode(trim($value)));
                         } elseif (isset($settings[$key . '_field_is_amount'])) {
                             // Format amount inputs
-                            $this->tab_index_settings_save($key, (string) $numberhelper->standardize_amount($value));
+                            $this->tabIndexSettingsSave($key, (string) $numberhelper->standardizeAmount($value));
                         } else {
-                            $this->tab_index_settings_save($key, $value);
+                            $this->tabIndexSettingsSave($key, $value);
                         }
 
-                        if (($key == 'number_format') && in_array($value, $this->sR->number_formats())) {
+                        if (($key == 'number_format') && in_array($value, $this->sR->numberFormats())) {
                             // Set thousands_separator and decimal_point according to number_format
                             // Derive the 'decimal_point' and 'thousands_separator' setting from the chosen ..number format eg. 1000,000.00 if it has a value
-                            $this->tab_index_number_format($value);
+                            $this->tabIndexNumberFormat($value);
                         }
                     } else {
                         // The key does not exist because the repoCount is not greater than zero => add
@@ -286,11 +286,11 @@ final class SettingController extends BaseController
                         // The settings 'decimal_point' and 'thousands_separator' which are derived from number_format array
                         // and were installed on the first run in InvoiceController
                         // will be derived automatically => their repoCount will be greater than zero and will not cause this to run
-                            $this->tab_index_debug_mode_ensure_all_settings_included(true, $key, $value);
+                            $this->tabIndexDebugModeEnsureAllSettingsIncluded(true, $key, $value);
                         }
                     }
                 $this->flashMessage('info', $this->translator->translate('settings.successfully.saved'));
-                return $this->webService->getRedirectResponse('setting/tab_index');
+                return $this->webService->getRedirectResponse('setting/tabIndex');
             }
         }
         return $this->webViewRenderer->render('tab_index', $parameters);
@@ -328,11 +328,11 @@ final class SettingController extends BaseController
      * @param string $key
      * @param string $value
      */
-    public function tab_index_settings_save(string $key, string $value): void
+    public function tabIndexSettingsSave(string $key, string $value): void
     {
         $setting = $this->sR->withKey($key);
         if ($setting) {
-            $setting->setSetting_value($value);
+            $setting->setSettingValue($value);
             $this->sR->save($setting);
         }
     }
@@ -341,7 +341,7 @@ final class SettingController extends BaseController
      * @param int $value
      * @psalm-suppress UnusedParam $value
      */
-    public function tab_index_change_decimal_column(int $value): void
+    public function tabIndexChangeDecimalColumn(int $value): void
     {
         // Change the decimal column dynamically using cycle and the Fragment command. SyncTable has been commented out from config/params.php
     }
@@ -349,20 +349,20 @@ final class SettingController extends BaseController
     /**
      * @param string $value
      */
-    public function tab_index_number_format(string $value): void
+    public function tabIndexNumberFormat(string $value): void
     {
         // Set thousands_separator and decimal_point according to number_format
-        $number_formats = $this->sR->number_formats();
+        $number_formats = $this->sR->numberFormats();
         if (strlen($value) > 0) {
             if (is_array($number_formats[$value])) {
                 if ($this->sR->repoCount('decimal_point') == 1) {
-                    $this->tab_index_settings_save(
+                    $this->tabIndexSettingsSave(
                         'decimal_point',
                         (string) $number_formats[$value]['decimal_point'],
                     );
                 }
                 if ($this->sR->repoCount('thousands_separator') == 1) {
-                    $this->tab_index_settings_save(
+                    $this->tabIndexSettingsSave(
                         'thousands_separator',
                         (string) $number_formats[$value]['thousands_separator'],
                     );
@@ -377,14 +377,15 @@ final class SettingController extends BaseController
      * @param string $key
      * @param string $value
      */
-    public function tab_index_debug_mode_ensure_all_settings_included(bool $bool, string $key, string $value): void
+    public function tabIndexDebugModeEnsureAllSettingsIncluded(bool $bool,
+            string $key, string $value): void
     {
         // The setting does not exist because repoCount is not greater than 0;
         if ($bool) {
             // Make sure the setting is available to be set in the database if there is no such like setting in the database
             $setting = new Setting();
-            $setting->setSetting_key($key);
-            $setting->setSetting_value($value);
+            $setting->setSettingKey($key);
+            $setting->setSettingValue($value);
             $this->sR->save($setting);
         }
     }
@@ -411,7 +412,7 @@ final class SettingController extends BaseController
             $key = (string) ($body['setting_key'] ?? '');
             if ($this->sR->repoCount($key) == 1) {
                 $this->flashMessage('danger', $this->translator->translate('setting.duplicate.key') . $key);
-                return $this->webService->getRedirectResponse('setting/debug_index');
+                return $this->webService->getRedirectResponse('setting/debugIndex');
             }
             /**
              * @psalm-suppress PossiblyInvalidArgument
@@ -419,7 +420,7 @@ final class SettingController extends BaseController
             if ($formHydrator->populateAndValidate($form, $body)) {
                 $this->settingService->saveSetting($setting, $body);
                 $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
-                return $this->webService->getRedirectResponse('setting/debug_index');
+                return $this->webService->getRedirectResponse('setting/debugIndex');
             }
             $parameters['form'] = $form;
             $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -434,17 +435,17 @@ final class SettingController extends BaseController
      * @param CurrentRoute $currentRoute
      * @return Response
      */
-    public function inv_draft_has_number_switch(CurrentRoute $currentRoute): Response
+    public function invDraftHasNumberSwitch(CurrentRoute $currentRoute): Response
     {
         $setting = $this->setting($currentRoute);
         if ($setting) {
-            if ($setting->getSetting_value() == '0') {
-                $setting->setSetting_value('1');
+            if ($setting->getSettingValue() == '0') {
+                $setting->setSettingValue('1');
                 $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
-            if ($setting->getSetting_value() == '1') {
-                $setting->setSetting_value('0');
+            if ($setting->getSettingValue() == '1') {
+                $setting->setSettingValue('0');
                 $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
@@ -461,17 +462,17 @@ final class SettingController extends BaseController
      * @param CurrentRoute $currentRoute
      * @return Response
      */
-    public function mark_sent(CurrentRoute $currentRoute): Response
+    public function markSent(CurrentRoute $currentRoute): Response
     {
         $setting = $this->setting($currentRoute);
         if ($setting) {
-            if ($setting->getSetting_value() == '0') {
-                $setting->setSetting_value('1');
+            if ($setting->getSettingValue() == '0') {
+                $setting->setSettingValue('1');
                 $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
-            if ($setting->getSetting_value() == '1') {
-                $setting->setSetting_value('0');
+            if ($setting->getSettingValue() == '1') {
+                $setting->setSettingValue('0');
                 $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
@@ -485,17 +486,17 @@ final class SettingController extends BaseController
      * Related logic: see src\Invoice\UserInv\UserInvController function signup
      * @return Response
      */
-    public function auto_client(): Response
+    public function autoClient(): Response
     {
         $setting = $this->sR->withKey('signup_automatically_assign_client');
         if ($setting) {
-            if ($setting->getSetting_value() == '0') {
-                $setting->setSetting_value('1');
+            if ($setting->getSettingValue() == '0') {
+                $setting->setSettingValue('1');
                 $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('site/index');
             }
-            if ($setting->getSetting_value() == '1') {
-                $setting->setSetting_value('0');
+            if ($setting->getSettingValue() == '1') {
+                $setting->setSettingValue('0');
                 $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('site/index');
             }
@@ -508,22 +509,22 @@ final class SettingController extends BaseController
         
         $setting = $this->sR->withKey('columns_all_visible');
         if ($setting) {
-            if ($setting->getSetting_value() == '0') {
-                $setting->setSetting_value('1');
+            if ($setting->getSettingValue() == '0') {
+                $setting->setSettingValue('1');
                 $this->sR->save($setting);
                 return $this->webService->getRedirectResponse($origin . '/index');
             }
-            if ($setting->getSetting_value() == '1') {
-                $setting->setSetting_value('0');
+            if ($setting->getSettingValue() == '1') {
+                $setting->setSettingValue('0');
                 $this->sR->save($setting);
                 return $this->webService->getRedirectResponse($origin . '/index');
             }
-            $setting->setSetting_value('0');
+            $setting->setSettingValue('0');
             $this->sR->save($setting);
             return $this->webService->getRedirectResponse($origin . '/index');
         }
         $new_setting = new Setting();
-        $new_setting->setSetting_key('columns_all_visible');
+        $new_setting->setSettingKey('columns_all_visible');
         $this->sR->save($new_setting);
 
         return $this->webService->getRedirectResponse($origin . '/index');
@@ -537,22 +538,22 @@ final class SettingController extends BaseController
     {
         $setting = $this->sR->withKey('column_inv_sent_log_visible');
         if ($setting) {
-            if ($setting->getSetting_value() == '0') {
-                $setting->setSetting_value('1');
+            if ($setting->getSettingValue() == '0') {
+                $setting->setSettingValue('1');
                 $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
-            if ($setting->getSetting_value() == '1') {
-                $setting->setSetting_value('0');
+            if ($setting->getSettingValue() == '1') {
+                $setting->setSettingValue('0');
                 $this->sR->save($setting);
                 return $this->webService->getRedirectResponse('inv/index');
             }
-            $setting->setSetting_value('0');
+            $setting->setSettingValue('0');
             $this->sR->save($setting);
             return $this->webService->getRedirectResponse('inv/index');
         }
         $new_setting = new Setting();
-        $new_setting->setSetting_key('column_inv_sent_log_visible');
+        $new_setting->setSettingKey('column_inv_sent_log_visible');
         $this->sR->save($new_setting);
 
         return $this->webService->getRedirectResponse('inv/index');
@@ -564,10 +565,10 @@ final class SettingController extends BaseController
         $origin = $currentRoute->getArgument('origin') ?? 'inv';
         $limit = $currentRoute->getArgument('limit');
         if ($setting) {
-            $setting->setSetting_value((string) $limit);
+            $setting->setSettingValue((string) $limit);
             $this->sR->save($setting);
         }
-        return $this->webService->getRedirectResponse($origin !== 'setting' ? $origin . '/index' : 'setting/debug_index');
+        return $this->webService->getRedirectResponse($origin !== 'setting' ? $origin . '/index' : 'setting/debugIndex');
     }
 
     /**
@@ -587,7 +588,7 @@ final class SettingController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'setting/edit',
-                'actionArguments' => ['setting_id' => $setting->getSetting_id()],
+                'actionArguments' => ['setting_id' => $setting->getSettingId()],
                 'alert' => $this->alert(),
                 'form' => $form,
                 'errors' => [],
@@ -603,14 +604,14 @@ final class SettingController extends BaseController
                      */
                     $this->settingService->saveSetting($setting, $body);
                     $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
-                    return $this->webService->getRedirectResponse('setting/debug_index');
+                    return $this->webService->getRedirectResponse('setting/debugIndex');
                 }
                 $parameters['form'] = $form;
                 $parameters['error'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
             }
             return $this->webViewRenderer->render('__form', $parameters);
         }
-        return $this->webService->getRedirectResponse('setting/debug_index');
+        return $this->webService->getRedirectResponse('setting/debugIndex');
     }
 
     /**
@@ -640,7 +641,7 @@ final class SettingController extends BaseController
             $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
             $this->settingService->deleteSetting($setting);
         }
-        return $this->webService->getRedirectResponse('setting/debug_index');
+        return $this->webService->getRedirectResponse('setting/debugIndex');
     }
 
     /**
@@ -654,7 +655,7 @@ final class SettingController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'setting/view',
-                'actionArguments' => ['setting_id' => $setting->getSetting_id()],
+                'actionArguments' => ['setting_id' => $setting->getSettingId()],
                 'setting' => $setting,
                 'form' => $form,
             ];
@@ -703,7 +704,7 @@ final class SettingController extends BaseController
     /**
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function get_cron_key(): \Psr\Http\Message\ResponseInterface
+    public function getCronKey(): \Psr\Http\Message\ResponseInterface
     {
         $parameters = [
             'success' => 1,
@@ -744,10 +745,10 @@ final class SettingController extends BaseController
          * @var Setting $setting
          */
         foreach ($settings as $setting) {
-            $settingKey = $setting->getSetting_key();
+            $settingKey = $setting->getSettingKey();
             // Remove repeats
-            if (!in_array($setting->getSetting_key(), $optionsDataSettings)) {
-                $optionsDataSettings[$settingKey] = $setting->getSetting_key();
+            if (!in_array($setting->getSettingKey(), $optionsDataSettings)) {
+                $optionsDataSettings[$settingKey] = $setting->getSettingKey();
             }
         }
         return $optionsDataSettings;
@@ -761,10 +762,10 @@ final class SettingController extends BaseController
          * @var Setting $setting
          */
         foreach ($settings as $setting) {
-            $settingValue = $setting->getSetting_value();
+            $settingValue = $setting->getSettingValue();
             // Remove repeats
-            if (!in_array($setting->getSetting_value(), $optionsDataSettings)) {
-                $optionsDataSettings[$settingValue] = $setting->getSetting_value();
+            if (!in_array($setting->getSettingValue(), $optionsDataSettings)) {
+                $optionsDataSettings[$settingValue] = $setting->getSettingValue();
             }
         }
         return $optionsDataSettings;

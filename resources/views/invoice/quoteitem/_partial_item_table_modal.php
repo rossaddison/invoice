@@ -36,21 +36,21 @@ use Yiisoft\Html\Html;
                 <td nowrap class="text-left">
                     <b><?= Html::encode($quoteItem->getId()); ?></b>
                 </td>
-                <?php if ($quoteItem->getProduct_id() > 0) { ?>
+                <?php if ($quoteItem->getProductId() > 0) { ?>
                     <td nowrap class="text-left">
-                        <b><?= Html::encode($quoteItem->getProduct()?->getProduct_sku()); ?></b>
+                        <b><?= Html::encode($quoteItem->getProduct()?->getProductSku()); ?></b>
                     </td>
                     <td>
-                        <b><?= Html::encode($quoteItem->getProduct()?->getProduct_name()); ?></b>
+                        <b><?= Html::encode($quoteItem->getProduct()?->getProductName()); ?></b>
                     </td>
                     <td>
-                        <?= nl2br(Html::encode($quoteItem->getProduct()?->getProduct_description())); ?>
+                        <?= nl2br(Html::encode($quoteItem->getProduct()?->getProductDescription())); ?>
                     </td>
                     <td class="text-right">
-                        <?= $numberHelper->format_currency($quoteItem->getProduct()?->getProduct_price()); ?>
+                        <?= $numberHelper->formatCurrency($quoteItem->getProduct()?->getProductPrice()); ?>
                     </td>
                 <?php } ?>
-                <?php if ($quoteItem->getTask_id() > 0) {
+                <?php if ($quoteItem->getTaskId() > 0) {
                     $taskStatuses = $taskR->getTaskStatuses($translator);
                     $taskStatus = (array) $taskStatuses[(string) $quoteItem->getTask()?->getStatus()];
                     $taskStatusLabel = (string) $taskStatus['label'];
@@ -65,7 +65,7 @@ use Yiisoft\Html\Html;
                         <?= nl2br(Html::encode($quoteItem->getTask()?->getDescription())); ?>
                     </td>
                     <td class="text-right">
-                        <?= $numberHelper->format_currency($quoteItem->getTask()?->getPrice()); ?>
+                        <?= $numberHelper->formatCurrency($quoteItem->getTask()?->getPrice()); ?>
                     </td>
                 <?php } ?>    
                 <td class="text-right">

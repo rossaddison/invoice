@@ -25,7 +25,7 @@ final readonly class ProductPropertyService
     ): void {
         $this->persist($model, $array);
         isset($array['product_id']) ? 
-            $model->setProduct_id(
+            $model->setProductId(
                 (int) $array['product_id']) : '';
         isset($array['name']) ? 
             $model->setName((string) $array['name']) : '';

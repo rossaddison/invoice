@@ -81,7 +81,7 @@ class PeppolHelper
             $this->s->getSetting('peppol_document_currency');
     }
     
-    private function ensure_temp_peppol_folder_and_uploads_folder_exist(): Aliases
+    private function ensureTempPeppolFolderAndUploadsFolderExist(): Aliases
     {
         $aliases = new Aliases([
             '@invoice' => dirname(__DIR__, 2),
@@ -125,7 +125,7 @@ class PeppolHelper
      * @throws BuyerRefNf
      * @return string
      */
-    public function generate_invoice_peppol_ubl_xml_temp_file(
+    public function generateInvoicePeppolUblXmlTempFile(
         SOR $soR,
         Inv $invoice,
         IAR $iaR,
@@ -151,7 +151,7 @@ class PeppolHelper
     ): string {
         $invoice_id = $invoice->getId();
         if (null !== $invoice_id) {
-            $this->ensure_temp_peppol_folder_and_uploads_folder_exist();
+            $this->ensureTempPeppolFolderAndUploadsFolderExist();
             $path = $this->UploadsTempPeppolXmlFileNamePathWithExt($invoice);
             // Generate inv items from Entity Inv->getItems() HasMany function
             // Generate inv item amounts from $iiaR
@@ -163,9 +163,9 @@ class PeppolHelper
                         sprintf('Unable to create output file %s', $path));
             }
             $deliveryLocation_ID_scheme =
-                    $this->build_delivery_location_ID_scheme();
+                    $this->buildDeliveryLocationIDScheme();
             $deliveryLocation_Address =
-                    $this->build_delivery_location_address();
+                    $this->buildDeliveryLocationAddress();
             // If no actual delivery date has been set, return the date supplied
             $actualDeliveryDate_datetime =
                     $this->ActualDeliveryDate($invoice, $delRepo);
@@ -174,12 +174,12 @@ class PeppolHelper
                     $this->DeliveryParty($invoice, $delRepo, $delPartyRepo);
             // if invoice/delivery periods are used retrieve from there or
             // alternatively retrieve from invoice
-            $invoice_period = $this->ubl_invoice_period($invoice, $this->s);
+            $invoice_period = $this->ublInvoicePeriod($invoice, $this->s);
             $start_datetime = $invoice_period->getStartDate();
             $end_datetime = $invoice_period->getEndDate();
             $numberhelper = new NumberHelper($this->s);
             $totals_of_line_items_array =
-                $numberhelper->inv_calculateTotalsofItemTotals(
+                $numberhelper->invCalculateTotalsofItemTotals(
                                                         $invoice_id, $iiR, $iiaR);
 
             // The lineExtensionAmount must reconcile with the taxExclusiveAmount
@@ -190,34 +190,34 @@ class PeppolHelper
              */
             $lineExtensionAmount = $totals_of_line_items_array['subtotal']
                                         - $totals_of_line_items_array['discount'];
-            $taxExclusiveAmount = $this->inv_amount->getItem_subtotal();
+            $taxExclusiveAmount = $this->inv_amount->getItemSubtotal();
 
             $taxInclusiveAmount =
-                    $taxExclusiveAmount + $this->inv_amount->getItem_tax_total();
+                    $taxExclusiveAmount + $this->inv_amount->getItemTaxTotal();
 
             // Early settlement discount is an allowance
             $allowanceTotalAmount = $totals_of_line_items_array['discount'];
             /** @var float $totals_of_line_items_array['total'] */
             $payableAmount = $totals_of_line_items_array['total'];
 
-            $so = $soR->repoSalesOrderUnloadedquery($invoice->getSo_id());
+            $so = $soR->repoSalesOrderUnloadedquery($invoice->getSoId());
 // Order Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#orderref
             $client_purchase_order_id = '';
-            if ($so && null !== $so->getClient_po_number()) {
-                $client_purchase_order_id = $so->getClient_po_number();
+            if ($so && null !== $so->getClientPoNumber()) {
+                $client_purchase_order_id = $so->getClientPoNumber();
                 $sales_order_id = $so->getNumber();
             }
 // Buyer Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
             $BuyerReference = '';
-            if ($so && null !== $so->getClient_po_person()) {
-                $BuyerReference = $so->getClient_po_person();
+            if ($so && null !== $so->getClientPoPerson()) {
+                $BuyerReference = $so->getClientPoPerson();
             }
-            $config_company_details = $this->s->get_config_company_details();
+            $config_company_details = $this->s->getConfigCompanyDetails();
 /**
  * @var string $config_company_details['name']
  */
             $supplier_name = $config_company_details['name'];
-            $config_peppol = $this->s->get_config_peppol();
+            $config_peppol = $this->s->getConfigPeppol();
 /**
  * @var string $config_peppol['SupplierPartyIdentificationId']
  * @var string $config_peppol['SupplierPartyIdentificationSchemeId']
@@ -232,9 +232,9 @@ class PeppolHelper
             $supplier_partyLegalEntity = $this->SupplierPartyLegalEntity();
             $supplier_endpointID = $this->SupplierEndpointID();
             $supplier_endpointID_schemeID = $this->SupplierEndpointIDSchemeID();
-            $customer_name = $invoice->getClient()?->getClient_full_name();
+            $customer_name = $invoice->getClient()?->getClientFullName();
             $party =
-        $this->build_peppol_accounting_customer_party_array($invoice, $paR, $cpR);
+        $this->buildPeppolAccountingCustomerPartyArray($invoice, $paR, $cpR);
             /**
              * @var array $party['Party']
              * @var array $party['Party']['PartyIdentification']
@@ -249,13 +249,13 @@ class PeppolHelper
             $customer_partyIdentificationSchemeId =
                 $party['Party']['PartyIdentification']['ID']['schemeID'] ?? null;
             $customer_postalAddress =
-                                    $this->build_customer_postal_address($party);
+                                    $this->buildCustomerPostalAddress($party);
             $customer_contact =
-                                            $this->build_customer_contact($party);
+                                            $this->buildCustomerContact($party);
             $customer_partyTaxScheme =
-                                $this->build_customer_party_tax_scheme($party);
+                                $this->buildCustomerPartyTaxScheme($party);
             $customer_partyLegalEntity =
-                                    $this->build_customer_legal_entity($party);
+                                    $this->buildCustomerLegalEntity($party);
             /**
              * @var array $party['Party]
              * @var array $party['Party']['EndPointID']
@@ -267,8 +267,8 @@ class PeppolHelper
              */
             $customer_endpointID_schemeID = $party
                                     ['Party']['EndPointID']['schemeID'] ?? '';
-            $payment_means_array = $this->build_peppol_payment_means_array();
-            $payeeFinancialAccount = $this->build_financial_account(
+            $payment_means_array = $this->buildPeppolPaymentMeansArray();
+            $payeeFinancialAccount = $this->buildFinancialAccount(
                                                             $payment_means_array);
             // return the $paymentId (ie. a payment reference id)
             $paymentId =
@@ -282,15 +282,15 @@ class PeppolHelper
 // but only one with tax subtotal ie. the elected doc currency code's tax subtotal
             $inv_amount = $iaR->repoInvquery((int) $invoice->getId());
             $supp_tax_cc_tax_amount = (null !== $inv_amount ?
-                    $inv_amount->getItem_tax_total() : 0.00);
+                    $inv_amount->getItemTaxTotal() : 0.00);
             $taxAmounts_item_subtotal = $this->TaxAmounts($supp_tax_cc_tax_amount);
-            $taxSubtotal = $this->build_TaxSubtotal_array($invoice, $iiaR, $trR);
+            $taxSubtotal = $this->buildTaxSubtotalArray($invoice, $iiaR, $trR);
             $issueDate = DateTime::createFromImmutable(
-                                                $invoice->getDate_created());
+                                                $invoice->getDateCreated());
             $taxPointDate = DateTime::createFromImmutable(
-                                                $invoice->getDate_tax_point());
+                                                $invoice->getDateTaxPoint());
             $dueDate = DateTime::createFromImmutable(
-                                                $invoice->getDate_due());
+                                                $invoice->getDateDue());
             $accountingCost = $this->AccountingCost(
                                                 $invoice, $cpR);
             $additionalDocumentReferences =
@@ -313,7 +313,7 @@ class PeppolHelper
             $isCopyIndicator = true;
             $id = $invoice->getId();
             $invoiceLines =
-                $this->build_invoice_lines_array(
+                $this->buildInvoiceLinesArray(
                     $invoice, $invoice_period, $iiaR, $cpR, $soiR,
                         $aciiR, $unpR);
             $profileID = 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0';
@@ -323,19 +323,19 @@ class PeppolHelper
             if (null == $note) {
                 throw new InvoiceNoteNf($this->t);
             }
-            if ($invoice->getSo_id()) {
+            if ($invoice->getSoId()) {
                 $sales_order = $soR->repoSalesOrderUnLoadedquery(
-                                                            $invoice->getSo_id());
+                                                            $invoice->getSoId());
                 if (null !== $sales_order) {
-                    $client_po_number = $sales_order->getClient_po_number();
+                    $client_po_number = $sales_order->getClientPoNumber();
                     if (null !== $client_po_number && !empty($client_po_number)) {
-                        $sales_order_id = $invoice->getSo_id();
+                        $sales_order_id = $invoice->getSoId();
 // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
 //                                          cac-InvoicePeriod/cbc-DescriptionCode/
 // Only permit a description code if there is no tax point date ie.
 //                           DateTimeImmutable->format('Y-m-d') === 1901/01/01
 // since the tax_point_date and description code are mutually exclusive
-                        $description_code = $this->no_tax_point_date(
+                        $description_code = $this->noTaxPointDate(
                                 $invoice) ?
                                     $this->DescriptionCode($invoice, $delRepo)
                                         : '';
@@ -411,7 +411,7 @@ class PeppolHelper
                     } // if $client_po_number
                 } // null!==sales order
                 throw new SalesOrderNf($this->t);
-            } else { // if $invoice->getSo_id() > 0
+            } else { // if $invoice->getSoId() > 0
                 throw new BuyerRefNf();
             }
         } else {
@@ -430,23 +430,23 @@ class PeppolHelper
     private function AdditionalDocumentReference(Inv $invoice, upR $upR):
                                                     AdditionalDocumentReference
     {
-        $url_key = $invoice->getUrl_key();
+        $url_key = $invoice->getUrlKey();
         $invoice_number = $this->t->translate('peppol.document.reference.null')
             . ($invoice->getId() ?? 'Not Found');
         if (null !== $invoice->getNumber()) {
             $invoice_number = $invoice->getNumber();
         }
         $inv_attachments = $upR->repoUploadUrlClientquery(
-                                        $url_key, (int) $invoice->getClient_id());
-        $aliases = $this->s->get_customer_files_folder_aliases();
+                                        $url_key, (int) $invoice->getClientId());
+        $aliases = $this->s->getCustomerFilesFolderAliases();
         $targetPath = $aliases->get('@customer_files');
         $attachments = [];
         /**
          * @var Upload $inv_attachment
          */
         foreach ($inv_attachments as $inv_attachment) {
-            $original_file_name = $inv_attachment->getFile_name_original();
-            $url_key = $inv_attachment->getUrl_key();
+            $original_file_name = $inv_attachment->getFileNameOriginal();
+            $url_key = $inv_attachment->getUrlKey();
             $target_path_with_filename = $targetPath . '/' . $url_key . '_'
                                                         . $original_file_name;
             $path_info = pathinfo($target_path_with_filename);
@@ -497,7 +497,7 @@ class PeppolHelper
      * @param array $party
      * @return Contact
      */
-    public function build_customer_contact(array $party): Contact
+    public function buildCustomerContact(array $party): Contact
     {
         /**
          * @var array $party['Party']
@@ -549,7 +549,7 @@ class PeppolHelper
      * @param array $party
      * @return PartyLegalEntity
      */
-    public function build_customer_legal_entity(array $party): PartyLegalEntity
+    public function buildCustomerLegalEntity(array $party): PartyLegalEntity
     {
         /**
          * @var array $party['Party']
@@ -584,7 +584,7 @@ class PeppolHelper
      * @param array $party
      * @return PartyTaxScheme
      */
-    public function build_customer_party_tax_scheme(array $party): PartyTaxScheme
+    public function buildCustomerPartyTaxScheme(array $party): PartyTaxScheme
     {
 //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
 //      cac-AccountingCustomerParty/cac-Party/cac-PartyTaxScheme/cac-TaxScheme/
@@ -617,7 +617,7 @@ class PeppolHelper
      * @param array $party
      * @return Address
      */
-    public function build_customer_postal_address(array $party): Address
+    public function buildCustomerPostalAddress(array $party): Address
     {
         /**
          * @var array $party['Party']
@@ -682,9 +682,9 @@ class PeppolHelper
         );
     }
 
-    public function build_delivery_location_ID_scheme(): array
+    public function buildDeliveryLocationIDScheme(): array
     {
-        $id = $this->delivery_location->getGlobal_location_number();
+        $id = $this->delivery_location->getGlobalLocationNumber();
         if (null == $id) {
             throw new DelLocIdNf($this->t);
         }
@@ -692,7 +692,7 @@ class PeppolHelper
             'ID' => $id,
             'attributes' => [
                 'schemeID' =>
-                    $this->delivery_location->getElectronic_address_scheme(),
+                    $this->delivery_location->getElectronicAddressScheme(),
             ],
         ];
     }
@@ -700,13 +700,13 @@ class PeppolHelper
     /**
      * @return Address
      */
-    public function build_delivery_location_address(): Address
+    public function buildDeliveryLocationAddress(): Address
     {
 // The customer/client must choose their delivery location from their dashboard
 // Alternatively the administrator can edit the invoice under view...options.
 // Peppol 3.0: Building number can be included in address_1
-        $street_name = $this->delivery_location->getAddress_1();
-        $additional_street_name = $this->delivery_location->getAddress_2();
+        $street_name = $this->delivery_location->getAddress1();
+        $additional_street_name = $this->delivery_location->getAddress2();
         $building_number = $this->delivery_location->getBuildingNumber();
         $cityName = $this->delivery_location->getCity();
         $postalZone = $this->delivery_location->getZip();
@@ -716,7 +716,7 @@ class PeppolHelper
          * Related logic: see App\Invoice\Entity\DeliveryLocation
          */
         if (null !== $country_name) {
-            return $this->ubl_delivery_location(
+            return $this->ublDeliveryLocation(
                 $street_name,
                 $additional_street_name,
                 $building_number,
@@ -734,7 +734,7 @@ class PeppolHelper
      * @param array $payment_means_array
      * @return PayeeFinancialAccount
      */
-    public function build_financial_account(array $payment_means_array):
+    public function buildFinancialAccount(array $payment_means_array):
         PayeeFinancialAccount
     {
         /**
@@ -783,12 +783,12 @@ class PeppolHelper
     {
         if ($this->s->getSetting('include_delivery_period') == '1'
                             && !empty($this->s->getSetting('stand_in_code'))) {
-            if ($invoice->getDelivery_location_id() > 0) {
+            if ($invoice->getDeliveryLocationId() > 0) {
                 $delivery = $delRepo->repoInvoicequery(
                         (string) $invoice->getId());
                 if ((null !== $delivery)
-                        && (!empty($invoice->getStand_in_code()))) {
-                    $description_code = $invoice->getStand_in_code();
+                        && (!empty($invoice->getStandInCode()))) {
+                    $description_code = $invoice->getStandInCode();
                 } else {
                     throw new InvPeriodDetIncompleteNf();
                 }
@@ -842,7 +842,7 @@ class PeppolHelper
                             'doc_cc' => $this->s->getSetting('peppol_document_currency'),
                             // supplier tax currency code tax amount
                             'supp_tax_cc_tax_amount' =>
-                                $this->s->currency_converter($ac->getVatOrTax()),
+                                $this->s->currencyConverter($ac->getVatOrTax()),
                             // supplier currency code
                             // views/invoice/setting/views/partial_settings_peppol
                             'supp_cc' => $this->s->getSetting(
@@ -870,14 +870,14 @@ class PeppolHelper
      * @throws ClientNf
      * @return array
      */
-    private function build_peppol_accounting_customer_party_array(Inv $invoice,
+    private function buildPeppolAccountingCustomerPartyArray(Inv $invoice,
         paR $paR, cpR $cpR): array
     {
         $client = $invoice->getClient();
         if ($client) {
-            $postaladdress_id = $client->getPostaladdress_id();
+            $postaladdress_id = $client->getPostaladdressId();
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                            (string) $client->getClient_id());
+                                            (string) $client->getClientId());
             if (null == $postaladdress_id) {
                 throw new BuyerPostAddNf();
             }
@@ -891,7 +891,7 @@ class PeppolHelper
                             'EndPointID' => [
                                 'value' => $client_peppol->getEndpointid(),
                                 'schemeID' =>
-                                        $client_peppol->getEndpointid_schemeid(),
+                                        $client_peppol->getEndpointidSchemeid(),
                             ],
 //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
 //              cac-AccountingSupplierParty/cac-Party/cac-PartyIdentification/
@@ -901,23 +901,23 @@ class PeppolHelper
                                             $client_peppol->getIdentificationid(),
                                     // optional
                                     'schemeID' =>
-                                    $client_peppol->getIdentificationid_schemeid(),
+                                    $client_peppol->getIdentificationidSchemeid(),
                                 ],
                             ],
                             'PostalAddress' => [
-                                'StreetName' => $postaladdress->getStreet_name(),
+                                'StreetName' => $postaladdress->getStreetName(),
                                 'AdditionalStreetName' =>
-                                    $postaladdress->getAdditional_street_name(),
+                                    $postaladdress->getAdditionalStreetName(),
                                 'AddressLine' => [
-                                    'Line' => $postaladdress->getBuilding_number(),
+                                    'Line' => $postaladdress->getBuildingNumber(),
                                 ],
-                                'CityName' => $postaladdress->getCity_name(),
+                                'CityName' => $postaladdress->getCityName(),
                                 'PostalZone' => $postaladdress->getPostalZone(),
                                 'CountrySubentity' =>
                                             $postaladdress->getCountrysubentity(),
                                 'Country' => [
                                     'IdentificationCode' =>
-$country_helper->get_country_identification_code_with_league(
+$country_helper->getCountryIdentificationCodeWithLeague(
                                                     $postaladdress->getCountry()),
                     //https://docs.peppol.eu/poacc/billing/3.0/codelist/ISO3166/
                                     'ListId' => 'ISO3166-1:Alpha2',
@@ -925,30 +925,30 @@ $country_helper->get_country_identification_code_with_league(
                             ],
                             'PhysicalLocation' => [
                                 'StreetName' =>
-                                        (string) $client->getClient_address_1(),
+                                        (string) $client->getClientAddress1(),
                                 'AdditionalStreetName' =>
-                                        (string) $client->getClient_address_2(),
+                                        (string) $client->getClientAddress2(),
                                 'AddressLine' => [
                                     'Line' =>
-                                    (string) $client->getClient_building_number(),
+                                    (string) $client->getClientBuildingNumber(),
                                 ],
-                                'CityName' => (string) $client->getClient_city(),
-                                'PostalZone' => (string) $client->getClient_zip(),
+                                'CityName' => (string) $client->getClientCity(),
+                                'PostalZone' => (string) $client->getClientZip(),
                                 'CountrySubentity' =>
-                                            (string) $client->getClient_state(),
+                                            (string) $client->getClientState(),
                                 'Country' => [
                                     'IdentificationCode' =>
-$country_helper->get_country_identification_code_with_league(
-                                        (string) $client->getClient_country()),
+$country_helper->getCountryIdentificationCodeWithLeague(
+                                        (string) $client->getClientCountry()),
                    //https://docs.peppol.eu/poacc/billing/3.0/codelist/ISO3166/
                                     'ListId' => 'ISO3166-1:Alpha2',
                                 ],
                             ],
                             'Contact' => [
-                                'Name' => $client->getClient_name(),
+                                'Name' => $client->getClientName(),
                                 'Telephone' =>
-                                            (string) $client->getClient_phone(),
-                                'ElectronicMail' => $client->getClient_email(),
+                                            (string) $client->getClientPhone(),
+                                'ElectronicMail' => $client->getClientEmail(),
                             ],
                             'PartyTaxScheme' => [
                                 'CompanyID' =>
@@ -970,15 +970,15 @@ $country_helper->get_country_identification_code_with_league(
                             ],
                             'PartyLegalEntity' => [
                                 'RegistrationName' =>
-                            $client_peppol->getLegal_entity_registration_name(),
+                            $client_peppol->getLegalEntityRegistrationName(),
                                 'CompanyID' =>
-                                    $client_peppol->getLegal_entity_companyid(),
+                                    $client_peppol->getLegalEntityCompanyid(),
                                 'Attributes' => [
                                     'schemeID' =>
-                           $client_peppol->getLegal_entity_companyid_schemeid(),
+                           $client_peppol->getLegalEntityCompanyidSchemeid(),
                                 ],
                                 'CompanyLegalform' =>
-                           $client_peppol->getLegal_entity_company_legal_form(),
+                           $client_peppol->getLegalEntityCompanyLegalForm(),
                             ],
                         ],
                     ];
@@ -1002,7 +1002,7 @@ $country_helper->get_country_identification_code_with_league(
         $client = $invoice->getClient();
         if (null !== $client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                               (string) $client->getClient_id());
+                                               (string) $client->getClientId());
             if (null === $client_peppol) {
                 throw new ClientNf($this->t);
             }
@@ -1028,13 +1028,13 @@ $country_helper->get_country_identification_code_with_league(
         if (null !== $invoice_id) {
             $delivery = $delRepo->repoInvoicequery($invoice_id);
             if (null !== $delivery) {
-                $actual_delivery_date = $delivery->getActual_delivery_date();
+                $actual_delivery_date = $delivery->getActualDeliveryDate();
                 if (null !== $actual_delivery_date) {
                     return DateTime::createFromImmutable($actual_delivery_date);
                 }
-                return DateTime::createFromImmutable($invoice->getDate_supplied());
+                return DateTime::createFromImmutable($invoice->getDateSupplied());
             }
-            return DateTime::createFromImmutable($invoice->getDate_supplied());
+            return DateTime::createFromImmutable($invoice->getDateSupplied());
         }
         return null;
     }
@@ -1053,7 +1053,7 @@ $country_helper->get_country_identification_code_with_league(
      * @throws ClientNf
      * @return array
      */
-    private function build_invoice_lines_array(Inv $invoice,
+    private function buildInvoiceLinesArray(Inv $invoice,
         InvoicePeriod $invoice_period, IIAR $iiaR, cpR $cpR, SOIR $soiR,
                                                 ACIIR $aciiR, unpR $unpR): array
     {
@@ -1066,7 +1066,7 @@ $country_helper->get_country_identification_code_with_league(
         $client = $invoice->getClient();
         if ($client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                                (string) $client->getClient_id());
+                                                (string) $client->getClientId());
             if ($client_peppol) {
                 $invoiceLines = [];
                 $b = Schema::CBC;
@@ -1077,18 +1077,18 @@ $country_helper->get_country_identification_code_with_league(
                 foreach ($invoice->getItems() as $item) {
                     $product = $item->getProduct();
                     if (null !== $product) {
-                        if (empty($product->getUnit_peppol_id())) {
+                        if (empty($product->getUnitPeppolId())) {
                             throw new ProductUnitCodeNf($this->t, $product);
                         }
                     }
                     // Item Identification number eg. TRQWERQERQ9879
-                    $peppol_po_itemid = $this->Peppol_po_itemid($item, $soiR);
+                    $peppol_po_itemid = $this->PeppolPoItemid($item, $soiR);
                     if (null == $peppol_po_itemid) {
                         throw new SOIPOINNe($this->t);
                     }
 
                     // Item Line Number eg. Line 1 of 4
-                    $peppol_po_lineid = $this->Peppol_po_lineid($item, $soiR);
+                    $peppol_po_lineid = $this->PeppolPoLineid($item, $soiR);
                     if (null == $peppol_po_lineid) {
                         throw new SOIPOLNNe($this->t);
                     }
@@ -1103,12 +1103,12 @@ $country_helper->get_country_identification_code_with_league(
  * Error message: [BR-CL-13]-Item classification identifier identification
  *           scheme identifier MUST be coded using one of the UNTDID 7143 list.
  */
-                    $listid = $product?->getProduct_icc_listid();
+                    $listid = $product?->getProductIccListid();
                     if (null == $listid && null !== $product) {
                         throw new PICCSINf($this->t, $product);
                     }
                     $price = ($item->getPrice() ?? 0.00);
-                    $discount = ($item->getDiscount_amount() ?? 0.00);
+                    $discount = ($item->getDiscountAmount() ?? 0.00);
 
                     $item_id = $item->getId();
                     $inv_item_amount = $this->getInvItemAmount(
@@ -1116,8 +1116,8 @@ $country_helper->get_country_identification_code_with_league(
                     if (isset($inv_item_amount)) {
                         $sub_total = $inv_item_amount->getSubtotal() ?? 0;
                         $convert_sub_total =
-                            $this->s->currency_converter($sub_total);
-                        $unit_peppol_id = $item->getProduct()?->getUnit_peppol_id();
+                            $this->s->currencyConverter($sub_total);
+                        $unit_peppol_id = $item->getProduct()?->getUnitPeppolId();
                         if (null !== $unit_peppol_id && null !== $item_id) {
                             $unit_peppol = $unpR->repoUnitPeppolLoadedquery(
                                                                 $unit_peppol_id);
@@ -1221,7 +1221,7 @@ $country_helper->get_country_identification_code_with_league(
                                         [
                                             'name' => "{$b}ID",
                                             'value' =>
-                                        $item->getProduct()?->getProduct_sku()
+                                        $item->getProduct()?->getProductSku()
                                         ],
                                     ],
                                 ],
@@ -1231,10 +1231,10 @@ $country_helper->get_country_identification_code_with_league(
                                         [
                                             'name' => "{$b}ID",
                                             'value' =>
-                                       $item->getProduct()?->getProduct_sii_id(),
+                                       $item->getProduct()?->getProductSiiId(),
                                             'attributes' => [
                                                 'schemeID' =>
-                                $item->getProduct()?->getProduct_sii_schemeid(),
+                                $item->getProduct()?->getProductSiiSchemeid(),
                                             ],
                                         ],
                                     ],
@@ -1245,7 +1245,7 @@ $country_helper->get_country_identification_code_with_league(
                                         [
                                             'name' => "{$b}IdentificationCode",
                                             'value' =>
-                        $item->getProduct()?->getProduct_country_of_origin_code()
+                        $item->getProduct()?->getProductCountryOfOriginCode()
                                         ],
                                     ],
                                 ],
@@ -1255,12 +1255,12 @@ $country_helper->get_country_identification_code_with_league(
                                         [
                                             'name' => "{$b}ItemClassificationCode",
                                             'value' =>
-                                    $item->getProduct()?->getProduct_icc_id(),
+                                    $item->getProduct()?->getProductIccId(),
                                             'attributes' => [
                                                 'listID' =>
-                                    $item->getProduct()?->getProduct_icc_listid(),
+                                    $item->getProduct()?->getProductIccListid(),
                                                 'listVersionID' =>
-                            $item->getProduct()?->getProduct_icc_listversionid(),
+                            $item->getProduct()?->getProductIccListversionid(),
                                             ],
                                         ],
                                     ],
@@ -1296,12 +1296,12 @@ $country_helper->get_country_identification_code_with_league(
                                     [
                                         'name' => "{$b}Name",
                                         'value' =>
-            $item->getProduct()?->getProduct_additional_item_property_name()
+            $item->getProduct()?->getProductAdditionalItemPropertyName()
                                     ],
                                     [
                                         'name' => "{$b}Value",
                                         'value' =>
-            $item->getProduct()?->getProduct_additional_item_property_value()
+            $item->getProduct()?->getProductAdditionalItemPropertyValue()
                                     ],
                                 ],
                             ],
@@ -1312,7 +1312,7 @@ $country_helper->get_country_identification_code_with_league(
                                 [
                                     'name' => "{$b}PriceAmount",
                                     'value' =>
-                                            $this->s->currency_converter($price),
+                                            $this->s->currencyConverter($price),
                                     'attributes' => [
                                         'currencyID' =>
                                         $this->s->getSetting(
@@ -1342,7 +1342,7 @@ $country_helper->get_country_identification_code_with_league(
                                         [
                                             'name' => "{$b}Amount",
                                             'value' =>
-                                        $this->s->currency_converter($discount),
+                                        $this->s->currencyConverter($discount),
                                             'attributes' => [
                                                 'currencyID' =>
             $this->s->getSetting('peppol_document_currency')
@@ -1354,7 +1354,7 @@ $country_helper->get_country_identification_code_with_league(
                                         [
                                             'name' => "{$b}BaseAmount",
                                             'value' =>
-            $this->s->currency_converter($price), 'attributes' => [
+            $this->s->currencyConverter($price), 'attributes' => [
                                             'currencyID' =>
             $this->s->getSetting('peppol_document_currency')]
                                         ],
@@ -1407,7 +1407,7 @@ $country_helper->get_country_identification_code_with_league(
                      $acii->getAllowanceCharge()?->getMultiplierFactorNumeric()],
                     [
                         'name' => "{$b}Amount",
-                        'value' => $this->s->currency_converter($acii->getAmount()),
+                        'value' => $this->s->currencyConverter($acii->getAmount()),
                         'attributes' => [
                             'currencyID' =>
                                 $this->s->getSetting('peppol_document_currency')
@@ -1416,7 +1416,7 @@ $country_helper->get_country_identification_code_with_league(
                     [
                         'name' => "{$b}BaseAmount",
                         'value' =>
-    $this->s->currency_converter($acii->getAllowanceCharge()?->getBaseAmount()
+    $this->s->currencyConverter($acii->getAllowanceCharge()?->getBaseAmount()
             ?? 0.00),
                         'attributes' => [
                             'currencyID' =>
@@ -1433,9 +1433,9 @@ $country_helper->get_country_identification_code_with_league(
      * Build a payment means array from the config/common/params file
      * @return array
      */
-    private function build_peppol_payment_means_array(): array
+    private function buildPeppolPaymentMeansArray(): array
     {
-        $config_peppol = $this->s->get_config_peppol();
+        $config_peppol = $this->s->getConfigPeppol();
         /**
          * @var array $config_peppol['PaymentMeans']
          */
@@ -1475,7 +1475,7 @@ $country_helper->get_country_identification_code_with_league(
     {
         $client = $invoice->getClient();
         if (null !== $client) {
-            $client_id = $client->getClient_id();
+            $client_id = $client->getClientId();
             if (null !== $client_id) {
                 $client_peppol = $cpR->repoClientPeppolLoadedquery(
                                                             (string) $client_id);
@@ -1495,7 +1495,7 @@ $country_helper->get_country_identification_code_with_league(
     public function ContractDocumentReference(Inv $invoice,
                                             ContractRepo $contractRepo): ?string
     {
-        $contract_id = $invoice->getContract_id();
+        $contract_id = $invoice->getContractId();
         $contract = $contractRepo->repoContractquery($contract_id);
         if ($contract) {
             return $contract->getReference();
@@ -1515,7 +1515,7 @@ $country_helper->get_country_identification_code_with_league(
         if (null !== $invoice_id) {
             $inv = $delRepo->repoPartyquery($invoice_id);
             if ($inv) {
-                $delivery_party_id = $inv->getDelivery_party_id();
+                $delivery_party_id = $inv->getDeliveryPartyId();
                 $delparty = $delpartyRepo->repoDeliveryPartyquery(
                                                             $delivery_party_id);
                 $partyName = (null !== $delparty ? $delparty->getPartyName()
@@ -1534,7 +1534,7 @@ $country_helper->get_country_identification_code_with_league(
      */
     public function DocumentCurrencyCode(): string
     {
-        $config = $this->s->get_config_peppol();
+        $config = $this->s->getConfigPeppol();
         /** @var string $config['DocumentCurrencyCode'] */
         return $config['DocumentCurrencyCode'] ?? '';
     }
@@ -1561,14 +1561,14 @@ $country_helper->get_country_identification_code_with_league(
      * @throws SOINe
      * @return string|null
      */
-    private function Peppol_po_itemid(InvItem $item, SOIR $soiR): ?string
+    private function PeppolPoItemid(InvItem $item, SOIR $soiR): ?string
     {
-        $sales_order_item_id = $item->getSo_item_id();
+        $sales_order_item_id = $item->getSoItemId();
         if ($sales_order_item_id) {
             $sales_order_item = $soiR->repoSalesOrderItemquery(
                                                             $sales_order_item_id);
             if (null !== $sales_order_item) {
-                $peppol_po_itemid = $sales_order_item->getPeppol_po_itemid();
+                $peppol_po_itemid = $sales_order_item->getPeppolPoItemid();
                 if (null !== $peppol_po_itemid) {
                     return $peppol_po_itemid;
                 }
@@ -1588,14 +1588,14 @@ $country_helper->get_country_identification_code_with_league(
      * @throws SOINe
      * @return string|null
      */
-    private function Peppol_po_lineid(InvItem $item, SOIR $soiR): ?string
+    private function PeppolPoLineid(InvItem $item, SOIR $soiR): ?string
     {
-        $sales_order_item_id = $item->getSo_item_id();
+        $sales_order_item_id = $item->getSoItemId();
         if ($sales_order_item_id) {
             $sales_order_item = $soiR->repoSalesOrderItemquery(
                     $sales_order_item_id);
             if (null !== $sales_order_item) {
-                $peppol_po_lineid = $sales_order_item->getPeppol_po_lineid();
+                $peppol_po_lineid = $sales_order_item->getPeppolPoLineid();
                 if (null !== $peppol_po_lineid) {
                     return $peppol_po_lineid;
                 }
@@ -1618,7 +1618,7 @@ $country_helper->get_country_identification_code_with_league(
         $client = $invoice->getClient();
         if (null !== $client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                    (string) $client->getClient_id());
+                    (string) $client->getClientId());
             $supplier_assigned_account_id = null !== $client_peppol ?
                     $client_peppol->getSupplierAssignedAccountId()
               : throw new ClientIdNf($this->t);
@@ -1636,7 +1636,7 @@ $country_helper->get_country_identification_code_with_league(
      */
     public function SupplierContact(): Contact
     {
-        $config = $this->s->get_config_peppol();
+        $config = $this->s->getConfigPeppol();
         /**
          * @var array $config
          * @var array $config['Contact']
@@ -1666,7 +1666,7 @@ $country_helper->get_country_identification_code_with_league(
      */
     public function SupplierEndpointID(): string
     {
-        $config = $this->s->get_config_peppol();
+        $config = $this->s->getConfigPeppol();
         /**
          * @var array $config
          * @var array $config['EndPointID']
@@ -1679,7 +1679,7 @@ $country_helper->get_country_identification_code_with_league(
      */
     public function SupplierEndPointIDSchemeID(): string
     {
-        $config = $this->s->get_config_peppol();
+        $config = $this->s->getConfigPeppol();
         /**
          * @var array $config
          * @var array $config['EndPointID']
@@ -1692,7 +1692,7 @@ $country_helper->get_country_identification_code_with_league(
      */
     public function SupplierPartyLegalEntity(): PartyLegalEntity
     {
-        $config = $this->s->get_config_peppol();
+        $config = $this->s->getConfigPeppol();
         /**
          * @var array $config
          * @var array $config['PartyLegalEntity']
@@ -1711,9 +1711,9 @@ $country_helper->get_country_identification_code_with_league(
      * @param Inv $invoice
      * @return bool
      */
-    private function no_tax_point_date(Inv $invoice): bool
+    private function noTaxPointDate(Inv $invoice): bool
     {
-        $date = $invoice->getDate_tax_point()->format('Y-m-d');
+        $date = $invoice->getDateTaxPoint()->format('Y-m-d');
         return $date === '1901/01/01';
     }
 
@@ -1722,7 +1722,7 @@ $country_helper->get_country_identification_code_with_league(
      */
     public function SupplierPartyTaxScheme(): PartyTaxScheme
     {
-        $config = $this->s->get_config_peppol();
+        $config = $this->s->getConfigPeppol();
         /**
          * @var array $config['PartyTaxScheme']
          * @var array $config['PartyTaxScheme']['TaxScheme']
@@ -1751,7 +1751,7 @@ $country_helper->get_country_identification_code_with_league(
      */
     public function SupplierPostalAddress(): Address
     {
-        $config = $this->s->get_config_peppol();
+        $config = $this->s->getConfigPeppol();
         $address = 'SupplierPartyIdentificationPostalAddress';
         $configAddress = (array) $config[$address];
         $configAddressCountry = (array) $configAddress['Country'];
@@ -1797,7 +1797,7 @@ $country_helper->get_country_identification_code_with_league(
         // so make sure same type ie. float
         // currency_converter outputs a string
         $doc_cc_tax_amount =
-                    (float) $this->s->currency_converter($supp_tax_cc_tax_amount);
+                    (float) $this->s->currencyConverter($supp_tax_cc_tax_amount);
         return [
             // first tax total
             'supp_tax_cc_tax_amount' => $supp_tax_cc_tax_amount,
@@ -1816,7 +1816,7 @@ $country_helper->get_country_identification_code_with_league(
      * @throws TCPNf
      * @return array
      */
-    private function build_TaxSubtotal_array(
+    private function buildTaxSubtotalArray(
                                      Inv $invoice, IIAR $iiaR, TRR $trR): array
     {
         $array = [];
@@ -1828,8 +1828,8 @@ $country_helper->get_country_identification_code_with_league(
          * @var InvItem $item
          */
         foreach ($invoice->getItems() as $item) {
-            if (!in_array($item->getTax_rate_id(), $item_tax_rates)) {
-                $item_tax_rates[] = $item->getTax_rate_id();
+            if (!in_array($item->getTaxRateId(), $item_tax_rates)) {
+                $item_tax_rates[] = $item->getTaxRateId();
             }
         }
         foreach ($item_tax_rates as $id) {
@@ -1862,7 +1862,7 @@ $country_helper->get_country_identification_code_with_league(
                                     if (null !== $item_sub_total) {
                                         $taxable_amount_total += $item_sub_total;
                                     }
-                                    $item_tax_total = $item_amount->getTax_total();
+                                    $item_tax_total = $item_amount->getTaxTotal();
                                     if (null !== $item_tax_total) {
                                         $tax_amount_total += $item_tax_total;
                                     }
@@ -1914,14 +1914,14 @@ $country_helper->get_country_identification_code_with_league(
      * @param string $country_name
      * @return Address
      */
-    public function ubl_delivery_location(?string $streetName,
+    public function ublDeliveryLocation(?string $streetName,
             ?string $additionalStreetName, ?string $buildingNumber,
             ?string $cityName, ?string $postalZone, ?string $countrySubEntity,
             string $country_name): Address
     {
         //https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-tc434/
         $country_helper = new CountryHelper();
-        $cic = $country_helper->get_country_identification_code_with_league(
+        $cic = $country_helper->getCountryIdentificationCodeWithLeague(
                 $country_name);
         $country = new Country($cic, 'ISO3166-1:Alpha2');
         return new Address(
@@ -1979,14 +1979,14 @@ $country_helper->get_country_identification_code_with_league(
      * @param SRepo $s
      * @return InvoicePeriod
      */
-    public function ubl_invoice_period(Inv $invoice, SRepo $s): InvoicePeriod
+    public function ublInvoicePeriod(Inv $invoice, SRepo $s): InvoicePeriod
     {
         // Related logic: see InvService set_tax_point
 
         $datehelper = new DateHelper($s);
-        $date_tax_point = $invoice->getDate_tax_point();
-        $date_created_or_issued = $invoice->getDate_created();
-        $date_supplied = $invoice->getDate_supplied();
+        $date_tax_point = $invoice->getDateTaxPoint();
+        $date_created_or_issued = $invoice->getDateCreated();
+        $date_supplied = $invoice->getDateSupplied();
         if ($date_tax_point === $date_created_or_issued) {
             // => there is NO need for a visible peppol tax point
             // therefore base the invoice period on the date_created
@@ -1995,7 +1995,7 @@ $country_helper->get_country_identification_code_with_league(
             // tax point will be based on ie. date supplied/delivery date
             // or date created or payment date
             $input_date = DateTime::createFromImmutable($date_created_or_issued);
-            $description_code = $this->get_description_code_for_tax_point(
+            $description_code = $this->getDescriptionCodeForTaxPoint(
                             $invoice, $date_supplied, $date_created_or_issued);
         } else {
             // => there IS a need for a visible peppol tax point
@@ -2006,7 +2006,7 @@ $country_helper->get_country_identification_code_with_league(
         }
         // if the invoice has a delivery period use the delivery period's begin
         // and end date
-        $start_end_array = $datehelper->invoice_period_start_end(
+        $start_end_array = $datehelper->invoicePeriodStartEnd(
                                         $invoice, $input_date, $this->delRepo);
         $startDate = (string) $start_end_array['StartDate'];
         $endDate = (string) $start_end_array['EndDate'];
@@ -2035,7 +2035,7 @@ $country_helper->get_country_identification_code_with_league(
      * @param DateTimeImmutable $date_created
      * @return string
      */
-    public function get_description_code_for_tax_point(Inv $inv,
+    public function getDescriptionCodeForTaxPoint(Inv $inv,
     DateTimeImmutable $date_supplied, DateTimeImmutable $date_created): string
     {
 // For yii3-i,'Date created' is used interchangeably with 'Date issued'
@@ -2047,7 +2047,7 @@ $country_helper->get_country_identification_code_with_league(
             'Actual Delivery Date/Time ie. Date Supplied' => '35',
             'Paid to Date' => '432',
         ];
-        if (null !== $inv->getClient()?->getClient_vat_id()) {
+        if (null !== $inv->getClient()?->getClientVatId()) {
             if ($date_created > $date_supplied) {
                 $diff = $date_supplied->diff($date_created)->format('%R%a');
                 if ((int) $diff > 14) {
@@ -2073,7 +2073,7 @@ $country_helper->get_country_identification_code_with_league(
         }
         // If the client is not VAT registered, the tax point is the date
         //  supplied
-        if (null == $inv->getClient()?->getClient_vat_id()) {
+        if (null == $inv->getClient()?->getClientVatId()) {
             return $uncl2005_subset_array[
                 'Actual Delivery Date/Time ie. Date Supplied'];
         }
@@ -2087,7 +2087,7 @@ $country_helper->get_country_identification_code_with_league(
      * Related logic: https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
      * @return array
      */
-    private function get_peppol_charges_subset_array(): array
+    private function getPeppolChargesSubsetArray(): array
     {
         return [
             '41' => 'Bonus for works ahead of schedule',
@@ -2117,7 +2117,7 @@ $country_helper->get_country_identification_code_with_league(
      * Related logic: https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
      * @return array
      */
-    private function get_peppol_allowances_array(): array
+    private function getPeppolAllowancesArray(): array
     {
         return [
             'AA' => ['Advertising',
@@ -2502,7 +2502,7 @@ $country_helper->get_country_identification_code_with_league(
                                                       structure/codelist/icd.xml
  * @return array
  */
-    private function getIso_6523_icd(): array
+    private function getIso6523Icd(): array
     {
         // 'ISO 6523 ICD list',
         // 'Identifier' => 'ICD',

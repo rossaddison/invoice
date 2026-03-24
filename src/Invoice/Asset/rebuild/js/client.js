@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
     "use strict";
 
     function parsedata(data) {
@@ -65,7 +65,7 @@
         // client_create_confirm
         var createBtn = el.closest('#client_create_confirm');
         if (createBtn) {
-            var url = location.origin + "/invoice/client/create_confirm";
+            var url = location.origin + "/invoice/client/createConfirm";
             var btn = document.querySelector('.client_create_confirm') || createBtn;
             var absolute_url = new URL(location.href);
 
@@ -110,8 +110,8 @@
         // save_client_note_new
         var saveNoteBtn = el.closest('#save_client_note_new');
         if (saveNoteBtn) {
-            var url = location.origin + "/invoice/client/save_client_note_new";
-            var url_note_list = location.origin + "/invoice/client/load_client_notes";
+            var url = location.origin + "/invoice/client/saveClientNoteNew";
+            var url_note_list = location.origin + "/invoice/client/loadClientNotes";
             var btn_note = document.querySelector('.save_client_note') || saveNoteBtn;
             var absolute_url = new URL(location.href);
 

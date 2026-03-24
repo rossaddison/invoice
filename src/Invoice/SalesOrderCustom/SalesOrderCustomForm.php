@@ -18,17 +18,17 @@ final class SalesOrderCustomForm extends FormModel
 
     public function __construct(SalesOrderCustom $salesOrderCustom)
     {
-        $this->sales_order_id = (int) $salesOrderCustom->getSales_order_id();
-        $this->custom_field_id = (int) $salesOrderCustom->getCustom_field_id();
+        $this->sales_order_id = (int) $salesOrderCustom->getSalesOrderId();
+        $this->custom_field_id = (int) $salesOrderCustom->getCustomFieldId();
         $this->value = $salesOrderCustom->getValue();
     }
 
-    public function getSales_order_id(): ?int
+    public function getSalesOrderId(): ?int
     {
         return $this->sales_order_id;
     }
 
-    public function getCustom_field_id(): ?int
+    public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;
     }

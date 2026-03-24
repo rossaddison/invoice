@@ -30,7 +30,7 @@ use App\Widget\LabelSwitch;
              */
             foreach ($quoteStatuses as $key => $status) { ?>
             <option value="<?php echo $key; ?>" <?php if ($key === $body['status_id']) {
-                $s->check_select(Html::encode($body['status_id'] ?? ''), $key);
+                $s->checkSelect(Html::encode($body['status_id'] ?? ''), $key);
             } ?>>
                 <?= Html::encode($status['label']); ?>
             </option>
@@ -46,12 +46,12 @@ use App\Widget\LabelSwitch;
 
 <?php
     // draft => show the url
-    if ($quote->getStatus_id() == 1) 
+    if ($quote->getStatusId() == 1) 
     { ?>
     <div class="quote-properties">
         <label for="quote_guest_url" hidden><?php echo $translator->translate('guest.url'); ?></label>
         <div class="input-group" hidden>
-            <input type="text" id="quote_guest_url" disabled class="form-control" value="<?= $quote->getUrl_key(); ?>">
+            <input type="text" id="quote_guest_url" disabled class="form-control" value="<?= $quote->getUrlKey(); ?>">
             <span class="input-group-text to-clipboard cursor-pointer"
                   data-clipboard-target="#quote_guest_url">
                 <i class="fa fa-clipboard fa-fw"></i>
@@ -62,14 +62,14 @@ use App\Widget\LabelSwitch;
 <?php
     // sent 2 or viewed 3 or rejected 5 AND no sales order => approve before transferring to sales order
     // if there was a sales order associated with it, we would not be able to approve it since it has been approved already
-    if (($quote->getStatus_id() === 2 || 
-         $quote->getStatus_id() === 3 || 
-         $quote->getStatus_id() === 5)  && 
-         !$invEdit && ($quote->getSo_id() === '0' || empty($quote->getSo_id()))) 
+    if (($quote->getStatusId() === 2 || 
+         $quote->getStatusId() === 3 || 
+         $quote->getStatusId() === 5)  && 
+         !$invEdit && ($quote->getSoId() === '0' || empty($quote->getSoId()))) 
     { ?>
     <div>
         <br>
-        <a href="<?= $urlGenerator->generate('quote/url_key', ['url_key' => $quote->getUrl_key()]); ?>" class="btn btn-success">  
+        <a href="<?= $urlGenerator->generate('quote/urlKey', ['url_key' => $quote->getUrlKey()]); ?>" class="btn btn-success">  
             <?= $translator->translate('approve.this.quote') ; ?></i>    
         </a>
     </div>
@@ -77,27 +77,27 @@ use App\Widget\LabelSwitch;
 <?php
     // sent 2 or viewed 3 or approved 4 AND user not permission to edit AND no sales order => can be rejected by user
     // if there was a sales order associated with it we would not be able to reject it
-    if (($quote->getStatus_id() === 2 ||
-         $quote->getStatus_id() === 3 || 
-         $quote->getStatus_id() === 4)  &&
-         !$invEdit && ($quote->getSo_id() === '0' || empty($quote->getSo_id()))) 
+    if (($quote->getStatusId() === 2 ||
+         $quote->getStatusId() === 3 || 
+         $quote->getStatusId() === 4)  &&
+         !$invEdit && ($quote->getSoId() === '0' || empty($quote->getSoId()))) 
     { ?>
     <div>
         <br>
-        <a href="<?= $urlGenerator->generate('quote/url_key', ['url_key' => $quote->getUrl_key()]); ?>" class="btn btn-danger">  
+        <a href="<?= $urlGenerator->generate('quote/urlKey', ['url_key' => $quote->getUrlKey()]); ?>" class="btn btn-danger">  
             <?= $translator->translate('reject.this.quote') ; ?></i>    
         </a>
     </div>
 <?php } ?>
-<input type="text" id="dropzone_client_id" readonly  hidden class="form-control" value="<?= $quote->getClient()?->getClient_id(); ?>">
+<input type="text" id="dropzone_client_id" readonly  hidden class="form-control" value="<?= $quote->getClient()?->getClientId(); ?>">
 <?php 
     // the quote has already been approved because it has a sales order number associated with it => it can only be viewed
-    if ($quote->getSo_id()) 
+    if ($quote->getSoId()) 
     { ?>  
     <div has-feedback">
         <label for="salesorder_to_url"><?= $translator->translate('salesorder'); ?></label>
         <div class="input-group">
-    	    <?= Html::a($sales_order_number, $urlGenerator->generate('salesorder/view', ['id' => $quote->getSo_id()]), ['class' => 'btn btn-success']); ?>
+    	    <?= Html::a($sales_order_number, $urlGenerator->generate('salesorder/view', ['id' => $quote->getSoId()]), ['class' => 'btn btn-success']); ?>
         </div>
 	</div>
 <?php } ?>

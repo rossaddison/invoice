@@ -24,13 +24,13 @@ final readonly class UserClientService
         );
         if ($user) {
             $model->setUser($user);
-            $model->setUser_id((int) $user->getId());
+            $model->setUserId((int) $user->getId());
         }
         $client = $this->cR->repoClientquery(
             (string) $array['client_id']
         );
         $model->setClient($client);
-        $model->setClient_id((int) $client->getClient_id());
+        $model->setClientId((int) $client->getClientId());
     }
 
     /**

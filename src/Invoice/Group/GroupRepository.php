@@ -84,17 +84,17 @@ final class GroupRepository extends Select\Repository
      * @param bool $set_next
      * @return mixed
      */
-    public function generate_number(int $id, bool $set_next = false): mixed
+    public function generateNumber(int $id, bool $set_next = false): mixed
     {
         /** @var Group $group */
         $group = $this->repoGroupquery((string) $id);
-        $my_result = $this->parse_identifier_format(
-            (string) $group->getIdentifier_format(),
-            (int) $group->getNext_id(),
-            (int) $group->getLeft_pad(),
+        $my_result = $this->parseIdentifierFormat(
+            (string) $group->getIdentifierFormat(),
+            (int) $group->getNextId(),
+            (int) $group->getLeftPad(),
         );
         if ($set_next) {
-            $this->set_next_number($id);
+            $this->setNextNumber($id);
         }
         if (!empty($my_result) && gettype($my_result)) {
             return $my_result;
@@ -108,7 +108,7 @@ final class GroupRepository extends Select\Repository
       * @param int $left_pad
       * @return string
       */
-    private function parse_identifier_format(string $identifier_format = '', int $next_id = 1, int $left_pad = 1): string
+    private function parseIdentifierFormat(string $identifier_format = '', int $next_id = 1, int $left_pad = 1): string
     {
         $template_vars = [];
         if (preg_match_all('/{{{([^{|}]*)}}}/', $identifier_format, $template_vars) > 0) {
@@ -156,13 +156,13 @@ final class GroupRepository extends Select\Repository
     /**
      * @param $id
      */
-    public function set_next_number(int $id): int
+    public function setNextNumber(int $id): int
     {
         $result = $this->repoGroupquery((string) $id) ?: null;
         if (null !== $result) {
-            $current_id = $result->getNext_id();
-            $incremented_next_id = (int) $result->getNext_id() + 1;
-            $result->setNext_id($incremented_next_id);
+            $current_id = $result->getNextId();
+            $incremented_next_id = (int) $result->getNextId() + 1;
+            $result->setNextId($incremented_next_id);
             $this->save($result);
             return (int) $current_id;
         }

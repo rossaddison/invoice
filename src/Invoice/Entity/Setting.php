@@ -19,27 +19,27 @@ class Setting
     {
     }
 
-    public function getSetting_id(): ?int
+    public function getSettingId(): ?int
     {
         return $this->id;
     }
 
-    public function getSetting_key(): string
+    public function getSettingKey(): string
     {
         return $this->setting_key;
     }
 
-    public function setSetting_key(string $setting_key): void
+    public function setSettingKey(string $setting_key): void
     {
         $this->setting_key = $setting_key;
     }
 
-    public function getSetting_value(): string
+    public function getSettingValue(): string
     {
         return $this->setting_value;
     }
 
-    public function setSetting_value(string $setting_value): void
+    public function setSettingValue(string $setting_value): void
     {
         $this->setting_value = $setting_value;
     }

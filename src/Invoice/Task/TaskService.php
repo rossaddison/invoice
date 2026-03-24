@@ -25,7 +25,7 @@ final readonly class TaskService
             );
             if ($project) {
                 $model->setProject($project);
-                $model->setProject_id((int) $project->getId());
+                $model->setProjectId((int) $project->getId());
             }
         }
         if (isset($array['tax_rate_id'])) {
@@ -34,7 +34,7 @@ final readonly class TaskService
             );
             if ($tax_rate) {
                 $model->setTaxRate($tax_rate);
-                $model->setTax_rate_id(
+                $model->setTaxRateId(
                     (int) $tax_rate->getTaxRateId()
                 );
             }
@@ -65,7 +65,7 @@ final readonly class TaskService
          * @var string $array['finish_date']
          */
         $finish_date = $array['finish_date'] ?? '';
-        $model->setFinish_date(
+        $model->setFinishDate(
             $datetime::createFromFormat('Y-m-d', $finish_date)
         );
         $this->repository->save($model);

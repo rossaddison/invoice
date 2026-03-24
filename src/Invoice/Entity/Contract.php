@@ -41,12 +41,12 @@ class Contract
         return $this->id;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
@@ -81,22 +81,22 @@ class Contract
         $this->reference = $reference;
     }
 
-    public function getPeriod_start(): DateTimeImmutable
+    public function getPeriodStart(): DateTimeImmutable
     {
         return $this->period_start;
     }
 
-    public function setPeriod_start(DateTimeImmutable $period_start): void
+    public function setPeriodStart(DateTimeImmutable $period_start): void
     {
         $this->period_start = $period_start;
     }
 
-    public function getPeriod_end(): DateTimeImmutable
+    public function getPeriodEnd(): DateTimeImmutable
     {
         return $this->period_end;
     }
 
-    public function setPeriod_end(DateTimeImmutable $period_end): void
+    public function setPeriodEnd(DateTimeImmutable $period_end): void
     {
         $this->period_end = $period_end;
     }

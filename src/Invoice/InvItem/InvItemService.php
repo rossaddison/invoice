@@ -73,7 +73,7 @@ final readonly class InvItemService
     }
 
     /**
-     * Related logic: see InvController function inv_to_inv_items
+     * Related logic: see InvController function invToInvItems
      * @param InvItem $model
      * @param array $array
      * @param string $inv_id
@@ -85,7 +85,7 @@ final readonly class InvItemService
      * @param UNR $unR
      * @return int|null
      */
-    public function addInvItem_product(
+    public function addInvItemProduct(
         InvItem $model,
         array $array,
         string $inv_id,
@@ -105,23 +105,23 @@ final readonly class InvItemService
         $tax_rate_id =
             ((isset($array['tax_rate_id'])) ? (int) $array['tax_rate_id'] : '');
         // The form is required to have a tax value even if it is a zero rate
-        $model->setTax_rate_id((int) $tax_rate_id);
-        $model->setInv_id((int) $inv_id);
+        $model->setTaxRateId((int) $tax_rate_id);
+        $model->setInvId((int) $inv_id);
         $so_item_id =
             ((isset($array['so_item_id'])) ? (int) $array['so_item_id'] : '');
-        $model->setSo_item_id((int) $so_item_id);
+        $model->setSoItemId((int) $so_item_id);
         $product_id =
             ((isset($array['product_id'])) ? (int) $array['product_id'] : '');
-        $model->setProduct_id((int) $product_id);
+        $model->setProductId((int) $product_id);
         $product = $pr->repoProductquery((string) $product_id);
 
         if (null !== $product) {
             $name = (((isset($array['product_id']))
                     && ($pr->repoCount((string) $product_id) > 0)) ?
-                    $product->getProduct_name() : '');
+                    $product->getProductName() : '');
             $model->setName($name ?? '');
 
-            $productDescription = $product->getProduct_description();
+            $productDescription = $product->getProductDescription();
             if (null !== $productDescription) {
                 isset($array['description']) ? 
                     $model->setDescription(
@@ -137,7 +137,7 @@ final readonly class InvItemService
         isset($array['price']) ? 
             $model->setPrice((float) $array['price']) : '';
         isset($array['discount_amount']) ? 
-            $model->setDiscount_amount(
+            $model->setDiscountAmount(
                 (float) $array['discount_amount']) : '';
         isset($array['order']) ? $model->setOrder((int) $array['order']) : '';
 
@@ -147,14 +147,14 @@ final readonly class InvItemService
         // the unit_id
         $unit = $unR->repoUnitquery((string) $array['product_unit_id']);
         if ($unit) {
-            $model->setProduct_unit($unit->getUnit_name());
+            $model->setProductUnit($unit->getUnitName());
         }
-        $model->setProduct_unit_id((int) $array['product_unit_id']);
+        $model->setProductUnitId((int) $array['product_unit_id']);
         $tax_rate_percentage =
-            $this->taxrate_percentage((int) $tax_rate_id, $trr);
+            $this->taxratePercentage((int) $tax_rate_id, $trr);
         // Users are required to enter a tax rate even if it is zero percent.
 
-        $model->setBelongs_to_vat_invoice(
+        $model->setBelongsToVatInvoice(
             (int) ($s->getSetting('enable_vat_registration') ?: '0'));
         if ($product_id > 0) {
             $this->repository->save($model);
@@ -215,13 +215,13 @@ final readonly class InvItemService
     }
 
     /**
-     * Related logic: see InvController function inv_to_inv_inv_items
+     * Related logic: see InvController function invToInvInvItems
      * @param string $copyInvId
      * @param int $originalId
      * @param int $newId
      * @param ACIIR $aciiR
      */
-    public function addInvItem_allowance_charges(string $copyInvId,
+    public function addInvItemAllowanceCharges(string $copyInvId,
         int $originalId, int $newId, ACIIR $aciiR): void
     {
         $originalACs = $aciiR->repoInvItemquery((string) $originalId);
@@ -230,10 +230,10 @@ final readonly class InvItemService
          */
         foreach ($originalACs as $originalAC) {
             $iiac = new InvItemAllowanceCharge();
-            $iiac->setAllowance_charge_id(
+            $iiac->setAllowanceChargeId(
                 (int) $originalAC->getAllowanceCharge()?->getId());
-            $iiac->setInv_id((int) $copyInvId);
-            $iiac->setInv_item_id($newId);
+            $iiac->setInvId((int) $copyInvId);
+            $iiac->setInvItemId($newId);
             $iiac->setAmount((float) $originalAC->getAmount());
             $iiac->setVatOrTax((float) $originalAC->getVatOrTax());
             $aciiR->save($iiac);
@@ -241,14 +241,14 @@ final readonly class InvItemService
     }
     
     /**
-     * Related logic: see QuoteController function quote_to_invoice_quote_items
+     * Related logic: see QuoteController function quoteToInvoiceQuoteItems
      * @param string $copyInvId
      * @param int $originalId
      * @param int $newId
      * @param ACQIR $acqiR
      * @param ACIIR $aciiR
      */
-    public function addInvItem_allowance_charges_from_quote(string $copyInvId,
+    public function addInvItemAllowanceChargesFromQuote(string $copyInvId,
         int $originalId, int $newId, ACQIR $acqiR, ACIIR $aciiR): void
     {
         // Get all allowance charges associated with quote_item i.e. $originalId
@@ -258,10 +258,10 @@ final readonly class InvItemService
          */
         foreach ($originalACs as $originalAC) {
             $iiac = new InvItemAllowanceCharge();
-            $iiac->setAllowance_charge_id(
+            $iiac->setAllowanceChargeId(
                 (int) $originalAC->getAllowanceCharge()?->getId());
-            $iiac->setInv_id((int) $copyInvId);
-            $iiac->setInv_item_id($newId);
+            $iiac->setInvId((int) $copyInvId);
+            $iiac->setInvItemId($newId);
             $iiac->setAmount((float) $originalAC->getAmount());
             $iiac->setVatOrTax((float) $originalAC->getVatOrTax());
             $aciiR->save($iiac);
@@ -276,7 +276,7 @@ final readonly class InvItemService
      * @param UNR $unR
      * @return int
      */
-    public function saveInvItem_product(InvItem $model, array $array,
+    public function saveInvItemProduct(InvItem $model, array $array,
                                 string $inv_id, PR $pr, UNR $unR): int
     {
         // This function is used in product/save_product_lookup_item_product
@@ -284,23 +284,23 @@ final readonly class InvItemService
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
                 (int) $array['tax_rate_id'] : '');
         // The form is required to have a tax value even if it is a zero rate
-        $model->setTax_rate_id((int) $tax_rate_id);
-        $model->setInv_id((int) $inv_id);
+        $model->setTaxRateId((int) $tax_rate_id);
+        $model->setInvId((int) $inv_id);
         $so_item_id = ((isset($array['so_item_id'])) ?
                 (int) $array['so_item_id'] : '');
-        $model->setSo_item_id((int) $so_item_id);
+        $model->setSoItemId((int) $so_item_id);
         $product_id = ((isset($array['product_id'])) ?
                 (int) $array['product_id'] : '');
-        $model->setProduct_id((int) $product_id);
+        $model->setProductId((int) $product_id);
         $product = $pr->repoProductquery((string) $product_id);
 
         if (null !== $product) {
             $name = (((isset($array['product_id']))
                     && ($pr->repoCount((string) $product_id) > 0)) ?
-                    $product->getProduct_name() : '');
+                    $product->getProductName() : '');
             $model->setName($name ?? '');
 
-            $productDescription = $product->getProduct_description();
+            $productDescription = $product->getProductDescription();
             if (null !== $productDescription) {
                 isset($array['description']) ?
                 $model->setDescription((string) $array['description']) :
@@ -314,7 +314,7 @@ final readonly class InvItemService
 
         isset($array['price']) ? $model->setPrice((float) $array['price']) : '';
         isset($array['discount_amount']) ?
-            $model->setDiscount_amount((float) $array['discount_amount']) : '';
+            $model->setDiscountAmount((float) $array['discount_amount']) : '';
         isset($array['order']) ? $model->setOrder((int) $array['order']) : '';
 
         $model->setDate(new \DateTimeImmutable('now'));
@@ -323,15 +323,15 @@ final readonly class InvItemService
         // the unit_id
         $unit = $unR->repoUnitquery((string) $array['product_unit_id']);
         if ($unit) {
-            $model->setProduct_unit($unit->getUnit_name());
+            $model->setProductUnit($unit->getUnitName());
         }
-        $model->setProduct_unit_id((int) $array['product_unit_id']);
+        $model->setProductUnitId((int) $array['product_unit_id']);
         $product_id > 0 ? $this->repository->save($model) : '';
         return (int) $tax_rate_id;
     }
 
     /**
-     * Related logic: see InvController function inv_to_inv_items
+     * Related logic: see InvController function invToInvItems
      * @param InvItem $model
      * @param array $array
      * @param string $inv_id
@@ -341,19 +341,19 @@ final readonly class InvItemService
      * @param IIAR $iiar
      * @return int|null
      */
-    public function addInvItem_task(InvItem $model, array $array, string $inv_id,
+    public function addInvItemTask(InvItem $model, array $array, string $inv_id,
                     taskR $taskR, TRR $trr, IIAS $iias, IIAR $iiar): ?int
     {
         // This function is used in task/selection_inv when adding a new task
         // from the modal. Related logic https://github.com/cycle/orm/issues/348
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
-        $model->setTax_rate_id((int) $tax_rate_id);
+        $model->setTaxRateId((int) $tax_rate_id);
         $task_id = ((isset($array['task_id'])) ? (int) $array['task_id'] : '');
         // Product id and task id are mutually exclusive
-        $model->setTask_id((int) $task_id);
+        $model->setTaskId((int) $task_id);
 
-        $model->setInv_id((int) $inv_id);
+        $model->setInvId((int) $inv_id);
 
         /** @var Task $task */
         $task = $taskR->repoTaskquery((string) $array['task_id']);
@@ -371,15 +371,15 @@ final readonly class InvItemService
         $model->setNote($note ?: '');
 
         $model->setQuantity((float) $array['quantity'] ?: 1.00);
-        $model->setProduct_unit('');
+        $model->setProductUnit('');
         $model->setPrice((float) $array['price'] ?: 0.00);
-        $model->setDiscount_amount((float) $array['discount_amount'] ?: 0.00);
+        $model->setDiscountAmount((float) $array['discount_amount'] ?: 0.00);
         $model->setOrder((int) $array['order'] ?: 0);
 
         $datetimeimmutable = new \DateTimeImmutable('now');
         $model->setDate($datetimeimmutable);
         $tax_rate_percentage =
-                            $this->taxrate_percentage((int) $tax_rate_id, $trr);
+                            $this->taxratePercentage((int) $tax_rate_id, $trr);
         if ($task_id > 0) {
             $this->repository->save($model);
             if (isset($array['quantity'], $array['price'],
@@ -404,7 +404,7 @@ final readonly class InvItemService
      * @param taskR $taskR
      * @return int
      */
-    public function saveInvItem_task(InvItem $model, array $array,
+    public function saveInvItemTask(InvItem $model, array $array,
                                     string $inv_id, taskR $taskR): int
     {
         // This function is used in invitem/edit_task when editing an item on
@@ -414,7 +414,7 @@ final readonly class InvItemService
                 (int) $array['tax_rate_id'] ? $model->getTaxRate() : null) : '';
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
-        $model->setTax_rate_id((int) $tax_rate_id);
+        $model->setTaxRateId((int) $tax_rate_id);
 
         isset($array['task_id']) ?
             $model->setTask($model->getTask()?->getId() ==
@@ -422,9 +422,9 @@ final readonly class InvItemService
         $task_id = ((isset($array['task_id']))
                 ? (int) $array['task_id'] : '');
         // Product id and task id are mutually exclusive
-        $model->setTask_id((int) $task_id);
+        $model->setTaskId((int) $task_id);
 
-        $model->setInv_id((int) $inv_id);
+        $model->setInvId((int) $inv_id);
 
         /** @var Task $task */
         $task = $taskR->repoTaskquery((string) $array['task_id']);
@@ -443,9 +443,9 @@ final readonly class InvItemService
         $note = ((isset($array['note'])) ? (string) $array['note'] : '');
         $model->setNote($note ?: '');
         $model->setQuantity((float) $array['quantity'] ?: 1);
-        $model->setProduct_unit('');
+        $model->setProductUnit('');
         $model->setPrice((float) $array['price'] ?: 0.00);
-        $model->setDiscount_amount((float) $array['discount_amount'] ?: 0.00);
+        $model->setDiscountAmount((float) $array['discount_amount'] ?: 0.00);
         $model->setOrder((int) $array['order'] ?: 0);
 
         $datetimeimmutable = new \DateTimeImmutable('now');
@@ -475,34 +475,34 @@ final readonly class InvItemService
     {
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
-        $model->setTax_rate_id((int) $tax_rate_id); 
+        $model->setTaxRateId((int) $tax_rate_id); 
         $product_id = (int) ($array['product_id'] ?? null);
         $task_id = (int) ($array['task_id'] ?? null);
-        $model->setInv_id((int) $inv_id);
+        $model->setInvId((int) $inv_id);
         $so_item_id = ((isset($array['so_item_id'])) ?
             (int) $array['so_item_id'] : '');
-        $model->setSo_item_id((int)$so_item_id);
+        $model->setSoItemId((int)$so_item_id);
         $product = $pr->repoProductquery((string) $array['product_id']);
         $name = '';
         if ($product) {
-            $model->setProduct_id($product_id);
+            $model->setProductId($product_id);
             if (isset($array['product_id'])
                     && $pr->repoCount((string) $product_id) > 0) {
-                $name = $product->getProduct_name();
+                $name = $product->getProductName();
             }
             null !== $name ? $model->setName($name) : $model->setName('');
             // If the user has changed the description on the form =>
             //  override default product description
             $description = ((isset($array['description']))
                                    ? (string) $array['description']
-                                   : $product->getProduct_description());
+                                   : $product->getProductDescription());
             null !== $description ? 
                 $model->setDescription($description) : 
                 $model->setDescription($translator->translate('not.available')) ;
         }
         $task = $taskR->repoTaskquery((string) $array['task_id']);
         if ($task) {
-            $model->setTask_id($task_id);
+            $model->setTaskId($task_id);
             if (isset($array['task_id'])
                     && $taskR->repoCount((string) $task_id) > 0) {
                 $name = $task->getName();
@@ -524,8 +524,8 @@ final readonly class InvItemService
             $model->setPrice((float) $array['price']) :
                 $model->setPrice(0.00);
         isset($array['discount_amount']) ?
-            $model->setDiscount_amount((float) $array['discount_amount']) :
-                $model->setDiscount_amount(0.00);
+            $model->setDiscountAmount((float) $array['discount_amount']) :
+                $model->setDiscountAmount(0.00);
         isset($array['order']) ?
             $model->setOrder((int) $array['order']) :
                 $model->setOrder(0) ;
@@ -533,9 +533,9 @@ final readonly class InvItemService
         //  the unit_id
         $unit = $uR->repoUnitquery((string) $array['product_unit_id']);
         if ($unit) {
-            $model->setProduct_unit($unit->getUnit_name());
+            $model->setProductUnit($unit->getUnitName());
         }
-        $model->setProduct_unit_id((int) $array['product_unit_id']);
+        $model->setProductUnitId((int) $array['product_unit_id']);
         $this->repository->save($model);
         return $model;
     }
@@ -550,7 +550,7 @@ final readonly class InvItemService
      * similar InvItemController function saveInvItemAmount which is used when
      * the user adjusts e.g. a product item
      *
-     * Related logic: see Used in InvController function inv_to_inv_items
+     * Related logic: see Used in InvController function invToInvItems
      * @param int $inv_item_id
      * @param float $quantity
      * @param float $price
@@ -625,7 +625,7 @@ final readonly class InvItemService
      * @param TRR $trr
      * @return float|null
      */
-    public function taxrate_percentage(int $id, TRR $trr): ?float
+    public function taxratePercentage(int $id, TRR $trr): ?float
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {
@@ -648,26 +648,26 @@ final readonly class InvItemService
         /** @var InvItem $item */
         foreach ($items as $item) {
             $new_item = new InvItem();
-            $new_item->setInv_id((int) $new_inv_id);
-            $new_item->setTax_rate_id((int) $item->getTax_rate_id());
-            null !== $item->getProduct_id() ?
-                    $new_item->setProduct_id((int) $item->getProduct_id())
-                        : $new_item->setTask_id((int) $item->getTask_id());
+            $new_item->setInvId((int) $new_inv_id);
+            $new_item->setTaxRateId((int) $item->getTaxRateId());
+            null !== $item->getProductId() ?
+                    $new_item->setProductId((int) $item->getProductId())
+                        : $new_item->setTaskId((int) $item->getTaskId());
             $new_item->setName($item->getName() ?? '');
             $new_item->setDescription($item->getDescription() ?? '');
             $new_item->setNote($item->getNote() ?? '');
             $new_item->setQuantity(($item->getQuantity() ?? 1.00) * -1.00);
             $new_item->setPrice($item->getPrice() ?? 0.00);
-            $new_item->setDiscount_amount($item->getDiscount_amount() ?? 0.00);
+            $new_item->setDiscountAmount($item->getDiscountAmount() ?? 0.00);
             $new_item->setOrder(0);
             // Even if an invoice is balanced with a credit invoice it will
             // remain recurring ... unless stopped.
             // Is_recurring will be either stored as 0 or 1 in mysql. Cannot be
             // null.
-            $new_item->setIs_recurring($item->getIs_recurring() ?? false);
-            $new_item->setProduct_unit($item->getProduct_unit() ?? '');
-            $new_item->setProduct_unit_id((int) $item->getProduct_unit_id());
-            $new_item->setDate($item->getDate_added());
+            $new_item->setIsRecurring($item->getIsRecurring() ?? false);
+            $new_item->setProductUnit($item->getProductUnit() ?? '');
+            $new_item->setProductUnitId((int) $item->getProductUnitId());
+            $new_item->setDate($item->getDateAdded());
             $iiR->save($new_item);
 
             // Create an item amount for this item; reversing the items amounts
@@ -676,11 +676,11 @@ final readonly class InvItemService
                         $iiaR->repoInvItemAmountquery((string) $item->getId());
             if ($basis_item_amount) {
                 $new_item_amount = new InvItemAmount();
-                $new_item_amount->setInv_item_id((int) $new_item->getId());
+                $new_item_amount->setInvItemId((int) $new_item->getId());
                 $new_item_amount->setSubtotal(
                             ($basis_item_amount->getSubtotal() ?? 0.00) * -1.00);
-                $new_item_amount->setTax_total(
-                            ($basis_item_amount->getTax_total() ?? 0.00) * -1.00);
+                $new_item_amount->setTaxTotal(
+                            ($basis_item_amount->getTaxTotal() ?? 0.00) * -1.00);
                 $new_item_amount->setDiscount(
                             ($basis_item_amount->getDiscount() ?? 0.00) * -1.00);
                 $new_item_amount->setTotal(

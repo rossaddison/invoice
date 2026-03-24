@@ -146,9 +146,9 @@ trait Callback
                     return $this->redirectToMain();
                 }
                 /**
-                 * @var array $this->sR->locale_language_array()
+                 * @var array $this->sR->localeLanguageArray()
                  */
-                $languageArray = $this->sR->locale_language_array();
+                $languageArray = $this->sR->localeLanguageArray();
                 /**
                  * @see Trait\Oauth2 function getAccessToken
                  * @var string $language
@@ -291,9 +291,9 @@ trait Callback
                         return $this->redirectToMain();
                     }
                     /**
-                     * @var array $this->sR->locale_language_array()
+                     * @var array $this->sR->localeLanguageArray()
                      */
-                    $languageArray = $this->sR->locale_language_array();
+                    $languageArray = $this->sR->localeLanguageArray();
                     /**
                      * @see Trait\Oauth2 function getFacebookAccessToken
                      * @var string $language
@@ -438,9 +438,9 @@ trait Callback
                         return $this->redirectToMain();
                     }
                     /**
-                     * @var array $this->sR->locale_language_array()
+                     * @var array $this->sR->localeLanguageArray()
                      */
-                    $languageArray = $this->sR->locale_language_array();
+                    $languageArray = $this->sR->localeLanguageArray();
                     /**
                      * @see Trait\Oauth2 function getAccessToken
                      * @var string $language
@@ -561,9 +561,9 @@ trait Callback
                     return $this->redirectToMain();
                 }
                 /**
-                 * @var array $this->sR->locale_language_array()
+                 * @var array $this->sR->localeLanguageArray()
                  */
-                $languageArray = $this->sR->locale_language_array();
+                $languageArray = $this->sR->localeLanguageArray();
                 /**
                  * @see Trait\Oauth2 function getGoogleAccessToken
                  * @var string $language
@@ -668,9 +668,9 @@ trait Callback
                     return $this->redirectToMain();
                 }
                 /**
-                 * @var array $this->sR->locale_language_array()
+                 * @var array $this->sR->localeLanguageArray()
                  */
-                $languageArray = $this->sR->locale_language_array();
+                $languageArray = $this->sR->localeLanguageArray();
                 /**
                  * @see Trait\Oauth2 function getAccessToken
                  * @var string $language
@@ -791,9 +791,9 @@ trait Callback
                     return $this->redirectToMain();
                 }
                 /**
-                 * @var array $this->sR->locale_language_array()
+                 * @var array $this->sR->localeLanguageArray()
                  */
-                $languageArray = $this->sR->locale_language_array();
+                $languageArray = $this->sR->localeLanguageArray();
                 /**
                  * @see Trait\Oauth2 function getLinkedInAccessToken
                  * @var string $language
@@ -917,9 +917,9 @@ trait Callback
                     return $this->redirectToMain();
                 }
                 /**
-                 * @var array $this->sR->locale_language_array()
+                 * @var array $this->sR->localeLanguageArray()
                  */
-                $languageArray = $this->sR->locale_language_array();
+                $languageArray = $this->sR->localeLanguageArray();
                 /**
                  * @see Trait\Oauth2 function getMicrosoftOnlineAccessToken
                  * @var string $language
@@ -1108,9 +1108,9 @@ trait Callback
                         return $this->redirectToMain();
                     }
                     /**
-                     * @var array $this->sR->locale_language_array()
+                     * @var array $this->sR->localeLanguageArray()
                      */
-                    $languageArray = $this->sR->locale_language_array();
+                    $languageArray = $this->sR->localeLanguageArray();
                     /**
                      * @see Trait\Oauth2 function getXAccessToken
                      * @var string $language
@@ -1290,9 +1290,9 @@ trait Callback
                     return $this->redirectToMain();
                 }
                 /**
-                 * @var array $this->sR->locale_language_array()
+                 * @var array $this->sR->localeLanguageArray()
                  */
-                $languageArray = $this->sR->locale_language_array();
+                $languageArray = $this->sR->localeLanguageArray();
                 /**
                  * @see Trait\Oauth2 function getYandexAccessToken
                  * @var string $language
@@ -1426,9 +1426,9 @@ trait Callback
                     return $this->redirectToMain();
                 }
                 /**
-                 * @var array $this->sR->locale_language_array()
+                 * @var array $this->sR->localeLanguageArray()
                  */
-                $languageArray = $this->sR->locale_language_array();
+                $languageArray = $this->sR->localeLanguageArray();
                 /**
                  * @see Trait\Oauth2 function getYandexAccessToken
                  * @var string $language

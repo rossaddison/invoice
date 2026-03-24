@@ -55,22 +55,22 @@ class ClientCustom
         $this->id = $id;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
 
-    public function getCustom_field_id(): string
+    public function getCustomFieldId(): string
     {
         return (string) $this->custom_field_id;
     }
 
-    public function setCustom_field_id(int $custom_field_id): void
+    public function setCustomFieldId(int $custom_field_id): void
     {
         $this->custom_field_id = $custom_field_id;
     }

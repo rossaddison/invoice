@@ -30,7 +30,7 @@ $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
     ->content( new I()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName() ?? 'payment/guest_online_log'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? 'payment/guestOnlineLog'))
     ->id('btn-reset')
     ->render();
 
@@ -46,7 +46,7 @@ $columns = [
         content: static function (Merchant $model) use ($urlGenerator): A|string {
             $return = '';
             if (null !== $model->getInv()) {
-                $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none']);
+                $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInvId()]), ['style' => 'text-decoration:none']);
             }
             return $return;
         },

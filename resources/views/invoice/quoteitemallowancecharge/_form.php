@@ -59,7 +59,7 @@ foreach ($allowance_charges as $allowance_charge) {
     ->label($translator->translate('allowance.or.charge.item.quote'))
     ->addInputAttributes(['class' => 'form-control'])
     ->optionsData($optionsDataAllowanceCharge)
-    ->value($form->getAllowance_charge_id())
+    ->value($form->getAllowanceChargeId())
     ->prompt($translator->translate('none'))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -67,7 +67,7 @@ foreach ($allowance_charges as $allowance_charge) {
     ->label($translator->translate('amount.quote.item')
         . '(' . $s->getSetting('currency_symbol') . ')')
     ->addInputAttributes(['class' => 'form-control'])
-    ->value($s->format_amount($form->getAmount() ?? 0.00))
+    ->value($s->formatAmount($form->getAmount() ?? 0.00))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>

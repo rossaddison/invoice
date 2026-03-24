@@ -35,7 +35,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::text($form, 'party_name')
                     ->addInputAttributes(['style' => 'background:lightblue'])
                     ->label($translator->translate('delivery.party.name'))
-                    ->value(Html::encode($form->getParty_name() ?? ''))
+                    ->value(Html::encode($form->getPartyName() ?? ''))
                     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>

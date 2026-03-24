@@ -76,7 +76,7 @@ $columns = [
         'project_id',
         header: $translator->translate('project'),
         content: static function (Task $model) use ($prjctR): string {
-            return Html::encode(($prjctR->count($model->getProject_id()) > 0 ? $prjctR->repoProjectquery($model->getProject_id())?->getName() : ''));
+            return Html::encode(($prjctR->count($model->getProjectId()) > 0 ? $prjctR->repoProjectquery($model->getProjectId())?->getName() : ''));
         },
     ),
     new DataColumn(
@@ -113,16 +113,16 @@ $columns = [
     new DataColumn(
         'price',
         header: $translator->translate('price'),
-        content: static fn (Task $model): string => Html::encode($s->format_currency(null !== $model->getPrice() ? $model->getPrice() : 0.00)),
+        content: static fn (Task $model): string => Html::encode($s->formatCurrency(null !== $model->getPrice() ? $model->getPrice() : 0.00)),
     ),
     new DataColumn(
         'finish_date',
         header: $translator->translate('task.finish.date'),
         content: static function (Task $model): string {
             /**
-             * @psalm-suppress PossiblyInvalidMethodCall $model->getFinish_date()->format('Y-m-d')
+             * @psalm-suppress PossiblyInvalidMethodCall $model->getFinishDate()->format('Y-m-d')
              */
-            return Html::encode($model->getFinish_date() instanceof \DateTimeImmutable ? $model->getFinish_date()->format('Y-m-d') : '');
+            return Html::encode($model->getFinishDate() instanceof \DateTimeImmutable ? $model->getFinishDate()->format('Y-m-d') : '');
         },
     ),
     new DataColumn(

@@ -39,12 +39,12 @@ class CustomValue
         $this->custom_field = $custom_field;
     }
 
-    public function getCustom_field_id(): ?int
+    public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;
     }
 
-    public function setCustom_field_id(int $custom_field_id): void
+    public function setCustomFieldId(int $custom_field_id): void
     {
         $this->custom_field_id = $custom_field_id;
     }

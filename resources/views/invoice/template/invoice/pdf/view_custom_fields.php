@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see App\Invoice\Helpers\PdfHelper function generate_inv_html
+ * Related logic: see App\Invoice\Helpers\PdfHelper function generateInvHtml
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\CustomValue\CustomValueRepository $cvR
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -21,6 +21,6 @@ foreach ($custom_fields as $custom_field) : ?>
     continue;
 } ?>
 <div>
-      <?php $cvH->print_field_for_pdf($translator, $inv_custom_values, $custom_field, $cvR); ?>
+      <?php $cvH->printFieldForPdf($translator, $inv_custom_values, $custom_field, $cvR); ?>
 </div>    
 <?php endforeach;

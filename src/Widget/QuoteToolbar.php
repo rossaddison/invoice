@@ -25,10 +25,10 @@ final readonly class QuoteToolbar
         $buttons = [];
 
         // View created invoice (if exists)
-        if ($quote->getInv_id() !== '0' && !empty($quote->getInv_id())) {
+        if ($quote->getInvId() !== '0' && !empty($quote->getInvId())) {
             $buttons[] = $this->createLinkButton(
                 'view-invoice',
-                $this->urlGenerator->generate('inv/view', ['id' => $quote->getInv_id()]),
+                $this->urlGenerator->generate('inv/view', ['id' => $quote->getInvId()]),
                 'fa-file-text',
                 'btn-outline-success',
                 $this->translator->translate('view') . ' ' . $this->translator->translate('invoice'),
@@ -68,10 +68,10 @@ final readonly class QuoteToolbar
 
         // Email button (only if editing allowed, quote is draft, and has amount)
         if (null !== $quoteAmountTotal) {
-            if ($quoteEdit && ($quote->getStatus_id() === 1) && ($quoteAmountTotal > 0)) {
+            if ($quoteEdit && ($quote->getStatusId() === 1) && ($quoteAmountTotal > 0)) {
                 $buttons[] = $this->createLinkButton(
                     'send-email',
-                    $this->urlGenerator->generate('quote/email_stage_0', ['id' => $quoteId]),
+                    $this->urlGenerator->generate('quote/emailStage0', ['id' => $quoteId]),
                     'fa-send',
                     'btn-outline-success',
                     $this->translator->translate('send.email'),
@@ -80,8 +80,8 @@ final readonly class QuoteToolbar
         }
 
         // Quote to SO button - show enabled if approved, disabled if not approved
-        if ($quoteEdit && $quote->getSo_id() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
-            if ($quote->getStatus_id() === 4) {
+        if ($quoteEdit && $quote->getSoId() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
+            if ($quote->getStatusId() === 4) {
                 // Quote is approved - show enabled button
                 $buttons[] = $this->createModalButton(
                     'quote-to-so',
@@ -103,8 +103,8 @@ final readonly class QuoteToolbar
         }
 
         // Quote to Invoice button - show enabled if approved, disabled if not approved (but don't show if already converted)
-        if ($quoteEdit && $quote->getInv_id() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
-            if ($quote->getStatus_id() === 4) {
+        if ($quoteEdit && $quote->getInvId() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
+            if ($quote->getStatusId() === 4) {
                 // Quote is approved - show enabled button
                 $buttons[] = [
                     'type' => 'modal',
@@ -284,7 +284,7 @@ final readonly class QuoteToolbar
         $badges = [];
 
         // Quote status indicator
-        $statusClass = match ($quote->getStatus_id()) {
+        $statusClass = match ($quote->getStatusId()) {
             1 => 'bg-secondary',    // Draft
             2 => 'bg-primary',      // Sent
             3 => 'bg-warning',      // Viewed
@@ -293,7 +293,7 @@ final readonly class QuoteToolbar
             default => 'bg-light',
         };
 
-        $statusText = match ($quote->getStatus_id()) {
+        $statusText = match ($quote->getStatusId()) {
             1 => $this->translator->translate('draft'),
             2 => $this->translator->translate('sent'),
             3 => $this->translator->translate('viewed'),
@@ -308,7 +308,7 @@ final readonly class QuoteToolbar
             ->render();
 
         // SO status indicator if quote has been converted
-        if ($quote->getSo_id() !== '0' && !empty($quote->getSo_id())) {
+        if ($quote->getSoId() !== '0' && !empty($quote->getSoId())) {
             $badges[] =  new Span()
                 ->addClass('badge bg-info me-2')
                 ->content($this->translator->translate('converted.to.so'))
@@ -316,7 +316,7 @@ final readonly class QuoteToolbar
         }
 
         // Invoice status indicator if quote has been converted
-        if ($quote->getInv_id() !== '0' && !empty($quote->getInv_id())) {
+        if ($quote->getInvId() !== '0' && !empty($quote->getInvId())) {
             $badges[] =  new Span()
                 ->addClass('badge bg-success me-2')
                 ->content($this->translator->translate('converted.to.invoice'))

@@ -23,34 +23,34 @@ final class FamilyForm extends FormModel
     
     public function __construct(Family $family)
     {
-        $this->family_name = $family->getFamily_name();
-        $this->family_commalist = $family->getFamily_commalist();
-        $this->family_productprefix = $family->getFamily_productprefix();
-        $this->category_primary_id = $family->getCategory_primary_id();
-        $this->category_secondary_id = $family->getCategory_secondary_id();        
+        $this->family_name = $family->getFamilyName();
+        $this->family_commalist = $family->getFamilyCommalist();
+        $this->family_productprefix = $family->getFamilyProductprefix();
+        $this->category_primary_id = $family->getCategoryPrimaryId();
+        $this->category_secondary_id = $family->getCategorySecondaryId();        
      }
 
-    public function getFamily_name(): ?string
+    public function getFamilyName(): ?string
     {
         return $this->family_name;
     }
 
-    public function getCategory_primary_id(): string
+    public function getCategoryPrimaryId(): string
     {
         return (string) $this->category_primary_id;
     }
 
-    public function getCategory_secondary_id(): string
+    public function getCategorySecondaryId(): string
     {
         return (string) $this->category_secondary_id;
     }
     
-    public function getFamily_commalist(): ?string
+    public function getFamilyCommalist(): ?string
     {
         return $this->family_commalist;
     }
     
-    public function getFamily_productprefix(): ?string
+    public function getFamilyProductprefix(): ?string
     {
         return $this->family_productprefix;
     }

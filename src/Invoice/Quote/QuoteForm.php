@@ -32,20 +32,20 @@ final class QuoteForm extends FormModel
     public function __construct(Quote $quote)
     {
         $this->number = $quote->getNumber();
-        $this->date_created = $quote->getDate_created();
-        $this->inv_id = $quote->getInv_id();
-        $this->so_id = $quote->getSo_id();
-        $this->group_id = (int) $quote->getGroup_id();
-        $this->client_id = (int) $quote->getClient_id();
-        $this->status_id = $quote->getStatus_id();
-        $this->discount_amount = $quote->getDiscount_amount();
-        $this->url_key = $quote->getUrl_key();
+        $this->date_created = $quote->getDateCreated();
+        $this->inv_id = $quote->getInvId();
+        $this->so_id = $quote->getSoId();
+        $this->group_id = (int) $quote->getGroupId();
+        $this->client_id = (int) $quote->getClientId();
+        $this->status_id = $quote->getStatusId();
+        $this->discount_amount = $quote->getDiscountAmount();
+        $this->url_key = $quote->getUrlKey();
         $this->password = $quote->getPassword();
         $this->notes = $quote->getNotes();
-        $this->delivery_location_id = (int) $quote->getDelivery_location_id();
+        $this->delivery_location_id = (int) $quote->getDeliveryLocationId();
     }
 
-    public function getDate_created(): string|DateTimeImmutable|null
+    public function getDateCreated(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->date_created
@@ -58,44 +58,44 @@ final class QuoteForm extends FormModel
         return $this->number;
     }
 
-    public function getInv_id(): ?string
+    public function getInvId(): ?string
     {
         return $this->inv_id;
     }
 
     // The Entities ie. Entity/Quote.php have return type string => return type strings in the form
     // get => string ;
-    public function getSo_id(): ?string
+    public function getSoId(): ?string
     {
         return $this->so_id;
     }
 
-    public function getGroup_id(): ?int
+    public function getGroupId(): ?int
     {
         return $this->group_id;
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function getStatus_id(): ?int
+    public function getStatusId(): ?int
     {
         return $this->status_id;
     }
 
-    public function getDelivery_location_id(): ?int
+    public function getDeliveryLocationId(): ?int
     {
         return $this->delivery_location_id;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function getUrl_key(): ?string
+    public function getUrlKey(): ?string
     {
         return $this->url_key;
     }

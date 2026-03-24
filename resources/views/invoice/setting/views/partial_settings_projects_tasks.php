@@ -59,7 +59,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        $body['settings[default_hourly_rate]'] =
        $s->getSetting('default_hourly_rate');
        $formatted_rate = $body['settings[default_hourly_rate]']
-       ? $s->format_amount((float) $body['settings[default_hourly_rate]'])
+       ? $s->formatAmount((float) $body['settings[default_hourly_rate]'])
        : $body['settings[default_hourly_rate]'];
        echo H::openTag('div', ['class' => 'input-group']); //8
         echo H::input('text', 'settings[default_hourly_rate]',

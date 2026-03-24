@@ -14,7 +14,7 @@ $random =  new DateTimeImmutable()->getTimestamp();
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\<?= $generator->getCamelcase_capital_name(); ?>;
+use App\Invoice\Entity\<?= $generator->getCamelcaseCapitalName(); ?>;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -28,7 +28,7 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
 /**
- * @var App\Invoice\Entity\<?= $generator->getCamelcase_capital_name(); ?> $<?= $generator->getSmall_singular_name() . "\n"; ?>
+ * @var App\Invoice\Entity\<?= $generator->getCamelcaseCapitalName(); ?> $<?= $generator->getSmallSingularName() . "\n"; ?>
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
@@ -44,8 +44,8 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 ?>
 <?php
         $inf = new Inflector();
-echo '<h1>' . $inf->toSentence($generator->getPre_entity_table(), false) . '</h1>' . "\n";
-echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa-margin'])," . '$urlGenerator->generate(' . "'" . $generator->getSmall_singular_name() . "/add'),[]); ?>";
+echo '<h1>' . $inf->toSentence($generator->getPreEntityTable(), false) . '</h1>' . "\n";
+echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa-margin'])," . '$urlGenerator->generate(' . "'" . $generator->getSmallSingularName() . "/add'),[]); ?>";
 ?>
 
 <?php   echo "<?php\n"; ?>
@@ -64,7 +64,7 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
       ->addAttributes(['type' => 'reset'])
       ->addClass('btn btn-danger me-1 ajax-loader')
       ->content( new I()->addClass('bi bi-bootstrap-reboot'))
-      ->href($urlGenerator->generate($currentRoute->getName() ?? '<?= $generator->getSmall_singular_name(); ?>/index'))
+      ->href($urlGenerator->generate($currentRoute->getName() ?? '<?= $generator->getSmallSingularName(); ?>/index'))
       ->id('btn-reset')
       ->render();
 
@@ -74,14 +74,14 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn(<?= $generator->getCamelcase_capital_name(); ?> $model) => $model->getId()
+            content: static fn(<?= $generator->getCamelcaseCapitalName(); ?> $model) => $model->getId()
         ),
         new ActionColumn(buttons: [
             new ActionButton(
                 content: '🔎',
-                url: function (<?= $generator->getCamelcase_capital_name(); ?> $model) use ($urlGenerator): string {
+                url: function (<?= $generator->getCamelcaseCapitalName(); ?> $model) use ($urlGenerator): string {
                     /** @psalm-suppress InvalidArgument */
-                    return $urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/view', ['id' => $model->getId()]);
+                    return $urlGenerator->generate('<?= $generator->getSmallSingularName(); ?>/view', ['id' => $model->getId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -90,9 +90,9 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
             ),
             new ActionButton(
                 content: '✎',
-                url: function (<?= $generator->getCamelcase_capital_name(); ?> $model) use ($urlGenerator): string {
+                url: function (<?= $generator->getCamelcaseCapitalName(); ?> $model) use ($urlGenerator): string {
                     /** @psalm-suppress InvalidArgument */
-                    return $urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/edit', ['id' => $model->getId()]);
+                    return $urlGenerator->generate('<?= $generator->getSmallSingularName(); ?>/edit', ['id' => $model->getId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -101,9 +101,9 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
             ),
             new ActionButton(
                 content: '❌',
-                url: function (<?= $generator->getCamelcase_capital_name(); ?> $model) use ($urlGenerator): string {
+                url: function (<?= $generator->getCamelcaseCapitalName(); ?> $model) use ($urlGenerator): string {
                     /** @psalm-suppress InvalidArgument */
-                    return $urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/delete', ['id' => $model->getId()]);
+                    return $urlGenerator->generate('<?= $generator->getSmallSingularName(); ?>/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),
@@ -112,13 +112,13 @@ echo "<?= Html::a(Html::tag('" . "i','',['class'=>'fa fa-plus btn btn-primary fa
             ),
         ]),
     ];
-    $toolbarString =  new Form()->post($urlGenerator->generate('<?= $generator->getSmall_singular_name(); ?>/index'))->csrf($csrf)->open() .
+    $toolbarString =  new Form()->post($urlGenerator->generate('<?= $generator->getSmallSingularName(); ?>/index'))->csrf($csrf)->open() .
          new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render() .
          new Form()->close();
     $gridSummary = $s->gridSummary($paginator, $translator, (int) $s->getSetting('default_list_limit'), $translator->translate('plural'), '');    
     echo GridView::widget()
       ->bodyRowAttributes(['class' => 'align-middle'])
-      ->tableAttributes(['class' => 'table table-striped text-center h-<?= $random; ?>', 'id' => 'table-<?= $generator->getSmall_singular_name(); ?>'])
+      ->tableAttributes(['class' => 'table table-striped text-center h-<?= $random; ?>', 'id' => 'table-<?= $generator->getSmallSingularName(); ?>'])
       ->columns(...$columns)
       ->dataReader($paginator)
       ->headerRowAttributes(['class' => 'card-header bg-info text-black'])      
