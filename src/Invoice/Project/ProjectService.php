@@ -34,14 +34,13 @@ final readonly class ProjectService
     private function persist(
         Project $model,
         array $array
-    ): Project {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
                 $this->cR->repoClientquery(
                     (string) $array[$client]));
         }
-        return $model;
     }
 
     /**

@@ -11,6 +11,7 @@ use App\Invoice\Asset\pciAsset\AmazonPayTwoSevenAsset;
 use App\Invoice\Asset\pciAsset\BraintreeDropInOneThirtyThreeSevenAsset;
 use App\Asset\AppAsset;
 use App\Widget\PerformanceMetrics;
+use Yiisoft\Bootstrap5\Assets\BootstrapAsset;
 use Yiisoft\Bootstrap5\ButtonSize;
 use Yiisoft\Bootstrap5\Dropdown;
 use Yiisoft\Bootstrap5\DropdownItem;
@@ -98,7 +99,7 @@ use Yiisoft\Html\Tag\Meta;
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
 $assetManager->register(NProgressAsset::class);
-$assetManager->register(Yiisoft\Bootstrap5\Assets\BootstrapAsset::class);
+$assetManager->register(BootstrapAsset::class);
 $s->getSetting('monospace_amounts') == 1 ?
     $assetManager->register(MonospaceAsset::class) : '';
 $assetManager->register(StripeVersionTenAsset::class);
@@ -1081,7 +1082,7 @@ echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
         include dirname(__DIR__) . '/invoice/layout/sidebar.php';
     }
 ?>
-            <main class="container py-4">
+            <main class="container-fluid py-4">
                                     <?php echo $content; ?>
             </main>
 

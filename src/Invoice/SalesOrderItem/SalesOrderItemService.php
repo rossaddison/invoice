@@ -91,6 +91,7 @@ final readonly class SalesOrderItemService
      * @param taskR $taskR
      * @param UR $uR
      * @param Translator $translator
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function addSoItemProductTask(
         SalesOrderItem $model,

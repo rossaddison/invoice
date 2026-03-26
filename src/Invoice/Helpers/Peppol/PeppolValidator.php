@@ -159,6 +159,7 @@ class PeppolValidator
      *
      * @param string $xmlContent XML to validate
      * @return bool Success status
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function loadXML(string $xmlContent): bool
     {

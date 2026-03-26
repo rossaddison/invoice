@@ -81,6 +81,7 @@ class PeppolHelper
             $this->s->getSetting('peppol_document_currency');
     }
     
+    /** @psalm-suppress UnusedReturnValue */
     private function ensureTempPeppolFolderAndUploadsFolderExist(): Aliases
     {
         $aliases = new Aliases([
@@ -205,7 +206,6 @@ class PeppolHelper
             $client_purchase_order_id = '';
             if ($so && null !== $so->getClientPoNumber()) {
                 $client_purchase_order_id = $so->getClientPoNumber();
-                $sales_order_id = $so->getNumber();
             }
 // Buyer Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
             $BuyerReference = '';

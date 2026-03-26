@@ -106,9 +106,8 @@ use Yiisoft\Html\Tag\Form;
                             <?php
         /**
          * @var string $key
-         * @var string $value
          */
-         foreach ($eneces as $key => $value) {
+         foreach (array_keys($eneces) as $key) {
              /**
               * @var array $eneces[$key]
               * @var string $eneces[$key]['Description']

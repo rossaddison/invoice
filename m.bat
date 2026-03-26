@@ -30,7 +30,7 @@ cls
 echo ======================================================================================
 echo                               INVOICE SYSTEM MAIN MENU
 echo ======================================================================================
-echo [0]  Installation Menu                         [5a]  Codeception Tests
+echo                                                [5a]  Codeception Tests
 echo [1]  Run PHP Psalm (Full)                      [5aa] Codeception Build
 echo [2]  Psalm on File                             [5b]  Rector See Changes
 echo [2a] Psalm on Directory                        [5c]  Rector Make Changes

@@ -216,6 +216,7 @@ class MpdfHelper
      * @param Aliases $aliases
      * @param SR $sR
      * @return string
+     * @psalm-suppress UnusedReturnValue
      */
     private function isInvoice(string $filename, \Mpdf\Mpdf $mpdf, Aliases $aliases, SR $sR): string
     {

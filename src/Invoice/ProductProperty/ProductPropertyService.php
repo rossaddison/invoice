@@ -37,7 +37,7 @@ final readonly class ProductPropertyService
     private function persist(
         ProductProperty $model,
         array $array
-    ): ProductProperty {
+    ): void {
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
@@ -46,7 +46,6 @@ final readonly class ProductPropertyService
                 $model->setProduct($productEntity);
             }
         }
-        return $model;
     }
 
     /**

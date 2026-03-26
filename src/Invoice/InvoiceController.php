@@ -539,9 +539,6 @@ final class InvoiceController extends BaseController
                                             \Psr\Http\Message\ResponseInterface
     {
         $store_cove = 'https://api.storecove.com/api/v2/document_submissions';
-        // Remove zeros from '000217668' => integer'
-        $legal_entity_id_as_integer = (int) $this->sR->getSetting(
-                                                'storecove_legal_entity_id');
         /**
          * @var mixed $api_key_here
          */
@@ -563,11 +560,9 @@ final class InvoiceController extends BaseController
                 'Content-Type: application/json']);
             curl_setopt($site, CURLOPT_HEADER, true);
             // World ie. GB,  to Germany a.k.a "World to DE"
-            /**
-             * @psalm-suppress UnusedVariable $dataWorldTo
-             */
+            /** @psalm-suppress UnusedVariable */
             $dataWorldTo = '{
-                "legalEntityId": ' . (string) $legal_entity_id_as_integer . ',
+                "legalEntityId": ' . (string) (int) $this->sR->getSetting('storecove_legal_entity_id') . ',
                 "routing": {
                   "emails": [
                     "test@example.com"

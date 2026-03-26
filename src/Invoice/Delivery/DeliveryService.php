@@ -57,14 +57,13 @@ final readonly class DeliveryService
     private function persist(
         Delivery $model,
         array $array
-    ): Delivery {
+    ): void {
         $delivery_location = 'delivery_location_id';
         if (isset($array[$delivery_location])) {
             $model->setDeliveryLocation(
                 $this->dlR->repoDeliveryLocationquery(
                     (string) $array[$delivery_location]));
         }
-        return $model;
     }
 
     public function deleteDelivery(Delivery $model): void

@@ -806,6 +806,7 @@ final class AuthController
         return '';
     }
 
+    /** @psalm-suppress PossiblyUnusedReturnValue */
     public function logout(
         UserRepository $uR,
         UserInvRepository $uiR,

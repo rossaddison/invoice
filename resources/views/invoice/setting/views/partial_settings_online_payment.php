@@ -70,9 +70,8 @@ echo H::openTag('div', $row); //1
        ->content($translator->translate('none'));
       /**
       * @var string $driver
-      * @var array $fields
       */
-      foreach ($gateway_drivers as $driver => $fields) {
+      foreach (array_keys($gateway_drivers) as $driver) {
       $d = strtolower($driver);
       echo  new Option()
        ->value($d)
@@ -233,9 +232,8 @@ echo H::openTag('div', $row); //1
      ]);
       /**
       * @var string $val
-      * @var string $key
       */
-      foreach ($gateway_regions as $val => $key) {
+      foreach (array_keys($gateway_regions) as $val) {
       echo  new Option()
        ->value($val)
        ->selected($body['settings[gateway_' . 
@@ -261,9 +259,8 @@ echo H::openTag('div', $row); //1
      ]);
       /**
       * @var string $val
-      * @var string $key
       */
-      foreach ($gateway_currency_codes as $val => $key) {
+      foreach (array_keys($gateway_currency_codes) as $val) {
       echo  new Option()
        ->value($val)
        ->selected($body['settings[gateway_' . 
@@ -291,10 +288,9 @@ echo H::openTag('div', $row); //1
       'class' => 'form-control'
      ]);
       /**
-      * @var string $key
       * @var string $value
       */
-      foreach ($locales as $key => $value) {
+      foreach ($locales as $value) {
       echo  new Option()
        ->value($value)
        ->selected($body['settings[gateway_mollie_locale]']

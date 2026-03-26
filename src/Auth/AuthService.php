@@ -44,6 +44,7 @@ final readonly class AuthService
 
     /**
      * @throws Throwable
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function logout(): bool
     {

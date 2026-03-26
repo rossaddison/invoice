@@ -2992,10 +2992,9 @@ echo file_get_contents($temp_aliase, true);
         $keyList = $data['keylist'] ?? [];
         if (!empty($keyList)) {
             /**
-             * @var string $key
              * @var string $value
              */
-            foreach ($keyList as $key => $value) {
+            foreach ($keyList as $value) {
                 /**
                  * @var \App\Invoice\Entity\Inv $inv
                  */
@@ -3044,10 +3043,9 @@ echo file_get_contents($temp_aliase, true);
         $keyList = $data['keylist'] ?? [];
         if (!empty($keyList)) {
             /**
-             * @var string $key
              * @var string $value
              */
-            foreach ($keyList as $key => $value) {
+            foreach ($keyList as $value) {
                 /**
                  * @var \App\Invoice\Entity\Inv $inv
                  */
@@ -3116,10 +3114,9 @@ echo file_get_contents($temp_aliase, true);
         $keyList = $data['keylist'] ?? [];
         if (!empty($keyList)) {
             /**
-             * @var string $key
              * @var string $value
              */
-            foreach ($keyList as $key => $value) {
+            foreach ($keyList as $value) {
                 $invId = $value;
                 $original = $iR->repoInvUnloadedquery($invId);
                 if ($original) {
@@ -4691,7 +4688,7 @@ echo file_get_contents($temp_aliase, true);
         $statuses = $iR->getStatuses($this->translator);
         
         /** @var array<int, array<string, string>> $statuses */
-        foreach ($statuses as $statusId => $statusData) {
+        foreach (array_keys($statuses) as $statusId) {
             $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
             $optionsDataStatus[$statusId] = $emoji . ' ' . $label;

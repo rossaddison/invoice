@@ -35,14 +35,6 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset =  new A()
-        ->addAttributes(['type' => 'reset'])
-        ->addClass('btn btn-primary me-1 ajax-loader')
-        ->content( new I()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName() ?? 'invrecurring/index'))
-        ->id('btn-reset')
-        ->render();
-
 /**
  * @var ColumnInterface[] $columns
  */

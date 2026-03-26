@@ -528,7 +528,7 @@ class CustomValuesHelper
                      * @var int $key
                      * @var string $value
                      */
-                    foreach ($array as $key => $value) {
+                    foreach ($array as $value) {
                         $custom_value = $cvR->repoCustomValuequery($value);
                         if (null !== $custom_value) {
                             $customValue = $custom_value->getValue();

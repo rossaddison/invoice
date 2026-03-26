@@ -48,6 +48,7 @@ final class Lang
      * @return array|true|null Array containing translations, if $return is set to true
      *
      * @psalm-return array<empty, empty>|null|true
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function load(array|string $langfile, $idiom = '', $return = false, $add_suffix = true, $alt_path = '')
     {

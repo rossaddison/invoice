@@ -37,7 +37,7 @@ final readonly class InvItemAmountService
     private function persist(
         InvItemAmount $model,
         array $array
-    ): InvItemAmount {
+    ): void {
         $inv_item = 'inv_item_id';
         if (isset($array[$inv_item])) {
             $invItemEntity = $this->iiR->repoInvItemquery(
@@ -46,7 +46,6 @@ final readonly class InvItemAmountService
                 $model->setInvItem($invItemEntity);
             }
         }
-        return $model;
     }
 
     /**

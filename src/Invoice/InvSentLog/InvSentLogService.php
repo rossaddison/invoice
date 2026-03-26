@@ -42,7 +42,7 @@ final readonly class InvSentLogService
     private function persist(
         InvSentLog $model,
         array $array
-    ): InvSentLog {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
@@ -57,7 +57,6 @@ final readonly class InvSentLogService
                 $model->setInv($invEntity);
             }
         }
-        return $model;
     }
 
     public function deleteInvSentLog(InvSentLog $model): void

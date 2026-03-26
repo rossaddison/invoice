@@ -147,11 +147,11 @@ final class QuoteFormTest extends TestCase
         
         $this->assertEquals('QUOTE-001', $form->getNumber());
         $this->assertEquals('Test quote notes', $form->getNotes());
-        $this->assertEquals(1, $form->getClient_id());
-        $this->assertEquals(1, $form->getGroup_id());
-        $this->assertEquals(1, $form->getStatus_id());
-        $this->assertEquals(100.50, $form->getDiscount_amount());
-        $this->assertEquals('test-quote-key', $form->getUrl_key());
+        $this->assertEquals(1, $form->getClientId());
+        $this->assertEquals(1, $form->getGroupId());
+        $this->assertEquals(1, $form->getStatusId());
+        $this->assertEquals(100.50, $form->getDiscountAmount());
+        $this->assertEquals('test-quote-key', $form->getUrlKey());
         $this->assertEquals('quote-password', $form->getPassword());
     }
 
@@ -164,11 +164,11 @@ final class QuoteFormTest extends TestCase
         
         $this->assertIsString($form->getNumber());
         $this->assertIsString($form->getNotes());
-        $this->assertIsInt($form->getClient_id());
-        $this->assertIsInt($form->getGroup_id());
-        $this->assertIsInt($form->getStatus_id());
-        $this->assertIsFloat($form->getDiscount_amount());
-        $this->assertIsString($form->getUrl_key());
+        $this->assertIsInt($form->getClientId());
+        $this->assertIsInt($form->getGroupId());
+        $this->assertIsInt($form->getStatusId());
+        $this->assertIsFloat($form->getDiscountAmount());
+        $this->assertIsString($form->getUrlKey());
         $this->assertIsString($form->getPassword());
     }
 
@@ -202,17 +202,17 @@ final class QuoteFormTest extends TestCase
         $now = new DateTimeImmutable();
         
         $quote->method('getNumber')->willReturn('QUOTE-001');
-        $quote->method('getDate_created')->willReturn($now);
-        $quote->method('getInv_id')->willReturn('1');
-        $quote->method('getSo_id')->willReturn('1');
-        $quote->method('getGroup_id')->willReturn('1');
-        $quote->method('getClient_id')->willReturn('1');
-        $quote->method('getStatus_id')->willReturn(1);
-        $quote->method('getDiscount_amount')->willReturn(100.50);
-        $quote->method('getUrl_key')->willReturn('test-quote-key');
+        $quote->method('getDateCreated')->willReturn($now);
+        $quote->method('getInvId')->willReturn('1');
+        $quote->method('getSoId')->willReturn('1');
+        $quote->method('getGroupId')->willReturn('1');
+        $quote->method('getClientId')->willReturn('1');
+        $quote->method('getStatusId')->willReturn(1);
+        $quote->method('getDiscountAmount')->willReturn(100.50);
+        $quote->method('getUrlKey')->willReturn('test-quote-key');
         $quote->method('getPassword')->willReturn('quote-password');
         $quote->method('getNotes')->willReturn('Test quote notes');
-        $quote->method('getDelivery_location_id')->willReturn('5');
+        $quote->method('getDeliveryLocationId')->willReturn('5');
         $quote->method('getClient')->willReturn($client);
         $quote->method('getGroup')->willReturn($group);
         $quote->method('getUser')->willReturn($user);

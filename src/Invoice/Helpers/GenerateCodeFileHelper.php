@@ -78,6 +78,7 @@ class GenerateCodeFileHelper
      * Saves the code into the file specified by [[path]].
      *
      * @return string|true the error occurred while saving the code file, or true if no error.
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function save(): bool|string
     {

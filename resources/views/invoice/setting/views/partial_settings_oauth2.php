@@ -249,7 +249,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $key
         * @var string $value
         */
-        foreach ($openBankingProviders as $key => $value) {
+        foreach ($openBankingProviders as $value) {
         echo  new Option()
          ->value($value)
          ->selected($value 

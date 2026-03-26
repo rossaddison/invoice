@@ -49,7 +49,7 @@ final readonly class MerchantService
     private function persist(
         Merchant $model,
         array $array
-    ): Merchant {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
@@ -58,7 +58,6 @@ final readonly class MerchantService
                 $model->setInv($invEntity);
             }
         }
-        return $model;
     }
 
     /**

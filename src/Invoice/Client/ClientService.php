@@ -19,10 +19,10 @@ final readonly class ClientService
      * @param array $body
      * @param SettingRepository $s
      * @return int|null
+     * @psalm-suppress UnusedParam
      */
     public function saveClient(Client $model, array $body, SettingRepository $s): ?int
     {
-        $datehelper = new DateHelper($s);
         isset($body['client_title']) ? $model->setClientTitle((string) $body['client_title']) : '';
         isset($body['client_name']) ? $model->setClientName((string) $body['client_name']) : '';
         isset($body['client_surname']) ? $model->setClientSurname((string) $body['client_surname']) : '';

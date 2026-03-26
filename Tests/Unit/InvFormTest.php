@@ -245,8 +245,8 @@ final class InvFormTest extends TestCase
         $this->assertEquals('INV-001', $form->getNumber());
         $this->assertEquals('Test terms', $form->getTerms());
         $this->assertEquals('Test note', $form->getNote());
-        $this->assertEquals('1', $form->getClient_id());
-        $this->assertEquals('1', $form->getGroup_id());
+        $this->assertEquals('1', $form->getClientId());
+        $this->assertEquals('1', $form->getGroupId());
     }
 
     /**
@@ -262,29 +262,29 @@ final class InvFormTest extends TestCase
         $inv->method('getNumber')->willReturn('INV-001');
         $inv->method('getTerms')->willReturn('Test terms');
         $inv->method('getNote')->willReturn('Test note');
-        $inv->method('getClient_id')->willReturn('1');
-        $inv->method('getGroup_id')->willReturn('1');
-        $inv->method('getStatus_id')->willReturn(1);
-        $inv->method('getDate_created')->willReturn($now);
-        $inv->method('getDate_modified')->willReturn($now);
-        $inv->method('getDate_supplied')->willReturn($now);
-        $inv->method('getDate_tax_point')->willReturn($now);
-        $inv->method('getDate_due')->willReturn($now);
-        $inv->method('getTime_created')->willReturn($now);
-        $inv->method('getStand_in_code')->willReturn('ABC');
-        $inv->method('getQuote_id')->willReturn('1');
-        $inv->method('getSo_id')->willReturn('1');
-        $inv->method('getCreditinvoice_parent_id')->willReturn('0');
-        $inv->method('getDelivery_id')->willReturn('0');
-        $inv->method('getDelivery_location_id')->willReturn('0');
-        $inv->method('getPostal_address_id')->willReturn('0');
-        $inv->method('getContract_id')->willReturn('0');
-        $inv->method('getDiscount_amount')->willReturn(0.00);
-        $inv->method('getUrl_key')->willReturn('test-key');
+        $inv->method('getClientId')->willReturn('1');
+        $inv->method('getGroupId')->willReturn('1');
+        $inv->method('getStatusId')->willReturn(1);
+        $inv->method('getDateCreated')->willReturn($now);
+        $inv->method('getDateModified')->willReturn($now);
+        $inv->method('getDateSupplied')->willReturn($now);
+        $inv->method('getDateTaxPoint')->willReturn($now);
+        $inv->method('getDateDue')->willReturn($now);
+        $inv->method('getTimeCreated')->willReturn($now);
+        $inv->method('getStandInCode')->willReturn('ABC');
+        $inv->method('getQuoteId')->willReturn('1');
+        $inv->method('getSoId')->willReturn('1');
+        $inv->method('getCreditinvoiceParentId')->willReturn('0');
+        $inv->method('getDeliveryId')->willReturn('0');
+        $inv->method('getDeliveryLocationId')->willReturn('0');
+        $inv->method('getPostalAddressId')->willReturn('0');
+        $inv->method('getContractId')->willReturn('0');
+        $inv->method('getDiscountAmount')->willReturn(0.00);
+        $inv->method('getUrlKey')->willReturn('test-key');
         $inv->method('getPassword')->willReturn('password');
-        $inv->method('getPayment_method')->willReturn(0);
+        $inv->method('getPaymentMethod')->willReturn(0);
         $inv->method('getDocumentDescription')->willReturn('Test description');
-        $inv->method('getIs_read_only')->willReturn(false);
+        $inv->method('getIsReadOnly')->willReturn(false);
         $inv->method('getClient')->willReturn($client);
         
         return $inv;

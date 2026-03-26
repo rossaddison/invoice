@@ -40,7 +40,7 @@ final readonly class ProductCustomService
     private function persist(
         ProductCustom $model,
         array $array
-    ): ProductCustom {
+    ): void {
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
@@ -55,7 +55,7 @@ final readonly class ProductCustomService
                 $this->cfR->repoCustomFieldquery(
                     (string) $array[$custom_field]));
         }
-        return $model;
+
     }
 
     /**

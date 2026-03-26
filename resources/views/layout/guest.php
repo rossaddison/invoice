@@ -16,6 +16,7 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Meta;
+use Yiisoft\Bootstrap5\Assets\BootstrapAsset;
 use Yiisoft\Bootstrap5\ButtonSize;
 use Yiisoft\Bootstrap5\Dropdown;
 use Yiisoft\Bootstrap5\DropdownItem;
@@ -77,7 +78,7 @@ use Yiisoft\Bootstrap5\NavStyle;
 
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
-$assetManager->register(Yiisoft\Bootstrap5\Assets\BootstrapAsset::class);
+$assetManager->register(BootstrapAsset::class);
 $s->getSetting('monospace_amounts') == 1 ?
         $assetManager->register(MonospaceAsset::class) : '';
 $assetManager->register(StripeVersionTenAsset::class);
@@ -312,7 +313,7 @@ echo NavBar::end();
 ?>    
 </header>
 <div id="main-area">
-    <main class="container py-4">        
+    <main class="container-fluid py-4">        
         <?php echo $content; ?>
         <div id="fullpage-loader" style="display: none">
             <div class="loader-content">

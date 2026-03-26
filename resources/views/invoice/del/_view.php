@@ -166,10 +166,9 @@ use Yiisoft\Html\Tag\Form;
 /**
  * Related logic: see src/Invoice/Helpers/Peppol/PeppolArrays.php function electronicAddressScheme
  * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-Delivery/cac-DeliveryLocation/cbc-ID/
- * @var int $key
  * @var array $value
  */
-foreach ($electronic_address_scheme as $key => $value) {
+foreach ($electronic_address_scheme as $value) {
     $optionsDataEAS[(string) $value['code']] = (string) $value['code'] . str_repeat("-", 10) . (string) $value['description'];
 }
 ?>

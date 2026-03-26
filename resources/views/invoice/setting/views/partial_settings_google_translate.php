@@ -64,7 +64,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $key
         * @var string $value
         */
-        foreach ($locales as $key => $value) {
+        foreach ($locales as $value) {
         echo  new Option()
          ->value($value)
          ->selected(

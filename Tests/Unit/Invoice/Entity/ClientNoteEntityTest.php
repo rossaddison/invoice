@@ -16,9 +16,9 @@ class ClientNoteEntityTest extends TestCase
         $clientNote = new ClientNote();
         
         $this->assertNull($clientNote->getId());
-        $this->assertSame('', $clientNote->getClient_id());
+        $this->assertSame('', $clientNote->getClientId());
         $this->assertSame('', $clientNote->getNote());
-        $this->assertSame('', $clientNote->getDate_note());
+        $this->assertSame('', $clientNote->getDateNote());
         $this->assertNull($clientNote->getClient());
         $this->assertTrue($clientNote->isNewRecord());
     }
@@ -31,7 +31,7 @@ class ClientNoteEntityTest extends TestCase
             // Skip date_note parameter due to entity type mismatch issue
         );
         
-        $this->assertSame('100', $clientNote->getClient_id());
+        $this->assertSame('100', $clientNote->getClientId());
         $this->assertSame('Important client note', $clientNote->getNote());
     }
 
@@ -47,9 +47,9 @@ class ClientNoteEntityTest extends TestCase
     public function testClientIdSetterAndGetter(): void
     {
         $clientNote = new ClientNote();
-        $clientNote->setClient_id(200);
+        $clientNote->setClientId(200);
         
-        $this->assertSame('200', $clientNote->getClient_id());
+        $this->assertSame('200', $clientNote->getClientId());
     }
 
     public function testNoteSetterAndGetter(): void
@@ -64,7 +64,7 @@ class ClientNoteEntityTest extends TestCase
     {
         $clientNote = new ClientNote();
         $dateNote = new DateTime('2024-12-25');
-        $clientNote->setDate_note($dateNote);
+        $clientNote->setDateNote($dateNote);
         
         // Skip getter test due to entity return type mismatch (returns DateTime but declares DateTimeImmutable|string)
         // Just test that setter accepts DateTime
@@ -109,10 +109,10 @@ class ClientNoteEntityTest extends TestCase
     public function testClientIdTypeConversion(): void
     {
         $clientNote = new ClientNote();
-        $clientNote->setClient_id(777);
+        $clientNote->setClientId(777);
         
-        $this->assertIsString($clientNote->getClient_id());
-        $this->assertSame('777', $clientNote->getClient_id());
+        $this->assertIsString($clientNote->getClientId());
+        $this->assertSame('777', $clientNote->getClientId());
     }
 
     public function testEmptyNote(): void
@@ -181,20 +181,20 @@ class ClientNoteEntityTest extends TestCase
     {
         $clientNote = new ClientNote();
         $clientNote->setId(0);
-        $clientNote->setClient_id(0);
+        $clientNote->setClientId(0);
         
         $this->assertSame('0', $clientNote->getId());
-        $this->assertSame('0', $clientNote->getClient_id());
+        $this->assertSame('0', $clientNote->getClientId());
     }
 
     public function testNegativeIds(): void
     {
         $clientNote = new ClientNote();
         $clientNote->setId(-1);
-        $clientNote->setClient_id(-5);
+        $clientNote->setClientId(-5);
         
         $this->assertSame('-1', $clientNote->getId());
-        $this->assertSame('-5', $clientNote->getClient_id());
+        $this->assertSame('-5', $clientNote->getClientId());
     }
 
     public function testLargeIds(): void
@@ -203,10 +203,10 @@ class ClientNoteEntityTest extends TestCase
         $largeId = PHP_INT_MAX;
         
         $clientNote->setId($largeId);
-        $clientNote->setClient_id($largeId - 1);
+        $clientNote->setClientId($largeId - 1);
         
         $this->assertSame((string)$largeId, $clientNote->getId());
-        $this->assertSame((string)($largeId - 1), $clientNote->getClient_id());
+        $this->assertSame((string)($largeId - 1), $clientNote->getClientId());
     }
 
     public function testDateNoteWithDifferentFormats(): void
@@ -223,7 +223,7 @@ class ClientNoteEntityTest extends TestCase
         ];
         
         foreach ($dates as $date) {
-            $clientNote->setDate_note($date);
+            $clientNote->setDateNote($date);
             // Skip getter test due to entity type mismatch
             $this->addToAssertionCount(1);
         }
@@ -236,13 +236,13 @@ class ClientNoteEntityTest extends TestCase
         $dateNote = new DateTime('2024-06-15');
         
         $clientNote->setId(1);
-        $clientNote->setClient_id(100);
+        $clientNote->setClientId(100);
         $clientNote->setClient($client);
         $clientNote->setNote('Complete setup note with all properties');
-        $clientNote->setDate_note($dateNote);
+        $clientNote->setDateNote($dateNote);
         
         $this->assertSame('1', $clientNote->getId());
-        $this->assertSame('100', $clientNote->getClient_id());
+        $this->assertSame('100', $clientNote->getClientId());
         $this->assertSame($client, $clientNote->getClient());
         $this->assertSame('Complete setup note with all properties', $clientNote->getNote());
         $this->assertFalse($clientNote->isNewRecord());
@@ -258,7 +258,7 @@ class ClientNoteEntityTest extends TestCase
         $clientNote->setId(1);
         
         $this->assertIsString($clientNote->getId());
-        $this->assertIsString($clientNote->getClient_id());
+        $this->assertIsString($clientNote->getClientId());
         $this->assertIsString($clientNote->getNote());
         // Skip date getter test due to entity type mismatch
         $this->assertIsBool($clientNote->isNewRecord());
@@ -346,18 +346,18 @@ class ClientNoteEntityTest extends TestCase
         );
         
         // Verify initial state
-        $this->assertSame('999', $clientNote->getClient_id());
+        $this->assertSame('999', $clientNote->getClientId());
         $this->assertSame('Initial note', $clientNote->getNote());
         $this->assertTrue($clientNote->isNewRecord());
         
         // Modify and verify changes
         $clientNote->setId(1);
-        $clientNote->setClient_id(888);
+        $clientNote->setClientId(888);
         $clientNote->setNote('Modified note');
-        $clientNote->setDate_note(new DateTime('2024-12-31'));
+        $clientNote->setDateNote(new DateTime('2024-12-31'));
         
         $this->assertSame('1', $clientNote->getId());
-        $this->assertSame('888', $clientNote->getClient_id());
+        $this->assertSame('888', $clientNote->getClientId());
         $this->assertSame('Modified note', $clientNote->getNote());
         $this->assertFalse($clientNote->isNewRecord());
     }
@@ -422,12 +422,12 @@ class ClientNoteEntityTest extends TestCase
     {
         // Test constructor with only some parameters
         $clientNote = new ClientNote(client_id: 123);
-        $this->assertSame('123', $clientNote->getClient_id());
+        $this->assertSame('123', $clientNote->getClientId());
         $this->assertSame('', $clientNote->getNote());
-        $this->assertSame('', $clientNote->getDate_note());
+        $this->assertSame('', $clientNote->getDateNote());
         
         $clientNote2 = new ClientNote(note: 'Only note provided');
-        $this->assertSame('', $clientNote2->getClient_id());
+        $this->assertSame('', $clientNote2->getClientId());
         $this->assertSame('Only note provided', $clientNote2->getNote());
     }
 }

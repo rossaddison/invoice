@@ -154,14 +154,6 @@ use Yiisoft\Html\Tag\Li;
                             $metricTypesGauge = $metricTypes['gauge'];
                             $metricTypesHistogram = $metricTypes['histogram'];
 
-                            /**
-                             * @var array $metric
-                             */
-                            foreach ($metrics as $metric) {
-                                $metricType = (string) $metric['type'];
-                                $mT = $metricTypes[$metricType];
-                                $mT++;
-                            }
                             ?>
                             <?= Html::openTag('div', ['class' => 'col-md-3']) ?>
                                 <?= Html::openTag('div', ['class' => 'info-box']) ?>

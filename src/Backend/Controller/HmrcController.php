@@ -75,7 +75,6 @@ final class HmrcController extends BaseController
 
     public function fphValidate(): Response
     {
-        $headers = [];
         $otp = (int) $this->session->get('otp');
         $otpReference = (string) $this->session->get('otpRef');
         if ($otp > 99999 && $otp < 1000000 && strlen($otpReference) > 0) {

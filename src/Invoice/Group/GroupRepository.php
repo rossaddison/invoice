@@ -155,6 +155,7 @@ final class GroupRepository extends Select\Repository
 
     /**
      * @param $id
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function setNextNumber(int $id): int
     {

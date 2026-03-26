@@ -52,7 +52,7 @@ final readonly class InvItemAllowanceChargeService
     private function persist(
         InvItemAllowanceCharge $model,
         array $array
-    ): InvItemAllowanceCharge {
+    ): void {
         $ac = 'allowance_charge_id';
         if (isset($array[$ac])) {
             $model->setAllowanceCharge(
@@ -75,7 +75,6 @@ final readonly class InvItemAllowanceChargeService
                 $model->setInvItem($invItemEntity);
             }
         }
-        return $model;
     }
 
     public function deleteInvItemAllowanceCharge(

@@ -42,14 +42,13 @@ final readonly class ProfileService
     private function persist(
         Profile $model,
         array $array
-    ): Profile {
+    ): void {
         $company = 'company_id';
         if (isset($array[$company])) {
             $model->setCompany(
                 $this->cR->repoCompanyquery(
                     (string) $array[$company]));
         }
-        return $model;
     }
 
     /**

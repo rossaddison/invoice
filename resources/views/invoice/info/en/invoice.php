@@ -55,12 +55,15 @@
 and if the 'Product Number List Prefix e.g. House' is filled, then especially useful for
 runs e.g. window cleaning, the House Numbers can be associated with a client. i.e. more than
 one house clean can be paid by a particular client.</p>
-<p>24th March 2026</p>
+<p>Layout improvements on invoice.php and guest.php - fluid used.</p>
+<p>Psalm - UnusedVariables - removed</p>
+<p>Tests: PSR1: Method naming: Substituted snake_case with camelCase</p>
+<p><b>24th March 2026</b></p>
 <p>PSR1 violations: All function names converted from snake_case to camelCase</p>
 <p>Routes, views, code adjusted accordingly</p>
 <p>$urlGenerator->generate('inv/url_key') becomes ('inv/urlKey')</p>
 <p>Testing to follow</p>
-<p>22nd March 2026</p>
+<p><b>22nd March 2026</b></p>
 <p>Avoiding RBAC Mutation: see md</p>
 <p></p>
 <p>19th March 2026</p>
@@ -68,7 +71,7 @@ one house clean can be paid by a particular client.</p>
 <p>Php8.4 Setup - md created. yii3i.online converted to php8.4</p>
 <p>Bugfix: Download file attached to invoice. Rbac influencing this.</p>
 <p>Bugfix: Attaching file to invoice workflow factory response replaced with web redirects.</p>
-<p>15th March 2026</p>
+<p><b>15th March 2026</b></p>
 <p>Apply razvbir's https://github.com/yiisoft/html/pull/264 using regex Find:  (\w+)::tag\(\) and Replace:  (new $1())</p>
 <p>Restructured psalm.xml: Find unused code = true. All error types have been categorized
 and will be reduced with the subsequent code reduction.</p>

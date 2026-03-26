@@ -50,7 +50,7 @@ final readonly class PaymentService
     private function persist(
         Payment $model,
         array $array
-    ): Payment {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
@@ -67,7 +67,6 @@ final readonly class PaymentService
                 $model->setPaymentMethod($pmEntity);
             }
         }
-        return $model;
     }
 
     /**

@@ -1407,6 +1407,7 @@ final class PaymentInformationController
         return $payment_intent->client_secret;
     }
 
+    /** @psalm-suppress UnusedReturnValue */
     private function recordOnlinePaymentsAndMerchant(
         string $reference,
         string $invoice_id,

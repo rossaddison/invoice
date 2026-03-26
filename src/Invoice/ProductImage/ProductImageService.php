@@ -55,7 +55,7 @@ final readonly class ProductImageService
     private function persist(
         ProductImage $model,
         array $array
-    ): ProductImage {
+    ): void {
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
@@ -64,7 +64,6 @@ final readonly class ProductImageService
                 $model->setProduct($productEntity);
             }
         }
-        return $model;
     }
 
     /**

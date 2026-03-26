@@ -178,6 +178,7 @@ final class GeneratorRelationController extends BaseController
     /**
      * @return Response|true
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);

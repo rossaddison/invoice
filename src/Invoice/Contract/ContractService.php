@@ -56,14 +56,13 @@ final readonly class ContractService
     private function persist(
         Contract $model,
         array $array
-    ): Contract {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
                 $this->cR->repoClientquery(
                     (string) $array[$client]));
         }
-        return $model;
     }
 
     public function deleteContract(Contract $model): void

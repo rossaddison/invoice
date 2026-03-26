@@ -15,9 +15,9 @@ final class GroupEntityTest extends Unit
         
         $this->assertSame('', $group->getId());
         $this->assertSame('', $group->getName());
-        $this->assertSame('', $group->getIdentifier_format());
-        $this->assertSame('', $group->getNext_id());
-        $this->assertNull($group->getLeft_pad());
+        $this->assertSame('', $group->getIdentifierFormat());
+        $this->assertSame('', $group->getNextId());
+        $this->assertNull($group->getLeftPad());
     }
 
     public function testConstructorWithAllParameters(): void
@@ -26,9 +26,9 @@ final class GroupEntityTest extends Unit
         
         $this->assertSame('1', $group->getId());
         $this->assertSame('Test Group', $group->getName());
-        $this->assertSame('TG-{id}', $group->getIdentifier_format());
-        $this->assertSame('100', $group->getNext_id());
-        $this->assertSame(3, $group->getLeft_pad());
+        $this->assertSame('TG-{id}', $group->getIdentifierFormat());
+        $this->assertSame('100', $group->getNextId());
+        $this->assertSame(3, $group->getLeftPad());
     }
 
     public function testIdSetterAndGetter(): void
@@ -50,40 +50,40 @@ final class GroupEntityTest extends Unit
     public function testIdentifierFormatSetterAndGetter(): void
     {
         $group = new Group();
-        $group->setIdentifier_format('INV-{year}-{id}');
+        $group->setIdentifierFormat('INV-{year}-{id}');
         
-        $this->assertSame('INV-{year}-{id}', $group->getIdentifier_format());
+        $this->assertSame('INV-{year}-{id}', $group->getIdentifierFormat());
     }
 
     public function testNextIdSetterAndGetter(): void
     {
         $group = new Group();
-        $group->setNext_id(1000);
+        $group->setNextId(1000);
         
-        $this->assertSame('1000', $group->getNext_id());
+        $this->assertSame('1000', $group->getNextId());
     }
 
     public function testLeftPadSetterAndGetter(): void
     {
         $group = new Group();
-        $group->setLeft_pad(5);
+        $group->setLeftPad(5);
         
-        $this->assertSame(5, $group->getLeft_pad());
+        $this->assertSame(5, $group->getLeftPad());
     }
 
     public function testCommonGroupTypes(): void
     {
         $invoiceGroup = new Group(1, 'Invoices', 'INV-{id}', 1001, 4);
         $this->assertSame('Invoices', $invoiceGroup->getName());
-        $this->assertSame('INV-{id}', $invoiceGroup->getIdentifier_format());
-        $this->assertSame('1001', $invoiceGroup->getNext_id());
-        $this->assertSame(4, $invoiceGroup->getLeft_pad());
+        $this->assertSame('INV-{id}', $invoiceGroup->getIdentifierFormat());
+        $this->assertSame('1001', $invoiceGroup->getNextId());
+        $this->assertSame(4, $invoiceGroup->getLeftPad());
 
         $quoteGroup = new Group(2, 'Quotes', 'QT-{id}', 2001, 3);
         $this->assertSame('Quotes', $quoteGroup->getName());
-        $this->assertSame('QT-{id}', $quoteGroup->getIdentifier_format());
-        $this->assertSame('2001', $quoteGroup->getNext_id());
-        $this->assertSame(3, $quoteGroup->getLeft_pad());
+        $this->assertSame('QT-{id}', $quoteGroup->getIdentifierFormat());
+        $this->assertSame('2001', $quoteGroup->getNextId());
+        $this->assertSame(3, $quoteGroup->getLeftPad());
     }
 
     public function testLongGroupNames(): void
@@ -99,7 +99,7 @@ final class GroupEntityTest extends Unit
         $complexFormat = '{prefix}-{year}-{month}-{id}';
         $group = new Group(1, 'Complex', $complexFormat, 1, 6);
         
-        $this->assertSame($complexFormat, $group->getIdentifier_format());
+        $this->assertSame($complexFormat, $group->getIdentifierFormat());
     }
 
     public function testZeroValues(): void
@@ -107,8 +107,8 @@ final class GroupEntityTest extends Unit
         $group = new Group(0, 'Zero Test', 'ZERO-{id}', 0, 0);
         
         $this->assertSame('0', $group->getId());
-        $this->assertSame('0', $group->getNext_id());
-        $this->assertSame(0, $group->getLeft_pad());
+        $this->assertSame('0', $group->getNextId());
+        $this->assertSame(0, $group->getLeftPad());
     }
 
     public function testLargeValues(): void
@@ -116,8 +116,8 @@ final class GroupEntityTest extends Unit
         $group = new Group(999999, 'Large Values', 'LARGE-{id}', 888888, 10);
         
         $this->assertSame('999999', $group->getId());
-        $this->assertSame('888888', $group->getNext_id());
-        $this->assertSame(10, $group->getLeft_pad());
+        $this->assertSame('888888', $group->getNextId());
+        $this->assertSame(10, $group->getLeftPad());
     }
 
     public function testChainedSetterCalls(): void
@@ -125,15 +125,15 @@ final class GroupEntityTest extends Unit
         $group = new Group();
         $group->setId(100);
         $group->setName('Chained Group');
-        $group->setIdentifier_format('CH-{id}');
-        $group->setNext_id(500);
-        $group->setLeft_pad(4);
+        $group->setIdentifierFormat('CH-{id}');
+        $group->setNextId(500);
+        $group->setLeftPad(4);
         
         $this->assertSame('100', $group->getId());
         $this->assertSame('Chained Group', $group->getName());
-        $this->assertSame('CH-{id}', $group->getIdentifier_format());
-        $this->assertSame('500', $group->getNext_id());
-        $this->assertSame(4, $group->getLeft_pad());
+        $this->assertSame('CH-{id}', $group->getIdentifierFormat());
+        $this->assertSame('500', $group->getNextId());
+        $this->assertSame(4, $group->getLeftPad());
     }
 
     public function testNullNameHandling(): void
@@ -163,9 +163,9 @@ final class GroupEntityTest extends Unit
         
         // Verify ID getter returns string even though setter accepts int
         $this->assertIsString($group->getId());
-        $this->assertIsString($group->getNext_id());
+        $this->assertIsString($group->getNextId());
         $this->assertSame('123', $group->getId());
-        $this->assertSame('456', $group->getNext_id());
+        $this->assertSame('456', $group->getNextId());
     }
 
     public function testCompleteGroupSetup(): void
@@ -173,14 +173,14 @@ final class GroupEntityTest extends Unit
         $group = new Group();
         $group->setId(999);
         $group->setName('Complete Setup Group');
-        $group->setIdentifier_format('CSG-{year}-{id}');
-        $group->setNext_id(5000);
-        $group->setLeft_pad(6);
+        $group->setIdentifierFormat('CSG-{year}-{id}');
+        $group->setNextId(5000);
+        $group->setLeftPad(6);
         
         $this->assertSame('999', $group->getId());
         $this->assertSame('Complete Setup Group', $group->getName());
-        $this->assertSame('CSG-{year}-{id}', $group->getIdentifier_format());
-        $this->assertSame('5000', $group->getNext_id());
-        $this->assertSame(6, $group->getLeft_pad());
+        $this->assertSame('CSG-{year}-{id}', $group->getIdentifierFormat());
+        $this->assertSame('5000', $group->getNextId());
+        $this->assertSame(6, $group->getLeftPad());
     }
 }

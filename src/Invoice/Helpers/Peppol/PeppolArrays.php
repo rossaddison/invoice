@@ -2807,7 +2807,7 @@ final class PeppolArrays
         /**
          * @var array $value
          */
-        foreach ($uncl2005_subset as $key => $value) {
+        foreach ($uncl2005_subset as $value) {
             /**
              * @var string $value['rdf:value']
              */

@@ -41,7 +41,7 @@ final readonly class PaymentCustomService
     private function persist(
         PaymentCustom $model,
         array $array
-    ): PaymentCustom {
+    ): void {
         $payment = 'payment_id';
         if (isset($array[$payment])) {
             $paymentEntity = $this->pR->repoPaymentquery(
@@ -56,7 +56,6 @@ final readonly class PaymentCustomService
                 $this->cfR->repoCustomFieldquery(
                     (string) $array[$custom_field]));
         }
-        return $model;
     }
 
     /**

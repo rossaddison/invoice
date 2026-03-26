@@ -55,14 +55,13 @@ final readonly class DeliveryLocationService
     private function persist(
         DeliveryLocation $model,
         array $array
-    ): DeliveryLocation {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
                 $this->cR->repoClientquery(
                     (string) $array[$client]));
         }
-        return $model;
     }
 
     public function deleteDeliveryLocation(DeliveryLocation $model): void

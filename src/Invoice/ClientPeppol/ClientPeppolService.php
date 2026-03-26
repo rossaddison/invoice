@@ -77,14 +77,13 @@ final readonly class ClientPeppolService
     private function persist(
         ClientPeppol $model,
         array $array
-    ): ClientPeppol {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
                 $this->cR->repoClientquery(
                     (string) $array[$client]));
         }
-        return $model;
     }
 
     public function deleteClientPeppol(ClientPeppol $model): void

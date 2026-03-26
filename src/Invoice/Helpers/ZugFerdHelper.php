@@ -27,6 +27,7 @@ final readonly class ZugFerdHelper
     /**
      * @return Aliases
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function ensureTempZugferdFolderAndUploadsFolderExist(): Aliases
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__), '@Uploads' => '@invoice/Uploads']);

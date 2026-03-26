@@ -44,10 +44,14 @@
                 <directory name="resources" />
             </errorLevel>
         </UnusedMethod>
+        <!-- Data/language files that assign to file-scope variables consumed by require callers -->
         <UnusedVariable>
             <errorLevel type="suppress">
-                <directory name="src" />
-                <directory name="resources" />
+                <file name="src/Invoice/Helpers/Peppol/uncl2005.php" />
+                <file name="src/Invoice/Helpers/Peppol/uncl2005_subset.php" />
+                <file name="src/Invoice/Helpers/Peppol/untdid2005.php" />
+                <file name="src/Invoice/Language/English/app_lang.php" />
+                <file name="src/Invoice/InvoiceController.php" />
             </errorLevel>
         </UnusedVariable>
         <UnusedProperty>
@@ -62,12 +66,6 @@
                 <directory name="resources" />
             </errorLevel>
         </UnusedFunctionCall>   
-        <UnusedReturnValue>
-            <errorLevel type="suppress">
-                <directory name="src" />
-                <directory name="resources" />
-            </errorLevel>
-        </UnusedReturnValue>         
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <directory name="src/Auth/Client" />
@@ -76,6 +74,10 @@
         <!-- Implemented 16/02/2025 psalm version upgrade to 6.6.0.             
              The Cycle/ORM  requires Entity Classes not to be final so that proxies can 
              be created using the ProxyFactory. -->             
-        <ClassMustBeFinal errorLevel="suppress" />
+        <ClassMustBeFinal errorLevel="suppress">
+             <errorLevel type="suppress">
+                <directory name="src/Invoice/Entity" />
+            </errorLevel>
+        </ClassMustBeFinal>    
     </issueHandlers>    
 </psalm>

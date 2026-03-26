@@ -250,11 +250,10 @@ class GeneratorController extends BaseController
                         /**
                         * @psalm-suppress RawObjectIteration $response_get_translations
                         * @var \Google\Cloud\Translate\V3\Translation $translation
-                        * @var string $key
                         * Related logic: see $content = ['view.contact.form.name' => 'Name']
                         * Related logic: see $response_get_translations = ['Name' => 'Naam']
                         */
-                        foreach ($response_get_translations as $key => $translation) {
+                        foreach ($response_get_translations as $translation) {
                             $result_array[] = $translation->getTranslatedText();
                         }
                     }

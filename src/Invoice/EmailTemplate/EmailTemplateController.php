@@ -15,7 +15,6 @@ use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface as Factory;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
@@ -50,17 +49,17 @@ final class EmailTemplateController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param EmailTemplateRepository $emailtemplateRepository
      */
-    public function index(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): \Psr\Http\Message\ResponseInterface
+    public function index(Request $request, CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): \Psr\Http\Message\ResponseInterface
     {
         $page = (int) $currentRoute->getArgument('page', '1');
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $this->rbac();
+        $query_params = $request->getQueryParams();
         $parameters = [
-            'paginator' => (new OffsetPaginator($this->emailtemplates($emailtemplateRepository)))
-                            ->withPageSize($this->sR->positiveListLimit())
-                            ->withCurrentPage($currentPageNeverZero),
             'alert' => $this->alert(),
             'email_templates' => $this->emailtemplates($emailtemplateRepository),
+            'page' => $currentPageNeverZero,
+            'sortString' => $query_params['sort'] ?? '-id',
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -384,6 +383,7 @@ final class EmailTemplateController extends BaseController
     /**
      * @return Response|true
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);

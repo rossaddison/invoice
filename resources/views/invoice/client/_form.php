@@ -156,7 +156,7 @@ foreach ($s->localeLanguageArray() as $language) {
             <?php
                 $countryOptions = [];
 /** @var string $country */
-foreach ($countries as $cldr => $country) {
+foreach ($countries as $country) {
     $countryOptions[$country] = ucfirst($country);
 }
 ?>

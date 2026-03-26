@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Entity\Client;
 use App\Invoice\Entity\UserInv;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Br;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\H5;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Html\Tag\Td;
+use Yiisoft\Html\Tag\Span;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
@@ -22,6 +23,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\UserClient\UserClientRepository $ucR
+ * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var string $active
@@ -48,36 +50,56 @@ $toolbarReset =  new A()
     ->id('btn-reset')
     ->render();
 
-echo  new A()->content( new H4()->content($translator->translate('client.has.not.assigned')))->href($urlGenerator->generate('client/index'))->render();
-echo '<table class="table table-responsive">';
-echo '<thead>';
-echo '<tr><th scope="row">' . $translator->translate('client.name') . ' '
-                             . $translator->translate('client.surname')
-     . '</th><th scope="row">' . $translator->translate('phone') . '</th>'
-     . '<th scope="row">' . $translator->translate('email.address') . '</th></tr>';
-echo '</thead>';
-echo '<tbody>';
-?> 
-<?php
-    $unAssignedClientIds = $ucR->getNotAssignedToAnyUser($cR);
-foreach ($unAssignedClientIds as $clientId) {
-    echo '<tr>';
-    $client = $cR->repoClientquery((string) $clientId);
-    echo  new Td()
-    ->content($client->getClientFullName())
-    ->render();
-    echo  new Td()
-    ->content($client->getClientPhone() ?? '')
-    ->render();
-    echo  new Td()
-    ->content($client->getClientEmail())
-    ->render();
-    echo '</tr>';
-}
-echo '</tbody>';
-echo '</table>';
-echo '<br>';
-$textDecorationNone =  'text-decoration:none';
+$textDecorationNone = 'text-decoration:none';
+$unAssignedClientIds = $ucR->getNotAssignedToAnyUser($cR);
+/** @var Client[] $unAssignedClients */
+$unAssignedClients = array_values(array_filter(
+    array_map(fn (int|null $id): ?Client => $id !== null ? $cR->repoClientquery((string) $id) : null, $unAssignedClientIds),
+    fn (?Client $c): bool => $c !== null,
+));
+$unAssignedClientReader = new IterableDataReader($unAssignedClients);
+$clientColumns = [
+    new DataColumn(
+        header: $translator->translate('client.name') . ' ' . $translator->translate('client.surname'),
+        content: static function (Client $model): string {
+            return $model->getClientFullName();
+        },
+        withSorting: false,
+    ),
+    new DataColumn(
+        header: $translator->translate('phone'),
+        content: static function (Client $model): string {
+            return $model->getClientPhone() ?? '';
+        },
+        withSorting: false,
+    ),
+    new DataColumn(
+        header: $translator->translate('email.address'),
+        content: static function (Client $model): string {
+            return $model->getClientEmail();
+        },
+        withSorting: false,
+    ),
+    new DataColumn(
+        header: $translator->translate('client.has.user.account'),
+        content: static function (Client $model) use ($canEdit, $ucR, $button, $translator, $urlGenerator): Span {
+            return ($ucR->repoUserqueryCount((string) $model->getClientId()) !== 0 && $canEdit)
+                   ? $button::activeLabel($translator)
+                   : $button::inactiveWithAddUserAccount($urlGenerator, $translator);
+        },
+        encodeContent: false,
+        withSorting: false,
+    ),
+];
+echo GridView::widget()
+    ->bodyRowAttributes(['class' => 'align-middle'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75', 'id' => 'table-unassigned-clients'])
+    ->columns(...$clientColumns)
+    ->dataReader($unAssignedClientReader)
+    ->header($translator->translate('client.has.not.assigned'))
+    ->headerRowAttributes(['class' => 'card-header bg-warning text-black'])
+    ->id('w6-grid')
+    ->emptyCell($translator->translate('no.records'), ['class' => 'card-header bg-warning text-black']);
 ?>
 <?= Html::openTag('div'); ?>
     <?=  new H5()->content($translator->translate('users'))->render(); ?>

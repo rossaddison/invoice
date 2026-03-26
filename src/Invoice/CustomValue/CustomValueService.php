@@ -35,14 +35,13 @@ final readonly class CustomValueService
     private function persist(
         CustomValue $model,
         array $array
-    ): CustomValue {
+    ): void {
         $custom_field = 'custom_field_id';
         if (isset($array[$custom_field])) {
             $model->setCustomField(
                 $this->cfR->repoCustomFieldquery(
                     (string) $array[$custom_field]));
         }
-        return $model;
     }
 
     /**

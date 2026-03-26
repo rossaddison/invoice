@@ -133,7 +133,7 @@ final readonly class InvAmountService
     private function persist(
         InvAmount $model,
         array $array
-    ): InvAmount {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
@@ -142,7 +142,6 @@ final readonly class InvAmountService
                 $model->setInv($invEntity);
             }
         }
-        return $model;
     }
 
     /**

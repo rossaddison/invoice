@@ -16,7 +16,7 @@ class CustomValueEntityTest extends TestCase
         $customValue = new CustomValue();
         
         $this->assertSame('', $customValue->getId());
-        $this->assertNull($customValue->getCustom_field_id());
+        $this->assertNull($customValue->getCustomFieldId());
         $this->assertSame('', $customValue->getValue());
         $this->assertNull($customValue->getCustomField());
     }
@@ -30,7 +30,7 @@ class CustomValueEntityTest extends TestCase
         );
         
         $this->assertSame('1', $customValue->getId());
-        $this->assertSame(100, $customValue->getCustom_field_id());
+        $this->assertSame(100, $customValue->getCustomFieldId());
         $this->assertSame('Custom field value', $customValue->getValue());
         $this->assertNull($customValue->getCustomField());
     }
@@ -43,7 +43,7 @@ class CustomValueEntityTest extends TestCase
         );
         
         $this->assertSame('2', $customValue->getId());
-        $this->assertNull($customValue->getCustom_field_id());
+        $this->assertNull($customValue->getCustomFieldId());
         $this->assertSame('Partial value', $customValue->getValue());
         $this->assertNull($customValue->getCustomField());
     }
@@ -59,9 +59,9 @@ class CustomValueEntityTest extends TestCase
     public function testCustomFieldIdSetterAndGetter(): void
     {
         $customValue = new CustomValue();
-        $customValue->setCustom_field_id(200);
+        $customValue->setCustomFieldId(200);
         
-        $this->assertSame(200, $customValue->getCustom_field_id());
+        $this->assertSame(200, $customValue->getCustomFieldId());
     }
 
     public function testValueSetterAndGetter(): void
@@ -117,17 +117,17 @@ class CustomValueEntityTest extends TestCase
     public function testZeroCustomFieldId(): void
     {
         $customValue = new CustomValue();
-        $customValue->setCustom_field_id(0);
+        $customValue->setCustomFieldId(0);
         
-        $this->assertSame(0, $customValue->getCustom_field_id());
+        $this->assertSame(0, $customValue->getCustomFieldId());
     }
 
     public function testNegativeCustomFieldId(): void
     {
         $customValue = new CustomValue();
-        $customValue->setCustom_field_id(-1);
+        $customValue->setCustomFieldId(-1);
         
-        $this->assertSame(-1, $customValue->getCustom_field_id());
+        $this->assertSame(-1, $customValue->getCustomFieldId());
     }
 
     public function testLargeCustomFieldId(): void
@@ -135,8 +135,8 @@ class CustomValueEntityTest extends TestCase
         $customValue = new CustomValue();
         $largeId = PHP_INT_MAX;
         
-        $customValue->setCustom_field_id($largeId);
-        $this->assertSame($largeId, $customValue->getCustom_field_id());
+        $customValue->setCustomFieldId($largeId);
+        $this->assertSame($largeId, $customValue->getCustomFieldId());
     }
 
     public function testEmptyStringValue(): void
@@ -390,11 +390,11 @@ class CustomValueEntityTest extends TestCase
         $customValue = new CustomValue();
         
         $customValue->setId(1);
-        $customValue->setCustom_field_id(100);
+        $customValue->setCustomFieldId(100);
         $customValue->setValue('Complete custom field value setup');
         
         $this->assertSame('1', $customValue->getId());
-        $this->assertSame(100, $customValue->getCustom_field_id());
+        $this->assertSame(100, $customValue->getCustomFieldId());
         $this->assertSame('Complete custom field value setup', $customValue->getValue());
         $this->assertNull($customValue->getCustomField());
     }
@@ -408,7 +408,7 @@ class CustomValueEntityTest extends TestCase
         );
         
         $this->assertIsString($customValue->getId());
-        $this->assertIsInt($customValue->getCustom_field_id());
+        $this->assertIsInt($customValue->getCustomFieldId());
         $this->assertIsString($customValue->getValue());
         $this->assertNull($customValue->getCustomField());
     }
@@ -423,17 +423,17 @@ class CustomValueEntityTest extends TestCase
         
         // Verify initial state
         $this->assertSame('999', $customValue->getId());
-        $this->assertSame(888, $customValue->getCustom_field_id());
+        $this->assertSame(888, $customValue->getCustomFieldId());
         $this->assertSame('Initial value', $customValue->getValue());
         
         // Modify all properties
         $customValue->setId(111);
-        $customValue->setCustom_field_id(222);
+        $customValue->setCustomFieldId(222);
         $customValue->setValue('Modified value');
         
         // Verify changes
         $this->assertSame('111', $customValue->getId());
-        $this->assertSame(222, $customValue->getCustom_field_id());
+        $this->assertSame(222, $customValue->getCustomFieldId());
         $this->assertSame('Modified value', $customValue->getValue());
     }
 
@@ -492,10 +492,10 @@ class CustomValueEntityTest extends TestCase
         ];
         
         foreach ($fieldScenarios as [$fieldId, $value]) {
-            $customValue->setCustom_field_id($fieldId);
+            $customValue->setCustomFieldId($fieldId);
             $customValue->setValue($value);
             
-            $this->assertSame($fieldId, $customValue->getCustom_field_id());
+            $this->assertSame($fieldId, $customValue->getCustomFieldId());
             $this->assertSame($value, $customValue->getValue());
         }
     }
@@ -613,25 +613,25 @@ class CustomValueEntityTest extends TestCase
         // Only ID
         $value1 = new CustomValue(id: 1);
         $this->assertSame('1', $value1->getId());
-        $this->assertNull($value1->getCustom_field_id());
+        $this->assertNull($value1->getCustomFieldId());
         $this->assertSame('', $value1->getValue());
         
         // ID and field ID
         $value2 = new CustomValue(id: 2, custom_field_id: 100);
         $this->assertSame('2', $value2->getId());
-        $this->assertSame(100, $value2->getCustom_field_id());
+        $this->assertSame(100, $value2->getCustomFieldId());
         $this->assertSame('', $value2->getValue());
         
         // ID and value
         $value3 = new CustomValue(id: 3, value: 'Test');
         $this->assertSame('3', $value3->getId());
-        $this->assertNull($value3->getCustom_field_id());
+        $this->assertNull($value3->getCustomFieldId());
         $this->assertSame('Test', $value3->getValue());
         
         // Field ID and value
         $value4 = new CustomValue(custom_field_id: 200, value: 'Another Test');
         $this->assertSame('', $value4->getId());
-        $this->assertSame(200, $value4->getCustom_field_id());
+        $this->assertSame(200, $value4->getCustomFieldId());
         $this->assertSame('Another Test', $value4->getValue());
     }
 
@@ -640,27 +640,27 @@ class CustomValueEntityTest extends TestCase
         $customValue = new CustomValue();
         
         // Text field
-        $customValue->setCustom_field_id(1);
+        $customValue->setCustomFieldId(1);
         $customValue->setValue('Simple text content');
-        $this->assertSame(1, $customValue->getCustom_field_id());
+        $this->assertSame(1, $customValue->getCustomFieldId());
         $this->assertSame('Simple text content', $customValue->getValue());
         
         // Number field
-        $customValue->setCustom_field_id(2);
+        $customValue->setCustomFieldId(2);
         $customValue->setValue('42.75');
-        $this->assertSame(2, $customValue->getCustom_field_id());
+        $this->assertSame(2, $customValue->getCustomFieldId());
         $this->assertSame('42.75', $customValue->getValue());
         
         // Date field
-        $customValue->setCustom_field_id(3);
+        $customValue->setCustomFieldId(3);
         $customValue->setValue($this->beg2024);
-        $this->assertSame(3, $customValue->getCustom_field_id());
+        $this->assertSame(3, $customValue->getCustomFieldId());
         $this->assertSame($this->beg2024, $customValue->getValue());
         
         // Boolean field
-        $customValue->setCustom_field_id(4);
+        $customValue->setCustomFieldId(4);
         $customValue->setValue('true');
-        $this->assertSame(4, $customValue->getCustom_field_id());
+        $this->assertSame(4, $customValue->getCustomFieldId());
         $this->assertSame('true', $customValue->getValue());
     }
 
@@ -670,29 +670,29 @@ class CustomValueEntityTest extends TestCase
         
         // Customer preference field
         $customValue->setId(1);
-        $customValue->setCustom_field_id(10);
+        $customValue->setCustomFieldId(10);
         $customValue->setValue('Email notifications: Weekly digest');
         
         $this->assertSame('1', $customValue->getId());
-        $this->assertSame(10, $customValue->getCustom_field_id());
+        $this->assertSame(10, $customValue->getCustomFieldId());
         $this->assertSame('Email notifications: Weekly digest', $customValue->getValue());
         
         // Product specification field
         $customValue->setId(2);
-        $customValue->setCustom_field_id(20);
+        $customValue->setCustomFieldId(20);
         $customValue->setValue('Dimensions: 10" x 8" x 2", Weight: 1.5 lbs');
         
         $this->assertSame('2', $customValue->getId());
-        $this->assertSame(20, $customValue->getCustom_field_id());
+        $this->assertSame(20, $customValue->getCustomFieldId());
         $this->assertSame('Dimensions: 10" x 8" x 2", Weight: 1.5 lbs', $customValue->getValue());
         
         // Order notes field
         $customValue->setId(3);
-        $customValue->setCustom_field_id(30);
+        $customValue->setCustomFieldId(30);
         $customValue->setValue('Special delivery instructions: Leave at front door, ring doorbell twice');
         
         $this->assertSame('3', $customValue->getId());
-        $this->assertSame(30, $customValue->getCustom_field_id());
+        $this->assertSame(30, $customValue->getCustomFieldId());
         $this->assertSame('Special delivery instructions: Leave at front door, ring doorbell twice', $customValue->getValue());
     }
 }

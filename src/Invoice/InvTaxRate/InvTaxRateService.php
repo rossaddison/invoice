@@ -50,7 +50,7 @@ final readonly class InvTaxRateService
     private function persist(
         InvTaxRate $model,
         array $array
-    ): InvTaxRate {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
@@ -65,7 +65,6 @@ final readonly class InvTaxRateService
                 $this->trR->repoTaxRatequery(
                     (string) $array[$tax_rate]));
         }
-        return $model;
     }
 
     /**

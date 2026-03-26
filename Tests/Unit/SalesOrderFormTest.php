@@ -274,10 +274,10 @@ final class SalesOrderFormTest extends TestCase
         $this->assertEquals('SO-001', $form->getNumber());
         $this->assertEquals('Test sales order notes', $form->getNotes());
         $this->assertEquals('Net 30 days', $form->getPaymentTerm());
-        $this->assertEquals(1, $form->getClient_id());
-        $this->assertEquals(1, $form->getGroup_id());
-        $this->assertEquals('1', $form->getQuote_id());
-        $this->assertEquals('PO12345', $form->getClient_po_number());
+        $this->assertEquals(1, $form->getClientId());
+        $this->assertEquals(1, $form->getGroupId());
+        $this->assertEquals('1', $form->getQuoteId());
+        $this->assertEquals('PO12345', $form->getClientPoNumber());
     }
 
     /**
@@ -313,17 +313,17 @@ final class SalesOrderFormTest extends TestCase
         $now = new DateTimeImmutable();
         
         $salesOrder->method('getNumber')->willReturn('SO-001');
-        $salesOrder->method('getDate_created')->willReturn($now);
-        $salesOrder->method('getQuote_id')->willReturn('1');
-        $salesOrder->method('getInv_id')->willReturn('1');
-        $salesOrder->method('getGroup_id')->willReturn('1');
-        $salesOrder->method('getClient_id')->willReturn('1');
-        $salesOrder->method('getClient_po_number')->willReturn('PO12345');
-        $salesOrder->method('getClient_po_line_number')->willReturn('LN001');
-        $salesOrder->method('getClient_po_person')->willReturn('John Doe');
-        $salesOrder->method('getStatus_id')->willReturn(1);
-        $salesOrder->method('getDiscount_amount')->willReturn(50.0);
-        $salesOrder->method('getUrl_key')->willReturn('test-so-key');
+        $salesOrder->method('getDateCreated')->willReturn($now);
+        $salesOrder->method('getQuoteId')->willReturn('1');
+        $salesOrder->method('getInvId')->willReturn('1');
+        $salesOrder->method('getGroupId')->willReturn('1');
+        $salesOrder->method('getClientId')->willReturn('1');
+        $salesOrder->method('getClientPoNumber')->willReturn('PO12345');
+        $salesOrder->method('getClientPoLineNumber')->willReturn('LN001');
+        $salesOrder->method('getClientPoPerson')->willReturn('John Doe');
+        $salesOrder->method('getStatusId')->willReturn(1);
+        $salesOrder->method('getDiscountAmount')->willReturn(50.0);
+        $salesOrder->method('getUrlKey')->willReturn('test-so-key');
         $salesOrder->method('getPassword')->willReturn('so-password');
         $salesOrder->method('getNotes')->willReturn('Test sales order notes');
         $salesOrder->method('getPaymentTerm')->willReturn('Net 30 days');

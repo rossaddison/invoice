@@ -84,7 +84,7 @@ final readonly class InvRecurringService
     private function persist(
         InvRecurring $model,
         array $array
-    ): InvRecurring {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->invR->repoInvUnLoadedquery(
@@ -93,7 +93,6 @@ final readonly class InvRecurringService
                 $model->setInv($invEntity);
             }
         }
-        return $model;
     }
 
     /**

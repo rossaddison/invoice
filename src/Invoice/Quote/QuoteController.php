@@ -3477,9 +3477,8 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         
         /** 
          * @var array<int, array<string, string>> $statuses
-         * @psalm-suppress UnusedVariable $statusDate 
          */
-        foreach ($statuses as $statusId => $statusData) {
+        foreach (array_keys($statuses) as $statusId) {
             $label = $qR->getSpecificStatusArrayLabel((string) $statusId);
             $optionsDataStatus[$statusId] = $label;
         }

@@ -214,6 +214,7 @@ class PdfHelper
      * @param WebViewRenderer $webViewRenderer
      * @param Translator $translator
      * @return string
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function generateSalesorderPdf(
         ?string $so_id,
@@ -492,7 +493,6 @@ class PdfHelper
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
                 $mpdfhelper = new MpdfHelper();
-                $associatedFiles = [];
                 $include_zugferd = $this->s->getSetting('include_zugferd') === '0' ? false : true;
                 if ($include_zugferd && null !== $inv_amount) {
                     $z = new ZugFerdHelper($this->s, $iiaR, $inv_amount);

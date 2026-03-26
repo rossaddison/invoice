@@ -42,7 +42,7 @@ final readonly class PaymentPeppolService
     private function persist(
         PaymentPeppol $model,
         array $array
-    ): PaymentPeppol {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
@@ -51,7 +51,6 @@ final readonly class PaymentPeppolService
                 $model->setInv($invEntity);
             }
         }
-        return $model;
     }
 
     public function deletePaymentPeppol(PaymentPeppol $model): void

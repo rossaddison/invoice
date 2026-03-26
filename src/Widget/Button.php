@@ -331,6 +331,7 @@ final readonly class Button
         ->render();
     }
 
+    /** @psalm-suppress PossiblyUnusedReturnValue */
     public function openbanking(string $openBankingAuthUrl, string $provider): string
     {
         return

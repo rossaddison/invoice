@@ -61,14 +61,13 @@ final readonly class CompanyPrivateService
     private function persist(
         CompanyPrivate $model,
         array $array
-    ): CompanyPrivate {
+    ): void {
         $company = 'company_id';
         if (isset($array[$company])) {
             $model->setCompany(
                 $this->cR->repoCompanyquery(
                     (string) $array[$company]));
         }
-        return $model;
     }
 
     /**

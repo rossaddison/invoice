@@ -98,7 +98,7 @@ final readonly class ProductService
     private function persist(
         Product $model,
         array $array
-    ): Product {
+    ): void {
         $family = 'family_id';
         if (isset($array[$family])) {
             $familyEntity = $this->fR->repoFamilyquery(
@@ -121,7 +121,6 @@ final readonly class ProductService
                 $model->setUnit($unitEntity);
             }
         }
-        return $model;
     }
 
     /**

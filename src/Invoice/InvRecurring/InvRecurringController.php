@@ -162,10 +162,9 @@ final class InvRecurringController extends BaseController
         $keyList = $data['keylist'] ?? [];
         if (!empty($keyList)) {
             /**
-             * @var string $key
              * @var string $value
              */
-            foreach ($keyList as $key => $value) {
+            foreach ($keyList as $value) {
                 $baseInvoice = $iR->repoInvUnloadedquery($value);
                 if (null !== $baseInvoice) {
                     if ($baseInvoice->getStatusId() == '2') {

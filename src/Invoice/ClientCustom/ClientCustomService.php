@@ -36,7 +36,7 @@ final readonly class ClientCustomService
         $this->repository->save($model);
     }
     
-    private function persist(ClientCustom $model, array $array): ClientCustom
+    private function persist(ClientCustom $model, array $array): void
     {
         $client = 'client_id';
         if (isset($array[$client])) {
@@ -49,7 +49,6 @@ final readonly class ClientCustomService
                 $this->cfR->repoCustomFieldquery(
                     (string) $array[$custom_field]));
         }
-        return $model;
     }
 
     /**

@@ -85,6 +85,7 @@ final class ChangePasswordController
      * @param string $level
      * @param string $message
      * @return Flash|null
+     * @psalm-suppress UnusedReturnValue
      */
     private function flashMessage(string $level, string $message): ?Flash
     {

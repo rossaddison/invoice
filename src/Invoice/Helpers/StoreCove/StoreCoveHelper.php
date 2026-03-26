@@ -190,7 +190,6 @@ final readonly class StoreCoveHelper
                     'documentId' => $documentId,
                     'description' => $inv_attachment->getDescription(),
                 ];
-                $incrementor += 1;
             } //if
         }
         return $attachments;
@@ -282,7 +281,6 @@ final readonly class StoreCoveHelper
         $datehelper = new DateHelper($s);
         $date_tax_point = $invoice->getDateTaxPoint();
         $date_created_or_issued = $invoice->getDateCreated();
-        $date_supplied = $invoice->getDateSupplied();
         if ($date_tax_point === $date_created_or_issued) {
             // => there is NO need for a visible peppol tax point
             // because the date issued and tax point are the same
@@ -292,14 +290,11 @@ final readonly class StoreCoveHelper
             // tax point will be based on ie. date supplied/delivery date
             // or payment date
             $input_date = DateTime::createFromImmutable($date_created_or_issued);
-            $description_code = $this->getDescriptionCodeForTaxPoint(
-                            $invoice, $date_supplied, $date_created_or_issued);
         } else {
             // => there IS a need for a visible peppol tax point
             // therefore base the invoice period on the tax point
             // but exclude the description code Business Rule (BT-8)
             $input_date = DateTime::createFromImmutable($date_tax_point);
-            $description_code = '';
         }
         // if the invoice has a delivery period use it's dates in preference
         $start_end_array = $datehelper->invoicePeriodStartEnd(
@@ -609,7 +604,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                  */
                 foreach ($invoice->getItems() as $item) {
                     $price = ($item->getPrice() ?? 0.00);
-                    $discount = ($item->getDiscountAmount() ?? 0.00);
                     $peppol_po_itemid = $this->PeppolPoItemid($item, $soiR);
                     $peppol_po_lineid = $this->PeppolPoLineid($item, $soiR);
                     $item_id = $item->getId();
@@ -623,7 +617,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                         $inv_item_amount = $this->getInvItemAmount(
                                                         (string) $item_id, $iiaR);
                         if (isset($inv_item_amount)) {
-                            $sub_total = $inv_item_amount->getSubtotal();
 
             // using Array Format 2
             // ..\vendor\sabre\xml\lib\Writer.php
@@ -688,12 +681,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                              * @var InvItemAllowanceCharge $acii
                              */
                             foreach ($inv_item_allowance_charges as $acii) {
-                                $item_line = $invoiceLines[$item_id];
-                                /**
-                                 * @var array $item_line['allowanceCharges']
-                                 * @var array $item_line['allowanceCharges'][]
-                                 */
-                                $item_line['allowanceCharges'][] = [
+                                $invoiceLines[$item_id]['allowanceCharges'][] = [
                                     'reason' =>
                                        $acii->getAllowanceCharge()?->getReason(),
                                     'amountExcludingTax' =>

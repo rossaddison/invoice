@@ -243,7 +243,7 @@ final class ItemsCommand extends Command
     private function format(float $number): string
     {
         $formatted_number = sprintf('%.2f', $number);
-        return $aligned_number = str_pad($formatted_number, 10, ' ', STR_PAD_LEFT);
+        return str_pad($formatted_number, 10, ' ', STR_PAD_LEFT);
     }
 
     private function formatBracketed(float $number): string
@@ -470,7 +470,7 @@ final class ItemsCommand extends Command
     private function addUserClients(int $count): void
     {
         for ($i = 0; $i < $count; $i++) {
-            foreach ($this->users as $user) {
+            foreach ($this->users as $_) {
                 $userClient = new UserClient();
                 $userClient->setUserId($this->faker->numberBetween(1, $count));
                 $userClient->setClientId($this->faker->numberBetween(1, $count));
@@ -488,7 +488,7 @@ final class ItemsCommand extends Command
          * Let us assume that each UserInv has only one Client to pay off.
          */
         for ($i = 0; $i < $count; $i++) {
-            foreach ($this->users as $user) {
+            foreach ($this->users as $_) {
                 $userInv = new UserInv();
                 $userInv->setUserId($this->faker->numberBetween(1, $count));
                 $userInv->setActive(true);
@@ -544,10 +544,9 @@ final class ItemsCommand extends Command
     {
         $groups = ['Order', 'Quote', 'Invoice'];
         /**
-         * @var int $key
          * @var string $value
          */
-        foreach ($groups as $key => $value) {
+        foreach ($groups as $value) {
             $i_group = new Group();
             $i_group->setName($value . ' Group');
             $i_group->setIdentifierFormat(substr($value, 0, 2) . '{{{id}}}');
@@ -642,26 +641,14 @@ final class ItemsCommand extends Command
         $invAmount->setItemSubtotal($itemAfterDiscount);
         $invAmount->setItemTaxTotal($itemTaxTotalWithAllowanceCharges);
         
-        // Calculate invoice-level allowances and charges total
-        $invAllowanceChargeTotal = 0;
-        foreach ($this->invAllowanceCharges as $invAllowanceCharge) {
-            $amount = (float) $invAllowanceCharge->getAmount();
-            $offSet = ((int) $invAllowanceCharge->getAllowanceChargeId()) - 1; 
-            $allowanceCharge = $this->allowanceCharges[$offSet] ?? null;
-            $isCharge = $allowanceCharge?->getIdentifier() ?? false;
-            if ($isCharge) {
-                $invAllowanceChargeTotal = $invAllowanceChargeTotal + $amount;
-            } else {
-                $invAllowanceChargeTotal = $invAllowanceChargeTotal - $amount;
-            }
+        // Call addInvTaxRates to populate invoice tax rates (returns void)
+        if ($summaryTaxesExist) {
+            $this->addInvTaxRates(
+                $inv,
+                $includeItemTaxInSummaryTaxSoApplyAfter ? $itemAfterDiscount : 0.00,
+                $includeItemTaxInSummaryTaxSoApplyAfter ? $itemTaxTotalWithAllowanceCharges : 0.00,
+            );
         }
-        
-        // Assume setInclude_item_tax is true in the calculation of additional InvTaxRates
-        $invTaxRateTotal = $summaryTaxesExist ? $this->addInvTaxRates(
-            $inv,
-            $includeItemTaxInSummaryTaxSoApplyAfter ? $itemAfterDiscount : 0.00,
-            $includeItemTaxInSummaryTaxSoApplyAfter ? $itemTaxTotalWithAllowanceCharges : 0.00,
-        ) : 0.00;
         return $invAmount;
     }
 
@@ -692,7 +679,6 @@ final class ItemsCommand extends Command
     private function addInvItems(int $count): void
     {
         for ($i = 0; $i < $count; $i++) {
-            $invItemAmount = 0;
             $invItem = new InvItem();
             /** TaxRate 15%, TaxRate 20% **/
             $chosenTaxRateId = $this->faker->numberBetween(1, 2);
@@ -811,7 +797,7 @@ final class ItemsCommand extends Command
         $itemLevelAllowanceChargeId = 4; // References the "Item Allowance" AllowanceCharge
         $itemLevelChargeId = 5; // References the "Item Charge" AllowanceCharge
         
-        foreach ($this->invItems as $index => $invItem) {
+        foreach (array_keys($this->invItems) as $index) {
             $invItemAmount = $this->invItemAmounts[(int) $index] ?? null;
             
             // Add an allowance (discount) to some items

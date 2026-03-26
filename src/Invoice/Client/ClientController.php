@@ -742,7 +742,6 @@ final class ClientController extends BaseController
     public function saveClientNoteNew(Request $request,
                                 FormHydrator $formHydrator, cnS $cnS): Response
     {
-        $datehelper = new DateHelper($this->sR);
         //receive data ie. note
         $body = $request->getQueryParams();
         /**
@@ -952,15 +951,6 @@ final class ClientController extends BaseController
         $clientCustom = new ClientCustom();
         $clientCustomForm = new ClientCustomForm($clientCustom);
 
-        $optionsGroupData = [];
-
-        $groups = $gR->findAllPreloaded();
-        /**
-         * @var \App\Invoice\Entity\Group
-         */
-        foreach ($groups as $group) {
-            $optionsGroupData[$group->getId()] = $group->getName();
-        }
         $client = $this->client($currentRoute, $cR);
         if ($client instanceof Client) {
             $cId = $client->getClientId();

@@ -17,6 +17,7 @@ class InvoiceHelper
 
     /**
      * @psalm-param 'danger' $level
+     * @psalm-suppress UnusedReturnValue
      */
     private function flash(string $level, string $message): Flash
     {

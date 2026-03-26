@@ -171,10 +171,9 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('0')
          ->content($translator->translate('none'));
         /**
-        * @var string $key
         * @var string $value
         */
-        foreach ($time_zones as $key => $value) {
+        foreach ($time_zones as $value) {
         echo  new Option()
          ->value($value)
          ->selected($body['settings[time_zone]'] == $value)
@@ -424,7 +423,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $key
         * @var string $val
         */
-        foreach ($gateway_currency_codes as $key => $val) {
+        foreach (array_keys($gateway_currency_codes) as $key) {
         echo  new Option()
          ->value($key)
          ->selected(

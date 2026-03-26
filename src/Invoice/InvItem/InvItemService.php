@@ -38,7 +38,7 @@ final readonly class InvItemService
     private function persist(
         InvItem $model,
         array $array
-    ): InvItem {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
@@ -69,7 +69,6 @@ final readonly class InvItemService
                 $model->setTask($taskEntity);
             }
         }
-        return $model;
     }
 
     /**
@@ -559,6 +558,7 @@ final readonly class InvItemService
      * @param IIAS $iias
      * @param IIAR $iiar
      * @return InvItemAmount|null
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function saveInvItemAmount(
         int $inv_item_id,

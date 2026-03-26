@@ -134,6 +134,7 @@ final readonly class SalesOrderService
      * @param SalesOrder $model
      * @param array $array
      * @return SalesOrder
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function saveSo(
         SalesOrder $model,

@@ -185,7 +185,7 @@ final readonly class InvService
         return $model;
     }
 
-    private function persist(Inv $model, array $array): Inv
+    private function persist(Inv $model, array $array): void
     {
         $client = 'client_id';
         if (isset($array[$client])) {
@@ -207,7 +207,6 @@ final readonly class InvService
                 $model->setUser($userEntity);
             }
         }
-        return $model;
     }
 
     public function copyInv(User $user, Inv $model, array $array, SR $s): Inv

@@ -77,14 +77,13 @@ final readonly class ClientNoteService
     private function persist(
         ClientNote $model,
         array $array
-    ): ClientNote {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
                 $this->cR->repoClientquery(
                     (string) $array[$client]));
         }
-        return $model;
     }
 
     /**
