@@ -75,7 +75,6 @@ final class HmrcController extends BaseController
 
     public function fphValidate(): Response
     {
-        $headers = [];
         $otp = (int) $this->session->get('otp');
         $otpReference = (string) $this->session->get('otpRef');
         if ($otp > 99999 && $otp < 1000000 && strlen($otpReference) > 0) {
@@ -219,7 +218,7 @@ final class HmrcController extends BaseController
      * @param string $govVendorVersion
      * @return array
      */
-    public function WebAppViaServerBuildArrayFromStrings(
+    public function webAppViaServerBuildArrayFromStrings(
         string $govClientConnectionMethod,
         string $govClientBrowserJsUserAgent,
         string $govClientDeviceID,

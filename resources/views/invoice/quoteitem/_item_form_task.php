@@ -8,8 +8,8 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 
 /**
- * Related logic: see QuoteController function view $parameters['add_quote_task']['actionName' => 'quoteitem/add_task']
- * Related logic: see QuoteItemController function add_task
+ * Related logic: see QuoteController function view $parameters['add_quote_task']['actionName' => 'quoteitem/addTask']
+ * Related logic: see QuoteItemController function addTask
  * @var App\Invoice\QuoteItem\QuoteItemForm $form
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s
@@ -67,7 +67,7 @@ foreach ($tasks as $task) {
 ?>
                                 <?= Field::select($form, 'task_id')
     ->optionsData($optionsDataTask)
-    ->value(Html::encode($form->getTask_id())); ?>
+    ->value(Html::encode($form->getTaskId())); ?>
                             <?= Html::closeTag('div'); ?>        
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-quality']); ?>
@@ -75,7 +75,7 @@ foreach ($tasks as $task) {
                                 <?= Field::number($form, 'quantity')
     ->label($translator->translate('quantity'))
     ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
-    ->value($numberHelper->format_amount($form->getQuantity()))
+    ->value($numberHelper->formatAmount($form->getQuantity()))
     ->hint($translator->translate('hint.greater.than.zero.please'));
 ?>
                             <?= Html::closeTag('div'); ?>
@@ -85,7 +85,7 @@ foreach ($tasks as $task) {
                                 <?= Field::text($form, 'price')
      ->label($translator->translate('price'))
      ->addInputAttributes(['class' => 'input-lg form-control amount has-feedback'])
-     ->value($numberHelper->format_amount($form->getPrice() ?? 0.00))
+     ->value($numberHelper->formatAmount($form->getPrice() ?? 0.00))
      ->hint($translator->translate('hint.greater.than.zero.please')); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
@@ -99,7 +99,7 @@ foreach ($tasks as $task) {
          'data-placement' => 'bottom',
          'title' => $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'),
      ])
-     ->value($numberHelper->format_amount($form->getDiscount_amount() ?? 0.00)); ?>
+     ->value($numberHelper->formatAmount($form->getDiscountAmount() ?? 0.00)); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
@@ -112,7 +112,7 @@ foreach ($tasks as $task) {
 foreach ($taxRates as $taxRate) {
     $taxRateId = $taxRate->getTaxRateId();
     $taxRatePercent = $taxRate->getTaxRatePercent();
-    $taxRatePercentNumber = $numberHelper->format_amount($taxRatePercent);
+    $taxRatePercentNumber = $numberHelper->formatAmount($taxRatePercent);
     $taxRateName = $taxRate->getTaxRateName();
     // Only build the drop down item if all values are present
     if (null !== $taxRatePercentNumber && null !== $taxRateName && null !== $taxRateId) {
@@ -124,7 +124,7 @@ foreach ($taxRates as $taxRate) {
     ->label($vat === false ? $translator->translate('tax.rate') : $translator->translate('vat.rate'))
     ->addInputAttributes(['class' => 'form-control'])
     ->optionsData($optionsDataTaxRate)
-    ->value(Html::encode($form->getTax_rate_id()))
+    ->value(Html::encode($form->getTaxRateId()))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>        
                             <?= Html::closeTag('div'); ?>
@@ -135,7 +135,7 @@ foreach ($taxRates as $taxRate) {
                                 'type' => 'submit',
                                 'class' => 'btn btn-info',
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => 'quoteitem/add_task']); ?>
+                                'title' => 'quoteitem/addTask']); ?>
                                 <?=  new I()->addClass('fa fa-plus'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>

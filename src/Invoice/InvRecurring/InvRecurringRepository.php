@@ -90,7 +90,7 @@ final class InvRecurringRepository extends Select\Repository
         return $query->count();
     }
 
-    public function recur_frequencies(): array
+    public function recurFrequencies(): array
     {
         return [
             '1D' => 'calendar.day.1',

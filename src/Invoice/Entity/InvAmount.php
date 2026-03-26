@@ -51,12 +51,12 @@ class InvAmount
         $this->id = $id;
     }
 
-    public function getInv_id(): string
+    public function getInvId(): string
     {
         return (string) $this->inv_id;
     }
 
-    public function setInv_id(int $inv_id): void
+    public function setInvId(int $inv_id): void
     {
         $this->inv_id = $inv_id;
     }
@@ -71,57 +71,57 @@ class InvAmount
         $this->sign = $sign;
     }
 
-    public function getItem_subtotal(): float
+    public function getItemSubtotal(): float
     {
         return $this->item_subtotal;
     }
 
-    public function setItem_subtotal(float $item_subtotal): void
+    public function setItemSubtotal(float $item_subtotal): void
     {
         $this->item_subtotal = $item_subtotal;
     }
 
-    public function getItem_tax_total(): float
+    public function getItemTaxTotal(): float
     {
         return $this->item_tax_total;
     }
 
-    public function setItem_tax_total(float $item_tax_total): void
+    public function setItemTaxTotal(float $item_tax_total): void
     {
         $this->item_tax_total = $item_tax_total;
     }
 
     // Holds InvAllowanceCharge accumulative totals
-    public function getPackhandleship_total(): float
+    public function getPackhandleshipTotal(): float
     {
         return $this->packhandleship_total;
     }
 
-    public function setPackhandleship_total(float $packhandleship_total): void
+    public function setPackhandleshipTotal(float $packhandleship_total): void
     {
         $this->packhandleship_total = $packhandleship_total;
     }
 
     // Holds InvAllowanceCharge accumulative tax totals
-    // See src/Invoice/Helpers/NumberHelper function calculate_inv
+    // See src/Invoice/Helpers/NumberHelper function calculateInv
     // which recalculates this total when the invoice is redirected
     // to the view after adding/deleting/editing an iac
-    public function getPackhandleship_tax(): float
+    public function getPackhandleshipTax(): float
     {
         return $this->packhandleship_tax;
     }
 
-    public function setPackhandleship_tax(float $packhandleship_tax): void
+    public function setPackhandleshipTax(float $packhandleship_tax): void
     {
         $this->packhandleship_tax = $packhandleship_tax;
     }
 
-    public function getTax_total(): ?float
+    public function getTaxTotal(): ?float
     {
         return $this->tax_total;
     }
 
-    public function setTax_total(float $tax_total): void
+    public function setTaxTotal(float $tax_total): void
     {
         $this->tax_total = $tax_total;
     }

@@ -57,9 +57,9 @@ final readonly class QuoteAllowanceChargeService
         isset($array['id']) ?
             $model->setId((int) $array['id']) : '';
         isset($array['quote_id']) ?
-            $model->setQuote_id((int) $array['quote_id']) : '';
+            $model->setQuoteId((int) $array['quote_id']) : '';
         isset($array['allowance_charge_id']) ?
-            $model->setAllowance_charge_id(
+            $model->setAllowanceChargeId(
                 (int) $array['allowance_charge_id']
             ) : '';
         isset($array['amount']) ?

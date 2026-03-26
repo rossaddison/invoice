@@ -184,7 +184,7 @@ final class ClientNoteController extends BaseController
                 'clients' => $clientRepository->findAllPreloaded(),
             ];
             if ($this->rbacObserver(
-                                    $clientNote->getClient_id(), $ucR, $uiR)) {
+                                    $clientNote->getClientId(), $ucR, $uiR)) {
                 return $this->webViewRenderer->render('_view', $parameters);
             }
         }
@@ -195,7 +195,7 @@ final class ClientNoteController extends BaseController
                                     string $clientId, UCR $ucR, UIR $uiR): bool {
         $userClient = $ucR->repoUserquery($clientId);
         if (null!==$userClient) {
-            $userId = $userClient->getUser_id();
+            $userId = $userClient->getUserId();
             $userInv = $uiR->repoUserInvUserIdquery($userId);
             if (null !== $userInv && $userInv->getActive()) {
                 return true;

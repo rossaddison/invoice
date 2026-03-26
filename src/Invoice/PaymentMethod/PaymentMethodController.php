@@ -39,15 +39,24 @@ final class PaymentMethodController extends BaseController
     }
 
     /**
+     * @param Request $request
+     * @param CurrentRoute $currentRoute
      * @param PaymentMethodRepository $paymentmethodRepository
      */
-    public function index(PaymentMethodRepository $paymentmethodRepository): Response
+    public function index(Request $request, CurrentRoute $currentRoute, PaymentMethodRepository $paymentmethodRepository): Response
     {
         $canEdit = $this->rbac();
+        if ($canEdit instanceof Response) {
+            return $canEdit;
+        }
+        $page = (int) $currentRoute->getArgument('page', '1');
+        $currentPageNeverZero = $page > 0 ? $page : 1;
+        $query_params = $request->getQueryParams();
         $parameters = [
-            'canEdit' => $canEdit,
             'payment_methods' => $this->paymentmethods($paymentmethodRepository),
             'alert' => $this->alert(),
+            'page' => $currentPageNeverZero,
+            'sortString' => $query_params['sort'] ?? '-id',
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -159,21 +168,21 @@ final class PaymentMethodController extends BaseController
                 'actionName' => 'paymentmethod/view',
                 'actionArguments' => ['id' => $payment_method->getId()],
                 'form' => $form,
-                'paymentmethod' => $paymentmethodRepository->repoPaymentMethodquery($payment_method->getId()),
+                'paymentmethod' =>
+                    $paymentmethodRepository->repoPaymentMethodquery(
+                            $payment_method->getId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('paymentmethod/index');
     }
 
-    /**
-     * @return Response|true
-     */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('permission'));
+            $this->flashMessage('warning',
+                    $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('paymentmethod/index');
         }
         return $canEdit;

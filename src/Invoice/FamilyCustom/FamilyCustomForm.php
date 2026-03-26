@@ -26,17 +26,17 @@ final class FamilyCustomForm extends FormModel
 
     public function __construct(FamilyCustom $familyCustom)
     {
-        $this->family_id = (int) $familyCustom->getFamily_id();
-        $this->custom_field_id = (int) $familyCustom->getCustom_field_id();
+        $this->family_id = (int) $familyCustom->getFamilyId();
+        $this->custom_field_id = (int) $familyCustom->getCustomFieldId();
         $this->value = (string) $familyCustom->getValue();
     }
 
-    public function getFamily_id(): ?int
+    public function getFamilyId(): ?int
     {
         return $this->family_id;
     }
 
-    public function getCustom_field_id(): ?int
+    public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;
     }

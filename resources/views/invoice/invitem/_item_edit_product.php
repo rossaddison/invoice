@@ -101,8 +101,8 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                          * @var App\Invoice\Entity\Product $product
                          */
                         foreach ($products as $product) {
-                            $productId = $product->getProduct_id();
-                            $productName = $product->getProduct_name() ?? '';
+                            $productId = $product->getProductId();
+                            $productName = $product->getProductName() ?? '';
                             if (!empty($productId) && strlen($productName) > 0) {
                                 $optionsDataProduct[$productId] = $productName;
                             }
@@ -110,7 +110,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         ?>
                                 <?= Field::select($form, 'product_id')
                                 ->optionsData($optionsDataProduct)
-                                ->value(Html::encode($form->getProduct_id())); ?>
+                                ->value(Html::encode($form->getProductId())); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class'
@@ -122,7 +122,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     ->addInputAttributes(
                                         ['class' =>
                                    'input-lg form-control amount has-feedback'])
-                                    ->value($numberHelper->format_amount(
+                                    ->value($numberHelper->formatAmount(
                                             $form->getQuantity()))
                                     ->hint($translator->translate(
                                              'hint.greater.than.zero.please'));
@@ -137,7 +137,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     ->addInputAttributes(
                                         ['class' =>
                                     'input-lg form-control amount has-feedback'])
-                                    ->value($numberHelper->format_amount(
+                                    ->value($numberHelper->formatAmount(
                                             $form->getPrice() ?? 0.00))
                                     ->hint($translator->translate(
                                            'hint.greater.than.zero.please')); ?>
@@ -158,8 +158,8 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                             ' '
                                             . $translator->translate('per.item'),
                                     ])
-                                    ->value($numberHelper->format_amount(
-                                       $form->getDiscount_amount() ?? 0.00)); ?>
+                                    ->value($numberHelper->formatAmount(
+                                       $form->getDiscountAmount() ?? 0.00)); ?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td td-vert-middle']); ?>
@@ -176,7 +176,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     $taxRateName = $taxRate->getTaxRateName()
                                             ?? '';
                                     $formattedNumber =
-                                        $numberHelper->format_amount(
+                                        $numberHelper->formatAmount(
                                             $taxRatePercent);
                                     if ((null !== $taxRateId)
                                             && ($taxRatePercent >= 0.00)
@@ -197,7 +197,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     ->addInputAttributes(
                                         ['class' => 'form-control'])
                                     ->optionsData($optionsDataTaxRate)
-                                    ->value(Html::encode($form->getTax_rate_id()))
+                                    ->value(Html::encode($form->getTaxRateId()))
                                     ->hint($translator->translate(
                                                 'hint.this.field.is.required'));
                                 ?>
@@ -212,7 +212,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 'type' => 'submit',
                                 'class' => 'btn btn-info',
                                 'data-toggle' => 'tooltip',
-                                'title' => 'invitem/add_product']); ?>
+                                'title' => 'invitem/addProduct']); ?>
                                 <?=  new I()->addClass('fa fa-plus'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>
@@ -246,10 +246,10 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                      * @var App\Invoice\Entity\Unit $unit
                                      */
                                     foreach ($units as $unit) {
-                                        $unitId = $unit->getUnit_id();
-                                        $unitName = $unit->getUnit_name();
+                                        $unitId = $unit->getUnitId();
+                                        $unitName = $unit->getUnitName();
                                         $unitNamePlrl =
-                                                $unit->getUnit_name_plrl();
+                                                $unit->getUnitNamePlrl();
                                         if ((null !== $unitId)
                                                 && (strlen($unitName) > 0)
                                                 && (strlen($unitNamePlrl) > 0)) {
@@ -267,7 +267,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                             ['class' => 'form-control'])
                                     ->optionsData($optionsDataProductUnit)
                                     ->value(Html::encode(
-                                        $form->getProduct_unit_id() ?? ''))
+                                        $form->getProductUnitId() ?? ''))
                                     ->hint($translator->translate(
                                         'hint.this.field.is.required'));
                                 ?>

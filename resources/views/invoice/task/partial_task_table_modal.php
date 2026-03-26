@@ -38,14 +38,14 @@ use Yiisoft\Html\Html;
                            id="task-id-<?= $task->getId() ?>" value="<?= $task->getId(); ?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?php echo ($projectR->count($task->getProject_id()) > 0 ? $projectR->repoProjectquery($task->getProject_id())?->getName() : '') ?></b>
+                    <b><?php echo ($projectR->count($task->getProjectId()) > 0 ? $projectR->repoProjectquery($task->getProjectId())?->getName() : '') ?></b>
                 </td>
                 <td>
                     <b><?php echo Html::encode($task->getName()); ?></b>
                 </td>
                 <td>
                     <?php
-                        $finishDate = $task->getFinish_date();
+                        $finishDate = $task->getFinishDate();
                 if ($finishDate instanceof \DateTimeImmutable) {
                     $fDate = $finishDate->format('Y-m-d');
                 }
@@ -62,7 +62,7 @@ use Yiisoft\Html\Html;
                     <?= nl2br(Html::encode($task->getDescription())); ?>
                 </td>
                 <td class="amount">
-                    <?= $numberHelper->format_currency($task->getPrice()); ?>
+                    <?= $numberHelper->formatCurrency($task->getPrice()); ?>
                 </td>
             </tr>
         <?php } ?>

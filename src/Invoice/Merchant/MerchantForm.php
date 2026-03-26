@@ -27,7 +27,7 @@ final class MerchantForm extends FormModel
 
     public function __construct(Merchant $merchant)
     {
-        $this->inv_id = (int) $merchant->getInv_id();
+        $this->inv_id = (int) $merchant->getInvId();
         $this->successful = $merchant->getSuccessful();
         $this->date = $merchant->getDate();
         $this->driver = $merchant->getDriver();
@@ -41,7 +41,7 @@ final class MerchantForm extends FormModel
         return $this->inv;
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * Related logic: see InvController function view_modal_create_credit
+ * Related logic: see InvController function viewModalCreateCredit
  * @var App\Invoice\Entity\Inv $inv
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
@@ -26,13 +26,13 @@ use Yiisoft\Html\Html;
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="user_id" id="user_id" class="form-control" value="<?= $inv->getUser_id(); ?>">
+                    <input type="hidden" name="user_id" id="user_id" class="form-control" value="<?= $inv->getUserId(); ?>">
 
                     <input type="hidden" name="parent_id" id="parent_id"
                            value="<?= $inv->getId(); ?>">
 
                     <input type="hidden" name="client_id" id="client_id" class="hidden"
-                           value="<?= $inv->getClient_id(); ?>">
+                           value="<?= $inv->getClientId(); ?>">
 
                     <input type="hidden" name="inv_date_created" id="inv_date_created"
                            value="<?=
@@ -72,7 +72,7 @@ echo $credit_date; ?>">
                     <p><strong><?= $translator->translate('credit.invoice.details'); ?></strong></p>
 
                     <ul>
-                        <li><?= $translator->translate('client') . ': ' . Html::encode($inv->getClient()?->getClient_name()); ?></li>
+                        <li><?= $translator->translate('client') . ': ' . Html::encode($inv->getClient()?->getClientName()); ?></li>
                         <li><?= $translator->translate('credit.invoice.date') . ': ' . $credit_date; ?></li>
                         <li><?= $translator->translate('group') . ': ' . (!empty($credit_invoice_group) ? $credit_invoice_group : ''); ?></li>
                     </ul>

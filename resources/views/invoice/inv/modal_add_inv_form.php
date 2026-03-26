@@ -67,7 +67,7 @@ echo  new Form()
                 <?= Field::select($form, 'client_id')
     ->label($translator->translate('user.account.clients'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getClient_id()))
+    ->value(Html::encode($form->getClientId()))
     ->prompt($translator->translate('none'))
     ->optionsData($clients)
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -88,9 +88,9 @@ echo  new Form()
                 <?= Field::date($form, 'date_created')
     ->label($translator->translate('date.created'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_created())
-            && null !== $form->getDate_created()
-                                    ? $form->getDate_created()->format('Y-m-d') : ''))
+    ->value(Html::encode(!is_string($form->getDateCreated())
+            && null !== $form->getDateCreated()
+                                    ? $form->getDateCreated()->format('Y-m-d') : ''))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
             <?= Html::closeTag('div'); ?>
@@ -99,9 +99,9 @@ echo  new Form()
     ->hideLabel()
     ->label($translator->translate('date.modified'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_modified())
-            && null !== $form->getDate_modified()
-                                    ? $form->getDate_modified()->format('Y-m-d') : ''))
+    ->value(Html::encode(!is_string($form->getDateModified())
+            && null !== $form->getDateModified()
+                                    ? $form->getDateModified()->format('Y-m-d') : ''))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -120,9 +120,9 @@ echo  new Form()
                 <?= Field::text($form, 'time_created')
     ->label($translator->translate('time.created'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(date('h:i:s', (!is_string($form->getTime_created())
-                    && null !== $form->getTime_created()
-                    ? $form->getTime_created()->getTimestamp() : null))))
+    ->value(Html::encode(date('h:i:s', (!is_string($form->getTimeCreated())
+                    && null !== $form->getTimeCreated()
+                    ? $form->getTimeCreated()->getTimestamp() : null))))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -130,16 +130,16 @@ echo  new Form()
     ->hideLabel(true)
     ->label($translator->translate('tax.point'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_tax_point())
-                    && null !== $form->getDate_tax_point()
-                    ? $form->getDate_tax_point()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->getDateTaxPoint())
+                    && null !== $form->getDateTaxPoint()
+                    ? $form->getDateTaxPoint()->format('Y-m-d') : ''));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::hidden($form, 'stand_in_code')
     ->hideLabel(true)
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getStand_in_code()))
+    ->value(Html::encode($form->getStandInCode()))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -147,9 +147,9 @@ echo  new Form()
     ->hideLabel(true)
     ->label($translator->translate('date.supplied'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_supplied())
-            && null !== $form->getDate_supplied()
-            ? $form->getDate_supplied()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->getDateSupplied())
+            && null !== $form->getDateSupplied()
+            ? $form->getDateSupplied()->format('Y-m-d') : ''));
 ?>    
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -157,9 +157,9 @@ echo  new Form()
     ->hideLabel(true)
     ->label($translator->translate('date.due'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode(!is_string($form->getDate_due())
-            && null !== $form->getDate_due()
-            ? $form->getDate_due()->format('Y-m-d') : ''));
+    ->value(Html::encode(!is_string($form->getDateDue())
+            && null !== $form->getDateDue()
+            ? $form->getDateDue()->format('Y-m-d') : ''));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -175,7 +175,7 @@ echo  new Form()
     ->hideLabel(true)
     ->label($translator->translate('discount.amount'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($s->format_amount(($form->getDiscount_amount() ?? 0.00))))
+    ->value(Html::encode($s->formatAmount(($form->getDiscountAmount() ?? 0.00))))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -211,7 +211,7 @@ echo  new Form()
     ->hideLabel(true)
     ->label($translator->translate('url.key'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getUrl_key() ?? $urlKey));
+    ->value(Html::encode($form->getUrlKey() ?? $urlKey));
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -219,7 +219,7 @@ echo  new Form()
     ->hideLabel(true)
     ->label($translator->translate('payment.method'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getPayment_method() ??
+    ->value(Html::encode($form->getPaymentMethod() ??
             ($s->getSetting('invoice_default_payment_method') ?: 1)))
 ?>
             <?= Html::closeTag('div'); ?>
@@ -228,7 +228,7 @@ echo  new Form()
     ->hideLabel(true)
     ->label($translator->translate('contract.id'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getContract_id() ?? 0))
+    ->value(Html::encode($form->getContractId() ?? 0))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -236,7 +236,7 @@ echo  new Form()
     ->hideLabel(true)
     ->label($translator->translate('delivery'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getDelivery_id() ?? 0))
+    ->value(Html::encode($form->getDeliveryId() ?? 0))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -244,7 +244,7 @@ echo  new Form()
     ->hideLabel(true)
     ->label($translator->translate('delivery.location'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getDelivery_location_id() ?? 0))
+    ->value(Html::encode($form->getDeliveryLocationId() ?? 0))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
@@ -252,7 +252,7 @@ echo  new Form()
     ->hideLabel(true)
     ->label($translator->translate('postal.address'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value(Html::encode($form->getPostal_address_id() ?? 0))
+    ->value(Html::encode($form->getPostalAddressId() ?? 0))
 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

@@ -33,7 +33,7 @@ final readonly class PeppolUblXml
             private InvAmount $inv_amount)
     {
         $this->items = $this->invoice->getItems();
-        $this->company = $this->sR->get_config_company_details();
+        $this->company = $this->sR->getConfigCompanyDetails();
     }
 
     public function xml(

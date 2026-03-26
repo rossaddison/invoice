@@ -14,31 +14,31 @@ echo "<?php\n";
 
 declare(strict_types=1); 
 
-namespace <?= $generator->getNamespace_path()
+namespace <?= $generator->getNamespacePath()
         . DIRECTORY_SEPARATOR
-        . $generator->getCamelcase_capital_name(); ?>;
+        . $generator->getCamelcaseCapitalName(); ?>;
 
 use App\Invoice\BaseController;
-use <?= $generator->getNamespace_path()
+use <?= $generator->getNamespacePath()
                 . DIRECTORY_SEPARATOR
                 . 'Entity'
                 . DIRECTORY_SEPARATOR
-                . $generator->getCamelcase_capital_name(); ?>;
-use <?= $generator->getNamespace_path()
+                . $generator->getCamelcaseCapitalName(); ?>;
+use <?= $generator->getNamespacePath()
                 . DIRECTORY_SEPARATOR
-                . $generator->getCamelcase_capital_name()
+                . $generator->getCamelcaseCapitalName()
                 . DIRECTORY_SEPARATOR
-                . $generator->getCamelcase_capital_name(); ?>Form;
-use <?= $generator->getNamespace_path()
+                . $generator->getCamelcaseCapitalName(); ?>Form;
+use <?= $generator->getNamespacePath()
                 . DIRECTORY_SEPARATOR
-                . $generator->getCamelcase_capital_name()
+                . $generator->getCamelcaseCapitalName()
                 . DIRECTORY_SEPARATOR
-                . $generator->getCamelcase_capital_name(); ?>Service;
-use <?= $generator->getNamespace_path()
+                . $generator->getCamelcaseCapitalName(); ?>Service;
+use <?= $generator->getNamespacePath()
                 . DIRECTORY_SEPARATOR
-                . $generator->getCamelcase_capital_name()
+                . $generator->getCamelcaseCapitalName()
                 . DIRECTORY_SEPARATOR
-                . $generator->getCamelcase_capital_name(); ?>Repository;
+                . $generator->getCamelcaseCapitalName(); ?>Repository;
 use App\Invoice\Setting\SettingRepository as sR;
 
 <?php
@@ -47,11 +47,11 @@ use App\Invoice\Setting\SettingRepository as sR;
    */
   foreach ($relations as $relation) {
       echo 'use '
-        . $generator->getNamespace_path()
+        . $generator->getNamespacePath()
         . DIRECTORY_SEPARATOR
-        . ($relation->getCamelcase_name() ?? '#')
+        . ($relation->getCamelcaseName() ?? '#')
         . DIRECTORY_SEPARATOR
-        . ($relation->getCamelcase_name() ?? '#')
+        . ($relation->getCamelcaseName() ?? '#')
         . 'Repository;' . "\n";
   }
 ?>
@@ -71,15 +71,15 @@ use Yiisoft\{Data\Cycle\Reader\EntityReader, Data\Paginator\PageToken,
 
 use \Exception;
 
-final class <?= $generator->getCamelcase_capital_name(); ?>
+final class <?= $generator->getCamelcaseCapitalName(); ?>
                 Controller extends BaseController
 {
     protected string $controllerName = 'invoice/
-            <?= $generator->getSmall_singular_name(); ?>';
+            <?= $generator->getSmallSingularName(); ?>';
 
     public function __construct(
-        private <?= $generator->getCamelcase_capital_name(); ?>
-            Service $<?= $generator->getSmall_singular_name(); ?>Service,
+        private <?= $generator->getCamelcaseCapitalName(); ?>
+            Service $<?= $generator->getSmallSingularName(); ?>Service,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -90,8 +90,8 @@ final class <?= $generator->getCamelcase_capital_name(); ?>
     ) {
         parent::__construct($webService, $userService, $translator,
             $webViewRenderer, $session, $sR, $flash);
-        $this-><?= $generator->getSmall_singular_name(); ?>Service = $
-            <?= $generator->getSmall_singular_name(); ?>Service;
+        $this-><?= $generator->getSmallSingularName(); ?>Service = $
+            <?= $generator->getSmallSingularName(); ?>Service;
     }
     
     public function add(Request $request, 
@@ -104,9 +104,9 @@ echo "\n";
  */
 foreach ($relations as $relation) {
     $rel .= '                        '
-            . ($relation->getCamelcase_name() ?? '#')
+            . ($relation->getCamelcaseName() ?? '#')
             . 'Repository $'
-            . lcfirst($relation->getCamelcase_name() ?? '#')
+            . lcfirst($relation->getCamelcaseName() ?? '#')
             . 'Repository,'
             . "\n";
 }
@@ -114,14 +114,14 @@ echo rtrim($rel, ",\n") . "\n";
 ?>
     ) : Response
     {
-        $<?= $generator->getSmall_singular_name(); ?> = new 
-         <?= $generator->getCamelcase_capital_name(); ?>();
+        $<?= $generator->getSmallSingularName(); ?> = new 
+         <?= $generator->getCamelcaseCapitalName(); ?>();
         $form = new 
-            <?= $generator->getCamelcase_capital_name(); ?>
-            Form($<?= $generator->getSmall_singular_name(); ?>);
+            <?= $generator->getCamelcaseCapitalName(); ?>
+            Form($<?= $generator->getSmallSingularName(); ?>);
         $parameters = [
             'title' => $this->translator->translate('add'),
-            'actionName' => '<?= $generator->getSmall_singular_name(); ?>/add',
+            'actionName' => '<?= $generator->getSmallSingularName(); ?>/add',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
@@ -132,10 +132,10 @@ echo rtrim($rel, ",\n") . "\n";
  */
 foreach ($relations as $relation) {
     echo "            '"
-        . ($relation->getLowercase_name() ?? '#')
+        . ($relation->getLowercaseName() ?? '#')
         . "s'=>"
         . '$'
-        . ($relation->getLowercase_name() ?? '#')
+        . ($relation->getLowercaseName() ?? '#')
         . 'Repository->findAllPreloaded(),' . "\n";
 }
 ?>
@@ -145,11 +145,11 @@ foreach ($relations as $relation) {
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                    $this-><?= $generator->getSmall_singular_name(); ?>Service->save
-                    <?= $generator->getCamelcase_capital_name(); ?>($
-                    <?= $generator->getSmall_singular_name(); ?>, $body);
+                    $this-><?= $generator->getSmallSingularName(); ?>Service->save
+                    <?= $generator->getCamelcaseCapitalName(); ?>($
+                    <?= $generator->getSmallSingularName(); ?>, $body);
                     return $this->webService->getRedirectResponse('
-                    <?= $generator->getSmall_singular_name(); ?>/index');
+                    <?= $generator->getSmallSingularName(); ?>/index');
                 }
                 $parameters['errors'] = $form->getValidationResult()
                                              ->getErrorMessagesIndexedByProperty();
@@ -160,22 +160,22 @@ foreach ($relations as $relation) {
     }
         
     public function index(
-        <?= $generator->getCamelcase_capital_name(); ?>Repository $
-        <?= lcfirst($generator->getCamelcase_capital_name()); ?>Repository, 
+        <?= $generator->getCamelcaseCapitalName(); ?>Repository $
+        <?= lcfirst($generator->getCamelcaseCapitalName()); ?>Repository, 
                           sR $sR, #[RouteArgument('page')] int $page = 1): Response
     {      
-      $<?= $generator->getSmall_singular_name(); ?> = $
-      <?= lcfirst($generator->getCamelcase_capital_name()); ?>
+      $<?= $generator->getSmallSingularName(); ?> = $
+      <?= lcfirst($generator->getCamelcaseCapitalName()); ?>
       Repository->findAllPreloaded();
       $paginator = (new OffsetPaginator($
-      <?= $generator->getSmall_singular_name(); ?>))
+      <?= $generator->getSmallSingularName(); ?>))
       ->withPageSize($settingRepository->positiveListLimit())
       ->withCurrentPage($page)
       ->withToken(PageToken::next((string)$page));
       $parameters = [
-      '<?= $generator->getSmall_singular_name(); ?>s' => $this->
-      <?= $generator->getSmall_singular_name(); ?>
-      s($<?= lcfirst($generator->getCamelcase_capital_name()); ?>Repository),
+      '<?= $generator->getSmallSingularName(); ?>s' => $this->
+      <?= $generator->getSmallSingularName(); ?>
+      s($<?= lcfirst($generator->getCamelcaseCapitalName()); ?>Repository),
       'paginator' => $paginator,
       'alert' => $this->alert(),
       'defaultPageSizeOffsetPaginator' => $sR->getSetting('default_list_limit')
@@ -186,45 +186,45 @@ foreach ($relations as $relation) {
     
     /**
      * @param 
-      <?= $generator->getCamelcase_capital_name(); ?>Repository $
-      <?= $generator->getSmall_singular_name();?>Repository
+      <?= $generator->getCamelcaseCapitalName(); ?>Repository $
+      <?= $generator->getSmallSingularName();?>Repository
      * @param int $id
      * @return Response
      */
     public function delete(
-      <?= $generator->getCamelcase_capital_name(); ?>Repository $
-      <?= lcfirst($generator->getCamelcase_capital_name());?>Repository,
+      <?= $generator->getCamelcaseCapitalName(); ?>Repository $
+      <?= lcfirst($generator->getCamelcaseCapitalName());?>Repository,
         #[RouteArgument('id')] int $id 
     ): Response {
         try {
-            $<?= $generator->getSmall_singular_name();?> = $this->
-            <?= $generator->getSmall_singular_name();?>($
-            <?= lcfirst($generator->getCamelcase_capital_name());?>Repository, $id);
-            if ($<?= $generator->getSmall_singular_name();?>) {
-                $this-><?= $generator->getSmall_singular_name();?>Service->delete
-                <?= $generator->getCamelcase_capital_name(); ?>($
-                <?= $generator->getSmall_singular_name();?>);               
+            $<?= $generator->getSmallSingularName();?> = $this->
+            <?= $generator->getSmallSingularName();?>($
+            <?= lcfirst($generator->getCamelcaseCapitalName());?>Repository, $id);
+            if ($<?= $generator->getSmallSingularName();?>) {
+                $this-><?= $generator->getSmallSingularName();?>Service->delete
+                <?= $generator->getCamelcaseCapitalName(); ?>($
+                <?= $generator->getSmallSingularName();?>);               
                 $this->flashMessage('info',
                     $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('
-                <?= $generator->getSmall_singular_name();?>/index'); 
+                <?= $generator->getSmallSingularName();?>/index'); 
             }
             return $this->webService->getRedirectResponse('
-                <?= $generator->getSmall_singular_name();?>/index'); 
+                <?= $generator->getSmallSingularName();?>/index'); 
 	} catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('
-                <?= $generator->getSmall_singular_name();?>/index'); 
+                <?= $generator->getSmallSingularName();?>/index'); 
         }
     }
         
     public function edit(Request $request, 
                          FormHydrator $formHydrator,
-        <?php if ($generator->getCamelcase_capital_name()) {
-            echo $generator->getCamelcase_capital_name()
+        <?php if ($generator->getCamelcaseCapitalName()) {
+            echo $generator->getCamelcaseCapitalName()
                     . 'Repository '
                     . '$'
-                    . $generator->getSmall_singular_name()
+                    . $generator->getSmallSingularName()
                     . 'Repository,';
         }
 ?> 
@@ -236,23 +236,23 @@ echo "\n";
  */
 foreach ($relations as $relation) {
     $rel .= '                        '
-            . ($relation->getCamelcase_name() ?? '#')
+            . ($relation->getCamelcaseName() ?? '#')
             . 'Repository $'
-            . ($relation->getLowercase_name() ?? '#')
+            . ($relation->getLowercaseName() ?? '#')
             . 'Repository,' . "\n";
 }
 echo rtrim($rel, ",\n") . ",";
 ?>#[RouteArgument('id')] int $id): Response {
-        $<?= $generator->getSmall_singular_name(); ?> = $this->
-        <?= $generator->getSmall_singular_name(); ?>($
-        <?= $generator->getSmall_singular_name(); ?>Repository, $id);
-        if ($<?= $generator->getSmall_singular_name(); ?>){
+        $<?= $generator->getSmallSingularName(); ?> = $this->
+        <?= $generator->getSmallSingularName(); ?>($
+        <?= $generator->getSmallSingularName(); ?>Repository, $id);
+        if ($<?= $generator->getSmallSingularName(); ?>){
             $form = new 
-            <?= $generator->getCamelcase_capital_name(); ?>Form($
-            <?= $generator->getSmall_singular_name(); ?>);
+            <?= $generator->getCamelcaseCapitalName(); ?>Form($
+            <?= $generator->getSmallSingularName(); ?>);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
-                'actionName' => '<?= $generator->getSmall_singular_name(); ?>/edit', 
+                'actionName' => '<?= $generator->getSmallSingularName(); ?>/edit', 
                 'actionArguments' => ['id' => $id],
                 'errors' => [],
                 'form' => $form,
@@ -263,10 +263,10 @@ echo rtrim($rel, ",\n") . ",";
  */
 foreach ($relations as $relation) {
     $rel .= "            '"
-            . ($relation->getLowercase_name() ?? '#')
+            . ($relation->getLowercaseName() ?? '#')
             . "s'=>"
             . '$'
-            . ($relation->getLowercase_name() ?? '#')
+            . ($relation->getLowercaseName() ?? '#')
             . 'Repository->findAllPreloaded(),' . "\n";
 }
 echo rtrim($rel, ",\n") . "\n";
@@ -278,11 +278,11 @@ echo rtrim($rel, ",\n") . "\n";
                 if (is_array($body)) {
                     if ($formHydrator->populateFromPostAndValidate($form,  $request)) {
                         $this->
-                    <?= $generator->getSmall_singular_name();?>Service->save
-                    <?= $generator->getCamelcase_capital_name(); ?>($
-                    <?= $generator->getSmall_singular_name();?>, $body);
+                    <?= $generator->getSmallSingularName();?>Service->save
+                    <?= $generator->getCamelcaseCapitalName(); ?>($
+                    <?= $generator->getSmallSingularName();?>, $body);
                         return $this->webService->getRedirectResponse('
-                            <?= $generator->getSmall_singular_name(); ?>/index');
+                            <?= $generator->getSmallSingularName(); ?>/index');
                     }
                     $parameters['errors'] =
                         $form->getValidationResult()
@@ -293,27 +293,27 @@ echo rtrim($rel, ",\n") . "\n";
             return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('
-                    <?= $generator->getSmall_singular_name(); ?>/index');
+                    <?= $generator->getSmallSingularName(); ?>/index');
     }
     
     //For rbac refer to AccessChecker    
     
     /**     
-     * @param <?= $generator->getCamelcase_capital_name();?>Repository $
-                    <?= $generator->getSmall_singular_name();?>Repository
+     * @param <?= $generator->getCamelcaseCapitalName();?>Repository $
+                    <?= $generator->getSmallSingularName();?>Repository
      * @param int $id
-     * @return <?= $generator->getCamelcase_capital_name();?>|null
+     * @return <?= $generator->getCamelcaseCapitalName();?>|null
      */
-    private function <?= $generator->getSmall_singular_name();?>(
-        <?= $generator->getCamelcase_capital_name();?>Repository $
-        <?= $generator->getSmall_singular_name();?>Repository, int $id) : 
-        <?= $generator->getCamelcase_capital_name();?>|null
+    private function <?= $generator->getSmallSingularName();?>(
+        <?= $generator->getCamelcaseCapitalName();?>Repository $
+        <?= $generator->getSmallSingularName();?>Repository, int $id) : 
+        <?= $generator->getCamelcaseCapitalName();?>|null
     {
         if ($id) {
-            $<?= $generator->getSmall_singular_name();?> = $
-            <?= $generator->getSmall_singular_name();?>Repository->repo
-            <?= $generator->getCamelcase_capital_name();?>Query((string)$id);
-            return $<?= $generator->getSmall_singular_name();?>;
+            $<?= $generator->getSmallSingularName();?> = $
+            <?= $generator->getSmallSingularName();?>Repository->repo
+            <?= $generator->getCamelcaseCapitalName();?>Query((string)$id);
+            return $<?= $generator->getSmallSingularName();?>;
         }
         return null;
     }
@@ -323,46 +323,46 @@ echo rtrim($rel, ",\n") . "\n";
      *
      * @psalm-return EntityReader
      */
-    private function <?= $generator->getSmall_plural_name();?>(
-            <?= $generator->getCamelcase_capital_name();?>Repository $
-            <?= $generator->getSmall_singular_name();?>Repository) : EntityReader
+    private function <?= $generator->getSmallPluralName();?>(
+            <?= $generator->getCamelcaseCapitalName();?>Repository $
+            <?= $generator->getSmallSingularName();?>Repository) : EntityReader
     {
-        $<?= $generator->getSmall_plural_name();?> = $
-         <?= $generator->getSmall_singular_name();?>Repository->findAllPreloaded(); 
-        return $<?= $generator->getSmall_plural_name();?>;
+        $<?= $generator->getSmallPluralName();?> = $
+         <?= $generator->getSmallSingularName();?>Repository->findAllPreloaded(); 
+        return $<?= $generator->getSmallPluralName();?>;
     }
         
     /**
-     * @param <?= $generator->getCamelcase_capital_name(); ?>Repository $
-        <?= $generator->getSmall_singular_name(); ?>Repository
+     * @param <?= $generator->getCamelcaseCapitalName(); ?>Repository $
+        <?= $generator->getSmallSingularName(); ?>Repository
      * @param SettingRepository $settingRepository
      * @param int id
      * @return Response
      */
-    public function view(<?= $generator->getCamelcase_capital_name(); ?>
+    public function view(<?= $generator->getCamelcaseCapitalName(); ?>
     Repository $
-        <?= $generator->getSmall_singular_name();?>Repository,
+        <?= $generator->getSmallSingularName();?>Repository,
             #[RouteArgument('id')] int $id) 
                          : Response 
     {
-        $<?= $generator->getSmall_singular_name(); ?> = $this->
-        <?= $generator->getSmall_singular_name(); ?>($
-        <?= $generator->getSmall_singular_name(); ?>Repository, $id); 
-        if ($<?= $generator->getSmall_singular_name(); ?>) {
-            $form = new <?= $generator->getCamelcase_capital_name(); ?>Form($
-            <?= $generator->getSmall_singular_name(); ?>);
+        $<?= $generator->getSmallSingularName(); ?> = $this->
+        <?= $generator->getSmallSingularName(); ?>($
+        <?= $generator->getSmallSingularName(); ?>Repository, $id); 
+        if ($<?= $generator->getSmallSingularName(); ?>) {
+            $form = new <?= $generator->getCamelcaseCapitalName(); ?>Form($
+            <?= $generator->getSmallSingularName(); ?>);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => '
-            <?= $generator->getSmall_singular_name(); ?>/view', 
+            <?= $generator->getSmallSingularName(); ?>/view', 
                 'actionArguments' => ['id' => $id],
                 'form' => $form,
-                '<?= $generator->getSmall_plural_name();?>' => $
-                <?= $generator->getSmall_singular_name();?>,
+                '<?= $generator->getSmallPluralName();?>' => $
+                <?= $generator->getSmallSingularName();?>,
             ];        
         return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('
-                <?= $generator->getSmall_singular_name(); ?>/index');
+                <?= $generator->getSmallSingularName(); ?>/index');
     }
 }

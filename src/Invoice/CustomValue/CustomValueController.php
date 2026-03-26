@@ -54,7 +54,7 @@ final class CustomValueController extends BaseController
             'custom_field' => $customfieldRepository->repoCustomFieldquery($custom_field_id),
             'custom_field_id' => $custom_field_id,
             'custom_values' => $custom_values,
-            'custom_values_types' => array_merge($this->user_input_types(), $this->custom_value_fields()),
+            'custom_values_types' => array_merge($this->userInputTypes(), $this->customValueFields()),
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -80,7 +80,7 @@ final class CustomValueController extends BaseController
                 $parameters = [
                     'field_form' => $field_form,
                     'custom_field' => $custom_field,
-                    'custom_values_types' => array_merge($this->user_input_types(), $this->custom_value_fields()),
+                    'custom_values_types' => array_merge($this->userInputTypes(), $this->customValueFields()),
                     'custom_values' => $customvalues,
                 ];
                 return $this->webViewRenderer->render('field', $parameters);
@@ -221,6 +221,7 @@ final class CustomValueController extends BaseController
     /**
      * @return Response|true
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
@@ -250,7 +251,7 @@ final class CustomValueController extends BaseController
      *
      * @psalm-return list{'TEXT', 'DATE', 'BOOLEAN'}
      */
-    public function user_input_types(): array
+    public function userInputTypes(): array
     {
         return [
             'TEXT',
@@ -264,7 +265,7 @@ final class CustomValueController extends BaseController
      *
      * @psalm-return list{'SINGLE-CHOICE', 'MULTIPLE-CHOICE'}
      */
-    public function custom_value_fields(): array
+    public function customValueFields(): array
     {
         return [
             'SINGLE-CHOICE',

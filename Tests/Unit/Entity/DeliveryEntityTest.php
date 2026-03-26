@@ -27,18 +27,18 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery();
         
         $this->assertNull($delivery->getId());
-        $this->assertNull($delivery->getInv_id());
-        $this->assertNull($delivery->getInv_item_id());
-        $this->assertSame('', $delivery->getDelivery_location_id());
-        $this->assertSame('', $delivery->getDelivery_party_id());
-        $this->assertNull($delivery->getDelivery_location());
+        $this->assertNull($delivery->getInvId());
+        $this->assertNull($delivery->getInvItemId());
+        $this->assertSame('', $delivery->getDeliveryLocationId());
+        $this->assertSame('', $delivery->getDeliveryPartyId());
+        $this->assertNull($delivery->getDeliveryLocation());
         
         // Check that dates are set automatically
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getDate_modified());
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getStart_date());
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getEnd_date());
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getActual_delivery_date());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getDateModified());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getStartDate());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getEndDate());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getActualDeliveryDate());
     }
 
     public function testConstructorWithAllParameters(): void
@@ -46,11 +46,11 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery(1, 100, 200, 5, 10);
         
         $this->assertSame(1, $delivery->getId());
-        $this->assertSame(100, $delivery->getInv_id());
-        $this->assertSame(200, $delivery->getInv_item_id());
-        $this->assertSame('5', $delivery->getDelivery_location_id());
-        $this->assertSame('10', $delivery->getDelivery_party_id());
-        $this->assertNull($delivery->getDelivery_location()); // Relationship set by ORM
+        $this->assertSame(100, $delivery->getInvId());
+        $this->assertSame(200, $delivery->getInvItemId());
+        $this->assertSame('5', $delivery->getDeliveryLocationId());
+        $this->assertSame('10', $delivery->getDeliveryPartyId());
+        $this->assertNull($delivery->getDeliveryLocation()); // Relationship set by ORM
     }
 
     public function testIdSetterAndGetter(): void
@@ -68,44 +68,44 @@ class DeliveryEntityTest extends Unit
     {
         $delivery = new Delivery();
         
-        $delivery->setInv_id(100);
-        $this->assertSame(100, $delivery->getInv_id());
+        $delivery->setInvId(100);
+        $this->assertSame(100, $delivery->getInvId());
         
-        $delivery->setInv_id(200);
-        $this->assertSame(200, $delivery->getInv_id());
+        $delivery->setInvId(200);
+        $this->assertSame(200, $delivery->getInvId());
     }
 
     public function testInvItemIdSetterAndGetter(): void
     {
         $delivery = new Delivery();
         
-        $delivery->setInv_item_id(50);
-        $this->assertSame(50, $delivery->getInv_item_id());
+        $delivery->setInvItemId(50);
+        $this->assertSame(50, $delivery->getInvItemId());
         
-        $delivery->setInv_item_id(75);
-        $this->assertSame(75, $delivery->getInv_item_id());
+        $delivery->setInvItemId(75);
+        $this->assertSame(75, $delivery->getInvItemId());
     }
 
     public function testDeliveryLocationIdSetterAndGetter(): void
     {
         $delivery = new Delivery();
         
-        $delivery->setDelivery_location_id(1);
-        $this->assertSame('1', $delivery->getDelivery_location_id());
+        $delivery->setDeliveryLocationId(1);
+        $this->assertSame('1', $delivery->getDeliveryLocationId());
         
-        $delivery->setDelivery_location_id(999);
-        $this->assertSame('999', $delivery->getDelivery_location_id());
+        $delivery->setDeliveryLocationId(999);
+        $this->assertSame('999', $delivery->getDeliveryLocationId());
     }
 
     public function testDeliveryPartyIdSetterAndGetter(): void
     {
         $delivery = new Delivery();
         
-        $delivery->setDelivery_party_id(5);
-        $this->assertSame('5', $delivery->getDelivery_party_id());
+        $delivery->setDeliveryPartyId(5);
+        $this->assertSame('5', $delivery->getDeliveryPartyId());
         
-        $delivery->setDelivery_party_id(888);
-        $this->assertSame('888', $delivery->getDelivery_party_id());
+        $delivery->setDeliveryPartyId(888);
+        $this->assertSame('888', $delivery->getDeliveryPartyId());
     }
 
     public function testStartDateSetterAndGetter(): void
@@ -113,9 +113,9 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery();
         $startDate = new DateTimeImmutable('2023-01-15 10:00:00');
         
-        $delivery->setStart_date($startDate);
-        $this->assertSame($startDate, $delivery->getStart_date());
-        $this->assertSame('2023-01-15 10:00:00', $delivery->getStart_date()->format($this->ymdHis));
+        $delivery->setStartDate($startDate);
+        $this->assertSame($startDate, $delivery->getStartDate());
+        $this->assertSame('2023-01-15 10:00:00', $delivery->getStartDate()->format($this->ymdHis));
     }
 
     public function testActualDeliveryDateSetterAndGetter(): void
@@ -123,13 +123,13 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery();
         $actualDate = new DateTimeImmutable('2023-02-20 15:30:00');
         
-        $delivery->setActual_delivery_date($actualDate);
-        $this->assertSame($actualDate, $delivery->getActual_delivery_date());
-        $this->assertSame('2023-02-20 15:30:00', $delivery->getActual_delivery_date()->format($this->ymdHis));
+        $delivery->setActualDeliveryDate($actualDate);
+        $this->assertSame($actualDate, $delivery->getActualDeliveryDate());
+        $this->assertSame('2023-02-20 15:30:00', $delivery->getActualDeliveryDate()->format($this->ymdHis));
         
         // Test setting to null
-        $delivery->setActual_delivery_date(null);
-        $this->assertNull($delivery->getActual_delivery_date());
+        $delivery->setActualDeliveryDate(null);
+        $this->assertNull($delivery->getActualDeliveryDate());
     }
 
     public function testEndDateSetterAndGetter(): void
@@ -137,9 +137,9 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery();
         $endDate = new DateTimeImmutable('2023-03-31 23:59:59');
         
-        $delivery->setEnd_date($endDate);
-        $this->assertSame($endDate, $delivery->getEnd_date());
-        $this->assertSame('2023-03-31 23:59:59', $delivery->getEnd_date()->format($this->ymdHis));
+        $delivery->setEndDate($endDate);
+        $this->assertSame($endDate, $delivery->getEndDate());
+        $this->assertSame('2023-03-31 23:59:59', $delivery->getEndDate()->format($this->ymdHis));
     }
 
     public function testDateCreatedSetterAndGetter(): void
@@ -147,9 +147,9 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery();
         $dateCreated = new DateTimeImmutable('2023-01-01 12:00:00');
         
-        $delivery->setDate_created($dateCreated);
-        $this->assertSame($dateCreated, $delivery->getDate_created());
-        $this->assertSame('2023-01-01 12:00:00', $delivery->getDate_created()->format($this->ymdHis));
+        $delivery->setDateCreated($dateCreated);
+        $this->assertSame($dateCreated, $delivery->getDateCreated());
+        $this->assertSame('2023-01-01 12:00:00', $delivery->getDateCreated()->format($this->ymdHis));
     }
 
     public function testDateModifiedSetterAndGetter(): void
@@ -157,9 +157,9 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery();
         $dateModified = new DateTimeImmutable('2023-12-31 18:45:30');
         
-        $delivery->setDate_modified($dateModified);
-        $this->assertSame($dateModified, $delivery->getDate_modified());
-        $this->assertSame('2023-12-31 18:45:30', $delivery->getDate_modified()->format($this->ymdHis));
+        $delivery->setDateModified($dateModified);
+        $this->assertSame($dateModified, $delivery->getDateModified());
+        $this->assertSame('2023-12-31 18:45:30', $delivery->getDateModified()->format($this->ymdHis));
     }
 
     public function testGetDeliveryLocation(): void
@@ -167,7 +167,7 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery();
         
         // Initially null (relationship set by ORM)
-        $this->assertNull($delivery->getDelivery_location());
+        $this->assertNull($delivery->getDeliveryLocation());
     }
 
     public function testIsNewRecord(): void
@@ -188,12 +188,12 @@ class DeliveryEntityTest extends Unit
         
         // Check that start_date is set to first day of current month
         $expectedStartDate = new DateTimeImmutable(date('Y-m-01'));
-        $actualStartDate = $delivery->getStart_date();
+        $actualStartDate = $delivery->getStartDate();
         $this->assertSame($expectedStartDate->format('Y-m-d'), $actualStartDate->format('Y-m-d'));
         
         // Check that end_date is set to last day of current month
         $expectedEndDate = new DateTimeImmutable(date('Y-m-t'));
-        $actualEndDate = $delivery->getEnd_date();
+        $actualEndDate = $delivery->getEndDate();
         $this->assertSame($expectedEndDate->format('Y-m-d'), $actualEndDate->format('Y-m-d'));
     }
 
@@ -203,16 +203,16 @@ class DeliveryEntityTest extends Unit
         
         // Step 1: Set up delivery
         $delivery->setId(1);
-        $delivery->setInv_id(100);
-        $delivery->setInv_item_id(50);
-        $delivery->setDelivery_location_id(5);
-        $delivery->setDelivery_party_id(10);
+        $delivery->setInvId(100);
+        $delivery->setInvItemId(50);
+        $delivery->setDeliveryLocationId(5);
+        $delivery->setDeliveryPartyId(10);
         
         $this->assertSame(1, $delivery->getId());
-        $this->assertSame(100, $delivery->getInv_id());
-        $this->assertSame(50, $delivery->getInv_item_id());
-        $this->assertSame('5', $delivery->getDelivery_location_id());
-        $this->assertSame('10', $delivery->getDelivery_party_id());
+        $this->assertSame(100, $delivery->getInvId());
+        $this->assertSame(50, $delivery->getInvItemId());
+        $this->assertSame('5', $delivery->getDeliveryLocationId());
+        $this->assertSame('10', $delivery->getDeliveryPartyId());
         $this->assertFalse($delivery->isNewRecord());
         
         // Step 2: Set delivery dates
@@ -220,23 +220,23 @@ class DeliveryEntityTest extends Unit
         $endDate = new DateTimeImmutable('2023-01-31');
         $actualDate = new DateTimeImmutable('2023-01-15');
         
-        $delivery->setStart_date($startDate);
-        $delivery->setEnd_date($endDate);
-        $delivery->setActual_delivery_date($actualDate);
+        $delivery->setStartDate($startDate);
+        $delivery->setEndDate($endDate);
+        $delivery->setActualDeliveryDate($actualDate);
         
-        $this->assertSame($startDate, $delivery->getStart_date());
-        $this->assertSame($endDate, $delivery->getEnd_date());
-        $this->assertSame($actualDate, $delivery->getActual_delivery_date());
+        $this->assertSame($startDate, $delivery->getStartDate());
+        $this->assertSame($endDate, $delivery->getEndDate());
+        $this->assertSame($actualDate, $delivery->getActualDeliveryDate());
     }
 
     public function testDateTimeImmutabilityProperties(): void
     {
         $delivery = new Delivery();
         
-        $originalStartDate = $delivery->getStart_date();
-        $originalEndDate = $delivery->getEnd_date();
-        $originalCreatedDate = $delivery->getDate_created();
-        $originalModifiedDate = $delivery->getDate_modified();
+        $originalStartDate = $delivery->getStartDate();
+        $originalEndDate = $delivery->getEndDate();
+        $originalCreatedDate = $delivery->getDateCreated();
+        $originalModifiedDate = $delivery->getDateModified();
         
         // DateTimeImmutable objects should be immutable
         $this->assertInstanceOf(DateTimeImmutable::class, $originalStartDate);
@@ -251,29 +251,29 @@ class DeliveryEntityTest extends Unit
         
         // Zero IDs
         $delivery->setId(0);
-        $delivery->setInv_id(0);
-        $delivery->setInv_item_id(0);
-        $delivery->setDelivery_location_id(0);
-        $delivery->setDelivery_party_id(0);
+        $delivery->setInvId(0);
+        $delivery->setInvItemId(0);
+        $delivery->setDeliveryLocationId(0);
+        $delivery->setDeliveryPartyId(0);
         
         $this->assertSame(0, $delivery->getId());
-        $this->assertSame(0, $delivery->getInv_id());
-        $this->assertSame(0, $delivery->getInv_item_id());
-        $this->assertSame('0', $delivery->getDelivery_location_id());
-        $this->assertSame('0', $delivery->getDelivery_party_id());
+        $this->assertSame(0, $delivery->getInvId());
+        $this->assertSame(0, $delivery->getInvItemId());
+        $this->assertSame('0', $delivery->getDeliveryLocationId());
+        $this->assertSame('0', $delivery->getDeliveryPartyId());
         
         // Large IDs
         $delivery->setId(999999999);
-        $delivery->setInv_id(888888888);
-        $delivery->setInv_item_id(777777777);
-        $delivery->setDelivery_location_id(666666666);
-        $delivery->setDelivery_party_id(555555555);
+        $delivery->setInvId(888888888);
+        $delivery->setInvItemId(777777777);
+        $delivery->setDeliveryLocationId(666666666);
+        $delivery->setDeliveryPartyId(555555555);
         
         $this->assertSame(999999999, $delivery->getId());
-        $this->assertSame(888888888, $delivery->getInv_id());
-        $this->assertSame(777777777, $delivery->getInv_item_id());
-        $this->assertSame('666666666', $delivery->getDelivery_location_id());
-        $this->assertSame('555555555', $delivery->getDelivery_party_id());
+        $this->assertSame(888888888, $delivery->getInvId());
+        $this->assertSame(777777777, $delivery->getInvItemId());
+        $this->assertSame('666666666', $delivery->getDeliveryLocationId());
+        $this->assertSame('555555555', $delivery->getDeliveryPartyId());
     }
 
     public function testCompleteDeliverySetup(): void
@@ -282,10 +282,10 @@ class DeliveryEntityTest extends Unit
         
         // Complete setup
         $delivery->setId(1);
-        $delivery->setInv_id(100);
-        $delivery->setInv_item_id(200);
-        $delivery->setDelivery_location_id(5);
-        $delivery->setDelivery_party_id(10);
+        $delivery->setInvId(100);
+        $delivery->setInvItemId(200);
+        $delivery->setDeliveryLocationId(5);
+        $delivery->setDeliveryPartyId(10);
         
         $startDate = new DateTimeImmutable('2023-06-01 09:00:00');
         $endDate = new DateTimeImmutable('2023-06-30 17:00:00');
@@ -293,25 +293,25 @@ class DeliveryEntityTest extends Unit
         $createdDate = new DateTimeImmutable('2023-05-15 10:00:00');
         $modifiedDate = new DateTimeImmutable('2023-06-16 11:00:00');
         
-        $delivery->setStart_date($startDate);
-        $delivery->setEnd_date($endDate);
-        $delivery->setActual_delivery_date($actualDate);
-        $delivery->setDate_created($createdDate);
-        $delivery->setDate_modified($modifiedDate);
+        $delivery->setStartDate($startDate);
+        $delivery->setEndDate($endDate);
+        $delivery->setActualDeliveryDate($actualDate);
+        $delivery->setDateCreated($createdDate);
+        $delivery->setDateModified($modifiedDate);
         
         // Verify all properties
         $this->assertSame(1, $delivery->getId());
-        $this->assertSame(100, $delivery->getInv_id());
-        $this->assertSame(200, $delivery->getInv_item_id());
-        $this->assertSame('5', $delivery->getDelivery_location_id());
-        $this->assertSame('10', $delivery->getDelivery_party_id());
-        $this->assertSame($startDate, $delivery->getStart_date());
-        $this->assertSame($endDate, $delivery->getEnd_date());
-        $this->assertSame($actualDate, $delivery->getActual_delivery_date());
-        $this->assertSame($createdDate, $delivery->getDate_created());
-        $this->assertSame($modifiedDate, $delivery->getDate_modified());
+        $this->assertSame(100, $delivery->getInvId());
+        $this->assertSame(200, $delivery->getInvItemId());
+        $this->assertSame('5', $delivery->getDeliveryLocationId());
+        $this->assertSame('10', $delivery->getDeliveryPartyId());
+        $this->assertSame($startDate, $delivery->getStartDate());
+        $this->assertSame($endDate, $delivery->getEndDate());
+        $this->assertSame($actualDate, $delivery->getActualDeliveryDate());
+        $this->assertSame($createdDate, $delivery->getDateCreated());
+        $this->assertSame($modifiedDate, $delivery->getDateModified());
         $this->assertFalse($delivery->isNewRecord());
-        $this->assertNull($delivery->getDelivery_location()); // Relationship set by ORM
+        $this->assertNull($delivery->getDeliveryLocation()); // Relationship set by ORM
     }
 
     public function testGetterMethodsConsistency(): void
@@ -320,16 +320,16 @@ class DeliveryEntityTest extends Unit
         
         // Multiple calls should return same values
         $this->assertSame($delivery->getId(), $delivery->getId());
-        $this->assertSame($delivery->getInv_id(), $delivery->getInv_id());
-        $this->assertSame($delivery->getInv_item_id(), $delivery->getInv_item_id());
-        $this->assertSame($delivery->getDelivery_location_id(), $delivery->getDelivery_location_id());
-        $this->assertSame($delivery->getDelivery_party_id(), $delivery->getDelivery_party_id());
-        $this->assertSame($delivery->getStart_date(), $delivery->getStart_date());
-        $this->assertSame($delivery->getEnd_date(), $delivery->getEnd_date());
-        $this->assertSame($delivery->getActual_delivery_date(), $delivery->getActual_delivery_date());
-        $this->assertSame($delivery->getDate_created(), $delivery->getDate_created());
-        $this->assertSame($delivery->getDate_modified(), $delivery->getDate_modified());
-        $this->assertSame($delivery->getDelivery_location(), $delivery->getDelivery_location());
+        $this->assertSame($delivery->getInvId(), $delivery->getInvId());
+        $this->assertSame($delivery->getInvItemId(), $delivery->getInvItemId());
+        $this->assertSame($delivery->getDeliveryLocationId(), $delivery->getDeliveryLocationId());
+        $this->assertSame($delivery->getDeliveryPartyId(), $delivery->getDeliveryPartyId());
+        $this->assertSame($delivery->getStartDate(), $delivery->getStartDate());
+        $this->assertSame($delivery->getEndDate(), $delivery->getEndDate());
+        $this->assertSame($delivery->getActualDeliveryDate(), $delivery->getActualDeliveryDate());
+        $this->assertSame($delivery->getDateCreated(), $delivery->getDateCreated());
+        $this->assertSame($delivery->getDateModified(), $delivery->getDateModified());
+        $this->assertSame($delivery->getDeliveryLocation(), $delivery->getDeliveryLocation());
         $this->assertSame($delivery->isNewRecord(), $delivery->isNewRecord());
     }
 
@@ -341,14 +341,14 @@ class DeliveryEntityTest extends Unit
         $endDate = new DateTimeImmutable('2023-01-31');
         $actualDate = new DateTimeImmutable('2023-01-15');
         
-        $delivery->setStart_date($startDate);
-        $delivery->setEnd_date($endDate);
-        $delivery->setActual_delivery_date($actualDate);
+        $delivery->setStartDate($startDate);
+        $delivery->setEndDate($endDate);
+        $delivery->setActualDeliveryDate($actualDate);
         
         // Test date logic
-        $this->assertTrue($delivery->getStart_date() < $delivery->getEnd_date());
-        $this->assertTrue($delivery->getActual_delivery_date() > $delivery->getStart_date());
-        $this->assertTrue($delivery->getActual_delivery_date() < $delivery->getEnd_date());
+        $this->assertTrue($delivery->getStartDate() < $delivery->getEndDate());
+        $this->assertTrue($delivery->getActualDeliveryDate() > $delivery->getStartDate());
+        $this->assertTrue($delivery->getActualDeliveryDate() < $delivery->getEndDate());
     }
 
     public function testPropertyTypes(): void
@@ -357,16 +357,16 @@ class DeliveryEntityTest extends Unit
         
         // Test return types
         $this->assertIsInt($delivery->getId());
-        $this->assertIsInt($delivery->getInv_id());
-        $this->assertIsInt($delivery->getInv_item_id());
-        $this->assertIsString($delivery->getDelivery_location_id());
-        $this->assertIsString($delivery->getDelivery_party_id());
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getStart_date());
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getEnd_date());
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getActual_delivery_date());
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getDate_modified());
-        $this->assertNull($delivery->getDelivery_location());
+        $this->assertIsInt($delivery->getInvId());
+        $this->assertIsInt($delivery->getInvItemId());
+        $this->assertIsString($delivery->getDeliveryLocationId());
+        $this->assertIsString($delivery->getDeliveryPartyId());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getStartDate());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getEndDate());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getActualDeliveryDate());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getDateModified());
+        $this->assertNull($delivery->getDeliveryLocation());
         $this->assertIsBool($delivery->isNewRecord());
     }
 
@@ -376,16 +376,16 @@ class DeliveryEntityTest extends Unit
         
         // Test negative IDs (though probably not used in practice)
         $delivery->setId(-1);
-        $delivery->setInv_id(-100);
-        $delivery->setInv_item_id(-200);
-        $delivery->setDelivery_location_id(-5);
-        $delivery->setDelivery_party_id(-10);
+        $delivery->setInvId(-100);
+        $delivery->setInvItemId(-200);
+        $delivery->setDeliveryLocationId(-5);
+        $delivery->setDeliveryPartyId(-10);
         
         $this->assertSame(-1, $delivery->getId());
-        $this->assertSame(-100, $delivery->getInv_id());
-        $this->assertSame(-200, $delivery->getInv_item_id());
-        $this->assertSame('-5', $delivery->getDelivery_location_id());
-        $this->assertSame('-10', $delivery->getDelivery_party_id());
+        $this->assertSame(-100, $delivery->getInvId());
+        $this->assertSame(-200, $delivery->getInvItemId());
+        $this->assertSame('-5', $delivery->getDeliveryLocationId());
+        $this->assertSame('-10', $delivery->getDeliveryPartyId());
     }
 
     public function testDeliveryScenarios(): void
@@ -427,10 +427,10 @@ class DeliveryEntityTest extends Unit
             );
             
             $this->assertSame($scenario['id'], $delivery->getId());
-            $this->assertSame($scenario['inv_id'], $delivery->getInv_id());
-            $this->assertSame($scenario['item_id'], $delivery->getInv_item_id());
-            $this->assertSame((string)$scenario['location_id'], $delivery->getDelivery_location_id());
-            $this->assertSame((string)$scenario['party_id'], $delivery->getDelivery_party_id());
+            $this->assertSame($scenario['inv_id'], $delivery->getInvId());
+            $this->assertSame($scenario['item_id'], $delivery->getInvItemId());
+            $this->assertSame((string)$scenario['location_id'], $delivery->getDeliveryLocationId());
+            $this->assertSame((string)$scenario['party_id'], $delivery->getDeliveryPartyId());
             $this->assertFalse($delivery->isNewRecord());
         }
     }
@@ -444,9 +444,9 @@ class DeliveryEntityTest extends Unit
         $endDate = new DateTimeImmutable('2023-06-30');
         $actualDate = new DateTimeImmutable('2023-06-15');
         
-        $delivery->setStart_date($startDate);
-        $delivery->setEnd_date($endDate);
-        $delivery->setActual_delivery_date($actualDate);
+        $delivery->setStartDate($startDate);
+        $delivery->setEndDate($endDate);
+        $delivery->setActualDeliveryDate($actualDate);
         
         // Verify date relationships
         $this->assertTrue($startDate <= $actualDate);
@@ -459,14 +459,14 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery();
         
         // Set up relationship references
-        $delivery->setDelivery_location_id(5);
-        $delivery->setDelivery_party_id(10);
+        $delivery->setDeliveryLocationId(5);
+        $delivery->setDeliveryPartyId(10);
         
-        $this->assertSame('5', $delivery->getDelivery_location_id());
-        $this->assertSame('10', $delivery->getDelivery_party_id());
+        $this->assertSame('5', $delivery->getDeliveryLocationId());
+        $this->assertSame('10', $delivery->getDeliveryPartyId());
         
         // DeliveryLocation relationship is null until set by ORM
-        $this->assertNull($delivery->getDelivery_location());
+        $this->assertNull($delivery->getDeliveryLocation());
     }
 
     public function testTimezoneHandling(): void
@@ -477,11 +477,11 @@ class DeliveryEntityTest extends Unit
         $utcDate = new DateTimeImmutable('2023-06-15 12:00:00', new \DateTimeZone('UTC'));
         $estDate = new DateTimeImmutable('2023-06-15 08:00:00', new \DateTimeZone('America/New_York'));
         
-        $delivery->setStart_date($utcDate);
-        $delivery->setEnd_date($estDate);
+        $delivery->setStartDate($utcDate);
+        $delivery->setEndDate($estDate);
         
-        $this->assertSame($utcDate, $delivery->getStart_date());
-        $this->assertSame($estDate, $delivery->getEnd_date());
+        $this->assertSame($utcDate, $delivery->getStartDate());
+        $this->assertSame($estDate, $delivery->getEndDate());
     }
 
     public function testEntityStateAfterConstruction(): void
@@ -497,15 +497,15 @@ class DeliveryEntityTest extends Unit
         
         $delivery3 = new Delivery(null, 100);
         $this->assertNull($delivery3->getId());
-        $this->assertSame(100, $delivery3->getInv_id());
+        $this->assertSame(100, $delivery3->getInvId());
         $this->assertTrue($delivery3->isNewRecord());
         
         $delivery4 = new Delivery(1, 100, 200, 5, 10);
         $this->assertSame(1, $delivery4->getId());
-        $this->assertSame(100, $delivery4->getInv_id());
-        $this->assertSame(200, $delivery4->getInv_item_id());
-        $this->assertSame('5', $delivery4->getDelivery_location_id());
-        $this->assertSame('10', $delivery4->getDelivery_party_id());
+        $this->assertSame(100, $delivery4->getInvId());
+        $this->assertSame(200, $delivery4->getInvItemId());
+        $this->assertSame('5', $delivery4->getDeliveryLocationId());
+        $this->assertSame('10', $delivery4->getDeliveryPartyId());
         $this->assertFalse($delivery4->isNewRecord());
     }
 
@@ -514,15 +514,15 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery();
         
         // Initially set to current date
-        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getActual_delivery_date());
+        $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getActualDeliveryDate());
         
         // Set to specific date
         $specificDate = new DateTimeImmutable('2023-06-15');
-        $delivery->setActual_delivery_date($specificDate);
-        $this->assertSame($specificDate, $delivery->getActual_delivery_date());
+        $delivery->setActualDeliveryDate($specificDate);
+        $this->assertSame($specificDate, $delivery->getActualDeliveryDate());
         
         // Set back to null
-        $delivery->setActual_delivery_date(null);
-        $this->assertNull($delivery->getActual_delivery_date());
+        $delivery->setActualDeliveryDate(null);
+        $this->assertNull($delivery->getActualDeliveryDate());
     }
 }

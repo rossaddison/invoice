@@ -110,7 +110,7 @@ final class QuoteTaxRateRepository extends Select\Repository
     }
 
     // find all quote tax rates used for a specific quote normally to apply include_item_tax
-    // (see function calculate_quote_taxes in NumberHelper
+    // (see function calculateQuoteTaxes in NumberHelper
     // load 'tax rate' so that we can use tax_rate_id through the BelongTo relation in the Entity
     // to access the parent tax rate table's percent name and percentage
     // which we will use in quote/view

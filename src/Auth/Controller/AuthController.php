@@ -774,7 +774,7 @@ final class AuthController
         $userInv = new UserInv();
         $ipas = 'identity.provider.authentication.successful';
         if (null !== ($userId = $user->getId())) {
-            $userInv->setUser_id((int) $userId);
+            $userInv->setUserId((int) $userId);
             // if the user is administrator assign 0 => 'Administrator',
             // 1 => Not Administrator
             $userInv->setType($user->getId() == 1 ? 0 : 1);
@@ -806,6 +806,7 @@ final class AuthController
         return '';
     }
 
+    /** @psalm-suppress PossiblyUnusedReturnValue */
     public function logout(
         UserRepository $uR,
         UserInvRepository $uiR,

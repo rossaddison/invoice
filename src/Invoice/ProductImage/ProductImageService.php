@@ -29,7 +29,7 @@ final readonly class ProductImageService
         $this->persist($model, $array);
 
         $datetime_created = new \DateTimeImmutable();
-        $model->setUploaded_date(
+        $model->setUploadedDate(
             $datetime_created::createFromFormat(
                 'Y-m-d', 
                 (string) $array['uploaded_date'])
@@ -37,13 +37,13 @@ final readonly class ProductImageService
         );
 
         isset($array['product_id']) ? 
-            $model->setProduct_id(
+            $model->setProductId(
                 (int) $array['product_id']) : '';
         isset($array['file_name_original']) ? 
-            $model->setFile_name_original(
+            $model->setFileNameOriginal(
                 (string) $array['file_name_original']) : '';
         isset($array['file_name_new']) ? 
-            $model->setFile_name_new(
+            $model->setFileNameNew(
                 (string) $array['file_name_new']) : '';
         isset($array['description']) ? 
             $model->setDescription(
@@ -55,7 +55,7 @@ final readonly class ProductImageService
     private function persist(
         ProductImage $model,
         array $array
-    ): ProductImage {
+    ): void {
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
@@ -64,7 +64,6 @@ final readonly class ProductImageService
                 $model->setProduct($productEntity);
             }
         }
-        return $model;
     }
 
     /**
@@ -75,10 +74,10 @@ final readonly class ProductImageService
         ProductImage $model,
         SettingRepository $sR
     ): void {
-        $aliases = $sR->get_productimages_files_folder_aliases();
+        $aliases = $sR->getProductimagesFilesFolderAliases();
         $targetPath = $aliases->get('@public_product_images');
         $file_path = $targetPath . '/' 
-            . $model->getFile_name_new();
+            . $model->getFileNameNew();
         // see vendor/yiisoft/files/src/FileHelper::unlink 
         // will delete the file
         $realTargetPath = realpath($targetPath);

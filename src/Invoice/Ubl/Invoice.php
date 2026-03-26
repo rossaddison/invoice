@@ -381,7 +381,7 @@ class Invoice implements XmlSerializable
                             ],
                         ],
                         [
-                            $this->build_tax_sub_totals_array(),
+                            $this->buildTaxSubTotalsArray(),
                         ],
                     ],
                 ],
@@ -400,7 +400,7 @@ class Invoice implements XmlSerializable
                             ],
                         ],
                         [
-                            $this->build_tax_sub_totals_array(),
+                            $this->buildTaxSubTotalsArray(),
                         ],
                     ],
                 ],
@@ -413,7 +413,7 @@ class Invoice implements XmlSerializable
 
         /**
          * Related logic: see src/Invoice/Helpers/Peppol/PeppolHelper function
-            build_invoice_lines_array
+            buildInvoiceLinesArray
          * @var array $invoiceLine
          */
         foreach ($this->invoiceLines as $invoiceLine) {
@@ -422,11 +422,11 @@ class Invoice implements XmlSerializable
     }
 
     /*
-     * Related logic: see PeppolHelper function build_TaxSubtotal_array
+     * Related logic: see PeppolHelper function buildTaxSubtotalArray
      * Take each Tax Category and build a tax sub total
      * @return array
      */
-    public function build_tax_sub_totals_array(): array
+    public function buildTaxSubTotalsArray(): array
     {
         $merged_array = [];
         /**
@@ -434,7 +434,7 @@ class Invoice implements XmlSerializable
          */
         foreach ($this->taxSubTotal as $value) {
             $tst = new TaxSubTotal($value, $this->sR);
-            $merged_array[] = $tst->build_pre_serialized_array();
+            $merged_array[] = $tst->buildPreSerializedArray();
         }
         return $merged_array;
     }

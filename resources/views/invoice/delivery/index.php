@@ -45,26 +45,26 @@ $columns = [
         'start_date',
         header: $translator->translate('start.date'),
         content: static fn (Delivery $model) => Html::encode(
-                ($model->getStart_date())?->format('Y-m-d') ?? ''),
+                ($model->getStartDate())?->format('Y-m-d') ?? ''),
     ),
     new DataColumn(
         'actual_delivery_date',
         header: $translator->translate('delivery.actual.delivery.date'),
         content: static fn (Delivery $model) => Html::encode(
-                ($model->getActual_delivery_date())?->format('Y-m-d') ?? ''),
+                ($model->getActualDeliveryDate())?->format('Y-m-d') ?? ''),
     ),
     new DataColumn(
         'end_date',
         header: $translator->translate('end.date'),
         content: static fn (Delivery $model) => Html::encode(
-                ($model->getEnd_date())?->format('Y-m-d') ?? ''),
+                ($model->getEndDate())?->format('Y-m-d') ?? ''),
     ),
     new DataColumn(
         content: static function (Delivery $model) use ($urlGenerator,
                                                         $translator): string {
             return Html::a($translator->translate('back'),
                     $urlGenerator->generate('inv/edit',
-                            ['id' => $model->getInv_id()]),
+                            ['id' => $model->getInvId()]),
                     ['style' => 'text-decoration:none'])->render();
         },
         encodeContent: false
@@ -74,7 +74,7 @@ $columns = [
         header: $translator->translate('delivery.location.global.location.number'),
         content: static fn (Delivery $model):
         string => Html::encode(
-                $model->getDelivery_location()?->getGlobal_location_number()),
+                $model->getDeliveryLocation()?->getGlobalLocationNumber()),
     ),
 ];
 

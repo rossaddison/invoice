@@ -58,7 +58,7 @@ class AllowanceCharge implements XmlSerializable
         $writer->write([
             [
                 'name' => Schema::CBC . 'Amount',
-                'value' => $this->s->currency_converter(
+                'value' => $this->s->currencyConverter(
                  number_format($this->amount ?: 0.00, 2, '.', '')),
                 'attributes' => [
                     'currencyID' =>

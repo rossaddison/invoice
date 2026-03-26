@@ -60,17 +60,17 @@ final class SalesOrderForm extends FormModel
     public function __construct(SalesOrder $salesOrder)
     {
         $this->number = $salesOrder->getNumber();
-        $this->date_created = $salesOrder->getDate_created();
-        $this->quote_id = $salesOrder->getQuote_id();
-        $this->inv_id = $salesOrder->getInv_id();
-        $this->group_id = (int) $salesOrder->getGroup_id();
-        $this->client_id = (int) $salesOrder->getClient_id();
-        $this->client_po_number = $salesOrder->getClient_po_number();
-        $this->client_po_line_number = $salesOrder->getClient_po_line_number();
-        $this->client_po_person = $salesOrder->getClient_po_person();
-        $this->status_id = $salesOrder->getStatus_id();
-        $this->discount_amount = $salesOrder->getDiscount_amount();
-        $this->url_key = $salesOrder->getUrl_key();
+        $this->date_created = $salesOrder->getDateCreated();
+        $this->quote_id = $salesOrder->getQuoteId();
+        $this->inv_id = $salesOrder->getInvId();
+        $this->group_id = (int) $salesOrder->getGroupId();
+        $this->client_id = (int) $salesOrder->getClientId();
+        $this->client_po_number = $salesOrder->getClientPoNumber();
+        $this->client_po_line_number = $salesOrder->getClientPoLineNumber();
+        $this->client_po_person = $salesOrder->getClientPoPerson();
+        $this->status_id = $salesOrder->getStatusId();
+        $this->discount_amount = $salesOrder->getDiscountAmount();
+        $this->url_key = $salesOrder->getUrlKey();
         $this->password = $salesOrder->getPassword();
         $this->notes = $salesOrder->getNotes();
         $this->payment_term = $salesOrder->getPaymentTerm();
@@ -79,47 +79,47 @@ final class SalesOrderForm extends FormModel
     // The Entities ie. Entity/SalesOrder.php have return type string => return type strings in the form
     // get => string ;
 
-    public function getQuote_id(): ?string
+    public function getQuoteId(): ?string
     {
         return $this->quote_id;
     }
 
-    public function getInv_id(): ?string
+    public function getInvId(): ?string
     {
         return $this->inv_id;
     }
 
-    public function getClient_po_number(): ?string
+    public function getClientPoNumber(): ?string
     {
         return $this->client_po_number;
     }
 
-    public function getClient_po_line_number(): ?string
+    public function getClientPoLineNumber(): ?string
     {
         return $this->client_po_line_number;
     }
 
-    public function getClient_po_person(): ?string
+    public function getClientPoPerson(): ?string
     {
         return $this->client_po_person;
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function getGroup_id(): ?int
+    public function getGroupId(): ?int
     {
         return $this->group_id;
     }
 
-    public function getStatus_id(): ?int
+    public function getStatusId(): ?int
     {
         return $this->status_id;
     }
 
-    public function getDate_created(): string|DateTimeImmutable|null
+    public function getDateCreated(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->date_created
@@ -132,12 +132,12 @@ final class SalesOrderForm extends FormModel
         return $this->number;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function getUrl_key(): ?string
+    public function getUrlKey(): ?string
     {
         return $this->url_key;
     }

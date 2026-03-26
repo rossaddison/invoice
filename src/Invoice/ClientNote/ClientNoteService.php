@@ -22,7 +22,7 @@ final readonly class ClientNoteService
     ): void {
         $this->persist($model, $array);
         isset($array['client_id']) ?
-            $model->setClient_id((int) $array['client_id']) : '';
+            $model->setClientId((int) $array['client_id']) : '';
 
         $datetime = new DateTime();
         /**
@@ -35,7 +35,7 @@ final readonly class ClientNoteService
          * @var bool|DateTime $result
          */
         $result = $datetime::createFromFormat('Y-m-d', $date);
-        $model->setDate_note(
+        $model->setDateNote(
             !is_bool($result) ? $result : $datetime);
 
         isset($array['note']) ?
@@ -53,7 +53,7 @@ final readonly class ClientNoteService
     ): void {
         $this->persist($model, $array);
         isset($array['client_id']) ?
-            $model->setClient_id((int) $array['client_id']) : '';
+            $model->setClientId((int) $array['client_id']) : '';
 
         $datetime = new DateTime();
         /**
@@ -66,7 +66,7 @@ final readonly class ClientNoteService
          * @var bool|DateTime $result
          */
         $result = $datetime::createFromFormat('Y-m-d', $date);
-        $model->setDate_note(
+        $model->setDateNote(
             !is_bool($result) ? $result : $datetime);
 
         isset($array['note']) ?
@@ -77,14 +77,13 @@ final readonly class ClientNoteService
     private function persist(
         ClientNote $model,
         array $array
-    ): ClientNote {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
                 $this->cR->repoClientquery(
                     (string) $array[$client]));
         }
-        return $model;
     }
 
     /**

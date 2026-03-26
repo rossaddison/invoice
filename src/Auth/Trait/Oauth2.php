@@ -223,7 +223,7 @@ trait Oauth2
         //  e.g. password-rest, email-verification, github-access
         $tR->save($token);
         $tokenString = $token->getToken();
-        $timeString = (string) $token->getCreated_at()->getTimestamp();
+        $timeString = (string) $token->getCreatedAt()->getTimestamp();
         // build the token with a timestamp built into it for comparison later
         return null !== $tokenString ? ($tokenString . '_' . $timeString) : '';
     }

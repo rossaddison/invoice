@@ -26,14 +26,14 @@ final readonly class SalesOrderTaxRateService
         );
         if ($sales_order) {
             $model->setSalesOrder($sales_order);
-            $model->setSales_order_id((int) $sales_order->getId());
+            $model->setSalesOrderId((int) $sales_order->getId());
         }
         $tax_rate = $this->trR->repoTaxRatequery(
             (string) $array['tax_rate_id']
         );
         if ($tax_rate) {
             $model->setTaxRate($tax_rate);
-            $model->setTax_rate_id((int) $tax_rate->getTaxRateId());
+            $model->setTaxRateId((int) $tax_rate->getTaxRateId());
         }
     }
 
@@ -46,10 +46,10 @@ final readonly class SalesOrderTaxRateService
         array $array
     ): void {
         $this->persist($model, $array);
-        $model->setInclude_item_tax(
+        $model->setIncludeItemTax(
             (int) $array['include_item_tax'] ?: 0
         );
-        $model->setSales_order_tax_rate_amount(
+        $model->setSalesOrderTaxRateAmount(
             (float) $array['sales_order_tax_rate_amount'] ?: 0.00
         );
         $this->repository->save($model);

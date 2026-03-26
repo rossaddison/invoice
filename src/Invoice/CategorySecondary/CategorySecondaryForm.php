@@ -18,12 +18,12 @@ final class CategorySecondaryForm extends FormModel
 
     public function __construct(CategorySecondary $categorySecondary)
     {
-        $this->category_primary_id = $categorySecondary->getCategory_primary_id();
+        $this->category_primary_id = $categorySecondary->getCategoryPrimaryId();
         $this->name = $categorySecondary->getName();
         $this->id = $categorySecondary->getId();
     }
 
-    public function getCategory_primary_id(): ?int
+    public function getCategoryPrimaryId(): ?int
     {
         return $this->category_primary_id;
     }

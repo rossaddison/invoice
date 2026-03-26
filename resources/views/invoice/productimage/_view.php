@@ -55,7 +55,7 @@ use Yiisoft\Html\Tag\Form;
 ])
 ->label($translator->translate('date'))
 ->required(true)
-->value($form->getUploaded_date() instanceof DateTimeImmutable ? ($form->getUploaded_date())->format('Y-m-d') : '')
+->value($form->getUploadedDate() instanceof DateTimeImmutable ? ($form->getUploadedDate())->format('Y-m-d') : '')
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>

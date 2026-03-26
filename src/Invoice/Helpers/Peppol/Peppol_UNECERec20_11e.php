@@ -6,7 +6,7 @@ namespace App\Invoice\Helpers\Peppol;
 
 class Peppol_UNECERec20_11e
 {
-    public function getUNECERec20_11e(): array
+    public function getUNECERec2011e(): array
     {
         //'CodeList'
         //'Title' => 'Recommendation 20, including Recommendation 21 codes - prefixed with X (UN/ECE)',

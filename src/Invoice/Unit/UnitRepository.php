@@ -113,7 +113,7 @@ final class UnitRepository extends Select\Repository
      * @param int $quantity
      * @return string|Unit|null
      */
-    public function singular_or_plural_name(string $unit_id, int $quantity): string|Unit|null
+    public function singularOrPluralName(string $unit_id, int $quantity): string|Unit|null
     {
         if ((int) $unit_id === 0) {
             return '';
@@ -121,9 +121,9 @@ final class UnitRepository extends Select\Repository
         $unit = $this->repoUnitquery($unit_id);
         if ($unit) {
             if ($quantity == -1 || $quantity == 1) {
-                return $unit->getUnit_name();
+                return $unit->getUnitName();
             }
-            return $unit->getUnit_name_plrl();
+            return $unit->getUnitNamePlrl();
         }
         return null;
     }

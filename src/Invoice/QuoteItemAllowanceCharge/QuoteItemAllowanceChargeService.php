@@ -72,13 +72,13 @@ final readonly class QuoteItemAllowanceChargeService
         $this->persist($array, $model);
         
         isset($array['quote_id']) ?
-            $model->setQuote_id((int) $array['quote_id']) : '';
+            $model->setQuoteId((int) $array['quote_id']) : '';
         isset($array['quote_item_id']) ?
-            $model->setQuote_item_id(
+            $model->setQuoteItemId(
                 (int) $array['quote_item_id']
             ) : '';
         isset($array['allowance_charge_id']) ?
-            $model->setAllowance_charge_id(
+            $model->setAllowanceChargeId(
                 (int) $array['allowance_charge_id']
             ) : '';
         isset($array['amount']) ? 
@@ -95,7 +95,7 @@ final readonly class QuoteItemAllowanceChargeService
         // before deleting the allowance/charge, record its 
         // related quote_item_id so that we can update the 
         // quote_item_amount record
-        $quote_item_id = $model->getQuote_item_id();
+        $quote_item_id = $model->getQuoteItemId();
         // delete the allowance / charge
         $this->repository->delete($model);
         $quote_item_amount = $qiaR->repoQuoteItemAmountquery(
@@ -137,7 +137,7 @@ final readonly class QuoteItemAllowanceChargeService
                 $quote_item_amount->getQuoteItem()?->getPrice()
                 ?? 0.00;
             $discount_per_item = 
-                $quote_item_amount->getQuoteItem()?->getDiscount_amount()
+                $quote_item_amount->getQuoteItem()?->getDiscountAmount()
                 ?? 0.00;
             $quantity_price = $current_item_quantity *
                 $current_item_price;
@@ -157,7 +157,7 @@ final readonly class QuoteItemAllowanceChargeService
             $quote_item_amount->setDiscount(
                 $current_discount_item_total
             );
-            $quote_item_amount->setTax_total($new_tax_total);
+            $quote_item_amount->setTaxTotal($new_tax_total);
             $overall_total = $qpIncAc - 
                 $current_discount_item_total + $new_tax_total;
             $quote_item_amount->setTotal($overall_total);

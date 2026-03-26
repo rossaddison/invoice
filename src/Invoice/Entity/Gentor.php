@@ -29,147 +29,147 @@ class Gentor
         private bool $deleted_include = false, #[Column(type: 'bool', default: true)]
         private bool $flash_include = false) {}
 
-    public function getGentor_id(): string
+    public function getGentorId(): string
     {
         return (string) $this->id;
     }
 
-    public function getRoute_prefix(): string
+    public function getRoutePrefix(): string
     {
         return $this->route_prefix;
     }
 
-    public function setRoute_prefix(string $route_prefix): void
+    public function setRoutePrefix(string $route_prefix): void
     {
         $this->route_prefix = $route_prefix;
     }
 
-    public function getRoute_suffix(): string
+    public function getRouteSuffix(): string
     {
         return $this->route_suffix;
     }
 
-    public function setRoute_suffix(string $route_suffix): void
+    public function setRouteSuffix(string $route_suffix): void
     {
         $this->route_suffix = $route_suffix;
     }
 
-    public function getCamelcase_capital_name(): string
+    public function getCamelcaseCapitalName(): string
     {
         return $this->camelcase_capital_name;
     }
 
-    public function setCamelcase_capital_name(string $camelcase_capital_name): void
+    public function setCamelcaseCapitalName(string $camelcase_capital_name): void
     {
         $this->camelcase_capital_name = $camelcase_capital_name;
     }
 
-    public function getSmall_singular_name(): string
+    public function getSmallSingularName(): string
     {
         return $this->small_singular_name;
     }
 
-    public function setSmall_singular_name(string $small_singular_name): void
+    public function setSmallSingularName(string $small_singular_name): void
     {
         $this->small_singular_name = $small_singular_name;
     }
 
-    public function getSmall_plural_name(): string
+    public function getSmallPluralName(): string
     {
         return $this->small_plural_name;
     }
 
-    public function setSmall_plural_name(string $small_plural_name): void
+    public function setSmallPluralName(string $small_plural_name): void
     {
         $this->small_plural_name = $small_plural_name;
     }
 
-    public function getNamespace_path(): string
+    public function getNamespacePath(): string
     {
         return $this->namespace_path;
     }
 
-    public function setNamespace_path(string $namespace_path): void
+    public function setNamespacePath(string $namespace_path): void
     {
         $this->namespace_path = $namespace_path;
     }
 
-    public function getController_layout_dir(): string
+    public function getControllerLayoutDir(): string
     {
         return $this->controller_layout_dir;
     }
 
-    public function setController_layout_dir(string $controller_layout_dir): void
+    public function setControllerLayoutDir(string $controller_layout_dir): void
     {
         $this->controller_layout_dir = $controller_layout_dir;
     }
 
-    public function getController_layout_dir_dot_path(): string
+    public function getControllerLayoutDirDotPath(): string
     {
         return $this->controller_layout_dir_dot_path;
     }
 
-    public function setController_layout_dir_dot_path(string $controller_layout_dir_dot_path): void
+    public function setControllerLayoutDirDotPath(string $controller_layout_dir_dot_path): void
     {
         $this->controller_layout_dir_dot_path = $controller_layout_dir_dot_path;
     }
 
-    public function getPre_entity_table(): string
+    public function getPreEntityTable(): string
     {
         return $this->pre_entity_table;
     }
 
-    public function setPre_entity_table(string $pre_entity_table): void
+    public function setPreEntityTable(string $pre_entity_table): void
     {
         $this->pre_entity_table = $pre_entity_table;
     }
 
-    public function isCreated_include(): bool
+    public function isCreatedInclude(): bool
     {
         return $this->created_include;
     }
 
-    public function setCreated_include(bool $created_include): void
+    public function setCreatedInclude(bool $created_include): void
     {
         $this->created_include = $created_include;
     }
 
-    public function isUpdated_include(): bool
+    public function isUpdatedInclude(): bool
     {
         return $this->updated_include;
     }
 
-    public function setUpdated_include(bool $updated_include): void
+    public function setUpdatedInclude(bool $updated_include): void
     {
         $this->updated_include = $updated_include;
     }
 
-    public function isModified_include(): bool
+    public function isModifiedInclude(): bool
     {
         return $this->modified_include;
     }
 
-    public function setModified_include(bool $modified_include): void
+    public function setModifiedInclude(bool $modified_include): void
     {
         $this->modified_include = $modified_include;
     }
 
-    public function isDeleted_include(): bool
+    public function isDeletedInclude(): bool
     {
         return $this->deleted_include;
     }
 
-    public function setDeleted_include(bool $deleted_include): void
+    public function setDeletedInclude(bool $deleted_include): void
     {
         $this->deleted_include = $deleted_include;
     }
 
-    public function isFlash_include(): bool
+    public function isFlashInclude(): bool
     {
         return $this->flash_include;
     }
 
-    public function setFlash_include(bool $flash_include): void
+    public function setFlashInclude(bool $flash_include): void
     {
         $this->flash_include = $flash_include;
     }

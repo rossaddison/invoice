@@ -44,12 +44,12 @@ class UnitPeppol
         $this->id = $id;
     }
 
-    public function getUnit_id(): string
+    public function getUnitId(): string
     {
         return (string) $this->unit_id;
     }
 
-    public function setUnit_id(int $unit_id): void
+    public function setUnitId(int $unit_id): void
     {
         $this->unit_id = $unit_id;
     }

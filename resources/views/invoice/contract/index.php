@@ -79,7 +79,7 @@ $columns = [
         'client_id',
         header: $translator->translate('client'),
         content: static function (Contract $model) use ($cR): string {
-            $client = ($cR->repoClientCount($model->getClient_id()) > 0 ? ($cR->repoClientquery($model->getClient_id()))->getClient_name() : '');
+            $client = ($cR->repoClientCount($model->getClientId()) > 0 ? ($cR->repoClientquery($model->getClientId()))->getClientName() : '');
             return $client;
         },
     ),
@@ -96,12 +96,12 @@ $columns = [
     new DataColumn(
         'period_start',
         header: $translator->translate('contract.period.start'),
-        content: static fn (Contract $model): string => ($model->getPeriod_start())->format('Y-m-d'),
+        content: static fn (Contract $model): string => ($model->getPeriodStart())->format('Y-m-d'),
     ),
     new DataColumn(
         'period_end',
         header: $translator->translate('contract.period.end'),
-        content: static fn (Contract $model): string => ($model->getPeriod_end())->format('Y-m-d'),
+        content: static fn (Contract $model): string => ($model->getPeriodEnd())->format('Y-m-d'),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

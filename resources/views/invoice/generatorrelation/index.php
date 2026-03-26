@@ -38,23 +38,23 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(GentorRelation $model) => Html::encode($model->getRelation_id()),
+        content: static fn(GentorRelation $model) => Html::encode($model->getRelationId()),
     ),
     new DataColumn(
         'lowercasename',
         header: $translator->translate('generator.relation.form.lowercase.name'),
-        content: static fn(GentorRelation $model) => Html::encode($model->getLowercase_name()),
+        content: static fn(GentorRelation $model) => Html::encode($model->getLowercaseName()),
     ),
     new DataColumn(
         'camelcasename',
         header: $translator->translate('generator.relation.form.camelcase.name'),
-        content: static fn(GentorRelation $model) => Html::encode($model->getCamelcase_name()),
+        content: static fn(GentorRelation $model) => Html::encode($model->getCamelcaseName()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (GentorRelation $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generatorrelation/view', ['id' => $model->getRelation_id()]);
+                return $urlGenerator->generate('generatorrelation/view', ['id' => $model->getRelationId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -64,7 +64,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (GentorRelation $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generatorrelation/edit', ['id' => $model->getRelation_id()]);
+                return $urlGenerator->generate('generatorrelation/edit', ['id' => $model->getRelationId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -74,7 +74,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (GentorRelation $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generatorrelation/delete', ['id' => $model->getRelation_id()]);
+                return $urlGenerator->generate('generatorrelation/delete', ['id' => $model->getRelationId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

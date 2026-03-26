@@ -18,11 +18,11 @@ final readonly class FamilyService
      */
     public function saveFamily(Family $model, array $array): void
     {
-        isset($array['family_name']) ? $model->setFamily_name((string) $array['family_name']) : '';
-        isset($array['category_primary_id']) ? $model->setCategory_primary_id((int) $array['category_primary_id']) : '';
-        isset($array['category_secondary_id']) ? $model->setCategory_secondary_id((int) $array['category_secondary_id']) : '';
-        isset($array['family_commalist']) ? $model->setFamily_commalist((string) $array['family_commalist']) : '';
-        isset($array['family_productprefix']) ? $model->setFamily_productprefix((string) $array['family_productprefix']) : '';
+        isset($array['family_name']) ? $model->setFamilyName((string) $array['family_name']) : '';
+        isset($array['category_primary_id']) ? $model->setCategoryPrimaryId((int) $array['category_primary_id']) : '';
+        isset($array['category_secondary_id']) ? $model->setCategorySecondaryId((int) $array['category_secondary_id']) : '';
+        isset($array['family_commalist']) ? $model->setFamilyCommalist((string) $array['family_commalist']) : '';
+        isset($array['family_productprefix']) ? $model->setFamilyProductprefix((string) $array['family_productprefix']) : '';
         $this->repository->save($model);
     }
 

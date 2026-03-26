@@ -247,7 +247,7 @@ final class QuoteToSalesOrderToInvoiceWorkflowTest extends TestCase
         
         // Pattern from QuoteController::rbacObserver (fixed version)
         // OLD BUG: Used status_id instead of user_id
-        // FIXED: Uses $quote->getUser_id()
+        // FIXED: Uses $quote->getUserId()
         
         // Correct check
         $hasAccess = ($quoteUserId === $observerUserId);
@@ -270,7 +270,7 @@ final class QuoteToSalesOrderToInvoiceWorkflowTest extends TestCase
         
         // Pattern from QuoteController::approve line 525
         // if ($formHydrator->populateAndValidate($form, $so_body)
-        //     && ($quote->getSo_id() === (string) 0))
+        //     && ($quote->getSoId() === (string) 0))
         
         $canConvert = ($quoteSoId === '0');
         $this->assertFalse($canConvert, 'Quote with existing so_id should not be convertible again');
@@ -337,7 +337,7 @@ final class QuoteToSalesOrderToInvoiceWorkflowTest extends TestCase
         $cashDiscount = 20.00; // discount_amount field
         
         // Pattern from QuoteController::approve line 530:
-        // 'discount_amount' => (float) $quote->getDiscount_amount()
+        // 'discount_amount' => (float) $quote->getDiscountAmount()
         // This is copied from Quote → SalesOrder → Invoice
         
         $quoteDiscountAmount = 20.00;
@@ -368,7 +368,7 @@ final class QuoteToSalesOrderToInvoiceWorkflowTest extends TestCase
     public function testDiscountAmountCopiedThroughWorkflow(): void
     {
         // From QuoteController::approve (line 530):
-        // $so_body['discount_amount'] = (float) $quote->getDiscount_amount();
+        // $so_body['discount_amount'] = (float) $quote->getDiscountAmount();
         
         $quoteDiscountAmount = '25.50';
         $soDiscountAmount = (float) $quoteDiscountAmount; // Type conversion during copy

@@ -24,9 +24,9 @@ final readonly class InvItemAmountService
         array $invitem
     ): void {
         $this->persist($model, $invitem);
-        $model->setInv_item_id((int) $invitem['inv_item_id']);
+        $model->setInvItemId((int) $invitem['inv_item_id']);
         $model->setSubtotal((float) $invitem['subtotal']);
-        $model->setTax_total((float) $invitem['taxtotal']);
+        $model->setTaxTotal((float) $invitem['taxtotal']);
         $model->setDiscount((float) $invitem['discount']);
         $model->setCharge((float) $invitem['charge']);
         $model->setAllowance((float) $invitem['allowance']);
@@ -37,7 +37,7 @@ final readonly class InvItemAmountService
     private function persist(
         InvItemAmount $model,
         array $array
-    ): InvItemAmount {
+    ): void {
         $inv_item = 'inv_item_id';
         if (isset($array[$inv_item])) {
             $invItemEntity = $this->iiR->repoInvItemquery(
@@ -46,7 +46,6 @@ final readonly class InvItemAmountService
                 $model->setInvItem($invItemEntity);
             }
         }
-        return $model;
     }
 
     /**

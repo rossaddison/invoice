@@ -77,20 +77,20 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
                                     <?= Field::select($form, 'delivery_location_id')
     ->label($translator->translate('delivery.location'))
     ->addInputAttributes(['class' => 'form-control'])
-    ->value($form->getDelivery_location_id())
+    ->value($form->getDeliveryLocationId())
     ->prompt($translator->translate('none'))
     ->optionsData($optionsData['deliveryLocation'])
     ->hint($translator->translate('hint.this.field.is.not.required'));
                                 ?>
                                 <?= Html::closeTag('div'); ?>           
-                                <?php if (null !== $form->getDelivery_location_id() && !empty($form->getDelivery_location_id())) { ?>
+                                <?php if (null !== $form->getDeliveryLocationId() && !empty($form->getDeliveryLocationId())) { ?>
                                 <span class="input-group-text">
                                     <!-- Remember second set of square brackets in urlGenerator are query Parameters NOT currentRoute arguments -->
                                     <a href="<?= $urlGenerator->generate(
                                         'del/edit',
                                         // Argument Parameters
                                         [
-                                            'id' => $form->getDelivery_location_id(),
+                                            'id' => $form->getDeliveryLocationId(),
                                         ],
                                         // Query Parameters
                                         [
@@ -109,7 +109,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
                                         'del/add',
                                         // Argument Parameters
                                         [
-                                            'client_id' => $quote->getClient_id(),
+                                            'client_id' => $quote->getClientId(),
                                         ],
                                         // Query Parameters
                                         [
@@ -131,15 +131,15 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
                         <?= $formFields->statusSelect($form, $optionsData, 'quoteStatus'); ?>
                         <?= Html::openTag('div'); ?>
                         <?php // If the quote is in draft status; do not show the url_key
-if ($form->getStatus_id() == 1) { ?>
+if ($form->getStatusId() == 1) { ?>
                             <?= Field::hidden($form, 'url_key')
     ->hideLabel(true);
     ?>
                         <?php } ?>
-                        <?php if ($form->getStatus_id() > 1) { ?>
+                        <?php if ($form->getStatusId() > 1) { ?>
                             <?= Field::text($form, 'url_key')
         ->hideLabel(false)
-        ->label(($form->getStatus_id()) > 1 ? $translator->translate('guest.url') : '');
+        ->label(($form->getStatusId()) > 1 ? $translator->translate('guest.url') : '');
                             ?>
                         <?php } ?>
                         <?= Html::closeTag('div'); ?>
@@ -157,7 +157,7 @@ if ($form->getStatus_id() == 1) { ?>
                          * @var App\Invoice\Entity\CustomField $customField
                          */
                         foreach ($customFields as $customField): ?>
-                        <?php $cvH->print_field_for_form($customField, $quoteCustomForm, $translator, $urlGenerator, $quoteCustomValues, $customValues); ?>
+                        <?php $cvH->printFieldForForm($customField, $quoteCustomForm, $translator, $urlGenerator, $quoteCustomValues, $customValues); ?>
                     <?php endforeach; ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>    

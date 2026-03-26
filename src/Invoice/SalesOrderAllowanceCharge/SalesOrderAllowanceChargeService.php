@@ -26,7 +26,7 @@ final readonly class SalesOrderAllowanceChargeService
         );
         if ($allowance_charge) {
             $model->setAllowanceCharge($allowance_charge);
-            $model->setAllowance_charge_id(
+            $model->setAllowanceChargeId(
                 (int) $allowance_charge->getId()
             );
         }
@@ -35,7 +35,7 @@ final readonly class SalesOrderAllowanceChargeService
         );
         if ($sales_order) {
             $model->setSalesOrder($sales_order);
-            $model->setSales_order_id((int) $sales_order->getId());
+            $model->setSalesOrderId((int) $sales_order->getId());
         }
     }
 

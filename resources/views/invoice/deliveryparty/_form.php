@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
             'class' => 'form-control',
         ])
         ->label($translator->translate('delivery.party.name'))
-        ->value(Html::encode($form->getParty_name() ?? ''));
+        ->value(Html::encode($form->getPartyName() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

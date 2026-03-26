@@ -4,6 +4,7 @@ declare(strict_types=1);
 // Source: https://service.unece.org/trade/uncefact/vocabulary/uncl2005.jsonld
 // Flattened with: https://json-ld.org/playground/
 // Converted to php with: https://wtools.io/convert-json-to-php-array
+/** @psalm-suppress UnusedVariable */
 $array = [
     '@context' => [
         'uncefact' => 'https://service.unece.org/trade/uncefact/vocabulary/uncefact#',

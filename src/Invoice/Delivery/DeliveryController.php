@@ -63,10 +63,10 @@ final class DeliveryController extends BaseController
         $inv_id = $currentRoute->getArgument('inv_id');
         $inv = $iR->repoInvLoadedquery((string) $inv_id);
         if (null !== $inv) {
-            $dels = $delRepo->repoClientquery($inv->getClient_id());
+            $dels = $delRepo->repoClientquery($inv->getClientId());
             $delivery = new Delivery();
             // inv_id is a hidden field and is static
-            $delivery->setInv_id((int) $inv_id);
+            $delivery->setInvId((int) $inv_id);
             $form = new DeliveryForm($delivery);
             $parameters = [
                 'title' => $this->translator->translate('delivery.add'),
@@ -74,7 +74,7 @@ final class DeliveryController extends BaseController
                 'actionArguments' => ['inv_id' => $inv->getId()],
                 'errors' => [],
                 'form' => $form,
-                'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
+                'del_count' => $delRepo->repoClientCount($inv->getClientId()),
                 'dels' => $dels,
                 'inv' => $inv,
             ];
@@ -115,7 +115,7 @@ final class DeliveryController extends BaseController
                 // - => 'desc'  so -id => default descending on id
                 // Show the latest quotes first => -id
                 ->withOrderString($query_params['sort'] ?? '-id');
-        $deliveries = $this->deliveries_with_sort($dR, $sort);
+        $deliveries = $this->deliveriesWithSort($dR, $sort);
         $paginator = (new OffsetPaginator($deliveries))
                 ->withPageSize($this->sR->positiveListLimit())
                 ->withCurrentPage($currentPageNeverZero)
@@ -137,7 +137,8 @@ final class DeliveryController extends BaseController
      *
      * @psalm-return SortableDataInterface&DataReaderInterface<int, Delivery>
      */
-    private function deliveries_with_sort(DeliveryRepository $dR, Sort $sort): SortableDataInterface
+    public function deliveriesWithSort(DeliveryRepository $dR, Sort $sort):
+        SortableDataInterface
     {
         return $dR->findAllPreloaded()
                          ->withSort($sort);
@@ -186,10 +187,10 @@ final class DeliveryController extends BaseController
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {
             $form = new DeliveryForm($delivery);
-            $inv_id = $delivery->getInv_id();
+            $inv_id = $delivery->getInvId();
             $inv = $iR->repoInvLoadedquery((string) $inv_id);
             if (null !== $inv) {
-                $dels = $delRepo->repoClientquery($inv->getClient_id());
+                $dels = $delRepo->repoClientquery($inv->getClientId());
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
                     'actionName' => 'delivery/edit',
@@ -197,7 +198,7 @@ final class DeliveryController extends BaseController
                     'errors' => [],
                     'form' => $form,
                     'inv' => $inv,
-                    'del_count' => $delRepo->repoClientCount($inv->getClient_id()),
+                    'del_count' => $delRepo->repoClientCount($inv->getClientId()),
                     'dels' => $dels,
                 ];
                 if ($request->getMethod() === Method::POST) {

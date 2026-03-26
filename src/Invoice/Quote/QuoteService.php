@@ -102,7 +102,7 @@ final readonly class QuoteService
             (strlen($model->getNumber() ?? '') == 0)  &&
             ($array['status_id'] == 1)) {
             $model->setNumber(
-                (string) $gR->generate_number(
+                (string) $gR->generateNumber(
                     (int) $array['group_id'],
                     true
                 )
@@ -114,7 +114,7 @@ final readonly class QuoteService
          * @var string $array['date_created']
          */
         $date_created = $array['date_created'] ?? '';
-        $model->setDate_created(
+        $model->setDateCreated(
             $datetime_created::createFromFormat(
                 'Y-m-d',
                 $date_created
@@ -122,38 +122,38 @@ final readonly class QuoteService
         );
 
         isset($array['inv_id']) ?
-            $model->setInv_id((int) $array['inv_id']) : '';
+            $model->setInvId((int) $array['inv_id']) : '';
         isset($array['so_id']) ?
-            $model->setSo_id((int) $array['so_id']) : '';
+            $model->setSoId((int) $array['so_id']) : '';
         isset($array['client_id']) ?
-            $model->setClient_id((int) $array['client_id']) : 0;
+            $model->setClientId((int) $array['client_id']) : 0;
         isset($array['group_id']) ?
-            $model->setGroup_id((int) $array['group_id']) : 0;
+            $model->setGroupId((int) $array['group_id']) : 0;
         isset($array['status_id']) ?
-            $model->setStatus_id((int) $array['status_id']) : '';
+            $model->setStatusId((int) $array['status_id']) : '';
         isset($array['delivery_location_id']) ?
-            $model->setDelivery_location_id(
+            $model->setDeliveryLocationId(
                 (int) $array['delivery_location_id']
             ) : '';
         isset($array['discount_amount']) ?
-            $model->setDiscount_amount(
+            $model->setDiscountAmount(
                 (float) $array['discount_amount']
             ) : '';
         isset($array['url_key']) ?
-            $model->setUrl_key((string) $array['url_key']) : '';
+            $model->setUrlKey((string) $array['url_key']) : '';
         isset($array['password']) ?
             $model->setPassword((string) $array['password']) : '';
         isset($array['notes']) ?
             $model->setNotes((string) $array['notes']) : '';
         if ($model->isNewRecord()) {
-            $model->setInv_id(0);
-            $model->setSo_id(0);
+            $model->setInvId(0);
+            $model->setSoId(0);
             // if draft quotes must get quote numbers
             if ($s->getSetting(
                 'generate_quote_number_for_draft'
             ) === '1') {
                 $model->setNumber(
-                    (string) $gR->generate_number(
+                    (string) $gR->generateNumber(
                         (int) $array['group_id'],
                         true
                     )
@@ -161,13 +161,13 @@ final readonly class QuoteService
             } else {
                 $model->setNumber('');
             }
-            $model->setStatus_id(1);
+            $model->setStatusId(1);
             $model->setUser($user);
-            $model->setUser_id((int) $user->getId());
-            $model->setUrl_key(Random::string(32));
-            $model->setDate_created(new \DateTimeImmutable('now'));
-            $model->setDate_expires($s);
-            $model->setDiscount_amount(0.00);
+            $model->setUserId((int) $user->getId());
+            $model->setUrlKey(Random::string(32));
+            $model->setDateCreated(new \DateTimeImmutable('now'));
+            $model->setDateExpires($s);
+            $model->setDiscountAmount(0.00);
         }
         $this->repository->save($model);
         return $model;

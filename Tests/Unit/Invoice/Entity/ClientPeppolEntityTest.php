@@ -21,18 +21,18 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol = new ClientPeppol();
         
         $this->assertSame('', $clientPeppol->getId());
-        $this->assertSame('', $clientPeppol->getClient_id());
+        $this->assertSame('', $clientPeppol->getClientId());
         $this->assertSame('', $clientPeppol->getEndpointid());
-        $this->assertSame('', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('', $clientPeppol->getEndpointidSchemeid());
         $this->assertSame('', $clientPeppol->getIdentificationid());
-        $this->assertSame('', $clientPeppol->getIdentificationid_schemeid());
+        $this->assertSame('', $clientPeppol->getIdentificationidSchemeid());
         $this->assertSame('', $clientPeppol->getTaxschemecompanyid());
         $this->assertSame('', $clientPeppol->getTaxschemeid());
-        $this->assertSame('', $clientPeppol->getLegal_entity_registration_name());
-        $this->assertSame('', $clientPeppol->getLegal_entity_companyid());
-        $this->assertSame('', $clientPeppol->getLegal_entity_companyid_schemeid());
-        $this->assertSame('', $clientPeppol->getLegal_entity_company_legal_form());
-        $this->assertSame('', $clientPeppol->getFinancial_institution_branchid());
+        $this->assertSame('', $clientPeppol->getLegalEntityRegistrationName());
+        $this->assertSame('', $clientPeppol->getLegalEntityCompanyid());
+        $this->assertSame('', $clientPeppol->getLegalEntityCompanyidSchemeid());
+        $this->assertSame('', $clientPeppol->getLegalEntityCompanyLegalForm());
+        $this->assertSame('', $clientPeppol->getFinancialInstitutionBranchid());
         $this->assertSame('', $clientPeppol->getAccountingCost());
         $this->assertSame('', $clientPeppol->getSupplierAssignedAccountId());
         $this->assertSame('', $clientPeppol->getBuyerReference());
@@ -61,18 +61,18 @@ class ClientPeppolEntityTest extends TestCase
         );
         
         $this->assertSame('1', $clientPeppol->getId());
-        $this->assertSame('100', $clientPeppol->getClient_id());
+        $this->assertSame('100', $clientPeppol->getClientId());
         $this->assertSame($this->sequenceOfNumbers, $clientPeppol->getEndpointid());
-        $this->assertSame('0088', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('0088', $clientPeppol->getEndpointidSchemeid());
         $this->assertSame('COMPANY123', $clientPeppol->getIdentificationid());
-        $this->assertSame('0002', $clientPeppol->getIdentificationid_schemeid());
+        $this->assertSame('0002', $clientPeppol->getIdentificationidSchemeid());
         $this->assertSame('VAT123456', $clientPeppol->getTaxschemecompanyid());
         $this->assertSame('VAT', $clientPeppol->getTaxschemeid());
-        $this->assertSame('Test Company Ltd', $clientPeppol->getLegal_entity_registration_name());
-        $this->assertSame('REG123456', $clientPeppol->getLegal_entity_companyid());
-        $this->assertSame('0002', $clientPeppol->getLegal_entity_companyid_schemeid());
-        $this->assertSame('LTD', $clientPeppol->getLegal_entity_company_legal_form());
-        $this->assertSame('BRANCH123', $clientPeppol->getFinancial_institution_branchid());
+        $this->assertSame('Test Company Ltd', $clientPeppol->getLegalEntityRegistrationName());
+        $this->assertSame('REG123456', $clientPeppol->getLegalEntityCompanyid());
+        $this->assertSame('0002', $clientPeppol->getLegalEntityCompanyidSchemeid());
+        $this->assertSame('LTD', $clientPeppol->getLegalEntityCompanyLegalForm());
+        $this->assertSame('BRANCH123', $clientPeppol->getFinancialInstitutionBranchid());
         $this->assertSame('COST001', $clientPeppol->getAccountingCost());
         $this->assertSame('SUPP001', $clientPeppol->getSupplierAssignedAccountId());
         $this->assertSame('REF001', $clientPeppol->getBuyerReference());
@@ -89,9 +89,9 @@ class ClientPeppolEntityTest extends TestCase
     public function testClientIdSetterAndGetter(): void
     {
         $clientPeppol = new ClientPeppol();
-        $clientPeppol->setClient_id(200);
+        $clientPeppol->setClientId(200);
         
-        $this->assertSame('200', $clientPeppol->getClient_id());
+        $this->assertSame('200', $clientPeppol->getClientId());
     }
 
     public function testEndpointidSetterAndGetter(): void
@@ -105,9 +105,9 @@ class ClientPeppolEntityTest extends TestCase
     public function testEndpointidSchemeidSetterAndGetter(): void
     {
         $clientPeppol = new ClientPeppol();
-        $clientPeppol->setEndpointid_schemeid('0192');
+        $clientPeppol->setEndpointidSchemeid('0192');
         
-        $this->assertSame('0192', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('0192', $clientPeppol->getEndpointidSchemeid());
     }
 
     public function testIdentificationidSetterAndGetter(): void
@@ -121,9 +121,9 @@ class ClientPeppolEntityTest extends TestCase
     public function testIdentificationidSchemeidSetterAndGetter(): void
     {
         $clientPeppol = new ClientPeppol();
-        $clientPeppol->setIdentificationid_schemeid('0007');
+        $clientPeppol->setIdentificationidSchemeid('0007');
         
-        $this->assertSame('0007', $clientPeppol->getIdentificationid_schemeid());
+        $this->assertSame('0007', $clientPeppol->getIdentificationidSchemeid());
     }
 
     public function testTaxschemecompanyidSetterAndGetter(): void
@@ -145,41 +145,41 @@ class ClientPeppolEntityTest extends TestCase
     public function testLegalEntityRegistrationNameSetterAndGetter(): void
     {
         $clientPeppol = new ClientPeppol();
-        $clientPeppol->setLegal_entity_registration_name('New Business Corporation');
+        $clientPeppol->setLegalEntityRegistrationName('New Business Corporation');
         
-        $this->assertSame('New Business Corporation', $clientPeppol->getLegal_entity_registration_name());
+        $this->assertSame('New Business Corporation', $clientPeppol->getLegalEntityRegistrationName());
     }
 
     public function testLegalEntityCompanyidSetterAndGetter(): void
     {
         $clientPeppol = new ClientPeppol();
-        $clientPeppol->setLegal_entity_companyid('NEWREG789');
+        $clientPeppol->setLegalEntityCompanyid('NEWREG789');
         
-        $this->assertSame('NEWREG789', $clientPeppol->getLegal_entity_companyid());
+        $this->assertSame('NEWREG789', $clientPeppol->getLegalEntityCompanyid());
     }
 
     public function testLegalEntityCompanyidSchemeidSetterAndGetter(): void
     {
         $clientPeppol = new ClientPeppol();
-        $clientPeppol->setLegal_entity_companyid_schemeid('0009');
+        $clientPeppol->setLegalEntityCompanyidSchemeid('0009');
         
-        $this->assertSame('0009', $clientPeppol->getLegal_entity_companyid_schemeid());
+        $this->assertSame('0009', $clientPeppol->getLegalEntityCompanyidSchemeid());
     }
 
     public function testLegalEntityCompanyLegalFormSetterAndGetter(): void
     {
         $clientPeppol = new ClientPeppol();
-        $clientPeppol->setLegal_entity_company_legal_form('PLC');
+        $clientPeppol->setLegalEntityCompanyLegalForm('PLC');
         
-        $this->assertSame('PLC', $clientPeppol->getLegal_entity_company_legal_form());
+        $this->assertSame('PLC', $clientPeppol->getLegalEntityCompanyLegalForm());
     }
 
     public function testFinancialInstitutionBranchidSetterAndGetter(): void
     {
         $clientPeppol = new ClientPeppol();
-        $clientPeppol->setFinancial_institution_branchid('NEWBRANCH456');
+        $clientPeppol->setFinancialInstitutionBranchid('NEWBRANCH456');
         
-        $this->assertSame('NEWBRANCH456', $clientPeppol->getFinancial_institution_branchid());
+        $this->assertSame('NEWBRANCH456', $clientPeppol->getFinancialInstitutionBranchid());
     }
 
     public function testAccountingCostSetterAndGetter(): void
@@ -230,30 +230,30 @@ class ClientPeppolEntityTest extends TestCase
     public function testClientIdTypeConversion(): void
     {
         $clientPeppol = new ClientPeppol();
-        $clientPeppol->setClient_id(777);
+        $clientPeppol->setClientId(777);
         
-        $this->assertIsString($clientPeppol->getClient_id());
-        $this->assertSame('777', $clientPeppol->getClient_id());
+        $this->assertIsString($clientPeppol->getClientId());
+        $this->assertSame('777', $clientPeppol->getClientId());
     }
 
     public function testZeroIds(): void
     {
         $clientPeppol = new ClientPeppol();
         $clientPeppol->setId(0);
-        $clientPeppol->setClient_id(0);
+        $clientPeppol->setClientId(0);
         
         $this->assertSame('0', $clientPeppol->getId());
-        $this->assertSame('0', $clientPeppol->getClient_id());
+        $this->assertSame('0', $clientPeppol->getClientId());
     }
 
     public function testNegativeIds(): void
     {
         $clientPeppol = new ClientPeppol();
         $clientPeppol->setId(-1);
-        $clientPeppol->setClient_id(-5);
+        $clientPeppol->setClientId(-5);
         
         $this->assertSame('-1', $clientPeppol->getId());
-        $this->assertSame('-5', $clientPeppol->getClient_id());
+        $this->assertSame('-5', $clientPeppol->getClientId());
     }
 
     public function testLargeIds(): void
@@ -262,10 +262,10 @@ class ClientPeppolEntityTest extends TestCase
         $largeId = PHP_INT_MAX;
         
         $clientPeppol->setId($largeId);
-        $clientPeppol->setClient_id($largeId - 1);
+        $clientPeppol->setClientId($largeId - 1);
         
         $this->assertSame((string)$largeId, $clientPeppol->getId());
-        $this->assertSame((string)($largeId - 1), $clientPeppol->getClient_id());
+        $this->assertSame((string)($largeId - 1), $clientPeppol->getClientId());
     }
 
     public function testEmptyStringFields(): void
@@ -274,31 +274,31 @@ class ClientPeppolEntityTest extends TestCase
         
         // All string fields should accept empty strings
         $clientPeppol->setEndpointid('');
-        $clientPeppol->setEndpointid_schemeid('');
+        $clientPeppol->setEndpointidSchemeid('');
         $clientPeppol->setIdentificationid('');
-        $clientPeppol->setIdentificationid_schemeid('');
+        $clientPeppol->setIdentificationidSchemeid('');
         $clientPeppol->setTaxschemecompanyid('');
         $clientPeppol->setTaxschemeid('');
-        $clientPeppol->setLegal_entity_registration_name('');
-        $clientPeppol->setLegal_entity_companyid('');
-        $clientPeppol->setLegal_entity_companyid_schemeid('');
-        $clientPeppol->setLegal_entity_company_legal_form('');
-        $clientPeppol->setFinancial_institution_branchid('');
+        $clientPeppol->setLegalEntityRegistrationName('');
+        $clientPeppol->setLegalEntityCompanyid('');
+        $clientPeppol->setLegalEntityCompanyidSchemeid('');
+        $clientPeppol->setLegalEntityCompanyLegalForm('');
+        $clientPeppol->setFinancialInstitutionBranchid('');
         $clientPeppol->setAccountingCost('');
         $clientPeppol->setSupplierAssignedAccountId('');
         $clientPeppol->setBuyerReference('');
         
         $this->assertSame('', $clientPeppol->getEndpointid());
-        $this->assertSame('', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('', $clientPeppol->getEndpointidSchemeid());
         $this->assertSame('', $clientPeppol->getIdentificationid());
-        $this->assertSame('', $clientPeppol->getIdentificationid_schemeid());
+        $this->assertSame('', $clientPeppol->getIdentificationidSchemeid());
         $this->assertSame('', $clientPeppol->getTaxschemecompanyid());
         $this->assertSame('', $clientPeppol->getTaxschemeid());
-        $this->assertSame('', $clientPeppol->getLegal_entity_registration_name());
-        $this->assertSame('', $clientPeppol->getLegal_entity_companyid());
-        $this->assertSame('', $clientPeppol->getLegal_entity_companyid_schemeid());
-        $this->assertSame('', $clientPeppol->getLegal_entity_company_legal_form());
-        $this->assertSame('', $clientPeppol->getFinancial_institution_branchid());
+        $this->assertSame('', $clientPeppol->getLegalEntityRegistrationName());
+        $this->assertSame('', $clientPeppol->getLegalEntityCompanyid());
+        $this->assertSame('', $clientPeppol->getLegalEntityCompanyidSchemeid());
+        $this->assertSame('', $clientPeppol->getLegalEntityCompanyLegalForm());
+        $this->assertSame('', $clientPeppol->getFinancialInstitutionBranchid());
         $this->assertSame('', $clientPeppol->getAccountingCost());
         $this->assertSame('', $clientPeppol->getSupplierAssignedAccountId());
         $this->assertSame('', $clientPeppol->getBuyerReference());
@@ -310,21 +310,21 @@ class ClientPeppolEntityTest extends TestCase
         
         // GLN endpoint
         $clientPeppol->setEndpointid($this->sequenceOfNumbers);
-        $clientPeppol->setEndpointid_schemeid('0088');
+        $clientPeppol->setEndpointidSchemeid('0088');
         $this->assertSame($this->sequenceOfNumbers, $clientPeppol->getEndpointid());
-        $this->assertSame('0088', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('0088', $clientPeppol->getEndpointidSchemeid());
         
         // DUNS endpoint
         $clientPeppol->setEndpointid($this->oneToNine);
-        $clientPeppol->setEndpointid_schemeid('0060');
+        $clientPeppol->setEndpointidSchemeid('0060');
         $this->assertSame($this->oneToNine, $clientPeppol->getEndpointid());
-        $this->assertSame('0060', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('0060', $clientPeppol->getEndpointidSchemeid());
         
         // IT IPA Code
         $clientPeppol->setEndpointid('ABCDEF');
-        $clientPeppol->setEndpointid_schemeid('0201');
+        $clientPeppol->setEndpointidSchemeid('0201');
         $this->assertSame('ABCDEF', $clientPeppol->getEndpointid());
-        $this->assertSame('0201', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('0201', $clientPeppol->getEndpointidSchemeid());
     }
 
     public function testPeppolIdentificationScenarios(): void
@@ -333,21 +333,21 @@ class ClientPeppolEntityTest extends TestCase
         
         // UK Companies House
         $clientPeppol->setIdentificationid($this->oneToEight);
-        $clientPeppol->setIdentificationid_schemeid('0002');
+        $clientPeppol->setIdentificationidSchemeid('0002');
         $this->assertSame($this->oneToEight, $clientPeppol->getIdentificationid());
-        $this->assertSame('0002', $clientPeppol->getIdentificationid_schemeid());
+        $this->assertSame('0002', $clientPeppol->getIdentificationidSchemeid());
         
         // DUNS
         $clientPeppol->setIdentificationid('987654321');
-        $clientPeppol->setIdentificationid_schemeid('0060');
+        $clientPeppol->setIdentificationidSchemeid('0060');
         $this->assertSame('987654321', $clientPeppol->getIdentificationid());
-        $this->assertSame('0060', $clientPeppol->getIdentificationid_schemeid());
+        $this->assertSame('0060', $clientPeppol->getIdentificationidSchemeid());
         
         // German Handelsregister
         $clientPeppol->setIdentificationid('HRB123456');
-        $clientPeppol->setIdentificationid_schemeid('0204');
+        $clientPeppol->setIdentificationidSchemeid('0204');
         $this->assertSame('HRB123456', $clientPeppol->getIdentificationid());
-        $this->assertSame('0204', $clientPeppol->getIdentificationid_schemeid());
+        $this->assertSame('0204', $clientPeppol->getIdentificationidSchemeid());
     }
 
     public function testTaxSchemeScenarios(): void
@@ -378,37 +378,37 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol = new ClientPeppol();
         
         // UK Limited Company
-        $clientPeppol->setLegal_entity_registration_name('Example Limited');
-        $clientPeppol->setLegal_entity_companyid($this->oneToEight);
-        $clientPeppol->setLegal_entity_companyid_schemeid('0002');
-        $clientPeppol->setLegal_entity_company_legal_form('Ltd');
+        $clientPeppol->setLegalEntityRegistrationName('Example Limited');
+        $clientPeppol->setLegalEntityCompanyid($this->oneToEight);
+        $clientPeppol->setLegalEntityCompanyidSchemeid('0002');
+        $clientPeppol->setLegalEntityCompanyLegalForm('Ltd');
         
-        $this->assertSame('Example Limited', $clientPeppol->getLegal_entity_registration_name());
-        $this->assertSame($this->oneToEight, $clientPeppol->getLegal_entity_companyid());
-        $this->assertSame('0002', $clientPeppol->getLegal_entity_companyid_schemeid());
-        $this->assertSame('Ltd', $clientPeppol->getLegal_entity_company_legal_form());
+        $this->assertSame('Example Limited', $clientPeppol->getLegalEntityRegistrationName());
+        $this->assertSame($this->oneToEight, $clientPeppol->getLegalEntityCompanyid());
+        $this->assertSame('0002', $clientPeppol->getLegalEntityCompanyidSchemeid());
+        $this->assertSame('Ltd', $clientPeppol->getLegalEntityCompanyLegalForm());
         
         // German GmbH
-        $clientPeppol->setLegal_entity_registration_name('Beispiel GmbH');
-        $clientPeppol->setLegal_entity_companyid('HRB987654');
-        $clientPeppol->setLegal_entity_companyid_schemeid('0204');
-        $clientPeppol->setLegal_entity_company_legal_form('GmbH');
+        $clientPeppol->setLegalEntityRegistrationName('Beispiel GmbH');
+        $clientPeppol->setLegalEntityCompanyid('HRB987654');
+        $clientPeppol->setLegalEntityCompanyidSchemeid('0204');
+        $clientPeppol->setLegalEntityCompanyLegalForm('GmbH');
         
-        $this->assertSame('Beispiel GmbH', $clientPeppol->getLegal_entity_registration_name());
-        $this->assertSame('HRB987654', $clientPeppol->getLegal_entity_companyid());
-        $this->assertSame('0204', $clientPeppol->getLegal_entity_companyid_schemeid());
-        $this->assertSame('GmbH', $clientPeppol->getLegal_entity_company_legal_form());
+        $this->assertSame('Beispiel GmbH', $clientPeppol->getLegalEntityRegistrationName());
+        $this->assertSame('HRB987654', $clientPeppol->getLegalEntityCompanyid());
+        $this->assertSame('0204', $clientPeppol->getLegalEntityCompanyidSchemeid());
+        $this->assertSame('GmbH', $clientPeppol->getLegalEntityCompanyLegalForm());
     }
 
     public function testSpecialCharactersInFields(): void
     {
         $clientPeppol = new ClientPeppol();
         
-        $clientPeppol->setLegal_entity_registration_name('Société Française & Co.');
+        $clientPeppol->setLegalEntityRegistrationName('Société Française & Co.');
         $clientPeppol->setAccountingCost('COST-123_ABC');
         $clientPeppol->setBuyerReference('PO#2024-001');
         
-        $this->assertSame('Société Française & Co.', $clientPeppol->getLegal_entity_registration_name());
+        $this->assertSame('Société Française & Co.', $clientPeppol->getLegalEntityRegistrationName());
         $this->assertSame('COST-123_ABC', $clientPeppol->getAccountingCost());
         $this->assertSame('PO#2024-001', $clientPeppol->getBuyerReference());
     }
@@ -417,11 +417,11 @@ class ClientPeppolEntityTest extends TestCase
     {
         $clientPeppol = new ClientPeppol();
         
-        $clientPeppol->setLegal_entity_registration_name('中文公司名称');
+        $clientPeppol->setLegalEntityRegistrationName('中文公司名称');
         $clientPeppol->setAccountingCost('成本代码123');
         $clientPeppol->setBuyerReference('采购参考456');
         
-        $this->assertSame('中文公司名称', $clientPeppol->getLegal_entity_registration_name());
+        $this->assertSame('中文公司名称', $clientPeppol->getLegalEntityRegistrationName());
         $this->assertSame('成本代码123', $clientPeppol->getAccountingCost());
         $this->assertSame('采购参考456', $clientPeppol->getBuyerReference());
     }
@@ -432,37 +432,37 @@ class ClientPeppolEntityTest extends TestCase
         $client = $this->createMock(Client::class);
         
         $clientPeppol->setId(1);
-        $clientPeppol->setClient_id(100);
+        $clientPeppol->setClientId(100);
         $clientPeppol->setClient($client);
         $clientPeppol->setEndpointid($this->sequenceOfNumbers);
-        $clientPeppol->setEndpointid_schemeid('0088');
+        $clientPeppol->setEndpointidSchemeid('0088');
         $clientPeppol->setIdentificationid('COMPANY123');
-        $clientPeppol->setIdentificationid_schemeid('0002');
+        $clientPeppol->setIdentificationidSchemeid('0002');
         $clientPeppol->setTaxschemecompanyid('GB123456789');
         $clientPeppol->setTaxschemeid('VAT');
-        $clientPeppol->setLegal_entity_registration_name('Complete Test Company Ltd');
-        $clientPeppol->setLegal_entity_companyid('REG123456');
-        $clientPeppol->setLegal_entity_companyid_schemeid('0002');
-        $clientPeppol->setLegal_entity_company_legal_form('Ltd');
-        $clientPeppol->setFinancial_institution_branchid('BRANCH123');
+        $clientPeppol->setLegalEntityRegistrationName('Complete Test Company Ltd');
+        $clientPeppol->setLegalEntityCompanyid('REG123456');
+        $clientPeppol->setLegalEntityCompanyidSchemeid('0002');
+        $clientPeppol->setLegalEntityCompanyLegalForm('Ltd');
+        $clientPeppol->setFinancialInstitutionBranchid('BRANCH123');
         $clientPeppol->setAccountingCost('COST001');
         $clientPeppol->setSupplierAssignedAccountId('SUPP001');
         $clientPeppol->setBuyerReference('REF001');
         
         $this->assertSame('1', $clientPeppol->getId());
-        $this->assertSame('100', $clientPeppol->getClient_id());
+        $this->assertSame('100', $clientPeppol->getClientId());
         $this->assertSame($client, $clientPeppol->getClient());
         $this->assertSame($this->sequenceOfNumbers, $clientPeppol->getEndpointid());
-        $this->assertSame('0088', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('0088', $clientPeppol->getEndpointidSchemeid());
         $this->assertSame('COMPANY123', $clientPeppol->getIdentificationid());
-        $this->assertSame('0002', $clientPeppol->getIdentificationid_schemeid());
+        $this->assertSame('0002', $clientPeppol->getIdentificationidSchemeid());
         $this->assertSame('GB123456789', $clientPeppol->getTaxschemecompanyid());
         $this->assertSame('VAT', $clientPeppol->getTaxschemeid());
-        $this->assertSame('Complete Test Company Ltd', $clientPeppol->getLegal_entity_registration_name());
-        $this->assertSame('REG123456', $clientPeppol->getLegal_entity_companyid());
-        $this->assertSame('0002', $clientPeppol->getLegal_entity_companyid_schemeid());
-        $this->assertSame('Ltd', $clientPeppol->getLegal_entity_company_legal_form());
-        $this->assertSame('BRANCH123', $clientPeppol->getFinancial_institution_branchid());
+        $this->assertSame('Complete Test Company Ltd', $clientPeppol->getLegalEntityRegistrationName());
+        $this->assertSame('REG123456', $clientPeppol->getLegalEntityCompanyid());
+        $this->assertSame('0002', $clientPeppol->getLegalEntityCompanyidSchemeid());
+        $this->assertSame('Ltd', $clientPeppol->getLegalEntityCompanyLegalForm());
+        $this->assertSame('BRANCH123', $clientPeppol->getFinancialInstitutionBranchid());
         $this->assertSame('COST001', $clientPeppol->getAccountingCost());
         $this->assertSame('SUPP001', $clientPeppol->getSupplierAssignedAccountId());
         $this->assertSame('REF001', $clientPeppol->getBuyerReference());
@@ -490,18 +490,18 @@ class ClientPeppolEntityTest extends TestCase
         );
         
         $this->assertIsString($clientPeppol->getId());
-        $this->assertIsString($clientPeppol->getClient_id());
+        $this->assertIsString($clientPeppol->getClientId());
         $this->assertIsString($clientPeppol->getEndpointid());
-        $this->assertIsString($clientPeppol->getEndpointid_schemeid());
+        $this->assertIsString($clientPeppol->getEndpointidSchemeid());
         $this->assertIsString($clientPeppol->getIdentificationid());
-        $this->assertIsString($clientPeppol->getIdentificationid_schemeid());
+        $this->assertIsString($clientPeppol->getIdentificationidSchemeid());
         $this->assertIsString($clientPeppol->getTaxschemecompanyid());
         $this->assertIsString($clientPeppol->getTaxschemeid());
-        $this->assertIsString($clientPeppol->getLegal_entity_registration_name());
-        $this->assertIsString($clientPeppol->getLegal_entity_companyid());
-        $this->assertIsString($clientPeppol->getLegal_entity_companyid_schemeid());
-        $this->assertIsString($clientPeppol->getLegal_entity_company_legal_form());
-        $this->assertIsString($clientPeppol->getFinancial_institution_branchid());
+        $this->assertIsString($clientPeppol->getLegalEntityRegistrationName());
+        $this->assertIsString($clientPeppol->getLegalEntityCompanyid());
+        $this->assertIsString($clientPeppol->getLegalEntityCompanyidSchemeid());
+        $this->assertIsString($clientPeppol->getLegalEntityCompanyLegalForm());
+        $this->assertIsString($clientPeppol->getFinancialInstitutionBranchid());
         $this->assertIsString($clientPeppol->getAccountingCost());
         $this->assertIsString($clientPeppol->getSupplierAssignedAccountId());
         $this->assertIsString($clientPeppol->getBuyerReference());
@@ -518,12 +518,12 @@ class ClientPeppolEntityTest extends TestCase
         $this->assertNull($clientPeppol->getClient());
         
         // Set first client
-        $clientPeppol->setClient_id(100);
+        $clientPeppol->setClientId(100);
         $clientPeppol->setClient($client1);
         $this->assertSame($client1, $clientPeppol->getClient());
         
         // Set new client
-        $clientPeppol->setClient_id(200);
+        $clientPeppol->setClientId(200);
         $clientPeppol->setClient($client2);
         $this->assertSame($client2, $clientPeppol->getClient());
     }
@@ -541,20 +541,20 @@ class ClientPeppolEntityTest extends TestCase
         
         // Verify initial state
         $this->assertSame('999', $clientPeppol->getId());
-        $this->assertSame('888', $clientPeppol->getClient_id());
+        $this->assertSame('888', $clientPeppol->getClientId());
         $this->assertSame('initial_endpoint', $clientPeppol->getEndpointid());
-        $this->assertSame('0001', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('0001', $clientPeppol->getEndpointidSchemeid());
         
         // Modify and verify changes
         $clientPeppol->setId(111);
-        $clientPeppol->setClient_id(222);
+        $clientPeppol->setClientId(222);
         $clientPeppol->setEndpointid('modified_endpoint');
-        $clientPeppol->setEndpointid_schemeid('0002');
+        $clientPeppol->setEndpointidSchemeid('0002');
         
         $this->assertSame('111', $clientPeppol->getId());
-        $this->assertSame('222', $clientPeppol->getClient_id());
+        $this->assertSame('222', $clientPeppol->getClientId());
         $this->assertSame('modified_endpoint', $clientPeppol->getEndpointid());
-        $this->assertSame('0002', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('0002', $clientPeppol->getEndpointidSchemeid());
     }
 
     public function testRealWorldPeppolExamples(): void
@@ -563,23 +563,23 @@ class ClientPeppolEntityTest extends TestCase
         
         // Norwegian organization
         $clientPeppol->setEndpointid('9908:123456789');
-        $clientPeppol->setEndpointid_schemeid('0192');
+        $clientPeppol->setEndpointidSchemeid('0192');
         $clientPeppol->setTaxschemecompanyid('NO123456789MVA');
         $clientPeppol->setTaxschemeid('VAT');
         
         $this->assertSame('9908:123456789', $clientPeppol->getEndpointid());
-        $this->assertSame('0192', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('0192', $clientPeppol->getEndpointidSchemeid());
         $this->assertSame('NO123456789MVA', $clientPeppol->getTaxschemecompanyid());
         $this->assertSame('VAT', $clientPeppol->getTaxschemeid());
         
         // Italian organization
         $clientPeppol->setEndpointid('ABCDEF');
-        $clientPeppol->setEndpointid_schemeid('0201');
+        $clientPeppol->setEndpointidSchemeid('0201');
         $clientPeppol->setTaxschemecompanyid('IT12345678901');
         $clientPeppol->setTaxschemeid('VAT');
         
         $this->assertSame('ABCDEF', $clientPeppol->getEndpointid());
-        $this->assertSame('0201', $clientPeppol->getEndpointid_schemeid());
+        $this->assertSame('0201', $clientPeppol->getEndpointidSchemeid());
         $this->assertSame('IT12345678901', $clientPeppol->getTaxschemecompanyid());
         $this->assertSame('VAT', $clientPeppol->getTaxschemeid());
     }

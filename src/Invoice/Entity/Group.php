@@ -44,32 +44,32 @@ class Group
         $this->name = $name;
     }
 
-    public function getIdentifier_format(): ?string
+    public function getIdentifierFormat(): ?string
     {
         return $this->identifier_format;
     }
 
-    public function setIdentifier_format(string $identifier_format): void
+    public function setIdentifierFormat(string $identifier_format): void
     {
         $this->identifier_format = $identifier_format;
     }
 
-    public function getNext_id(): string
+    public function getNextId(): string
     {
         return (string) $this->next_id;
     }
 
-    public function setNext_id(int $next_id): void
+    public function setNextId(int $next_id): void
     {
         $this->next_id = $next_id;
     }
 
-    public function getLeft_pad(): ?int
+    public function getLeftPad(): ?int
     {
         return $this->left_pad;
     }
 
-    public function setLeft_pad(int $left_pad): void
+    public function setLeftPad(int $left_pad): void
     {
         $this->left_pad = $left_pad;
     }

@@ -73,7 +73,7 @@ use Yiisoft\Html\Tag\Form;
         'disabled' => 'disabled',
     ])
     ->placeholder($translator->translate('price'))
-    ->value(Html::encode($s->format_amount($form->getPrice() ?? 0.00)));
+    ->value(Html::encode($s->formatAmount($form->getPrice() ?? 0.00)));
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

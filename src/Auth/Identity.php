@@ -24,7 +24,8 @@ class Identity implements CookieLoginIdentityInterface
     private ?User $user = null;
 
     /**
-     * A #[HasOne(target: Identity::class)] relationship exists in the User table so no need for a user_id column here as
+     * A #[HasOne(target: Identity::class)] relationship exists in the User
+     *  table so no need for a user_id column here as
      * it gets built automatically by the User's HasOne Identity relationship
      */
     public function __construct() {
@@ -37,7 +38,7 @@ class Identity implements CookieLoginIdentityInterface
         return (string) $this->id;
     }
 
-    public function getUser_id(): ?string
+    public function getUserId(): ?string
     {
         if ($this->user) {
             return $this->user->getId();

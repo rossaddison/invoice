@@ -40,7 +40,7 @@ class Price implements XmlSerializable
         $writer->write([
             [
                 'name' => Schema::CBC . 'PriceAmount',
-                'value' => $this->s->currency_converter(
+                'value' => $this->s->currencyConverter(
                  number_format((float) $this->priceAmount ?: 0.00, 2, '.', '')),
                 'attributes' => [
                     'currencyID' =>

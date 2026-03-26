@@ -170,9 +170,9 @@ final class SignupController
                 $to = $user->getEmail();
                 $login = $user->getLogin();
                 /**
-                 * @var array $this->sR->locale_language_array()
+                 * @var array $this->sR->localeLanguageArray()
                  */
-                $languageArray = $this->sR->locale_language_array();
+                $languageArray = $this->sR->localeLanguageArray();
                 $_language = $currentRoute->getArgument('_language');
                 /**
                  * @var string $_language
@@ -295,7 +295,7 @@ final class SignupController
         $userInv = new UserInv();
         if (null !== ($userId = $user->getId())) {
             $elcc = $this->translator->translate('email.link.click.confirm');
-            $userInv->setUser_id((int) $userId);
+            $userInv->setUserId((int) $userId);
             // if the user is administrator assign 0 => 'Administrator',
             // 1 => Not Administrator
             $userInv->setType($user->getId() == 1 ? 0 : 1);
@@ -343,7 +343,7 @@ final class SignupController
         // password_reset_token, email_verification_token etc
         $tR->save($token);
         $tokenString = $token->getToken();
-        $timeString = (string) $token->getCreated_at()->getTimestamp();
+        $timeString = (string) $token->getCreatedAt()->getTimestamp();
         // build the token
         return null !== $tokenString ?
             ($tokenString . '_' . $timeString) : '';

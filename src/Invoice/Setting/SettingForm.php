@@ -20,16 +20,16 @@ final class SettingForm extends FormModel
 
     public function __construct(Setting $setting)
     {
-        $this->setting_key = $setting->getSetting_key();
-        $this->setting_value = $setting->getSetting_value();
+        $this->setting_key = $setting->getSettingKey();
+        $this->setting_value = $setting->getSettingValue();
     }
 
-    public function getSetting_key(): ?string
+    public function getSettingKey(): ?string
     {
         return $this->setting_key;
     }
 
-    public function getSetting_value(): ?string
+    public function getSettingValue(): ?string
     {
         return $this->setting_value;
     }

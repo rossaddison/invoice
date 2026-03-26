@@ -27,20 +27,20 @@ final class PaymentForm extends FormModel
 
     public function __construct(Payment $payment)
     {
-        $this->payment_method_id = (int) $payment->getPayment_method_id();
-        $this->payment_date = $payment->getPayment_date();
+        $this->payment_method_id = (int) $payment->getPaymentMethodId();
+        $this->payment_date = $payment->getPaymentDate();
         $this->amount = $payment->getAmount();
         $this->note = $payment->getNote();
-        $this->inv_id = (int) $payment->getInv_id();
+        $this->inv_id = (int) $payment->getInvId();
         $this->inv = $payment->getInv();
     }
 
-    public function getPayment_method_id(): ?int
+    public function getPaymentMethodId(): ?int
     {
         return $this->payment_method_id;
     }
 
-    public function getPayment_date(): string|DateTimeImmutable|null
+    public function getPaymentDate(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->payment_date
@@ -58,7 +58,7 @@ final class PaymentForm extends FormModel
         return $this->note;
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }

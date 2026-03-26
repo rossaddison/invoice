@@ -234,7 +234,7 @@ final class TaskController extends BaseController
      * @param iR $iR
      * @param pymR $pymR
      */
-    public function selection_inv(
+    public function selectionInv(
         FormHydrator $formHydrator,
         Request $request,
         ACIR $aciR,
@@ -258,11 +258,11 @@ final class TaskController extends BaseController
         $order = 1;
         /** @var Task $task */
         foreach ($tasks as $task) {
-            $task->setPrice((float) $numberHelper->format_amount($task->getPrice()));
-            $this->save_task_lookup_item_inv($order, $task, $inv_id, $taskR, $trR, $iiaR, $iiR, $formHydrator);
+            $task->setPrice((float) $numberHelper->formatAmount($task->getPrice()));
+            $this->saveTaskLookupItemInv($order, $task, $inv_id, $taskR, $trR, $iiaR, $iiR, $formHydrator);
             $order++;
         }
-        $numberHelper->calculate_inv((string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+        $numberHelper->calculateInv((string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
         return $this->factory->createResponse(Json::encode($tasks));
     }
 
@@ -276,7 +276,7 @@ final class TaskController extends BaseController
      * @param iiR $iiR
      * @param FormHydrator $formHydrator
      */
-    private function save_task_lookup_item_inv(int $order, Task $task,
+    private function saveTaskLookupItemInv(int $order, Task $task,
             string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, iiR $iiR,
             FormHydrator $formHydrator): void
     {
@@ -285,7 +285,7 @@ final class TaskController extends BaseController
         $ajax_content = [
             'name' => $task->getName(),
             'inv_id' => $inv_id,
-            'tax_rate_id' => $task->getTax_rate_id(),
+            'tax_rate_id' => $task->getTaxRateId(),
             'task_id' => $task->getId(),
             'product_id' => null,
             'date_added' => new \DateTimeImmutable('now'),
@@ -298,7 +298,7 @@ final class TaskController extends BaseController
             'order' => $order,
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
-            $this->invitemService->addInvItem_task($invItem, $ajax_content,
+            $this->invitemService->addInvItemTask($invItem, $ajax_content,
                     $inv_id, $taskR, $trR, new iiaS($iiaR, $iiR), $iiaR);
         }
     }
@@ -317,7 +317,7 @@ final class TaskController extends BaseController
      * @param qR $qR
      * @param acqR $acqR
      */
-    public function selection_quote(
+    public function selectionQuote(
         FormHydrator $formHydrator,
         Request $request,
         tR $taskR,
@@ -341,11 +341,11 @@ final class TaskController extends BaseController
         $order = 1;
         /** @var Task $task */
         foreach ($tasks as $task) {
-            $task->setPrice((float) $numberHelper->format_amount($task->getPrice()));
-            $this->save_task_lookup_item_quote($order, $task, $quote_id, $taskR, $trR, $qiaR, $qiaS, $formHydrator);
+            $task->setPrice((float) $numberHelper->formatAmount($task->getPrice()));
+            $this->saveTaskLookupItemQuote($order, $task, $quote_id, $taskR, $trR, $qiaR, $qiaS, $formHydrator);
             $order++;
         }
-        $numberHelper->calculate_quote($quote_id, $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
+        $numberHelper->calculateQuote($quote_id, $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
         return $this->factory->createResponse(Json::encode($tasks));
     }
 
@@ -359,14 +359,14 @@ final class TaskController extends BaseController
      * @param qiaS $qiaS
      * @param FormHydrator $formHydrator
      */
-    private function save_task_lookup_item_quote(int $order, Task $task, string $quote_id, tR $taskR, trR $trR, qiaR $qiaR, qiaS $qiaS, FormHydrator $formHydrator): void
+    private function saveTaskLookupItemQuote(int $order, Task $task, string $quote_id, tR $taskR, trR $trR, qiaR $qiaR, qiaS $qiaS, FormHydrator $formHydrator): void
     {
         $quoteItem = new QuoteItem();
         $form = new QuoteItemForm($quoteItem, $quote_id);
         $ajax_content = [
             'name' => $task->getName(),
             'quote_id' => $quote_id,
-            'tax_rate_id' => $task->getTax_rate_id(),
+            'tax_rate_id' => $task->getTaxRateId(),
             'task_id' => $task->getId(),
             'product_id' => null,
             'date_added' => new \DateTimeImmutable('now'),

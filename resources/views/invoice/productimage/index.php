@@ -41,17 +41,17 @@ $columns = [
     new DataColumn(
         'product_id',
         header: $translator->translate('product'),
-        content: static fn (ProductImage $model): string => Html::encode($model->getProduct()?->getProduct_name() ?? ''),
+        content: static fn (ProductImage $model): string => Html::encode($model->getProduct()?->getProductName() ?? ''),
     ),
     new DataColumn(
         'file_name_original',
         header: $translator->translate('upload.filename.original'),
-        content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_original()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getFileNameOriginal()),
     ),
     new DataColumn(
         'file_name_new',
         header: $translator->translate('upload.filename.new'),
-        content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_new()),
+        content: static fn (ProductImage $model): string => Html::encode($model->getFileNameNew()),
     ),
     new DataColumn(
         'description',

@@ -63,7 +63,7 @@ use Yiisoft\FormModel\Field;
    ->addInputAttributes([
        'class' => 'form-control',
    ])
-   ->value(Html::encode(!is_string($form->getDate_sent()) ? $form->getDate_sent()?->format('l, d-M-y H:i:s T') : ''))
+   ->value(Html::encode(!is_string($form->getDateSent()) ? $form->getDateSent()?->format('l, d-M-y H:i:s T') : ''))
    ->placeholder($translator->translate('date.sent'))
    ->readonly(true)
 ?>

@@ -23,16 +23,16 @@ final class EmailTemplateEntityTest extends Unit
     {
         $emailTemplate = new EmailTemplate();
         
-        $this->assertNull($emailTemplate->getEmail_template_id());
-        $this->assertSame('', $emailTemplate->getEmail_template_title());
-        $this->assertSame('', $emailTemplate->getEmail_template_type());
-        $this->assertSame('', $emailTemplate->getEmail_template_body());
-        $this->assertSame('', $emailTemplate->getEmail_template_subject());
-        $this->assertSame('', $emailTemplate->getEmail_template_from_name());
-        $this->assertSame('', $emailTemplate->getEmail_template_from_email());
-        $this->assertSame('', $emailTemplate->getEmail_template_cc());
-        $this->assertSame('', $emailTemplate->getEmail_template_bcc());
-        $this->assertSame('', $emailTemplate->getEmail_template_pdf_template());
+        $this->assertNull($emailTemplate->getEmailTemplateId());
+        $this->assertSame('', $emailTemplate->getEmailTemplateTitle());
+        $this->assertSame('', $emailTemplate->getEmailTemplateType());
+        $this->assertSame('', $emailTemplate->getEmailTemplateBody());
+        $this->assertSame('', $emailTemplate->getEmailTemplateSubject());
+        $this->assertSame('', $emailTemplate->getEmailTemplateFromName());
+        $this->assertSame('', $emailTemplate->getEmailTemplateFromEmail());
+        $this->assertSame('', $emailTemplate->getEmailTemplateCc());
+        $this->assertSame('', $emailTemplate->getEmailTemplateBcc());
+        $this->assertSame('', $emailTemplate->getEmailTemplatePdfTemplate());
     }
 
     public function testConstructorWithAllParameters(): void
@@ -49,111 +49,111 @@ final class EmailTemplateEntityTest extends Unit
             'invoice_template.pdf'
         );
         
-        $this->assertNull($emailTemplate->getEmail_template_id());
-        $this->assertSame($this->invoiceTemplate, $emailTemplate->getEmail_template_title());
-        $this->assertSame('invoice', $emailTemplate->getEmail_template_type());
-        $this->assertSame('<p>Your invoice is ready</p>', $emailTemplate->getEmail_template_body());
-        $this->assertSame('Invoice #123 from Company', $emailTemplate->getEmail_template_subject());
-        $this->assertSame('Billing Department', $emailTemplate->getEmail_template_from_name());
-        $this->assertSame('billing@company.com', $emailTemplate->getEmail_template_from_email());
-        $this->assertSame('manager@company.com', $emailTemplate->getEmail_template_cc());
-        $this->assertSame('archive@company.com', $emailTemplate->getEmail_template_bcc());
-        $this->assertSame('invoice_template.pdf', $emailTemplate->getEmail_template_pdf_template());
+        $this->assertNull($emailTemplate->getEmailTemplateId());
+        $this->assertSame($this->invoiceTemplate, $emailTemplate->getEmailTemplateTitle());
+        $this->assertSame('invoice', $emailTemplate->getEmailTemplateType());
+        $this->assertSame('<p>Your invoice is ready</p>', $emailTemplate->getEmailTemplateBody());
+        $this->assertSame('Invoice #123 from Company', $emailTemplate->getEmailTemplateSubject());
+        $this->assertSame('Billing Department', $emailTemplate->getEmailTemplateFromName());
+        $this->assertSame('billing@company.com', $emailTemplate->getEmailTemplateFromEmail());
+        $this->assertSame('manager@company.com', $emailTemplate->getEmailTemplateCc());
+        $this->assertSame('archive@company.com', $emailTemplate->getEmailTemplateBcc());
+        $this->assertSame('invoice_template.pdf', $emailTemplate->getEmailTemplatePdfTemplate());
     }
 
     public function testIdGetter(): void
     {
         $emailTemplate = new EmailTemplate();
         
-        $this->assertNull($emailTemplate->getEmail_template_id());
+        $this->assertNull($emailTemplate->getEmailTemplateId());
     }
 
     public function testTitleSetterAndGetter(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_title($this->quoteTemplate);
+        $emailTemplate->setEmailTemplateTitle($this->quoteTemplate);
         
-        $this->assertSame($this->quoteTemplate, $emailTemplate->getEmail_template_title());
+        $this->assertSame($this->quoteTemplate, $emailTemplate->getEmailTemplateTitle());
     }
 
     public function testTypeSetterAndGetter(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_type('quote');
+        $emailTemplate->setEmailTemplateType('quote');
         
-        $this->assertSame('quote', $emailTemplate->getEmail_template_type());
+        $this->assertSame('quote', $emailTemplate->getEmailTemplateType());
     }
 
     public function testBodySetterAndGetter(): void
     {
         $htmlBody = '<html><body><h1>Thank you!</h1><p>Your quote is attached.</p></body></html>';
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_body($htmlBody);
+        $emailTemplate->setEmailTemplateBody($htmlBody);
         
-        $this->assertSame($htmlBody, $emailTemplate->getEmail_template_body());
+        $this->assertSame($htmlBody, $emailTemplate->getEmailTemplateBody());
     }
 
     public function testSubjectSetterAndGetter(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_subject('Your Quote Request');
+        $emailTemplate->setEmailTemplateSubject('Your Quote Request');
         
-        $this->assertSame('Your Quote Request', $emailTemplate->getEmail_template_subject());
+        $this->assertSame('Your Quote Request', $emailTemplate->getEmailTemplateSubject());
     }
 
     public function testFromNameSetterAndGetter(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_from_name('Sales Team');
+        $emailTemplate->setEmailTemplateFromName('Sales Team');
         
-        $this->assertSame('Sales Team', $emailTemplate->getEmail_template_from_name());
+        $this->assertSame('Sales Team', $emailTemplate->getEmailTemplateFromName());
     }
 
     public function testFromEmailSetterAndGetter(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_from_email('sales@company.com');
+        $emailTemplate->setEmailTemplateFromEmail('sales@company.com');
         
-        $this->assertSame('sales@company.com', $emailTemplate->getEmail_template_from_email());
+        $this->assertSame('sales@company.com', $emailTemplate->getEmailTemplateFromEmail());
     }
 
     public function testCcSetterAndGetter(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_cc('supervisor@company.com');
+        $emailTemplate->setEmailTemplateCc('supervisor@company.com');
         
-        $this->assertSame('supervisor@company.com', $emailTemplate->getEmail_template_cc());
+        $this->assertSame('supervisor@company.com', $emailTemplate->getEmailTemplateCc());
     }
 
     public function testBccSetterAndGetter(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_bcc('records@company.com');
+        $emailTemplate->setEmailTemplateBcc('records@company.com');
         
-        $this->assertSame('records@company.com', $emailTemplate->getEmail_template_bcc());
+        $this->assertSame('records@company.com', $emailTemplate->getEmailTemplateBcc());
     }
 
     public function testPdfTemplateSetterAndGetter(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_pdf_template('quote_template.pdf');
+        $emailTemplate->setEmailTemplatePdfTemplate('quote_template.pdf');
         
-        $this->assertSame('quote_template.pdf', $emailTemplate->getEmail_template_pdf_template());
+        $this->assertSame('quote_template.pdf', $emailTemplate->getEmailTemplatePdfTemplate());
     }
 
     public function testCommonEmailTemplateTypes(): void
     {
         $invoiceTemplate = new EmailTemplate($this->invoiceTemplate, 'invoice', 'Invoice body', 'Invoice subject', 'Billing', 'billing@test.com', '', '', 'invoice.pdf');
-        $this->assertSame('invoice', $invoiceTemplate->getEmail_template_type());
-        $this->assertSame($this->invoiceTemplate, $invoiceTemplate->getEmail_template_title());
+        $this->assertSame('invoice', $invoiceTemplate->getEmailTemplateType());
+        $this->assertSame($this->invoiceTemplate, $invoiceTemplate->getEmailTemplateTitle());
 
         $quoteTemplate = new EmailTemplate($this->quoteTemplate, 'quote', 'Quote body', 'Quote subject', 'Sales', 'sales@test.com', '', '', 'quote.pdf');
-        $this->assertSame('quote', $quoteTemplate->getEmail_template_type());
-        $this->assertSame($this->quoteTemplate, $quoteTemplate->getEmail_template_title());
+        $this->assertSame('quote', $quoteTemplate->getEmailTemplateType());
+        $this->assertSame($this->quoteTemplate, $quoteTemplate->getEmailTemplateTitle());
 
         $reminderTemplate = new EmailTemplate('Reminder Template', 'reminder', 'Reminder body', 'Payment reminder', 'Accounts', 'accounts@test.com', '', '', '');
-        $this->assertSame('reminder', $reminderTemplate->getEmail_template_type());
-        $this->assertSame('Reminder Template', $reminderTemplate->getEmail_template_title());
+        $this->assertSame('reminder', $reminderTemplate->getEmailTemplateType());
+        $this->assertSame('Reminder Template', $reminderTemplate->getEmailTemplateTitle());
     }
 
     public function testLongEmailTemplateContent(): void
@@ -163,8 +163,8 @@ final class EmailTemplateEntityTest extends Unit
         
         $emailTemplate = new EmailTemplate('Long Template', 'long', $longBody, $longSubject, 'Sender', $this->testExampleCom, '', '', '');
         
-        $this->assertSame($longBody, $emailTemplate->getEmail_template_body());
-        $this->assertSame($longSubject, $emailTemplate->getEmail_template_subject());
+        $this->assertSame($longBody, $emailTemplate->getEmailTemplateBody());
+        $this->assertSame($longSubject, $emailTemplate->getEmailTemplateSubject());
     }
 
     public function testHtmlContentInBody(): void
@@ -184,126 +184,126 @@ final class EmailTemplateEntityTest extends Unit
         ';
         
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_body($htmlContent);
+        $emailTemplate->setEmailTemplateBody($htmlContent);
         
-        $this->assertSame($htmlContent, $emailTemplate->getEmail_template_body());
+        $this->assertSame($htmlContent, $emailTemplate->getEmailTemplateBody());
     }
 
     public function testMultipleEmailAddresses(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_cc('manager@company.com, supervisor@company.com');
-        $emailTemplate->setEmail_template_bcc('archive@company.com, backup@company.com');
+        $emailTemplate->setEmailTemplateCc('manager@company.com, supervisor@company.com');
+        $emailTemplate->setEmailTemplateBcc('archive@company.com, backup@company.com');
         
-        $this->assertSame('manager@company.com, supervisor@company.com', $emailTemplate->getEmail_template_cc());
-        $this->assertSame('archive@company.com, backup@company.com', $emailTemplate->getEmail_template_bcc());
+        $this->assertSame('manager@company.com, supervisor@company.com', $emailTemplate->getEmailTemplateCc());
+        $this->assertSame('archive@company.com, backup@company.com', $emailTemplate->getEmailTemplateBcc());
     }
 
     public function testSpecialCharactersInContent(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_subject('Invoice #12345 - €1,234.56 (20% VAT)');
-        $emailTemplate->setEmail_template_from_name('Müller & Associates');
+        $emailTemplate->setEmailTemplateSubject('Invoice #12345 - €1,234.56 (20% VAT)');
+        $emailTemplate->setEmailTemplateFromName('Müller & Associates');
         
-        $this->assertSame('Invoice #12345 - €1,234.56 (20% VAT)', $emailTemplate->getEmail_template_subject());
-        $this->assertSame('Müller & Associates', $emailTemplate->getEmail_template_from_name());
+        $this->assertSame('Invoice #12345 - €1,234.56 (20% VAT)', $emailTemplate->getEmailTemplateSubject());
+        $this->assertSame('Müller & Associates', $emailTemplate->getEmailTemplateFromName());
     }
 
     public function testUnicodeInContent(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_title('Förmula Tëst 测试');
-        $emailTemplate->setEmail_template_subject('Ñoñó España 日本語');
+        $emailTemplate->setEmailTemplateTitle('Förmula Tëst 测试');
+        $emailTemplate->setEmailTemplateSubject('Ñoñó España 日本語');
         
-        $this->assertSame('Förmula Tëst 测试', $emailTemplate->getEmail_template_title());
-        $this->assertSame('Ñoñó España 日本語', $emailTemplate->getEmail_template_subject());
+        $this->assertSame('Förmula Tëst 测试', $emailTemplate->getEmailTemplateTitle());
+        $this->assertSame('Ñoñó España 日本語', $emailTemplate->getEmailTemplateSubject());
     }
 
     public function testChainedSetterCalls(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_title('Chained Template');
-        $emailTemplate->setEmail_template_type('chained');
-        $emailTemplate->setEmail_template_body('<p>Chained body</p>');
-        $emailTemplate->setEmail_template_subject('Chained Subject');
-        $emailTemplate->setEmail_template_from_name('Chained Sender');
-        $emailTemplate->setEmail_template_from_email('chained@test.com');
-        $emailTemplate->setEmail_template_cc($this->ccTestCom);
-        $emailTemplate->setEmail_template_bcc($this->bccTestCom);
-        $emailTemplate->setEmail_template_pdf_template('chained.pdf');
+        $emailTemplate->setEmailTemplateTitle('Chained Template');
+        $emailTemplate->setEmailTemplateType('chained');
+        $emailTemplate->setEmailTemplateBody('<p>Chained body</p>');
+        $emailTemplate->setEmailTemplateSubject('Chained Subject');
+        $emailTemplate->setEmailTemplateFromName('Chained Sender');
+        $emailTemplate->setEmailTemplateFromEmail('chained@test.com');
+        $emailTemplate->setEmailTemplateCc($this->ccTestCom);
+        $emailTemplate->setEmailTemplateBcc($this->bccTestCom);
+        $emailTemplate->setEmailTemplatePdfTemplate('chained.pdf');
         
-        $this->assertSame('Chained Template', $emailTemplate->getEmail_template_title());
-        $this->assertSame('chained', $emailTemplate->getEmail_template_type());
-        $this->assertSame('<p>Chained body</p>', $emailTemplate->getEmail_template_body());
-        $this->assertSame('Chained Subject', $emailTemplate->getEmail_template_subject());
-        $this->assertSame('Chained Sender', $emailTemplate->getEmail_template_from_name());
-        $this->assertSame('chained@test.com', $emailTemplate->getEmail_template_from_email());
-        $this->assertSame($this->ccTestCom, $emailTemplate->getEmail_template_cc());
-        $this->assertSame($this->bccTestCom, $emailTemplate->getEmail_template_bcc());
-        $this->assertSame('chained.pdf', $emailTemplate->getEmail_template_pdf_template());
+        $this->assertSame('Chained Template', $emailTemplate->getEmailTemplateTitle());
+        $this->assertSame('chained', $emailTemplate->getEmailTemplateType());
+        $this->assertSame('<p>Chained body</p>', $emailTemplate->getEmailTemplateBody());
+        $this->assertSame('Chained Subject', $emailTemplate->getEmailTemplateSubject());
+        $this->assertSame('Chained Sender', $emailTemplate->getEmailTemplateFromName());
+        $this->assertSame('chained@test.com', $emailTemplate->getEmailTemplateFromEmail());
+        $this->assertSame($this->ccTestCom, $emailTemplate->getEmailTemplateCc());
+        $this->assertSame($this->bccTestCom, $emailTemplate->getEmailTemplateBcc());
+        $this->assertSame('chained.pdf', $emailTemplate->getEmailTemplatePdfTemplate());
     }
 
     public function testEmptyFieldHandling(): void
     {
         $emailTemplate = new EmailTemplate('', '', '', '', '', '', '', '', '');
         
-        $this->assertSame('', $emailTemplate->getEmail_template_title());
-        $this->assertSame('', $emailTemplate->getEmail_template_type());
-        $this->assertSame('', $emailTemplate->getEmail_template_body());
-        $this->assertSame('', $emailTemplate->getEmail_template_subject());
-        $this->assertSame('', $emailTemplate->getEmail_template_from_name());
-        $this->assertSame('', $emailTemplate->getEmail_template_from_email());
-        $this->assertSame('', $emailTemplate->getEmail_template_cc());
-        $this->assertSame('', $emailTemplate->getEmail_template_bcc());
-        $this->assertSame('', $emailTemplate->getEmail_template_pdf_template());
+        $this->assertSame('', $emailTemplate->getEmailTemplateTitle());
+        $this->assertSame('', $emailTemplate->getEmailTemplateType());
+        $this->assertSame('', $emailTemplate->getEmailTemplateBody());
+        $this->assertSame('', $emailTemplate->getEmailTemplateSubject());
+        $this->assertSame('', $emailTemplate->getEmailTemplateFromName());
+        $this->assertSame('', $emailTemplate->getEmailTemplateFromEmail());
+        $this->assertSame('', $emailTemplate->getEmailTemplateCc());
+        $this->assertSame('', $emailTemplate->getEmailTemplateBcc());
+        $this->assertSame('', $emailTemplate->getEmailTemplatePdfTemplate());
     }
 
     public function testNullFieldHandling(): void
     {
         $emailTemplate = new EmailTemplate(null, null, '', null, null, null, null, null, null);
         
-        $this->assertNull($emailTemplate->getEmail_template_title());
-        $this->assertNull($emailTemplate->getEmail_template_type());
-        $this->assertSame('', $emailTemplate->getEmail_template_body());
-        $this->assertNull($emailTemplate->getEmail_template_subject());
-        $this->assertNull($emailTemplate->getEmail_template_from_name());
-        $this->assertNull($emailTemplate->getEmail_template_from_email());
-        $this->assertNull($emailTemplate->getEmail_template_cc());
-        $this->assertNull($emailTemplate->getEmail_template_bcc());
-        $this->assertNull($emailTemplate->getEmail_template_pdf_template());
+        $this->assertNull($emailTemplate->getEmailTemplateTitle());
+        $this->assertNull($emailTemplate->getEmailTemplateType());
+        $this->assertSame('', $emailTemplate->getEmailTemplateBody());
+        $this->assertNull($emailTemplate->getEmailTemplateSubject());
+        $this->assertNull($emailTemplate->getEmailTemplateFromName());
+        $this->assertNull($emailTemplate->getEmailTemplateFromEmail());
+        $this->assertNull($emailTemplate->getEmailTemplateCc());
+        $this->assertNull($emailTemplate->getEmailTemplateBcc());
+        $this->assertNull($emailTemplate->getEmailTemplatePdfTemplate());
     }
 
     public function testCompleteEmailTemplateSetup(): void
     {
         $emailTemplate = new EmailTemplate();
-        $emailTemplate->setEmail_template_title('Complete Setup Template');
-        $emailTemplate->setEmail_template_type('complete');
-        $emailTemplate->setEmail_template_body('<h1>Complete Setup</h1><p>This is a complete email template setup.</p>');
-        $emailTemplate->setEmail_template_subject('Complete Setup Subject');
-        $emailTemplate->setEmail_template_from_name('Complete Sender');
-        $emailTemplate->setEmail_template_from_email('complete@setup.com');
-        $emailTemplate->setEmail_template_cc('cc@setup.com');
-        $emailTemplate->setEmail_template_bcc('bcc@setup.com');
-        $emailTemplate->setEmail_template_pdf_template('complete_setup.pdf');
+        $emailTemplate->setEmailTemplateTitle('Complete Setup Template');
+        $emailTemplate->setEmailTemplateType('complete');
+        $emailTemplate->setEmailTemplateBody('<h1>Complete Setup</h1><p>This is a complete email template setup.</p>');
+        $emailTemplate->setEmailTemplateSubject('Complete Setup Subject');
+        $emailTemplate->setEmailTemplateFromName('Complete Sender');
+        $emailTemplate->setEmailTemplateFromEmail('complete@setup.com');
+        $emailTemplate->setEmailTemplateCc('cc@setup.com');
+        $emailTemplate->setEmailTemplateBcc('bcc@setup.com');
+        $emailTemplate->setEmailTemplatePdfTemplate('complete_setup.pdf');
         
-        $this->assertSame('Complete Setup Template', $emailTemplate->getEmail_template_title());
-        $this->assertSame('complete', $emailTemplate->getEmail_template_type());
-        $this->assertSame('<h1>Complete Setup</h1><p>This is a complete email template setup.</p>', $emailTemplate->getEmail_template_body());
-        $this->assertSame('Complete Setup Subject', $emailTemplate->getEmail_template_subject());
-        $this->assertSame('Complete Sender', $emailTemplate->getEmail_template_from_name());
-        $this->assertSame('complete@setup.com', $emailTemplate->getEmail_template_from_email());
-        $this->assertSame('cc@setup.com', $emailTemplate->getEmail_template_cc());
-        $this->assertSame('bcc@setup.com', $emailTemplate->getEmail_template_bcc());
-        $this->assertSame('complete_setup.pdf', $emailTemplate->getEmail_template_pdf_template());
+        $this->assertSame('Complete Setup Template', $emailTemplate->getEmailTemplateTitle());
+        $this->assertSame('complete', $emailTemplate->getEmailTemplateType());
+        $this->assertSame('<h1>Complete Setup</h1><p>This is a complete email template setup.</p>', $emailTemplate->getEmailTemplateBody());
+        $this->assertSame('Complete Setup Subject', $emailTemplate->getEmailTemplateSubject());
+        $this->assertSame('Complete Sender', $emailTemplate->getEmailTemplateFromName());
+        $this->assertSame('complete@setup.com', $emailTemplate->getEmailTemplateFromEmail());
+        $this->assertSame('cc@setup.com', $emailTemplate->getEmailTemplateCc());
+        $this->assertSame('bcc@setup.com', $emailTemplate->getEmailTemplateBcc());
+        $this->assertSame('complete_setup.pdf', $emailTemplate->getEmailTemplatePdfTemplate());
     }
 
     public function testPdfTemplateExtensions(): void
     {
         $pdfTemplate = new EmailTemplate('PDF Template', 'pdf', 'Body', 'Subject', 'Sender', $this->testExampleCom, '', '', 'template.pdf');
-        $this->assertSame('template.pdf', $pdfTemplate->getEmail_template_pdf_template());
+        $this->assertSame('template.pdf', $pdfTemplate->getEmailTemplatePdfTemplate());
 
         $docxTemplate = new EmailTemplate('DOCX Template', 'docx', 'Body', 'Subject', 'Sender', $this->testExampleCom, '', '', 'template.docx');
-        $this->assertSame('template.docx', $docxTemplate->getEmail_template_pdf_template());
+        $this->assertSame('template.docx', $docxTemplate->getEmailTemplatePdfTemplate());
     }
 
     public function testEmailAddressFormats(): void
@@ -311,30 +311,30 @@ final class EmailTemplateEntityTest extends Unit
         $emailTemplate = new EmailTemplate();
         
         // Standard email
-        $emailTemplate->setEmail_template_from_email('user@domain.com');
-        $this->assertSame('user@domain.com', $emailTemplate->getEmail_template_from_email());
+        $emailTemplate->setEmailTemplateFromEmail('user@domain.com');
+        $this->assertSame('user@domain.com', $emailTemplate->getEmailTemplateFromEmail());
         
         // Email with subdomain
-        $emailTemplate->setEmail_template_from_email('admin@mail.company.co.uk');
-        $this->assertSame('admin@mail.company.co.uk', $emailTemplate->getEmail_template_from_email());
+        $emailTemplate->setEmailTemplateFromEmail('admin@mail.company.co.uk');
+        $this->assertSame('admin@mail.company.co.uk', $emailTemplate->getEmailTemplateFromEmail());
         
         // Email with plus sign
-        $emailTemplate->setEmail_template_from_email('user+tag@example.com');
-        $this->assertSame('user+tag@example.com', $emailTemplate->getEmail_template_from_email());
+        $emailTemplate->setEmailTemplateFromEmail('user+tag@example.com');
+        $this->assertSame('user+tag@example.com', $emailTemplate->getEmailTemplateFromEmail());
     }
 
     public function testReturnTypeConsistency(): void
     {
         $emailTemplate = new EmailTemplate('Test', 'test', 'Body', 'Subject', 'Name', 'email@test.com', $this->ccTestCom, $this->bccTestCom, 'template.pdf');
         // Test that nullable fields can return null or string
-        $this->assertTrue(is_string($emailTemplate->getEmail_template_title()) || is_null($emailTemplate->getEmail_template_title()));
-        $this->assertTrue(is_string($emailTemplate->getEmail_template_type()) || is_null($emailTemplate->getEmail_template_type()));
-        $this->assertIsString($emailTemplate->getEmail_template_body()); // Non-nullable
-        $this->assertTrue(is_string($emailTemplate->getEmail_template_subject()) || is_null($emailTemplate->getEmail_template_subject()));
-        $this->assertTrue(is_string($emailTemplate->getEmail_template_from_name()) || is_null($emailTemplate->getEmail_template_from_name()));
-        $this->assertTrue(is_string($emailTemplate->getEmail_template_from_email()) || is_null($emailTemplate->getEmail_template_from_email()));
-        $this->assertTrue(is_string($emailTemplate->getEmail_template_cc()) || is_null($emailTemplate->getEmail_template_cc()));
-        $this->assertTrue(is_string($emailTemplate->getEmail_template_bcc()) || is_null($emailTemplate->getEmail_template_bcc()));
-        $this->assertTrue(is_string($emailTemplate->getEmail_template_pdf_template()) || is_null($emailTemplate->getEmail_template_pdf_template()));
+        $this->assertTrue(is_string($emailTemplate->getEmailTemplateTitle()) || is_null($emailTemplate->getEmailTemplateTitle()));
+        $this->assertTrue(is_string($emailTemplate->getEmailTemplateType()) || is_null($emailTemplate->getEmailTemplateType()));
+        $this->assertIsString($emailTemplate->getEmailTemplateBody()); // Non-nullable
+        $this->assertTrue(is_string($emailTemplate->getEmailTemplateSubject()) || is_null($emailTemplate->getEmailTemplateSubject()));
+        $this->assertTrue(is_string($emailTemplate->getEmailTemplateFromName()) || is_null($emailTemplate->getEmailTemplateFromName()));
+        $this->assertTrue(is_string($emailTemplate->getEmailTemplateFromEmail()) || is_null($emailTemplate->getEmailTemplateFromEmail()));
+        $this->assertTrue(is_string($emailTemplate->getEmailTemplateCc()) || is_null($emailTemplate->getEmailTemplateCc()));
+        $this->assertTrue(is_string($emailTemplate->getEmailTemplateBcc()) || is_null($emailTemplate->getEmailTemplateBcc()));
+        $this->assertTrue(is_string($emailTemplate->getEmailTemplatePdfTemplate()) || is_null($emailTemplate->getEmailTemplatePdfTemplate()));
     }
 }

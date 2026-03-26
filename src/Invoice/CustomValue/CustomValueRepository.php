@@ -122,7 +122,7 @@ final class CustomValueRepository extends Select\Repository
      * @param int $custom_field_id
      * @return int
      */
-    public function repoCustomFieldquery_count(int $custom_field_id): int
+    public function repoCustomFieldqueryCount(int $custom_field_id): int
     {
         return $this->select()
                       ->where(['custom_field_id' => $custom_field_id])

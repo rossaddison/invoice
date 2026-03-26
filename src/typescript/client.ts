@@ -1,4 +1,4 @@
-import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
+﻿import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
 
 // Client-specific interfaces
 interface ClientFormData extends RequestParams {
@@ -124,7 +124,7 @@ export class ClientHandler {
 
 
     private async handleClientCreateConfirm(createBtn: HTMLElement): Promise<void> {
-        const url = `${location.origin}/invoice/client/create_confirm`;
+        const url = `${location.origin}/invoice/client/createConfirm`;
         const btn = (document.querySelector('.client_create_confirm') as HTMLElement) || createBtn;
 
         // Set loading state
@@ -164,8 +164,8 @@ export class ClientHandler {
     }
 
     private async handleSaveClientNote(saveNoteBtn: HTMLElement): Promise<void> {
-        const url = `${location.origin}/invoice/client/save_client_note_new`;
-        const loadNotesUrl = `${location.origin}/invoice/client/load_client_notes`;
+        const url = `${location.origin}/invoice/client/saveClientNoteNew`;
+        const loadNotesUrl = `${location.origin}/invoice/client/loadClientNotes`;
         const btn = (document.querySelector('.save_client_note') as HTMLElement) || saveNoteBtn;
         const currentUrl = new URL(location.href);
 
@@ -273,7 +273,7 @@ export class ClientHandler {
             return;
         }
 
-        const url = `${location.origin}/invoice/client/delete_client_note`;
+        const url = `${location.origin}/invoice/client/deleteClientNote`;
         const originalHtml = deleteBtn.innerHTML;
 
         try {

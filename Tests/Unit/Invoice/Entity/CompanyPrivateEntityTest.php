@@ -21,20 +21,20 @@ class CompanyPrivateEntityTest extends TestCase
         $companyPrivate = new CompanyPrivate();
         
         $this->assertNull($companyPrivate->getId());
-        $this->assertSame('', $companyPrivate->getCompany_id());
-        $this->assertSame('', $companyPrivate->getVat_id());
-        $this->assertSame('', $companyPrivate->getTax_code());
+        $this->assertSame('', $companyPrivate->getCompanyId());
+        $this->assertSame('', $companyPrivate->getVatId());
+        $this->assertSame('', $companyPrivate->getTaxCode());
         $this->assertSame('', $companyPrivate->getIban());
         $this->assertSame('', $companyPrivate->getGln());
         $this->assertSame('', $companyPrivate->getRcc());
-        $this->assertSame('', $companyPrivate->getLogo_filename());
-        $this->assertNull($companyPrivate->getLogo_width());
-        $this->assertNull($companyPrivate->getLogo_height());
-        $this->assertNull($companyPrivate->getLogo_Margin());
-        $this->assertNull($companyPrivate->getStart_date());
-        $this->assertNull($companyPrivate->getEnd_date());
-        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDate_modified());
+        $this->assertSame('', $companyPrivate->getLogoFilename());
+        $this->assertNull($companyPrivate->getLogoWidth());
+        $this->assertNull($companyPrivate->getLogoHeight());
+        $this->assertNull($companyPrivate->getLogoMargin());
+        $this->assertNull($companyPrivate->getStartDate());
+        $this->assertNull($companyPrivate->getEndDate());
+        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDateModified());
         $this->assertNull($companyPrivate->getCompany());
         $this->assertTrue($companyPrivate->isNewRecord());
     }
@@ -57,16 +57,16 @@ class CompanyPrivateEntityTest extends TestCase
         );
         
         $this->assertSame(1, $companyPrivate->getId());
-        $this->assertSame('123', $companyPrivate->getCompany_id());
-        $this->assertSame('VAT123456789', $companyPrivate->getVat_id());
-        $this->assertSame('TAX987654321', $companyPrivate->getTax_code());
+        $this->assertSame('123', $companyPrivate->getCompanyId());
+        $this->assertSame('VAT123456789', $companyPrivate->getVatId());
+        $this->assertSame('TAX987654321', $companyPrivate->getTaxCode());
         $this->assertSame('DE89370400440532013000', $companyPrivate->getIban());
         $this->assertSame($this->seqNumbers, $companyPrivate->getGln());
         $this->assertSame('RCC1234', $companyPrivate->getRcc());
-        $this->assertSame('company_logo.png', $companyPrivate->getLogo_filename());
-        $this->assertSame(150, $companyPrivate->getLogo_width());
-        $this->assertSame(75, $companyPrivate->getLogo_height());
-        $this->assertSame(15, $companyPrivate->getLogo_Margin());
+        $this->assertSame('company_logo.png', $companyPrivate->getLogoFilename());
+        $this->assertSame(150, $companyPrivate->getLogoWidth());
+        $this->assertSame(75, $companyPrivate->getLogoHeight());
+        $this->assertSame(15, $companyPrivate->getLogoMargin());
     }
 
     public function testIdSetterAndGetter(): void
@@ -80,9 +80,9 @@ class CompanyPrivateEntityTest extends TestCase
     public function testCompanyIdSetterAndGetter(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setCompany_id(456);
+        $companyPrivate->setCompanyId(456);
         
-        $this->assertSame('456', $companyPrivate->getCompany_id());
+        $this->assertSame('456', $companyPrivate->getCompanyId());
     }
 
     public function testCompanySetterAndGetter(): void
@@ -97,17 +97,17 @@ class CompanyPrivateEntityTest extends TestCase
     public function testVatIdSetterAndGetter(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setVat_id('GB123456789');
+        $companyPrivate->setVatId('GB123456789');
         
-        $this->assertSame('GB123456789', $companyPrivate->getVat_id());
+        $this->assertSame('GB123456789', $companyPrivate->getVatId());
     }
 
     public function testTaxCodeSetterAndGetter(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setTax_code('US987654321');
+        $companyPrivate->setTaxCode('US987654321');
         
-        $this->assertSame('US987654321', $companyPrivate->getTax_code());
+        $this->assertSame('US987654321', $companyPrivate->getTaxCode());
     }
 
     public function testIbanSetterAndGetter(): void
@@ -137,40 +137,40 @@ class CompanyPrivateEntityTest extends TestCase
     public function testLogoFilenameSetterAndGetter(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setLogo_filename('brand_logo.jpg');
+        $companyPrivate->setLogoFilename('brand_logo.jpg');
         
-        $this->assertSame('brand_logo.jpg', $companyPrivate->getLogo_filename());
+        $this->assertSame('brand_logo.jpg', $companyPrivate->getLogoFilename());
     }
 
     public function testLogoWidthSetterAndGetter(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setLogo_width(200);
+        $companyPrivate->setLogoWidth(200);
         
-        $this->assertSame(200, $companyPrivate->getLogo_width());
+        $this->assertSame(200, $companyPrivate->getLogoWidth());
     }
 
     public function testLogoHeightSetterAndGetter(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setLogo_height(100);
+        $companyPrivate->setLogoHeight(100);
         
-        $this->assertSame(100, $companyPrivate->getLogo_height());
+        $this->assertSame(100, $companyPrivate->getLogoHeight());
     }
 
     public function testLogoMarginSetterAndGetter(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setLogo_margin(20);
+        $companyPrivate->setLogoMargin(20);
         
-        $this->assertSame(20, $companyPrivate->getLogo_Margin());
+        $this->assertSame(20, $companyPrivate->getLogoMargin());
     }
 
     public function testStartDateSetterAndGetter(): void
     {
         $companyPrivate = new CompanyPrivate();
         $startDate = new DateTime('2024-06-01');
-        $companyPrivate->setStart_date($startDate);
+        $companyPrivate->setStartDate($startDate);
         
         // Skip getter test due to entity return type mismatch (returns DateTime but declares DateTimeImmutable)
         // Just test that setter accepts DateTime
@@ -181,7 +181,7 @@ class CompanyPrivateEntityTest extends TestCase
     {
         $companyPrivate = new CompanyPrivate();
         $endDate = new DateTime('2024-12-31');
-        $companyPrivate->setEnd_date($endDate);
+        $companyPrivate->setEndDate($endDate);
         
         // Skip getter test due to entity return type mismatch (returns DateTime but declares DateTimeImmutable)
         // Just test that setter accepts DateTime
@@ -207,8 +207,8 @@ class CompanyPrivateEntityTest extends TestCase
     {
         $companyPrivate = new CompanyPrivate();
         // Test setter methods without triggering the type error in getter/isActiveToday
-        $companyPrivate->setStart_date(new DateTime('2024-01-01'));
-        $companyPrivate->setEnd_date(new DateTime('2025-01-01'));
+        $companyPrivate->setStartDate(new DateTime('2024-01-01'));
+        $companyPrivate->setEndDate(new DateTime('2025-01-01'));
         
         // Entity has type mismatch issue - skip isActiveToday() test
         // Just test that setters work
@@ -218,8 +218,8 @@ class CompanyPrivateEntityTest extends TestCase
     public function testIsActiveTodayPastDateSetters(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setStart_date(new DateTime('2023-01-01'));
-        $companyPrivate->setEnd_date(new DateTime('2023-12-31'));
+        $companyPrivate->setStartDate(new DateTime('2023-01-01'));
+        $companyPrivate->setEndDate(new DateTime('2023-12-31'));
         
         // Entity has type mismatch issue - skip isActiveToday() test
         // Just test that setters work
@@ -229,8 +229,8 @@ class CompanyPrivateEntityTest extends TestCase
     public function testIsActiveTodayFutureDateSetters(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setStart_date(new DateTime('2025-01-01'));
-        $companyPrivate->setEnd_date(new DateTime('2025-12-31'));
+        $companyPrivate->setStartDate(new DateTime('2025-01-01'));
+        $companyPrivate->setEndDate(new DateTime('2025-12-31'));
         
         // Entity has type mismatch issue - skip isActiveToday() test
         // Just test that setters work
@@ -243,8 +243,8 @@ class CompanyPrivateEntityTest extends TestCase
         $today = new DateTime('today');
         $tomorrow = new DateTime('tomorrow');
         
-        $companyPrivate->setStart_date($today);
-        $companyPrivate->setEnd_date($tomorrow);
+        $companyPrivate->setStartDate($today);
+        $companyPrivate->setEndDate($tomorrow);
         
         // Entity has type mismatch issue - skip isActiveToday() test
         // Just test that setters work
@@ -257,8 +257,8 @@ class CompanyPrivateEntityTest extends TestCase
         $yesterday = new DateTime('yesterday');
         $today = new DateTime('today');
         
-        $companyPrivate->setStart_date($yesterday);
-        $companyPrivate->setEnd_date($today);
+        $companyPrivate->setStartDate($yesterday);
+        $companyPrivate->setEndDate($today);
         
         // Entity has type mismatch issue - skip isActiveToday() test
         // Just test that setters work
@@ -269,8 +269,8 @@ class CompanyPrivateEntityTest extends TestCase
     {
         $companyPrivate = new CompanyPrivate();
         
-        $dateCreated = $companyPrivate->getDate_created();
-        $dateModified = $companyPrivate->getDate_modified();
+        $dateCreated = $companyPrivate->getDateCreated();
+        $dateModified = $companyPrivate->getDateModified();
         
         $this->assertInstanceOf(DateTimeImmutable::class, $dateCreated);
         $this->assertInstanceOf(DateTimeImmutable::class, $dateModified);
@@ -281,49 +281,49 @@ class CompanyPrivateEntityTest extends TestCase
     public function testEuropeanCompanyScenario(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setVat_id('DE123456789');
+        $companyPrivate->setVatId('DE123456789');
         $companyPrivate->setIban('DE89370400440532013000');
         $companyPrivate->setGln('4012345678901');
-        $companyPrivate->setLogo_filename('eu_company_logo.png');
-        $companyPrivate->setLogo_width(120);
-        $companyPrivate->setLogo_height(60);
+        $companyPrivate->setLogoFilename('eu_company_logo.png');
+        $companyPrivate->setLogoWidth(120);
+        $companyPrivate->setLogoHeight(60);
         
-        $this->assertSame('DE123456789', $companyPrivate->getVat_id());
+        $this->assertSame('DE123456789', $companyPrivate->getVatId());
         $this->assertSame('DE89370400440532013000', $companyPrivate->getIban());
         $this->assertSame('4012345678901', $companyPrivate->getGln());
-        $this->assertSame('eu_company_logo.png', $companyPrivate->getLogo_filename());
-        $this->assertSame(120, $companyPrivate->getLogo_width());
-        $this->assertSame(60, $companyPrivate->getLogo_height());
+        $this->assertSame('eu_company_logo.png', $companyPrivate->getLogoFilename());
+        $this->assertSame(120, $companyPrivate->getLogoWidth());
+        $this->assertSame(60, $companyPrivate->getLogoHeight());
     }
 
     public function testUkCompanyScenario(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setVat_id('GB999999999');
+        $companyPrivate->setVatId('GB999999999');
         $companyPrivate->setIban('GB82WEST12345698765432');
-        $companyPrivate->setTax_code('UTR1234567890');
+        $companyPrivate->setTaxCode('UTR1234567890');
         $companyPrivate->setRcc('12345');
         
-        $this->assertSame('GB999999999', $companyPrivate->getVat_id());
+        $this->assertSame('GB999999999', $companyPrivate->getVatId());
         $this->assertSame('GB82WEST12345698765432', $companyPrivate->getIban());
-        $this->assertSame('UTR1234567890', $companyPrivate->getTax_code());
+        $this->assertSame('UTR1234567890', $companyPrivate->getTaxCode());
         $this->assertSame('12345', $companyPrivate->getRcc());
     }
 
     public function testUsCompanyScenario(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setVat_id('');  // US doesn't use VAT
-        $companyPrivate->setTax_code('123456789');  // EIN
-        $companyPrivate->setLogo_filename('us_corp_logo.svg');
-        $companyPrivate->setLogo_width(200);
-        $companyPrivate->setLogo_height(50);
+        $companyPrivate->setVatId('');  // US doesn't use VAT
+        $companyPrivate->setTaxCode('123456789');  // EIN
+        $companyPrivate->setLogoFilename('us_corp_logo.svg');
+        $companyPrivate->setLogoWidth(200);
+        $companyPrivate->setLogoHeight(50);
         
-        $this->assertSame('', $companyPrivate->getVat_id());
-        $this->assertSame('123456789', $companyPrivate->getTax_code());
-        $this->assertSame('us_corp_logo.svg', $companyPrivate->getLogo_filename());
-        $this->assertSame(200, $companyPrivate->getLogo_width());
-        $this->assertSame(50, $companyPrivate->getLogo_height());
+        $this->assertSame('', $companyPrivate->getVatId());
+        $this->assertSame('123456789', $companyPrivate->getTaxCode());
+        $this->assertSame('us_corp_logo.svg', $companyPrivate->getLogoFilename());
+        $this->assertSame(200, $companyPrivate->getLogoWidth());
+        $this->assertSame(50, $companyPrivate->getLogoHeight());
     }
 
     public function testLogoConfigurationVariations(): void
@@ -331,26 +331,26 @@ class CompanyPrivateEntityTest extends TestCase
         $companyPrivate = new CompanyPrivate();
         
         // Small logo
-        $companyPrivate->setLogo_filename('small_logo.png');
-        $companyPrivate->setLogo_width(50);
-        $companyPrivate->setLogo_height(25);
-        $companyPrivate->setLogo_margin(5);
+        $companyPrivate->setLogoFilename('small_logo.png');
+        $companyPrivate->setLogoWidth(50);
+        $companyPrivate->setLogoHeight(25);
+        $companyPrivate->setLogoMargin(5);
         
-        $this->assertSame('small_logo.png', $companyPrivate->getLogo_filename());
-        $this->assertSame(50, $companyPrivate->getLogo_width());
-        $this->assertSame(25, $companyPrivate->getLogo_height());
-        $this->assertSame(5, $companyPrivate->getLogo_Margin());
+        $this->assertSame('small_logo.png', $companyPrivate->getLogoFilename());
+        $this->assertSame(50, $companyPrivate->getLogoWidth());
+        $this->assertSame(25, $companyPrivate->getLogoHeight());
+        $this->assertSame(5, $companyPrivate->getLogoMargin());
         
         // Large logo
-        $companyPrivate->setLogo_filename('large_logo.jpg');
-        $companyPrivate->setLogo_width(300);
-        $companyPrivate->setLogo_height(150);
-        $companyPrivate->setLogo_margin(30);
+        $companyPrivate->setLogoFilename('large_logo.jpg');
+        $companyPrivate->setLogoWidth(300);
+        $companyPrivate->setLogoHeight(150);
+        $companyPrivate->setLogoMargin(30);
         
-        $this->assertSame('large_logo.jpg', $companyPrivate->getLogo_filename());
-        $this->assertSame(300, $companyPrivate->getLogo_width());
-        $this->assertSame(150, $companyPrivate->getLogo_height());
-        $this->assertSame(30, $companyPrivate->getLogo_Margin());
+        $this->assertSame('large_logo.jpg', $companyPrivate->getLogoFilename());
+        $this->assertSame(300, $companyPrivate->getLogoWidth());
+        $this->assertSame(150, $companyPrivate->getLogoHeight());
+        $this->assertSame(30, $companyPrivate->getLogoMargin());
     }
 
     public function testVatIdFormats(): void
@@ -368,8 +368,8 @@ class CompanyPrivateEntityTest extends TestCase
         ];
         
         foreach ($vatFormats as $vatId) {
-            $companyPrivate->setVat_id($vatId);
-            $this->assertSame($vatId, $companyPrivate->getVat_id());
+            $companyPrivate->setVatId($vatId);
+            $this->assertSame($vatId, $companyPrivate->getVatId());
         }
     }
 
@@ -394,13 +394,13 @@ class CompanyPrivateEntityTest extends TestCase
     public function testSpecialCharactersInFields(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setVat_id($this->atUto8);
-        $companyPrivate->setTax_code('TAX-CODE-123');
-        $companyPrivate->setLogo_filename('logo-with-dashes.png');
+        $companyPrivate->setVatId($this->atUto8);
+        $companyPrivate->setTaxCode('TAX-CODE-123');
+        $companyPrivate->setLogoFilename('logo-with-dashes.png');
         
-        $this->assertSame($this->atUto8, $companyPrivate->getVat_id());
-        $this->assertSame('TAX-CODE-123', $companyPrivate->getTax_code());
-        $this->assertSame('logo-with-dashes.png', $companyPrivate->getLogo_filename());
+        $this->assertSame($this->atUto8, $companyPrivate->getVatId());
+        $this->assertSame('TAX-CODE-123', $companyPrivate->getTaxCode());
+        $this->assertSame('logo-with-dashes.png', $companyPrivate->getLogoFilename());
     }
 
     public function testCompleteCompanyPrivateSetup(): void
@@ -409,32 +409,32 @@ class CompanyPrivateEntityTest extends TestCase
         $company = $this->createMock(Company::class);
         
         $companyPrivate->setId(1);
-        $companyPrivate->setCompany_id(100);
+        $companyPrivate->setCompanyId(100);
         $companyPrivate->setCompany($company);
-        $companyPrivate->setVat_id('DE987654321');
-        $companyPrivate->setTax_code('TAX12345');
+        $companyPrivate->setVatId('DE987654321');
+        $companyPrivate->setTaxCode('TAX12345');
         $companyPrivate->setIban('DE89370400440532013000');
         $companyPrivate->setGln($this->seqNumbers);
         $companyPrivate->setRcc('RCC9876');
-        $companyPrivate->setLogo_filename('complete_logo.png');
-        $companyPrivate->setLogo_width(160);
-        $companyPrivate->setLogo_height(80);
-        $companyPrivate->setLogo_margin(12);
-        $companyPrivate->setStart_date(new DateTime('2024-01-01'));
-        $companyPrivate->setEnd_date(new DateTime('2024-12-31'));
+        $companyPrivate->setLogoFilename('complete_logo.png');
+        $companyPrivate->setLogoWidth(160);
+        $companyPrivate->setLogoHeight(80);
+        $companyPrivate->setLogoMargin(12);
+        $companyPrivate->setStartDate(new DateTime('2024-01-01'));
+        $companyPrivate->setEndDate(new DateTime('2024-12-31'));
         
         $this->assertSame(1, $companyPrivate->getId());
-        $this->assertSame('100', $companyPrivate->getCompany_id());
+        $this->assertSame('100', $companyPrivate->getCompanyId());
         $this->assertSame($company, $companyPrivate->getCompany());
-        $this->assertSame('DE987654321', $companyPrivate->getVat_id());
-        $this->assertSame('TAX12345', $companyPrivate->getTax_code());
+        $this->assertSame('DE987654321', $companyPrivate->getVatId());
+        $this->assertSame('TAX12345', $companyPrivate->getTaxCode());
         $this->assertSame('DE89370400440532013000', $companyPrivate->getIban());
         $this->assertSame($this->seqNumbers, $companyPrivate->getGln());
         $this->assertSame('RCC9876', $companyPrivate->getRcc());
-        $this->assertSame('complete_logo.png', $companyPrivate->getLogo_filename());
-        $this->assertSame(160, $companyPrivate->getLogo_width());
-        $this->assertSame(80, $companyPrivate->getLogo_height());
-        $this->assertSame(12, $companyPrivate->getLogo_Margin());
+        $this->assertSame('complete_logo.png', $companyPrivate->getLogoFilename());
+        $this->assertSame(160, $companyPrivate->getLogoWidth());
+        $this->assertSame(80, $companyPrivate->getLogoHeight());
+        $this->assertSame(12, $companyPrivate->getLogoMargin());
         // Skip date getters due to entity type mismatch
         $this->assertFalse($companyPrivate->isNewRecord());
     }
@@ -456,29 +456,29 @@ class CompanyPrivateEntityTest extends TestCase
         );
         
         $this->assertIsInt($companyPrivate->getId());
-        $this->assertIsString($companyPrivate->getCompany_id());
-        $this->assertIsString($companyPrivate->getVat_id());
-        $this->assertIsString($companyPrivate->getTax_code());
+        $this->assertIsString($companyPrivate->getCompanyId());
+        $this->assertIsString($companyPrivate->getVatId());
+        $this->assertIsString($companyPrivate->getTaxCode());
         $this->assertIsString($companyPrivate->getIban());
         $this->assertIsString($companyPrivate->getGln());
         $this->assertIsString($companyPrivate->getRcc());
-        $this->assertIsString($companyPrivate->getLogo_filename());
-        $this->assertIsInt($companyPrivate->getLogo_width());
-        $this->assertIsInt($companyPrivate->getLogo_height());
-        $this->assertIsInt($companyPrivate->getLogo_Margin());
-        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDate_modified());
+        $this->assertIsString($companyPrivate->getLogoFilename());
+        $this->assertIsInt($companyPrivate->getLogoWidth());
+        $this->assertIsInt($companyPrivate->getLogoHeight());
+        $this->assertIsInt($companyPrivate->getLogoMargin());
+        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDateModified());
     }
 
     public function testNullDateHandling(): void
     {
         $companyPrivate = new CompanyPrivate();
         
-        $companyPrivate->setStart_date(null);
-        $companyPrivate->setEnd_date(null);
+        $companyPrivate->setStartDate(null);
+        $companyPrivate->setEndDate(null);
         
-        $this->assertNull($companyPrivate->getStart_date());
-        $this->assertNull($companyPrivate->getEnd_date());
+        $this->assertNull($companyPrivate->getStartDate());
+        $this->assertNull($companyPrivate->getEndDate());
         $this->assertFalse($companyPrivate->isActiveToday());
     }
 
@@ -489,12 +489,12 @@ class CompanyPrivateEntityTest extends TestCase
         $company2 = $this->createMock(Company::class);
         
         // Set initial company
-        $companyPrivate->setCompany_id(100);
+        $companyPrivate->setCompanyId(100);
         $companyPrivate->setCompany($company1);
         $this->assertSame($company1, $companyPrivate->getCompany());
                 
         // Set new company
-        $companyPrivate->setCompany_id(200);
+        $companyPrivate->setCompanyId(200);
         $companyPrivate->setCompany($company2);
         $this->assertSame($company2, $companyPrivate->getCompany());
     }
@@ -505,8 +505,8 @@ class CompanyPrivateEntityTest extends TestCase
         $companyPrivate = new CompanyPrivate();
         $afterTime = time();
         
-        $createdTime = $companyPrivate->getDate_created()->getTimestamp();
-        $modifiedTime = $companyPrivate->getDate_modified()->getTimestamp();
+        $createdTime = $companyPrivate->getDateCreated()->getTimestamp();
+        $modifiedTime = $companyPrivate->getDateModified()->getTimestamp();
         
         $this->assertGreaterThanOrEqual($beforeTime, $createdTime);
         $this->assertLessThanOrEqual($afterTime, $createdTime);
@@ -520,27 +520,27 @@ class CompanyPrivateEntityTest extends TestCase
         
         $this->assertTrue($companyPrivate->isNewRecord());
         $this->assertNull($companyPrivate->getCompany());
-        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDate_modified());
+        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDateModified());
     }
 
     public function testLogoZeroDimensions(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setLogo_width(0);
-        $companyPrivate->setLogo_height(0);
-        $companyPrivate->setLogo_margin(0);
+        $companyPrivate->setLogoWidth(0);
+        $companyPrivate->setLogoHeight(0);
+        $companyPrivate->setLogoMargin(0);
         
-        $this->assertSame(0, $companyPrivate->getLogo_width());
-        $this->assertSame(0, $companyPrivate->getLogo_height());
-        $this->assertSame(0, $companyPrivate->getLogo_Margin());
+        $this->assertSame(0, $companyPrivate->getLogoWidth());
+        $this->assertSame(0, $companyPrivate->getLogoHeight());
+        $this->assertSame(0, $companyPrivate->getLogoMargin());
     }
 
     public function testNegativeCompanyId(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $companyPrivate->setCompany_id(-1);
+        $companyPrivate->setCompanyId(-1);
         
-        $this->assertSame('-1', $companyPrivate->getCompany_id());
+        $this->assertSame('-1', $companyPrivate->getCompanyId());
     }
 }

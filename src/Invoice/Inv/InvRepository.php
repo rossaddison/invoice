@@ -236,7 +236,7 @@ final class InvRepository extends Select\Repository
      */
     public function countAllWithUserClient(int $user_id, int $client_id): int
     {
-        return $query = $this->select()
+        return $this->select()
                 ->load(['user', 'client'])
                 ->where(['user.id' => $user_id])
                 ->andWhere(['client.id' => $client_id])
@@ -366,7 +366,7 @@ final class InvRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoUrl_key_guest_loaded(string $url_key): ?Inv
+    public function repoUrlKeyGuestLoaded(string $url_key): ?Inv
     {
         $query = $this->select()
                        ->load('client')
@@ -380,7 +380,7 @@ final class InvRepository extends Select\Repository
      * @param string $url_key
      * @return int
      */
-    public function repoUrl_key_guest_count(string $url_key): int
+    public function repoUrlKeyGuestCount(string $url_key): int
     {
         return $this->select()
                       ->where(['url_key' => $url_key])
@@ -391,7 +391,7 @@ final class InvRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function repoClient_guest_count(int $inv_id, array $user_client = []):
+    public function repoClientGuestCount(int $inv_id, array $user_client = []):
         Select
     {
         return $this->select()
@@ -407,7 +407,7 @@ final class InvRepository extends Select\Repository
      * @param int $status_id
      * @param array $user_client
      */
-    public function repoGuest_Clients_Post_Draft(int $status_id, array $user_client = []): EntityReader
+    public function repoGuestClientsPostDraft(int $status_id, array $user_client = []): EntityReader
     {
     // sent = 2, viewed = 3, paid = 4, overdue = 5, unpaid = 6, reminder sent = 7,
     // 7 day letter before action = 8, started a legal claim = 9
@@ -437,7 +437,7 @@ final class InvRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function open_count(): int
+    public function openCount(): int
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         // 2,3 => There is still a balance available => Not paid
@@ -449,7 +449,7 @@ final class InvRepository extends Select\Repository
     /**
      * @psalm-return EntityReader
      */
-    public function guest_visible(): EntityReader
+    public function guestVisible(): EntityReader
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
@@ -460,7 +460,7 @@ final class InvRepository extends Select\Repository
     /**
      * @psalm-return EntityReader
      */
-    public function is_draft(): EntityReader
+    public function isDraft(): EntityReader
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
@@ -471,7 +471,7 @@ final class InvRepository extends Select\Repository
     /**
      * @psalm-return EntityReader
      */
-    public function is_sent(): EntityReader
+    public function isSent(): EntityReader
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
@@ -482,7 +482,7 @@ final class InvRepository extends Select\Repository
     /**
      * @psalm-return EntityReader
      */
-    public function is_viewed(): EntityReader
+    public function isViewed(): EntityReader
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
@@ -493,7 +493,7 @@ final class InvRepository extends Select\Repository
     /**
      * @psalm-return EntityReader
      */
-    public function is_paid(): EntityReader
+    public function isPaid(): EntityReader
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
@@ -504,7 +504,7 @@ final class InvRepository extends Select\Repository
     /**
      * @psalm-return EntityReader
      */
-    public function is_overdue(): EntityReader
+    public function isOverdue(): EntityReader
     {
         // 1 draft, 2 sent, 3 viewed, 4 paid
         $query = $this->select()
@@ -516,7 +516,7 @@ final class InvRepository extends Select\Repository
      * @param int $client_id
      * @return EntityReader
      */
-    public function by_client(int $client_id): EntityReader
+    public function byClient(int $client_id): EntityReader
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
@@ -529,7 +529,7 @@ final class InvRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function by_client_inv_status(int $client_id, int $status_id):
+    public function byClientInvStatus(int $client_id, int $status_id):
         EntityReader
     {
         $query = $this->select()
@@ -543,7 +543,7 @@ final class InvRepository extends Select\Repository
      * @param int $status_id
      * @return int
      */
-    public function by_client_inv_status_count(int $client_id, int $status_id): int
+    public function byClientInvStatusCount(int $client_id, int $status_id): int
     {
         return $this->select()
                       ->where(['client_id' => $client_id])
@@ -692,7 +692,7 @@ final class InvRepository extends Select\Repository
      * @param SR $sR
      * @return string
      */
-    public function get_date_due(string $invoice_date_created, SR $sR): string
+    public function getDateDue(string $invoice_date_created, SR $sR): string
     {
         $invoice_date_due = new \DateTime($invoice_date_created);
         $invoice_date_due->add(new \DateInterval('P'
@@ -703,7 +703,7 @@ final class InvRepository extends Select\Repository
     /**
      * @return string
      */
-    public function get_url_key()
+    public function getUrlKey()
     {
         $random = new Random();
         return $random::string(32);
@@ -713,9 +713,9 @@ final class InvRepository extends Select\Repository
      * @param string $group_id
      * @return mixed
      */
-    public function get_inv_number(string $group_id, GR $gR): mixed
+    public function getInvNumber(string $group_id, GR $gR): mixed
     {
-        return $gR->generate_number((int) $group_id);
+        return $gR->generateNumber((int) $group_id);
     }
 
     // total = item_subtotal + item_tax_total + tax_total
@@ -725,7 +725,7 @@ final class InvRepository extends Select\Repository
      * @param IAR $iaR
      * @return float
      */
-    public function with_total(int $client_id, IAR $iaR): float
+    public function withTotal(int $client_id, IAR $iaR): float
     {
         $invoices = $this->findAllWithClient($client_id);
         $sum = 0.00;
@@ -748,7 +748,7 @@ final class InvRepository extends Select\Repository
      * @param IAR $iaR
      * @return float
      */
-    public function with_item_subtotal(int $client_id, IAR $iaR): float
+    public function withItemSubtotal(int $client_id, IAR $iaR): float
     {
         $invoices = $this->findAllWithClient($client_id);
         $sum = 0.00;
@@ -758,7 +758,7 @@ final class InvRepository extends Select\Repository
         foreach ($invoices as $invoice) {
             $invoice_amount = $iaR->repoInvquery((int) $invoice->getId());
             if (null !== $invoice_amount) {
-                $sum += $invoice_amount->getItem_subtotal() ?: 0.00;
+                $sum += $invoice_amount->getItemSubtotal() ?: 0.00;
             }
         }
         return $sum;
@@ -773,7 +773,7 @@ final class InvRepository extends Select\Repository
      * @param IAR $iaR
      * @return float
      */
-    public function with_total_from_to(
+    public function withTotalFromTo(
             int $client_id, string $from, string $to, IAR $iaR): float
     {
         $invoices = $this->repoClientLoadedFromToDate($client_id, $from, $to);
@@ -798,7 +798,7 @@ final class InvRepository extends Select\Repository
      * @param IAR $iaR
      * @return float
      */
-    public function with_item_subtotal_from_to(
+    public function withItemSubtotalFromTo(
             int $client_id, string $from, string $to, IAR $iaR): float
     {
         $invoices = $this->repoClientLoadedFromToDate($client_id, $from, $to);
@@ -809,7 +809,7 @@ final class InvRepository extends Select\Repository
         foreach ($invoices as $invoice) {
             $invoice_amount = $iaR->repoInvquery((int) $invoice->getId());
             if (null !== $invoice_amount) {
-                $sum += $invoice_amount->getItem_subtotal();
+                $sum += $invoice_amount->getItemSubtotal();
             }
         }
         return $sum;
@@ -823,7 +823,7 @@ final class InvRepository extends Select\Repository
      * @param IAR $iaR
      * @return float
      */
-    public function with_item_tax_total_from_to(
+    public function withItemTaxTotalFromTo(
             int $client_id, string $from, string $to, IAR $iaR): float
     {
         $invoices = $this->repoClientLoadedFromToDate($client_id, $from, $to);
@@ -834,14 +834,14 @@ final class InvRepository extends Select\Repository
         foreach ($invoices as $invoice) {
             $invoice_amount = $iaR->repoInvquery((int) $invoice->getId());
             if (null !== $invoice_amount) {
-                $sum += $invoice_amount->getItem_tax_total();
+                $sum += $invoice_amount->getItemTaxTotal();
             }
         }
         return $sum;
     }
 
     // Second tax: Total tax total
-    public function with_tax_total_from_to(
+    public function withTaxTotalFromTo(
             int $client_id, string $from, string $to, IAR $iaR): float
     {
         $invoices = $this->repoClientLoadedFromToDate($client_id, $from, $to);
@@ -853,7 +853,7 @@ final class InvRepository extends Select\Repository
             $invoice_amount =
                     ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ?
                     $iaR->repoInvquery((int) $invoice->getId()) : null);
-            $sum += (null !== $invoice_amount ? $invoice_amount->getTax_total()
+            $sum += (null !== $invoice_amount ? $invoice_amount->getTaxTotal()
                                                                 ?? 0.00 : 0.00);
         }
         return $sum;
@@ -866,7 +866,7 @@ final class InvRepository extends Select\Repository
      * @param IAR $iaR
      * @return float
      */
-    public function with_paid_from_to(
+    public function withPaidFromTo(
                     int $client_id, string $from, string $to, IAR $iaR): float
     {
         $invoices = $this->repoClientLoadedFromToDate($client_id, $from, $to);
@@ -889,7 +889,7 @@ final class InvRepository extends Select\Repository
      * @param IAR $iaR
      * @return float
      */
-    public function with_total_paid(int $client_id, IAR $iaR): float
+    public function withTotalPaid(int $client_id, IAR $iaR): float
     {
         $invoices = $this->findAllWithClient($client_id);
         $sum = 0.00;
@@ -911,7 +911,7 @@ final class InvRepository extends Select\Repository
      * @param IAR $iaR
      * @return int
      */
-    public function with_total_balance_invoices(int $client_id, IAR $iaR): int
+    public function withTotalBalanceInvoices(int $client_id, IAR $iaR): int
     {
         $invoices = $this->findAllWithClient($client_id);
         $num_invoices = 0;
@@ -933,7 +933,7 @@ final class InvRepository extends Select\Repository
      * @param IAR $iaR
      * @return float
      */
-    public function with_total_balance(int $client_id, IAR $iaR): float
+    public function withTotalBalance(int $client_id, IAR $iaR): float
     {
         $invoices = $this->findAllWithClient($client_id);
         $sum = 0.00;
@@ -1044,7 +1044,7 @@ final class InvRepository extends Select\Repository
      * @param IIAR $iiaR
      * @return float
      */
-    public function with_item_subtotal_from_to_using_product(
+    public function withItemSubtotalFromToUsingProduct(
             int $product_id, string $from, string $to, IIAR $iiaR): float
     {
         $invoices =
@@ -1059,7 +1059,7 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getProduct_id() == (string) $product_id) {
+                if ($item->getProductId() == (string) $product_id) {
                     $inv_item_amount = $iiaR->repoInvItemAmountquery(
                                                         (string) $item->getId());
                     if (null !== $inv_item_amount) {
@@ -1079,7 +1079,7 @@ final class InvRepository extends Select\Repository
      * @param IIAR $iiaR
      * @return float
      */
-    public function with_item_tax_total_from_to_using_product(int $product_id, string $from, string $to, IIAR $iiaR): float
+    public function withItemTaxTotalFromToUsingProduct(int $product_id, string $from, string $to, IIAR $iiaR): float
     {
         $invoices = $this->repoProductWithInvItemsFromToDate(
                                                         $product_id, $from, $to);
@@ -1093,11 +1093,11 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getProduct_id() == (string) $product_id) {
+                if ($item->getProductId() == (string) $product_id) {
                     $inv_item_amount =
                             $iiaR->repoInvItemAmountquery((string) $item->getId());
                     if (null !== $inv_item_amount) {
-                        $sum += ($inv_item_amount->getTax_total() ?? 0.00);
+                        $sum += ($inv_item_amount->getTaxTotal() ?? 0.00);
                     }
                 }
             }
@@ -1115,7 +1115,7 @@ final class InvRepository extends Select\Repository
      * @param IIAR $iiaR
      * @return float
      */
-    public function with_item_total_from_to_using_product(
+    public function withItemTotalFromToUsingProduct(
                 int $product_id, string $from, string $to, IIAR $iiaR): float
     {
         $invoices =
@@ -1130,7 +1130,7 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getProduct_id() == (string) $product_id) {
+                if ($item->getProductId() == (string) $product_id) {
                     $inv_item_amount =
                         $iiaR->repoInvItemAmountquery((string) $item->getId());
                     if (null !== $inv_item_amount) {
@@ -1180,7 +1180,7 @@ final class InvRepository extends Select\Repository
      * @param IIAR $iiaR
      * @return float
      */
-    public function with_item_subtotal_from_to_using_task(
+    public function withItemSubtotalFromToUsingTask(
                     int $task_id, string $from, string $to, IIAR $iiaR): float
     {
         $invoices = $this->repoTaskWithInvItemsFromToDate($task_id, $from, $to);
@@ -1194,7 +1194,7 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getTask_id() == (string) $task_id) {
+                if ($item->getTaskId() == (string) $task_id) {
                     $inv_item_amount = $iiaR->repoInvItemAmountquery(
                                                         (string) $item->getId());
                     if (null !== $inv_item_amount) {
@@ -1214,7 +1214,7 @@ final class InvRepository extends Select\Repository
      * @param IIAR $iiaR
      * @return float
      */
-    public function with_item_tax_total_from_to_using_task(
+    public function withItemTaxTotalFromToUsingTask(
                     int $task_id, string $from, string $to, IIAR $iiaR): float
     {
         $invoices = $this->repoTaskWithInvItemsFromToDate($task_id, $from, $to);
@@ -1228,11 +1228,11 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getTask_id() == (string) $task_id) {
+                if ($item->getTaskId() == (string) $task_id) {
                     $inv_item_amount = $iiaR->repoInvItemAmountquery(
                                                         (string) $item->getId());
                     if (null !== $inv_item_amount) {
-                        $sum += ($inv_item_amount->getTax_total() ?? 0.00);
+                        $sum += ($inv_item_amount->getTaxTotal() ?? 0.00);
                     }
                 }
             }
@@ -1250,7 +1250,7 @@ final class InvRepository extends Select\Repository
      * @param IIAR $iiaR
      * @return float
      */
-    public function with_item_total_from_to_using_task(
+    public function withItemTotalFromToUsingTask(
                     int $task_id, string $from, string $to, IIAR $iiaR): float
     {
         $invoices = $this->repoTaskWithInvItemsFromToDate($task_id, $from, $to);
@@ -1264,7 +1264,7 @@ final class InvRepository extends Select\Repository
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                if ($item->getTask_id() == (string) $task_id) {
+                if ($item->getTaskId() == (string) $task_id) {
                     $inv_item_amount = $iiaR->repoInvItemAmountquery(
                                                         (string) $item->getId());
                     if (null !== $inv_item_amount) {

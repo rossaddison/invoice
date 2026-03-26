@@ -25,7 +25,7 @@ final readonly class ProfileService
     ): void {
         $this->persist($model, $array);
         isset($array['company_id']) ? 
-            $model->setCompany_id(
+            $model->setCompanyId(
                 (int) $array['company_id']) : '';
         $model->setCurrent($array['current'] === '1' ? 1 : 0);
         isset($array['mobile']) ? 
@@ -42,14 +42,13 @@ final readonly class ProfileService
     private function persist(
         Profile $model,
         array $array
-    ): Profile {
+    ): void {
         $company = 'company_id';
         if (isset($array[$company])) {
             $model->setCompany(
                 $this->cR->repoCompanyquery(
                     (string) $array[$company]));
         }
-        return $model;
     }
 
     /**

@@ -151,7 +151,7 @@ final class QuoteBusinessLogicTest extends TestCase
         $groupId = 5;
         $isQuote = true; // Second parameter for generate_number
         
-        // These would be the parameters passed to GR->generate_number()
+        // These would be the parameters passed to GR->generateNumber()
         $expectedGroupId = (int) $groupId;
         $expectedIsQuote = $isQuote;
         

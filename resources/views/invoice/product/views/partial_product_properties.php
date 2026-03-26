@@ -15,7 +15,7 @@ use Yiisoft\Html\Html;
  */
 
 $languageArgument = ['_language' => $language];
-$productPropertyArguments = ['product_id' => $product->getProduct_id(), '_language' => $language];
+$productPropertyArguments = ['product_id' => $product->getProductId(), '_language' => $language];
 ?>
 <div>
 <label class="btn btn-info">

@@ -81,7 +81,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
             $quote_item_ac = new QuoteItemAllowanceCharge();
             $form = new QuoteItemAllowanceChargeForm($quote_item_ac,
                 (int) $quote_item_id);
-            $quote_id = $quote_item->getQuote_id();
+            $quote_id = $quote_item->getQuoteId();
             $parameters = [
                 'title' => $this->translator->translate('add'),
                 'actionName' => 'quoteitemallowancecharge/add',
@@ -147,7 +147,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
                                 $current_item_quantity = $qi?->getQuantity()
                                     ?? 0.00;
                                 $current_item_price = $qi?->getPrice() ?? 0.00;
-                                $discount_per_item = $qi?->getDiscount_amount()
+                                $discount_per_item = $qi?->getDiscountAmount()
                                     ?? 0.00;
                                 $quantity_price =
                                     $current_item_quantity * $current_item_price;
@@ -168,7 +168,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
                                 $quote_item_amount->setSubtotal($qpIncAc);
                                 $quote_item_amount->setDiscount(
                                     $current_discount_item_total);
-                                $quote_item_amount->setTax_total($new_tax_total);
+                                $quote_item_amount->setTaxTotal($new_tax_total);
                                 $overall_total = $qpIncAc -
                                     $current_discount_item_total +
                                         $new_tax_total;
@@ -244,13 +244,13 @@ final class QuoteItemAllowanceChargeController extends BaseController
     ): Response {
         $acqi = $this->acqi($currentRoute, $acqiR);
         if (null !== $acqi) {
-            $quote_id = $acqi->getQuote_id();
+            $quote_id = $acqi->getQuoteId();
             // delete the quote item allowance/charge and update the related
             // quote item amount record
             $this->acqiService->deleteQuoteItemAllowanceCharge(
                 $acqi, $qiaR, $acqiR);
             // update the quote amount record
-            $this->numberHelper->calculate_quote(
+            $this->numberHelper->calculateQuote(
                 $quote_id, $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
             $this->flashMessage('info', $this->translator->translate(
                 'record.successfully.deleted'));
@@ -283,9 +283,9 @@ final class QuoteItemAllowanceChargeController extends BaseController
     ): Response {
         $acqi = $this->acqi($currentRoute, $acqiR);
         if ($acqi) {
-            $quote_item_id = $acqi->getQuote_item_id();
+            $quote_item_id = $acqi->getQuoteItemId();
             $quote_item = $acqi->getQuoteItem();
-            $quote_id = $quote_item?->getQuote_id();
+            $quote_id = $quote_item?->getQuoteId();
             $form = new QuoteItemAllowanceChargeForm($acqi, (int) $quote_item_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
@@ -359,7 +359,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
                                     $current_item_price =
                                         $qi?->getPrice() ?? 0.00;
                                     $discount_per_item =
-                                        $qi?->getDiscount_amount() ?? 0.00;
+                                        $qi?->getDiscountAmount() ?? 0.00;
                                     $quantity_price =
                                         $current_item_quantity *
                                             $current_item_price;
@@ -382,7 +382,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
                                     $quote_item_amount->setSubtotal($qpIncAc);
                                     $quote_item_amount->setDiscount(
                                         $current_discount_item_total);
-                                    $quote_item_amount->setTax_total(
+                                    $quote_item_amount->setTaxTotal(
                                         $new_tax_total);
                                     $overall_total = $qpIncAc -
                                         $current_discount_item_total +
@@ -441,7 +441,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $acqi = $this->acqi($currentRoute, $acqiRepository);
         if ($acqi) {
-            $quote_item_id = $acqi->getQuote_item_id();
+            $quote_item_id = $acqi->getQuoteItemId();
             $form = new QuoteItemAllowanceChargeForm($acqi, (int) $quote_item_id);
             $parameters = [
                 'title' => $this->translator->translate('view'),

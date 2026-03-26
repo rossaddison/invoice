@@ -24,15 +24,15 @@ final class DeliveryForm extends FormModel
     public function __construct(Delivery $delivery)
     {
         $this->id = $delivery->getId();
-        $this->date_created = $delivery->getDate_created();
-        $this->date_modified = $delivery->getDate_modified();
-        $this->start_date = $delivery->getStart_date();
-        $this->actual_delivery_date = $delivery->getActual_delivery_date();
-        $this->end_date = $delivery->getEnd_date();
-        $this->delivery_location_id = (int) $delivery->getDelivery_location_id();
-        $this->delivery_party_id = (int) $delivery->getDelivery_party_id();
-        $this->inv_id = $delivery->getInv_id();
-        $this->inv_item_id = $delivery->getInv_item_id();
+        $this->date_created = $delivery->getDateCreated();
+        $this->date_modified = $delivery->getDateModified();
+        $this->start_date = $delivery->getStartDate();
+        $this->actual_delivery_date = $delivery->getActualDeliveryDate();
+        $this->end_date = $delivery->getEndDate();
+        $this->delivery_location_id = (int) $delivery->getDeliveryLocationId();
+        $this->delivery_party_id = (int) $delivery->getDeliveryPartyId();
+        $this->inv_id = $delivery->getInvId();
+        $this->inv_item_id = $delivery->getInvItemId();
     }
 
     public function getId(): ?int
@@ -40,7 +40,7 @@ final class DeliveryForm extends FormModel
         return $this->id;
     }
 
-    public function getDate_created(): string|DateTimeImmutable
+    public function getDateCreated(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->date_created
@@ -48,7 +48,7 @@ final class DeliveryForm extends FormModel
         return $this->date_created;
     }
 
-    public function getDate_modified(): string|DateTimeImmutable
+    public function getDateModified(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->date_modified
@@ -56,7 +56,7 @@ final class DeliveryForm extends FormModel
         return $this->date_modified;
     }
 
-    public function getStart_date(): string|DateTimeImmutable
+    public function getStartDate(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->start_date
@@ -64,7 +64,7 @@ final class DeliveryForm extends FormModel
         return $this->start_date;
     }
 
-    public function getActual_delivery_date(): string|DateTimeImmutable
+    public function getActualDeliveryDate(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->actual_delivery_date
@@ -72,7 +72,7 @@ final class DeliveryForm extends FormModel
         return $this->actual_delivery_date;
     }
 
-    public function getEnd_date(): string|DateTimeImmutable
+    public function getEndDate(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->end_date
@@ -80,22 +80,22 @@ final class DeliveryForm extends FormModel
         return $this->end_date;
     }
 
-    public function getDelivery_location_id(): ?int
+    public function getDeliveryLocationId(): ?int
     {
         return $this->delivery_location_id;
     }
 
-    public function getDelivery_party_id(): ?int
+    public function getDeliveryPartyId(): ?int
     {
         return $this->delivery_party_id;
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }
 
-    public function getInv_item_id(): ?int
+    public function getInvItemId(): ?int
     {
         return $this->inv_item_id;
     }

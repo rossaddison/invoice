@@ -208,7 +208,7 @@ class Inv
     public function getFirstItemFamilyName(): string
     {
         foreach ($this->items as $item) {
-            return $item->getProduct()?->getFamily()?->getFamily_name() ?? '';
+            return $item->getProduct()?->getFamily()?->getFamilyName() ?? '';
         }
         return '';
     }
@@ -217,9 +217,9 @@ class Inv
     {
         foreach ($this->items as $item) {
             $familyName =
-                $item->getProduct()?->getFamily()?->getFamily_name() ?? '';
+                $item->getProduct()?->getFamily()?->getFamilyName() ?? '';
             $productName =
-                $item->getProduct()?->getProduct_name() ?? '';
+                $item->getProduct()?->getProductName() ?? '';
             return $familyName . '➡️' . $productName;
         }
         return '';
@@ -238,103 +238,103 @@ class Inv
         $this->id = $id;
     }
 
-    public function getUser_id(): string
+    public function getUserId(): string
     {
         return (string) $this->user_id;
     }
 
-    public function setUser_id(int $user_id): void
+    public function setUserId(int $user_id): void
     {
         $this->user_id = $user_id;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
 
-    public function getGroup_id(): string
+    public function getGroupId(): string
     {
         return (string) $this->group_id;
     }
 
-    public function setGroup_id(int $group_id): void
+    public function setGroupId(int $group_id): void
     {
         $this->group_id = $group_id;
     }
 
-    public function getSo_id(): string
+    public function getSoId(): string
     {
         return (string) $this->so_id;
     }
 
-    public function setSo_id(int $so_id): void
+    public function setSoId(int $so_id): void
     {
         $this->so_id = $so_id;
     }
 
-    public function getQuote_id(): string
+    public function getQuoteId(): string
     {
         return (string) $this->quote_id;
     }
 
-    public function setQuote_id(int $quote_id): void
+    public function setQuoteId(int $quote_id): void
     {
         $this->quote_id = $quote_id;
     }
 
-    public function getDelivery_id(): string
+    public function getDeliveryId(): string
     {
         return (string) $this->delivery_id;
     }
 
-    public function setDelivery_id(int $delivery_id): void
+    public function setDeliveryId(int $delivery_id): void
     {
         $this->delivery_id = $delivery_id;
     }
 
-    public function getDelivery_location_id(): string
+    public function getDeliveryLocationId(): string
     {
         return (string) $this->delivery_location_id;
     }
 
-    public function setDelivery_location_id(int $delivery_location_id): void
+    public function setDeliveryLocationId(int $delivery_location_id): void
     {
         $this->delivery_location_id = $delivery_location_id;
     }
 
-    public function getContract_id(): string
+    public function getContractId(): string
     {
         return (string) $this->contract_id;
     }
 
-    public function setContract_id(int $contract_id): void
+    public function setContractId(int $contract_id): void
     {
         $this->contract_id = $contract_id;
     }
 
-    public function getStatus_id(): ?int
+    public function getStatusId(): ?int
     {
         return $this->status_id;
     }
 
-    public function setStatus_id(int $status_id): void
+    public function setStatusId(int $status_id): void
     {
         $this->status_id = (!in_array($status_id,
                 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]) ? 1 : $status_id);
     }
 
-    public function getIs_read_only(): bool
+    public function getIsReadOnly(): bool
     {
         return $this->is_read_only ? true : false;
     }
 
-    public function setIs_read_only(bool $is_read_only): void
+    public function setIsReadOnly(bool $is_read_only): void
     {
         $this->is_read_only = $is_read_only;
     }
@@ -353,36 +353,36 @@ class Inv
      * Same as date issued
      * @return DateTimeImmutable
      */
-    public function getDate_created(): DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->date_created */
         return $this->date_created;
     }
 
-    public function setDate_created(string $date_created): void
+    public function setDateCreated(string $date_created): void
     {
         $this->date_created =  new DateTimeImmutable()
         ->createFromFormat('Y-m-d', $date_created)
         ?: new DateTimeImmutable('now');
     }
 
-    public function setTime_created(string $time_created): void
+    public function setTimeCreated(string $time_created): void
     {
         $this->time_created = $time_created;
     }
 
-    public function getTime_created(): DateTimeImmutable
+    public function getTimeCreated(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->time_created */
         return $this->time_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
 
-    public function setDate_due(\App\Invoice\Setting\SettingRepository $sR): void
+    public function setDateDue(\App\Invoice\Setting\SettingRepository $sR): void
     {
         if (empty($sR->getSetting('invoices_due_after'))) {
             $days = 30;
@@ -394,27 +394,27 @@ class Inv
                 . (string) $days . 'D'));
     }
 
-    public function getDate_due(): DateTimeImmutable
+    public function getDateDue(): DateTimeImmutable
     {
         return $this->date_due;
     }
 
-    public function getDate_supplied(): DateTimeImmutable
+    public function getDateSupplied(): DateTimeImmutable
     {
         return $this->date_supplied;
     }
 
-    public function setDate_supplied(DateTimeImmutable $date_supplied): void
+    public function setDateSupplied(DateTimeImmutable $date_supplied): void
     {
         $this->date_supplied = $date_supplied;
     }
 
-    public function getDate_tax_point(): DateTimeImmutable
+    public function getDateTaxPoint(): DateTimeImmutable
     {
         return $this->date_tax_point;
     }
 
-    public function setDate_tax_point(DateTimeImmutable $date_tax_point): void
+    public function setDateTaxPoint(DateTimeImmutable $date_tax_point): void
     {
         $this->date_tax_point = $date_tax_point;
     }
@@ -429,12 +429,12 @@ class Inv
         $this->number = $number;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function setDiscount_amount(float $discount_amount): void
+    public function setDiscountAmount(float $discount_amount): void
     {
         $this->discount_amount = $discount_amount;
     }
@@ -469,49 +469,49 @@ class Inv
         $this->terms = $terms;
     }
 
-    public function getUrl_key(): string
+    public function getUrlKey(): string
     {
         return $this->url_key;
     }
 
-    public function setUrl_key(string $url_key): void
+    public function setUrlKey(string $url_key): void
     {
         $this->url_key = $url_key;
     }
 
-    public function getPayment_method(): ?int
+    public function getPaymentMethod(): ?int
     {
         return $this->payment_method;
     }
 
-    public function setPayment_method(int $payment_method): void
+    public function setPaymentMethod(int $payment_method): void
     {
         $this->payment_method = $payment_method;
     }
 
-    public function getPostal_address_id(): string
+    public function getPostalAddressId(): string
     {
         return (string) $this->postal_address_id;
     }
 
-    public function setPostal_address_id(int $postal_address_id): void
+    public function setPostalAddressId(int $postal_address_id): void
     {
         $this->postal_address_id = $postal_address_id;
     }
 
-    public function getCreditinvoice_parent_id(): string
+    public function getCreditinvoiceParentId(): string
     {
         return (string) $this->creditinvoice_parent_id;
     }
 
-    public function setCreditinvoice_parent_id(?int $creditinvoice_parent_id): void
+    public function setCreditinvoiceParentId(?int $creditinvoice_parent_id): void
     {
         $this->creditinvoice_parent_id = $creditinvoice_parent_id;
     }
 
     public function isOverdue(): bool
     {
-        return $this->getStatus_id() === 5;
+        return $this->getStatusId() === 5;
     }
 
     // https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL2005/
@@ -526,12 +526,12 @@ class Inv
      * Related logic: see src/resources/views/invoice/info/deutschebahn.php
      * @return string
      */
-    public function getStand_in_code(): string
+    public function getStandInCode(): string
     {
         return $this->stand_in_code;
     }
 
-    public function setStand_in_code(string $stand_in_code): void
+    public function setStandInCode(string $stand_in_code): void
     {
         $this->stand_in_code = $stand_in_code;
     }

@@ -51,22 +51,22 @@ class PaymentPeppol
         $this->id = $id;
     }
 
-    public function getAuto_reference(): int
+    public function getAutoReference(): int
     {
         return $this->auto_reference;
     }
 
-    public function setAuto_reference(int $timestamp): void
+    public function setAutoReference(int $timestamp): void
     {
         $this->auto_reference = $timestamp;
     }
 
-    public function getInv_id(): string
+    public function getInvId(): string
     {
         return (string) $this->inv_id;
     }
 
-    public function setInv_id(int $inv_id): void
+    public function setInvId(int $inv_id): void
     {
         $this->inv_id = $inv_id;
     }

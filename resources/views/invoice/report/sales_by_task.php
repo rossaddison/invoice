@@ -44,8 +44,8 @@ $assetManager->register(ReportAsset::class);
         <tr>
             <td><?= Html::encode(($result['task_name'])); ?></td>
             <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($result['inv_count']); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->format_currency($result['sales_no_tax'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->format_currency($result['item_tax_total'])); ?></td>
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->formatCurrency($result['sales_no_tax'])); ?></td>
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->formatCurrency($result['item_tax_total'])); ?></td>
         </tr>
     <?php } ?>
 </table>

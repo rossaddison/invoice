@@ -42,10 +42,10 @@ final class PostalAddressForm extends FormModel
         $this->id = (int) $postalAddress->getId();
 
         // not hidden fields
-        $this->street_name = $postalAddress->getStreet_name();
-        $this->additional_street_name = $postalAddress->getAdditional_street_name();
-        $this->building_number = $postalAddress->getBuilding_number();
-        $this->city_name = $postalAddress->getCity_name();
+        $this->street_name = $postalAddress->getStreetName();
+        $this->additional_street_name = $postalAddress->getAdditionalStreetName();
+        $this->building_number = $postalAddress->getBuildingNumber();
+        $this->city_name = $postalAddress->getCityName();
         $this->postalzone = $postalAddress->getPostalzone();
         $this->countrysubentity = $postalAddress->getCountrysubentity();
         $this->country = $postalAddress->getCountry();
@@ -86,27 +86,27 @@ final class PostalAddressForm extends FormModel
         return $this->id;
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function getStreet_name(): ?string
+    public function getStreetName(): ?string
     {
         return $this->street_name;
     }
 
-    public function getAdditional_street_name(): ?string
+    public function getAdditionalStreetName(): ?string
     {
         return $this->additional_street_name;
     }
 
-    public function getBuilding_number(): ?string
+    public function getBuildingNumber(): ?string
     {
         return $this->building_number;
     }
 
-    public function getCity_name(): ?string
+    public function getCityName(): ?string
     {
         return $this->city_name;
     }

@@ -21,13 +21,13 @@ final class PaymentPeppolForm extends FormModel
 
     public function __construct(PaymentPeppol $paymentPeppol)
     {
-        $this->inv_id = $paymentPeppol->getInv_id();
+        $this->inv_id = $paymentPeppol->getInvId();
         $this->id = $paymentPeppol->getId();
-        $this->auto_reference = $paymentPeppol->getAuto_reference();
+        $this->auto_reference = $paymentPeppol->getAutoReference();
         $this->provider = $paymentPeppol->getProvider();
     }
 
-    public function getInv_id(): ?string
+    public function getInvId(): ?string
     {
         return $this->inv_id;
     }
@@ -37,7 +37,7 @@ final class PaymentPeppolForm extends FormModel
         return $this->id;
     }
 
-    public function getAuto_reference(): ?int
+    public function getAutoReference(): ?int
     {
         return $this->auto_reference;
     }

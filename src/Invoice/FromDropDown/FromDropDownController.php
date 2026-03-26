@@ -24,7 +24,7 @@ use Exception;
 
 final class FromDropDownController extends BaseController
 {
-    protected string $controllerName = 'invoice/fromdropdown';
+    protected string $controllerName = 'invoice/from';
 
     public function __construct(
         private FromDropDownService $fromService,
@@ -102,12 +102,12 @@ final class FromDropDownController extends BaseController
             if ($from) {
                 $this->fromService->deleteFromDropDown($from);
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                return $this->webService->getRedirectResponse('from/index');
+                return $this->webService->getRedirectResponse('index');
             }
-            return $this->webService->getRedirectResponse('from/index');
+            return $this->webService->getRedirectResponse('index');
         } catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
-            return $this->webService->getRedirectResponse('from/index');
+            return $this->webService->getRedirectResponse('index');
         }
     }
 
@@ -139,7 +139,7 @@ final class FromDropDownController extends BaseController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->fromService->saveFromDropDown($from, $body);
-                        return $this->webService->getRedirectResponse('from/index');
+                        return $this->webService->getRedirectResponse('index');
                     }
                 }
                 $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
@@ -147,7 +147,7 @@ final class FromDropDownController extends BaseController
             }
             return $this->webViewRenderer->render('_form', $parameters);
         }
-        return $this->webService->getRedirectResponse('from/index');
+        return $this->webService->getRedirectResponse('index');
     }
 
     //For rbac refer to AccessChecker
@@ -196,6 +196,6 @@ final class FromDropDownController extends BaseController
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
-        return $this->webService->getRedirectResponse('from/index');
+        return $this->webService->getRedirectResponse('index');
     }
 }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Note this UBL is not currently being used. Refer to Invoice and
-//  PeppolHelper function build_invoice_lines_array
+//  PeppolHelper function buildInvoiceLinesArray
 
 namespace App\Invoice\Ubl;
 
@@ -289,7 +289,7 @@ class InvoiceLine implements XmlSerializable
             ],
             [
                 'name' => Schema::CBC . 'LineExtensionAmount',
-                'value' => $this->s->currency_converter(
+                'value' => $this->s->currencyConverter(
                  number_format($this->lineExtensionAmount ?: 0.00, 2, '.', '')),
                 'attributes' => [
                     'currencyID' =>

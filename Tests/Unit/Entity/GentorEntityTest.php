@@ -15,20 +15,20 @@ class GentorEntityTest extends Unit
     {
         $gentor = new Gentor();
         
-        $this->assertSame('', $gentor->getRoute_prefix());
-        $this->assertSame('', $gentor->getRoute_suffix());
-        $this->assertSame('', $gentor->getCamelcase_capital_name());
-        $this->assertSame('', $gentor->getSmall_singular_name());
-        $this->assertSame('', $gentor->getSmall_plural_name());
-        $this->assertSame('', $gentor->getNamespace_path());
-        $this->assertSame('dirname(dirname(__DIR__)', $gentor->getController_layout_dir());
-        $this->assertSame('@invoice/layout/main.php', $gentor->getController_layout_dir_dot_path());
-        $this->assertSame('', $gentor->getPre_entity_table());
-        $this->assertFalse($gentor->isCreated_include());
-        $this->assertFalse($gentor->isUpdated_include());
-        $this->assertFalse($gentor->isModified_include());
-        $this->assertFalse($gentor->isDeleted_include());
-        $this->assertFalse($gentor->isFlash_include());
+        $this->assertSame('', $gentor->getRoutePrefix());
+        $this->assertSame('', $gentor->getRouteSuffix());
+        $this->assertSame('', $gentor->getCamelcaseCapitalName());
+        $this->assertSame('', $gentor->getSmallSingularName());
+        $this->assertSame('', $gentor->getSmallPluralName());
+        $this->assertSame('', $gentor->getNamespacePath());
+        $this->assertSame('dirname(dirname(__DIR__)', $gentor->getControllerLayoutDir());
+        $this->assertSame('@invoice/layout/main.php', $gentor->getControllerLayoutDirDotPath());
+        $this->assertSame('', $gentor->getPreEntityTable());
+        $this->assertFalse($gentor->isCreatedInclude());
+        $this->assertFalse($gentor->isUpdatedInclude());
+        $this->assertFalse($gentor->isModifiedInclude());
+        $this->assertFalse($gentor->isDeletedInclude());
+        $this->assertFalse($gentor->isFlashInclude());
     }
 
     public function testConstructorWithAllParameters(): void
@@ -50,20 +50,20 @@ class GentorEntityTest extends Unit
             true
         );
         
-        $this->assertSame('test_prefix', $gentor->getRoute_prefix());
-        $this->assertSame('test_suffix', $gentor->getRoute_suffix());
-        $this->assertSame('TestCapital', $gentor->getCamelcase_capital_name());
-        $this->assertSame('test_singular', $gentor->getSmall_singular_name());
-        $this->assertSame('test_plural', $gentor->getSmall_plural_name());
-        $this->assertSame('Test\\Namespace', $gentor->getNamespace_path());
-        $this->assertSame('test/layout', $gentor->getController_layout_dir());
-        $this->assertSame('test.layout.path', $gentor->getController_layout_dir_dot_path());
-        $this->assertSame('test_table_', $gentor->getPre_entity_table());
-        $this->assertTrue($gentor->isCreated_include());
-        $this->assertTrue($gentor->isUpdated_include());
-        $this->assertTrue($gentor->isModified_include());
-        $this->assertTrue($gentor->isDeleted_include());
-        $this->assertTrue($gentor->isFlash_include());
+        $this->assertSame('test_prefix', $gentor->getRoutePrefix());
+        $this->assertSame('test_suffix', $gentor->getRouteSuffix());
+        $this->assertSame('TestCapital', $gentor->getCamelcaseCapitalName());
+        $this->assertSame('test_singular', $gentor->getSmallSingularName());
+        $this->assertSame('test_plural', $gentor->getSmallPluralName());
+        $this->assertSame('Test\\Namespace', $gentor->getNamespacePath());
+        $this->assertSame('test/layout', $gentor->getControllerLayoutDir());
+        $this->assertSame('test.layout.path', $gentor->getControllerLayoutDirDotPath());
+        $this->assertSame('test_table_', $gentor->getPreEntityTable());
+        $this->assertTrue($gentor->isCreatedInclude());
+        $this->assertTrue($gentor->isUpdatedInclude());
+        $this->assertTrue($gentor->isModifiedInclude());
+        $this->assertTrue($gentor->isDeletedInclude());
+        $this->assertTrue($gentor->isFlashInclude());
     }
 
     public function testGentorIdGetter(): void
@@ -71,172 +71,172 @@ class GentorEntityTest extends Unit
         $gentor = new Gentor();
         
         // ID should be null initially, converted to empty string
-        $this->assertSame('', $gentor->getGentor_id());
+        $this->assertSame('', $gentor->getGentorId());
     }
 
     public function testRoutePrefixSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setRoute_prefix('invoice');
-        $this->assertSame('invoice', $gentor->getRoute_prefix());
+        $gentor->setRoutePrefix('invoice');
+        $this->assertSame('invoice', $gentor->getRoutePrefix());
         
-        $gentor->setRoute_prefix('quote');
-        $this->assertSame('quote', $gentor->getRoute_prefix());
+        $gentor->setRoutePrefix('quote');
+        $this->assertSame('quote', $gentor->getRoutePrefix());
     }
 
     public function testRouteSuffixSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setRoute_suffix('list');
-        $this->assertSame('list', $gentor->getRoute_suffix());
+        $gentor->setRouteSuffix('list');
+        $this->assertSame('list', $gentor->getRouteSuffix());
         
-        $gentor->setRoute_suffix('view');
-        $this->assertSame('view', $gentor->getRoute_suffix());
+        $gentor->setRouteSuffix('view');
+        $this->assertSame('view', $gentor->getRouteSuffix());
     }
 
     public function testCamelcaseCapitalNameSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setCamelcase_capital_name('InvoiceEntity');
-        $this->assertSame('InvoiceEntity', $gentor->getCamelcase_capital_name());
+        $gentor->setCamelcaseCapitalName('InvoiceEntity');
+        $this->assertSame('InvoiceEntity', $gentor->getCamelcaseCapitalName());
         
-        $gentor->setCamelcase_capital_name('QuoteEntity');
-        $this->assertSame('QuoteEntity', $gentor->getCamelcase_capital_name());
+        $gentor->setCamelcaseCapitalName('QuoteEntity');
+        $this->assertSame('QuoteEntity', $gentor->getCamelcaseCapitalName());
     }
 
     public function testSmallSingularNameSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setSmall_singular_name('invoice');
-        $this->assertSame('invoice', $gentor->getSmall_singular_name());
+        $gentor->setSmallSingularName('invoice');
+        $this->assertSame('invoice', $gentor->getSmallSingularName());
         
-        $gentor->setSmall_singular_name('quote');
-        $this->assertSame('quote', $gentor->getSmall_singular_name());
+        $gentor->setSmallSingularName('quote');
+        $this->assertSame('quote', $gentor->getSmallSingularName());
     }
 
     public function testSmallPluralNameSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setSmall_plural_name('invoices');
-        $this->assertSame('invoices', $gentor->getSmall_plural_name());
+        $gentor->setSmallPluralName('invoices');
+        $this->assertSame('invoices', $gentor->getSmallPluralName());
         
-        $gentor->setSmall_plural_name('quotes');
-        $this->assertSame('quotes', $gentor->getSmall_plural_name());
+        $gentor->setSmallPluralName('quotes');
+        $this->assertSame('quotes', $gentor->getSmallPluralName());
     }
 
     public function testNamespacePathSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setNamespace_path('App\\Invoice\\Entity');
-        $this->assertSame('App\\Invoice\\Entity', $gentor->getNamespace_path());
+        $gentor->setNamespacePath('App\\Invoice\\Entity');
+        $this->assertSame('App\\Invoice\\Entity', $gentor->getNamespacePath());
         
-        $gentor->setNamespace_path('App\\Quote\\Entity');
-        $this->assertSame('App\\Quote\\Entity', $gentor->getNamespace_path());
+        $gentor->setNamespacePath('App\\Quote\\Entity');
+        $this->assertSame('App\\Quote\\Entity', $gentor->getNamespacePath());
     }
 
     public function testControllerLayoutDirSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setController_layout_dir($this->invoiceViews);
-        $this->assertSame($this->invoiceViews, $gentor->getController_layout_dir());
+        $gentor->setControllerLayoutDir($this->invoiceViews);
+        $this->assertSame($this->invoiceViews, $gentor->getControllerLayoutDir());
         
-        $gentor->setController_layout_dir('quote/views');
-        $this->assertSame('quote/views', $gentor->getController_layout_dir());
+        $gentor->setControllerLayoutDir('quote/views');
+        $this->assertSame('quote/views', $gentor->getControllerLayoutDir());
     }
 
     public function testControllerLayoutDirDotPathSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setController_layout_dir_dot_path('invoice.layout.main');
-        $this->assertSame('invoice.layout.main', $gentor->getController_layout_dir_dot_path());
+        $gentor->setControllerLayoutDirDotPath('invoice.layout.main');
+        $this->assertSame('invoice.layout.main', $gentor->getControllerLayoutDirDotPath());
         
-        $gentor->setController_layout_dir_dot_path('quote.layout.main');
-        $this->assertSame('quote.layout.main', $gentor->getController_layout_dir_dot_path());
+        $gentor->setControllerLayoutDirDotPath('quote.layout.main');
+        $this->assertSame('quote.layout.main', $gentor->getControllerLayoutDirDotPath());
     }
 
     public function testPreEntityTableSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setPre_entity_table('inv_');
-        $this->assertSame('inv_', $gentor->getPre_entity_table());
+        $gentor->setPreEntityTable('inv_');
+        $this->assertSame('inv_', $gentor->getPreEntityTable());
         
-        $gentor->setPre_entity_table('quote_');
-        $this->assertSame('quote_', $gentor->getPre_entity_table());
+        $gentor->setPreEntityTable('quote_');
+        $this->assertSame('quote_', $gentor->getPreEntityTable());
     }
 
     public function testCreatedIncludeSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setCreated_include(true);
-        $this->assertTrue($gentor->isCreated_include());
+        $gentor->setCreatedInclude(true);
+        $this->assertTrue($gentor->isCreatedInclude());
         
-        $gentor->setCreated_include(false);
-        $this->assertFalse($gentor->isCreated_include());
+        $gentor->setCreatedInclude(false);
+        $this->assertFalse($gentor->isCreatedInclude());
     }
 
     public function testUpdatedIncludeSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setUpdated_include(true);
-        $this->assertTrue($gentor->isUpdated_include());
+        $gentor->setUpdatedInclude(true);
+        $this->assertTrue($gentor->isUpdatedInclude());
         
-        $gentor->setUpdated_include(false);
-        $this->assertFalse($gentor->isUpdated_include());
+        $gentor->setUpdatedInclude(false);
+        $this->assertFalse($gentor->isUpdatedInclude());
     }
 
     public function testModifiedIncludeSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setModified_include(true);
-        $this->assertTrue($gentor->isModified_include());
+        $gentor->setModifiedInclude(true);
+        $this->assertTrue($gentor->isModifiedInclude());
         
-        $gentor->setModified_include(false);
-        $this->assertFalse($gentor->isModified_include());
+        $gentor->setModifiedInclude(false);
+        $this->assertFalse($gentor->isModifiedInclude());
     }
 
     public function testDeletedIncludeSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setDeleted_include(true);
-        $this->assertTrue($gentor->isDeleted_include());
+        $gentor->setDeletedInclude(true);
+        $this->assertTrue($gentor->isDeletedInclude());
         
-        $gentor->setDeleted_include(false);
-        $this->assertFalse($gentor->isDeleted_include());
+        $gentor->setDeletedInclude(false);
+        $this->assertFalse($gentor->isDeletedInclude());
     }
 
     public function testFlashIncludeSetterAndGetter(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setFlash_include(true);
-        $this->assertTrue($gentor->isFlash_include());
+        $gentor->setFlashInclude(true);
+        $this->assertTrue($gentor->isFlashInclude());
         
-        $gentor->setFlash_include(false);
-        $this->assertFalse($gentor->isFlash_include());
+        $gentor->setFlashInclude(false);
+        $this->assertFalse($gentor->isFlashInclude());
     }
 
     public function testMultipleSetterCalls(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setRoute_prefix('test');
-        $gentor->setRoute_suffix('entity');
+        $gentor->setRoutePrefix('test');
+        $gentor->setRouteSuffix('entity');
         
-        $this->assertSame('test', $gentor->getRoute_prefix());
-        $this->assertSame('entity', $gentor->getRoute_suffix());
+        $this->assertSame('test', $gentor->getRoutePrefix());
+        $this->assertSame('entity', $gentor->getRouteSuffix());
     }
 
     public function testAllBooleanProperties(): void
@@ -244,42 +244,42 @@ class GentorEntityTest extends Unit
         $gentor = new Gentor();
         
         // Test all combinations of boolean values
-        $gentor->setCreated_include(true);
-        $gentor->setUpdated_include(false);
-        $gentor->setModified_include(true);
-        $gentor->setDeleted_include(false);
-        $gentor->setFlash_include(true);
+        $gentor->setCreatedInclude(true);
+        $gentor->setUpdatedInclude(false);
+        $gentor->setModifiedInclude(true);
+        $gentor->setDeletedInclude(false);
+        $gentor->setFlashInclude(true);
         
-        $this->assertTrue($gentor->isCreated_include());
-        $this->assertFalse($gentor->isUpdated_include());
-        $this->assertTrue($gentor->isModified_include());
-        $this->assertFalse($gentor->isDeleted_include());
-        $this->assertTrue($gentor->isFlash_include());
+        $this->assertTrue($gentor->isCreatedInclude());
+        $this->assertFalse($gentor->isUpdatedInclude());
+        $this->assertTrue($gentor->isModifiedInclude());
+        $this->assertFalse($gentor->isDeletedInclude());
+        $this->assertTrue($gentor->isFlashInclude());
     }
 
     public function testEmptyStringValues(): void
     {
         $gentor = new Gentor();
         
-        $gentor->setRoute_prefix('');
-        $gentor->setRoute_suffix('');
-        $gentor->setCamelcase_capital_name('');
-        $gentor->setSmall_singular_name('');
-        $gentor->setSmall_plural_name('');
-        $gentor->setNamespace_path('');
-        $gentor->setController_layout_dir('');
-        $gentor->setController_layout_dir_dot_path('');
-        $gentor->setPre_entity_table('');
+        $gentor->setRoutePrefix('');
+        $gentor->setRouteSuffix('');
+        $gentor->setCamelcaseCapitalName('');
+        $gentor->setSmallSingularName('');
+        $gentor->setSmallPluralName('');
+        $gentor->setNamespacePath('');
+        $gentor->setControllerLayoutDir('');
+        $gentor->setControllerLayoutDirDotPath('');
+        $gentor->setPreEntityTable('');
         
-        $this->assertSame('', $gentor->getRoute_prefix());
-        $this->assertSame('', $gentor->getRoute_suffix());
-        $this->assertSame('', $gentor->getCamelcase_capital_name());
-        $this->assertSame('', $gentor->getSmall_singular_name());
-        $this->assertSame('', $gentor->getSmall_plural_name());
-        $this->assertSame('', $gentor->getNamespace_path());
-        $this->assertSame('', $gentor->getController_layout_dir());
-        $this->assertSame('', $gentor->getController_layout_dir_dot_path());
-        $this->assertSame('', $gentor->getPre_entity_table());
+        $this->assertSame('', $gentor->getRoutePrefix());
+        $this->assertSame('', $gentor->getRouteSuffix());
+        $this->assertSame('', $gentor->getCamelcaseCapitalName());
+        $this->assertSame('', $gentor->getSmallSingularName());
+        $this->assertSame('', $gentor->getSmallPluralName());
+        $this->assertSame('', $gentor->getNamespacePath());
+        $this->assertSame('', $gentor->getControllerLayoutDir());
+        $this->assertSame('', $gentor->getControllerLayoutDirDotPath());
+        $this->assertSame('', $gentor->getPreEntityTable());
     }
 
     public function testLongStringValues(): void
@@ -287,13 +287,13 @@ class GentorEntityTest extends Unit
         $gentor = new Gentor();
         $longString = str_repeat('long', 25); // 100 characters
         
-        $gentor->setNamespace_path($longString);
-        $gentor->setController_layout_dir($longString);
-        $gentor->setController_layout_dir_dot_path($longString);
+        $gentor->setNamespacePath($longString);
+        $gentor->setControllerLayoutDir($longString);
+        $gentor->setControllerLayoutDirDotPath($longString);
         
-        $this->assertSame($longString, $gentor->getNamespace_path());
-        $this->assertSame($longString, $gentor->getController_layout_dir());
-        $this->assertSame($longString, $gentor->getController_layout_dir_dot_path());
+        $this->assertSame($longString, $gentor->getNamespacePath());
+        $this->assertSame($longString, $gentor->getControllerLayoutDir());
+        $this->assertSame($longString, $gentor->getControllerLayoutDirDotPath());
     }
 
     public function testSpecialCharactersInStrings(): void
@@ -301,13 +301,13 @@ class GentorEntityTest extends Unit
         $gentor = new Gentor();
         $specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?`~"\'\\';
         
-        $gentor->setRoute_prefix($specialChars);
-        $gentor->setRoute_suffix($specialChars);
-        $gentor->setCamelcase_capital_name($specialChars);
+        $gentor->setRoutePrefix($specialChars);
+        $gentor->setRouteSuffix($specialChars);
+        $gentor->setCamelcaseCapitalName($specialChars);
         
-        $this->assertSame($specialChars, $gentor->getRoute_prefix());
-        $this->assertSame($specialChars, $gentor->getRoute_suffix());
-        $this->assertSame($specialChars, $gentor->getCamelcase_capital_name());
+        $this->assertSame($specialChars, $gentor->getRoutePrefix());
+        $this->assertSame($specialChars, $gentor->getRouteSuffix());
+        $this->assertSame($specialChars, $gentor->getCamelcaseCapitalName());
     }
 
     public function testUnicodeCharactersInStrings(): void
@@ -315,13 +315,13 @@ class GentorEntityTest extends Unit
         $gentor = new Gentor();
         $unicode = 'Hello 世界! 🌍 Héllö Wørld™€₹中文';
         
-        $gentor->setSmall_singular_name($unicode);
-        $gentor->setSmall_plural_name($unicode);
-        $gentor->setNamespace_path($unicode);
+        $gentor->setSmallSingularName($unicode);
+        $gentor->setSmallPluralName($unicode);
+        $gentor->setNamespacePath($unicode);
         
-        $this->assertSame($unicode, $gentor->getSmall_singular_name());
-        $this->assertSame($unicode, $gentor->getSmall_plural_name());
-        $this->assertSame($unicode, $gentor->getNamespace_path());
+        $this->assertSame($unicode, $gentor->getSmallSingularName());
+        $this->assertSame($unicode, $gentor->getSmallPluralName());
+        $this->assertSame($unicode, $gentor->getNamespacePath());
     }
 
     public function testCompleteEntitySetup(): void
@@ -329,35 +329,35 @@ class GentorEntityTest extends Unit
         $gentor = new Gentor();
         
         // Setup a complete invoice generator configuration
-        $gentor->setRoute_prefix('invoice');
-        $gentor->setRoute_suffix('invoice');
-        $gentor->setCamelcase_capital_name('Invoice');
-        $gentor->setSmall_singular_name('invoice');
-        $gentor->setSmall_plural_name('invoices');
-        $gentor->setNamespace_path('App\\Invoice');
-        $gentor->setController_layout_dir($this->invoiceViews);
-        $gentor->setController_layout_dir_dot_path('invoice.layout.main');
-        $gentor->setPre_entity_table('inv_');
-        $gentor->setCreated_include(true);
-        $gentor->setUpdated_include(true);
-        $gentor->setModified_include(true);
-        $gentor->setDeleted_include(true);
-        $gentor->setFlash_include(true);
+        $gentor->setRoutePrefix('invoice');
+        $gentor->setRouteSuffix('invoice');
+        $gentor->setCamelcaseCapitalName('Invoice');
+        $gentor->setSmallSingularName('invoice');
+        $gentor->setSmallPluralName('invoices');
+        $gentor->setNamespacePath('App\\Invoice');
+        $gentor->setControllerLayoutDir($this->invoiceViews);
+        $gentor->setControllerLayoutDirDotPath('invoice.layout.main');
+        $gentor->setPreEntityTable('inv_');
+        $gentor->setCreatedInclude(true);
+        $gentor->setUpdatedInclude(true);
+        $gentor->setModifiedInclude(true);
+        $gentor->setDeletedInclude(true);
+        $gentor->setFlashInclude(true);
         
-        $this->assertSame('invoice', $gentor->getRoute_prefix());
-        $this->assertSame('invoice', $gentor->getRoute_suffix());
-        $this->assertSame('Invoice', $gentor->getCamelcase_capital_name());
-        $this->assertSame('invoice', $gentor->getSmall_singular_name());
-        $this->assertSame('invoices', $gentor->getSmall_plural_name());
-        $this->assertSame('App\\Invoice', $gentor->getNamespace_path());
-        $this->assertSame($this->invoiceViews, $gentor->getController_layout_dir());
-        $this->assertSame('invoice.layout.main', $gentor->getController_layout_dir_dot_path());
-        $this->assertSame('inv_', $gentor->getPre_entity_table());
-        $this->assertTrue($gentor->isCreated_include());
-        $this->assertTrue($gentor->isUpdated_include());
-        $this->assertTrue($gentor->isModified_include());
-        $this->assertTrue($gentor->isDeleted_include());
-        $this->assertTrue($gentor->isFlash_include());
+        $this->assertSame('invoice', $gentor->getRoutePrefix());
+        $this->assertSame('invoice', $gentor->getRouteSuffix());
+        $this->assertSame('Invoice', $gentor->getCamelcaseCapitalName());
+        $this->assertSame('invoice', $gentor->getSmallSingularName());
+        $this->assertSame('invoices', $gentor->getSmallPluralName());
+        $this->assertSame('App\\Invoice', $gentor->getNamespacePath());
+        $this->assertSame($this->invoiceViews, $gentor->getControllerLayoutDir());
+        $this->assertSame('invoice.layout.main', $gentor->getControllerLayoutDirDotPath());
+        $this->assertSame('inv_', $gentor->getPreEntityTable());
+        $this->assertTrue($gentor->isCreatedInclude());
+        $this->assertTrue($gentor->isUpdatedInclude());
+        $this->assertTrue($gentor->isModifiedInclude());
+        $this->assertTrue($gentor->isDeletedInclude());
+        $this->assertTrue($gentor->isFlashInclude());
     }
 
     public function testGetterMethodsConsistency(): void
@@ -365,20 +365,20 @@ class GentorEntityTest extends Unit
         $gentor = new Gentor('test', 'entity', 'TestEntity', 'test', 'tests', 'Test\\Entity', 'test/views', 'test.views', 'test_', true, false, true, false, true);
         
         // Multiple calls should return same values
-        $this->assertSame($gentor->getRoute_prefix(), $gentor->getRoute_prefix());
-        $this->assertSame($gentor->getRoute_suffix(), $gentor->getRoute_suffix());
-        $this->assertSame($gentor->getCamelcase_capital_name(), $gentor->getCamelcase_capital_name());
-        $this->assertSame($gentor->getSmall_singular_name(), $gentor->getSmall_singular_name());
-        $this->assertSame($gentor->getSmall_plural_name(), $gentor->getSmall_plural_name());
-        $this->assertSame($gentor->getNamespace_path(), $gentor->getNamespace_path());
-        $this->assertSame($gentor->getController_layout_dir(), $gentor->getController_layout_dir());
-        $this->assertSame($gentor->getController_layout_dir_dot_path(), $gentor->getController_layout_dir_dot_path());
-        $this->assertSame($gentor->getPre_entity_table(), $gentor->getPre_entity_table());
-        $this->assertSame($gentor->isCreated_include(), $gentor->isCreated_include());
-        $this->assertSame($gentor->isUpdated_include(), $gentor->isUpdated_include());
-        $this->assertSame($gentor->isModified_include(), $gentor->isModified_include());
-        $this->assertSame($gentor->isDeleted_include(), $gentor->isDeleted_include());
-        $this->assertSame($gentor->isFlash_include(), $gentor->isFlash_include());
+        $this->assertSame($gentor->getRoutePrefix(), $gentor->getRoutePrefix());
+        $this->assertSame($gentor->getRouteSuffix(), $gentor->getRouteSuffix());
+        $this->assertSame($gentor->getCamelcaseCapitalName(), $gentor->getCamelcaseCapitalName());
+        $this->assertSame($gentor->getSmallSingularName(), $gentor->getSmallSingularName());
+        $this->assertSame($gentor->getSmallPluralName(), $gentor->getSmallPluralName());
+        $this->assertSame($gentor->getNamespacePath(), $gentor->getNamespacePath());
+        $this->assertSame($gentor->getControllerLayoutDir(), $gentor->getControllerLayoutDir());
+        $this->assertSame($gentor->getControllerLayoutDirDotPath(), $gentor->getControllerLayoutDirDotPath());
+        $this->assertSame($gentor->getPreEntityTable(), $gentor->getPreEntityTable());
+        $this->assertSame($gentor->isCreatedInclude(), $gentor->isCreatedInclude());
+        $this->assertSame($gentor->isUpdatedInclude(), $gentor->isUpdatedInclude());
+        $this->assertSame($gentor->isModifiedInclude(), $gentor->isModifiedInclude());
+        $this->assertSame($gentor->isDeletedInclude(), $gentor->isDeletedInclude());
+        $this->assertSame($gentor->isFlashInclude(), $gentor->isFlashInclude());
     }
 
     public function testDefaultLayoutValues(): void
@@ -386,8 +386,8 @@ class GentorEntityTest extends Unit
         $gentor = new Gentor();
         
         // Test default constructor values for layout properties
-        $this->assertSame('dirname(dirname(__DIR__)', $gentor->getController_layout_dir());
-        $this->assertSame('@invoice/layout/main.php', $gentor->getController_layout_dir_dot_path());
+        $this->assertSame('dirname(dirname(__DIR__)', $gentor->getControllerLayoutDir());
+        $this->assertSame('@invoice/layout/main.php', $gentor->getControllerLayoutDirDotPath());
     }
 
     public function testBooleanToggling(): void
@@ -395,24 +395,24 @@ class GentorEntityTest extends Unit
         $gentor = new Gentor();
         
         // Test toggling each boolean property
-        $this->assertFalse($gentor->isCreated_include());
-        $gentor->setCreated_include(!$gentor->isCreated_include());
-        $this->assertTrue($gentor->isCreated_include());
+        $this->assertFalse($gentor->isCreatedInclude());
+        $gentor->setCreatedInclude(!$gentor->isCreatedInclude());
+        $this->assertTrue($gentor->isCreatedInclude());
         
-        $this->assertFalse($gentor->isUpdated_include());
-        $gentor->setUpdated_include(!$gentor->isUpdated_include());
-        $this->assertTrue($gentor->isUpdated_include());
+        $this->assertFalse($gentor->isUpdatedInclude());
+        $gentor->setUpdatedInclude(!$gentor->isUpdatedInclude());
+        $this->assertTrue($gentor->isUpdatedInclude());
         
-        $this->assertFalse($gentor->isModified_include());
-        $gentor->setModified_include(!$gentor->isModified_include());
-        $this->assertTrue($gentor->isModified_include());
+        $this->assertFalse($gentor->isModifiedInclude());
+        $gentor->setModifiedInclude(!$gentor->isModifiedInclude());
+        $this->assertTrue($gentor->isModifiedInclude());
         
-        $this->assertFalse($gentor->isDeleted_include());
-        $gentor->setDeleted_include(!$gentor->isDeleted_include());
-        $this->assertTrue($gentor->isDeleted_include());
+        $this->assertFalse($gentor->isDeletedInclude());
+        $gentor->setDeletedInclude(!$gentor->isDeletedInclude());
+        $this->assertTrue($gentor->isDeletedInclude());
         
-        $this->assertFalse($gentor->isFlash_include());
-        $gentor->setFlash_include(!$gentor->isFlash_include());
-        $this->assertTrue($gentor->isFlash_include());
+        $this->assertFalse($gentor->isFlashInclude());
+        $gentor->setFlashInclude(!$gentor->isFlashInclude());
+        $this->assertTrue($gentor->isFlashInclude());
     }
 }

@@ -108,7 +108,7 @@ final class EmailTemplateRepository extends Select\Repository
      */
     public static function getSettings(SettingRepository $setting): SettingRepository
     {
-        $setting->load_settings();
+        $setting->loadSettings();
         return $setting;
     }
 
@@ -117,7 +117,7 @@ final class EmailTemplateRepository extends Select\Repository
      * @param string $pdf_or_public
      * @return array
      */
-    public function get_invoice_templates(string $pdf_or_public): array
+    public function getInvoiceTemplates(string $pdf_or_public): array
     {
         $pdf_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/invoice/pdf';
         $public_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/invoice/public';
@@ -137,8 +137,8 @@ final class EmailTemplateRepository extends Select\Repository
             ]);
         }
         if (!empty($templates)) {
-            $extension_remove = $this->remove_extension($templates);
-            return $this->remove_path($extension_remove);
+            $extension_remove = $this->removeExtension($templates);
+            return $this->removePath($extension_remove);
         }
         return $templates;
     }
@@ -148,7 +148,7 @@ final class EmailTemplateRepository extends Select\Repository
      * @param string $pdf_or_public
      * @return array
      */
-    public function get_quote_templates(string $pdf_or_public): array
+    public function getQuoteTemplates(string $pdf_or_public): array
     {
         $pdf_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/quote/pdf';
         $public_template_directory = dirname(__DIR__, 3) . '/resources/views/invoice/template/quote/public';
@@ -168,8 +168,8 @@ final class EmailTemplateRepository extends Select\Repository
             ]);
         }
         if (!empty($templates)) {
-            $extension_remove = $this->remove_extension($templates);
-            return $this->remove_path($extension_remove);
+            $extension_remove = $this->removeExtension($templates);
+            return $this->removePath($extension_remove);
         }
         return $templates;
     }
@@ -178,7 +178,7 @@ final class EmailTemplateRepository extends Select\Repository
      * @param array $files
      * @return array
      */
-    private function remove_extension(array $files): array
+    private function removeExtension(array $files): array
     {
         /**
          * @var string $key
@@ -194,7 +194,7 @@ final class EmailTemplateRepository extends Select\Repository
      * @param array $files
      * @return array
      */
-    private function remove_path(array $files): array
+    private function removePath(array $files): array
     {
         //https://stackoverflow.com/questions/1418193/how-do-i-get-a-file-name-from-a-full-path-with-php
         /**

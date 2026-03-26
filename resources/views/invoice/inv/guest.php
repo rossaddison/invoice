@@ -73,7 +73,7 @@ echo new Div();
  * @var ColumnInterface[] $columns
  */
 // Build enabled payment gateways list once for use in the paid column
-$enabledGateways = $s->payment_gateways_enabled_DriverList();
+$enabledGateways = $s->paymentGatewaysEnabledDriverList();
 
 $columns = [
     new DataColumn(
@@ -121,7 +121,7 @@ $columns = [
                     $displayName = str_replace('_', ' ', (string) $gateway);
                     $url = $urlGenerator->generate('paymentinformation/inform', [
                         'gateway' => $gateway,
-                        'url_key' => $model->getUrl_key(),
+                        'url_key' => $model->getUrlKey(),
                     ]);
                     $items .= '<li><a class="dropdown-item" href="'
                         . Html::encode($url) . '">'
@@ -170,7 +170,7 @@ $columns = [
         buttons: [
             new ActionButton(
                 url: static function (Inv $inv) use ($urlGenerator): string {
-                    return $urlGenerator->generate('inv/pdf_dashboard_exclude_cf',
+                    return $urlGenerator->generate('inv/pdfDashboardExcludeCf',
                             ['id' => $inv->getId()]);
                 },
                 attributes: [
@@ -184,7 +184,7 @@ $columns = [
             new ActionButton(
                 url: static function (Inv $inv) use ($urlGenerator):
                 string {
-                    return $urlGenerator->generate('inv/pdf_dashboard_include_cf',
+                    return $urlGenerator->generate('inv/pdfDashboardIncludeCf',
                             ['id' => $inv->getId()]);
                 },
                 attributes: [
@@ -230,7 +230,7 @@ $columns = [
         encodeHeader: false,
         content: static function (Inv $model) use ($iR, $s, $irR, $translator):
                                                                         string {
-            $statusId = $model->getStatus_id();
+            $statusId = $model->getStatusId();
             if ($statusId === null) {
                 return '<span class="label label-default">N/A</span>';
             }
@@ -238,7 +238,7 @@ $columns = [
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
             
             // Add read-only indicator
-            if (($model->getIs_read_only())
+            if (($model->getIsReadOnly())
                                 && $s->getSetting('disable_read_only') == '0') {
                 $label .= ' 🚫';
             }
@@ -276,14 +276,14 @@ $columns = [
         property: 'filterCreditInvNumber',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
             $visible = $iR->repoInvUnLoadedquery(
-                                        $model->getCreditinvoice_parent_id());
+                                        $model->getCreditinvoiceParentId());
             if (null !== $visible) {
                 $url = ($visible->getNumber() ?? '#') . '💳';
                 return   new A()
                         ->addAttributes(['style' => 'text-decoration:none'])
                         ->content($url)
                         ->href($urlGenerator->generate('inv/view',
-                                ['id' => $model->getCreditinvoice_parent_id()]));
+                                ['id' => $model->getCreditinvoiceParentId()]));
             }
             return  new A()->content('')->href('');
         },
@@ -307,7 +307,7 @@ $columns = [
         property: 'filterClient',
         header: $translator->translate('client'),
         content: static fn (Inv $model):
-            string => Html::encode($model->getClient()?->getClient_full_name()),
+            string => Html::encode($model->getClient()?->getClientFullName()),
         encodeContent: false,
         filter: DropdownFilter::widget()
                 ->addAttributes([
@@ -324,7 +324,7 @@ $columns = [
         'date_created',
         header: $translator->translate('date.created'),
         content: static fn (Inv $model):
-            string => (!is_string($dateCreated = $model->getDate_created()) ?
+            string => (!is_string($dateCreated = $model->getDateCreated()) ?
                 $dateCreated->format('Y-m-d') : ''),
         withSorting: false,
     ),
@@ -335,9 +335,9 @@ $columns = [
             $now = new \DateTimeImmutable('now');
             return Html::tag('label')
                     ->attributes([
-                        'class' => $model->getDate_due() > $now ?
+                        'class' => $model->getDateDue() > $now ?
                             'label label-success' : 'label label-warning'])
-                    ->content(!is_string($dateDue = $model->getDate_due()) ?
+                    ->content(!is_string($dateDue = $model->getDateDue()) ?
                             $dateDue->format('Y-m-d') : '');
         },
         encodeContent: false,

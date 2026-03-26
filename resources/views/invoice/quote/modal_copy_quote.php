@@ -26,18 +26,18 @@ use Yiisoft\Html\Html;
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUser_id(); ?>">
+                    <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUserId(); ?>">
                     <div class="form-group">
                         <label for="create_quote_client_id"><?= $translator->translate('client'); ?></label>
                         <select name="create_quote_client_id" id="create_quote_client_id" class="form-control">
-                            <option value="<?= $quote->getClient()?->getClient_id(); ?>"><?= $quote->getClient()?->getClient_name() ?? '#'; ?></option>
+                            <option value="<?= $quote->getClient()?->getClientId(); ?>"><?= $quote->getClient()?->getClientName() ?? '#'; ?></option>
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\Client $client
                                      */
                                     foreach ($clients as $client) { ?>
-                                    <option value="<?= $client->getClient_id(); ?>">
-                                        <?= Html::encode($client->getClient_name()); ?>
+                                    <option value="<?= $client->getClientId(); ?>">
+                                        <?= Html::encode($client->getClientName()); ?>
                                     </option>
                                 <?php } ?>
                         </select>          

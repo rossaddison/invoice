@@ -55,8 +55,8 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Entity\Client $client
  */
 foreach ($clients as $client) {
-    if (null !== ($clientId = $client->getClient_id())) {
-        $optionsDataClient[$clientId] = $client->getClient_name() . ' ' . ($client->getClient_surname() ?? '#');
+    if (null !== ($clientId = $client->getClientId())) {
+        $optionsDataClient[$clientId] = $client->getClientName() . ' ' . ($client->getClientSurname() ?? '#');
     }
 }
 echo Field::select($form, 'client_id')
@@ -74,7 +74,7 @@ echo Field::select($form, 'client_id')
                     <?= Field::date($form, 'date_note')
     ->label($translator->translate('date'))
     ->required(true)
-    ->value(!is_string($dateNote = $form->getDate_note()) ? $dateNote->format('Y-m-d') : '')
+    ->value(!is_string($dateNote = $form->getDateNote()) ? $dateNote->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>

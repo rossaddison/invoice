@@ -143,11 +143,11 @@ final class ProductPropertyController extends BaseController
     ): Response {
         $productProperty = $this->productproperty($currentRoute, $productpropertyRepository);
         if ($productProperty) {
-            $form = new ProductPropertyForm($productProperty, (int) $productProperty->getProduct_id());
+            $form = new ProductPropertyForm($productProperty, (int) $productProperty->getProductId());
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'productproperty/edit',
-                'actionArguments' => ['id' => $productProperty->getProperty_id()],
+                'actionArguments' => ['id' => $productProperty->getPropertyId()],
                 'errors' => [],
                 'form' => $form,
                 'products' => $productRepository->findAllPreloaded(),
@@ -203,11 +203,11 @@ final class ProductPropertyController extends BaseController
     {
         $productProperty = $this->productproperty($currentRoute, $productpropertyRepository);
         if ($productProperty) {
-            $form = new ProductPropertyForm($productProperty, (int) $productProperty->getProduct_id());
+            $form = new ProductPropertyForm($productProperty, (int) $productProperty->getProductId());
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'productproperty/view',
-                'actionArguments' => ['id' => $productProperty->getProperty_id()],
+                'actionArguments' => ['id' => $productProperty->getPropertyId()],
                 'form' => $form,
                 'productproperty' => $productProperty,
             ];

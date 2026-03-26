@@ -46,13 +46,13 @@ final readonly class SalesOrderService
             (string) $array['client_id']
         );
         $model->setClient($client);
-        $model->setClient_id((int) $client->getClient_id());
+        $model->setClientId((int) $client->getClientId());
         $group = $this->groupRepository->repoGroupquery(
             (string) $array['group_id']
         );
         if ($group) {
             $model->setGroup($group);
-            $model->setGroup_id((int) $group->getId());
+            $model->setGroupId((int) $group->getId());
         }
         if (isset($array['user_id'])) {
             $user = $this->userRepository->findById(
@@ -60,7 +60,7 @@ final readonly class SalesOrderService
             );
             if ($user) {
                 $model->setUser($user);
-                $model->setUser_id((int) $user->getId());
+                $model->setUserId((int) $user->getId());
             }
         }
         if (isset($array['quote_id'])) {
@@ -69,7 +69,7 @@ final readonly class SalesOrderService
             );
             if ($quote) {
                 $model->setQuote($quote);
-                $model->setQuote_id((int) $quote->getId());
+                $model->setQuoteId((int) $quote->getId());
             }
         }
     }
@@ -89,28 +89,28 @@ final readonly class SalesOrderService
         $this->persist($model, $array);
         // Not every SalesOrder BelongsTo an Invoice. They can be rejected.
         isset($array['inv_id'])
-            ? $model->setInv_id((int) ($array['inv_id'] ?? null))
+            ? $model->setInvId((int) ($array['inv_id'] ?? null))
             : '';
         isset($array['client_po_number'])
-            ? $model->setClient_po_number(
+            ? $model->setClientPoNumber(
                 (string) $array['client_po_number']
             )
             : '';
         isset($array['client_po_person'])
-            ? $model->setClient_po_person(
+            ? $model->setClientPoPerson(
                 (string) $array['client_po_person']
             )
             : '';
         isset($array['status_id'])
-            ? $model->setStatus_id((int) $array['status_id'])
+            ? $model->setStatusId((int) $array['status_id'])
             : '';
         isset($array['discount_amount'])
-            ? $model->setDiscount_amount(
+            ? $model->setDiscountAmount(
                 (float) $array['discount_amount']
             )
             : '';
         isset($array['url_key'])
-            ? $model->setUrl_key((string) $array['url_key'])
+            ? $model->setUrlKey((string) $array['url_key'])
             : Random::string(32);
         isset($array['password'])
             ? $model->setPassword((string) $array['password'])
@@ -123,8 +123,8 @@ final readonly class SalesOrderService
             : '';
         $model->setNumber((string) $array['number']);
         if ($model->isNewRecord()) {
-            $model->setStatus_id(1);
-            $model->setDate_created(new \DateTimeImmutable('now'));
+            $model->setStatusId(1);
+            $model->setDateCreated(new \DateTimeImmutable('now'));
         }
         $this->repository->save($model);
         return $model;
@@ -134,33 +134,34 @@ final readonly class SalesOrderService
      * @param SalesOrder $model
      * @param array $array
      * @return SalesOrder
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function saveSo(
         SalesOrder $model,
         array $array
     ): SalesOrder {
         $this->persist($model, $array);
-        $model->setInv_id((int) $array['inv_id']);
+        $model->setInvId((int) $array['inv_id']);
         isset($array['client_po_number'])
-            ? $model->setClient_po_number(
+            ? $model->setClientPoNumber(
                 (string) $array['client_po_number']
             )
             : '';
         isset($array['client_po_person'])
-            ? $model->setClient_po_person(
+            ? $model->setClientPoPerson(
                 (string) $array['client_po_person']
             )
             : '';
         isset($array['status_id'])
-            ? $model->setStatus_id((int) $array['status_id'])
+            ? $model->setStatusId((int) $array['status_id'])
             : '';
         isset($array['discount_amount'])
-            ? $model->setDiscount_amount(
+            ? $model->setDiscountAmount(
                 (float) $array['discount_amount']
             )
             : '';
         isset($array['url_key'])
-            ? $model->setUrl_key((string) $array['url_key'])
+            ? $model->setUrlKey((string) $array['url_key'])
             : '';
         isset($array['password'])
             ? $model->setPassword((string) $array['password'])
@@ -183,7 +184,7 @@ final readonly class SalesOrderService
                 $date_created
             );
             if ($datetime !== false) {
-                $model->setDate_created($datetime);
+                $model->setDateCreated($datetime);
             }
         }
         

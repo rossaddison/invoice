@@ -8,7 +8,7 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Input;
 
 /**
- * Related logic: see InvController function email_stage_0
+ * Related logic: see InvController function emailStage0
  * @var App\Invoice\Inv\MailerInvForm $form
  * @var App\Invoice\Entity\Inv $invoice
  * @var App\Invoice\Entity\UserInv $userInv
@@ -150,7 +150,7 @@ echo Html::script($js5)->type('module');
         . ' #'
         . ($invoice->getNumber() ?? '#')
         . ' => '
-        . ($invoice->getClient()?->getClient_email() ?? '') ?>
+        . ($invoice->getClient()?->getClientEmail() ?? '') ?>
                     </h1>
                 </div>
                 <div class="card-body p-5 text-center">
@@ -197,7 +197,7 @@ echo Html::script($js5)->type('module');
 </div>
 <?= Html::tag('Label', $translator->translate('to.email')) ?>
 <?= Field::email($form, 'to_email')->addInputAttributes([
-    'value' => Html::encode($invoice->getClient()?->getClient_email())])
+    'value' => Html::encode($invoice->getClient()?->getClientEmail())])
                                    ->required(true)
                                    ->hideLabel() ?>
 
@@ -345,8 +345,8 @@ echo Html::script($js5)->type('module');
         ->readonly(true)
         ->addInputAttributes(['id' => 'invoice-guest-url','readonly' => 'true',
             'value' => $urlGenerator->generate(
-                'inv/url_key',
-                ['url_key' => $invoice->getUrl_key(),'gateway' => ''],
+                'inv/urlKey',
+                ['url_key' => $invoice->getUrlKey(),'gateway' => ''],
             ),'class' => 'form-control']);
 echo Html::tag(
     'Div',

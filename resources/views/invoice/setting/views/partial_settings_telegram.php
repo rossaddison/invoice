@@ -153,7 +153,7 @@ echo H::openTag('div', $row); //1
         echo 'which uses \'long polling\' by ';
         echo H::openTag('a', [
          'href' => $urlGenerator->generate(
-         'telegram/delete_webhook'
+         'telegram/deleteWebhook'
         )
          ]);
          echo 'clicking here ...';
@@ -166,7 +166,7 @@ echo H::openTag('div', $row); //1
         echo 'Use \'getUpdates\' now by ';
         echo H::openTag('a', [
          'href' => $urlGenerator->generate(
-         'telegram/get_updates'
+         'telegram/getUpdates'
         ),
          'target' => '_blank'
          ]);

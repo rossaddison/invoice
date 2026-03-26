@@ -59,7 +59,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::select($form, 'unit_id')
     ->label($translator->translate('id'))
     ->optionsData($optionsDataUnits)
-    ->value(Html::encode($form->getUnit_id() ?? ''))
+    ->value(Html::encode($form->getUnitId() ?? ''))
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -106,9 +106,8 @@ use Yiisoft\Html\Tag\Form;
                             <?php
         /**
          * @var string $key
-         * @var string $value
          */
-         foreach ($eneces as $key => $value) {
+         foreach (array_keys($eneces) as $key) {
              /**
               * @var array $eneces[$key]
               * @var string $eneces[$key]['Description']

@@ -113,9 +113,9 @@ $columns = [
         'status_id',
         header: $translator->translate('status'),
         content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
-            if (null !== $model->getStatus_id()) {
-                $span = $qR->getSpecificStatusArrayLabel((string) $model->getStatus_id());
-                $class = $qR->getSpecificStatusArrayClass((string) $model->getStatus_id());
+            if (null !== $model->getStatusId()) {
+                $span = $qR->getSpecificStatusArrayLabel((string) $model->getStatusId());
+                $class = $qR->getSpecificStatusArrayClass((string) $model->getStatusId());
                 return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'label ' . $class]);
             }
             return '';
@@ -136,22 +136,22 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('id'),
-        content: static fn (Quote $model): string => Html::encode($model->getClient()?->getClient_name() ?? ''),
+        content: static fn (Quote $model): string => Html::encode($model->getClient()?->getClientName() ?? ''),
     ),
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static fn (Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDateCreated())->format('Y-m-d'),
         withSorting: true,
     ),
     new DataColumn(
         'date_expires',
-        content: static fn (Quote $model): string => ($model->getDate_expires())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDateExpires())->format('Y-m-d'),
         withSorting: true,
     ),
     new DataColumn(
         'date_required',
-        content: static fn (Quote $model): string => ($model->getDate_required())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDateRequired())->format('Y-m-d'),
     ),
     new DataColumn(
         'id',
@@ -160,7 +160,7 @@ $columns = [
             $quote_id = $model->getId();
             if (null !== $quote_id) {
                 $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
-                return $s->format_currency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00);
+                return $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00);
             }
             return '';
         },

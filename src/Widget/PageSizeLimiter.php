@@ -28,12 +28,12 @@ final class PageSizeLimiter
         ->addClass('btn btn-success me-1')
         ->content($defaultListLimit)
         ->href(
-            $urlGenerator->generate('setting/tab_index', ['_language' => 'en'], ['active' => 'general'], 'settings[default_list_limit]'),
+            $urlGenerator->generate('setting/tabIndex', ['_language' => 'en'], ['active' => 'general'], 'settings[default_list_limit]'),
         )
         ->id('btn-submit-' . $defaultListLimit)
         ->render();
         if (null !== $setting) {
-            $setting_id = $setting->getSetting_id() ?? 0;
+            $setting_id = $setting->getSettingId() ?? 0;
             $limits_array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 75, 100, 150, 200, 250, 300];
             foreach ($limits_array as $value) {
                 $buttons .=  new A()

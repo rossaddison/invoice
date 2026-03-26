@@ -49,7 +49,7 @@ $optionsDataGenerators = [];
  * @var App\Invoice\Entity\Gentor $generator
  */
 foreach ($generators as $generator) {
-    $optionsDataGenerators[$generator->getGentor_id()] = $generator->getCamelcase_capital_name();
+    $optionsDataGenerators[$generator->getGentorId()] = $generator->getCamelcaseCapitalName();
 }
 
 echo Field::select($form, 'gentor_id')
@@ -75,7 +75,7 @@ echo Field::select($form, 'gentor_id')
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getLowercase_name()))
+    ->value(Html::encode($form->getLowercaseName()))
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -89,7 +89,7 @@ echo Field::select($form, 'gentor_id')
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getCamelcase_name()))
+    ->value(Html::encode($form->getCamelcaseName()))
 ?>
 <?= Html::closeTag('div'); ?>
 
@@ -103,7 +103,7 @@ echo Field::select($form, 'gentor_id')
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getView_field_name()))
+    ->value(Html::encode($form->getViewFieldName()))
 ?>
 <?= Html::closeTag('div'); ?>
 

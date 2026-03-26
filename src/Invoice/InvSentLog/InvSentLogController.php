@@ -253,7 +253,7 @@ final class InvSentLogController extends BaseController
      * @return bool
      */
     private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
-        $statusId = $inv->getStatus_id();
+        $statusId = $inv->getStatusId();
         if (null!==$statusId) {
             // has observer role
             if ($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -261,11 +261,11 @@ final class InvSentLogController extends BaseController
                 // the invoice  is not a draft i.e. has been sent
                 && !($statusId === 1)
                 // the invoice is intended for the current user        
-                && ($inv->getUser_id() === $this->userService->getUser()?->getId())
+                && ($inv->getUserId() === $this->userService->getUser()?->getId())
                 // the invoice client is associated with the above user
                 // the observer user may be paying for more than one client    
-                && ($ucR->repoUserClientqueryCount($inv->getUser_id(),
-                                                $inv->getClient_id()) > 0)) {
+                && ($ucR->repoUserClientqueryCount($inv->getUserId(),
+                                                $inv->getClientId()) > 0)) {
                 $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {
@@ -313,8 +313,8 @@ final class InvSentLogController extends BaseController
          */
         foreach ($invsentlogs as $invsentlog) {
             $clientFullName =
-                    $invsentlog->getInv()?->getClient()?->getClient_full_name();
-            $clientId = $invsentlog->getInv()?->getClient()?->getClient_id();
+                    $invsentlog->getInv()?->getClient()?->getClientFullName();
+            $clientId = $invsentlog->getInv()?->getClient()?->getClientId();
             if (null !== $clientFullName && null !== $clientId) {
                 if (!in_array($clientFullName, $optionsDataClients)) {
                     $optionsDataClients[$clientId] = $clientFullName;
@@ -371,8 +371,8 @@ final class InvSentLogController extends BaseController
          */
         foreach ($invsentlogs as $invSentLog) {
             $invClientFullName =
-                    $invSentLog->getInv()?->getClient()?->getClient_full_name();
-            $invClientId = $invSentLog->getInv()?->getClient()?->getClient_id();
+                    $invSentLog->getInv()?->getClient()?->getClientFullName();
+            $invClientId = $invSentLog->getInv()?->getClient()?->getClientId();
             $invUserId = $invSentLog->getInv()?->getUser()?->getId();
             if (null !== $invUserId && null !== $invClientId) {
                 if ((null !== $invClientFullName)

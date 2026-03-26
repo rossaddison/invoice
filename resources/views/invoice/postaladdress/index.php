@@ -48,10 +48,10 @@ $columns = [
         'client_id',
         header: $translator->translate('client.name'),
         content: static function (PostalAddress $model) use ($cR): string {
-            $clientName = ($cR->repoClientCount($model->getClient_id()) > 0 ?
+            $clientName = ($cR->repoClientCount($model->getClientId()) > 0 ?
                 Html::encode(
                     ($cR->repoClientquery(
-                            $model->getClient_id()))->getClient_name()) : '');
+                            $model->getClientId()))->getClientName()) : '');
             return $clientName;
         },
     ),
@@ -59,10 +59,10 @@ $columns = [
         'client_id',
         header: $translator->translate('client.surname'),
         content: static function (PostalAddress $model) use ($cR): string {
-            $clientId = $model->getClient_id();
+            $clientId = $model->getClientId();
             if ($clientId) {
                 $clientSurname = ($cR->repoClientCount($clientId) > 0 ?
-                    Html::encode(($cR->repoClientquery($clientId))->getClient_surname())
+                    Html::encode(($cR->repoClientquery($clientId))->getClientSurname())
                         : '');
                 return $clientSurname;
             }
@@ -74,13 +74,13 @@ $columns = [
         header: $translator->translate('active'),
         content: static function (PostalAddress $model)
             use ($cR, $urlGenerator): Yiisoft\Html\Tag\A|string {
-            $client = $cR->repoClientquery($model->getClient_id());
-            if (null !== $client->getPostaladdress_id()
-                    && $client->getPostaladdress_id() > 0) {
+            $client = $cR->repoClientquery($model->getClientId());
+            if (null !== $client->getPostaladdressId()
+                    && $client->getPostaladdressId() > 0) {
                 return 'Postal Address Used';
             } else {
                 return Html::a('No Postal address', $urlGenerator->generate('client/edit',
-                            ['id' => $model->getClient_id(), 'origin' => 'inv']));
+                            ['id' => $model->getClientId(), 'origin' => 'inv']));
             }
         },
     ),

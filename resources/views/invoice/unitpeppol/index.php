@@ -47,12 +47,12 @@ $columns = [
     new DataColumn(
         'unit_id',
         header: $translator->translate('unit.name'),
-        content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnitName()),
     ),
     new DataColumn(
         'unit_id',
         header: $translator->translate('unit.name.plrl'),
-        content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnit_name_plrl()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->getUnit()?->getUnitNamePlrl()),
     ),
     new DataColumn(
         'code',

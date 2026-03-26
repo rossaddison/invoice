@@ -53,9 +53,9 @@ final readonly class QuoteCustomService
         $this->persist($array, $model);
 
         isset($array['quote_id']) ?
-            $model->setQuote_id((int) $array['quote_id']) : '';
+            $model->setQuoteId((int) $array['quote_id']) : '';
         isset($array['custom_field_id']) ?
-            $model->setCustom_field_id(
+            $model->setCustomFieldId(
                 (int) $array['custom_field_id']
             ) : '';
         isset($array['value']) ?

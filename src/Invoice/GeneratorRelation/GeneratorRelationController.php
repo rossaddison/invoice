@@ -109,7 +109,7 @@ final class GeneratorRelationController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'generatorrelation/edit',
-                'actionArguments' => ['id' => $generatorrelation->getRelation_id()],
+                'actionArguments' => ['id' => $generatorrelation->getRelationId()],
                 'errors' => [],
                 'form' => $form,
                 //relation generator
@@ -163,12 +163,12 @@ final class GeneratorRelationController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'generatorrelation/view',
-                'actionArguments' => ['id' => $generatorrelation->getRelation_id()],
+                'actionArguments' => ['id' => $generatorrelation->getRelationId()],
                 'errors' => [],
                 'form' => $form,
                 'generatorrelation' => $generatorrelation,
                 'generators' => $generatorRepository->findAllPreloaded(),
-                'egrs' => $generatorrelationRepository->repoGeneratorRelationquery($generatorrelation->getRelation_id()),
+                'egrs' => $generatorrelationRepository->repoGeneratorRelationquery($generatorrelation->getRelationId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
@@ -178,6 +178,7 @@ final class GeneratorRelationController extends BaseController
     /**
      * @return Response|true
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);

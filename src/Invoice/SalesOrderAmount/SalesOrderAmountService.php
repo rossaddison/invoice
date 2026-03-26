@@ -29,8 +29,8 @@ final readonly class SalesOrderAmountService
             (string) $array['sales_order_id']
         );
         if ($sales_order) {
-            $model->setSales_order($sales_order);
-            $model->setSales_order_id((int) $sales_order->getId());
+            $model->setSalesOrder($sales_order);
+            $model->setSalesOrderId((int) $sales_order->getId());
         }
     }
 
@@ -42,12 +42,12 @@ final readonly class SalesOrderAmountService
         SoAmount $model,
         int $sales_order_id
     ): void {
-        $model->setSales_order_id($sales_order_id);
-        $model->setItem_subtotal(0.00);
-        $model->setItem_tax_total(0.00);
-        $model->setPackhandleship_total(0.00);
-        $model->setPackhandleship_tax(0.00);
-        $model->setTax_total(0.00);
+        $model->setSalesOrderId($sales_order_id);
+        $model->setItemSubtotal(0.00);
+        $model->setItemTaxTotal(0.00);
+        $model->setPackhandleshipTotal(0.00);
+        $model->setPackhandleshipTax(0.00);
+        $model->setTaxTotal(0.00);
         $model->setTotal(0.00);
         $this->repository->save($model);
     }
@@ -68,15 +68,15 @@ final readonly class SalesOrderAmountService
          * @var float $array['total']
          */
         $this->persist($model, $array);
-        $model->setItem_subtotal($array['item_subtotal']);
-        $model->setItem_tax_total($array['item_taxtotal']);
-        $model->setPackhandleship_total(
+        $model->setItemSubtotal($array['item_subtotal']);
+        $model->setItemTaxTotal($array['item_taxtotal']);
+        $model->setPackhandleshipTotal(
             (float) $array['packhandleship_total']
         );
-        $model->setPackhandleship_tax(
+        $model->setPackhandleshipTax(
             (float) $array['packhandleship_tax']
         );
-        $model->setTax_total($array['tax_total']);
+        $model->setTaxTotal($array['tax_total']);
         $model->setTotal($array['total']);
         $this->repository->save($model);
     }
@@ -89,21 +89,21 @@ final readonly class SalesOrderAmountService
         SoAmount $model,
         SalesOrderAmountForm $form
     ): void {
-        null !== $form->getSales_order_id() ?
-            $model->setSales_order_id($form->getSales_order_id()) : '';
-        $model->setItem_subtotal(
-            $form->getItem_subtotal() ?? 0.00
+        null !== $form->getSalesOrderId() ?
+            $model->setSalesOrderId($form->getSalesOrderId()) : '';
+        $model->setItemSubtotal(
+            $form->getItemSubtotal() ?? 0.00
         );
-        $model->setItem_tax_total(
-            $form->getItem_tax_total() ?? 0.00
+        $model->setItemTaxTotal(
+            $form->getItemTaxTotal() ?? 0.00
         );
-        $model->setPackhandleship_total(
-            (float) $form->getPackhandleship_total()
+        $model->setPackhandleshipTotal(
+            (float) $form->getPackhandleshipTotal()
         );
-        $model->setPackhandleship_tax(
-            (float) $form->getPackhandleship_tax()
+        $model->setPackhandleshipTax(
+            (float) $form->getPackhandleshipTax()
         );
-        $model->setTax_total($form->getTax_total() ?? 0.00);
+        $model->setTaxTotal($form->getTaxTotal() ?? 0.00);
         $model->setTotal($form->getTotal() ?? 0.00);
         $this->repository->save($model);
     }
@@ -132,7 +132,7 @@ final readonly class SalesOrderAmountService
             (string) $sales_order_id
         );
         if (null !== $model) {
-            $salesorder = $model->getSales_order();
+            $salesorder = $model->getSalesOrder();
             if (null !== $salesorder) {
                 /**
                  * Related logic: see Entity\SalesOrder
@@ -158,24 +158,24 @@ final readonly class SalesOrderAmountService
                             $salesorderItemAmount->getSubtotal()
                             ?? 0.00;
                         $taxTotal +=
-                            $salesorderItemAmount->getTax_total()
+                            $salesorderItemAmount->getTaxTotal()
                             ?? 0.00;
                     }
                 }
 
-                $model->setItem_subtotal($subtotal);
-                $model->setItem_tax_total($taxTotal);
-                $model->setPackhandleship_total(
+                $model->setItemSubtotal($subtotal);
+                $model->setItemTaxTotal($taxTotal);
+                $model->setPackhandleshipTotal(
                     $packHandleShipTotal
                 );
-                $model->setPackhandleship_tax($packHandleShipTax);
+                $model->setPackhandleshipTax($packHandleShipTax);
                 $additionalTaxTotal =
-                    $numberHelper->calculate_salesorder_taxes(
+                    $numberHelper->calculateSalesorderTaxes(
                         (string) $sales_order_id,
                         $sotrR,
                         $soaR
                     );
-                $model->setTax_total($additionalTaxTotal);
+                $model->setTaxTotal($additionalTaxTotal);
                 $model->setTotal(
                     $subtotal + $taxTotal + $additionalTaxTotal
                 );

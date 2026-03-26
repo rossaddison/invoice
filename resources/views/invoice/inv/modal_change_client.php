@@ -32,8 +32,8 @@ declare(strict_types=1);
                                      * @var App\Invoice\Entity\Client $client
                                      */
                                     foreach ($clients as $client) { ?>
-                                    <option value="<?= $client->getClient_id(); ?>">
-                                        <?= $client->getClient_name() ?: '#'; ?>
+                                    <option value="<?= $client->getClientId(); ?>">
+                                        <?= $client->getClientName() ?: '#'; ?>
                                     </option>
                                 <?php } ?>
                         </select>

@@ -34,52 +34,52 @@ class PostalAddress
         $this->id = $id;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
 
-    public function getStreet_name(): string
+    public function getStreetName(): string
     {
         return $this->street_name;
     }
 
-    public function setStreet_name(string $street_name): void
+    public function setStreetName(string $street_name): void
     {
         $this->street_name = $street_name;
     }
 
-    public function getAdditional_street_name(): string
+    public function getAdditionalStreetName(): string
     {
         return $this->additional_street_name;
     }
 
-    public function setAdditional_street_name(string $additional_street_name): void
+    public function setAdditionalStreetName(string $additional_street_name): void
     {
         $this->additional_street_name = $additional_street_name;
     }
 
-    public function getBuilding_number(): string
+    public function getBuildingNumber(): string
     {
         return $this->building_number;
     }
 
-    public function setBuilding_number(string $building_number): void
+    public function setBuildingNumber(string $building_number): void
     {
         $this->building_number = $building_number;
     }
 
-    public function getCity_name(): string
+    public function getCityName(): string
     {
         return $this->city_name;
     }
 
-    public function setCity_name(string $city_name): void
+    public function setCityName(string $city_name): void
     {
         $this->city_name = $city_name;
     }
@@ -116,6 +116,11 @@ class PostalAddress
 
     public function getFullAddress(): string
     {
-        return $this->street_name . ' ' . $this->building_number . ', ' . $this->additional_street_name . ', ' . $this->postalzone;
+        return $this->street_name
+                . ' '
+                . $this->building_number
+                . ', '
+                . $this->additional_street_name
+                . ', ' . $this->postalzone;
     }
 }

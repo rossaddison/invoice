@@ -70,12 +70,12 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('client'),
-        content: static fn (InvSentLog $model): string => Html::encode($model->getClient()?->getClient_full_name() ?? ''),
+        content: static fn (InvSentLog $model): string => Html::encode($model->getClient()?->getClientFullName() ?? ''),
     ),
     new DataColumn(
         'date_sent',
         header: $translator->translate('email.date'),
-        content: static fn (InvSentLog $model): string => ($model->getDate_sent())->format('l, d-M-Y H:i:s T'),
+        content: static fn (InvSentLog $model): string => ($model->getDateSent())->format('l, d-M-Y H:i:s T'),
     ),
 ];
 

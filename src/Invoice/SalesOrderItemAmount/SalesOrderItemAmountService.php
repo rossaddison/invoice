@@ -24,7 +24,7 @@ final readonly class SalesOrderItemAmountService
         );
         if ($sales_order_item) {
             $model->setSalesOrderItem($sales_order_item);
-            $model->setSales_order_item_id(
+            $model->setSalesOrderItemId(
                 (int) $sales_order_item->getId()
             );
         }
@@ -43,7 +43,7 @@ final readonly class SalesOrderItemAmountService
         $model->setCharge((float) $soitem['charge']);
         $model->setAllowance((float) $soitem['allowance']);
         $model->setSubtotal((float) $soitem['subtotal']);
-        $model->setTax_total((float) $soitem['taxtotal']);
+        $model->setTaxTotal((float) $soitem['taxtotal']);
         $model->setDiscount((float) $soitem['discount']);
         $model->setTotal((float) $soitem['total']);
         $this->repository->save($model);

@@ -18,10 +18,10 @@ final readonly class GeneratorRelationService
      */
     public function saveGeneratorRelation(GentorRelation $model, array $array): void
     {
-        isset($array['lowercasename']) ? $model->setLowercase_name((string) $array['lowercasename']) : '';
-        isset($array['camelcasename']) ? $model->setCamelcase_name((string) $array['camelcasename']) : '';
-        isset($array['view_field_name']) ? $model->setView_field_name((string) $array['view_field_name']) : '';
-        isset($array['gentor_id']) ? $model->setGentor_id((int) $array['gentor_id']) : '';
+        isset($array['lowercasename']) ? $model->setLowercaseName((string) $array['lowercasename']) : '';
+        isset($array['camelcasename']) ? $model->setCamelcaseName((string) $array['camelcasename']) : '';
+        isset($array['view_field_name']) ? $model->setViewFieldName((string) $array['view_field_name']) : '';
+        isset($array['gentor_id']) ? $model->setGentorId((int) $array['gentor_id']) : '';
         $this->repository->save($model);
     }
 

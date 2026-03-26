@@ -43,14 +43,14 @@ $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn (Client $model) => (string) $model->getClient_id(),
+        content: static fn (Client $model) => (string) $model->getClientId(),
         withSorting: true,
     ),
     new DataColumn(
         'client_active',
         header: $translator->translate('active'),
         content: static function (Client $model) use ($button, $translator): Span {
-            return $model->getClient_active() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
+            return $model->getClientActive() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
         },
         encodeContent: false,
     ),
@@ -58,7 +58,7 @@ $columns = [
         'client_email',
         header: $translator->translate('email'),
         content: static function (Client $model): string {
-            return $model->getClient_email() ?: '';
+            return $model->getClientEmail() ?: '';
         },
         encodeContent: true,
         withSorting: false,
@@ -67,7 +67,7 @@ $columns = [
         'client_mobile',
         header: $translator->translate('mobile.number'),
         content: static function (Client $model): string {
-            return $model->getClient_mobile() ?? '';
+            return $model->getClientMobile() ?? '';
         },
         encodeContent: true,
         withSorting: true,
@@ -77,8 +77,8 @@ $columns = [
         header: $translator->translate('client.name'),
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
-                    ->content(Html::encode($model->getClient_name()))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
+                    ->content(Html::encode($model->getClientName()))
+                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClientId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -89,8 +89,8 @@ $columns = [
         header: $translator->translate('client.surname'),
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
-                    ->content(Html::encode($model->getClient_surname() ?? ''))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClient_id()]))
+                    ->content(Html::encode($model->getClientSurname() ?? ''))
+                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClientId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -100,7 +100,7 @@ $columns = [
         'client_phone',
         header: $translator->translate('phone'),
         content: static function (Client $model): string {
-            return $model->getClient_phone() ?? '';
+            return $model->getClientPhone() ?? '';
         },
         encodeContent: true,
         withSorting: true,
@@ -108,7 +108,7 @@ $columns = [
     new DataColumn(
         'invs',
         content: static function (Client $model) use ($iR, $iaR): int {
-            if (null !== ($clientId = $model->getClient_id())) {
+            if (null !== ($clientId = $model->getClientId())) {
                 $invoices = $iR->findAllWithClient($clientId);
                 /**
                  *  Initialize the ArrayCollection
@@ -139,7 +139,7 @@ $columns = [
     new DataColumn(
         'invs',
         content: static function (Client $model) use ($iR, $iaR, $urlGenerator, $gridComponents): string {
-            if (null !== ($clientId = $model->getClient_id())) {
+            if (null !== ($clientId = $model->getClientId())) {
                 $invoices = $iR->findAllWithClient($clientId);
                 // Initialize a new empty ArrayCollection without the need to create a new entity
                 $model->setInvs();
@@ -170,8 +170,8 @@ $columns = [
         'client_id',
         header: $translator->translate('balance') . ' (' . $s->getSetting('currency_symbol') . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
-            if (null !== ($clientId = $model->getClient_id())) {
-                return Html::encode($s->format_currency($iR->with_total_balance($clientId, $iaR)));
+            if (null !== ($clientId = $model->getClientId())) {
+                return Html::encode($s->formatCurrency($iR->withTotalBalance($clientId, $iaR)));
             } else {
                 return '';
             }

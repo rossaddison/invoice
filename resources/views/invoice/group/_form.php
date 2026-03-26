@@ -62,7 +62,7 @@ use Yiisoft\Html\Tag\Form;
                     'id' => 'identifier_format',
                     'name' => 'identifier_format',
                 ])
-                ->value(Html::encode($form->getIdentifier_format()))
+                ->value(Html::encode($form->getIdentifierFormat()))
                 ->placeholder('INV-{{{id}}}')
                 ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Field::text($form, 'left_pad')
@@ -70,7 +70,7 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control',
                 ])
-                ->value(Html::encode($form->getLeft_pad()) ?: '0')
+                ->value(Html::encode($form->getLeftPad()) ?: '0')
                 ->placeholder('0')
                 ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
@@ -79,7 +79,7 @@ use Yiisoft\Html\Tag\Form;
                 ->addInputAttributes([
                     'class' => 'form-control',
                 ])
-                ->value(Html::encode($form->getNext_id()) ?: '1')
+                ->value(Html::encode($form->getNextId()) ?: '1')
                 ->placeholder('1')
                 ->hint($translator->translate('hint.this.field.is.required')); ?>    
             <?= Html::tag('br'); ?>

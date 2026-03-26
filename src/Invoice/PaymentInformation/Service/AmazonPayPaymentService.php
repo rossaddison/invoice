@@ -93,8 +93,8 @@ class AmazonPayPaymentService
                 ];
             }
 
-            $invoice->setPayment_method(4); // 4 = Card/Direct Debit
-            $invoice->setStatus_id(4);      // 4 = Paid
+            $invoice->setPaymentMethod(4); // 4 = Card/Direct Debit
+            $invoice->setStatusId(4);      // 4 = Paid
             $invoiceRepository->save($invoice);
 
             $invoiceAmountRecord =
@@ -127,7 +127,7 @@ class AmazonPayPaymentService
 
     public function checkPrivatePemFile(): ?array
     {
-        $aliases = $this->sR->get_amazon_pem_file_folder_aliases();
+        $aliases = $this->sR->getAmazonPemFileFolderAliases();
         if (!file_exists($aliases->get('@pem_file_unique_folder') . '/private.pem')) {
             return [
                 'heading' => '',
@@ -136,7 +136,7 @@ class AmazonPayPaymentService
                 . ' private.pem (Amazon Pay: 29 May 2025) Download at:'
                 . 'https://sellercentral-europe.amazon.com/gp/pyop/seller/'
                 . 'integrationcentral?ref=py_intcentr_confcard_sboxhome_GB',
-                'url' => 'inv/url_key',
+                'url' => 'inv/urlKey',
                 'url_key' => '', // Set dynamically in controller
                 'gateway' => 'Amazon_Pay',
             ];
@@ -156,8 +156,8 @@ class AmazonPayPaymentService
     public function getButtonData(Inv $invoice, string $url_key, float $amount): array
     {
         // Get client language and determine Amazon language code
-        $client_language = $invoice->getClient()?->getClient_language() ?? '';
-        $amazon_languages = $this->sR->amazon_languages();
+        $client_language = $invoice->getClient()?->getClientLanguage() ?? '';
+        $amazon_languages = $this->sR->amazonLanguages();
         $checkoutLanguage = 'en_GB';
         if ($client_language && isset($amazon_languages[$client_language])) {
             $checkoutLanguage = $amazon_languages[$client_language];
@@ -249,7 +249,7 @@ class AmazonPayPaymentService
 
     private function getAmazonPrivateKeyFile(): string
     {
-        $aliases = $this->sR->get_amazon_pem_file_folder_aliases();
+        $aliases = $this->sR->getAmazonPemFileFolderAliases();
         $targetPath = $aliases->get('@pem_file_unique_folder');
         $original_file_name = 'private.pem';
         return $targetPath . '/' . $original_file_name;
@@ -257,7 +257,7 @@ class AmazonPayPaymentService
 
     private function getAmazonRegion(): string
     {
-        $regions = $this->sR->amazon_regions();
+        $regions = $this->sR->amazonRegions();
         $region = $this->sR->getSetting('gateway_amazon_pay_region');
         return (string) $regions[$region] ?: 'eu';
     }

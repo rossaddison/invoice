@@ -21,14 +21,14 @@ final readonly class CategorySecondaryService
     ): void {
         $this->persist($model, $array);
         isset($array['category_primary_id']) ?
-            $model->setCategory_primary_id(
+            $model->setCategoryPrimaryId(
                 (int) $array['category_primary_id']) : '';
         isset($array['name']) ?
             $model->setName((string) $array['name']) : '';
         $this->repository->save($model);
     }
     
-    private function persist(CS $model, array $array): CS
+    private function persist(CS $model, array $array): void
     {
         $cp = 'category_primary_id';
         if (isset($array[$cp])) {
@@ -36,7 +36,6 @@ final readonly class CategorySecondaryService
                 $this->cpR->repoCategoryPrimaryQuery(
                     (string) $array[$cp]));
         }
-        return $model;
     }
 
     public function deleteCategorySecondary(CS $model): void

@@ -47,12 +47,12 @@ class FromDropDown
         $this->include = $include;
     }
 
-    public function getDefault_email(): bool
+    public function getDefaultEmail(): bool
     {
         return $this->default_email;
     }
 
-    public function setDefault_email(bool $default_email): void
+    public function setDefaultEmail(bool $default_email): void
     {
         $this->default_email = $default_email;
     }

@@ -104,9 +104,9 @@ if ($openInvsCount > 0) {
             $optionsDataInvId[(int) $inv->getId()]
                = ($inv->getNumber() ?? $translator->translate('number.no'))
                . ' - '
-               . ($clientHelper->format_client($cR->repoClientquery($inv->getClient_id())))
+               . ($clientHelper->formatClient($cR->repoClientquery($inv->getClientId())))
                . ' - '
-               . ($numberHelper->format_currency($invAmount->getBalance()));
+               . ($numberHelper->formatCurrency($invAmount->getBalance()));
         }
     }
 } else {
@@ -125,7 +125,7 @@ if ($openInvsCount > 0) {
                     <?= Field::date($form, 'payment_date')
     ->label($translator->translate('date'))
     ->required(true)
-    ->value($form->getPayment_date() instanceof DateTimeImmutable ? $form->getPayment_date()->format('Y-m-d') : '')
+    ->value($form->getPaymentDate() instanceof DateTimeImmutable ? $form->getPaymentDate()->format('Y-m-d') : '')
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
@@ -156,7 +156,7 @@ if ($openInvsCount > 0) {
  * @var App\Invoice\Entity\CustomField $customField
  */
 foreach ($customFields as $customField): ?>  
-                        <?php $cvH->print_field_for_form($customField, $paymentCustomForm, $translator, $urlGenerator, $paymentCustomValues, $customValues); ?>
+                        <?php $cvH->printFieldForForm($customField, $paymentCustomForm, $translator, $urlGenerator, $paymentCustomValues, $customValues); ?>
                 <?php endforeach; ?>
             <?= Html::closeTag('div'); ?>    
         <?= Html::closeTag('div'); ?>

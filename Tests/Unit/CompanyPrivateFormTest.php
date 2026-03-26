@@ -247,16 +247,16 @@ final class CompanyPrivateFormTest extends TestCase
         $form = new CompanyPrivateForm($this->companyPrivate);
         
         $this->assertEquals(1, $form->getId());
-        $this->assertEquals(1, $form->getCompany_id());
-        $this->assertEquals('GB123456789', $form->getVat_id());
-        $this->assertEquals('TC12345', $form->getTax_code());
+        $this->assertEquals(1, $form->getCompanyId());
+        $this->assertEquals('GB123456789', $form->getVatId());
+        $this->assertEquals('TC12345', $form->getTaxCode());
         $this->assertEquals('GB82WEST12345698765432', $form->getIban());
         $this->assertEquals($this->gln, $form->getGln());
         $this->assertEquals('RCC001', $form->getRcc());
-        $this->assertEquals('company_logo.png', $form->getLogo_filename());
-        $this->assertEquals('200', $form->getLogo_width());
-        $this->assertEquals('100', $form->getLogo_height());
-        $this->assertEquals('10', $form->getLogo_margin());
+        $this->assertEquals('company_logo.png', $form->getLogoFilename());
+        $this->assertEquals('200', $form->getLogoWidth());
+        $this->assertEquals('100', $form->getLogoHeight());
+        $this->assertEquals('10', $form->getLogoMargin());
     }
 
     /**
@@ -296,19 +296,19 @@ final class CompanyPrivateFormTest extends TestCase
         $company->method('getName')->willReturn('Test Company');
         
         $companyPrivate->method('getId')->willReturn(1);
-        $companyPrivate->method('getCompany_id')->willReturn('1');
+        $companyPrivate->method('getCompanyId')->willReturn('1');
         $companyPrivate->method('getCompany')->willReturn($company);
-        $companyPrivate->method('getVat_id')->willReturn('GB123456789');
-        $companyPrivate->method('getTax_code')->willReturn('TC12345');
+        $companyPrivate->method('getVatId')->willReturn('GB123456789');
+        $companyPrivate->method('getTaxCode')->willReturn('TC12345');
         $companyPrivate->method('getIban')->willReturn('GB82WEST12345698765432');
         $companyPrivate->method('getGln')->willReturn('1234567890123');
         $companyPrivate->method('getRcc')->willReturn('RCC001');
-        $companyPrivate->method('getLogo_filename')->willReturn('company_logo.png');
-        $companyPrivate->method('getLogo_width')->willReturn(200);
-        $companyPrivate->method('getLogo_height')->willReturn(100);
-        $companyPrivate->method('getLogo_margin')->willReturn(10);
-        $companyPrivate->method('getStart_date')->willReturn($now);
-        $companyPrivate->method('getEnd_date')->willReturn($now);
+        $companyPrivate->method('getLogoFilename')->willReturn('company_logo.png');
+        $companyPrivate->method('getLogoWidth')->willReturn(200);
+        $companyPrivate->method('getLogoHeight')->willReturn(100);
+        $companyPrivate->method('getLogoMargin')->willReturn(10);
+        $companyPrivate->method('getStartDate')->willReturn($now);
+        $companyPrivate->method('getEndDate')->willReturn($now);
         
         return $companyPrivate;
     }

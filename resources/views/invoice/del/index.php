@@ -58,8 +58,8 @@ $columns = [
         'client_id',
         header: $translator->translate('client'),
         content: static function (DeliveryLocation $model) use ($cR): string {
-            if ($cR->repoClientCount($model->getClient_id()) > 0) {
-                return $cR->repoClientquery($model->getClient_id())->getClient_name();
+            if ($cR->repoClientCount($model->getClientId()) > 0) {
+                return $cR->repoClientquery($model->getClientId())->getClientName();
             }
             return '#';
         },
@@ -81,7 +81,7 @@ $columns = [
                         $button = (string) Html::a(
                             ($quote->getNumber() ?? '#') .
                                    ' ' .
-                                   ($quote->getDate_created())->format('Y-m-d'),
+                                   ($quote->getDateCreated())->format('Y-m-d'),
                             $urlGenerator->generate('quote/view', ['id' => $quoteId]),
                             ['class' => 'btn btn-primary btn-sm',
                                 'data-bs-toggle' => 'tooltip',
@@ -115,7 +115,7 @@ $columns = [
                         $button = (string) Html::a(
                             ($invoice->getNumber() ?? '#') .
                                 ' ' .
-                                ($invoice->getDate_created())->format(
+                                ($invoice->getDateCreated())->format(
                                     'Y-m-d',
                                 ),
                             $urlGenerator->generate(
@@ -141,14 +141,14 @@ $columns = [
         'global_location_number',
         header: $translator->translate('delivery.location.global.location.number'),
         content: static function (DeliveryLocation $model): string {
-            return $model->getGlobal_location_number() ?? '';
+            return $model->getGlobalLocationNumber() ?? '';
         },
         encodeContent: true,
     ),
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static fn(DeliveryLocation $model): string => ($model->getDate_created())->format(
+        content: static fn(DeliveryLocation $model): string => ($model->getDateCreated())->format(
             'Y-m-d',
         ),
     ),

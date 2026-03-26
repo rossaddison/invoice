@@ -58,12 +58,12 @@ class Delivery
         return $this->id;
     }
 
-    public function getDelivery_location(): ?DeliveryLocation
+    public function getDeliveryLocation(): ?DeliveryLocation
     {
         return $this->delivery_location;
     }
 
-    public function setDelivery_location(
+    public function setDeliveryLocation(
         ?DeliveryLocation $delivery_location
     ): void {
         $this->delivery_location = $delivery_location;
@@ -74,97 +74,97 @@ class Delivery
         $this->id = $id;
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }
 
-    public function setInv_id(int $inv_id): void
+    public function setInvId(int $inv_id): void
     {
         $this->inv_id = $inv_id;
     }
 
-    public function getInv_item_id(): ?int
+    public function getInvItemId(): ?int
     {
         return $this->inv_item_id;
     }
 
-    public function setInv_item_id(int $inv_item_id): void
+    public function setInvItemId(int $inv_item_id): void
     {
         $this->inv_item_id = $inv_item_id;
     }
 
-    public function getStart_date(): ?DateTimeImmutable
+    public function getStartDate(): ?DateTimeImmutable
     {
         /** @var DateTimeImmutable|null $this->start_date */
         return $this->start_date;
     }
 
-    public function setStart_date(DateTimeImmutable $start_date): void
+    public function setStartDate(DateTimeImmutable $start_date): void
     {
         $this->start_date = $start_date;
     }
 
-    public function getActual_delivery_date(): ?DateTimeImmutable
+    public function getActualDeliveryDate(): ?DateTimeImmutable
     {
         /** @var DateTimeImmutable|null $this->actual_delivey_date */
         return $this->actual_delivery_date;
     }
 
-    public function setActual_delivery_date(?DateTimeImmutable $actual_delivery_date): void
+    public function setActualDeliveryDate(?DateTimeImmutable $actual_delivery_date): void
     {
         $this->actual_delivery_date = $actual_delivery_date;
     }
 
-    public function getEnd_date(): ?DateTimeImmutable
+    public function getEndDate(): ?DateTimeImmutable
     {
         /** @var DateTimeImmutable|null $this->end_date */
         return $this->end_date;
     }
 
-    public function setEnd_date(DateTimeImmutable $end_date): void
+    public function setEndDate(DateTimeImmutable $end_date): void
     {
         $this->end_date = $end_date;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->date_created */
         return $this->date_created;
     }
 
-    public function setDate_created(DateTimeImmutable $date_created): void
+    public function setDateCreated(DateTimeImmutable $date_created): void
     {
         $this->date_created = $date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->date_modified */
         return $this->date_modified;
     }
 
-    public function setDate_modified(DateTimeImmutable $date_modified): void
+    public function setDateModified(DateTimeImmutable $date_modified): void
     {
         $this->date_modified = $date_modified;
     }
 
-    public function getDelivery_location_id(): string
+    public function getDeliveryLocationId(): string
     {
         return (string) $this->delivery_location_id;
     }
 
-    public function setDelivery_location_id(int $delivery_location_id): void
+    public function setDeliveryLocationId(int $delivery_location_id): void
     {
         $this->delivery_location_id = $delivery_location_id;
     }
 
-    public function getDelivery_party_id(): string
+    public function getDeliveryPartyId(): string
     {
         return (string) $this->delivery_party_id;
     }
 
-    public function setDelivery_party_id(int $delivery_party_id): void
+    public function setDeliveryPartyId(int $delivery_party_id): void
     {
         $this->delivery_party_id = $delivery_party_id;
     }

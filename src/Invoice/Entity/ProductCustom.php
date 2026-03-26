@@ -59,22 +59,22 @@ class ProductCustom
         $this->id = $id;
     }
 
-    public function getProduct_id(): string
+    public function getProductId(): string
     {
         return (string) $this->product_id;
     }
 
-    public function setProduct_id(int $product_id): void
+    public function setProductId(int $product_id): void
     {
         $this->product_id = $product_id;
     }
 
-    public function getCustom_field_id(): string
+    public function getCustomFieldId(): string
     {
         return (string) $this->custom_field_id;
     }
 
-    public function setCustom_field_id(int $custom_field_id): void
+    public function setCustomFieldId(int $custom_field_id): void
     {
         $this->custom_field_id = $custom_field_id;
     }

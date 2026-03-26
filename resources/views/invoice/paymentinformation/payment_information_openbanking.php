@@ -38,9 +38,9 @@ use Yiisoft\Router\FastRoute\UrlGenerator;
 
 $clientName = '';
 if (is_object($client_on_invoice)
-        && method_exists($client_on_invoice, 'getClient_name')) {
+        && method_exists($client_on_invoice, 'getClientName')) {
     /** @var string|null $maybeName */
-    $maybeName = $client_on_invoice->getClient_name();
+    $maybeName = $client_on_invoice->getClientName();
     if (is_string($maybeName)) {
         $clientName = $maybeName;
     }
@@ -81,7 +81,7 @@ echo H::openTag('div', ['class' => 'container py-4']);
       echo H::openTag('span',
               ['class' => 'text-success fw-bold display-6',
                   'style' => 'letter-spacing:1px;']);
-       echo H::encode($s->format_currency($balance));
+       echo H::encode($s->formatCurrency($balance));
       echo H::closeTag('span');
      echo H::closeTag('p');
     echo H::closeTag('div');

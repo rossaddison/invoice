@@ -115,7 +115,7 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     // find all inv tax rates used for a specific inv normally to apply include_item_tax
-    // (see function calculate_inv_taxes in NumberHelper
+    // (see function calculateInvTaxes in NumberHelper
     // load 'tax rate' so that we can use tax_rate_id through the BelongTo relation in the Entity
     // to access the parent tax rate table's percent name and percentage
     // which we will use in inv/view

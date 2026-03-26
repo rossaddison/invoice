@@ -126,63 +126,63 @@ class InvItem
         $this->inv = $inv;
     }
 
-    public function getInv_id(): string
+    public function getInvId(): string
     {
         return (string) $this->inv_id;
     }
 
-    public function setInv_id(int $inv_id): void
+    public function setInvId(int $inv_id): void
     {
         $this->inv_id = $inv_id;
     }
 
-    public function getSo_item_id(): string
+    public function getSoItemId(): string
     {
         return (string) $this->so_item_id;
     }
 
-    public function setSo_item_id(int $so_item_id): void
+    public function setSoItemId(int $so_item_id): void
     {
         $this->so_item_id = $so_item_id;
     }
 
-    public function getTax_rate_id(): string
+    public function getTaxRateId(): string
     {
         return (string) $this->tax_rate_id;
     }
 
-    public function setTax_rate_id(int $tax_rate_id): void
+    public function setTaxRateId(int $tax_rate_id): void
     {
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getDate_added(): DateTimeImmutable
+    public function getDateAdded(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->date_added */
         return $this->date_added;
     }
 
-    public function setDate_added(DateTime $date_added): void
+    public function setDateAdded(DateTime $date_added): void
     {
         $this->date_added = $date_added;
     }
 
-    public function getProduct_id(): ?string
+    public function getProductId(): ?string
     {
         return null !== $this->product_id ? (string) $this->product_id : null;
     }
 
-    public function setProduct_id(int $product_id): void
+    public function setProductId(int $product_id): void
     {
         $this->product_id = $product_id;
     }
 
-    public function getTask_id(): ?string
+    public function getTaskId(): ?string
     {
         return null !== $this->task_id ? (string) $this->task_id : null;
     }
 
-    public function setTask_id(int $task_id): void
+    public function setTaskId(int $task_id): void
     {
         $this->task_id = $task_id;
     }
@@ -227,12 +227,12 @@ class InvItem
         $this->price = $price;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function setDiscount_amount(float $discount_amount): void
+    public function setDiscountAmount(float $discount_amount): void
     {
         $this->discount_amount = $discount_amount;
     }
@@ -250,12 +250,12 @@ class InvItem
         $this->order = $order;
     }
 
-    public function getIs_recurring(): ?bool
+    public function getIsRecurring(): ?bool
     {
         return $this->is_recurring;
     }
 
-    public function setIs_recurring(bool $is_recurring): void
+    public function setIsRecurring(bool $is_recurring): void
     {
         $this->is_recurring = $is_recurring;
     }
@@ -270,42 +270,42 @@ class InvItem
         $this->date = $date;
     }
 
-    public function getProduct_unit(): ?string
+    public function getProductUnit(): ?string
     {
         return $this->product_unit;
     }
 
-    public function setProduct_unit(string $product_unit): void
+    public function setProductUnit(string $product_unit): void
     {
         $this->product_unit = $product_unit;
     }
 
-    public function getProduct_unit_id(): string
+    public function getProductUnitId(): string
     {
         return (string) $this->product_unit_id;
     }
 
-    public function setProduct_unit_id(int $product_unit_id): void
+    public function setProductUnitId(int $product_unit_id): void
     {
         $this->product_unit_id = $product_unit_id;
     }
 
-    public function setBelongs_to_vat_invoice(int $belongs_to_vat_invoice): void
+    public function setBelongsToVatInvoice(int $belongs_to_vat_invoice): void
     {
         $this->belongs_to_vat_invoice = $belongs_to_vat_invoice;
     }
 
-    public function getBelongs_to_vat_invoice(): string
+    public function getBelongsToVatInvoice(): string
     {
         return (string) $this->belongs_to_vat_invoice;
     }
 
-    public function getDelivery_id(): string
+    public function getDeliveryId(): string
     {
         return (string) $this->delivery_id;
     }
 
-    public function setDelivery_id(int $delivery_id): void
+    public function setDeliveryId(int $delivery_id): void
     {
         $this->delivery_id = $delivery_id;
     }

@@ -43,12 +43,12 @@ class SalesOrderAmount
     {
     }
 
-    public function getSales_order(): ?SalesOrder
+    public function getSalesOrder(): ?SalesOrder
     {
         return $this->sales_order;
     }
 
-    public function setSales_order(?SalesOrder $sales_order): void
+    public function setSalesOrder(?SalesOrder $sales_order): void
     {
         $this->sales_order = $sales_order;
     }
@@ -63,62 +63,62 @@ class SalesOrderAmount
         $this->id = $id;
     }
 
-    public function getSales_order_id(): string
+    public function getSalesOrderId(): string
     {
         return (string) $this->sales_order_id;
     }
 
-    public function setSales_order_id(int $sales_order_id): void
+    public function setSalesOrderId(int $sales_order_id): void
     {
         $this->sales_order_id = $sales_order_id;
     }
 
-    public function getItem_subtotal(): ?float
+    public function getItemSubtotal(): ?float
     {
         return $this->item_subtotal;
     }
 
-    public function setItem_subtotal(float $item_subtotal): void
+    public function setItemSubtotal(float $item_subtotal): void
     {
         $this->item_subtotal = $item_subtotal;
     }
 
-    public function getItem_tax_total(): ?float
+    public function getItemTaxTotal(): ?float
     {
         return $this->item_tax_total;
     }
 
-    public function setItem_tax_total(float $item_tax_total): void
+    public function setItemTaxTotal(float $item_tax_total): void
     {
         $this->item_tax_total = $item_tax_total;
     }
     
-    public function getPackhandleship_total(): float
+    public function getPackhandleshipTotal(): float
     {
         return $this->packhandleship_total;
     }
 
-    public function setPackhandleship_total(float $packhandleship_total): void
+    public function setPackhandleshipTotal(float $packhandleship_total): void
     {
         $this->packhandleship_total = $packhandleship_total;
     }
 
-    public function getPackhandleship_tax(): float
+    public function getPackhandleshipTax(): float
     {
         return $this->packhandleship_tax;
     }
 
-    public function setPackhandleship_tax(float $packhandleship_tax): void
+    public function setPackhandleshipTax(float $packhandleship_tax): void
     {
         $this->packhandleship_tax = $packhandleship_tax;
     }
 
-    public function getTax_total(): ?float
+    public function getTaxTotal(): ?float
     {
         return $this->tax_total;
     }
 
-    public function setTax_total(float $tax_total): void
+    public function setTaxTotal(float $tax_total): void
     {
         $this->tax_total = $tax_total;
     }

@@ -84,17 +84,17 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompany_id() == (string) $company->getId()
+                    if ($private->getCompanyId() == (string) $company->getId()
                         && (
-                            $private->getStart_date()?->format('Y-m-d')
+                            $private->getStartDate()?->format('Y-m-d')
                            < (new \DateTimeImmutable('now'))->format('Y-m-d')
-                           && $private->getEnd_date()?->format('Y-m-d')
+                           && $private->getEndDate()?->format('Y-m-d')
                            > (new \DateTimeImmutable('now'))->format('Y-m-d')
                         )) {
-                        $companyLogoFileName = $private->getLogo_filename();
-                        $companyLogoWidth = $private->getLogo_width();
-                        $companyLogoHeight = $private->getLogo_height();
-                        $companyLogoMargin = $private->getLogo_margin();
+                        $companyLogoFileName = $private->getLogoFilename();
+                        $companyLogoWidth = $private->getLogoWidth();
+                        $companyLogoHeight = $private->getLogoHeight();
+                        $companyLogoMargin = $private->getLogoMargin();
                     }
                 }
             }

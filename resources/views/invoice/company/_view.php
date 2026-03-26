@@ -95,7 +95,7 @@ use Yiisoft\Html\Tag\Form;
         'placeholder' => $translator->translate('street.address'),
         'class' => 'form-control',
     ])
-    ->value(Html::encode($form->getAddress_1() ?? ''))
+    ->value(Html::encode($form->getAddress1() ?? ''))
     ->disabled(true)
 ?>    
                 <?= Html::closeTag('div'); ?>
@@ -106,7 +106,7 @@ use Yiisoft\Html\Tag\Form;
         'placeholder' => $translator->translate('street.address.2'),
         'class' => 'form-control',
     ])
-    ->value(Html::encode($form->getAddress_2() ?? ''))
+    ->value(Html::encode($form->getAddress2() ?? ''))
     ->disabled(true)
 ?>
                 <?= Html::closeTag('div'); ?>

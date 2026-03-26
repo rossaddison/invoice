@@ -59,7 +59,7 @@ foreach ($results as $result) {
             <td style="width:15%;"><?= $result['payment_client']; ?></td>
             <td style="width:15%;"><?= Html::encode($result['payment_method']); ?></td>
             <td style="width:15%;"><?= nl2br(Html::encode($result['payment_note'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberHelper->format_currency($result['payment_amount']);
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberHelper->formatCurrency($result['payment_amount']);
     $sum = $sum + $result['payment_amount']; ?></td>
         </tr>
         <?php
@@ -69,7 +69,7 @@ if (!empty($results)) {
     ?>
         <tr>
             <td colspan=5><?= $translator->translate('total'); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberHelper->format_currency($sum); ?></td>
+            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= $numberHelper->formatCurrency($sum); ?></td>
         </tr>
     <?php } ?>
 </table>

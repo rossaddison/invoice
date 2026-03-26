@@ -181,8 +181,8 @@ final class InvAmountRepository extends Select\Repository
         $query = $this->select()
                       ->load('inv')
                       ->where(['inv.status_id' => $key])
-                      ->andWhere('inv.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('inv.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']));
+                      ->andWhere('inv.date_created', '>=', $datehelper->dateFromMysqlWithoutStyle($range['lower']))
+                      ->andWhere('inv.date_created', '<=', $datehelper->dateFromMysqlWithoutStyle($range['upper']));
         return $this->prepareDataReader($query);
     }
 
@@ -192,7 +192,7 @@ final class InvAmountRepository extends Select\Repository
      * @param SR $sR
      * @return int
      */
-    public function repoStatusTotals_Num_Total(int $key, array $range, SR $sR): int
+    public function repoStatusTotalsNumTotal(int $key, array $range, SR $sR): int
     {
         $datehelper = new DateHelper($sR);
         /**
@@ -202,8 +202,8 @@ final class InvAmountRepository extends Select\Repository
         return $this->select()
                       ->load('inv')
                       ->where(['inv.status_id' => $key])
-                      ->andWhere('inv.date_created', '>=', $datehelper->date_from_mysql_without_style($range['lower']))
-                      ->andWhere('inv.date_created', '<=', $datehelper->date_from_mysql_without_style($range['upper']))
+                      ->andWhere('inv.date_created', '>=', $datehelper->dateFromMysqlWithoutStyle($range['lower']))
+                      ->andWhere('inv.date_created', '<=', $datehelper->dateFromMysqlWithoutStyle($range['upper']))
                       ->count();
     }
 
@@ -214,7 +214,7 @@ final class InvAmountRepository extends Select\Repository
      * @param string $period
      * @return array
      */
-    public function get_status_totals(IR $iR, SR $sR, Translator $translator, string $period): array
+    public function getStatusTotals(IR $iR, SR $sR, Translator $translator, string $period): array
     {
         $return = [];
         $range = $sR->range($period);
@@ -237,7 +237,7 @@ final class InvAmountRepository extends Select\Repository
                 'label' => $status['label'],
                 'href' => (string) $status['href'],
                 'sum_total' => $total,
-                'num_total' => $this->repoStatusTotals_Num_Total((int) $key, $range, $sR),
+                'num_total' => $this->repoStatusTotalsNumTotal((int) $key, $range, $sR),
             ];
         }
         return $return;

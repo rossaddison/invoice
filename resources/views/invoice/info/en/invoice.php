@@ -50,14 +50,28 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p><s>Payment gateway testing on alpine</s></p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
-<p>22nd March 2026</p>
+<p>26th March 2026</p>
+<p>Branch psr1: The error that was being generated using 'Generate Products' in the family index has been fixed. e.g. A list of house numbers can be created in the 'Product Number List'
+and if the 'Product Number List Prefix e.g. House' is filled, then especially useful for
+runs e.g. window cleaning, the House Numbers can be associated with a client. i.e. more than
+one house clean can be paid by a particular client.</p>
+<p>Layout improvements on invoice.php and guest.php - fluid used.</p>
+<p>Psalm - UnusedVariables - removed</p>
+<p>Tests: PSR1: Method naming: Substituted snake_case with camelCase</p>
+<p><b>24th March 2026</b></p>
+<p>PSR1 violations: All function names converted from snake_case to camelCase</p>
+<p>Routes, views, code adjusted accordingly</p>
+<p>$urlGenerator->generate('inv/url_key') becomes ('inv/urlKey')</p>
+<p>Testing to follow</p>
+<p><b>22nd March 2026</b></p>
 <p>Avoiding RBAC Mutation: see md</p>
+<p></p>
 <p>19th March 2026</p>
 <p>Psalm UnusedVariable code reduction</p>
 <p>Php8.4 Setup - md created. yii3i.online converted to php8.4</p>
 <p>Bugfix: Download file attached to invoice. Rbac influencing this.</p>
 <p>Bugfix: Attaching file to invoice workflow factory response replaced with web redirects.</p>
-<p>15th March 2026</p>
+<p><b>15th March 2026</b></p>
 <p>Apply razvbir's https://github.com/yiisoft/html/pull/264 using regex Find:  (\w+)::tag\(\) and Replace:  (new $1())</p>
 <p>Restructured psalm.xml: Find unused code = true. All error types have been categorized
 and will be reduced with the subsequent code reduction.</p>
@@ -118,7 +132,7 @@ when converting from html to php. This will be updated.</p>
 <p><b>7th March 2026</b></p>
 <p>Modal Product Lookups only lookup products with prices greater than zero</p>
 <p><b>6th March 2026</b></p>
-<p>Bugfix: Update inv_id session variable if using function url_key
+<p>Bugfix: Update inv_id session variable if using function urlKey
 otherwise route inv/attachment only picks up _language argument and not also the id argument</p>
 <p>Removed 6 security vulnerabilities from hono via "npm-check-updates": "^19.6.3"</p>
 <p>Bugfix: User not able to view invoice</p>
@@ -224,7 +238,7 @@ type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
 <p><b>4th January 2026</b></p>
 <p>quote to salesorder tested</p>
 <p>salesorder to invoice tested</p>
-<p>The SalesOrderController function quote_to_so_amount is a good example of the
+<p>The SalesOrderController function quoteToSoAmount is a good example of the
    application of the hasOne Entity function ... for both the quote and the salesorder
    <pre>
        /**
@@ -233,27 +247,27 @@ type invoice/userinv in the browser or Settings ... Invoice ... User .. Account
      * @param InvRepo $iR
      * @return void
      */
-    private function so_to_invoice_so_amount(SalesOrder $so, Inv $inv, InvRepo $iR): void
+    private ASalesOrder $so, Inv $inv, InvRepo $iR): void
     {
         /**
          * @var SalesOrderAmount $soA
          */
-        $soA = $so->getSales_order_amount();   <--- hasOne
+        $soA = $so->getSalesOrderAmount();   <--- hasOne
         /**
          * @var InvAmount $iA
          */
         $iA = $inv->getInvAmount();  <-- hasOne
         // hydrate the hasOne with values from the Sales Order hasOne
-        $iA->setInv_id((int) $inv->getId());
-        $iA->setItem_subtotal(
-            $soA->getItem_subtotal() ?? 0.00);
-        $iA->setItem_tax_total(
-            $soA->getItem_tax_total() ?? 0.00);
-        $iA->setPackhandleship_total(
-            $soA->getPackhandleship_total() ?: 0.00);
-        $iA->setPackhandleship_tax(
-            $soA->getPackhandleship_tax() ?: 0.00);
-        $iA->setTax_total($soA->getTax_total() ?? 0.00);
+        $iA->setInvId((int) $inv->getId());
+        $iA->setItemSubtotal(
+            $soA->getItemSubtotal() ?? 0.00);
+        $iA->setItemTaxTotal(
+            $soA->getItemTaxTotal() ?? 0.00);
+        $iA->setPackhandleshipTotal(
+            $soA->getPackhandleshipTotal() ?: 0.00);
+        $iA->setPackhandleshipTax(
+            $soA->getPackhandleshipTax() ?: 0.00);
+        $iA->setTaxTotal($soA->getTaxTotal() ?? 0.00);
         $iA->setTotal($soA->getTotal() ?? 0.00);
         $iR->save($inv);
     }
@@ -520,7 +534,7 @@ Next: Include some Codeception Tests which will secure these concepts if bugs cr
 <p><b>3rd August 2025</b></p>
 <p>Replaced int with float since amount being sent via Wonderful was being truncated. e.g. Â£3.60 truncated to Â£3.00</p>
 <p>The return url is functional but ref was being truncated because the route did not have it so included ref in the route.</p>
-<p>A more general message is preferred on the completion page for Wonderful which is compiled in the PaymentInformationController function wonderful_complete.</p>
+<p>A more general message is preferred on the completion page for Wonderful which is compiled in the PaymentInformationController function wonderfulComplete.</p>
 <p>Next: Refund a Credit Note if Payment has been made by the customer via Wonderful</p>
 <p>Next: Include an Oauth2.0 payment provider e.g. Tink in the Open Banking selection process. Tink uses OIDC so this will be an interesting integration.</p>
 <p>Current Payment Providers: ...src\Invoice\Setting\Trait\OpenBankProviders.php</p>
@@ -1642,7 +1656,7 @@ p>Further integration of the entity into the form constructs for the rest of the
  * @param string $cldr<br>
  * @return mixed<br>
  */    <br>
-public function get_country_list(string $cldr) : mixed<br>
+public function geCountryList(string $cldr) : mixed<br>
 {<br>
     $new_aliases = new Aliases(['@helpers' => __DIR__, '@country_list' => '@helpers/Country-list']);<br>
     $file = $new_aliases->get('@country_list') .DIRECTORY_SEPARATOR. $cldr .DIRECTORY_SEPARATOR.'country.php';<br>
@@ -1679,7 +1693,7 @@ public function get_country_list(string $cldr) : mixed<br>
         // After signup the user was included in the userinv using Settings...User Account...+<br>
 $user_inv = $uiR->repoUserInvUserIdquery($currentUser_getId);<br>
 // The client has been assigned to the user id using Setting...User Account...Assigned Clients<br>
-$user_client = $ucR->repoUserClientqueryCount($currentUser_getId, $inv->getClient_id()) === 1 ? true : false;<br>
+$user_client = $ucR->repoUserClientqueryCount($currentUser_getId, $inv->getClientId()) === 1 ? true : false;<br>
 if ($user_inv && $user_client) {  <br>
 </code></p>
 <p>If the currentUser getId returns a null value they are a guest. See documentation. Yiisoft/CurrentUser</p>
@@ -1830,7 +1844,7 @@ ie. check that the gateway_lang.php in the English folder corresponds with your 
         // A user-quest-accountant will be allocated a series of clients <br>
         // A user-guest-client will be allocated their client number by the administrator so that <br>
         // they can view their invoices and make payment <br>
-        $user_clients = (null!== $userinv ? $ucR->get_assigned_to_user($user->getId()) : []);</code>
+        $user_clients = (null!== $userinv ? $ucR->getAssignedToUser($user->getId()) : []);</code>
 </p>
 <h2><a href="https://pay.amazon.co.uk/help/202022560">Notes for Amazon Pay</a></h2>
 <p>To configure Amazon Pay you will need your Merchant ID, Public Key, Public Key ID and Private Key.</p>
@@ -1932,7 +1946,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>Setting...View...Email shows some config/params.php settings using SettingRepository <code>config_params</code> function.</p>
 <p>
 <code>
-    public function config_params() : array { <br>
+    public function configParams() : array { <br>
         $config = ConfigFactory::create(new ConfigPaths(dirname(dirname(dirname(__DIR__))), 'config/'), null); <br>
         $params = $config->get('params'); <br>
         $config_array = [ <br>
@@ -2036,7 +2050,7 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
 <p>Invoice/Layout/main.php has been moved to @views/layout/invoice.php. The cldr setting value is given the $session->get('_language') value by means of the locale dropdown.</p>
 <p>The $s value is configured for the @views/layout/invoice.php. (different to the demo layout ie. views/layout/main.php) in config/params.php yii-soft/view Reference::to and NOT by means of the InvoiceController .
    The $s value is necessary in this layout to record the current locale in the cldr setting if it is selected BEFORE login. ie.
-   <code><s>$s->save_session_locale_to_cldr($session->get('_language') ?? ($s->getSetting('cldr') ? $s->getSetting('cldr') : 'en'));</s></code>
+   <code><s>$s->saveSessionLocaleToCldr($session->get('_language') ?? ($s->getSetting('cldr') ? $s->getSetting('cldr') : 'en'));</s></code>
 <p></p>
 <p>jquery 1.13.2 which has just been released is now the default. jquery 1.13.0 has been removed. </p>
 <p>In demo mode, the menu now includes the ability to test data with pre-setup clients, products, groups, tax rates. A deinstall feature of demo clients(2), products(2) is available. </p><!-- comment -->
@@ -2047,8 +2061,8 @@ $s->getSetting('gateway_amazon_pay_version') == '0' ? $assetManager->register(am
         ...php<br>
 
     $js11 = "$(function () {".
-    '$(".form-control.input-sm.datepicker").datepicker({dateFormat:"'.$datehelper->datepicker_dateFormat()<br>
-                                                        .'", firstDay:'.$datehelper->datepicker_firstDay()<br>
+    '$(".form-control.input-sm.datepicker").datepicker({dateFormat:"'.$datehelper->datepickerDateFormat()<br>
+                                                        .'", firstDay:'.$datehelper->datepickerFirstDay()<br>
                                                         .', changeMonth: true'<br>
                                                         .', changeYear: true'<br>
                                                         .', yearRange: "-50:+10"'<br>

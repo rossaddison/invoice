@@ -119,7 +119,7 @@ final readonly class GridComponents
             }
 
             // Tooltip date (safe): guard against missing/invalid date
-            $dateObj = $invoice->getDate_created();
+            $dateObj = $invoice->getDateCreated();
 
              try {
                  $dateTitle = $dateObj->format('m-d');
@@ -187,7 +187,7 @@ final readonly class GridComponents
             $invSentLogId = $invSentLog->getId();
 
             // Tooltip date (safe)
-            $dateObj = $invSentLog->getDate_sent();
+            $dateObj = $invSentLog->getDateSent();
             try {
                 $dateTitle = $dateObj->format('m-d');
             } catch (\Throwable) {

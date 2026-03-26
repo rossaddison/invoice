@@ -72,20 +72,20 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::openTag('div', ['class' => 'form-group']); //7
        echo H::openTag('div', ['class' => 'form-group']); //8
         echo H::tag('h6', 'eSMTP Host: ' .
-         (string) $s->config_params()['esmtp_host']);
+         (string) $s->configParams()['esmtp_host']);
        echo H::closeTag('div'); //8
        echo H::openTag('div', ['class' => 'form-group']); //8
         echo H::tag('h6', 'eSMTP Port: ' .
-         (string) $s->config_params()['esmtp_port']);
+         (string) $s->configParams()['esmtp_port']);
        echo H::closeTag('div'); //8
        echo H::openTag('div', ['class' => 'form-group']); //8
         echo H::tag('h6', 'eSMTP Schema: ' . ucfirst(
-         (string) $s->config_params()['esmtp_scheme']
+         (string) $s->configParams()['esmtp_scheme']
         ));
        echo H::closeTag('div'); //8
        echo H::openTag('div', ['class' => 'form-group']); //8
         echo H::tag('h6', 'Use SendMail: ' .
-         $s->config_params()['use_send_mail']);
+         $s->configParams()['use_send_mail']);
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6

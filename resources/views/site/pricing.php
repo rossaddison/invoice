@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\P;
                                             ->render(); ?>
                                         <?=  new H4()
                                             ->addClass('display-3 fw-bold text-primary mb-0')
-                                            ->content($s->format_currency(50))
+                                            ->content($s->formatCurrency(50))
                                             ->render(); ?>
                                         <?=  new P()
                                             ->addClass('text-secondary mb-4')
@@ -85,7 +85,7 @@ use Yiisoft\Html\Tag\P;
                                             ->content((string) $pricing['pro']); ?>
                                         <?=  new H4()
                                             ->addClass('display-3 fw-bold text-primary mb-0')
-                                            ->content($s->format_currency(50))
+                                            ->content($s->formatCurrency(50))
                                             ->render(); ?>
                                         <?=  new P()
                                             ->addClass('text-secondary')

@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
     "use strict";
 
     // Robust parse helper (matches original parsedata behaviour)
@@ -9,6 +9,7 @@
             try {
                 return JSON.parse(data);
             } catch (e) {
+                console.error('[parsedata] Invalid JSON:', e);
                 return {};
             }
         }
@@ -21,7 +22,7 @@
         // Clear existing options
         selectEl.innerHTML = '';
         // Add prompt/none option
-        var opt = document.createElement('option');
+        const opt = document.createElement('option');
         opt.value = '';
         opt.textContent = promptText || 'None';
         selectEl.appendChild(opt);
@@ -31,14 +32,14 @@
         // items may be an array or object. Prefer object/associative.
         if (Array.isArray(items)) {
             items.forEach(function (v, i) {
-                var o = document.createElement('option');
+                const o = document.createElement('option');
                 o.value = i;
                 o.textContent = v;
                 selectEl.appendChild(o);
             });
         } else {
             Object.keys(items).forEach(function (key) {
-                var o = document.createElement('option');
+                const o = document.createElement('option');
                 o.value = key;
                 o.textContent = items[key];
                 selectEl.appendChild(o);
@@ -107,7 +108,7 @@
         let totalProducts = 0;
         
         familyData.forEach(family => {
-            const items = family.commalist.split(',').map(item => item.trim()).filter(item => item);
+            const items = family.commalist.split(',').map(item => item.trim()).filter(Boolean);
             totalProducts += items.length;
             
             previewHtml += `<div class="col-md-6 mb-3">`;
@@ -168,6 +169,20 @@
         .catch(error => console.error('Error loading units:', error));
     }
     
+    // Handle success response from product generation
+    function handleGenerateSuccess(data) {
+        if (data.redirect_url) {
+            alert('✅ Successfully generated ' + (data.count || 0) + ' products from selected families. Redirecting to client association...');
+            globalThis.location.href = data.redirect_url;
+        } else {
+            alert('✅ Successfully generated ' + (data.count || 0) + ' products from selected families.');
+            const modal = document.getElementById('generate-products-modal');
+            const modalInstance = modal ? bootstrap.Modal.getInstance(modal) : null;
+            if (modalInstance) modalInstance.hide();
+            globalThis.location.reload();
+        }
+    }
+
     // Handle actual product generation when modal confirm button is clicked
     function processProductGeneration() {
         const checkedBoxes = document.querySelectorAll('input[type="checkbox"][name="family_ids[]"]:checked');
@@ -176,7 +191,7 @@
         
         if (!taxRateId || !unitId) {
             alert('Please select both tax rate and unit.');
-            return false;
+            return;
         }
         
         // Prepare form data
@@ -201,38 +216,42 @@
         }
         
         // Send request to generate products
-        fetch('/invoice/family/generate_products', {
+        fetch('/invoice/family/generateProducts', {
             method: 'POST',
             body: formData,
+            credentials: 'same-origin',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                if (data.redirect_url) {
-                    // Redirect to ProductClient association workflow
-                    alert(`✅ Successfully generated ${data.count || 0} products from selected families. Redirecting to client association...`);
-                    window.location.href = data.redirect_url;
-                } else {
-                    // Standard success without client association
-                    alert(`✅ Successfully generated ${data.count || 0} products from selected families.`);
-                    // Close modal and reload page
-                    const modal = document.getElementById('generate-products-modal');
-                    if (modal) {
-                        const modalInstance = bootstrap.Modal.getInstance(modal);
-                        if (modalInstance) modalInstance.hide();
+        .then(response => {
+            const status = response.status;
+            return response.text().then(function(text) {
+                let data;
+                try {
+                    data = JSON.parse(text);
+                    // Handle double-encoded JSON (server wrapped JSON string in another JSON string)
+                    if (typeof data === 'string') {
+                        data = JSON.parse(data);
                     }
-                    window.location.reload();
+                } catch (e) {
+                    alert('❌ Server returned a non-JSON response (HTTP ' + status + '). Check the PHP error log for details.');
+                    console.error('[generateProducts] HTTP ' + status + ' — raw response:', text, e);
+                    return;
                 }
-            } else {
-                alert('❌ Error generating products: ' + (data.message || 'Unknown error'));
-            }
+                if (data.success) {
+                    handleGenerateSuccess(data);
+                } else {
+                    alert('❌ Error generating products: ' + (data.message || 'Unknown error'));
+                }
+                if (data?.warnings?.length > 0) {
+                    console.warn('[generateProducts] Warnings:', data.warnings);
+                }
+            });
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('❌ Network error occurred while generating products.');
+            console.error('[generateProducts] Fetch failed (true network error):', error);
+            alert('❌ Network error: could not reach the server. Check your connection and try again.');
         })
         .finally(() => {
             // Re-enable confirm button
@@ -241,14 +260,52 @@
                 confirmBtn.textContent = '✅ Generate Products';
             }
         });
-        
-        return false;
     }
 
     // Initialize event listeners when DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {\n        // Handle generate products button click\n        const generateBtn = document.getElementById('btn-generate-products');\n        if (generateBtn) {\n            generateBtn.addEventListener('click', function(e) {\n                e.preventDefault();\n                const result = handleGenerateProducts();\n                if (!result) {\n                    e.stopPropagation();\n                    return false;\n                }\n            });\n        }\n        \n        // Handle modal confirm button click\n        const confirmBtn = document.getElementById('confirm-generate-products');\n        if (confirmBtn) {\n            confirmBtn.addEventListener('click', function(e) {\n                e.preventDefault();\n                processProductGeneration();\n            });\n        }\n        \n        // Update preview when families are selected/deselected\n        document.addEventListener('change', function(e) {\n            if (e.target.type === 'checkbox' && e.target.name === 'family_ids[]') {\n                const modal = document.getElementById('generate-products-modal');\n                if (modal && modal.classList.contains('show')) {\n                    const checkedBoxes = document.querySelectorAll('input[type=\"checkbox\"][name=\"family_ids[]\"]:checked');\n                    const familyData = getFamilyDataFromCheckedBoxes(checkedBoxes);\n                    updateProductsPreview(familyData);\n                }\n            }\n        });\n    });\n\n    // Request helper: GET with query params, returns parsed response (object or {})
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle generate products button click
+        const generateBtn = document.getElementById('btn-generate-products');
+        if (generateBtn) {
+            generateBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const result = handleGenerateProducts();
+                if (!result) {
+                    return false;
+                }
+                const modalEl = document.getElementById('generate-products-modal');
+                if (modalEl) {
+                    bootstrap.Modal.getOrCreateInstance(modalEl).show();
+                }
+            });
+        }
+
+        // Handle modal confirm button click (id matches modal HTML #process-generate-products)
+        const confirmBtn = document.getElementById('process-generate-products');
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                processProductGeneration();
+            });
+        }
+
+        // Update preview when families are selected/deselected
+        document.addEventListener('change', function(e) {
+            if (e.target.type === 'checkbox' && e.target.name === 'family_ids[]') {
+                const modal = document.getElementById('generate-products-modal');
+                if (modal?.classList.contains('show')) {
+                    const checkedBoxes = document.querySelectorAll('input[type="checkbox"][name="family_ids[]"]:checked');
+                    const familyData = getFamilyDataFromCheckedBoxes(checkedBoxes);
+                    updateProductsPreview(familyData);
+                }
+            }
+        });
+    });
+
+    // Request helper: GET with query params, returns parsed response (object or {})
     function getJson(url, params) {
-        var u = url;
+        let u = url;
         if (params && Object.keys(params).length > 0) {
             u += (url.indexOf('?') === -1 ? '?' : '&') + new URLSearchParams(params).toString();
         }
@@ -264,21 +321,21 @@
 
     // Handler: when primary category changes, load secondary categories
     function onPrimaryChange() {
-        var primarySelect = document.getElementById('family-category-primary-id');
+        const primarySelect = document.getElementById('family-category-primary-id');
         if (!primarySelect) return;
-        var primaryCategoryId = primarySelect.value || '';
-        var url = location.origin + "/invoice/family/secondaries/" + encodeURIComponent(primaryCategoryId);
+        const primaryCategoryId = primarySelect.value || '';
+        const url = location.origin + "/invoice/family/secondaries/" + encodeURIComponent(primaryCategoryId);
 
         getJson(url, { category_primary_id: primaryCategoryId })
             .then(function (response) {
-                if (response && response.success === 1) {
-                    var secondaryCategories = response.secondary_categories || {};
-                    var secondaryDropdown = document.getElementById('family-category-secondary-id');
+                if (response?.success === 1) {
+                    const secondaryCategories = response.secondary_categories || {};
+                    const secondaryDropdown = document.getElementById('family-category-secondary-id');
                     populateSelect(secondaryDropdown, secondaryCategories, 'None');
 
                     // Optionally, trigger change on secondary to cascade populate family names
                     if (secondaryDropdown) {
-                        var evt = new Event('change', { bubbles: true });
+                        const evt = new Event('change', { bubbles: true });
                         secondaryDropdown.dispatchEvent(evt);
                     }
                 } else {
@@ -294,16 +351,16 @@
 
     // Handler: when secondary category changes, load family names
     function onSecondaryChange() {
-        var secondarySelect = document.getElementById('family-category-secondary-id');
+        const secondarySelect = document.getElementById('family-category-secondary-id');
         if (!secondarySelect) return;
-        var secondaryCategoryId = secondarySelect.value || '';
-        var url = location.origin + "/invoice/family/names/" + encodeURIComponent(secondaryCategoryId);
+        const secondaryCategoryId = secondarySelect.value || '';
+        const url = location.origin + "/invoice/family/names/" + encodeURIComponent(secondaryCategoryId);
 
         getJson(url, { category_secondary_id: secondaryCategoryId })
             .then(function (response) {
-                if (response && response.success === 1) {
-                    var familyNames = response.family_names || {};
-                    var familyNameDropdown = document.getElementById('family-name');
+                if (response?.success === 1) {
+                    const familyNames = response.family_names || {};
+                    const familyNameDropdown = document.getElementById('family-name');
                     populateSelect(familyNameDropdown, familyNames, 'None');
                 } else {
                     populateSelect(document.getElementById('family-name'), {}, 'None');
@@ -316,8 +373,8 @@
 
     // Wire up listeners on DOMContentLoaded and trigger initial population
     document.addEventListener('DOMContentLoaded', function () {
-        var primarySelect = document.getElementById('family-category-primary-id');
-        var secondarySelect = document.getElementById('family-category-secondary-id');
+        const primarySelect = document.getElementById('family-category-primary-id');
+        const secondarySelect = document.getElementById('family-category-secondary-id');
 
         if (primarySelect) {
             primarySelect.addEventListener('change', onPrimaryChange, false);

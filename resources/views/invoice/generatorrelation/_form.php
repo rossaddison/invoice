@@ -54,7 +54,7 @@ $optionsDataGenerators = [];
  * @var App\Invoice\Entity\Gentor $generator
  */
 foreach ($generators as $generator) {
-    $optionsDataGenerators[$generator->getGentor_id()] = $generator->getCamelcase_capital_name();
+    $optionsDataGenerators[$generator->getGentorId()] = $generator->getCamelcaseCapitalName();
 }
 
 echo Field::select($form, 'gentor_id')
@@ -78,7 +78,7 @@ echo Field::select($form, 'gentor_id')
         'class' => 'form-control',
         'id' => 'lowercasename',
     ])
-    ->value(Html::encode($form->getLowercase_name()))
+    ->value(Html::encode($form->getLowercaseName()))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -92,7 +92,7 @@ echo Field::select($form, 'gentor_id')
         'class' => 'form-control',
         'id' => 'camelcasename',
     ])
-    ->value(Html::encode($form->getCamelcase_name()))
+    ->value(Html::encode($form->getCamelcaseName()))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -106,7 +106,7 @@ echo Field::select($form, 'gentor_id')
         'class' => 'form-control',
         'id' => 'view_field_name',
     ])
-    ->value(Html::encode($form->getView_field_name()))
+    ->value(Html::encode($form->getViewFieldName()))
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>

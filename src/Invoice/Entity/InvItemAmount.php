@@ -46,12 +46,12 @@ class InvItemAmount
         $this->id = $id;
     }
 
-    public function getInv_item_id(): string
+    public function getInvItemId(): string
     {
         return (string) $this->inv_item_id;
     }
 
-    public function setInv_item_id(int $inv_item_id): void
+    public function setInvItemId(int $inv_item_id): void
     {
         $this->inv_item_id = $inv_item_id;
     }
@@ -66,12 +66,12 @@ class InvItemAmount
         $this->subtotal = $subtotal;
     }
 
-    public function getTax_total(): ?float
+    public function getTaxTotal(): ?float
     {
         return $this->tax_total;
     }
 
-    public function setTax_total(float $tax_total): void
+    public function setTaxTotal(float $tax_total): void
     {
         $this->tax_total = $tax_total;
     }

@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
             'class' => 'form-control',
         ])
         ->optionsData($projects)
-        ->value($form->getProject_id())
+        ->value($form->getProjectId())
         ->prompt($translator->translate('none'))
         ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -71,7 +71,7 @@ use Yiisoft\Html\Tag\Form;
         'class' => 'form-control',
     ])
     ->optionsData($taxRates)
-    ->value($form->getTax_rate_id())
+    ->value($form->getTaxRateId())
     ->prompt($translator->translate('none'))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
@@ -81,7 +81,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control',
     ])
-    ->value($s->format_amount(($form->getPrice() ?? 0.00)))
+    ->value($s->formatAmount(($form->getPrice() ?? 0.00)))
     ->placeholder($translator->translate('price'))
     ->hint($translator->translate('hint.this.field.is.required')); ?>         
     <?= Html::tag('br'); ?>
@@ -90,11 +90,11 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control',
     ])
-    ->value(Html::encode($form->getFinish_date() instanceof \DateTimeImmutable
-                         ? $form->getFinish_date()->format('Y-m-d') : (is_string(
-                             $form->getFinish_date(),
+    ->value(Html::encode($form->getFinishDate() instanceof \DateTimeImmutable
+                         ? $form->getFinishDate()->format('Y-m-d') : (is_string(
+                             $form->getFinishDate(),
                          )
-                         ? $form->getFinish_date() : '')))
+                         ? $form->getFinishDate() : '')))
     ->hint($translator->translate('hint.this.field.is.required')); ?>         
     <?= Html::tag('br'); ?>
     <?php

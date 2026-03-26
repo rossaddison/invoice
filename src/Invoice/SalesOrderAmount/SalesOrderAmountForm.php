@@ -17,32 +17,32 @@ final class SalesOrderAmountForm extends FormModel
     private ?float $tax_total = null;
     private ?float $total = null;
 
-    public function getSales_order_id(): ?int
+    public function getSalesOrderId(): ?int
     {
         return $this->sales_order_id;
     }
 
-    public function getItem_subtotal(): ?float
+    public function getItemSubtotal(): ?float
     {
         return $this->item_subtotal;
     }
 
-    public function getItem_tax_total(): ?float
+    public function getItemTaxTotal(): ?float
     {
         return $this->item_tax_total;
     }
     
-    public function getPackhandleship_total(): ?float
+    public function getPackhandleshipTotal(): ?float
     {
         return $this->packhandleship_total;
     }
 
-    public function getPackhandleship_tax(): ?float
+    public function getPackhandleshipTax(): ?float
     {
         return $this->packhandleship_tax;
     }
 
-    public function getTax_total(): ?float
+    public function getTaxTotal(): ?float
     {
         return $this->tax_total;
     }
