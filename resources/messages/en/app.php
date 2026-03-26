@@ -750,6 +750,7 @@ return [
   'family.history' => 'Family History exists. Cannot delete',
   'family.comma.list' => 'Product Number List e.g. 1, 2, 5, 7 for Product Generator',
   'family.product.prefix' => 'Product Number List Prefix e.g. House',
+  'family.product.prefix.required.when.commalist.filled' => 'Product prefix is required when a comma list is provided.',
   'family.name' => 'Family name',
   'family.search' => 'Family Search',
   'faq' => 'FAQ\'s',
@@ -1810,6 +1811,10 @@ prior to importing and no existing documents e.g. Invoices.',
     'Peppol Additional Property Item Name eg. Colour',
   'product.additional.item.property.value' =>
     'Peppol Additional Property Item Value eg. Black',
+  'product.client.association' => 'Product Client Association',
+  'product.client.association.options' => 'Product Client Association Options',
+  'product.client.associations.completed' =>
+    'Product Client Associations Completed',
   'product.country.of.origin.code' =>
     'Peppol Country of Origin Code using'
     . ' ISO-3166-1:Alpha2 Country Codes',

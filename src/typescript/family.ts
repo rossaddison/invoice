@@ -31,6 +31,7 @@ interface FamilyGenerateResponse extends ApiResponse {
     count?: number;
     message?: string;
     warnings?: string[];
+    redirect_url?: string;
 }
 
 interface FamilyData {
@@ -59,7 +60,24 @@ export class FamilyHandler {
 
     private handleClick(event: Event): void {
         const target = event.target as HTMLElement;
-        
+
+        if (target.closest('#btn-generate-products')) {
+            event.preventDefault();
+            event.stopPropagation();
+            const checkedBoxes = document.querySelectorAll<HTMLInputElement>(
+                'input[type="checkbox"][name="family_ids[]"]:checked'
+            );
+            if (checkedBoxes.length === 0) {
+                alert('Please select at least one family to generate products.');
+                return;
+            }
+            const modalEl = document.getElementById('generate-products-modal');
+            if (modalEl && typeof (window as any).bootstrap?.Modal !== 'undefined') {
+                (window as any).bootstrap.Modal.getOrCreateInstance(modalEl).show();
+            }
+            return;
+        }
+
         if (target.closest('#process-generate-products')) {
             this.processProductGeneration();
             return;
@@ -324,24 +342,39 @@ export class FamilyHandler {
         try {
             const familyIds = selectedFamilies.map(f => f.family_id);
             const csrfToken = (document.querySelector('input[name="_csrf"]') as HTMLInputElement)?.value || '';
-            
-            const payload: FamilyGenerateRequest = {
-                family_ids: familyIds,
-                tax_rate_id: taxRateSelect.value,
-                unit_id: unitSelect.value,
-                _csrf: csrfToken
-            };
+
+            // Build URL-encoded body manually so family_ids[] are sent as repeated keys
+            const params = new URLSearchParams();
+            familyIds.forEach(id => params.append('family_ids[]', id));
+            params.append('tax_rate_id', taxRateSelect.value);
+            params.append('unit_id', unitSelect.value);
+            params.append('_csrf', csrfToken);
 
             const response = await fetch(`${location.origin}/invoice/family/generateProducts`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest',
                 },
                 credentials: 'same-origin',
-                body: new URLSearchParams(payload as any).toString()
+                body: params.toString()
             });
 
-            const data = (await response.json()) as FamilyGenerateResponse;
+            const rawText = await response.text();
+            console.log('[generateProducts] HTTP status:', response.status);
+            console.log('[generateProducts] raw response:', rawText);
+
+            let data: FamilyGenerateResponse;
+            try {
+                const parsed = JSON.parse(rawText);
+                // Handle double-encoded JSON (server wrapped JSON string in another JSON string)
+                data = (typeof parsed === 'string' ? JSON.parse(parsed) : parsed) as FamilyGenerateResponse;
+            } catch (parseError) {
+                alert('Server returned non-JSON response (HTTP ' + response.status + '). Check PHP error log.');
+                processBtn.innerHTML = originalText;
+                processBtn.disabled = false;
+                return;
+            }
 
             if (data.success) {
                 processBtn.innerHTML = '<i class="fa fa-check"></i> Success!';
@@ -351,7 +384,7 @@ export class FamilyHandler {
                     console.warn('Warnings during product generation:', data.warnings);
                 }
 
-                // Close modal and reload page
+                // Close modal then redirect or reload
                 const modal = document.getElementById('generate-products-modal');
                 if (modal && typeof (window as any).bootstrap?.Modal !== 'undefined') {
                     const bsModal = (window as any).bootstrap.Modal.getInstance(modal);
@@ -360,7 +393,11 @@ export class FamilyHandler {
                     }
                 }
                 setTimeout(() => {
-                    window.location.reload();
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        window.location.reload();
+                    }
                 }, 1000);
             } else {
                 processBtn.innerHTML = originalText;

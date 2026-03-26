@@ -50,6 +50,11 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p><s>Payment gateway testing on alpine</s></p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
+<p>26th March 2026</p>
+<p>Branch psr1: The error that was being generated using 'Generate Products' in the family index has been fixed. e.g. A list of house numbers can be created in the 'Product Number List'
+and if the 'Product Number List Prefix e.g. House' is filled, then especially useful for
+runs e.g. window cleaning, the House Numbers can be associated with a client. i.e. more than
+one house clean can be paid by a particular client.</p>
 <p>24th March 2026</p>
 <p>PSR1 violations: All function names converted from snake_case to camelCase</p>
 <p>Routes, views, code adjusted accordingly</p>

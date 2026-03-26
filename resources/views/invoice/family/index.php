@@ -48,9 +48,9 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
  * Related logic: see family.js handleGenerateProducts function
  */
 $generateProductsButton =  new A()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
+        ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-success')
-        ->href('#generate-products-modal')
+        ->href('#')
         ->content('☑️' . $translator->translate('generate')
             . ' '
             . $translator->translate('products') 

@@ -104,7 +104,7 @@ final class ProductClientController extends BaseController
             $this->flash->add(
                 'success',
                 $this->translator->translate(
-                    'all.product.client.associations.completed'),
+                    'product.client.associations.completed'),
                 true
             );
             return $this->webService->getRedirectResponse('productclient/index');
@@ -199,6 +199,7 @@ final class ProductClientController extends BaseController
             'clients' => $this->buildClientOptionsArray(
                 $clientRepository->findAllPreloaded()),
             'product' => $product,
+            'productRepository' => $productRepository,
             'productId' => $currentProductId,
             'showClientCreation' => true,
             'suggestedClientGroup' => $suggestedClientGroup,
@@ -311,10 +312,10 @@ final class ProductClientController extends BaseController
             $this->clearClientGroupFromSession();
             $this->flash->add(
                 'success',
-                $this->translator->translate('all.product.client.associations.completed'),
+                $this->translator->translate('product.client.associations.completed'),
                 true
             );
-            return $this->webService->getRedirectResponse('productclient/index');
+            return $this->webService->getRedirectResponse('product/index');
         }
         
         // Redirect to next product
@@ -342,6 +343,7 @@ final class ProductClientController extends BaseController
             'form' => $form,
             'clients' => $clientRepository->findAllPreloaded(),
             'products' => $productRepository->findAllPreloaded(),
+            'productRepository' => $productRepository,
         ];
         
         if ($request->getMethod() === Method::POST) {
@@ -408,7 +410,8 @@ final class ProductClientController extends BaseController
                 'errors' => [],
                 'form' => $form,
                 'clients'=>$clientRepository->findAllPreloaded(),
-                'products'=>$productRepository->findAllPreloaded()
+                'products'=>$productRepository->findAllPreloaded(),
+                'productRepository'=>$productRepository,    
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];

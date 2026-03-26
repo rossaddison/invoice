@@ -101,6 +101,28 @@ final readonly class Button
                 ->buttonsData($buttonsDataArray)
             .  Html::closeTag('div');
     }
+        
+    public function saveCancel(): string
+    {
+        $buttonsDataArray = [
+            [
+                '',
+                'type' => 'submit',
+                'class' => 'btn btn-success bi bi-save pull-right',
+                'value' => '1',
+            ],
+            [
+                $this->translator->translate('cancel'),
+                'type' => 'cancel',
+                'class' => 'btn btn-secondary pull-right',
+                'href' => $this->generator->generate('family/index')
+            ],
+        ];
+        return Html::openTag('div', ['class' => 'headerbar-item pull-right'])
+            . (string) Field::buttongroup()
+                ->buttonsData($buttonsDataArray)
+            .  Html::closeTag('div');        
+    }    
 
     public static function activeLabel(Translator $translator): Span
     {

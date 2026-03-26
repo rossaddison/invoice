@@ -62,7 +62,7 @@
         "phpseclib/phpseclib": ">=3.0.50",
         "php-standard-library/php-standard-library": ">=5.5",
         "phptg/bot-api": "^0.17",
-        "promphp/prometheus_client_php": ">=2.14.1",
+        "promphp/prometheus_client_php": ">=2.15.0",
         "psalm/plugin-symfony": "^5.3.0",
         "psr/container": "^2.0.2",
         "psr/http-client": ">=1.0.3",

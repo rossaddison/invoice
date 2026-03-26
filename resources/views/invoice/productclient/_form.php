@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Widget\Button as Btn;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Form;
-use Yiisoft\Html\Tag\Button;
 
 /**
  * @var App\Invoice\ProductClient\ProductClientForm $form
@@ -15,6 +15,7 @@ use Yiisoft\Html\Tag\Button;
  * @var App\Widget\Button $button
  * @var App\Widget\FormFields $formFields
  * @var Yiisoft\Translator\TranslatorInterface $translator
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var string $csrf
  * @var string $actionName
@@ -40,7 +41,7 @@ use Yiisoft\Html\Tag\Button;
     'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
-<?= $translator->translate('i.product_client_association'); ?>
+<?= $translator->translate('product.client.association'); ?>
 <?= Html::closeTag('h1'); ?>
 
 <?=  new Form()
@@ -60,25 +61,26 @@ use Yiisoft\Html\Tag\Button;
 <!-- Product Information -->
 <?= Html::openTag('div',
         [ 'class' => 'mb-3',
-            $currentIndex ? 'data-current-index => ' .
-                Html::encode($currentIndex) : '',
-            $totalProducts ? 'data-total-products => ' .
-                Html::encode($totalProducts) : '']); ?>
+            'data-current-index' => Html::encode($currentIndex),
+            'data-total-products' => Html::encode($totalProducts)]); ?>
     <?= Html::openTag('h4'); ?>
         <?= $translator->translate('product'); ?>
     <?= Html::closeTag('h4'); ?>
     <?php if ($productId): ?>
         <?= Html::openTag('div', ['class' => 'alert alert-info']); ?>
             <?= Html::openTag('strong'); ?>
-                <?= $translator->translate('product.id'); ?>:
+                <?= $translator->translate('product.name'); ?>:
             <?= Html::closeTag('strong'); ?>
-             <?= Html::encode($productId); ?>
+            <?= Html::encode(($productRepository->repoProductquery(
+                    (string) $productId))?->getProductName() ??
+                    $translator->translate('product.name'));
+            ?>
             <?php if ($remainingProducts): ?>
                 <?= Html::openTag('small', ['class' => 'd-block mt-1']); ?>
                     <?= Html::openTag('i', ['class' => 'fa fa-info-circle']); ?>
                     <?= Html::closeTag('i'); ?>
                     <?= $remainingProducts; ?>
-                    <?= $translator->translate('products.remaining.after.this.one'); ?>
+                    <?= $translator->translate('products.remaining.after.this'); ?>
                 <?= Html::closeTag('small'); ?>
             <?php endif; ?>
         <?= Html::closeTag('div'); ?>
@@ -88,17 +90,18 @@ use Yiisoft\Html\Tag\Button;
 <!-- Client Association Options -->
 <?= Html::openTag('div', ['class' => 'mb-3']); ?>
     <?= Html::openTag('h4'); ?>
-        <?= $translator->translate('client.association.options'); ?>
+        <?= $translator->translate('product.client.association.options'); ?>
     <?= Html::closeTag('h4'); ?>
     <!-- Option 1: Select Existing Client -->
-    <?= Html::openTag('div', ['class' => 'form-check mb-3']); ?>
-        <?= Html::openTag('input', [
+    <?= Html::openTag('div', ['class' => 'form-check mb-3']); ?>    
+    <?=  new Input()
+         ->attributes([
             'class' => 'form-check-input',
             'type' => 'radio',
             'name' => 'association_type',
             'id' => 'existing_client',
             'value' => 'existing',
-            'checked']); ?>
+            'checked' => true]); ?>
         <?= Html::openTag('label', [
                     'class' => 'form-check-label',
                     'for' => 'existing_client']); ?>
@@ -111,7 +114,7 @@ use Yiisoft\Html\Tag\Button;
         <?= Field::select($form, 'client_id')
             ->label($translator->translate('client'))
             ->addInputAttributes(['class' => 'form-control'])
-            ->prompt($translator->translate('select.client'))
+            ->prompt($translator->translate('select.existing.client'))
             ->optionsData($clients)
             ->render()
         ?>
@@ -192,23 +195,7 @@ use Yiisoft\Html\Tag\Button;
 <?= Html::hiddenInput('product_id', (string) $productId); ?>
 
 <!-- Form Actions -->
-<?= Html::openTag('div', ['class' => 'row mb-3']); ?>
-    <?= Html::openTag('div', ['class' => 'col-sm-12']); ?>
-        <?=  new Button()
-            ->content($translator->translate('save'))
-            ->class('btn btn-success')
-            ->type('submit')
-            ->render()
-        ?>
-        
-        <?=  new A()
-            ->addAttributes(['class' => 'btn btn-secondary ms-2'])
-            ->content($translator->translate('cancel'))
-            ->href($urlGenerator->generate('family/index'))
-            ->render()
-        ?>
-    <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
+<?= new Btn($currentRoute, $translator, $urlGenerator)->saveCancel(); ?>
 
 <?=  new Form()->close(); ?>
 

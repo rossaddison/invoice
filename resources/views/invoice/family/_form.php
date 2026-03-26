@@ -160,6 +160,38 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                 <?= Html::closeTag('div'); ?>
               <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
+<script>
+(function () {
+    document.getElementById('FamilyForm').addEventListener('submit', function (e) {
+        var commalist = document.getElementById('family_commalist').value.trim();
+        var prefix    = document.getElementById('family_productprefix').value.trim();
+        if (commalist !== '' && prefix === '') {
+            e.preventDefault();
+            document.getElementById('family_productprefix').focus();
+            document.getElementById('family_productprefix').classList.add('is-invalid');
+            var existing = document.getElementById('prefix-required-feedback');
+            if (!existing) {
+                var msg = document.createElement('div');
+                msg.id = 'prefix-required-feedback';
+                msg.className = 'invalid-feedback d-block';
+                msg.textContent = 'Product prefix is required when a comma list is provided.';
+                document.getElementById('family_productprefix').insertAdjacentElement('afterend', msg);
+            }
+        } else {
+            document.getElementById('family_productprefix').classList.remove('is-invalid');
+            var existing = document.getElementById('prefix-required-feedback');
+            if (existing) { existing.remove(); }
+        }
+    });
+    document.getElementById('family_productprefix').addEventListener('input', function () {
+        if (this.value.trim() !== '') {
+            this.classList.remove('is-invalid');
+            var existing = document.getElementById('prefix-required-feedback');
+            if (existing) { existing.remove(); }
+        }
+    });
+}());
+</script>
           <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
       <?= Html::closeTag('div'); ?>
