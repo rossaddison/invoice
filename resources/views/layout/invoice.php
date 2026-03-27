@@ -11,7 +11,8 @@ use App\Invoice\Asset\pciAsset\AmazonPayTwoSevenAsset;
 use App\Invoice\Asset\pciAsset\BraintreeDropInOneThirtyThreeSevenAsset;
 use App\Asset\AppAsset;
 use App\Widget\PerformanceMetrics;
-use Yiisoft\Bootstrap5\Assets\BootstrapAsset;
+use Yiisoft\Bootstrap5\Assets\BootstrapAsset as NoCdn;
+use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset as Cdn;
 use Yiisoft\Bootstrap5\ButtonSize;
 use Yiisoft\Bootstrap5\Dropdown;
 use Yiisoft\Bootstrap5\DropdownItem;
@@ -41,6 +42,7 @@ use Yiisoft\Html\Tag\Meta;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
+ * @var bool $bootstrap5CdnNotNodeModule 
  * @var bool $bootstrap5OffcanvasEnable
  * @var bool $isGuest
  * @var bool $buildDatabase
@@ -99,7 +101,7 @@ use Yiisoft\Html\Tag\Meta;
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
 $assetManager->register(NProgressAsset::class);
-$assetManager->register(BootstrapAsset::class);
+$assetManager->register($bootstrap5CdnNotNodeModule ? Cdn::class : NoCdn::class);
 $s->getSetting('monospace_amounts') == 1 ?
     $assetManager->register(MonospaceAsset::class) : '';
 $assetManager->register(StripeVersionTenAsset::class);

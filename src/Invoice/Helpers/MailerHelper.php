@@ -66,8 +66,6 @@ class MailerHelper
         ;
     }
 
-    // This function will be used with cron at a later stage
-
     /**
      * @param string $quote_id
      * @param QR $qR

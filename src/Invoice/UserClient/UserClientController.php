@@ -194,20 +194,6 @@ final class UserClientController extends BaseController
     }
 
     /**
-     * @return Response|true
-     */
-    private function rbac(): bool|Response
-    {
-        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
-        if (!$canEdit) {
-            $this->flashMessage('warning',
-                $this->translator->translate('permission'));
-            return $this->webService->getRedirectResponse('userinv/index');
-        }
-        return $canEdit;
-    }
-
-    /**
      * @param CurrentRoute $currentRoute
      * @param UIR $uiR
      * @return UserInv|null
@@ -234,15 +220,5 @@ final class UserClientController extends BaseController
             return $ucR->repoUserClientquery($id);
         }
         return null;
-    }
-
-    /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function userclients(UserClientRepository $userclientRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        return $userclientRepository->findAllPreloaded();
     }
 }

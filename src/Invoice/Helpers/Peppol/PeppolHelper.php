@@ -2083,11 +2083,10 @@ $country_helper->getCountryIdentificationCodeWithLeague(
     }
 
     /**
-     * TODO phase 2: insert translator here
      * Related logic: https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
      * @return array
      */
-    private function getPeppolChargesSubsetArray(): array
+    public function getPeppolChargesSubsetArray(): array
     {
         return [
             '41' => 'Bonus for works ahead of schedule',
@@ -2113,9 +2112,9 @@ $country_helper->getCountryIdentificationCodeWithLeague(
     }
 
     /**
-     * TODO phase 2: insert translator here
      * Related logic: https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
      * @return array
+     * @psalm-suppress UnusedMethod
      */
     private function getPeppolAllowancesArray(): array
     {
@@ -2497,7 +2496,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
 
 /**
  * Used with product/edit
- * Related logic:
+     * Related logic:
    https://github.com/OpenPEPPOL/peppol-bis-invoice-3/blob/master/
                                                       structure/codelist/icd.xml
  * @return array

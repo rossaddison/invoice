@@ -665,19 +665,6 @@ final class SettingController extends BaseController
     }
 
     /**
-     * @return Response|true
-     */
-    private function rbac(): bool|Response
-    {
-        $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
-        if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('permission'));
-            return $this->webService->getRedirectResponse('setting/index');
-        }
-        return $canEdit;
-    }
-
-    /**
      * @param CurrentRoute $currentRoute
      * @return Setting|null
      */
@@ -711,30 +698,6 @@ final class SettingController extends BaseController
             'cronkey' => Random::string(32),
         ];
         return $this->factory->createResponse(Json::encode($parameters));
-    }
-
-    private function invoiceplaneConnected(): bool
-    {
-        $settingInvoiceplaneName = $this->sR->getSetting('invoiceplane_database_name');
-        $settingInvoiceplaneUsername = $this->sR->getSetting('invoiceplane_database_username');
-        $settingInvoiceplanePassword = $this->sR->getSetting('invoiceplane_database_password') ?: '';
-        if (strlen($settingInvoiceplaneName) > 0 && strlen($settingInvoiceplaneUsername) > 0) {
-            $dsn = (string) (new Dsn(
-                'mysql',
-                '127.0.0.1',
-                $settingInvoiceplaneName,
-                '3306',
-                [
-                    'charset' => 'utf8mb4',
-                ],
-            ));
-            $arrayCache = new ArrayCache();
-            $schemaCache = new SchemaCache($arrayCache);
-            $pdoDriver = new Driver($dsn, $settingInvoiceplaneUsername, $settingInvoiceplanePassword);
-            new Connection($pdoDriver, $schemaCache);
-            return true;
-        }
-        return false;
     }
 
     public function optionsDataSettingsKey(sR $sR): array

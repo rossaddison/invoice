@@ -50,7 +50,9 @@
 <p>Retest signing up procedure because middleware authentication class moved into group header</p>
 <p><s>Payment gateway testing on alpine</s></p>
 <p>Callback traits i.e. C:\wamp128\www\invoice\src\Auth\Trait\Callback.php still to be tested</p>
-<p>26th March 2026</p>
+<p><b>27th March 2026</b></p>
+<p>Site Main page no css. Include BootstrapAsset in the soletrader/main.php since the BootstrapCdnAsset was removed from AppAsset due to it causing a loading conflict with BootstrapAsset i.e. do not have two versions of Bootstrap loading at the same time otherwise they will cancel each other out. Created a setting in the tab_index to choose between using the Cdn or Node Module Bootstrap. The Node Modules related BootstrapAsset will load by default. see layout/templates/soletrader/main.php</p>
+<p><b>26th March 2026</b></p>
 <p>Branch psr1: The error that was being generated using 'Generate Products' in the family index has been fixed. e.g. A list of house numbers can be created in the 'Product Number List'
 and if the 'Product Number List Prefix e.g. House' is filled, then especially useful for
 runs e.g. window cleaning, the House Numbers can be associated with a client. i.e. more than

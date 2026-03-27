@@ -9,6 +9,8 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\Label;
+use Yiisoft\Bootstrap5\Assets\BootstrapAsset as NoCdn;
+use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset as Cdn;
 use Yiisoft\Bootstrap5\ButtonSize;
 use Yiisoft\Bootstrap5\ButtonVariant;
 use Yiisoft\Bootstrap5\Dropdown;
@@ -36,6 +38,7 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  *              'layout' => '@views/layout/templates/soletrader/main.php'
  *          ],
  * @var App\User\User|null $user
+ * @var bool $bootstrap5CdnNotNodeModule
  * @var bool $debugMode
  * @var bool $noFrontPageAbout
  * @var bool $noFrontPageAccreditations
@@ -95,6 +98,7 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var DropdownItem $yoNG
  * @var DropdownItem $zuZA
  */
+$assetManager->register($bootstrap5CdnNotNodeModule ? Cdn::class : NoCdn::class);
 $assetManager->register(AppAsset::class);
 $assetManager->register(AuthAegisTotpKeypadAsset::class);
 $assetManager->register(AuthChoiceAsset::class);

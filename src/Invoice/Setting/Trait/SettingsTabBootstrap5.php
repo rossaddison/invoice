@@ -30,6 +30,8 @@ trait SettingsTabBootstrap5
     private function buildBootstrap5Body(): array
     {
         return [
+            'settings[bootstrap5_cdn_not_node_module]'
+                => $this->sR->getSetting('bootstrap5_cdn_not_node_module'),
             'settings[bootstrap5_offcanvas_enable]'
                 => $this->sR->getSetting('bootstrap5_offcanvas_enable'),
             'settings[bootstrap5_offcanvas_placement]'
@@ -49,7 +51,8 @@ trait SettingsTabBootstrap5
 
     /**
      * Renders the full bootstrap5 settings panel.
-     * Called by tab_index() in place of renderPartialAsString on the old monolithic partial.
+     * Called by tab_index() in place of renderPartialAsString
+     *  on the old monolithic partial.
      */
     private function bootstrap5Partial(): string
     {
@@ -90,6 +93,13 @@ trait SettingsTabBootstrap5
                 'fontSizes' => $fontSizes,
             ],
         );
+        
+        $cdn = $this->webViewRenderer->renderPartialAsString(
+            '//invoice/setting/views/bootstrap5/partial_cdn_not_node_module',
+            [
+                'body' => $body,
+            ],
+        );
 
         $sep = H::openTag('div', ['class' => 'border']) . H::closeTag('div');
 
@@ -107,6 +117,7 @@ trait SettingsTabBootstrap5
             . $alert
             . $sep
             . $navbar
+            . $cdn    
             . H::closeTag('div')   // row (inner)
             . H::closeTag('div')   // panel-body
             . H::closeTag('div')   // panel panel-default

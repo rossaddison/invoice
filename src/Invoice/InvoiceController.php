@@ -79,6 +79,7 @@ final class InvoiceController extends BaseController
  */
 
             'active_only' => 0,
+            'bootstrap5_cdn_not_node_module' => 1,
             'bootstrap5_offcanvas_enable' => 0,
             'bootstrap5_offcanvas_placement' => 'top',
             'bootstrap5_alert_message_font_size' => '10',
@@ -1329,20 +1330,6 @@ final class InvoiceController extends BaseController
         $open_banking->setName('Open Banking Third Party Provider');
         $open_banking->setActive(true);
         $pmR->save($open_banking);
-    }
-
-    /**
-     * @return Response|true
-     */
-    private function rbac(): bool|Response
-    {
-        $canEdit = $this->userService->hasPermission(Permissions::VIEW_INV);
-        if (!$canEdit) {
-            $this->flashMessage(
-                'warning', $this->translator->translate('permission'));
-            return $this->webService->getRedirectResponse('invoice/index');
-        }
-        return $canEdit;
     }
 
     /**

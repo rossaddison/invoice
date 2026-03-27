@@ -345,11 +345,6 @@ final class UserInvController extends BaseController
         return $this->webService->getRedirectResponse('userinv/index');
     }
 
-    private function getRolesByUserId(string $userId): array
-    {
-        return $this->manager->getRolesByUserId($userId);
-    }
-
     /**
      * @param Request $request
      * @param int $id

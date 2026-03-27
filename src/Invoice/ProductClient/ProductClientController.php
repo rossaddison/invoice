@@ -449,19 +449,6 @@ final class ProductClientController extends BaseController
         }
         return null;
     }
-
-    /**
-     * @return \Yiisoft\Data\Cycle\Reader\EntityReader
-     *
-     * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
-     */
-    private function productclients(
-        ProductClientRepository $productclientRepository)
-            : \Yiisoft\Data\Cycle\Reader\EntityReader
-    {
-        $productclients = $productclientRepository->findAllPreloaded();
-        return $productclients;
-    }
         
     /**
      * @param ProductClientRepository $productclientRepository

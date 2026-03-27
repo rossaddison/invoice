@@ -489,52 +489,6 @@ final readonly class ButtonsToolbarFull
         return $link->encode(false)->render(); // Allow HTML content for icon
     }
 
-    private function renderStatusIndicators(Inv $inv): string
-    {
-        $string = Html::openTag('div', [
-            'class' => 'invoice-status-indicators',
-            'style' => 'margin: 6px 0; display: flex; gap: 6px; align-items:'
-                . ' center; flex-wrap: wrap;',
-        ]);
-
-        if ($inv->getIsReadOnly() === true) {
-            $string .=  new Span()
-                ->addClass('badge bg-danger')
-                ->attribute('style', 'font-size: 0.75rem; padding: 4px 8px;'
-                    . ' border-radius: 12px;')
-                ->content('🔒 ' . $this->translator->translate('read.only'))
-                ->render();
-        }
-
-        $statusClass = match ($inv->getStatusId()) {
-            1 => 'bg-secondary',
-            2 => 'bg-info',
-            3 => 'bg-warning',
-            4 => 'bg-success',
-            5 => 'bg-danger',
-            default => 'bg-light',
-        };
-
-        $statusText = match ($inv->getStatusId()) {
-            1 => '📝 ' . $this->translator->translate('draft'),
-            2 => '📤 ' . $this->translator->translate('sent'),
-            3 => '👁 ' . $this->translator->translate('viewed'),
-            4 => '✅ ' . $this->translator->translate('paid'),
-            5 => '⚠️ ' . $this->translator->translate('overdue'),
-            default => '❓ ' . $this->translator->translate('unknown'),
-        };
-
-        $string .=  new Span()
-            ->addClass('badge ' . $statusClass)
-            ->attribute('style', 'font-size: 0.75rem; padding:'
-                . ' 4px 8px; border-radius: 12px;')
-            ->content($statusText)
-            ->render();
-
-        $string .= Html::closeTag('div');
-        return $string;
-    }
-
     private function renderInlineStatusIndicators(Inv $inv): string
     {
         $string = '';

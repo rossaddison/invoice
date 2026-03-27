@@ -326,18 +326,6 @@ final class DeveloperSandboxHmrc extends OAuth2
         return 'read:self-assessment write:self-assessment';
     }
 
-    /**
-     * Format as UTC+00:00
-     * @return string
-     */
-    private function dateTimeZone(): string
-    {
-        $timezone = date_default_timezone_get();
-        $dateTimeZone = new DateTimeZone($timezone);
-        $offset = $dateTimeZone->getOffset(new DateTime('now', $dateTimeZone)) / 3600;
-        return ($offset >= 0 ? 'UTC+' : 'UTC') . sprintf('%02d:00', abs($offset));
-    }
-
     public function getAuthorizedIpAddressEndpoints(): array
     {
         return $this->authorizedIpAddressValidatorEndPoints;

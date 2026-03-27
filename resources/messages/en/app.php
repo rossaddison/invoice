@@ -147,6 +147,7 @@ return [
   'bootstrap5.alert.message.font' => 'Alert Message Font',
   'bootstrap5.alert.message.font.size' =>
     'Alert Message Font Size',
+  'bootstrap5.cdn.not.node.module' => 'Bootstrap5 Cdn (Not Node Module)',
   'bootstrap5.layout.invoice.navbar.font' =>
     'Layout Invoice Navbar Font',
   'bootstrap5.layout.invoice.navbar.font.size' =>

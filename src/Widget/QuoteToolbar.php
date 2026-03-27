@@ -210,16 +210,6 @@ final readonly class QuoteToolbar
         ];
     }
 
-    private function renderToolbar(array $buttons): string
-    {
-        return Html::openTag('div', [
-            'class' => 'quote-actions-toolbar d-flex flex-wrap gap-2 align-items-center',
-            'style' => 'margin-bottom: 1rem;',
-        ])
-        . $this->renderButtons($buttons)
-        . Html::closeTag('div');
-    }
-
     private function renderButtons(array $buttons): string
     {
         $html = '';

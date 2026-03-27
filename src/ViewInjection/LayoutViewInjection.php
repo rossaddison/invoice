@@ -115,6 +115,10 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             $this->settingRepository
                  ->getSetting('bootstrap5_layout_invoice_navbar_font_size')
                    ?: '10';
+        $bootstrap5CdnNotNodeModule =
+            $this->settingRepository
+                 ->getSetting('bootstrap5_cdn_not_node_module') == '1'
+                   ? true : false;
         $stopSigningUp =
             $this->settingRepository->getSetting('stop_signing_up') == '1'
                    ? true : false;
@@ -177,7 +181,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $logoPath = ((isset($companyLogoFileName)
                       && !empty($companyLogoFileName))
                       ? '/logo/' . $companyLogoFileName
-                      : '/site/logo.png');        
+                      : '/site/logo.png');
         $_language = '_language';
         $localeSplitter =  new Locale($this->currentRoute->getArgument('_language') ?? 'en');
         $siteIndex = 'site/index';
@@ -186,6 +190,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'bootstrap5OffcanvasPlacement' => $bootstrap5OffcanvasPlacement,
             'bootstrap5LayoutInvoiceNavbarFont' => $bootstrap5LayoutInvoiceNavbarFont,
             'bootstrap5LayoutInvoiceNavbarFontSize' => $bootstrap5LayoutInvoiceNavbarFontSize,
+            'bootstrap5CdnNotNodeModule' => $bootstrap5CdnNotNodeModule,
             'title' => 'Home',
             'logoPath' => $logoPath,
             'buildDatabase' => $buildDatabase,

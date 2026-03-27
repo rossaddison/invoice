@@ -16,7 +16,8 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Meta;
-use Yiisoft\Bootstrap5\Assets\BootstrapAsset;
+use Yiisoft\Bootstrap5\Assets\BootstrapAsset as NoCdn;
+use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset as Cdn;
 use Yiisoft\Bootstrap5\ButtonSize;
 use Yiisoft\Bootstrap5\Dropdown;
 use Yiisoft\Bootstrap5\DropdownItem;
@@ -37,6 +38,7 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
+ * @var bool $bootstrap5CdnNotNodeModule 
  * @var string $csrf
  * @var string $content
  * @var string $brandLabel
@@ -78,7 +80,7 @@ use Yiisoft\Bootstrap5\NavStyle;
 
 $assetManager->register(AppAsset::class);
 $assetManager->register(InvoiceAsset::class);
-$assetManager->register(BootstrapAsset::class);
+$assetManager->register($bootstrap5CdnNotNodeModule ? Cdn::class : NoCdn::class);
 $s->getSetting('monospace_amounts') == 1 ?
         $assetManager->register(MonospaceAsset::class) : '';
 $assetManager->register(StripeVersionTenAsset::class);

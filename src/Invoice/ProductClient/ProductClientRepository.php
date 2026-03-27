@@ -27,13 +27,7 @@ final class ProductClientRepository extends Select\Repository
         parent::__construct($select);
     }
     
-    /**
-     * @return Sort
-     */
-    private function getSort(): Sort
-    {
-        return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }
+
     
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
