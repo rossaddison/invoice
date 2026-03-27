@@ -34,7 +34,7 @@ $client_helper = new ClientHelper($s);
                                                                      'back'); ?>
             </a>
             <a class="btn btn-primary" href="<?= $urlGenerator->generate(
-                   'userclient/new', ['user_id' => $userInv->getUser_id()]); ?>">
+                   'userclient/new', ['user_id' => $userInv->getUserId()]); ?>">
                 <i class="fa fa-plus"></i> <?= $translator->translate('new'); ?>
             </a>
         </div>
@@ -64,18 +64,18 @@ $client_helper = new ClientHelper($s);
     /**
      * @var App\Invoice\Entity\UserClient $userClient
      */
-    foreach ($ucR->repoClientquery($userInv->getUser_id()) as $userClient) { ?>
+    foreach ($ucR->repoClientquery($userInv->getUserId()) as $userClient) { ?>
                             <tr>
                                 <td>
                                     <a href="<?= 
                                         $urlGenerator->generate(
                                         'client/view',
-                                        ['id' => $userClient->getClient_id()]); ?>"
+                                        ['id' => $userClient->getClientId()]); ?>"
                                        style="text-decoration:none">
                                         <?php
                                             $client = $cR->repoClientquery(
-                                                    $userClient->getClient_id());
-                                    echo $client_helper->format_client($client);
+                                                    $userClient->getClientId());
+                                    echo $client_helper->formatClient($client);
                                 ?>
                                     </a>
                                 </td>

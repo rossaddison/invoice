@@ -42,7 +42,7 @@ final class InvItemForm extends FormModel
 
     /**
      * Not Required because will conflict with a task which does not require a product unit id.
-     * To cause an error and test the InvController function inv_to_inv_items use the inv/index checkbox Copy Invoice button
+     * To cause an error and test the InvController function invToInvItems use the inv/index checkbox Copy Invoice button
      * on an invoice that has both a task and a product and input a #[Required] here. Result: danger flash message in inv/index
      */
     private ?int $product_unit_id = null;
@@ -57,22 +57,22 @@ final class InvItemForm extends FormModel
     {
         $this->id = (string) $invitem->getId();
         $this->inv_id = (string) $inv_id;
-        $this->so_item_id = $invitem->getSo_item_id();
-        $this->tax_rate_id = $invitem->getTax_rate_id();
-        $this->product_id = $invitem->getProduct_id();
-        $this->task_id = $invitem->getTask_id();
+        $this->so_item_id = $invitem->getSoItemId();
+        $this->tax_rate_id = $invitem->getTaxRateId();
+        $this->product_id = $invitem->getProductId();
+        $this->task_id = $invitem->getTaskId();
         $this->name = $invitem->getName();
         $this->description = $invitem->getDescription();
         $this->note = $invitem->getNote();
         $this->quantity = $invitem->getQuantity();
         $this->price = $invitem->getPrice();
-        $this->discount_amount = $invitem->getDiscount_amount();
+        $this->discount_amount = $invitem->getDiscountAmount();
         $this->order = (string) $invitem->getOrder();
-        $this->product_unit = $invitem->getProduct_unit();
-        $this->product_unit_id = (int) $invitem->getProduct_unit_id();
+        $this->product_unit = $invitem->getProductUnit();
+        $this->product_unit_id = (int) $invitem->getProductUnitId();
         $this->date = $invitem->getDate();
-        $this->belongs_to_vat_invoice = (int) $invitem->getBelongs_to_vat_invoice();
-        $this->delivery_id = $invitem->getDelivery_id();
+        $this->belongs_to_vat_invoice = (int) $invitem->getBelongsToVatInvoice();
+        $this->delivery_id = $invitem->getDeliveryId();
     }
 
     public function getId(): ?string
@@ -85,27 +85,27 @@ final class InvItemForm extends FormModel
         return $this->date;
     }
 
-    public function getInv_id(): ?string
+    public function getInvId(): ?string
     {
         return $this->inv_id;
     }
 
-    public function getSo_item_id(): ?string
+    public function getSoItemId(): ?string
     {
         return $this->so_item_id;
     }
 
-    public function getTax_rate_id(): ?string
+    public function getTaxRateId(): ?string
     {
         return $this->tax_rate_id;
     }
 
-    public function getProduct_id(): ?string
+    public function getProductId(): ?string
     {
         return $this->product_id;
     }
 
-    public function getTask_id(): ?string
+    public function getTaskId(): ?string
     {
         return $this->task_id;
     }
@@ -135,7 +135,7 @@ final class InvItemForm extends FormModel
         return $this->price;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
@@ -145,22 +145,22 @@ final class InvItemForm extends FormModel
         return $this->order;
     }
 
-    public function getProduct_unit(): ?string
+    public function getProductUnit(): ?string
     {
         return $this->product_unit;
     }
 
-    public function getProduct_unit_id(): ?int
+    public function getProductUnitId(): ?int
     {
         return $this->product_unit_id;
     }
 
-    public function getBelongs_to_vat_invoice(): ?int
+    public function getBelongsToVatInvoice(): ?int
     {
         return $this->belongs_to_vat_invoice;
     }
 
-    public function getDelivery_id(): ?string
+    public function getDeliveryId(): ?string
     {
         return $this->delivery_id;
     }

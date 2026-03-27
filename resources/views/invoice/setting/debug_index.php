@@ -45,7 +45,7 @@ $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
     ->content( new I()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName() ?? 'setting/debug_index'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? 'setting/debugIndex'))
     ->id('btn-reset')
     ->render();
 
@@ -62,20 +62,20 @@ $columns = [
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn (Setting $model) => Html::encode($model->getSetting_id()),
+        content: static fn (Setting $model) => Html::encode($model->getSettingId()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'setting_key',
         header: $translator->translate('setting.key'),
-        content: static fn (Setting $model) => Html::encode($model->getSetting_key()),
+        content: static fn (Setting $model) => Html::encode($model->getSettingKey()),
         withSorting: true,
         filter:  new DropdownFilter()->optionsData($optionsDataSettingsKeyDropDownFilter),
     ),
     new DataColumn(
         property: 'setting_value',
         header: $translator->translate('setting.value'),
-        content: static fn (Setting $model) => Html::encode($model->getSetting_value()),
+        content: static fn (Setting $model) => Html::encode($model->getSettingValue()),
         withSorting: true,
         filter:  new DropdownFilter()->optionsData($optionsDataSettingsValueDropDownFilter),
     ),
@@ -83,7 +83,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Setting $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('setting/view', ['setting_id' => $model->getSetting_id()]);
+                return $urlGenerator->generate('setting/view', ['setting_id' => $model->getSettingId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -93,7 +93,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Setting $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('setting/edit', ['setting_id' => $model->getSetting_id()]);
+                return $urlGenerator->generate('setting/edit', ['setting_id' => $model->getSettingId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -103,7 +103,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Setting $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('setting/delete', ['setting_id' => $model->getSetting_id()]);
+                return $urlGenerator->generate('setting/delete', ['setting_id' => $model->getSettingId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -132,7 +132,7 @@ $gridSummary = $s->gridSummary(
     '',
 );
 
-$toolbarString =  new Form()->post($urlGenerator->generate('setting/debug_index'))->csrf($csrf)->open()
+$toolbarString =  new Form()->post($urlGenerator->generate('setting/debugIndex'))->csrf($csrf)->open()
     .  new A()
     ->href($urlGenerator->generate('setting/add'))
     ->addClass('btn btn-info')

@@ -42,7 +42,7 @@ final readonly class QuoteItemAmountService
         // The total of all the allowances of the quote item
         $model->setAllowance((float) $quoteitem['allowance']);
         $model->setSubtotal((float) $quoteitem['subtotal']);
-        $model->setTax_total((float) $quoteitem['taxtotal']);
+        $model->setTaxTotal((float) $quoteitem['taxtotal']);
         $model->setDiscount((float) $quoteitem['discount']);
         $model->setTotal((float) $quoteitem['total']);
         $this->repository->save($model);

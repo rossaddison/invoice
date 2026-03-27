@@ -44,7 +44,7 @@ $columns = [
     ),
     new DataColumn(
         'logo_filename',
-        content: static fn (CompanyPrivate $model) => Html::encode($model->getLogo_filename()),
+        content: static fn (CompanyPrivate $model) => Html::encode($model->getLogoFilename()),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

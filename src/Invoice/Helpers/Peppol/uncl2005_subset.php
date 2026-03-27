@@ -5,6 +5,7 @@ declare(strict_types=1);
 // Flattened with: https://json-ld.org/playground/
 // Converted to php with: https://wtools.io/convert-json-to-php-array
 // This array has been placed into Peppolarrays
+/** @psalm-suppress UnusedVariable */
 $array = [
     216 => [
         '@id' => 'uncl2005:Delivery_date/time_actual',

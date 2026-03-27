@@ -28,30 +28,30 @@ final class UploadForm extends FormModel
 
     public function __construct(Upload $upload)
     {
-        $this->client_id = (int) $upload->getClient_id();
-        $this->url_key = $upload->getUrl_key();
-        $this->file_name_original = $upload->getFile_name_original();
-        $this->file_name_new = $upload->getFile_name_new();
+        $this->client_id = (int) $upload->getClientId();
+        $this->url_key = $upload->getUrlKey();
+        $this->file_name_original = $upload->getFileNameOriginal();
+        $this->file_name_new = $upload->getFileNameNew();
         $this->description = $upload->getDescription();
-        $this->uploaded_date = $upload->getUploaded_date();
+        $this->uploaded_date = $upload->getUploadedDate();
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function getUrl_key(): string
+    public function getUrlKey(): string
     {
         return $this->url_key;
     }
 
-    public function getFile_name_original(): string
+    public function getFileNameOriginal(): string
     {
         return $this->file_name_original;
     }
 
-    public function getFile_name_new(): string
+    public function getFileNameNew(): string
     {
         return $this->file_name_new;
     }
@@ -61,7 +61,7 @@ final class UploadForm extends FormModel
         return $this->description;
     }
 
-    public function getUploaded_date(): string|DateTimeImmutable
+    public function getUploadedDate(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->uploaded_date

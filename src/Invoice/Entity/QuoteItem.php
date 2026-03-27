@@ -116,43 +116,43 @@ class QuoteItem
         $this->id = $id;
     }
 
-    public function getQuote_id(): string
+    public function getQuoteId(): string
     {
         return (string) $this->quote_id;
     }
 
-    public function setQuote_id(int $quote_id): void
+    public function setQuoteId(int $quote_id): void
     {
         $this->quote_id = $quote_id;
     }
 
-    public function getTax_rate_id(): string
+    public function getTaxRateId(): string
     {
         return (string) $this->tax_rate_id;
     }
 
-    public function setTax_rate_id(int $tax_rate_id): void
+    public function setTaxRateId(int $tax_rate_id): void
     {
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getProduct_id(): string
+    public function getProductId(): string
     {
         return (string) $this->product_id;
     }
 
-    public function setProduct_id(int $product_id): void
+    public function setProductId(int $product_id): void
     {
         $this->product_id = $product_id;
     }
 
-    public function getDate_added(): DateTimeImmutable
+    public function getDateAdded(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->date_added */
         return $this->date_added;
     }
 
-    public function setDate_added(DateTime $date_added): void
+    public function setDateAdded(DateTime $date_added): void
     {
         $this->date_added = $date_added;
     }
@@ -197,12 +197,12 @@ class QuoteItem
         $this->price = $price;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function setDiscount_amount(float $discount_amount): void
+    public function setDiscountAmount(float $discount_amount): void
     {
         $this->discount_amount = $discount_amount;
     }
@@ -217,32 +217,32 @@ class QuoteItem
         $this->order = $order;
     }
 
-    public function getProduct_unit(): ?string
+    public function getProductUnit(): ?string
     {
         return $this->product_unit;
     }
 
-    public function setProduct_unit(string $product_unit): void
+    public function setProductUnit(string $product_unit): void
     {
         $this->product_unit = $product_unit;
     }
 
-    public function getProduct_unit_id(): string
+    public function getProductUnitId(): string
     {
         return (string) $this->product_unit_id;
     }
 
-    public function setProduct_unit_id(int $product_unit_id): void
+    public function setProductUnitId(int $product_unit_id): void
     {
         $this->product_unit_id = $product_unit_id;
     }
 
-    public function getTask_id(): string
+    public function getTaskId(): string
     {
         return (string) $this->task_id;
     }
 
-    public function setTask_id(int $task_id): void
+    public function setTaskId(int $task_id): void
     {
         $this->task_id = $task_id;
     }

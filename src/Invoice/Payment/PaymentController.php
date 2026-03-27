@@ -114,7 +114,7 @@ final class PaymentController extends BaseController
         ITRR $itrR,
     ): Response {
         $open = $invRepository->open();
-        $invRepository->open_count() == 0 ?
+        $invRepository->openCount() == 0 ?
                 $this->flashMessage('danger', $this->translator->translate(
                         'payment.no.invoice.sent')) : '';
         $amounts = [];
@@ -127,10 +127,10 @@ final class PaymentController extends BaseController
                 if (null !== $inv_amount) {
                     $amounts['invoice'
                         . $open_invoice_id] =
-                            $this->sR->format_amount($inv_amount->getBalance());
+                            $this->sR->formatAmount($inv_amount->getBalance());
                 }
                 $invoice_payment_methods['invoice'
-                    . $open_invoice_id] = $open_invoice->getPayment_method();
+                    . $open_invoice_id] = $open_invoice->getPaymentMethod();
             }
         }
         $numberHelper = new NumberHelper($this->sR);
@@ -145,7 +145,7 @@ final class PaymentController extends BaseController
             'errors' => [],
             'errorsCustom' => [],
             'form' => $form,
-            'openInvsCount' => $invRepository->open_count(),
+            'openInvsCount' => $invRepository->openCount(),
             'openInvs' => $open,
             // jquery script at bottom of _from to load all amounts
             'amounts' => Json::encode($amounts),
@@ -164,7 +164,7 @@ final class PaymentController extends BaseController
                                     $cfR, $cvR, 'payment_custom')['customValues'],
 // There will initially be no custom_values attached to this payment until they
 // are filled in the field on the form
-//'payment_custom_values' => $this->payment_custom_values($payment_id,$pcR),
+//'payment_custom_values' => $this->paymentCustomValues($payment_id,$pcR),
             'paymentCustomValues' => [],
             'paymentCustomForm' => $pcForm,
         ];
@@ -176,9 +176,9 @@ final class PaymentController extends BaseController
                     $this->paymentService->savePayment($payment, $body);
 // Once the payment has been saved, retrieve the payment id for the custom fields
                     $payment_id = $payment->getId();
-                    $inv_id = $payment->getInv_id();
+                    $inv_id = $payment->getInvId();
                     // Recalculate the invoice
-                    $numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR,
+                    $numberHelper->calculateInv($inv_id, $aciR, $iiR, $iiaR,
                                             $itrR, $iaR, $invRepository, $pmtR);
                     $this->flashMessage('info',
                     $this->translator->translate('record.successfully.created'));
@@ -200,7 +200,7 @@ final class PaymentController extends BaseController
                                 serialize($value) : $value,
                             ];
                             if ($fmHyd->populate($pcForm, $paymentCustomInput)
-                                && $pcForm->isValid() && $this->add_custom_field(
+                                && $pcForm->isValid() && $this->addCustomField(
                                         $payment_id, $custom_field_id, $pcR)) {
                                 $this->paymentCustomService->savePaymentCustom(
                                     $paymentCustom, $paymentCustomInput);
@@ -232,7 +232,7 @@ final class PaymentController extends BaseController
      * @param PaymentCustomRepository $pcR
      * @return bool
      */
-    public function add_custom_field(string $payment_id, int $custom_field_id,
+    public function addCustomField(string $payment_id, int $custom_field_id,
                                             PaymentCustomRepository $pcR): bool
     {
         return $pcR->repoPaymentCustomCount($payment_id,
@@ -246,7 +246,7 @@ final class PaymentController extends BaseController
      * @param PaymentCustomRepository $pcR
      * @psalm-param array{custom: ''|mixed} $array
      */
-    public function custom_fields(FormHydrator $fmHyd, array $array,
+    public function customFields(FormHydrator $fmHyd, array $array,
                         string $payment_id, PaymentCustomRepository $pcR): void
     {
         if (is_array($array['custom'])) {
@@ -328,7 +328,7 @@ final class PaymentController extends BaseController
             if ($payment) {
                 $inv_id = $payment->getInv()?->getId();
                 $this->paymentService->deletePayment($payment);
-                $number_helper->calculate_inv((string) $inv_id, $aciR, $iiR,
+                $number_helper->calculateInv((string) $inv_id, $aciR, $iiR,
                                     $iiaR, $itrR, $iaR, $invRepository, $pmtR);
                 $this->flashMessage('success',
                                 $this->translator->translate('payment.deleted'));
@@ -395,7 +395,7 @@ final class PaymentController extends BaseController
                 'errors' => [],
                 'errorsCustom' => [],
                 'openInvs' => $open,
-                'openInvsCount' => $invRepository->open_count(),
+                'openInvsCount' => $invRepository->openCount(),
                 'paymentMethods' => $payment_methodRepository->findAllPreloaded(),
                 'cR' => $cR,
                 'iaR' => $iaR,
@@ -407,16 +407,16 @@ final class PaymentController extends BaseController
                         'payment_custom')['customValues'],
 // There will initially be no custom_values attached to this payment until they
 // are filled in the field on the form
-// 'payment_custom_values' => $this->payment_custom_values($payment_id,$pcR),
+// 'payment_custom_values' => $this->paymentCustomValues($payment_id,$pcR),
                 'paymentCustomValues' =>
-                                $this->payment_custom_values($payment_id, $pcR),
+                                $this->paymentCustomValues($payment_id, $pcR),
                 'edit' => true,
                 'paymentCustomForm' => $pcForm,
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
-                    $form = $this->save_form_fields($body, $currentRoute, $fmHyd,
+                    $form = $this->saveFormFields($body, $currentRoute, $fmHyd,
                             $pmtR);
                     if (isset($params['errors'])) {
                         // Recalculate the invoice
@@ -429,7 +429,7 @@ final class PaymentController extends BaseController
                                                                     $payment_id);
                             }
                         }
-                        $number_helper->calculate_inv($inv_id, $aciR, $iiR,
+                        $number_helper->calculateInv($inv_id, $aciR, $iiR,
                                     $iiaR, $itrR, $iaR, $invRepository, $pmtR);
                         $this->flashMessage('info',
                         $this->translator->translate('record.successfully.updated'));
@@ -454,7 +454,7 @@ final class PaymentController extends BaseController
  * @param array $body
  * @return PaymentForm|null
  */
-    public function save_form_fields(
+    public function saveFormFields(
         array $body,
         CurrentRoute $currentRoute,
         FormHydrator $fmHyd,
@@ -529,7 +529,7 @@ final class PaymentController extends BaseController
                     && null !== $user->getId()
                     && $userinv->getActive()) {
                 /** @psalm-suppress PossiblyNullArgument */
-                $client_id_array = $ucR->get_assigned_to_user($user->getId());
+                $client_id_array = $ucR->getAssignedToUser($user->getId());
                 // Use the users last preferred Page Size Limiter value
                 $userInvListLimit = $userinv->getListLimit();
             } else {
@@ -539,7 +539,7 @@ final class PaymentController extends BaseController
 /**
  * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $payments
  */
-                $payments = $this->payments_with_sort_guest($payR,
+                $payments = $this->paymentsWithSortGuest($payR,
                                                     $client_id_array, $sort_by);
                 $paginator = (new OffsetPaginator($payments))
                  ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
@@ -576,7 +576,7 @@ final class PaymentController extends BaseController
      * @param UserInvRepository $uiR
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function guest_online_log(
+    public function guestOnlineLog(
         Request $request,
         CurrentRoute $currentRoute,
         MerchantRepository $merchR,
@@ -602,12 +602,12 @@ final class PaymentController extends BaseController
                      ? $uiR->repoUserInvUserIdquery($user_id)
                      : null);
             $client_id_array = (null !== $userinv ?
-                                    $ucR->get_assigned_to_user($user_id) : []);
+                                    $ucR->getAssignedToUser($user_id) : []);
 /**
  * @psalm-var RDI<array-key, array<array-key, mixed>|object>&LDI&ODI&CDI $merchants
  */
             
-            $merchants = $this->merchant_with_sort_guest($merchR,
+            $merchants = $this->merchantWithSortGuest($merchR,
                 $client_id_array, $sort_by);
             if (!empty($client_id_array)) {
                 $paginator = (new OffsetPaginator($merchants))
@@ -659,7 +659,7 @@ final class PaymentController extends BaseController
 /**
  * @psalm-var RDI<array-key, array<array-key, mixed>|object>&LDI&ODI&CDI $payments
  */
-        $payments = $this->payments_with_sort($payR, $sort);
+        $payments = $this->paymentsWithSort($payR, $sort);
         if (isset($query_params['paymentAmountFilter'])
                 && !empty($query_params['paymentAmountFilter'])) {
             $payments =
@@ -721,7 +721,7 @@ final class PaymentController extends BaseController
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    private function merchant_with_sort(MerchantRepository $merchR,
+    private function merchantWithSort(MerchantRepository $merchR,
         Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $merchR->findAllPreloaded()->withSort($sort);
@@ -733,7 +733,7 @@ final class PaymentController extends BaseController
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    private function merchant_with_sort_guest(
+    private function merchantWithSortGuest(
         MerchantRepository $merchR,
             array $client_id_array, Sort $sort):
                                     \Yiisoft\Data\Reader\SortableDataInterface
@@ -747,7 +747,7 @@ final class PaymentController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param MerchantRepository $merchR
      */
-    public function online_log(
+    public function onlineLog(
         Request $request,
         CurrentRoute $currentRoute,
         MerchantRepository $merchR,
@@ -766,7 +766,7 @@ final class PaymentController extends BaseController
         /**
          * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $merchants
          */
-        $merchants = $this->merchant_with_sort($merchR, $sort);
+        $merchants = $this->merchantWithSort($merchR, $sort);
         if (isset($query_params['filterInvNumber'])
                 && !empty($query_params['filterInvNumber'])) {
             $merchants =
@@ -809,7 +809,7 @@ final class PaymentController extends BaseController
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    private function payments_with_sort(PaymentRepository $payR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
+    private function paymentsWithSort(PaymentRepository $payR, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $payR->findAllPreloaded()
                                       ->withSort($sort);
@@ -821,7 +821,7 @@ final class PaymentController extends BaseController
      * @param Sort $sort
      * @return \Yiisoft\Data\Reader\SortableDataInterface
      */
-    private function payments_with_sort_guest(PaymentRepository $payR,
+    private function paymentsWithSortGuest(PaymentRepository $payR,
     array $client_id_array, Sort $sort): \Yiisoft\Data\Reader\SortableDataInterface
     {
         return $payR->findOneUserManyClientsPayments($client_id_array)
@@ -858,7 +858,7 @@ final class PaymentController extends BaseController
      * @param PaymentCustomRepository $pcR
      * @return array
      */
-    private function payment_custom_values(string $payment_id,
+    private function paymentCustomValues(string $payment_id,
                                             PaymentCustomRepository $pcR): array
     {
         // Function edit: Get field's values for editing
@@ -884,7 +884,7 @@ final class PaymentController extends BaseController
      * @param Request $request
      * @param PaymentCustomRepository $pcR
      */
-    public function save_custom(FormHydrator $fmHyd,
+    public function saveCustom(FormHydrator $fmHyd,
                                 Request $request, PaymentCustomRepository $pcR):                                                       \Psr\Http\Message\ResponseInterface
     {
         $js_data = $request->getQueryParams();
@@ -892,7 +892,7 @@ final class PaymentController extends BaseController
         $custom_field_body = [
             'custom' => (array) $js_data['custom'] ?: '',
         ];
-        $this->custom_fields($fmHyd, $custom_field_body, $payment_id, $pcR);
+        $this->customFields($fmHyd, $custom_field_body, $payment_id, $pcR);
         return $this->factory->createResponse(Json::encode(['success' => 1]));
     }
 
@@ -922,10 +922,10 @@ final class PaymentController extends BaseController
                 'errors' => [],
                 'form' => $form,
                 'paymentMethods' => $paymentMethodRepository->findAllPreloaded(),
-                'viewCustomFields' => $this->view_custom_fields(
+                'viewCustomFields' => $this->viewCustomFields(
                     $cfR,
                     $cvR,
-                    $this->payment_custom_values($paymentId, $pcR),
+                    $this->paymentCustomValues($paymentId, $pcR),
                 ),
             ];
             return $this->webViewRenderer->render('_view', $params);
@@ -939,7 +939,7 @@ final class PaymentController extends BaseController
      * @param array $payment_custom_values
      * @return string
      */
-    private function view_custom_fields(CustomFieldRepository $cfR,
+    private function viewCustomFields(CustomFieldRepository $cfR,
             CustomValueRepository $cvR, array $payment_custom_values): string
     {
         return $this->webViewRenderer->renderPartialAsString(

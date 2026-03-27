@@ -57,7 +57,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string $key
  * @var string $value
  */
-foreach ($numberHelper->recur_frequencies() as $key => $value) {
+foreach ($numberHelper->recurFrequencies() as $key => $value) {
     $optionsDataFrequency[$key] = $translator->translate($value);
 }
 ?> 

@@ -27,9 +27,9 @@ final readonly class InvCustomService
     ): void {
         $this->persist($model, $array);
         isset($array['inv_id']) ?
-            $model->setInv_id((int) $array['inv_id']) : '';
+            $model->setInvId((int) $array['inv_id']) : '';
         isset($array['custom_field_id']) ?
-            $model->setCustom_field_id(
+            $model->setCustomFieldId(
                 (int) $array['custom_field_id']) : '';
         isset($array['value']) ?
             $model->setValue((string) $array['value']) : '';
@@ -39,7 +39,7 @@ final readonly class InvCustomService
     private function persist(
         InvCustom $model,
         array $array
-    ): InvCustom {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
@@ -54,7 +54,6 @@ final readonly class InvCustomService
                 $this->cfR->repoCustomFieldquery(
                     (string) $array[$custom_field]));
         }
-        return $model;
     }
 
     /**

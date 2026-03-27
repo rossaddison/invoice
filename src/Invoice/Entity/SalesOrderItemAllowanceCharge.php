@@ -77,32 +77,32 @@ class SalesOrderItemAllowanceCharge
         $this->id = $id;
     }
 
-    public function getSales_order_id(): string
+    public function getSalesOrderId(): string
     {
         return (string) $this->sales_order_id;
     }
 
-    public function setSales_order_id(int $sales_order_id): void
+    public function setSalesOrderId(int $sales_order_id): void
     {
         $this->sales_order_id = $sales_order_id;
     }
 
-    public function getSales_order_item_id(): string
+    public function getSalesOrderItemId(): string
     {
         return (string) $this->sales_order_item_id;
     }
 
-    public function setSales_order_item_id(int $sales_order_item_id): void
+    public function setSalesOrderItemId(int $sales_order_item_id): void
     {
         $this->sales_order_item_id = $sales_order_item_id;
     }
 
-    public function getAllowance_charge_id(): string
+    public function getAllowanceChargeId(): string
     {
         return (string) $this->allowance_charge_id;
     }
 
-    public function setAllowance_charge_id(int $allowance_charge_id): void
+    public function setAllowanceChargeId(int $allowance_charge_id): void
     {
         $this->allowance_charge_id = $allowance_charge_id;
     }

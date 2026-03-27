@@ -41,10 +41,10 @@ class ClientHelperTest extends Unit
     public function testFormatClientWithClientEntityWithBothNames(): void
     {
         $client = new Client();
-        $client->setClient_name('John');
-        $client->setClient_surname('Doe');
+        $client->setClientName('John');
+        $client->setClientSurname('Doe');
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         $this->assertSame('John Doe', $result);
     }
@@ -52,10 +52,10 @@ class ClientHelperTest extends Unit
     public function testFormatClientWithClientEntityWithNameOnly(): void
     {
         $client = new Client();
-        $client->setClient_name('John');
+        $client->setClientName('John');
         // Don't set surname, leave it as default
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         $this->assertSame('John', $result);
     }
@@ -63,10 +63,10 @@ class ClientHelperTest extends Unit
     public function testFormatClientWithClientEntityWithEmptyName(): void
     {
         $client = new Client();
-        $client->setClient_name('');
-        $client->setClient_surname('Doe');
+        $client->setClientName('');
+        $client->setClientSurname('Doe');
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         $this->assertSame('Doe', $result);
     }
@@ -74,17 +74,17 @@ class ClientHelperTest extends Unit
     public function testFormatClientWithClientEntityBothEmpty(): void
     {
         $client = new Client();
-        $client->setClient_name('');
-        $client->setClient_surname('');
+        $client->setClientName('');
+        $client->setClientSurname('');
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         $this->assertSame('', $result);
     }
 
     public function testFormatClientWithNullClient(): void
     {
-        $result = $this->clientHelper->format_client(null);
+        $result = $this->clientHelper->formatClient(null);
         
         $this->assertSame('', $result);
     }
@@ -93,14 +93,14 @@ class ClientHelperTest extends Unit
     {
         $client = ['name' => 'John', 'surname' => 'Doe'];
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         $this->assertSame('', $result);
     }
 
     public function testFormatClientWithEmptyArray(): void
     {
-        $result = $this->clientHelper->format_client([]);
+        $result = $this->clientHelper->formatClient([]);
         
         $this->assertSame('', $result);
     }
@@ -110,7 +110,7 @@ class ClientHelperTest extends Unit
         $client = new \stdClass();
         $client->name = 'John';
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         $this->assertSame('', $result);
     }
@@ -118,10 +118,10 @@ class ClientHelperTest extends Unit
     public function testFormatClientWithLongNames(): void
     {
         $client = new Client();
-        $client->setClient_name('Johnathan Alexander');
-        $client->setClient_surname('Smith-Williams-Brown');
+        $client->setClientName('Johnathan Alexander');
+        $client->setClientSurname('Smith-Williams-Brown');
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         $this->assertSame('Johnathan Alexander Smith-Williams-Brown', $result);
     }
@@ -129,10 +129,10 @@ class ClientHelperTest extends Unit
     public function testFormatClientWithSpecialCharacters(): void
     {
         $client = new Client();
-        $client->setClient_name('José');
-        $client->setClient_surname('García-López');
+        $client->setClientName('José');
+        $client->setClientSurname('García-López');
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         $this->assertSame('José García-López', $result);
     }
@@ -140,10 +140,10 @@ class ClientHelperTest extends Unit
     public function testFormatClientWithUnicodeCharacters(): void
     {
         $client = new Client();
-        $client->setClient_name('张');
-        $client->setClient_surname('三');
+        $client->setClientName('张');
+        $client->setClientSurname('三');
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         $this->assertSame('张 三', $result);
     }
@@ -151,10 +151,10 @@ class ClientHelperTest extends Unit
     public function testFormatClientTrimsTrailingSpacesWithDefaultSurname(): void
     {
         $client = new Client();
-        $client->setClient_name('John   ');
+        $client->setClientName('John   ');
         // Don't set surname, leave it as default empty string
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         // When surname is default empty string, rtrim is used because it's not null
         $this->assertSame('John', $result);
@@ -163,10 +163,10 @@ class ClientHelperTest extends Unit
     public function testFormatClientTrimsTrailingSpaces(): void
     {
         $client = new Client();
-        $client->setClient_name('John   ');
-        $client->setClient_surname('Doe    ');
+        $client->setClientName('John   ');
+        $client->setClientSurname('Doe    ');
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         // When surname exists, rtrim is used to remove trailing spaces after the surname
         $this->assertSame('John Doe', $result);
@@ -175,10 +175,10 @@ class ClientHelperTest extends Unit
     public function testFormatClientTrimsPreceedingAndTrailingSpaces(): void
     {
         $client = new Client();
-        $client->setClient_name(' John  ');
-        $client->setClient_surname('  Doe     ');
+        $client->setClientName(' John  ');
+        $client->setClientSurname('  Doe     ');
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         // When surname exists, ltrim and rtrim are used to remove trailing
         // spaces
@@ -188,10 +188,10 @@ class ClientHelperTest extends Unit
     public function testFormatClientWithNameAndEmptyStringForSurname(): void
     {
         $client = new Client();
-        $client->setClient_name('John');
-        $client->setClient_surname('');
+        $client->setClientName('John');
+        $client->setClientSurname('');
         
-        $result = $this->clientHelper->format_client($client);
+        $result = $this->clientHelper->formatClient($client);
         
         $this->assertSame('John', $result);
     }
@@ -203,7 +203,7 @@ class ClientHelperTest extends Unit
             ->with('gender.male')
             ->willReturn('Male');
         
-        $result = $this->clientHelper->format_gender(0, $this->translator);
+        $result = $this->clientHelper->formatGender(0, $this->translator);
         
         $this->assertSame('Male', $result);
     }
@@ -215,7 +215,7 @@ class ClientHelperTest extends Unit
             ->with('gender.female')
             ->willReturn('Female');
         
-        $result = $this->clientHelper->format_gender(1, $this->translator);
+        $result = $this->clientHelper->formatGender(1, $this->translator);
         
         $this->assertSame('Female', $result);
     }
@@ -227,7 +227,7 @@ class ClientHelperTest extends Unit
             ->with('gender.other')
             ->willReturn('Other');
         
-        $result = $this->clientHelper->format_gender(2, $this->translator);
+        $result = $this->clientHelper->formatGender(2, $this->translator);
         
         $this->assertSame('Other', $result);
     }
@@ -239,7 +239,7 @@ class ClientHelperTest extends Unit
             ->with('gender.other')
             ->willReturn('Other');
         
-        $result = $this->clientHelper->format_gender(-1, $this->translator);
+        $result = $this->clientHelper->formatGender(-1, $this->translator);
         
         $this->assertSame('Other', $result);
     }
@@ -251,7 +251,7 @@ class ClientHelperTest extends Unit
             ->with('gender.other')
             ->willReturn('Other');
         
-        $result = $this->clientHelper->format_gender(999, $this->translator);
+        $result = $this->clientHelper->formatGender(999, $this->translator);
         
         $this->assertSame('Other', $result);
     }
@@ -277,9 +277,9 @@ class ClientHelperTest extends Unit
             ->with('gender.other')
             ->willReturn('Other');
         
-        $this->assertSame('Male', $this->clientHelper->format_gender(0, $translator1));
-        $this->assertSame('Female', $this->clientHelper->format_gender(1, $translator2));
-        $this->assertSame('Other', $this->clientHelper->format_gender(3, $translator3));
+        $this->assertSame('Male', $this->clientHelper->formatGender(0, $translator1));
+        $this->assertSame('Female', $this->clientHelper->formatGender(1, $translator2));
+        $this->assertSame('Other', $this->clientHelper->formatGender(3, $translator3));
     }
 
     public function testFormatGenderTranslationKeys(): void
@@ -303,9 +303,9 @@ class ClientHelperTest extends Unit
             ->with('gender.other')
             ->willReturn('Otro');
         
-        $this->assertSame('Masculino', $this->clientHelper->format_gender(0, $translator1));
-        $this->assertSame('Femenino', $this->clientHelper->format_gender(1, $translator2));
-        $this->assertSame('Otro', $this->clientHelper->format_gender(5, $translator3));
+        $this->assertSame('Masculino', $this->clientHelper->formatGender(0, $translator1));
+        $this->assertSame('Femenino', $this->clientHelper->formatGender(1, $translator2));
+        $this->assertSame('Otro', $this->clientHelper->formatGender(5, $translator3));
     }
 
     public function testConstructorAcceptsSettingRepository(): void

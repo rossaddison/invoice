@@ -24,14 +24,14 @@ final readonly class InvSentLogService
     ): void {
         $this->persist($model, $array);
         isset($array['inv_id']) ? 
-            $model->setInv_id((int) $array['inv_id']) : '';
+            $model->setInvId((int) $array['inv_id']) : '';
 
         $datetime_created = new DateTimeImmutable('now');
         /**
          * @var string $array['date_sent']
          */
         $date_sent = $array['date_sent'] ?? '';
-        $model->setDate_sent(
+        $model->setDateSent(
             $datetime_created::createFromFormat(
                 'Y-m-d', 
                 $date_sent) ?: 
@@ -42,7 +42,7 @@ final readonly class InvSentLogService
     private function persist(
         InvSentLog $model,
         array $array
-    ): InvSentLog {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
@@ -57,7 +57,6 @@ final readonly class InvSentLogService
                 $model->setInv($invEntity);
             }
         }
-        return $model;
     }
 
     public function deleteInvSentLog(InvSentLog $model): void

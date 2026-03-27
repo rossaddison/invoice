@@ -30,7 +30,7 @@ cls
 echo ======================================================================================
 echo                               INVOICE SYSTEM MAIN MENU
 echo ======================================================================================
-echo [0]  Installation Menu                         [5a]  Codeception Tests
+echo                                                [5a]  Codeception Tests
 echo [1]  Run PHP Psalm (Full)                      [5aa] Codeception Build
 echo [2]  Psalm on File                             [5b]  Rector See Changes
 echo [2a] Psalm on Directory                        [5c]  Rector Make Changes
@@ -71,7 +71,6 @@ echo =================================
 set /p choice="Enter your choice [0-24,99]: "
 
 REM ======== MENU COMMAND ROUTING ========
-if "%choice%"=="0" goto installation_menu 
 if "%choice%"=="1" goto psalm
 if "%choice%"=="2" goto psalm_file
 if "%choice%"=="2a" goto psalm_directory
@@ -204,27 +203,6 @@ npm list --depth=0
 pause
 goto menu
 
-:installation_menu
-cls
-echo ======================================================================================
-echo                            INSTALLATION MENU
-echo ======================================================================================
-echo [0x] Check PHP Extensions (Pre-install)    [3] Full Installation 
-echo [1]  Check System Requirements             [4] Shipmonk Dependency Analyser
-echo [2]  Install Dependencies Only             [5] Back to Main Menu              
-echo ======================================================================================
-set /p install_choice="Enter your choice [0x-4]: "
-
-if "%install_choice%"=="0x" goto check_extensions
-if "%install_choice%"=="1" goto check_requirements  
-if "%install_choice%"=="2" goto install_dependencies
-if "%install_choice%"=="3" goto full_installation
-if "%install_choice%"=="4" goto shipmonk_dependency_analyser
-if "%install_choice%"=="5" goto menu
-echo Invalid choice. Please try again.
-pause
-goto installation_menu
-
 :check_extensions
 cls
 echo ======================================================================================
@@ -255,18 +233,6 @@ goto installation_menu
 echo Installing dependencies only...
 composer install --no-dev --optimize-autoloader
 npm install --production
-pause
-goto installation_menu
-
-:full_installation
-echo Running full installation...
-if exist install.bat (
-    call install.bat
-) else (
-    echo [INFO] No install.bat found. Running 'composer install' and 'npm install'.
-    composer install
-    npm install
-)
 pause
 goto installation_menu
 
@@ -334,7 +300,7 @@ goto menu
 
 :psalm
 echo Running PHP Psalm...
-php vendor/bin/psalm
+php vendor/bin/psalm --force-jit
 pause
 goto menu
 

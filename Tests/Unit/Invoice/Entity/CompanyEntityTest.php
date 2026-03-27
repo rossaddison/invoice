@@ -20,8 +20,8 @@ class CompanyEntityTest extends TestCase
         $this->assertNull($company->getId());
         $this->assertSame(0, $company->getCurrent());
         $this->assertSame('', $company->getName());
-        $this->assertSame('', $company->getAddress_1());
-        $this->assertSame('', $company->getAddress_2());
+        $this->assertSame('', $company->getAddress1());
+        $this->assertSame('', $company->getAddress2());
         $this->assertSame('', $company->getCity());
         $this->assertSame('', $company->getState());
         $this->assertSame('', $company->getZip());
@@ -37,8 +37,8 @@ class CompanyEntityTest extends TestCase
         $this->assertSame('', $company->getWhatsapp());
         $this->assertSame('', $company->getArbitrationBody());
         $this->assertSame('', $company->getArbitrationJurisdiction());
-        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDate_modified());
+        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateModified());
         $this->assertInstanceOf(ArrayCollection::class, $company->getCompanyPrivates());
         $this->assertTrue($company->isNewRecord());
     }
@@ -71,8 +71,8 @@ class CompanyEntityTest extends TestCase
         $this->assertSame(1, $company->getId());
         $this->assertSame(1, $company->getCurrent());
         $this->assertSame('Tech Solutions Inc.', $company->getName());
-        $this->assertSame('123 Business Ave', $company->getAddress_1());
-        $this->assertSame('Suite 200', $company->getAddress_2());
+        $this->assertSame('123 Business Ave', $company->getAddress1());
+        $this->assertSame('Suite 200', $company->getAddress2());
         $this->assertSame('Tech City', $company->getCity());
         $this->assertSame('CA', $company->getState());
         $this->assertSame('90210', $company->getZip());
@@ -117,17 +117,17 @@ class CompanyEntityTest extends TestCase
     public function testAddress1SetterAndGetter(): void
     {
         $company = new Company();
-        $company->setAddress_1('456 Corporate Blvd');
+        $company->setAddress1('456 Corporate Blvd');
         
-        $this->assertSame('456 Corporate Blvd', $company->getAddress_1());
+        $this->assertSame('456 Corporate Blvd', $company->getAddress1());
     }
 
     public function testAddress2SetterAndGetter(): void
     {
         $company = new Company();
-        $company->setAddress_2('Floor 15');
+        $company->setAddress2('Floor 15');
         
-        $this->assertSame('Floor 15', $company->getAddress_2());
+        $this->assertSame('Floor 15', $company->getAddress2());
     }
 
     public function testCitySetterAndGetter(): void
@@ -263,8 +263,8 @@ class CompanyEntityTest extends TestCase
     {
         $company = new Company();
         
-        $dateCreated = $company->getDate_created();
-        $dateModified = $company->getDate_modified();
+        $dateCreated = $company->getDateCreated();
+        $dateModified = $company->getDateModified();
         
         $this->assertInstanceOf(DateTimeImmutable::class, $dateCreated);
         $this->assertInstanceOf(DateTimeImmutable::class, $dateModified);
@@ -288,7 +288,7 @@ class CompanyEntityTest extends TestCase
     {
         $company = new Company();
         $company->setName('TechCorp Solutions');
-        $company->setAddress_1('100 Silicon Valley Drive');
+        $company->setAddress1('100 Silicon Valley Drive');
         $company->setCity('Palo Alto');
         $company->setState('California');
         $company->setZip('94301');
@@ -300,7 +300,7 @@ class CompanyEntityTest extends TestCase
         $company->setLinkedIn('linkedin.com/company/techcorp');
         
         $this->assertSame('TechCorp Solutions', $company->getName());
-        $this->assertSame('100 Silicon Valley Drive', $company->getAddress_1());
+        $this->assertSame('100 Silicon Valley Drive', $company->getAddress1());
         $this->assertSame('Palo Alto', $company->getCity());
         $this->assertSame('California', $company->getState());
         $this->assertSame('94301', $company->getZip());
@@ -316,8 +316,8 @@ class CompanyEntityTest extends TestCase
     {
         $company = new Company();
         $company->setName('Industrial Manufacturing Co.');
-        $company->setAddress_1('500 Factory Road');
-        $company->setAddress_2('Building A');
+        $company->setAddress1('500 Factory Road');
+        $company->setAddress2('Building A');
         $company->setCity('Detroit');
         $company->setState('Michigan');
         $company->setZip('48201');
@@ -327,8 +327,8 @@ class CompanyEntityTest extends TestCase
         $company->setEmail('orders@manufacturing.com');
         
         $this->assertSame('Industrial Manufacturing Co.', $company->getName());
-        $this->assertSame('500 Factory Road', $company->getAddress_1());
-        $this->assertSame('Building A', $company->getAddress_2());
+        $this->assertSame('500 Factory Road', $company->getAddress1());
+        $this->assertSame('Building A', $company->getAddress2());
         $this->assertSame('Detroit', $company->getCity());
         $this->assertSame('Michigan', $company->getState());
         $this->assertSame('48201', $company->getZip());
@@ -342,7 +342,7 @@ class CompanyEntityTest extends TestCase
     {
         $company = new Company();
         $company->setName('Global Consulting GmbH');
-        $company->setAddress_1('Friedrichstraße 123');
+        $company->setAddress1('Friedrichstraße 123');
         $company->setCity('Berlin');
         $company->setZip('10117');
         $company->setCountry('Germany');
@@ -351,7 +351,7 @@ class CompanyEntityTest extends TestCase
         $company->setWeb('https://globalconsulting.de');
         
         $this->assertSame('Global Consulting GmbH', $company->getName());
-        $this->assertSame('Friedrichstraße 123', $company->getAddress_1());
+        $this->assertSame('Friedrichstraße 123', $company->getAddress1());
         $this->assertSame('Berlin', $company->getCity());
         $this->assertSame('10117', $company->getZip());
         $this->assertSame('Germany', $company->getCountry());
@@ -368,11 +368,11 @@ class CompanyEntityTest extends TestCase
         
         $company = new Company();
         $company->setName($longName);
-        $company->setAddress_1($longAddress);
+        $company->setAddress1($longAddress);
         $company->setArbitrationBody($longArbitration);
         
         $this->assertSame($longName, $company->getName());
-        $this->assertSame($longAddress, $company->getAddress_1());
+        $this->assertSame($longAddress, $company->getAddress1());
         $this->assertSame($longArbitration, $company->getArbitrationBody());
     }
 
@@ -380,12 +380,12 @@ class CompanyEntityTest extends TestCase
     {
         $company = new Company();
         $company->setName('Müller & Associates, Inc.');
-        $company->setAddress_1('123 Résidence Street');
+        $company->setAddress1('123 Résidence Street');
         $company->setEmail('müller@company.com');
         $company->setWeb('https://müller-associates.com');
         
         $this->assertSame('Müller & Associates, Inc.', $company->getName());
-        $this->assertSame('123 Résidence Street', $company->getAddress_1());
+        $this->assertSame('123 Résidence Street', $company->getAddress1());
         $this->assertSame('müller@company.com', $company->getEmail());
         $this->assertSame('https://müller-associates.com', $company->getWeb());
     }
@@ -394,13 +394,13 @@ class CompanyEntityTest extends TestCase
     {
         $company = new Company();
         $company->setName('株式会社テクノロジー');
-        $company->setAddress_1('東京都新宿区西新宿1-1-1');
+        $company->setAddress1('東京都新宿区西新宿1-1-1');
         $company->setCity('東京');
         $company->setCountry('日本');
         $company->setEmail('info@テクノロジー.jp');
         
         $this->assertSame('株式会社テクノロジー', $company->getName());
-        $this->assertSame('東京都新宿区西新宿1-1-1', $company->getAddress_1());
+        $this->assertSame('東京都新宿区西新宿1-1-1', $company->getAddress1());
         $this->assertSame('東京', $company->getCity());
         $this->assertSame('日本', $company->getCountry());
         $this->assertSame('info@テクノロジー.jp', $company->getEmail());
@@ -439,8 +439,8 @@ class CompanyEntityTest extends TestCase
         $company->setId(1);
         $company->setCurrent(1);
         $company->setName('Complete Business Solutions Ltd.');
-        $company->setAddress_1('789 Enterprise Way');
-        $company->setAddress_2('Executive Suite');
+        $company->setAddress1('789 Enterprise Way');
+        $company->setAddress2('Executive Suite');
         $company->setCity('Business District');
         $company->setState('Business State');
         $company->setZip('12345');
@@ -460,8 +460,8 @@ class CompanyEntityTest extends TestCase
         $this->assertSame(1, $company->getId());
         $this->assertSame(1, $company->getCurrent());
         $this->assertSame('Complete Business Solutions Ltd.', $company->getName());
-        $this->assertSame('789 Enterprise Way', $company->getAddress_1());
-        $this->assertSame('Executive Suite', $company->getAddress_2());
+        $this->assertSame('789 Enterprise Way', $company->getAddress1());
+        $this->assertSame('Executive Suite', $company->getAddress2());
         $this->assertSame('Business District', $company->getCity());
         $this->assertSame('Business State', $company->getState());
         $this->assertSame('12345', $company->getZip());
@@ -495,12 +495,12 @@ class CompanyEntityTest extends TestCase
         $this->assertIsInt($company->getId());
         $this->assertIsInt($company->getCurrent());
         $this->assertIsString($company->getName());
-        $this->assertIsString($company->getAddress_1());
+        $this->assertIsString($company->getAddress1());
         $this->assertIsString($company->getCity());
         $this->assertIsString($company->getPhone());
         $this->assertIsString($company->getEmail());
-        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDate_modified());
+        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateModified());
         $this->assertInstanceOf(ArrayCollection::class, $company->getCompanyPrivates());
     }
 
@@ -552,8 +552,8 @@ class CompanyEntityTest extends TestCase
         
         $this->assertIsInt($company->getId());
         $this->assertIsInt($company->getCurrent());
-        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDate_modified());
+        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateModified());
         $this->assertInstanceOf(ArrayCollection::class, $company->getCompanyPrivates());
     }
 
@@ -565,7 +565,7 @@ class CompanyEntityTest extends TestCase
         
         // Set company details
         $company->setName('Workflow Test Company');
-        $company->setAddress_1('123 Test Street');
+        $company->setAddress1('123 Test Street');
         $company->setCity('Test City');
         
         // Still new until ID is set
@@ -587,8 +587,8 @@ class CompanyEntityTest extends TestCase
         $company = new Company();
         $afterTime = time();
         
-        $createdTime = $company->getDate_created()->getTimestamp();
-        $modifiedTime = $company->getDate_modified()->getTimestamp();
+        $createdTime = $company->getDateCreated()->getTimestamp();
+        $modifiedTime = $company->getDateModified()->getTimestamp();
         
         $this->assertGreaterThanOrEqual($beforeTime, $createdTime);
         $this->assertLessThanOrEqual($afterTime, $createdTime);
@@ -603,7 +603,7 @@ class CompanyEntityTest extends TestCase
         $this->assertTrue($company->isNewRecord());
         $this->assertInstanceOf(ArrayCollection::class, $company->getCompanyPrivates());
         $this->assertTrue($company->getCompanyPrivates()->isEmpty());
-        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDate_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDate_modified());
+        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateModified());
     }
 }

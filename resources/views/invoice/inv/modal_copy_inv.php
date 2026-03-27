@@ -26,18 +26,18 @@ use Yiisoft\Html\Html;
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="user_id" id="user_id" value="<?= $inv->getUser_id(); ?>">
+                    <input type="hidden" name="user_id" id="user_id" value="<?= $inv->getUserId(); ?>">
                     <div class="form-group">
                         <label for="create_inv_client_id"><?= $translator->translate('client'); ?></label>
                         <select name="create_inv_client_id" id="create_inv_client_id" class="form-control">
-                            <option value="<?= $inv->getClient()?->getClient_id(); ?>"><?= $inv->getClient()?->getClient_name() ?? '#'; ?></option>
+                            <option value="<?= $inv->getClient()?->getClientId(); ?>"><?= $inv->getClient()?->getClientName() ?? '#'; ?></option>
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\Client $client
                                      */
                                     foreach ($clients as $client) { ?>
-                                    <option value="<?= $client->getClient_id(); ?>">
-                                        <?= Html::encode($client->getClient_name()); ?>
+                                    <option value="<?= $client->getClientId(); ?>">
+                                        <?= Html::encode($client->getClientName()); ?>
                                     </option>
                                 <?php } ?>
                         </select>          
@@ -46,7 +46,7 @@ use Yiisoft\Html\Html;
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('cancel'); ?></button>
-                <!-- inv.js inv_to_inv_confirm, InvController function inv_to_inv_confirm -->
+                <!-- inv.js inv_to_inv_confirm, InvController function invToInvConfirm -->
                 <button type="button" class="inv_to_inv_confirm btn btn-success" id="inv_to_inv_confirm">
                     <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
                 </button>

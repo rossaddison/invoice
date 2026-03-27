@@ -16,7 +16,7 @@ use Yiisoft\Html\Tag\Option;
 * Related logic: see App\Invoice\InvoiceController 
 *   no_developer_sandbox_hmrc_continue_button
 * Related logic: see App\Invoice\Setting\SettingController 
-*   function tab_index oauth2
+*   function tabIndex oauth2
 * @var App\Invoice\Setting\SettingRepository $s
 * @var Yiisoft\Translator\TranslatorInterface $translator
 * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -249,7 +249,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $key
         * @var string $value
         */
-        foreach ($openBankingProviders as $key => $value) {
+        foreach ($openBankingProviders as $value) {
         echo  new Option()
          ->value($value)
          ->selected($value 

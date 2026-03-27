@@ -184,7 +184,7 @@ final class InvAllowanceChargeController extends BaseController
     ): Response {
         $invAllowanceCharge = $this->invallowancecharge($currentRoute, $invAllowanceChargeRepository);
         if ($invAllowanceCharge) {
-            $inv_id = $invAllowanceCharge->getInv_id();
+            $inv_id = $invAllowanceCharge->getInvId();
             $form = new InvAllowanceChargeForm($invAllowanceCharge, (int) $inv_id);
             $parameters = [
                 'title' => $this->translator->translate('allowance.or.charge'),
@@ -248,7 +248,7 @@ final class InvAllowanceChargeController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $invAllowanceCharge = $this->invallowancecharge($currentRoute, $invallowancechargeRepository);
         if ($invAllowanceCharge) {
-            $inv_id = $invAllowanceCharge->getInv_id();
+            $inv_id = $invAllowanceCharge->getInvId();
             $form = new InvAllowanceChargeForm($invAllowanceCharge, (int) $inv_id);
             $parameters = [
                 'title' => $this->translator->translate('view'),

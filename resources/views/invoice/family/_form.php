@@ -69,7 +69,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     ->label($translator->translate('family.name'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('family.name'),
-                        'value' => Html::encode($form->getFamily_name() ?? ''),
+                        'value' => Html::encode($form->getFamilyName() ?? ''),
                         'class' => 'form-control',
                         'id' => 'family_name',
                     ])
@@ -82,7 +82,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
     ->addInputAttributes([
         'class' => 'form-control  alert alert-warning',
     ])
-    ->value($form->getCategory_primary_id())
+    ->value($form->getCategoryPrimaryId())
     ->prompt($translator->translate('none'))
     ->optionsData($categoryPrimaries);
 ?>
@@ -93,7 +93,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
     ->addInputAttributes([
         'class' => 'form-control  alert alert-warning',
     ])
-    ->value($form->getCategory_secondary_id())
+    ->value($form->getCategorySecondaryId())
     ->prompt($translator->translate('none'))
     ->optionsData($categorySecondaries);
 ?>
@@ -103,7 +103,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     ->label($translator->translate('family.comma.list'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('family.comma.list'),
-                        'value' => Html::encode($form->getFamily_commalist() ?? ''),
+                        'value' => Html::encode($form->getFamilyCommalist() ?? ''),
                         'class' => 'form-control',
                         'id' => 'family_commalist',
                         'rows' => '3',
@@ -131,7 +131,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     ->label($translator->translate('family.product.prefix'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('family.product.prefix'),
-                        'value' => Html::encode($form->getFamily_productprefix() ?? ''),
+                        'value' => Html::encode($form->getFamilyProductprefix() ?? ''),
                         'class' => 'form-control',
                         'id' => 'family_productprefix',
                     ])
@@ -149,7 +149,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                                 continue;
                             }
                         ?>
-                        <?php $cvH->print_field_for_form(
+                        <?php $cvH->printFieldForForm(
                             $customField,
                             $familyCustomForm,
                             $translator,
@@ -160,6 +160,38 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                 <?= Html::closeTag('div'); ?>
               <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
+<script>
+(function () {
+    document.getElementById('FamilyForm').addEventListener('submit', function (e) {
+        var commalist = document.getElementById('family_commalist').value.trim();
+        var prefix    = document.getElementById('family_productprefix').value.trim();
+        if (commalist !== '' && prefix === '') {
+            e.preventDefault();
+            document.getElementById('family_productprefix').focus();
+            document.getElementById('family_productprefix').classList.add('is-invalid');
+            var existing = document.getElementById('prefix-required-feedback');
+            if (!existing) {
+                var msg = document.createElement('div');
+                msg.id = 'prefix-required-feedback';
+                msg.className = 'invalid-feedback d-block';
+                msg.textContent = 'Product prefix is required when a comma list is provided.';
+                document.getElementById('family_productprefix').insertAdjacentElement('afterend', msg);
+            }
+        } else {
+            document.getElementById('family_productprefix').classList.remove('is-invalid');
+            var existing = document.getElementById('prefix-required-feedback');
+            if (existing) { existing.remove(); }
+        }
+    });
+    document.getElementById('family_productprefix').addEventListener('input', function () {
+        if (this.value.trim() !== '') {
+            this.classList.remove('is-invalid');
+            var existing = document.getElementById('prefix-required-feedback');
+            if (existing) { existing.remove(); }
+        }
+    });
+}());
+</script>
           <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
       <?= Html::closeTag('div'); ?>

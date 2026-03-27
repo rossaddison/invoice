@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * Related logic: see App\Invoice\Helpers\PdfHelper function generate_quote_pdf
+ * Related logic: see App\Invoice\Helpers\PdfHelper function generateQuotePdf
  *
  * @var App\Invoice\Entity\QuoteAmount $quote_amount
  * @var App\Invoice\Entity\Quote $quote
@@ -47,42 +47,42 @@ $vat = $s->getSetting('enable_vat_registration');
     <?= $company_logo_and_address; ?>
     <div id="client">
         <div>
-            <b><?= Html::encode($quote->getClient()?->getClient_name()); ?></b>
+            <b><?= Html::encode($quote->getClient()?->getClientName()); ?></b>
         </div>
-        <?php if (strlen($clientVatId = $quote->getClient()?->getClient_vat_id() ?? '') > 0) {
+        <?php if (strlen($clientVatId = $quote->getClient()?->getClientVatId() ?? '') > 0) {
             echo '<div>' . $translator->translate('vat.reg.no')
                          . ': '
                          . $clientVatId
                          . '</div>';
         }
-if (strlen($clientTaxCode = $quote->getClient()?->getClient_tax_code() ?? '') > 0) {
+if (strlen($clientTaxCode = $quote->getClient()?->getClientTaxCode() ?? '') > 0) {
     echo '<div>' . $translator->translate('tax.code.short') . ': ' . $clientTaxCode . '</div>';
 }
-echo '<div>' . Html::encode(strlen($quote->getClient()?->getClient_address_1() ?? '') > 0 ?: $translator->translate('street.address')) . '</div>';
-echo '<div>' . Html::encode(strlen($quote->getClient()?->getClient_address_2() ?? '') > 0 ?: $translator->translate('street.address.2')) . '</div>';
-if (strlen($quote->getClient()?->getClient_city() ?? '') > 0 || strlen($quote->getClient()?->getClient_state() ?? '') > 0 || strlen($quote->getClient()?->getClient_zip() ?? '') > 0) {
+echo '<div>' . Html::encode(strlen($quote->getClient()?->getClientAddress1() ?? '') > 0 ?: $translator->translate('street.address')) . '</div>';
+echo '<div>' . Html::encode(strlen($quote->getClient()?->getClientAddress2() ?? '') > 0 ?: $translator->translate('street.address.2')) . '</div>';
+if (strlen($quote->getClient()?->getClientCity() ?? '') > 0 || strlen($quote->getClient()?->getClientState() ?? '') > 0 || strlen($quote->getClient()?->getClientZip() ?? '') > 0) {
     echo '<div>';
-    if (strlen($quote->getClient()?->getClient_city() ?? '') > 0) {
-        echo Html::encode($quote->getClient()?->getClient_city()) . ' ';
+    if (strlen($quote->getClient()?->getClientCity() ?? '') > 0) {
+        echo Html::encode($quote->getClient()?->getClientCity()) . ' ';
     }
-    if (strlen($quote->getClient()?->getClient_state() ?? '') > 0) {
-        echo Html::encode($quote->getClient()?->getClient_state()) . ' ';
+    if (strlen($quote->getClient()?->getClientState() ?? '') > 0) {
+        echo Html::encode($quote->getClient()?->getClientState()) . ' ';
     }
-    if (strlen($quote->getClient()?->getClient_zip() ?? '') > 0) {
-        echo Html::encode($quote->getClient()?->getClient_zip());
+    if (strlen($quote->getClient()?->getClientZip() ?? '') > 0) {
+        echo Html::encode($quote->getClient()?->getClientZip());
     }
     echo '</div>';
 }
-if (strlen($quote->getClient()?->getClient_state() ?? '') > 0) {
-    echo '<div>' . Html::encode($quote->getClient()?->getClient_state()) . '</div>';
+if (strlen($quote->getClient()?->getClientState() ?? '') > 0) {
+    echo '<div>' . Html::encode($quote->getClient()?->getClientState()) . '</div>';
 }
-if (strlen($clientCountry = $quote->getClient()?->getClient_country() ?? '') > 0) {
-    echo '<div>' . $countryHelper->get_country_name($translator->translate('cldr'), $clientCountry) . '</div>';
+if (strlen($clientCountry = $quote->getClient()?->getClientCountry() ?? '') > 0) {
+    echo '<div>' . $countryHelper->getCountryName($translator->translate('cldr'), $clientCountry) . '</div>';
 }
 
 echo '<br/>';
 
-if (strlen($clientPhone = $quote->getClient()?->getClient_phone() ?? '') > 0) {
+if (strlen($clientPhone = $quote->getClient()?->getClientPhone() ?? '') > 0) {
     echo '<div>' . $translator->translate('phone.abbr') . ': ' . Html::encode($clientPhone) . '</div>';
 } ?>
 
@@ -94,13 +94,13 @@ if (strlen($clientPhone = $quote->getClient()?->getClient_phone() ?? '') > 0) {
             <tr>
                 <!-- date issued -->
                 <td><?php echo $translator->translate('date.issued') . ':'; ?></td>
-                <td><?php echo Html::encode(!is_string($dateCreated = $quote->getDate_created())
+                <td><?php echo Html::encode(!is_string($dateCreated = $quote->getDateCreated())
                                                ? $dateCreated->format('Y-m-d') : ''); ?></td>
             </tr>
             <tr>
                 <td><?php echo $translator->translate('expires') . ': '; ?></td>
                 <td>
-                    <?= $quote->getDate_expires()->format('Y-m-d'); ?>
+                    <?= $quote->getDateExpires()->format('Y-m-d'); ?>
                 </td>
             </tr>
             <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>    
@@ -191,7 +191,7 @@ if ($items) {
                 </td>
                 <td class="text-right">
                     <?= ($isCharge ? '' : '(')
-                        . $numberHelper->format_currency(
+                        . $numberHelper->formatCurrency(
                             $quoteItemAllowanceCharge
                                 ->getAmount()
                         ) . ($isCharge ? '' : ')'); ?>
@@ -199,7 +199,7 @@ if ($items) {
                 <td class="text-right">
                     <?php $vatQuoteItem = $quoteItemAllowanceCharge->getVatOrTax();
                         echo Html::encode(($isCharge ? '' : '(')
-                            . $numberHelper->format_currency($vatQuoteItem)
+                            . $numberHelper->formatCurrency($vatQuoteItem)
                             . ($isCharge ? '' : ')')); ?>
                 </td>
                 <td class="text-right">
@@ -217,23 +217,23 @@ if ($items) {
                 <td><?= Html::encode($item->getName()); ?></td>
                 <td><?php echo nl2br(Html::encode($item->getDescription())); ?></td>
                 <td class="text-right">
-                    <?php echo Html::encode($s->format_amount($item->getQuantity())); ?>
-                    <?php if (strlen($item->getProduct_unit() ?? '') > 0) : ?>
+                    <?php echo Html::encode($s->formatAmount($item->getQuantity())); ?>
+                    <?php if (strlen($item->getProductUnit() ?? '') > 0) : ?>
                         <br>
-                        <small><?= Html::encode($item->getProduct_unit()); ?></small>
+                        <small><?= Html::encode($item->getProductUnit()); ?></small>
                     <?php endif; ?>
                 </td>
                 <td class="text-right">
-                    <?php echo Html::encode($s->format_currency($item->getPrice())); ?>
+                    <?php echo Html::encode($s->formatCurrency($item->getPrice())); ?>
                 </td>
                 <?php if ($show_item_discounts) : ?>
                     <td class="text-right">
-                        <?php echo Html::encode($s->format_currency($item->getDiscount_amount())); ?>
+                        <?php echo Html::encode($s->formatCurrency($item->getDiscountAmount())); ?>
                     </td>
                 <?php endif; ?>
                 <td class="text-right">
                     <?php
-                    echo Html::encode($s->format_currency($quote_item_amount?->getTax_total()));
+                    echo Html::encode($s->formatCurrency($quote_item_amount?->getTaxTotal()));
         ?>
                 </td>
                 <td class="text-right">
@@ -244,7 +244,7 @@ if ($items) {
                 <td class="text-right">
                     <b>
                     <?php
-            echo Html::encode($s->format_currency($quote_item_amount?->getTotal()));
+            echo Html::encode($s->formatCurrency($quote_item_amount?->getTotal()));
         ?>
                     </b>
                 </td>
@@ -268,23 +268,23 @@ if ($items) {
                         $translator->translate('subtotal'),
                     ); ?></td> 
             <?php } ?> 
-            <td class="text-right"><b><?php echo Html::encode($s->format_currency($quote_amount->getItem_subtotal())); ?></b></td>
+            <td class="text-right"><b><?php echo Html::encode($s->formatCurrency($quote_amount->getItemSubtotal())); ?></b></td>
         </tr>
 
-        <?php if ($quote_amount->getItem_tax_total() > 0) { ?>
+        <?php if ($quote_amount->getItemTaxTotal() > 0) { ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
                     <?= Html::encode($vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax')); ?>
                 </td>
                 <td class="text-right">
-                    <b><?php echo Html::encode($s->format_currency($quote_amount->getItem_tax_total())); ?></b>
+                    <b><?php echo Html::encode($s->formatCurrency($quote_amount->getItemTaxTotal())); ?></b>
                 </td>
             </tr>
         <?php } ?>
 
         <?php
         if ($s->getSetting('enable_peppol') == '1') {
-            if ($quote_amount->getPackhandleship_total() != 0.00) { ?>
+            if ($quote_amount->getPackhandleshipTotal() != 0.00) { ?>
             <tr>
                 <td <?php
                     echo($show_item_discounts
@@ -296,13 +296,13 @@ if ($items) {
                 </td>
                 <td class="text-right">
                     <b><?php
-                    echo Html::encode($s->format_currency(
-                        $quote_amount->getPackhandleship_total()
+                    echo Html::encode($s->formatCurrency(
+                        $quote_amount->getPackhandleshipTotal()
                     )); ?></b>
                 </td>
             </tr>
         <?php }
-            if ($quote_amount->getPackhandleship_tax() != 0.00) { ?>
+            if ($quote_amount->getPackhandleshipTax() != 0.00) { ?>
             <tr>
                 <td <?php
                     echo($show_item_discounts
@@ -318,8 +318,8 @@ if ($items) {
                 </td>
                 <td class="text-right">
                     <b><?php
-                    echo Html::encode($s->format_currency(
-                        $quote_amount->getPackhandleship_tax()
+                    echo Html::encode($s->formatCurrency(
+                        $quote_amount->getPackhandleshipTax()
                     )); ?></b>
                 </td>
             </tr>
@@ -334,22 +334,22 @@ if ($items) {
                         foreach ($quote_tax_rates as $quote_tax_rate) : ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
-                    <?php echo Html::encode($quote_tax_rate->getTaxRate()?->getTaxRateName()) . ' (' . Html::encode($s->format_amount($quote_tax_rate->getTaxRate()?->getTaxRatePercent())) . '%)'; ?>
+                    <?php echo Html::encode($quote_tax_rate->getTaxRate()?->getTaxRateName()) . ' (' . Html::encode($s->formatAmount($quote_tax_rate->getTaxRate()?->getTaxRatePercent())) . '%)'; ?>
                 </td>
                 <td class="text-right">
-                    <b><?php echo Html::encode($s->format_currency($quote_tax_rate->getQuote_tax_rate_amount())); ?></b>
+                    <b><?php echo Html::encode($s->formatCurrency($quote_tax_rate->getQuoteTaxRateAmount())); ?></b>
                 </td>
             </tr>
         <?php endforeach ?>
         <?php } ?>
         <?php if ($vat == '0') { ?>
-        <?php if ($quote->getDiscount_amount() !== 0.00) : ?>
+        <?php if ($quote->getDiscountAmount() !== 0.00) : ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
                     <?= Html::encode($translator->translate('discount')); ?>
                 </td>
                 <td class="text-right">
-                    <b><?php echo Html::encode($s->format_currency($quote->getDiscount_amount())); ?></b>
+                    <b><?php echo Html::encode($s->formatCurrency($quote->getDiscountAmount())); ?></b>
                 </td>
             </tr>
         <?php endif; ?>
@@ -359,7 +359,7 @@ if ($items) {
                 <b><?= Html::encode($translator->translate('total')); ?></b>
             </td>
             <td class="text-right">
-                <b><?php echo Html::encode($s->format_currency($quote_amount->getTotal())); ?></b>
+                <b><?php echo Html::encode($s->formatCurrency($quote_amount->getTotal())); ?></b>
             </td>
         </tr>
         </tbody>

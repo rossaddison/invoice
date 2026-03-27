@@ -200,7 +200,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
         'class' => 'form-control',
         'id' => 'tax_code',
     ])
-    ->value(Html::encode($form->getTax_code() ?? ''));
+    ->value(Html::encode($form->getTaxCode() ?? ''));
 ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>

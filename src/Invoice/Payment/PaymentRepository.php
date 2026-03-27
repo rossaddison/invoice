@@ -156,7 +156,7 @@ final class PaymentRepository extends Select\Repository
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoPaymentLoaded_from_to_count(string $from, string $to): int
+    public function repoPaymentLoadedFromToCount(string $from, string $to): int
     {
         return $this->select()
                       ->load('inv')
@@ -166,7 +166,7 @@ final class PaymentRepository extends Select\Repository
                       ->count();
     }
 
-    public function repoPaymentLoaded_from_to(string $from, string $to): EntityReader
+    public function repoPaymentLoadedFromTo(string $from, string $to): EntityReader
     {
         $query = $this->select()
                       ->load('inv')

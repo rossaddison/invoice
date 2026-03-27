@@ -16,7 +16,7 @@ final readonly class FromDropDownService
     {
         isset($array['email']) ? $model->setEmail((string) $array['email']) : '';
         $model->setInclude($array['include'] === '1' ? true : false);
-        $model->setDefault_email($array['default_email'] === '1' ? true : false);
+        $model->setDefaultEmail($array['default_email'] === '1' ? true : false);
         $this->repository->save($model);
     }
 

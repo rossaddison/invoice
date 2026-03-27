@@ -11,7 +11,7 @@ final class StoreCoveArrays
      *
      * @return array
      */
-    public static function store_cove_sender_identifier_array(): array
+    public static function storeCoveSenderIdentifierArray(): array
     {
         return [
             -1 => [
@@ -368,7 +368,7 @@ final class StoreCoveArrays
     /**
      * @return array
      */
-    public static function store_cove_receiver_identifier_array(): array
+    public static function storeCoveReceiverIdentifierArray(): array
     {
         return [
             -1 => [

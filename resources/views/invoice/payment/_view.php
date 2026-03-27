@@ -87,7 +87,7 @@ echo Field::select($form, 'payment_method_id')
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value(Html::encode($form->getPayment_date() instanceof DateTimeImmutable ? $form->getPayment_date()->format('Y-m-d') : ''))
+    ->value(Html::encode($form->getPaymentDate() instanceof DateTimeImmutable ? $form->getPaymentDate()->format('Y-m-d') : ''))
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>

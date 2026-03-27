@@ -8,7 +8,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 /**
- * Related logic: see ...src\Invoice\Product\ProductController function view_partial_product_image
+ * Related logic: see ...src\Invoice\Product\ProductController function viewPartialProductImage
  * Related logic: see ...resources\views\invoice\product\views\partial_product_image.php
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Helpers\DateHelper $dateHelper
@@ -26,12 +26,12 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
             new DataColumn(
                 'file_name_original',
                 header: $translator->translate('name'),
-                content: static fn (ProductImage $model): string => Html::encode($model->getFile_name_original()),
+                content: static fn (ProductImage $model): string => Html::encode($model->getFileNameOriginal()),
             ),
             new DataColumn(
                 'uploaded_date',
                 header: $translator->translate('date'),
-                content: static fn (ProductImage $model): string => ($model->getUploaded_date())->format('Y-m-d'),
+                content: static fn (ProductImage $model): string => ($model->getUploadedDate())->format('Y-m-d'),
             ),
             new DataColumn(
                 header: $translator->translate('download'),
@@ -47,7 +47,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                         ),
                         // route action => product/download_image_file
                         // route name => /image
-                        $urlGenerator->generate('product/download_image_file', ['product_image_id' => $model->getId(), '_language' => 'en']),
+                        $urlGenerator->generate('product/downloadImageFile', ['product_image_id' => $model->getId(), '_language' => 'en']),
                         [],
                     );
                 },

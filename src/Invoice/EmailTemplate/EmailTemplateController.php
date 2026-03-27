@@ -15,7 +15,6 @@ use App\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\Aliases\Aliases;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface as Factory;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
@@ -50,17 +49,17 @@ final class EmailTemplateController extends BaseController
      * @param CurrentRoute $currentRoute
      * @param EmailTemplateRepository $emailtemplateRepository
      */
-    public function index(CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): \Psr\Http\Message\ResponseInterface
+    public function index(Request $request, CurrentRoute $currentRoute, EmailTemplateRepository $emailtemplateRepository): \Psr\Http\Message\ResponseInterface
     {
         $page = (int) $currentRoute->getArgument('page', '1');
         $currentPageNeverZero = $page > 0 ? $page : 1;
         $this->rbac();
+        $query_params = $request->getQueryParams();
         $parameters = [
-            'paginator' => (new OffsetPaginator($this->emailtemplates($emailtemplateRepository)))
-                            ->withPageSize($this->sR->positiveListLimit())
-                            ->withCurrentPage($currentPageNeverZero),
             'alert' => $this->alert(),
             'email_templates' => $this->emailtemplates($emailtemplateRepository),
+            'page' => $currentPageNeverZero,
+            'sortString' => $query_params['sort'] ?? '-id',
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -72,7 +71,7 @@ final class EmailTemplateController extends BaseController
      * @param FromDropDownRepository $fromR
      * @return Response
      */
-    public function add_invoice(
+    public function addInvoice(
         Request $request,
         FormHydrator $formHydrator,
         CustomFieldRepository $customfieldRepository,
@@ -81,7 +80,7 @@ final class EmailTemplateController extends BaseController
         $email_template = new EmailTemplate();
         $form = new EmailTemplateForm($email_template);
         $parameters = [
-            'actionName' => 'emailtemplate/add_invoice',
+            'actionName' => 'emailtemplate/addInvoice',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
@@ -94,7 +93,7 @@ final class EmailTemplateController extends BaseController
                 ],
             ]),
             //Email templates can be built for either a quote or an invoice.
-            'invoiceTemplates' => $this->sR->get_invoice_templates('pdf'),
+            'invoiceTemplates' => $this->sR->getInvoiceTemplates('pdf'),
             // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
             'admin_email' => $this->sR->getConfigAdminEmail(),
             'sender_email' => $this->sR->getConfigSenderEmail(),
@@ -123,7 +122,7 @@ final class EmailTemplateController extends BaseController
      * @param FromDropDownRepository $fromR
      * @return Response
      */
-    public function add_quote(
+    public function addQuote(
         Request $request,
         FormHydrator $formHydrator,
         CustomFieldRepository $customfieldRepository,
@@ -132,7 +131,7 @@ final class EmailTemplateController extends BaseController
         $email_template = new EmailTemplate();
         $form = new EmailTemplateForm($email_template);
         $parameters = [
-            'actionName' => 'emailtemplate/add_quote',
+            'actionName' => 'emailtemplate/addQuote',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
@@ -144,7 +143,7 @@ final class EmailTemplateController extends BaseController
                     'client_custom' => $customfieldRepository->repoTablequery('client_custom'),
                 ],
             ]),
-            'quoteTemplates' => $this->sR->get_quote_templates('pdf'),
+            'quoteTemplates' => $this->sR->getQuoteTemplates('pdf'),
             // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
             'admin_email' => $this->sR->getConfigAdminEmail(),
             'sender_email' => $this->sR->getConfigSenderEmail(),
@@ -175,7 +174,7 @@ final class EmailTemplateController extends BaseController
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function edit_invoice(
+    public function editInvoice(
         CurrentRoute $currentRoute,
         Request $request,
         EmailTemplateRepository $emailtemplateRepository,
@@ -188,22 +187,30 @@ final class EmailTemplateController extends BaseController
             $form = new EmailTemplateForm($email_template);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
-                'actionName' => 'emailtemplate/edit_invoice',
-                'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
+                'actionName' => 'emailtemplate/editInvoice',
+                'actionArguments' => ['email_template_id' => $email_template->getEmailTemplateId()],
                 'errors' => [],
                 'email_template' => $email_template,
                 'form' => $form,
-                'aliases' => new Aliases(['@invoice' => dirname(__DIR__), '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']),
-                'email_template_tags' => $this->webViewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-with-inv', [
-                    'template_tags_inv' => $this->webViewRenderer->renderPartialAsString('//invoice/emailtemplate/template-tags-inv', [
-                        'custom_fields_inv_custom' => $customfieldRepository->repoTablequery('inv_custom'),
+                'aliases' => new Aliases(['@invoice' => dirname(__DIR__),
+                    '@language' => dirname(__DIR__)
+                    . DIRECTORY_SEPARATOR
+                    . 'Language']),
+                'email_template_tags' =>
+                    $this->webViewRenderer->renderPartialAsString(
+                            '//invoice/emailtemplate/template-tags-with-inv', [
+                    'template_tags_inv' =>
+                                $this->webViewRenderer->renderPartialAsString(
+                                    '//invoice/emailtemplate/template-tags-inv', [
+                        'custom_fields_inv_custom' =>
+                            $customfieldRepository->repoTablequery('inv_custom'),
                     ]),
                     'custom_fields' => [
                         'client_custom' => $customfieldRepository->repoTablequery('client_custom'),
                     ],
                 ]),
-                'invoiceTemplates' => $this->sR->get_invoice_templates('pdf'),
-                'selected_pdf_template' => $email_template->getEmail_template_pdf_template(),
+                'invoiceTemplates' => $this->sR->getInvoiceTemplates('pdf'),
+                'selected_pdf_template' => $email_template->getEmailTemplatePdfTemplate(),
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email' => $this->sR->getConfigAdminEmail(),
                 'sender_email' => $this->sR->getConfigSenderEmail(),
@@ -235,7 +242,7 @@ final class EmailTemplateController extends BaseController
      * @param FormHydrator $formHydrator
      * @return Response
      */
-    public function edit_quote(
+    public function editQuote(
         CurrentRoute $currentRoute,
         Request $request,
         EmailTemplateRepository $emailtemplateRepository,
@@ -248,8 +255,8 @@ final class EmailTemplateController extends BaseController
             $form = new EmailTemplateForm($email_template);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
-                'actionName' => 'emailtemplate/edit_quote',
-                'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
+                'actionName' => 'emailtemplate/editQuote',
+                'actionArguments' => ['email_template_id' => $email_template->getEmailTemplateId()],
                 'errors' => [],
                 'email_template' => $email_template,
                 'form' => $form,
@@ -262,8 +269,8 @@ final class EmailTemplateController extends BaseController
                         'client_custom' => $customfieldRepository->repoTablequery('client_custom'),
                     ],
                 ]),
-                'quoteTemplates' => $this->sR->get_quote_templates('pdf'),
-                'selected_pdf_template' => $email_template->getEmail_template_pdf_template(),
+                'quoteTemplates' => $this->sR->getQuoteTemplates('pdf'),
+                'selected_pdf_template' => $email_template->getEmailTemplatePdfTemplate(),
                 // see src\Invoice\Asset\rebuild-1.13\js\mailer_ajax_email_addresses
                 'admin_email' => $this->sR->getConfigAdminEmail(),
                 'sender_email' => $this->sR->getConfigSenderEmail(),
@@ -308,7 +315,7 @@ final class EmailTemplateController extends BaseController
      * @param Request $request
      * @param EmailTemplateRepository $etR
      */
-    public function get_content(Request $request, EmailTemplateRepository $etR): \Psr\Http\Message\ResponseInterface
+    public function getContent(Request $request, EmailTemplateRepository $etR): \Psr\Http\Message\ResponseInterface
     {
         //views/invoice/inv/mailer_invoice'
         $get_content = $request->getQueryParams();
@@ -317,13 +324,13 @@ final class EmailTemplateController extends BaseController
         $email_template = $etR->repoEmailTemplateCount((string) $email_template_id) > 0 ? $etR->repoEmailTemplatequery((string) $email_template_id) : null;
         return $this->factory->createResponse(Json::htmlEncode($email_template
             ? ['email_template' => [
-                'email_template_body' => $email_template->getEmail_template_body(),
-                'email_template_subject' => $email_template->getEmail_template_subject(),
-                'email_template_from_name' => $email_template->getEmail_template_from_name(),
-                'email_template_from_email' => $email_template->getEmail_template_from_email(),
-                'email_template_cc' => $email_template->getEmail_template_cc() ?? '',
-                'email_template_bcc' => $email_template->getEmail_template_bcc() ?? '',
-                'email_template_pdf_template' => $email_template->getEmail_template_pdf_template() ?? '',
+                'email_template_body' => $email_template->getEmailTemplateBody(),
+                'email_template_subject' => $email_template->getEmailTemplateSubject(),
+                'email_template_from_name' => $email_template->getEmailTemplateFromName(),
+                'email_template_from_email' => $email_template->getEmailTemplateFromEmail(),
+                'email_template_cc' => $email_template->getEmailTemplateCc() ?? '',
+                'email_template_bcc' => $email_template->getEmailTemplateBcc() ?? '',
+                'email_template_pdf_template' => $email_template->getEmailTemplatePdfTemplate() ?? '',
             ],
                 'success' => 1]
             : ['success' => 0]));
@@ -341,7 +348,7 @@ final class EmailTemplateController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('preview'),
                 'actionName' => 'emailtemplate/preview',
-                'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
+                'actionArguments' => ['email_template_id' => $email_template->getEmailTemplateId()],
                 'errors' => [],
                 'emailtemplate' => $email_template,
                 'form' => $form,
@@ -363,7 +370,7 @@ final class EmailTemplateController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'emailtemplate/view',
-                'actionArguments' => ['email_template_id' => $email_template->getEmail_template_id()],
+                'actionArguments' => ['email_template_id' => $email_template->getEmailTemplateId()],
                 'errors' => [],
                 'emailtemplate' => $email_template,
                 'form' => $form,
@@ -376,6 +383,7 @@ final class EmailTemplateController extends BaseController
     /**
      * @return Response|true
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);

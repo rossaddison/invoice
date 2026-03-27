@@ -37,7 +37,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (ProductProperty $model): string {
-            return (string) $model->getProperty_id();
+            return (string) $model->getPropertyId();
         },
     ),
     new DataColumn(
@@ -53,13 +53,13 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (ProductProperty $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productproperty/view', ['id' => $model->getProperty_id()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productproperty/view', ['id' => $model->getPropertyId()]), []);
         },
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (ProductProperty $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('productproperty/edit', ['id' => $model->getProperty_id()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('productproperty/edit', ['id' => $model->getPropertyId()]), []);
         },
     ),
     new DataColumn(
@@ -75,7 +75,7 @@ $columns = [
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('productproperty/delete', ['id' => $model->getProperty_id()]),
+                $urlGenerator->generate('productproperty/delete', ['id' => $model->getPropertyId()]),
                 [],
             );
         },

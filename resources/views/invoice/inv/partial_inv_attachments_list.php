@@ -23,13 +23,13 @@ $columns = [
         'file_name_original',
         header: $translator->translate('name'),
         content: static fn (Upload $model): string =>
-            ($model->getFile_name_original()),
+            ($model->getFileNameOriginal()),
     ),
     new DataColumn(
         'uploaded_date',
         header: $translator->translate('date'),
         content: static fn (Upload $model): string =>
-            ($model->getUploaded_date())->format('Y-m-d'),
+            ($model->getUploadedDate())->format('Y-m-d'),
     ),
     new DataColumn(
         header: $translator->translate('download'),
@@ -43,7 +43,7 @@ $columns = [
                         'class' => 'dropdown-button',
                     ],
                 ),
-                $urlGenerator->generate('inv/download_file',
+                $urlGenerator->generate('inv/downloadFile',
                         ['upload_id' => $model->getId(), '_language' => 'en']),
                 [],
             );

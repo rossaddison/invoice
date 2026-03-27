@@ -38,17 +38,17 @@ final class QuoteItemForm extends FormModel
     public function __construct(QuoteItem $quoteItem, private readonly ?string $quote_id)
     {
         $this->id = $quoteItem->getId();
-        $this->tax_rate_id = $quoteItem->getTax_rate_id();
-        $this->product_id = $quoteItem->getProduct_id();
-        $this->task_id = $quoteItem->getTask_id();
+        $this->tax_rate_id = $quoteItem->getTaxRateId();
+        $this->product_id = $quoteItem->getProductId();
+        $this->task_id = $quoteItem->getTaskId();
         $this->name = $quoteItem->getName();
         $this->description = $quoteItem->getDescription();
         $this->quantity = $quoteItem->getQuantity();
         $this->price = $quoteItem->getPrice();
-        $this->discount_amount = $quoteItem->getDiscount_amount();
+        $this->discount_amount = $quoteItem->getDiscountAmount();
         $this->order = $quoteItem->getOrder();
-        $this->product_unit = $quoteItem->getProduct_unit();
-        $this->product_unit_id = (int) $quoteItem->getProduct_unit_id();
+        $this->product_unit = $quoteItem->getProductUnit();
+        $this->product_unit_id = (int) $quoteItem->getProductUnitId();
     }
 
     public function getId(): ?string
@@ -56,22 +56,22 @@ final class QuoteItemForm extends FormModel
         return $this->id;
     }
 
-    public function getQuote_id(): ?string
+    public function getQuoteId(): ?string
     {
         return $this->quote_id;
     }
 
-    public function getTax_rate_id(): ?string
+    public function getTaxRateId(): ?string
     {
         return $this->tax_rate_id;
     }
 
-    public function getProduct_id(): ?string
+    public function getProductId(): ?string
     {
         return $this->product_id;
     }
 
-    public function getTask_id(): ?string
+    public function getTaskId(): ?string
     {
         return $this->task_id;
     }
@@ -96,7 +96,7 @@ final class QuoteItemForm extends FormModel
         return $this->price;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
@@ -106,12 +106,12 @@ final class QuoteItemForm extends FormModel
         return $this->order;
     }
 
-    public function getProduct_unit(): ?string
+    public function getProductUnit(): ?string
     {
         return $this->product_unit;
     }
 
-    public function getProduct_unit_id(): ?int
+    public function getProductUnitId(): ?int
     {
         return $this->product_unit_id;
     }

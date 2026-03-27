@@ -72,7 +72,7 @@ final class DeliveryLocationController extends BaseController
     ): Response {
         /** @psalm-var positive-int $currentPageNeverZero */
         $currentPageNeverZero = (int) $queryPage > 0 ? (int) $queryPage : 1;
-        $this->add_in_invoice_flash();
+        $this->addInInvoiceFlash();
         $parameters = [
             'alert' => $this->alert(),
             'cR' => $cR,
@@ -87,7 +87,7 @@ final class DeliveryLocationController extends BaseController
         return $this->webViewRenderer->render('index', $parameters);
     }
 
-    public function add_in_invoice_flash(): void
+    public function addInInvoiceFlash(): void
     {
         $this->flashMessage('info',
                 $this->translator->translate('delivery.location.add.in.invoice'));
@@ -124,7 +124,7 @@ final class DeliveryLocationController extends BaseController
         $action = (string) $queryParams['action'];
 
         $delivery_location = new DeliveryLocation();
-        $delivery_location->setClient_id((int) $client_id);
+        $delivery_location->setClientId((int) $client_id);
         $form = new DeliveryLocationForm($delivery_location);
 
         $parameters = [
@@ -140,7 +140,7 @@ final class DeliveryLocationController extends BaseController
             'errors' => [],
             'form' => $form,
             'session' => $this->session,
-            'electronic_address_scheme' => PeppolArrays::electronic_address_scheme(),
+            'electronic_address_scheme' => PeppolArrays::electronicAddressScheme(),
         ];
 
         if ($request->getMethod() === Method::POST) {
@@ -208,7 +208,7 @@ final class DeliveryLocationController extends BaseController
                 'errors' => [],
                 'form' => $form,
                 'electronic_address_scheme' =>
-                                      PeppolArrays::electronic_address_scheme(),
+                                      PeppolArrays::electronicAddressScheme(),
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -292,20 +292,20 @@ final class DeliveryLocationController extends BaseController
                 'del' =>
                 $delRepository->repoDeliveryLocationquery((string) $del->getId()),
                 'electronic_address_scheme' =>
-                PeppolArrays::electronic_address_scheme(),
+                PeppolArrays::electronicAddressScheme(),
             ];
-            if ($this->rbacObserver($del->getClient_id(), $ucR, $uiR) ||
+            if ($this->rbacObserver($del->getClientId(), $ucR, $uiR) ||
                 $this->rbacAdmin()) {
                 return $this->webViewRenderer->render('_view', $parameters);
             }
         }
-        return $this->webService->getRedirectResponse('delivery_location/index');
+        return $this->webService->getRedirectResponse('del/index');
     }
     
     private function rbacObserver(string $clientId, UCR $ucR, UIR $uiR): bool {
         $userClient = $ucR->repoUserquery($clientId);
         if (null!==$userClient) {
-            $userId = $userClient->getUser_id();
+            $userId = $userClient->getUserId();
             $userInv = $uiR->repoUserInvUserIdquery($userId);
             if (null !== $userInv && $userInv->getActive()) {
                 return true;

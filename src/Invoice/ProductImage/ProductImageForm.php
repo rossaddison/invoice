@@ -23,23 +23,23 @@ final class ProductImageForm extends FormModel
 
     public function __construct(ProductImage $productImage, private readonly ?int $product_id)
     {
-        $this->file_name_original = $productImage->getFile_name_original();
-        $this->file_name_new = $productImage->getFile_name_new();
+        $this->file_name_original = $productImage->getFileNameOriginal();
+        $this->file_name_new = $productImage->getFileNameNew();
         $this->description = $productImage->getDescription();
-        $this->uploaded_date = $productImage->getUploaded_date();
+        $this->uploaded_date = $productImage->getUploadedDate();
     }
 
-    public function getProduct_id(): ?int
+    public function getProductId(): ?int
     {
         return $this->product_id;
     }
 
-    public function getFile_name_original(): string
+    public function getFileNameOriginal(): string
     {
         return $this->file_name_original;
     }
 
-    public function getFile_name_new(): string
+    public function getFileNameNew(): string
     {
         return $this->file_name_new;
     }
@@ -49,7 +49,7 @@ final class ProductImageForm extends FormModel
         return $this->description;
     }
 
-    public function getUploaded_date(): string|DateTimeImmutable
+    public function getUploadedDate(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->uploaded_date

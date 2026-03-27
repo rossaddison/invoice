@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
                           'class' => 'form-control  alert alert-warning',
                           'id' => 'family-category-primary-id',
                       ])
-                      ->value($form->getCategory_primary_id())
+                      ->value($form->getCategoryPrimaryId())
                       ->prompt($translator->translate('none'))
                       ->optionsData($categoryPrimaries);
 ?>
@@ -61,7 +61,7 @@ use Yiisoft\Html\Tag\Form;
         'class' => 'form-control  alert alert-warning',
         'id' => 'family-category-secondary-id',
     ])
-    ->value($form->getCategory_secondary_id())
+    ->value($form->getCategorySecondaryId())
     ->optionsData($categorySecondaries);
 ?>
                 <?= Html::closeTag('div'); ?>
@@ -73,7 +73,7 @@ use Yiisoft\Html\Tag\Form;
       'class' => 'form-control',
       'id' => 'family-name',
   ])
-  ->value($form->getFamily_name())
+  ->value($form->getFamilyName())
   ->optionsData($familyNames);
 ?>
                 <?= Html::closeTag('div'); ?>

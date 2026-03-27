@@ -56,16 +56,16 @@ $invoice_list_split = $invoice_count > 3 ? $invoice_count / 2 : 9999;
 foreach ($invoices as $invoice) {
     // Disable read-only if not applicable
     if ($s->getSetting('disable_read_only') === (string) 1) {
-        $invoice->setIs_read_only(false);
+        $invoice->setIsReadOnly(false);
     }
     // Convert the dropdown menu to a dropup if invoice is after the invoice split
     $dropup = $invoice_idx > $invoice_list_split ? true : false;
     $actionDeleteArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getId()];
     $actionEmailArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getId()];
     $actionPdfArguments = ['_language' => (string) $session->get('_language'), 'include' => true, 'inv_id' => $invoice->getId()];
-    $actionClientViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getClient_id()];
+    $actionClientViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getClientId()];
     $actionViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getId()];
-    $statusId = (string) $invoice->getStatus_id();
+    $statusId = (string) $invoice->getStatusId();
     ?>
             <tr>
                 <td>
@@ -86,7 +86,7 @@ foreach ($invoices as $invoice) {
         }
     }
     ?>
-                        <?php if ($invoice->getIs_read_only()) { ?>
+                        <?php if ($invoice->getIsReadOnly()) { ?>
                             &nbsp;<i class="fa fa-read-only" title="<?= $translator->translate('read.only') ?>"></i>
                         <?php } ?>
                         <?php if ($irR->repoCount((string) $invoice->getId()) > 0) { ?>
@@ -103,19 +103,19 @@ foreach ($invoices as $invoice) {
                 </td>
 
                 <td>
-                    <?= $invoice->getDate_created()->format('Y-m-d'); ?>
+                    <?= $invoice->getDateCreated()->format('Y-m-d'); ?>
                 </td>
 
                 <td>
                     <span class="<?php if ($invoice->isOverdue()) { ?>font-overdue<?php } ?>">
-                        <?= $invoice->getDate_due()->format('Y-m-d'); ?>
+                        <?= $invoice->getDateDue()->format('Y-m-d'); ?>
                     </span>
                 </td>
 
                 <td>
                     <a href="<?= $urlGenerator->generate('client/view', $actionClientViewArguments); ?>"
                        title="<?= $translator->translate('view.client'); ?>" style="text-decoration:none">
-                        <?= Html::encode($clientHelper->format_client($invoice->getClient())); ?>
+                        <?= Html::encode($clientHelper->formatClient($invoice->getClient())); ?>
                     </a>
                 </td>
 
@@ -126,11 +126,11 @@ foreach ($invoices as $invoice) {
         echo 'text-danger';
     } ?>">  
                     
-                    <?= null !== $inv_amount ? $s->format_currency($inv_amount->getTotal()) : 0.00; ?>
+                    <?= null !== $inv_amount ? $s->formatCurrency($inv_amount->getTotal()) : 0.00; ?>
                 </td>
 
                 <td class="amount">
-                    <?= null != $inv_amount ? $s->format_currency($inv_amount->getBalance()) : 0.00; ?>
+                    <?= null != $inv_amount ? $s->formatCurrency($inv_amount->getBalance()) : 0.00; ?>
                 </td>
 
                 <td>
@@ -139,7 +139,7 @@ foreach ($invoices as $invoice) {
                             <i class="fa fa-cog"></i> <?= $translator->translate('options'); ?>
                         </a>
                         <ul class="dropdown-menu">
-                            <?php if ($invoice->getIs_read_only() !== true) { ?>
+                            <?php if ($invoice->getIsReadOnly() !== true) { ?>
                                 <li>
                                     <a href="<?= $urlGenerator->generate('inv/view', $actionViewArguments); ?>" style="text-decoration:none">
                                         <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('edit'); ?>
@@ -153,7 +153,7 @@ foreach ($invoices as $invoice) {
                                 </a>
                             </li>
                             <li>
-                                <a href="<?= $urlGenerator->generate('inv/email_stage_0', $actionEmailArguments); ?>" style="text-decoration:none">
+                                <a href="<?= $urlGenerator->generate('inv/emailStage0', $actionEmailArguments); ?>" style="text-decoration:none">
                                     <i class="fa fa-send fa-margin"></i> <?= $translator->translate('send.email'); ?>
                                 </a>
                             </li>
@@ -161,14 +161,14 @@ foreach ($invoices as $invoice) {
                                 <a href="#" class="invoice-add-payment"
                                    data-invoice-id="<?= $invoice->getId(); ?>"
                                    data-invoice-balance="<?=  null !== $inv_amount ? $inv_amount->getBalance() : 0.00; ?>"
-                                   data-invoice-payment-method="<?= $invoice->getPayment_method(); ?>">
+                                   data-invoice-payment-method="<?= $invoice->getPaymentMethod(); ?>">
                                     <i class="fa fa-money fa-margin"></i>
                                     <?= $translator->translate('enter.payment'); ?>
                                 </a>
                             </li>
                             <?php if (
-                                $invoice->getStatus_id() === 1
-                                || ($s->getSetting('enable_invoice_deletion') == 1  && $invoice->getIs_read_only() !== true)
+                                $invoice->getStatusId() === 1
+                                || ($s->getSetting('enable_invoice_deletion') == 1  && $invoice->getIsReadOnly() !== true)
                             ) { ?>
                                 <li>
                                     <form action="<?= $urlGenerator->generate('inv/delete', $actionDeleteArguments); ?>" method="POST">

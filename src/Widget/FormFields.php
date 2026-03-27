@@ -45,7 +45,7 @@ final readonly class FormFields
             . Field::select($form, 'client_id')
                 ->label($this->translator->translate($labelKey))
                 ->addInputAttributes(['class' => 'form-control'])
-                ->value($form->getClient_id())
+                ->value($form->getClientId())
                 ->prompt($this->translator->translate('none'))
                 ->optionsData($clientOptions)
                 ->hint($this->translator->translate($hintKey))
@@ -73,7 +73,7 @@ final readonly class FormFields
             . Field::select($form, 'group_id')
                 ->label($this->translator->translate('group'))
                 ->addInputAttributes(['class' => 'form-control'])
-                ->value($form->getGroup_id() ?? $defaultValue)
+                ->value($form->getGroupId() ?? $defaultValue)
                 ->prompt($this->translator->translate('none'))
                 ->optionsData($groupOptions)
                 ->hint($this->translator->translate($hintKey))
@@ -101,7 +101,7 @@ final readonly class FormFields
             . Field::select($form, 'status_id')
                 ->label($this->translator->translate('status'))
                 ->addInputAttributes(['class' => 'form-control'])
-                ->value($form->getStatus_id())
+                ->value($form->getStatusId())
                 ->prompt($this->translator->translate('none'))
                 ->optionsData($statusOptions)
                 ->hint($this->translator->translate($hintKey))
@@ -123,7 +123,7 @@ final readonly class FormFields
                 ->addInputAttributes([
                     'class' => 'form-control',
                     'id' => 'inv_discount_amount'])
-                ->value(Html::encode($this->settingRepository->format_amount($form->getDiscount_amount() ?? 0.00)))
+                ->value(Html::encode($this->settingRepository->formatAmount($form->getDiscountAmount() ?? 0.00)))
                 ->placeholder($this->translator->translate('discount.amount'))
                 ->render()
             . Html::closeTag('div');
@@ -135,7 +135,7 @@ final readonly class FormFields
     public function dateCreatedField(InvForm|QuoteForm|SalesOrderForm $form,
             string $labelKey = 'date.issued'): string
     {
-        $value = $form->getDate_created();
+        $value = $form->getDateCreated();
         $dateValue = $value instanceof \DateTimeImmutable ?
                 $value->format('Y-m-d') : '';
 
@@ -203,7 +203,7 @@ final readonly class FormFields
         return Field::select($form, 'family_id')
             ->label($this->translator->translate('family'))
             ->addInputAttributes(['class' => $cssClass])
-            ->value($form->getFamily_id())
+            ->value($form->getFamilyId())
             ->prompt($this->translator->translate('none'))
             ->optionsData($familiesData)
             ->hint($this->translator->translate($hintKey))
@@ -225,7 +225,7 @@ final readonly class FormFields
         return Field::select($form, 'unit_id')
             ->label($this->translator->translate('unit'))
             ->addInputAttributes(['class' => $cssClass])
-            ->value($form->getUnit_id())
+            ->value($form->getUnitId())
             ->prompt($this->translator->translate('none'))
             ->optionsData($unitsData)
             ->hint($this->translator->translate($hintKey))
@@ -247,7 +247,7 @@ final readonly class FormFields
         return Field::select($form, 'tax_rate_id')
             ->label($this->translator->translate('tax.rate'))
             ->addInputAttributes(['class' => $cssClass])
-            ->value($form->getTax_rate_id())
+            ->value($form->getTaxRateId())
             ->prompt($this->translator->translate('none'))
             ->optionsData($taxRatesData)
             ->hint($this->translator->translate($hintKey))
@@ -271,32 +271,32 @@ final readonly class FormFields
 
         // Handle specific field name mappings for ProductForm
         $value = match ($fieldName) {
-            'product_name' => $form->getProduct_name(),
-            'product_description' => $form->getProduct_description(),
-            'product_sku' => $form->getProduct_sku(),
-            'purchase_price' => $form->getPurchase_price(),
-            'product_price' => $form->getProduct_price(),
+            'product_name' => $form->getProductName(),
+            'product_description' => $form->getProductDescription(),
+            'product_sku' => $form->getProductSku(),
+            'purchase_price' => $form->getPurchasePrice(),
+            'product_price' => $form->getProductPrice(),
             'product_price_base_quantity' =>
-                    $form->getProduct_price_base_quantity(),
-            'product_sii_id' => $form->getProduct_sii_id(),
-            'product_sii_schemeid' => $form->getProduct_sii_schemeid(),
-            'product_icc_listid' => $form->getProduct_icc_listid(),
-            'product_icc_listversionid' => $form->getProduct_icc_listversionid(),
-            'product_icc_id' => $form->getProduct_icc_id(),
+                    $form->getProductPriceBaseQuantity(),
+            'product_sii_id' => $form->getProductSiiId(),
+            'product_sii_schemeid' => $form->getProductSiiSchemeid(),
+            'product_icc_listid' => $form->getProductIccListid(),
+            'product_icc_listversionid' => $form->getProductIccListversionid(),
+            'product_icc_id' => $form->getProductIccId(),
             'product_country_of_origin_code' =>
-                    $form->getProduct_country_of_origin_code(),
+                    $form->getProductCountryOfOriginCode(),
             'product_additional_item_property_name' =>
-                    $form->getProduct_additional_item_property_name(),
+                    $form->getProductAdditionalItemPropertyName(),
             'product_additional_item_property_value' =>
-                    $form->getProduct_additional_item_property_value(),
-            'provider_name' => $form->getProvider_name(),
+                    $form->getProductAdditionalItemPropertyValue(),
+            'provider_name' => $form->getProviderName(),
             default => null,
         };
 
         // Format price values using SettingRepository
         if ($isPrice && is_numeric($value)) {
             $numericValue = is_float($value) ? $value : (float) $value;
-            $value = $this->settingRepository->format_amount(
+            $value = $this->settingRepository->formatAmount(
                     $numericValue >= 0.00 ? $numericValue : 0.00);
         }
 
@@ -339,7 +339,7 @@ final readonly class FormFields
         return Field::select($form, 'unit_peppol_id')
             ->label($this->translator->translate('product.peppol.unit'))
             ->addInputAttributes(['class' => $cssClass])
-            ->value(Html::encode($form->getUnit_peppol_id()))
+            ->value(Html::encode($form->getUnitPeppolId()))
             ->prompt($this->translator->translate('none'))
             ->optionsData($unitPeppolsData)
             ->hint($this->translator->translate($hintKey))
@@ -361,18 +361,18 @@ final readonly class FormFields
 
         // Handle specific field name mappings for ClientForm
         $value = match ($fieldName) {
-            'client_name' => $form->getClient_name(),
-            'client_surname' => $form->getClient_surname(),
-            'client_group' => $form->getClient_group(),
-            'client_number' => $form->getClient_number(),
-            'client_address_1' => $form->getClient_address_1(),
-            'client_address_2' => $form->getClient_address_2(),
-            'client_building_number' => $form->getClient_building_number(),
-            'client_city' => $form->getClient_city(),
-            'client_state' => $form->getClient_state(),
-            'client_zip' => $form->getClient_zip(),
-            'client_vat_id' => $form->getClient_vat_id(),
-            'client_tax_code' => $form->getClient_tax_code(),
+            'client_name' => $form->getClientName(),
+            'client_surname' => $form->getClientSurname(),
+            'client_group' => $form->getClientGroup(),
+            'client_number' => $form->getClientNumber(),
+            'client_address_1' => $form->getClientAddress1(),
+            'client_address_2' => $form->getClientAddress2(),
+            'client_building_number' => $form->getClientBuildingNumber(),
+            'client_city' => $form->getClientCity(),
+            'client_state' => $form->getClientState(),
+            'client_zip' => $form->getClientZip(),
+            'client_vat_id' => $form->getClientVatId(),
+            'client_tax_code' => $form->getClientTaxCode(),
             default => null,
         };
 
@@ -403,7 +403,7 @@ final readonly class FormFields
             ->label($this->translator->translate('email'))
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate('email'),
-                'value' => Html::encode($form->getClient_email() ?? ''),
+                'value' => Html::encode($form->getClientEmail() ?? ''),
                 'class' => 'form-control',
                 'id' => 'client_email',
             ])
@@ -418,9 +418,9 @@ final readonly class FormFields
             string $labelKey): string
     {
         $value = match ($fieldName) {
-            'client_mobile' => $form->getClient_mobile(),
-            'client_phone' => $form->getClient_phone(),
-            'client_fax' => $form->getClient_fax(),
+            'client_mobile' => $form->getClientMobile(),
+            'client_phone' => $form->getClientPhone(),
+            'client_fax' => $form->getClientFax(),
             default => null,
         };
 
@@ -445,7 +445,7 @@ final readonly class FormFields
             ->label($this->translator->translate('web'))
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate('web'),
-                'value' => Html::encode($form->getClient_web() ?? ''),
+                'value' => Html::encode($form->getClientWeb() ?? ''),
                 'class' => 'form-control',
                 'id' => 'client_web',
             ])
@@ -462,7 +462,7 @@ final readonly class FormFields
         return Field::select($form, 'client_title')
             ->label($this->translator->translate('client.title'))
             ->addInputAttributes(['class' => 'form-control'])
-            ->value($form->getClient_title())
+            ->value($form->getClientTitle())
             ->prompt($this->translator->translate('none'))
             ->optionsData($titleOptions)
             ->required(false)
@@ -480,8 +480,8 @@ final readonly class FormFields
             ->label($this->translator->translate('language'))
             ->addInputAttributes(['class' => 'form-control',
                 'id' => 'client_language'])
-            ->value(strlen($form->getClient_language() ?? '') > 0 ?
-                    $form->getClient_language() : $selectedLanguage)
+            ->value(strlen($form->getClientLanguage() ?? '') > 0 ?
+                    $form->getClientLanguage() : $selectedLanguage)
             ->optionsData($languageOptions)
             ->required(false)
             ->render();
@@ -500,7 +500,7 @@ final readonly class FormFields
                 'id' => 'client_country',
                 'class' => 'form-control',
             ])
-            ->value($form->getClient_country() ?? $selectedCountry)
+            ->value($form->getClientCountry() ?? $selectedCountry)
             ->optionsData($countryOptions)
             ->required(false)
             ->render();
@@ -523,8 +523,8 @@ final readonly class FormFields
         $value = match ($fieldName) {
             'name' => $form->getName(),
             'company' => $form->getCompany(),
-            'address_1' => $form->getAddress_1(),
-            'address_2' => $form->getAddress_2(),
+            'address_1' => $form->getAddress1(),
+            'address_2' => $form->getAddress2(),
             'city' => $form->getCity(),
             'state' => $form->getState(),
             'zip' => $form->getZip(),
@@ -533,8 +533,8 @@ final readonly class FormFields
             'fax' => $form->getFax(),
             'mobile' => $form->getMobile(),
             'web' => $form->getWeb(),
-            'vat_id' => $form->getVat_id(),
-            'tax_code' => $form->getTax_code(),
+            'vat_id' => $form->getVatId(),
+            'tax_code' => $form->getTaxCode(),
             'subscribernumber' => $form->getSubscribernumber(),
             'iban' => $form->getIban(),
             'rcc' => $form->getRcc(),
@@ -574,7 +574,7 @@ final readonly class FormFields
                 'id' => 'user_id',
             ])
             ->optionsData($userOptions)
-            ->value(Html::encode($form->getUser_id() ?? ''))
+            ->value(Html::encode($form->getUserId() ?? ''))
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
@@ -591,7 +591,7 @@ final readonly class FormFields
                 'id' => 'user_id',
             ])
             ->readonly(true)
-            ->value(Html::encode($form->getUser_id() ?? ''))
+            ->value(Html::encode($form->getUserId() ?? ''))
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
@@ -695,8 +695,8 @@ final readonly class FormFields
         // Handle specific field name mappings for CompanyForm
         $value = match ($fieldName) {
             'name' => $form->getName(),
-            'address_1' => $form->getAddress_1(),
-            'address_2' => $form->getAddress_2(),
+            'address_1' => $form->getAddress1(),
+            'address_2' => $form->getAddress2(),
             'city' => $form->getCity(),
             'state' => $form->getState(),
             'zip' => $form->getZip(),
@@ -812,14 +812,14 @@ final readonly class FormFields
 
         // Handle specific field name mappings for CompanyPrivateForm
         $value = match ($fieldName) {
-            'tax_code' => $form->getTax_code(),
+            'tax_code' => $form->getTaxCode(),
             'iban' => $form->getIban(),
             'gln' => $form->getGln(),
             'rcc' => $form->getRcc(),
-            'logo_width' => $form->getLogo_width(),
-            'logo_height' => $form->getLogo_height(),
-            'logo_margin' => $form->getLogo_margin(),
-            'vat_id' => $form->getVat_id(),
+            'logo_width' => $form->getLogoWidth(),
+            'logo_height' => $form->getLogoHeight(),
+            'logo_margin' => $form->getLogoMargin(),
+            'vat_id' => $form->getVatId(),
             default => null,
         };
 
@@ -886,7 +886,7 @@ final readonly class FormFields
         string $fieldName): string
     {
         $value = match ($fieldName) {
-            'logo_filename' => $form->getLogo_filename(),
+            'logo_filename' => $form->getLogoFilename(),
             default => null,
         };
 
@@ -905,8 +905,8 @@ final readonly class FormFields
         string $placeholder,
     ): string {
         $value = match ($fieldName) {
-            'start_date' => $form->getStart_date(),
-            'end_date' => $form->getEnd_date(),
+            'start_date' => $form->getStartDate(),
+            'end_date' => $form->getEndDate(),
             default => null,
         };
 

@@ -18,17 +18,17 @@ final class QuoteCustomForm extends FormModel
 
     public function __construct(QuoteCustom $quoteCustom)
     {
-        $this->quote_id = (int) $quoteCustom->getQuote_id();
-        $this->custom_field_id = (int) $quoteCustom->getCustom_field_id();
+        $this->quote_id = (int) $quoteCustom->getQuoteId();
+        $this->custom_field_id = (int) $quoteCustom->getCustomFieldId();
         $this->value = $quoteCustom->getValue();
     }
 
-    public function getQuote_id(): ?int
+    public function getQuoteId(): ?int
     {
         return $this->quote_id;
     }
 
-    public function getCustom_field_id(): ?int
+    public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;
     }

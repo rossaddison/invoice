@@ -15,17 +15,17 @@ final class UserClientForm extends FormModel
 
     public function __construct(UserClient $user_client)
     {
-        $this->user_id = (int) $user_client->getUser_id();
-        $this->client_id = (int) $user_client->getClient_id();
+        $this->user_id = (int) $user_client->getUserId();
+        $this->client_id = (int) $user_client->getClientId();
         $this->user_all_clients = '0';
     }
 
-    public function getUser_id(): ?int
+    public function getUserId(): ?int
     {
         return $this->user_id;
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }

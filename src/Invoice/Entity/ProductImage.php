@@ -56,22 +56,22 @@ class ProductImage
         $this->id = $id;
     }
 
-    public function getProduct_id(): string
+    public function getProductId(): string
     {
         return (string) $this->product_id;
     }
 
-    public function setProduct_id(int $product_id): void
+    public function setProductId(int $product_id): void
     {
         $this->product_id = $product_id;
     }
 
-    public function getFile_name_original(): string
+    public function getFileNameOriginal(): string
     {
         return $this->file_name_original;
     }
 
-    public function setFile_name_original(string $file_name_original): void
+    public function setFileNameOriginal(string $file_name_original): void
     {
         $this->file_name_original = $file_name_original;
     }
@@ -86,23 +86,23 @@ class ProductImage
         $this->description = $description;
     }
 
-    public function getFile_name_new(): string
+    public function getFileNameNew(): string
     {
         return $this->file_name_new;
     }
 
-    public function setFile_name_new(string $file_name_new): void
+    public function setFileNameNew(string $file_name_new): void
     {
         $this->file_name_new = $file_name_new;
     }
 
-    public function getUploaded_date(): DateTimeImmutable
+    public function getUploadedDate(): DateTimeImmutable
     {
         /** @var DateTimeImmutable $this->uploaded_date */
         return $this->uploaded_date;
     }
 
-    public function setUploaded_date(DateTimeImmutable $uploaded_date): void
+    public function setUploadedDate(DateTimeImmutable $uploaded_date): void
     {
         $this->uploaded_date = $uploaded_date;
     }

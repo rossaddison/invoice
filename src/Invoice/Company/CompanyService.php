@@ -20,8 +20,8 @@ final readonly class CompanyService
     {
         $model->setCurrent($array['current'] === '1' ? 1 : 0);
         isset($array['name']) ? $model->setName((string) $array['name']) : '';
-        isset($array['address_1']) ? $model->setAddress_1((string) $array['address_1']) : '';
-        isset($array['address_2']) ? $model->setAddress_2((string) $array['address_2']) : '';
+        isset($array['address_1']) ? $model->setAddress1((string) $array['address_1']) : '';
+        isset($array['address_2']) ? $model->setAddress2((string) $array['address_2']) : '';
         isset($array['city']) ? $model->setCity((string) $array['city']) : '';
         isset($array['state']) ? $model->setState((string) $array['state']) : '';
         isset($array['zip']) ? $model->setZip((string) $array['zip']) : '';

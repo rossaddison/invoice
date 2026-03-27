@@ -80,7 +80,7 @@ final class InvItemAllowanceChargeController extends BaseController
         if ($inv_item) {
             $inv_item_ac = new InvItemAllowanceCharge();
             $form = new InvItemAllowanceChargeForm($inv_item_ac, (int) $inv_item_id);
-            $inv_id = $inv_item->getInv_id();
+            $inv_id = $inv_item->getInvId();
             $parameters = [
                 'title' => $this->translator->translate('add'),
                 'actionName' => 'invitemallowancecharge/add',
@@ -130,7 +130,7 @@ final class InvItemAllowanceChargeController extends BaseController
                                 $all_vat_or_tax = $all_charges_vat - $all_allowances_vat;
                                 $current_item_quantity = $inv_item_amount->getInvItem()?->getQuantity() ?? 0.00;
                                 $current_item_price = $inv_item_amount->getInvItem()?->getPrice() ?? 0.00;
-                                $discount_per_item = $inv_item_amount->getInvItem()?->getDiscount_amount() ?? 0.00;
+                                $discount_per_item = $inv_item_amount->getInvItem()?->getDiscountAmount() ?? 0.00;
                                 $quantity_price = $current_item_quantity * $current_item_price;
                                 $current_discount_item_total = $current_item_quantity * $discount_per_item;
                                 $qpIncAc = $quantity_price + $all_charges - $all_allowances;
@@ -140,7 +140,7 @@ final class InvItemAllowanceChargeController extends BaseController
                                 // include all item allowance charges in the subtotal
                                 $inv_item_amount->setSubtotal($qpIncAc);
                                 $inv_item_amount->setDiscount($current_discount_item_total);
-                                $inv_item_amount->setTax_total($new_tax_total);
+                                $inv_item_amount->setTaxTotal($new_tax_total);
                                 $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total;
                                 $inv_item_amount->setTotal($overall_total);
                                 $iiaR->save($inv_item_amount);
@@ -209,11 +209,11 @@ final class InvItemAllowanceChargeController extends BaseController
     ): Response {
         $acii = $this->acii($currentRoute, $aciiR);
         if (null !== $acii) {
-            $inv_id = $acii->getInv_id();
+            $inv_id = $acii->getInvId();
             // delete the inv item allowance/charge and update the related inv item amount record
             $this->aciiService->deleteInvItemAllowanceCharge($acii, $iiaR, $aciiR);
             // update the inv amount record
-            $this->numberHelper->calculate_inv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+            $this->numberHelper->calculateInv($inv_id, $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
             $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
             return $this->webService->getRedirectResponse('inv/view', ['id' => $inv_id]);
         }
@@ -243,9 +243,9 @@ final class InvItemAllowanceChargeController extends BaseController
     ): Response {
         $acii = $this->acii($currentRoute, $aciiR);
         if ($acii) {
-            $inv_item_id = $acii->getInv_item_id();
+            $inv_item_id = $acii->getInvItemId();
             $inv_item = $acii->getInvItem();
-            $inv_id = $inv_item?->getInv_id();
+            $inv_id = $inv_item?->getInvId();
             $form = new InvItemAllowanceChargeForm($acii, (int) $inv_item_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
@@ -296,7 +296,7 @@ final class InvItemAllowanceChargeController extends BaseController
                                     $all_vat = $all_charges_vat - $all_allowances_vat;
                                     $current_item_quantity = $inv_item_amount->getInvItem()?->getQuantity() ?? 0.00;
                                     $current_item_price = $inv_item_amount->getInvItem()?->getPrice() ?? 0.00;
-                                    $discount_per_item = $inv_item_amount->getInvItem()?->getDiscount_amount() ?? 0.00;
+                                    $discount_per_item = $inv_item_amount->getInvItem()?->getDiscountAmount() ?? 0.00;
                                     $quantity_price = $current_item_quantity * $current_item_price;
                                     $current_discount_item_total = $current_item_quantity * $discount_per_item;
                                     $tax_percent = $inv_item_amount->getInvItem()?->getTaxRate()?->getTaxRatePercent();
@@ -306,7 +306,7 @@ final class InvItemAllowanceChargeController extends BaseController
                                     // include all item allowance charges in the subtotal
                                     $inv_item_amount->setSubtotal($qpIncAc);
                                     $inv_item_amount->setDiscount($current_discount_item_total);
-                                    $inv_item_amount->setTax_total($new_tax_total);
+                                    $inv_item_amount->setTaxTotal($new_tax_total);
                                     $overall_total = $qpIncAc - $current_discount_item_total + $new_tax_total;
                                     $inv_item_amount->setTotal($overall_total);
                                     $iiaR->save($inv_item_amount);
@@ -367,7 +367,7 @@ final class InvItemAllowanceChargeController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $acii = $this->acii($currentRoute, $aciiRepository);
         if ($acii) {
-            $inv_item_id = $acii->getInv_item_id();
+            $inv_item_id = $acii->getInvItemId();
             $form = new InvItemAllowanceChargeForm($acii, (int) $inv_item_id);
             $parameters = [
                 'title' => $this->translator->translate('view'),

@@ -60,13 +60,13 @@ echo H::openTag('div', [
           * @var App\Invoice\Entity\Family $family
           */
          foreach ($families as $family) {
-             $attributes = ['value' => $family->getFamily_id()];
+             $attributes = ['value' => $family->getFamilyId()];
              if (isset($filter_family)
-                     && $family->getFamily_id() == $filter_family) {
+                     && $family->getFamilyId() == $filter_family) {
                  $attributes['selected'] = 'selected';
              }
              echo H::openTag('option', $attributes);
-              echo H::encode($family->getFamily_name() ?? '');
+              echo H::encode($family->getFamilyName() ?? '');
              echo H::closeTag('option');
          }
         echo H::closeTag('select');

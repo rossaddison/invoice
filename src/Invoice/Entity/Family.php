@@ -27,57 +27,57 @@ class Family
     ) {
     }
 
-    public function getFamily_id(): ?int
+    public function getFamilyId(): ?int
     {
         return $this->id;
     }
 
-    public function getFamily_name(): ?string
+    public function getFamilyName(): ?string
     {
         return $this->family_name;
     }
 
-    public function setFamily_name(string $family_name): void
+    public function setFamilyName(string $family_name): void
     {
         $this->family_name = $family_name;
     }
     
-    public function getFamily_commalist(): ?string
+    public function getFamilyCommalist(): ?string
     {
         return $this->family_commalist;
     }
 
-    public function setFamily_commalist(string $family_commalist): void
+    public function setFamilyCommalist(string $family_commalist): void
     {
         $this->family_commalist = $family_commalist;
     }
     
-    public function getFamily_productprefix(): ?string
+    public function getFamilyProductprefix(): ?string
     {
         return $this->family_productprefix;
     }
 
-    public function setFamily_productprefix(string $family_productprefix): void
+    public function setFamilyProductprefix(string $family_productprefix): void
     {
         $this->family_productprefix = $family_productprefix;
     }
 
-    public function getCategory_primary_id(): string
+    public function getCategoryPrimaryId(): string
     {
         return (string) $this->category_primary_id;
     }
 
-    public function setCategory_primary_id(int $category_primary_id): void
+    public function setCategoryPrimaryId(int $category_primary_id): void
     {
         $this->category_primary_id = $category_primary_id;
     }
 
-    public function getCategory_secondary_id(): string
+    public function getCategorySecondaryId(): string
     {
         return (string) $this->category_secondary_id;
     }
 
-    public function setCategory_secondary_id(int $category_secondary_id): void
+    public function setCategorySecondaryId(int $category_secondary_id): void
     {
         $this->category_secondary_id = $category_secondary_id;
     }

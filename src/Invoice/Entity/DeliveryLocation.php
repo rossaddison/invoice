@@ -86,22 +86,22 @@ class DeliveryLocation
     }
 
     // building number normally included in address_1 for 3.0
-    public function getAddress_1(): ?string
+    public function getAddress1(): ?string
     {
         return $this->address_1;
     }
 
-    public function setAddress_1(string $address_1): void
+    public function setAddress1(string $address_1): void
     {
         $this->address_1 = $address_1;
     }
 
-    public function getAddress_2(): ?string
+    public function getAddress2(): ?string
     {
         return $this->address_2;
     }
 
-    public function setAddress_2(string $address_2): void
+    public function setAddress2(string $address_2): void
     {
         $this->address_2 = $address_2;
     }
@@ -147,42 +147,42 @@ class DeliveryLocation
     }
 
     // https://www.gs1.org/standards/id-keys/gln
-    public function getGlobal_location_number(): ?string
+    public function getGlobalLocationNumber(): ?string
     {
         return $this->global_location_number;
     }
 
-    public function setGlobal_location_number(?string $global_location_number): void
+    public function setGlobalLocationNumber(?string $global_location_number): void
     {
         $this->global_location_number = $global_location_number;
     }
 
-    public function getElectronic_address_scheme(): ?string
+    public function getElectronicAddressScheme(): ?string
     {
         return $this->electronic_address_scheme;
     }
 
-    public function setElectronic_address_scheme(?string $electronic_address_scheme): void
+    public function setElectronicAddressScheme(?string $electronic_address_scheme): void
     {
         $this->electronic_address_scheme = $electronic_address_scheme;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }

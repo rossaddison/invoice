@@ -63,32 +63,32 @@ class InvSentLog
         $this->id = $id;
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }
 
-    public function setInv_id(int $inv_id): void
+    public function setInvId(int $inv_id): void
     {
         $this->inv_id = $inv_id;
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
 
-    public function getDate_sent(): DateTimeImmutable
+    public function getDateSent(): DateTimeImmutable
     {
         return $this->date_sent;
     }
 
-    public function setDate_sent(DateTimeImmutable $date_sent): void
+    public function setDateSent(DateTimeImmutable $date_sent): void
     {
         $this->date_sent = $date_sent;
     }

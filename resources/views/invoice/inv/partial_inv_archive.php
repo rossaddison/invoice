@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Related logic: see main menu Settings...Invoice Archive  inv/archive
  * Related logic: see views\layout\invoice.php
  * Related logic: see resources\views\invoice\inv\archive.php
- * Related logic: see App\Invoice\Setting\SettingRepository function get_invoice_archived_files_with_filter($inv_number)
+ * Related logic: see App\Invoice\Setting\SettingRepository A$inv_number)
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator

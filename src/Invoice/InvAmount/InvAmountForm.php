@@ -40,19 +40,19 @@ final class InvAmountForm extends FormModel
 
     public function __construct(InvAmount $invAmount)
     {
-        $this->inv_id = (int) $invAmount->getInv_id();
+        $this->inv_id = (int) $invAmount->getInvId();
         $this->sign = $invAmount->getSign();
-        $this->item_subtotal = $invAmount->getItem_subtotal();
-        $this->item_tax_total = $invAmount->getItem_tax_total();
-        $this->packhandleship_total = $invAmount->getPackhandleship_total();
-        $this->packhandleship_tax = $invAmount->getPackhandleship_tax();
-        $this->tax_total = $invAmount->getTax_total();
+        $this->item_subtotal = $invAmount->getItemSubtotal();
+        $this->item_tax_total = $invAmount->getItemTaxTotal();
+        $this->packhandleship_total = $invAmount->getPackhandleshipTotal();
+        $this->packhandleship_tax = $invAmount->getPackhandleshipTax();
+        $this->tax_total = $invAmount->getTaxTotal();
         $this->total = $invAmount->getTotal();
         $this->paid = $invAmount->getPaid();
         $this->balance = $invAmount->getBalance();
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }
@@ -62,27 +62,27 @@ final class InvAmountForm extends FormModel
         return $this->sign;
     }
 
-    public function getItem_subtotal(): ?float
+    public function getItemSubtotal(): ?float
     {
         return $this->item_subtotal;
     }
 
-    public function getItem_tax_total(): ?float
+    public function getItemTaxTotal(): ?float
     {
         return $this->item_tax_total;
     }
 
-    public function getPackhandleship_total(): ?float
+    public function getPackhandleshipTotal(): ?float
     {
         return $this->packhandleship_total;
     }
 
-    public function getPackhandleship_tax(): ?float
+    public function getPackhandleshipTax(): ?float
     {
         return $this->packhandleship_tax;
     }
 
-    public function getTax_total(): ?float
+    public function getTaxTotal(): ?float
     {
         return $this->tax_total;
     }

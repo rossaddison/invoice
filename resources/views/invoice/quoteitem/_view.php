@@ -31,8 +31,8 @@ if (null !== $taxRateName) {
  <div class="mb3 form-group">
    <label for="product_id" class="form-label" style="background:lightblue"><?= $translator->translate('product'); ?></label>
    <?php  $actionNameProduct = 'product/view';
-$actionArgumentsProduct = ['id' => $quoteitem->getProduct()?->getProduct_id()];
-$productName = $quoteitem->getProduct()?->getProduct_name();
+$actionArgumentsProduct = ['id' => $quoteitem->getProduct()?->getProductId()];
+$productName = $quoteitem->getProduct()?->getProductName();
 if (null !== $productName) {
     echo Html::a($productName, $urlGenerator->generate($actionNameProduct, $actionArgumentsProduct))->render();
 }

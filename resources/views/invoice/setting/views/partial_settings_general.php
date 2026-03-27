@@ -171,10 +171,9 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('0')
          ->content($translator->translate('none'));
         /**
-        * @var string $key
         * @var string $value
         */
-        foreach ($time_zones as $key => $value) {
+        foreach ($time_zones as $value) {
         echo  new Option()
          ->value($value)
          ->selected($body['settings[time_zone]'] == $value)
@@ -424,7 +423,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var string $key
         * @var string $val
         */
-        foreach ($gateway_currency_codes as $key => $val) {
+        foreach (array_keys($gateway_currency_codes) as $key) {
         echo  new Option()
          ->value($key)
          ->selected(
@@ -770,7 +769,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          'style' => 'font-family: Monaco, Lucida Console, ' .
          'monospace'
         ]);
-         echo $s->format_currency(123456.78);
+         echo $s->formatCurrency(123456.78);
         echo H::closeTag('span');
        echo H::closeTag('p');
       echo H::closeTag('div'); //7

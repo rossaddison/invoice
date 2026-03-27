@@ -187,6 +187,7 @@ final class GroupController extends BaseController
     /**
      * @return bool|Response
      */
+    /** @psalm-suppress UnusedReturnValue */
     private function rbac(): bool|Response
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);

@@ -267,7 +267,7 @@ abstract class BaseController
      * @param string $delivery_location_id
      * @return string
      */
-    protected function view_partial_delivery_location(
+    protected function viewPartialDeliveryLocation(
             string $_language, 
             DeliveryLocationRepository $dlr, 
             string $delivery_location_id): string
@@ -284,12 +284,12 @@ abstract class BaseController
                     ],
                     'title' => $this->translator->translate('delivery.location'),
                     'building_number' => $del->getBuildingNumber(),
-                    'address_1' => $del->getAddress_1(),
-                    'address_2' => $del->getAddress_2(),
+                    'address_1' => $del->getAddress1(),
+                    'address_2' => $del->getAddress2(),
                     'city' => $del->getCity(),
                     'state' => $del->getZip(),
                     'country' => $del->getCountry(),
-                    'global_location_number' => $del->getGlobal_location_number(),
+                    'global_location_number' => $del->getGlobalLocationNumber(),
                 ]);
             } //null!==$del
         } else {

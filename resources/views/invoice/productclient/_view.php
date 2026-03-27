@@ -57,7 +57,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($product->getProduct_id()); ?>
+                                <?= Html::encode($product->getProductId()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                         <?= Html::openTag('tr'); ?>
@@ -67,7 +67,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($product->getProduct_name()); ?>
+                                <?= Html::encode($product->getProductName()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                         <?= Html::openTag('tr'); ?>
@@ -77,7 +77,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($product->getProduct_description()); ?>
+                                <?= Html::encode($product->getProductDescription()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                         <?= Html::openTag('tr'); ?>
@@ -87,7 +87,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($product->getProduct_price()); ?>
+                                <?= Html::encode($product->getProductPrice()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                     <?= Html::closeTag('tbody'); ?>
@@ -99,12 +99,12 @@ use Yiisoft\Html\Tag\A;
     <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
         <?= Html::openTag('div', ['class' => 'card h-100']); ?>
             <?= Html::openTag('div', ['class' => 'card-header bg-'
-                . ($client->getClient_active() ? 'success' : 'warning')]); ?>
+                . ($client->getClientActive() ? 'success' : 'warning')]); ?>
                 <?= Html::openTag('h5', ['class' => 'mb-0 text-white']); ?>
                     <?= $translator->translate('client_details'); ?>
                     <?= Html::openTag('span',
                             ['class' => 'badge bg-light text-dark ms-2']); ?>
-                        <?= $client->getClient_active() ?
+                        <?= $client->getClientActive() ?
                                 $translator->translate('active') :
                                 $translator->translate('inactive'); ?>
                     <?= Html::closeTag('span'); ?>
@@ -120,7 +120,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($client->getClient_id()); ?>
+                                <?= Html::encode($client->getClientId()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                         <?= Html::openTag('tr'); ?>
@@ -130,7 +130,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($client->getClient_name()); ?>
+                                <?= Html::encode($client->getClientName()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                         <?= Html::openTag('tr'); ?>
@@ -140,7 +140,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($client->getClient_surname()); ?>
+                                <?= Html::encode($client->getClientSurname()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                         <?= Html::openTag('tr'); ?>
@@ -150,7 +150,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($client->getClient_email()); ?>
+                                <?= Html::encode($client->getClientEmail()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                         <?= Html::openTag('tr'); ?>
@@ -160,10 +160,10 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($client->getClient_mobile()); ?>
+                                <?= Html::encode($client->getClientMobile()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
-                        <?php if (strlen($client->getClient_group() ?? '') > 0): ?>
+                        <?php if (strlen($client->getClientGroup() ?? '') > 0): ?>
                         <?= Html::openTag('tr'); ?>
                             <?= Html::openTag('td'); ?>
                                 <?= Html::openTag('strong'); ?>
@@ -173,7 +173,7 @@ use Yiisoft\Html\Tag\A;
                             <?= Html::openTag('td'); ?>
                                 <?= Html::openTag('span',
                                         ['class' => 'badge bg-info']); ?>
-                                    <?= Html::encode($client->getClient_group()); ?>
+                                    <?= Html::encode($client->getClientGroup()); ?>
                                 <?= Html::closeTag('span'); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
@@ -247,7 +247,7 @@ use Yiisoft\Html\Tag\A;
                 ->addAttributes(['class' => 'btn btn-info me-2'])
                 ->content($translator->translate('view.product'))
                 ->href($urlGenerator->generate(
-                    'product/view', ['id' => $product->getProduct_id()]))
+                    'product/view', ['id' => $product->getProductId()]))
                 ->render()
             ?>
             
@@ -255,7 +255,7 @@ use Yiisoft\Html\Tag\A;
                 ->addAttributes(['class' => 'btn btn-info'])
                 ->content($translator->translate('view.client'))
                 ->href($urlGenerator->generate(
-                    'client/view', ['id' => $client->getClient_id()]))
+                    'client/view', ['id' => $client->getClientId()]))
                 ->render()
             ?>
         <?= Html::closeTag('div'); ?>

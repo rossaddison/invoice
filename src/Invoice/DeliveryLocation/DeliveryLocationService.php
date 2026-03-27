@@ -25,16 +25,16 @@ final readonly class DeliveryLocationService
     ): void {
         $this->persist($model, $array);
         isset($array['client_id']) ?
-            $model->setClient_id((int) $array['client_id']) : '';
+            $model->setClientId((int) $array['client_id']) : '';
         isset($array['name']) ?
             $model->setName((string) $array['name']) : '';
         isset($array['building_number']) ?
             $model->setBuildingNumber(
                 (string) $array['building_number']) : '';
         isset($array['address_1']) ?
-            $model->setAddress_1((string) $array['address_1']) : '';
+            $model->setAddress1((string) $array['address_1']) : '';
         isset($array['address_2']) ?
-            $model->setAddress_2((string) $array['address_2']) : '';
+            $model->setAddress2((string) $array['address_2']) : '';
         isset($array['city']) ?
             $model->setCity((string) $array['city']) : '';
         isset($array['state']) ?
@@ -44,10 +44,10 @@ final readonly class DeliveryLocationService
         isset($array['country']) ?
             $model->setCountry((string) $array['country']) : '';
         isset($array['global_location_number']) ?
-            $model->setGlobal_location_number(
+            $model->setGlobalLocationNumber(
                 (string) $array['global_location_number']) : '';
         isset($array['electronic_address_scheme']) ?
-            $model->setElectronic_address_scheme(
+            $model->setElectronicAddressScheme(
                 (string) $array['electronic_address_scheme']) : '';
         $this->repository->save($model);
     }
@@ -55,14 +55,13 @@ final readonly class DeliveryLocationService
     private function persist(
         DeliveryLocation $model,
         array $array
-    ): DeliveryLocation {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
                 $this->cR->repoClientquery(
                     (string) $array[$client]));
         }
-        return $model;
     }
 
     public function deleteDeliveryLocation(DeliveryLocation $model): void

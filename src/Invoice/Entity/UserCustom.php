@@ -43,12 +43,12 @@ class UserCustom
         $this->id = $id;
     }
 
-    public function getUser_id(): string
+    public function getUserId(): string
     {
         return (string) $this->user_id;
     }
 
-    public function setUser_id(int $user_id): void
+    public function setUserId(int $user_id): void
     {
         $this->user_id = $user_id;
     }

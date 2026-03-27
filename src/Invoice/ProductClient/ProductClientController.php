@@ -104,7 +104,7 @@ final class ProductClientController extends BaseController
             $this->flash->add(
                 'success',
                 $this->translator->translate(
-                    'all.product.client.associations.completed'),
+                    'product.client.associations.completed'),
                 true
             );
             return $this->webService->getRedirectResponse('productclient/index');
@@ -136,7 +136,7 @@ final class ProductClientController extends BaseController
                 
                 if ($clientRepository->repoClientCount((string) $clientId) > 0) {
                     // Save client group for future suggestions
-                    if (strlen($clientGroup = ($client->getClient_group() ?? '')) > 0) {
+                    if (strlen($clientGroup = ($client->getClientGroup() ?? '')) > 0) {
                         $this->saveClientGroupToSession($clientGroup);
                     }
                     
@@ -160,12 +160,12 @@ final class ProductClientController extends BaseController
                 
                 if ($newClient) {
                     // Save client group for future suggestions
-                    if (strlen($clientGroup = ($newClient->getClient_group() ?? '')) > 0) {
+                    if (strlen($clientGroup = ($newClient->getClientGroup() ?? '')) > 0) {
                         $this->saveClientGroupToSession($clientGroup);
                     }
                     
                     // Create association
-                    $clientId = $newClient->getClient_id();
+                    $clientId = $newClient->getClientId();
                     if ($clientId !== null) {
                         $this->createProductClientAssociation(
                             $currentProductId, $clientId);
@@ -199,6 +199,7 @@ final class ProductClientController extends BaseController
             'clients' => $this->buildClientOptionsArray(
                 $clientRepository->findAllPreloaded()),
             'product' => $product,
+            'productRepository' => $productRepository,
             'productId' => $currentProductId,
             'showClientCreation' => true,
             'suggestedClientGroup' => $suggestedClientGroup,
@@ -311,10 +312,10 @@ final class ProductClientController extends BaseController
             $this->clearClientGroupFromSession();
             $this->flash->add(
                 'success',
-                $this->translator->translate('all.product.client.associations.completed'),
+                $this->translator->translate('product.client.associations.completed'),
                 true
             );
-            return $this->webService->getRedirectResponse('productclient/index');
+            return $this->webService->getRedirectResponse('product/index');
         }
         
         // Redirect to next product
@@ -342,6 +343,7 @@ final class ProductClientController extends BaseController
             'form' => $form,
             'clients' => $clientRepository->findAllPreloaded(),
             'products' => $productRepository->findAllPreloaded(),
+            'productRepository' => $productRepository,
         ];
         
         if ($request->getMethod() === Method::POST) {
@@ -408,7 +410,8 @@ final class ProductClientController extends BaseController
                 'errors' => [],
                 'form' => $form,
                 'clients'=>$clientRepository->findAllPreloaded(),
-                'products'=>$productRepository->findAllPreloaded()
+                'products'=>$productRepository->findAllPreloaded(),
+                'productRepository'=>$productRepository,    
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -508,13 +511,13 @@ final class ProductClientController extends BaseController
          * @var Client $client
          */
         foreach ($clients as $client) {
-            $status = $client->getClient_active() ?
+            $status = $client->getClientActive() ?
                 $this->translator->translate('active') :
                 $this->translator->translate('inactive');
-            $options[(string) $client->getClient_id()] =
-                $client->getClient_name()
+            $options[(string) $client->getClientId()] =
+                $client->getClientName()
                     . ' '
-                    . ($client->getClient_surname()
+                    . ($client->getClientSurname()
                         ?? $this->translator->translate('not.set.yet'))
                     . ' ' . ($status ?: $this->translator->translate('inactive'));
         }

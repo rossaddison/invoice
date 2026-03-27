@@ -70,18 +70,18 @@ final class CompanyForm extends FormModel
     private ?string $whatsapp = '';
 
     #[Length(min: 0, max: 200, skipOnEmpty: true)]
-    private ?string $arbitrationBody = '';
+    private ?string $arbitration_body = '';
 
     #[Length(min: 0, max: 200, skipOnEmpty: true)]
-    private ?string $arbitrationJurisdiction = '';
+    private ?string $arbitration_jurisdiction = '';
 
     public function __construct(Company $company)
     {
         $this->id = $company->getId();
         $this->current = $company->getCurrent();
         $this->name = $company->getName();
-        $this->address_1 = $company->getAddress_1();
-        $this->address_2 = $company->getAddress_2();
+        $this->address_1 = $company->getAddress1();
+        $this->address_2 = $company->getAddress2();
         $this->city = $company->getCity();
         $this->state = $company->getState();
         $this->zip = $company->getZip();
@@ -95,8 +95,8 @@ final class CompanyForm extends FormModel
         $this->twitter = $company->getTwitter();
         $this->linkedin = $company->getLinkedIn();
         $this->whatsapp = $company->getWhatsapp();
-        $this->arbitrationBody = $company->getArbitrationBody();
-        $this->arbitrationJurisdiction = $company->getArbitrationJurisdiction();
+        $this->arbitration_body = $company->getArbitrationBody();
+        $this->arbitration_jurisdiction = $company->getArbitrationJurisdiction();
     }
 
     public function getId(): ?int
@@ -114,12 +114,12 @@ final class CompanyForm extends FormModel
         return $this->name;
     }
 
-    public function getAddress_1(): ?string
+    public function getAddress1(): ?string
     {
         return $this->address_1;
     }
 
-    public function getAddress_2(): ?string
+    public function getAddress2(): ?string
     {
         return $this->address_2;
     }
@@ -191,12 +191,12 @@ final class CompanyForm extends FormModel
 
     public function getArbitrationBody(): ?string
     {
-        return $this->arbitrationBody;
+        return $this->arbitration_body;
     }
 
     public function getArbitrationJurisdiction(): ?string
     {
-        return $this->arbitrationJurisdiction;
+        return $this->arbitration_jurisdiction;
     }
 
     /**

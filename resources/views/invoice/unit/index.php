@@ -42,17 +42,17 @@ $columns = [
     new DataColumn(
         property: 'unit_id',
         header: $translator->translate('id'),
-        content: static fn (Unit $model) => Html::encode($model->getUnit_id()),
+        content: static fn (Unit $model) => Html::encode($model->getUnitId()),
     ),
     new DataColumn(
         property: 'unit_name',
         header: $translator->translate('unit.name'),
-        content: static fn (Unit $model) => Html::encode($model->getUnit_name()),
+        content: static fn (Unit $model) => Html::encode($model->getUnitName()),
     ),
     new DataColumn(
         property: 'unit_name_plrl',
         header: $translator->translate('unit.name.plrl'),
-        content: static fn (Unit $model) => Html::encode($model->getUnit_name_plrl()),
+        content: static fn (Unit $model) => Html::encode($model->getUnitNamePlrl()),
     ),
 
     new ActionColumn(
@@ -62,7 +62,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Unit $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('unit/view', ['unit_id' => $model->getUnit_id()]);
+                return $urlGenerator->generate('unit/view', ['unit_id' => $model->getUnitId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -73,7 +73,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Unit $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('unit/edit', ['unit_id' => $model->getUnit_id()]);
+                return $urlGenerator->generate('unit/edit', ['unit_id' => $model->getUnitId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -84,7 +84,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Unit $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('unit/delete', ['unit_id' => $model->getUnit_id()]);
+                return $urlGenerator->generate('unit/delete', ['unit_id' => $model->getUnitId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

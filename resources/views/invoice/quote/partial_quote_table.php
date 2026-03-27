@@ -55,13 +55,13 @@ foreach ($quotes as $quote) {
     $actionDeleteArguments = ['_language' => (string) $session->get('_language'), 'id' => $quote->getId()];
     $actionEmailArguments = ['_language' => (string) $session->get('_language'), 'id' => $quote->getId()];
     $actionPdfArguments = ['_language' => (string) $session->get('_language'), 'include' => true, 'quote_id' => $quote->getId()];
-    $actionClientViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $quote->getClient_id()];
+    $actionClientViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $quote->getClientId()];
     $actionViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $quote->getId()];
     ?>
             <tr>
                 <td>
-                    <span class="label <?= $qR->getSpecificStatusArrayClass((string) $quote->getStatus_id()); ?>">
-                        <?= $qR->getSpecificStatusArrayLabel((string) $quote->getStatus_id()); ?>
+                    <span class="label <?= $qR->getSpecificStatusArrayClass((string) $quote->getStatusId()); ?>">
+                        <?= $qR->getSpecificStatusArrayLabel((string) $quote->getStatusId()); ?>
                     </span>
                 </td>
                 <td>
@@ -71,20 +71,20 @@ foreach ($quotes as $quote) {
                     </a>
                 </td>
                 <td>
-                    <?= $quote->getDate_created()->format('Y-m-d'); ?>
+                    <?= $quote->getDateCreated()->format('Y-m-d'); ?>
                 </td>
                 <td>
-                    <?= $quote->getDate_expires()->format('Y-m-d'); ?>
+                    <?= $quote->getDateExpires()->format('Y-m-d'); ?>
                 </td>
                 <td>
                     <a href="<?= $urlGenerator->generate('client/view', $actionClientViewArguments); ?>"
                        title="<?= $translator->translate('view.client'); ?>" style="text-decoration:none">
-                        <?= Html::encode($clientHelper->format_client($quote->getClient())); ?>
+                        <?= Html::encode($clientHelper->formatClient($quote->getClient())); ?>
                     </a>
                 </td>
                 <td style="text-align: right; padding-right: 25px;">
                     <?php $quote_amount = (($qaR->repoQuoteAmountCount((string) $quote->getId()) > 0) ? $qaR->repoQuotequery((string) $quote->getId()) : null) ?>
-                    <?= $s->format_currency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00) ?>
+                    <?= $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00) ?>
                 </td>
                 <td>
                     <div class="options btn-group<?= $dropup ? ' dropup' : ''; ?>">
@@ -105,7 +105,7 @@ foreach ($quotes as $quote) {
                                 </a>
                             </li>
                             <li>
-                                <a href="<?= $urlGenerator->generate('quote/email_stage_0', $actionEmailArguments); ?>" style="text-decoration:none">
+                                <a href="<?= $urlGenerator->generate('quote/emailStage0', $actionEmailArguments); ?>" style="text-decoration:none">
                                     <i class="fa fa-send fa-margin"></i> <?= $translator->translate('send.email'); ?>
                                 </a>
                             </li>

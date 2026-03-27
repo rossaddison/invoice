@@ -65,7 +65,7 @@ echo Field::select($form, 'pre_entity_table')
     'placeholder' => $translator->translate('generator.table.used.to.generate.entity.controller.repository'),
 ])
 ->optionsData($optionsDataTable)
-->value(Html::encode($form->getPre_entity_table()));
+->value(Html::encode($form->getPreEntityTable()));
 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
@@ -81,7 +81,7 @@ echo Field::select($form, 'pre_entity_table')
         ->addInputAttributes([
             'placeholder' => $translator->translate('generator.namespace.before.entity'),
         ])
-        ->value(Html::encode($form->getNamespace_path() ?: 'App\Invoice'))
+        ->value(Html::encode($form->getNamespacePath() ?: 'App\Invoice'))
 ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
@@ -98,7 +98,7 @@ echo Field::select($form, 'pre_entity_table')
 ->addInputAttributes([
     'placeholder' => $translator->translate('generator.route.prefix'),
 ])
-->value(Html::encode($form->getRoute_prefix() ?: 'invoice'))
+->value(Html::encode($form->getRoutePrefix() ?: 'invoice'))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -107,7 +107,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.route.suffix'),
     ])
-    ->value(Html::encode($form->getRoute_suffix() ?: 'product'))
+    ->value(Html::encode($form->getRouteSuffix() ?: 'product'))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -116,7 +116,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.camelcase.capital.name.product'),
     ])
-    ->value(Html::encode($form->getCamelcase_capital_name() ?: ''))
+    ->value(Html::encode($form->getCamelcaseCapitalName() ?: ''))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -125,7 +125,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.small.singular.name.product'),
     ])
-    ->value(Html::encode($form->getSmall_singular_name() ?: ''))
+    ->value(Html::encode($form->getSmallSingularName() ?: ''))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -134,7 +134,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.small.plural.name.products'),
     ])
-    ->value(Html::encode($form->getSmall_plural_name()))
+    ->value(Html::encode($form->getSmallPluralName()))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -155,7 +155,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.controller.layout.directory.placeholder'),
     ])
-    ->value(Html::encode($form->getController_layout_dir() ?: 'dirname(dirname(__DIR__))'))
+    ->value(Html::encode($form->getControllerLayoutDir() ?: 'dirname(dirname(__DIR__))'))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
@@ -164,7 +164,7 @@ echo Field::select($form, 'pre_entity_table')
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.controller.layout.directory.dot.path.placeholder'),
     ])
-    ->value(Html::encode($form->getController_layout_dir_dot_path() ?: '@views/layout/invoice.php'))
+    ->value(Html::encode($form->getControllerLayoutDirDotPath() ?: '@views/layout/invoice.php'))
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>

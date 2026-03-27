@@ -77,7 +77,7 @@ final readonly class QuoteItemService
     }
 
     /**
-     * Related logic: QuoteController function quote_to_quote_items
+     * Related logic: QuoteController function quoteToQuoteItems
      * @param QuoteItem $model
      * @param array $array
      * @param string $quote_id
@@ -105,19 +105,19 @@ final readonly class QuoteItemService
 
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
-        $model->setTax_rate_id((int) $tax_rate_id);
+        $model->setTaxRateId((int) $tax_rate_id);
         $product_id =  (int) ($array['product_id'] ?? null);
         $task_id =  (int) ($array['task_id'] ?? null);
-        $model->setQuote_id((int) $quote_id);
+        $model->setQuoteId((int) $quote_id);
         $product = $pr->repoProductquery(
             (string) $array['product_id']
         );
         $name = '';
         if ($product) {
-            $model->setProduct_id($product_id);
+            $model->setProductId($product_id);
             if (isset($array['product_id']) &&
                 $pr->repoCount((string) $product_id) > 0) {
-                $name = $product->getProduct_name();
+                $name = $product->getProductName();
             }
             null !== $name ?
                 $model->setName($name) : $model->setName('');
@@ -125,7 +125,7 @@ final readonly class QuoteItemService
             // form => override default product description
             $description = (isset($array['description'])
                 ? (string) $array['description']
-                : $product->getProduct_description());
+                : $product->getProductDescription());
 
             null !== $description ?
                 $model->setDescription($description) :
@@ -135,7 +135,7 @@ final readonly class QuoteItemService
         }
         $task = $taskR->repoTaskquery((string) $array['task_id']);
         if ($task) {
-            $model->setTask_id($task_id);
+            $model->setTaskId($task_id);
             if (isset($array['task_id']) &&
                 $taskR->repoCount((string) $task_id) > 0) {
                 $name = $task->getName();
@@ -159,7 +159,7 @@ final readonly class QuoteItemService
         isset($array['price']) ?
             $model->setPrice((float) $array['price']) : '';
         isset($array['discount_amount']) ?
-            $model->setDiscount_amount(
+            $model->setDiscountAmount(
                 (float) $array['discount_amount']
             ) : '';
         isset($array['order']) ?
@@ -170,12 +170,12 @@ final readonly class QuoteItemService
             (string) $array['product_unit_id']
         );
         if ($unit) {
-            $model->setProduct_unit($unit->getUnit_name());
+            $model->setProductUnit($unit->getUnitName());
         }
-        $model->setProduct_unit_id((int) $array['product_unit_id']);
+        $model->setProductUnitId((int) $array['product_unit_id']);
         // Users are required to enter a tax rate even if it
         // is zero percent.
-        $tax_rate_percentage = $this->taxrate_percentage(
+        $tax_rate_percentage = $this->taxratePercentage(
             (int) $tax_rate_id,
             $trr
         );
@@ -229,10 +229,10 @@ final readonly class QuoteItemService
         // item_quote when adding a quote using the modal
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
-        $model->setTax_rate_id((int) $tax_rate_id);
+        $model->setTaxRateId((int) $tax_rate_id);
         $product_id = (int) ($array['product_id'] ?? '');
-        $model->setProduct_id($product_id);
-        $model->setQuote_id((int) $quote_id);
+        $model->setProductId($product_id);
+        $model->setQuoteId((int) $quote_id);
         $product = $pr->repoProductquery(
             (string) $array['product_id']
         );
@@ -240,7 +240,7 @@ final readonly class QuoteItemService
         if ($product) {
             if (isset($array['product_id']) &&
                 $pr->repoCount((string) $product_id) > 0) {
-                $name = $product->getProduct_name();
+                $name = $product->getProductName();
             }
             null !== $name ?
                 $model->setName($name) : $model->setName('');
@@ -248,7 +248,7 @@ final readonly class QuoteItemService
             // form => override default product description
             $description = (isset($array['description'])
                 ? (string) $array['description']
-                : $product->getProduct_description());
+                : $product->getProductDescription());
 
             null !== $description ?
                 $model->setDescription($description) :
@@ -261,7 +261,7 @@ final readonly class QuoteItemService
         isset($array['price']) ?
             $model->setPrice((float) $array['price']) : '';
         isset($array['discount_amount']) ?
-            $model->setDiscount_amount(
+            $model->setDiscountAmount(
                 (float) $array['discount_amount']
             ) : '';
         isset($array['order']) ?
@@ -272,12 +272,12 @@ final readonly class QuoteItemService
             (string) $array['product_unit_id']
         );
         if ($unit) {
-            $model->setProduct_unit($unit->getUnit_name());
+            $model->setProductUnit($unit->getUnitName());
         }
-        $model->setProduct_unit_id((int) $array['product_unit_id']);
+        $model->setProductUnitId((int) $array['product_unit_id']);
         // Users are required to enter a tax rate even if it
         // is zero percent.
-        $tax_rate_percentage = $this->taxrate_percentage(
+        $tax_rate_percentage = $this->taxratePercentage(
             (int) $tax_rate_id,
             $trr
         );
@@ -331,13 +331,13 @@ final readonly class QuoteItemService
         // adding a new task from the modal
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
-        $model->setTax_rate_id((int) $tax_rate_id);
+        $model->setTaxRateId((int) $tax_rate_id);
         $task_id = ((isset($array['task_id'])) ?
             (int) $array['task_id'] : '');
 
-        $model->setTask_id((int) $task_id);
+        $model->setTaskId((int) $task_id);
 
-        $model->setQuote_id((int) $quote_id);
+        $model->setQuoteId((int) $quote_id);
 
         /** @var Task $task */
         $task = $taskR->repoTaskquery((string) $array['task_id']);
@@ -353,16 +353,16 @@ final readonly class QuoteItemService
         $model->setDescription($description ?: '');
 
         $model->setQuantity((float) $array['quantity'] ?: 1.00);
-        $model->setProduct_unit('');
+        $model->setProductUnit('');
         $model->setPrice((float) $array['price'] ?: 0.00);
-        $model->setDiscount_amount(
+        $model->setDiscountAmount(
             (float) $array['discount_amount'] ?: 0.00
         );
         $model->setOrder((int) $array['order'] ?: 0);
 
         $datetime = new \DateTime('now');
-        $model->setDate_added($datetime);
-        $tax_rate_percentage = $this->taxrate_percentage(
+        $model->setDateAdded($datetime);
+        $tax_rate_percentage = $this->taxratePercentage(
             (int) $tax_rate_id,
             $trr
         );
@@ -420,34 +420,34 @@ final readonly class QuoteItemService
             ) : '';
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
-        $model->setTax_rate_id((int) $tax_rate_id);
+        $model->setTaxRateId((int) $tax_rate_id);
         isset($array['product_id']) ?
             $model->setProduct(
-                $model->getProduct()?->getProduct_id() ==
+                $model->getProduct()?->getProductId() ==
                     (int) $array['product_id'] ?
                     $model->getProduct() : null
             ) : '';
         $product_id = (isset($array['product_id']) ?
             (int) $array['product_id'] : '');
-        $model->setProduct_id((int) $product_id);
+        $model->setProductId((int) $product_id);
         $model->setQuote(
             $model->getQuote()?->getId() == $quote_id ?
                 $model->getQuote() : null
         );
-        $model->setQuote_id((int) $quote_id);
+        $model->setQuoteId((int) $quote_id);
         $product = $pr->repoProductquery(
             (string) $array['product_id']
         );
         if (null !== $product) {
             if (isset($array['product_id'])) {
                 $name = ($pr->repoCount((string) $product_id) > 0 ?
-                    $product->getProduct_name() : '');
+                    $product->getProductName() : '');
                 $model->setName($name ?? '');
                 // If the user has changed the description on the
                 // form => override default product description
                 $description = ((isset($array['description']))
                     ? (string) $array['description']
-                    : ($product->getProduct_description() ??
+                    : ($product->getProductDescription() ??
                         $translator->translate('not.available')));
                 $model->setDescription($description);
             }
@@ -458,9 +458,9 @@ final readonly class QuoteItemService
         isset($array['price']) ?
             $model->setPrice((float) $array['price']) : '';
         isset($array['discount_amount']) ?
-            $model->setDiscount_amount(
+            $model->setDiscountAmount(
                 (float) $array['discount_amount']
-            ) : $model->setDiscount_amount(0.00);
+            ) : $model->setDiscountAmount(0.00);
         isset($array['order']) ?
             $model->setOrder((int) $array['order']) : '';
         // Product_unit is a string which we get from unit's
@@ -469,9 +469,9 @@ final readonly class QuoteItemService
             (string) $array['product_unit_id']
         );
         if ($unit) {
-            $model->setProduct_unit($unit->getUnit_name());
+            $model->setProductUnit($unit->getUnitName());
         }
-        $model->setProduct_unit_id((int) $array['product_unit_id']);
+        $model->setProductUnitId((int) $array['product_unit_id']);
         if (isset($array['product_id'])) {
             $this->repository->save($model);
         }
@@ -506,7 +506,7 @@ final readonly class QuoteItemService
             ) : '';
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
-        $model->setTax_rate_id((int) $tax_rate_id);
+        $model->setTaxRateId((int) $tax_rate_id);
 
         isset($array['task_id']) ?
             $model->setTask(
@@ -517,9 +517,9 @@ final readonly class QuoteItemService
         $task_id = ((isset($array['task_id'])) ?
             (int) $array['task_id'] : '');
 
-        $model->setTask_id((int) $task_id);
+        $model->setTaskId((int) $task_id);
 
-        $model->setQuote_id((int) $quote_id);
+        $model->setQuoteId((int) $quote_id);
 
         /** @var Task $task */
         $task = $taskR->repoTaskquery((string) $array['task_id']);
@@ -541,13 +541,13 @@ final readonly class QuoteItemService
         isset($array['price']) ?
             $model->setPrice((float) $array['price']) : '';
         isset($array['discount_amount']) ?
-            $model->setDiscount_amount(
+            $model->setDiscountAmount(
                 (float) $array['discount_amount']
-            ) : $model->setDiscount_amount(0.00);
+            ) : $model->setDiscountAmount(0.00);
         isset($array['order']) ?
             $model->setOrder((int) $array['order']) : '';
-        $model->setProduct_unit('');
-        $model->setProduct_unit_id(0);
+        $model->setProductUnit('');
+        $model->setProductUnitId(0);
 
         if (isset($array['task_id'])) {
             $this->repository->save($model);
@@ -562,7 +562,7 @@ final readonly class QuoteItemService
      * @param TRR $trr
      * @return float|null
      */
-    public function taxrate_percentage(int $id, TRR $trr): ?float
+    public function taxratePercentage(int $id, TRR $trr): ?float
     {
         $taxrate = $trr->repoTaxRatequery((string) $id);
         if ($taxrate) {
@@ -634,22 +634,6 @@ final readonly class QuoteItemService
         }
     }
     
-    /**
-     * @param int $id
-     * @param TRR $trr
-     * @return float|null
-     */
-    public function taxratePercentage(
-        int $id,
-        TRR $trr
-    ): ?float {
-        $taxrate = $trr->repoTaxRatequery((string) $id);
-        if ($taxrate) {
-            return $taxrate->getTaxRatePercent();
-        }
-        return null;
-    }
-
     /**
      * @param array|QuoteItem|null $model
      */

@@ -222,7 +222,7 @@ final class QuoteRepository extends Select\Repository
      * @param string $url_key
      * @return Quote|null
      */
-    public function repoUrl_key_guest_loaded(string $url_key): ?Quote
+    public function repoUrlKeyGuestLoaded(string $url_key): ?Quote
     {
         $query = $this->select()
                        ->load('client')
@@ -234,7 +234,7 @@ final class QuoteRepository extends Select\Repository
      * @param string $url_key
      * @return int
      */
-    public function repoUrl_key_guest_count(string $url_key): int
+    public function repoUrlKeyGuestCount(string $url_key): int
     {
         return $this->select()
                       ->where(['url_key' => $url_key])
@@ -246,7 +246,7 @@ final class QuoteRepository extends Select\Repository
      * @param array $user_client
      * @return int
      */
-    public function repoClient_guest_count(string $quote_id, array $user_client = []): int
+    public function repoClientGuestCount(string $quote_id, array $user_client = []): int
     {
         return $this->select()
                       ->where(['id' => $quote_id])
@@ -259,7 +259,7 @@ final class QuoteRepository extends Select\Repository
      * @param array $user_client
      * @return EntityReader
      */
-    public function repoGuest_Clients_Sent_Viewed_Approved_Rejected_Cancelled(int $status_id, array $user_client = []): EntityReader
+    public function repoGuestClientsSentViewedApprovedRejectedCancelled(int $status_id, array $user_client = []): EntityReader
     {
         // Get specific statuses
         if ($status_id > 0) {
@@ -343,15 +343,15 @@ final class QuoteRepository extends Select\Repository
      * @param string $group_id
      * @return mixed
      */
-    public function get_quote_number(string $group_id, GR $gR): mixed
+    public function getQuoteNumber(string $group_id, GR $gR): mixed
     {
-        return $gR->generate_number((int) $group_id);
+        return $gR->generateNumber((int) $group_id);
     }
 
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_draft(): Select
+    public function isDraft(): Select
     {
         return $this->select()->where(['status_id' => 1]);
     }
@@ -359,7 +359,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_sent(): Select
+    public function isSent(): Select
     {
         return $this->select()->where(['status_id' => 2]);
     }
@@ -367,7 +367,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_viewed(): Select
+    public function isViewed(): Select
     {
         return $this->select()->where(['status_id' => 3]);
     }
@@ -375,7 +375,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_approved(): Select
+    public function isApproved(): Select
     {
         return $this->select()->where(['status_id' => 4]);
     }
@@ -383,7 +383,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_rejected(): Select
+    public function isRejected(): Select
     {
         return $this->select()->where(['status_id' => 5]);
     }
@@ -391,7 +391,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function is_canceled(): Select
+    public function isCanceled(): Select
     {
         return $this->select()->where(['status_id' => 6]);
     }
@@ -401,7 +401,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return Select<TEntity>
      */
-    public function is_open(): Select
+    public function isOpen(): Select
     {
         return $this->select()->where(['status_id' => ['in' => new Parameter([2,3])]]);
     }
@@ -409,7 +409,7 @@ final class QuoteRepository extends Select\Repository
     /**
      * @psalm-return Select<TEntity>
      */
-    public function guest_visible(): Select
+    public function guestVisible(): Select
     {
         return $this->select()->where(['status_id' => ['in' => new Parameter([2,3,4,5])]]);
     }
@@ -419,7 +419,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return Select<TEntity>
      */
-    public function by_client(int $client_id): Select
+    public function byClient(int $client_id): Select
     {
         return $this->select()
                       ->where(['client_id' => $client_id]);
@@ -431,7 +431,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function by_client_quote_status(int $client_id, int $status_id): EntityReader
+    public function byClientQuoteStatus(int $client_id, int $status_id): EntityReader
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id])
@@ -444,7 +444,7 @@ final class QuoteRepository extends Select\Repository
      * @param int $status_id
      * @return int
      */
-    public function by_client_quote_status_count(int $client_id, int $status_id): int
+    public function byClientQuoteStatusCount(int $client_id, int $status_id): int
     {
         return $this->select()
                       ->where(['client_id' => $client_id])
@@ -457,7 +457,7 @@ final class QuoteRepository extends Select\Repository
      *
      * @psalm-return Select<TEntity>
      */
-    public function approve_or_reject_quote_by_key(string $url_key): Select
+    public function approveOrRejectQuoteByKey(string $url_key): Select
     {
         return $this->select()
                       ->where(['status_id' => ['in' => new Parameter([2,3,4,5])]])
@@ -468,7 +468,7 @@ final class QuoteRepository extends Select\Repository
      * @param string $id
      * @return Select
      */
-    public function approve_or_reject_quote_by_id(string $id): Select
+    public function approveOrRejectQuoteById(string $id): Select
     {
         return $this->select()
                       ->where(['status_id' => ['in' => new Parameter([2,3,4,5])]])

@@ -61,12 +61,12 @@ class Task
         $this->id = $id;
     }
 
-    public function getProject_id(): string
+    public function getProjectId(): string
     {
         return (string) $this->project_id;
     }
 
-    public function setProject_id(int $project_id): void
+    public function setProjectId(int $project_id): void
     {
         $this->project_id = $project_id;
     }
@@ -101,13 +101,13 @@ class Task
         $this->price = $price;
     }
 
-    public function getFinish_date(): string|DateTimeImmutable
+    public function getFinishDate(): string|DateTimeImmutable
     {
         /** @var DateTimeImmutable|string $this->finish_date */
         return $this->finish_date;
     }
 
-    public function setFinish_date(?DateTime $finish_date): void
+    public function setFinishDate(?DateTime $finish_date): void
     {
         $this->finish_date = $finish_date;
     }
@@ -122,17 +122,17 @@ class Task
         $this->status = $status;
     }
 
-    public function getTax_rate_id(): string
+    public function getTaxRateId(): string
     {
         return (string) $this->tax_rate_id;
     }
 
-    public function setTax_rate_id(int $tax_rate_id): void
+    public function setTaxRateId(int $tax_rate_id): void
     {
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function Is_overdue(): bool
+    public function IsOverdue(): bool
     {
         return $this->finish_date < new DateTime(date('Y-m-d')) ? false : true;
     }

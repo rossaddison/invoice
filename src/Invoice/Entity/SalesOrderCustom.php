@@ -63,22 +63,22 @@ class SalesOrderCustom
         $this->id = $id;
     }
 
-    public function getSales_order_id(): string
+    public function getSalesOrderId(): string
     {
         return (string) $this->sales_order_id;
     }
 
-    public function setSales_order_id(int $sales_order_id): void
+    public function setSalesOrderId(int $sales_order_id): void
     {
         $this->sales_order_id = $sales_order_id;
     }
 
-    public function getCustom_field_id(): string
+    public function getCustomFieldId(): string
     {
         return (string) $this->custom_field_id;
     }
 
-    public function setCustom_field_id(int $custom_field_id): void
+    public function setCustomFieldId(int $custom_field_id): void
     {
         $this->custom_field_id = $custom_field_id;
     }

@@ -29,13 +29,13 @@ final readonly class InvAmountService
         string $inv_id
     ): void {
         $this->persist($model, ['inv_id' => $inv_id]);
-        $inv_id ? $model->setInv_id((int) $inv_id) : '';
+        $inv_id ? $model->setInvId((int) $inv_id) : '';
         $model->setSign(1);
-        $model->setItem_subtotal(0.00);
-        $model->setItem_tax_total(0.00);
-        $model->setPackhandleship_total(0.00);
-        $model->setPackhandleship_tax(0.00);
-        $model->setTax_total(0.00);
+        $model->setItemSubtotal(0.00);
+        $model->setItemTaxTotal(0.00);
+        $model->setPackhandleshipTotal(0.00);
+        $model->setPackhandleshipTax(0.00);
+        $model->setTaxTotal(0.00);
         $model->setTotal(0.00);
         $model->setPaid(0.00);
         $model->setBalance(0.00);
@@ -55,13 +55,13 @@ final readonly class InvAmountService
         $this->persist($model, ['inv_id' => $new_inv_id]);
         $basis_invoice = $this->repository->repoInvquery(
             $basis_inv_id);
-        $new_inv_id ? $model->setInv_id((int) $new_inv_id) : '';
+        $new_inv_id ? $model->setInvId((int) $new_inv_id) : '';
         $model->setSign(1);
-        null !== $basis_invoice ? $model->setItem_subtotal(($basis_invoice->getItem_subtotal() ?: 0.00) * -1.00) : '';
-        null !== $basis_invoice ? $model->setItem_tax_total(($basis_invoice->getItem_tax_total() ?: 0.00) * -1.00) : '';
-        null !== $basis_invoice ? $model->setPackhandleship_total(($basis_invoice->getPackhandleship_total() ?: 0.00) * -1.00) : '';
-        null !== $basis_invoice ? $model->setPackhandleship_tax(($basis_invoice->getPackhandleship_tax() ?: 0.00) * -1.00) : '';
-        null !== $basis_invoice ? $model->setTax_total(($basis_invoice->getTax_total() ?? 0.00) * -1.00) : '';
+        null !== $basis_invoice ? $model->setItemSubtotal(($basis_invoice->getItemSubtotal() ?: 0.00) * -1.00) : '';
+        null !== $basis_invoice ? $model->setItemTaxTotal(($basis_invoice->getItemTaxTotal() ?: 0.00) * -1.00) : '';
+        null !== $basis_invoice ? $model->setPackhandleshipTotal(($basis_invoice->getPackhandleshipTotal() ?: 0.00) * -1.00) : '';
+        null !== $basis_invoice ? $model->setPackhandleshipTax(($basis_invoice->getPackhandleshipTax() ?: 0.00) * -1.00) : '';
+        null !== $basis_invoice ? $model->setTaxTotal(($basis_invoice->getTaxTotal() ?? 0.00) * -1.00) : '';
         null !== $basis_invoice ? $model->setTotal(($basis_invoice->getTotal() ?? 0.00) * -1.00) : '';
         $model->setPaid(0.00);
         null !== $basis_invoice ? $model->setBalance(($basis_invoice->getBalance() ?? 0.00) * -1.00) : '';
@@ -81,14 +81,14 @@ final readonly class InvAmountService
         $this->persist($model, ['inv_id' => $new_inv_id]);
         $basis_invoice = $this->repository->repoInvquery(
             $basis_inv_id);
-        $new_inv_id ? $model->setInv_id((int) $new_inv_id) : '';
+        $new_inv_id ? $model->setInvId((int) $new_inv_id) : '';
         $model->setSign(1);
         /** @psalm-suppress PossiblyNullArgument, PossiblyNullReference */
-        $model->setItem_subtotal($basis_invoice->getItem_subtotal());
-        $model->setItem_tax_total($basis_invoice->getItem_tax_total() ?: 0.00);
-        $model->setPackhandleship_total($basis_invoice->getPackhandleship_total() ?: 0.00);
-        $model->setPackhandleship_tax($basis_invoice->getPackhandleship_tax() ?: 0.00);
-        $model->setTax_total($basis_invoice->getTax_total() ?? 0.00);
+        $model->setItemSubtotal($basis_invoice->getItemSubtotal());
+        $model->setItemTaxTotal($basis_invoice->getItemTaxTotal() ?: 0.00);
+        $model->setPackhandleshipTotal($basis_invoice->getPackhandleshipTotal() ?: 0.00);
+        $model->setPackhandleshipTax($basis_invoice->getPackhandleshipTax() ?: 0.00);
+        $model->setTaxTotal($basis_invoice->getTaxTotal() ?? 0.00);
         $model->setTotal($basis_invoice->getTotal() ?? 0.00);
         $model->setPaid(0.00);
         $model->setBalance($basis_invoice->getTotal() ?? 0.00);
@@ -105,22 +105,22 @@ final readonly class InvAmountService
     ): void {
         $this->persist($model, $array);
         isset($array['inv_id']) ?
-            $model->setInv_id((int) $array['inv_id']) : '';
+            $model->setInvId((int) $array['inv_id']) : '';
         $model->setSign(1);
         isset($array['item_subtotal']) ?
-            $model->setItem_subtotal(
+            $model->setItemSubtotal(
                 (float) $array['item_subtotal']) : '';
         isset($array['item_tax_total']) ?
-            $model->setItem_tax_total(
+            $model->setItemTaxTotal(
                 (float) $array['item_tax_total']) : '';
         isset($array['packhandleship_total']) ?
-            $model->setPackhandleship_total(
+            $model->setPackhandleshipTotal(
                 (float) $array['packhandleship_total']) : '';
         isset($array['packhandleship_tax']) ?
-            $model->setPackhandleship_tax(
+            $model->setPackhandleshipTax(
                 (float) $array['packhandleship_tax']) : '';
         isset($array['tax_total']) ?
-            $model->setTax_total((float) $array['tax_total']) : '';
+            $model->setTaxTotal((float) $array['tax_total']) : '';
         isset($array['total']) ?
             $model->setTotal((float) $array['total']) : '';
         isset($array['paid']) ?
@@ -133,7 +133,7 @@ final readonly class InvAmountService
     private function persist(
         InvAmount $model,
         array $array
-    ): InvAmount {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
@@ -142,7 +142,6 @@ final readonly class InvAmountService
                 $model->setInv($invEntity);
             }
         }
-        return $model;
     }
 
     /**
@@ -151,12 +150,12 @@ final readonly class InvAmountService
      */
     public function saveInvAmountViaCalculations(InvAmount $model, array $array): void
     {
-        $model->setInv_id((int) $array['inv_id']);
-        $model->setItem_subtotal((float) $array['item_subtotal']);
-        $model->setItem_tax_total((float) $array['item_taxtotal']);
-        $model->setPackhandleship_total((float) $array['packhandleship_total']);
-        $model->setPackhandleship_tax((float) $array['packhandleship_tax']);
-        $model->setTax_total((float) $array['tax_total']);
+        $model->setInvId((int) $array['inv_id']);
+        $model->setItemSubtotal((float) $array['item_subtotal']);
+        $model->setItemTaxTotal((float) $array['item_taxtotal']);
+        $model->setPackhandleshipTotal((float) $array['packhandleship_total']);
+        $model->setPackhandleshipTax((float) $array['packhandleship_tax']);
+        $model->setTaxTotal((float) $array['tax_total']);
         $model->setTotal((float) $array['total']);
         $model->setPaid((float) $array['paid']);
         $model->setBalance((float) $array['balance']);
@@ -197,18 +196,18 @@ final readonly class InvAmountService
                         $invItemAmount = $iiaR->repoInvItemAmountquery((string) $invItemId);
                         if ($invItemAmount) {
                             $subtotal += $invItemAmount->getSubtotal() ?? 0.00;
-                            $taxTotal += $invItemAmount->getTax_total() ?? 0.00;
+                            $taxTotal += $invItemAmount->getTaxTotal() ?? 0.00;
                         }
                     }
                 }
 
                 $model->setSign(1);
-                $model->setItem_subtotal($subtotal);
-                $model->setItem_tax_total($taxTotal);
-                $model->setPackhandleship_total($packHandleShipTotal);
-                $model->setPackhandleship_tax($packHandleShipTax);
-                $additionalTaxTotal = $numberHelper->calculate_inv_taxes((string) $inv_id, $itrR, $iaR);
-                $model->setTax_total($additionalTaxTotal);
+                $model->setItemSubtotal($subtotal);
+                $model->setItemTaxTotal($taxTotal);
+                $model->setPackhandleshipTotal($packHandleShipTotal);
+                $model->setPackhandleshipTax($packHandleShipTax);
+                $additionalTaxTotal = $numberHelper->calculateInvTaxes((string) $inv_id, $itrR, $iaR);
+                $model->setTaxTotal($additionalTaxTotal);
                 $model->setTotal($subtotal + $taxTotal + $additionalTaxTotal);
                 $this->repository->save($model);
             }

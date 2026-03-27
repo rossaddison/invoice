@@ -22,9 +22,9 @@ final class GroupForm extends FormModel
     public function __construct(Group $group)
     {
         $this->name = $group->getName();
-        $this->identifier_format = $group->getIdentifier_format();
-        $this->next_id = (int) $group->getNext_id();
-        $this->left_pad = (int) $group->getLeft_pad();
+        $this->identifier_format = $group->getIdentifierFormat();
+        $this->next_id = (int) $group->getNextId();
+        $this->left_pad = (int) $group->getLeftPad();
     }
 
     public function getName(): ?string
@@ -32,17 +32,17 @@ final class GroupForm extends FormModel
         return $this->name;
     }
 
-    public function getIdentifier_format(): ?string
+    public function getIdentifierFormat(): ?string
     {
         return $this->identifier_format;
     }
 
-    public function getNext_id(): ?int
+    public function getNextId(): ?int
     {
         return $this->next_id;
     }
 
-    public function getLeft_pad(): ?int
+    public function getLeftPad(): ?int
     {
         return $this->left_pad;
     }

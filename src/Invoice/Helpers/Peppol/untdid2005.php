@@ -1,5 +1,6 @@
  <?php
 declare(strict_types=1);
+/** @psalm-suppress UnusedVariable */
 $array = [
     0 => [
         0 => '1',

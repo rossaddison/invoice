@@ -13,56 +13,56 @@ final class SettingEntityTest extends Unit
     {
         $setting = new Setting();
         
-        $this->assertNull($setting->getSetting_id());
-        $this->assertSame('', $setting->getSetting_key());
-        $this->assertSame('', $setting->getSetting_value());
+        $this->assertNull($setting->getSettingId());
+        $this->assertSame('', $setting->getSettingKey());
+        $this->assertSame('', $setting->getSettingValue());
     }
 
     public function testConstructorWithParameters(): void
     {
         $setting = new Setting('theme', 'dark');
         
-        $this->assertNull($setting->getSetting_id());
-        $this->assertSame('theme', $setting->getSetting_key());
-        $this->assertSame('dark', $setting->getSetting_value());
+        $this->assertNull($setting->getSettingId());
+        $this->assertSame('theme', $setting->getSettingKey());
+        $this->assertSame('dark', $setting->getSettingValue());
     }
 
     public function testSettingKeySetterAndGetter(): void
     {
         $setting = new Setting();
-        $setting->setSetting_key('language');
+        $setting->setSettingKey('language');
         
-        $this->assertSame('language', $setting->getSetting_key());
+        $this->assertSame('language', $setting->getSettingKey());
     }
 
     public function testSettingValueSetterAndGetter(): void
     {
         $setting = new Setting();
-        $setting->setSetting_value('en_US');
+        $setting->setSettingValue('en_US');
         
-        $this->assertSame('en_US', $setting->getSetting_value());
+        $this->assertSame('en_US', $setting->getSettingValue());
     }
 
     public function testSettingIdGetter(): void
     {
         $setting = new Setting();
         
-        $this->assertNull($setting->getSetting_id());
+        $this->assertNull($setting->getSettingId());
     }
 
     public function testCommonSettingTypes(): void
     {
         $booleanSetting = new Setting('debug_mode', 'true');
-        $this->assertSame('debug_mode', $booleanSetting->getSetting_key());
-        $this->assertSame('true', $booleanSetting->getSetting_value());
+        $this->assertSame('debug_mode', $booleanSetting->getSettingKey());
+        $this->assertSame('true', $booleanSetting->getSettingValue());
 
         $numericSetting = new Setting('max_files', '100');
-        $this->assertSame('max_files', $numericSetting->getSetting_key());
-        $this->assertSame('100', $numericSetting->getSetting_value());
+        $this->assertSame('max_files', $numericSetting->getSettingKey());
+        $this->assertSame('100', $numericSetting->getSettingValue());
 
         $pathSetting = new Setting('upload_path', '/uploads/documents');
-        $this->assertSame('upload_path', $pathSetting->getSetting_key());
-        $this->assertSame('/uploads/documents', $pathSetting->getSetting_value());
+        $this->assertSame('upload_path', $pathSetting->getSettingKey());
+        $this->assertSame('/uploads/documents', $pathSetting->getSettingValue());
     }
 
     public function testLongSettingKeys(): void
@@ -70,8 +70,8 @@ final class SettingEntityTest extends Unit
         $longKey = str_repeat('key_', 20); // 80 characters
         $setting = new Setting($longKey, 'value');
         
-        $this->assertSame($longKey, $setting->getSetting_key());
-        $this->assertSame('value', $setting->getSetting_value());
+        $this->assertSame($longKey, $setting->getSettingKey());
+        $this->assertSame('value', $setting->getSettingValue());
     }
 
     public function testLongSettingValues(): void
@@ -79,52 +79,52 @@ final class SettingEntityTest extends Unit
         $longValue = str_repeat('This is a very long setting value. ', 5); // ~175 characters
         $setting = new Setting('description', $longValue);
         
-        $this->assertSame('description', $setting->getSetting_key());
-        $this->assertSame($longValue, $setting->getSetting_value());
+        $this->assertSame('description', $setting->getSettingKey());
+        $this->assertSame($longValue, $setting->getSettingValue());
     }
 
     public function testCompleteSettingSetup(): void
     {
         $setting = new Setting('email_host', 'smtp.example.com');
-        $setting->setSetting_key('smtp_host');
-        $setting->setSetting_value('mail.company.com');
+        $setting->setSettingKey('smtp_host');
+        $setting->setSettingValue('mail.company.com');
         
-        $this->assertSame('smtp_host', $setting->getSetting_key());
-        $this->assertSame('mail.company.com', $setting->getSetting_value());
+        $this->assertSame('smtp_host', $setting->getSettingKey());
+        $this->assertSame('mail.company.com', $setting->getSettingValue());
     }
 
     public function testChainedSetterCalls(): void
     {
         $setting = new Setting();
-        $setting->setSetting_key('timezone');
-        $setting->setSetting_value('America/New_York');
+        $setting->setSettingKey('timezone');
+        $setting->setSettingValue('America/New_York');
         
-        $this->assertSame('timezone', $setting->getSetting_key());
-        $this->assertSame('America/New_York', $setting->getSetting_value());
+        $this->assertSame('timezone', $setting->getSettingKey());
+        $this->assertSame('America/New_York', $setting->getSettingValue());
     }
 
     public function testEmptySettingHandling(): void
     {
         $setting = new Setting('', '');
         
-        $this->assertSame('', $setting->getSetting_key());
-        $this->assertSame('', $setting->getSetting_value());
+        $this->assertSame('', $setting->getSettingKey());
+        $this->assertSame('', $setting->getSettingValue());
     }
 
     public function testSpecialCharactersInSettings(): void
     {
         $setting = new Setting('special_chars', 'Value with @#$%^&*()');
         
-        $this->assertSame('special_chars', $setting->getSetting_key());
-        $this->assertSame('Value with @#$%^&*()', $setting->getSetting_value());
+        $this->assertSame('special_chars', $setting->getSettingKey());
+        $this->assertSame('Value with @#$%^&*()', $setting->getSettingValue());
     }
 
     public function testUnicodeInSettings(): void
     {
         $setting = new Setting('unicode_test', 'Tëst Vâlùe 测试');
         
-        $this->assertSame('unicode_test', $setting->getSetting_key());
-        $this->assertSame('Tëst Vâlùe 测试', $setting->getSetting_value());
+        $this->assertSame('unicode_test', $setting->getSettingKey());
+        $this->assertSame('Tëst Vâlùe 测试', $setting->getSettingValue());
     }
 
     public function testJsonValueHandling(): void
@@ -132,7 +132,7 @@ final class SettingEntityTest extends Unit
         $jsonValue = '{"theme": "dark", "language": "en"}';
         $setting = new Setting('user_preferences', $jsonValue);
         
-        $this->assertSame('user_preferences', $setting->getSetting_key());
-        $this->assertSame($jsonValue, $setting->getSetting_value());
+        $this->assertSame('user_preferences', $setting->getSettingKey());
+        $this->assertSame($jsonValue, $setting->getSettingValue());
     }
 }

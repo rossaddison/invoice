@@ -61,7 +61,7 @@ use Yiisoft\Html\Tag\Form;
                         ->label($translator->translate('family.name'))
                         ->addInputAttributes([
                             'placeholder' => $translator->translate('family.name'),
-                            'value' => Html::encode($form->getFamily_name() ?? ''),
+                            'value' => Html::encode($form->getFamilyName() ?? ''),
                             'class' => 'form-control',
                             'id' => 'family_name',
                         ])
@@ -74,7 +74,7 @@ use Yiisoft\Html\Tag\Form;
                         ->addInputAttributes([
                             'class' => 'form-control  alert alert-warning',
                         ])
-                        ->value($form->getCategory_primary_id())
+                        ->value($form->getCategoryPrimaryId())
                         ->prompt($translator->translate('none'))
                         ->optionsData($categoryPrimaries)
                         ->disabled(true);
@@ -86,7 +86,7 @@ use Yiisoft\Html\Tag\Form;
                         ->addInputAttributes([
                             'class' => 'form-control  alert alert-warning',
                         ])
-                        ->value($form->getCategory_secondary_id())
+                        ->value($form->getCategorySecondaryId())
                         ->prompt($translator->translate('none'))
                         ->optionsData($categorySecondaries)
                         ->disabled(true)
@@ -97,7 +97,7 @@ use Yiisoft\Html\Tag\Form;
                         ->label($translator->translate('family.comma.list'))
                         ->addInputAttributes([
                             'placeholder' => $translator->translate('family.comma.list'),
-                            'value' => Html::encode($form->getFamily_commalist() ?? ''),
+                            'value' => Html::encode($form->getFamilyCommalist() ?? ''),
                             'class' => 'form-control',
                             'id' => 'family_commalist',
                         ])
@@ -109,7 +109,7 @@ use Yiisoft\Html\Tag\Form;
                         ->label($translator->translate('family.product.prefix'))
                         ->addInputAttributes([
                             'placeholder' => $translator->translate('family.product.prefix'),
-                            'value' => Html::encode($form->getFamily_productprefix() ?? ''),
+                            'value' => Html::encode($form->getFamilyProductprefix() ?? ''),
                             'class' => 'form-control',
                             'id' => 'family_productprefix',
                         ])
@@ -130,7 +130,7 @@ use Yiisoft\Html\Tag\Form;
                         <?= Html::openTag('td'); ?>    
                     <?php
                         $familyCustomForm = new FamilyCustomForm(new FamilyCustom());
-$cvH->print_field_for_view($custom_field, $familyCustomForm, $familyCustomValues);?>
+$cvH->printFieldForView($custom_field, $familyCustomForm, $familyCustomValues);?>
                         <?= Html::closeTag('td'); ?>    
                     <?= Html::closeTag('tr'); ?>
                 <?php

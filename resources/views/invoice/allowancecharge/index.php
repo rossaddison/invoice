@@ -39,12 +39,12 @@ $toolbarReset =  new A()
         if ($canEdit) {
             echo Html::a(
                 'Add Allowance',
-                $urlGenerator->generate('allowancecharge/add_allowance'),
+                $urlGenerator->generate('allowancecharge/addAllowance'),
                 ['class' => 'btn btn-outline-secondary btn-md-12 mb-3'],
             );
             echo Html::a(
                 'Add Charge',
-                $urlGenerator->generate('allowancecharge/add_charge'),
+                $urlGenerator->generate('allowancecharge/addCharge'),
                 ['class' => 'btn btn-outline-secondary btn-md-12 mb-3'],
             );
         } ?>    
@@ -116,7 +116,7 @@ $columns = [
                   ? Html::a(
                       Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
                       $urlGenerator->generate(
-                          'allowancecharge/edit_allowance',
+                          'allowancecharge/editAllowance',
                           ['id' => $model->getId()],
                       ),
                       [],

@@ -47,8 +47,8 @@ class SalesOrder
      * https://cycle-orm.dev/        ...
      * docs/relation-has-one/current/en#differences-from-belongsto
      *
-     * QuoteController function quote_to_so_quote_amount uses
-     * $salesOrder->getSales_order_amount()
+     * QuoteController function quoteToSoQuoteAmount uses
+     * $salesOrder->getSalesOrderAmount()
      */
     #[HasOne(target: SalesOrderAmount::class, outerKey: 'sales_order_id')]
     private readonly SalesOrderAmount $sales_order_amount;
@@ -176,12 +176,12 @@ class SalesOrder
         $this->id = $id;
     }
 
-    public function getUser_id(): string
+    public function getUserId(): string
     {
         return (string) $this->user_id;
     }
 
-    public function setUser_id(int $user_id): void
+    public function setUserId(int $user_id): void
     {
         $this->user_id = $user_id;
     }
@@ -189,18 +189,18 @@ class SalesOrder
     /**
      * @param int|string|null $quote_id
      */
-    public function setQuote_id(string|int|null $quote_id): void
+    public function setQuoteId(string|int|null $quote_id): void
     {
         $quote_id === null ? $this->quote_id = null
                            : $this->quote_id = (int) $quote_id ;
     }
 
-    public function getQuote_id(): string
+    public function getQuoteId(): string
     {
         return (string) $this->quote_id;
     }
 
-    public function getInv_id(): ?string
+    public function getInvId(): ?string
     {
         return (string) $this->inv_id;
     }
@@ -208,32 +208,32 @@ class SalesOrder
     /**
      * @param int|string|null $inv_id
      */
-    public function setInv_id(string|int|null $inv_id): void
+    public function setInvId(string|int|null $inv_id): void
     {
         $inv_id === null ? $this->inv_id = null : $this->inv_id = (int) $inv_id ;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
 
-    public function getGroup_id(): string
+    public function getGroupId(): string
     {
         return (string) $this->group_id;
     }
 
-    public function setGroup_id(int $group_id): void
+    public function setGroupId(int $group_id): void
     {
         $this->group_id = $group_id;
     }
 
-    public function getStatus_id(): ?int
+    public function getStatusId(): ?int
     {
         return $this->status_id;
     }
@@ -252,35 +252,35 @@ class SalesOrder
         };
     }
 
-    public function setStatus_id(int $status_id): void
+    public function setStatusId(int $status_id): void
     {
         !in_array($status_id, [1,2,3,4,5,6,7,8,9]) ?
                 $this->status_id = 1 : $this->status_id = $status_id ;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function setDate_created(DateTimeImmutable $date_created): void
+    public function setDateCreated(DateTimeImmutable $date_created): void
     {
         $this->date_created = $date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
 
-    public function setDate_expires(): void
+    public function setDateExpires(): void
     {
         $days = (string) 1;
         $this->date_expires =
         (new DateTimeImmutable('now'))->add(new \DateInterval('P' . $days . 'D'));
     }
 
-    public function getDate_expires(): DateTimeImmutable
+    public function getDateExpires(): DateTimeImmutable
     {
         return $this->date_expires;
     }
@@ -295,52 +295,52 @@ class SalesOrder
         $this->number = $number;
     }
 
-    public function getClient_po_number(): ?string
+    public function getClientPoNumber(): ?string
     {
         return $this->client_po_number;
     }
 
-    public function setClient_po_number(string $client_po_number): void
+    public function setClientPoNumber(string $client_po_number): void
     {
         $this->client_po_number = $client_po_number;
     }
 
-    public function getClient_po_line_number(): ?string
+    public function getClientPoLineNumber(): ?string
     {
         return $this->client_po_line_number;
     }
 
-    public function setClient_po_line_number(string $client_po_line_number): void
+    public function setClientPoLineNumber(string $client_po_line_number): void
     {
         $this->client_po_line_number = $client_po_line_number;
     }
 
-    public function getClient_po_person(): ?string
+    public function getClientPoPerson(): ?string
     {
         return $this->client_po_person;
     }
 
-    public function setClient_po_person(string $client_po_person): void
+    public function setClientPoPerson(string $client_po_person): void
     {
         $this->client_po_person = $client_po_person;
     }
 
-    public function getDiscount_amount(): ?float
+    public function getDiscountAmount(): ?float
     {
         return $this->discount_amount;
     }
 
-    public function setDiscount_amount(float $discount_amount): void
+    public function setDiscountAmount(float $discount_amount): void
     {
         $this->discount_amount = $discount_amount;
     }
 
-    public function getUrl_key(): string
+    public function getUrlKey(): string
     {
         return $this->url_key;
     }
 
-    public function setUrl_key(string $url_key): void
+    public function setUrlKey(string $url_key): void
     {
         $this->url_key = $url_key;
     }
@@ -370,7 +370,7 @@ class SalesOrder
         return $this->items;
     }
     
-    public function getSales_order_amount(): SalesOrderAmount
+    public function getSalesOrderAmount(): SalesOrderAmount
     {
         return $this->sales_order_amount;
     }

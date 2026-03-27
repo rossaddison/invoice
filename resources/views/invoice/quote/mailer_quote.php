@@ -146,7 +146,7 @@ echo Html::script($js3)->type('module');
         <div class="col-12 col-md-8 col-lg-6 col-xl-8">
             <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
-                    <h1 class="fw-normal h3 text-center"><?= $translator->translate('email.quote') . ' #' . ($quote->getNumber() ?? '#') . ' => ' . ($quote->getClient()?->getClient_email() ?? '#') ?></h1>
+                    <h1 class="fw-normal h3 text-center"><?= $translator->translate('email.quote') . ' #' . ($quote->getNumber() ?? '#') . ' => ' . ($quote->getClient()?->getClientEmail() ?? '#') ?></h1>
                 </div>
                 <div class="card-body p-5 text-center">
                     <?=  new Form()
@@ -186,7 +186,7 @@ echo Html::script($js3)->type('module');
                         ); ?>
                     </div>
                     <?= Html::tag('Label', $translator->translate('to.email')) ?>
-                    <?= Field::email($form, 'to_email')->addInputAttributes(['value' => Html::encode($quote->getClient()?->getClient_email())])
+                    <?= Field::email($form, 'to_email')->addInputAttributes(['value' => Html::encode($quote->getClient()?->getClientEmail())])
                                                            ->hideLabel()
                                                            ->required(true); ?> 
                     
@@ -301,8 +301,8 @@ echo Html::script($js3)->type('module');
         Field::text($form, 'guest_url')->readonly(true)
                                       ->addInputAttributes(['id' => 'quote-guest-url','readonly' => 'true',
                                           'value' => $urlGenerator->generate(
-                                              'quote/url_key',
-                                              ['url_key' => $quote->getUrl_key()],
+                                              'quote/urlKey',
+                                              ['url_key' => $quote->getUrlKey()],
                                           ),'class' => 'form-control']);
 
 echo Html::tag(

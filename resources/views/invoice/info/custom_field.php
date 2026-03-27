@@ -28,7 +28,7 @@ whether the <code>custom_field</code> it is linked to is BOOLEAN, TEXT, MULTIPLE
 </p>
 <p>
     Provided the $quote_custom variable on the view has been passed from the controller parameter array as eg. $parameter = ['quote_custom' => $quote_custom] <br>
-    <code>$quote_custom->getQuote()->getClient_id()</code> 			will retrieve the client_id<br>
+    <code>$quote_custom->getQuote()->getClientId()</code> 			will retrieve the client_id<br>
     <code>$quote_custom->getCustom_field->getLocation()</code>	will retrieve the position that the field will appear under.<br>
     <code>$quote_custom->getValue()</code>   			stores the actual value for this clients's quote.<br>
 </p>

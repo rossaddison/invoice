@@ -64,7 +64,7 @@ final class ClientPeppolController extends BaseController
         $client_id = $currentRoute->getArgument('client_id');
         $client_peppol = new ClientPeppol();
         $form = new ClientPeppolForm($client_peppol);
-        $electronic_address_scheme = PeppolArrays::electronic_address_scheme();
+        $electronic_address_scheme = PeppolArrays::electronicAddressScheme();
         $peppolArrays = new PeppolArrays();
         if (null !== $client_id) {
             $parameters = [
@@ -80,9 +80,9 @@ final class ClientPeppolController extends BaseController
                         == '1' ? true : false,
                 'client_id' => $client_id,
                 'receiver_identifier_array' =>
-                    StoreCoveArrays::store_cove_receiver_identifier_array(),
+                    StoreCoveArrays::storeCoveReceiverIdentifierArray(),
                 'electronic_address_scheme' => $electronic_address_scheme,
-                'iso_6523_array' => $peppolArrays->getIso_6523_icd(),
+                'iso_6523_array' => $peppolArrays->getIso6523Icd(),
             ];
             if ($request->getMethod() === Method::POST) {
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
@@ -234,7 +234,7 @@ final class ClientPeppolController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'clientpeppol/edit',
-                'actionArguments' => ['client_id' => $clientpeppol->getClient_id()],
+                'actionArguments' => ['client_id' => $clientpeppol->getClientId()],
                 'buttons' => $this->webViewRenderer->renderPartialAsString(
                     '//invoice/layout/header_buttons',
                     ['hide_submit_button' => false, 'hide_cancel_button' => false],
@@ -247,12 +247,12 @@ final class ClientPeppolController extends BaseController
                 'defaults' =>
                     $this->sR->getSetting('enable_client_peppol_defaults') == '1'
                         ? true : false,
-                'client_id' => $clientpeppol->getClient_id(),
+                'client_id' => $clientpeppol->getClientId(),
                 'receiver_identifier_array' =>
-                    StoreCoveArrays::store_cove_receiver_identifier_array(),
+                    StoreCoveArrays::storeCoveReceiverIdentifierArray(),
                 'electronic_address_scheme' =>
-                    PeppolArrays::electronic_address_scheme(),
-                'iso_6523_array' => $peppolarrays->getIso_6523_icd(),
+                    PeppolArrays::electronicAddressScheme(),
+                'iso_6523_array' => $peppolarrays->getIso6523Icd(),
             ];
             if ($request->getMethod() === Method::POST) {
                 if (is_array($body)) {

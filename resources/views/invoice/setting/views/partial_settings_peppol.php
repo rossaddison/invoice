@@ -187,9 +187,8 @@ echo H::openTag('div', $row); //1
         ->content($translator->translate('none'));
        /**
        * @var string $val
-       * @var string $key
        */
-       foreach ($gateway_currency_codes as $val => $key) {
+       foreach (array_keys($gateway_currency_codes) as $val) {
        echo  new Option()
         ->value($val)
         ->selected(
@@ -222,9 +221,8 @@ echo H::openTag('div', $row); //1
         ->content($translator->translate('none'));
        /**
        * @var string $val
-       * @var string $key
        */
-       foreach ($gateway_currency_codes as $val => $key) {
+       foreach (array_keys($gateway_currency_codes) as $val) {
        echo  new Option()
         ->value($val)
         ->selected(
@@ -259,9 +257,8 @@ echo H::openTag('div', $row); //1
         ->content($translator->translate('none'));
        /**
        * @var string $val
-       * @var string $key
        */
-       foreach ($gateway_currency_codes as $val => $key) {
+       foreach (array_keys($gateway_currency_codes) as $val) {
        echo  new Option()
         ->value($val)
         ->selected(
@@ -370,11 +367,10 @@ echo H::openTag('div', $row); //1
        ]);
         /**
         * @var array $value
-        * @var string $key
         * @var string $value['rdf:value']
         * @var string $value['rdf:comment']
         */
-        foreach ($stand_in_codes as $key => $value) {
+        foreach ($stand_in_codes as $value) {
         echo  new Option()
          ->value($value['rdf:value'])
          ->selected(

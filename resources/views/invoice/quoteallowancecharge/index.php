@@ -66,7 +66,7 @@ $columns = [
                 return Html::a(
                     $model->getQuote()?->getNumber() ?? '#',
                         $urlGenerator->generate('quote/view',
-                            ['id' => $model->getQuote_id()]), []);
+                            ['id' => $model->getQuoteId()]), []);
         },
         encodeContent: false,
         filter: $optionsDataQuoteNumberDropDownFilter,

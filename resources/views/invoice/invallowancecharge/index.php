@@ -60,7 +60,7 @@ $columns = [
         property: 'filterInvNumber',
         header: $translator->translate('invoice'),
         content: static function (InvAllowanceCharge $model) use ($urlGenerator): A {
-            return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), []);
+            return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInvId()]), []);
         },
         encodeContent: false,
         filter: $optionsDataInvNumberDropDownFilter,

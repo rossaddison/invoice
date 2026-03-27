@@ -24,17 +24,17 @@ class ProductProperty
     {
     }
 
-    public function getProperty_id(): ?int
+    public function getPropertyId(): ?int
     {
         return $this->id;
     }
 
-    public function getProduct_id(): string
+    public function getProductId(): string
     {
         return (string) $this->product_id;
     }
 
-    public function setProduct_id(int $product_id): void
+    public function setProductId(int $product_id): void
     {
         $this->product_id = $product_id;
     }

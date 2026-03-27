@@ -72,7 +72,7 @@ if ($invEdit && $invView) {
                         [
                             $translator->translate('layout.submit'),
                             'type' => 'submit',
-                            'title' => 'actions: inv/view_partial_inv_attachments and inv/attachment',
+                            'title' => 'actions: inv/viewPartialInvAttachments and inv/attachment',
                             'tooltip' => 'data-bs-toggle',
                             'class' => 'btn btn-sm btn-primary',
                             'name' => 'contact-button',

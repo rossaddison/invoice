@@ -22,17 +22,17 @@ final class ClientNoteForm extends FormModel
 
     public function __construct(ClientNote $clientNote)
     {
-        $this->client_id = (int) $clientNote->getClient_id();
-        $this->date_note = $clientNote->getDate_note();
+        $this->client_id = (int) $clientNote->getClientId();
+        $this->date_note = $clientNote->getDateNote();
         $this->note = $clientNote->getNote();
     }
 
-    public function getClient_id(): ?int
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function getDate_note(): string|DateTimeImmutable
+    public function getDateNote(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->date_note

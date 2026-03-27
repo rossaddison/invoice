@@ -48,9 +48,9 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
  * Related logic: see family.js handleGenerateProducts function
  */
 $generateProductsButton =  new A()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
+        ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-success')
-        ->href('#generate-products-modal')
+        ->href('#')
         ->content('☑️' . $translator->translate('generate')
             . ' '
             . $translator->translate('products') 
@@ -83,7 +83,7 @@ $columns = [
         content: static function (Checkbox $input, DataContext $context): string {
             $family = $context->data;
             if (($family instanceof Family)
-                    && (null !== ($id = $family->getFamily_id()))) {
+                    && (null !== ($id = $family->getFamilyId()))) {
                 return  new Input()
                        ->type('checkbox')
                        ->addAttributes([
@@ -92,8 +92,8 @@ $columns = [
                            'data-bs-toggle' => 'tooltip'
                         ])
                        ->value($id)
-                       ->disabled(null!== $family->getFamily_commalist()
-                               && null !== $family->getFamily_productprefix()
+                       ->disabled(null!== $family->getFamilyCommalist()
+                               && null !== $family->getFamilyProductprefix()
                                ? false : true)
                        ->render();
             }
@@ -104,14 +104,14 @@ $columns = [
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn (Family $model) => Html::encode($model->getFamily_id()),
+        content: static fn (Family $model) => Html::encode($model->getFamilyId()),
         withSorting: true,
     ),
     new DataColumn(
         property: 'family_name',
         header: $translator->translate('family'),
         content: static fn (Family $model) => '<span data-family-name>'
-            . Html::encode($model->getFamily_name() ?? '') . '</span>',
+            . Html::encode($model->getFamilyName() ?? '') . '</span>',
         encodeContent: false,
         withSorting: true,
     ),
@@ -119,7 +119,7 @@ $columns = [
         property: 'family_commalist',
         header: $translator->translate('family.comma.list'),
         content: static fn (Family $model) => '<span data-family-commalist>'
-            . Html::encode($model->getFamily_commalist() ?? '') . '</span>',
+            . Html::encode($model->getFamilyCommalist() ?? '') . '</span>',
         encodeContent: false,
         withSorting: true,
     ),
@@ -127,7 +127,7 @@ $columns = [
         property: 'family_productprefix',
         header: $translator->translate('family.product.prefix'),
         content: static fn (Family $model) => '<span data-family-prefix>'
-            . Html::encode($model->getFamily_productprefix() ?? '') . '</span>',
+            . Html::encode($model->getFamilyProductprefix() ?? '') . '</span>',
         encodeContent: false,
         withSorting: true,
     ),
@@ -135,7 +135,7 @@ $columns = [
         'category_primary_id',
         header: $translator->translate('category.primary'),
         content: static function (Family $model) use ($cpR, $translator): string {
-            $categoryPrimaryId = $model->getCategory_primary_id();
+            $categoryPrimaryId = $model->getCategoryPrimaryId();
             $categoryPrimary = $cpR->repoCategoryPrimaryQuery($categoryPrimaryId);
             return null !== $categoryPrimary ?
                     ($categoryPrimary->getName() ?? $translator->translate('not.set'))
@@ -146,7 +146,7 @@ $columns = [
         'category_secondary_id',
         header: $translator->translate('category.secondary'),
         content: static function (Family $model) use ($csR, $translator): string {
-            $categorySecondaryId = $model->getCategory_secondary_id();
+            $categorySecondaryId = $model->getCategorySecondaryId();
             $categorySecondary = $csR->repoCategorySecondaryQuery($categorySecondaryId);
             return null !== $categorySecondary ?
                     $categorySecondary->getName() ?? $translator->translate('not.set')
@@ -158,7 +158,7 @@ $columns = [
             content: '🔎',
             url: static function (Family $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('family/view',
-                    ['id' => $model->getFamily_id()]);
+                    ['id' => $model->getFamilyId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -169,7 +169,7 @@ $columns = [
             content: '✎',
             url: static function (Family $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('family/edit',
-                    ['id' => $model->getFamily_id()]);
+                    ['id' => $model->getFamilyId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -180,7 +180,7 @@ $columns = [
             content: '❌',
             url: static function (Family $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('family/delete',
-                    ['id' => $model->getFamily_id()]);
+                    ['id' => $model->getFamilyId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

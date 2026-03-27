@@ -15,7 +15,7 @@ echo "<?php\n";
 
 declare(strict_types=1); 
 
-namespace <?= $generator->getNamespace_path() . '\Entity'; ?>;
+namespace <?= $generator->getNamespacePath() . '\Entity'; ?>;
 
 <?php
 
@@ -26,11 +26,11 @@ namespace <?= $generator->getNamespace_path() . '\Entity'; ?>;
  */
 foreach ($relations as $relation) {
     echo 'use '
-        . $generator->getNamespace_path()
+        . $generator->getNamespacePath()
         . DIRECTORY_SEPARATOR
         . 'Entity'
         . DIRECTORY_SEPARATOR
-        . ($relation->getCamelcase_name() ?? '#') . ';' . "\n";
+        . ($relation->getCamelcaseName() ?? '#') . ';' . "\n";
 } ?>
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -52,41 +52,41 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
  <?php
     echo '#[Entity(repository: '
             . DIRECTORY_SEPARATOR
-            . $generator->getNamespace_path()
+            . $generator->getNamespacePath()
             . DIRECTORY_SEPARATOR
-            . $generator->getCamelcase_capital_name()
+            . $generator->getCamelcaseCapitalName()
             . DIRECTORY_SEPARATOR
-            . $generator->getCamelcase_capital_name()
+            . $generator->getCamelcaseCapitalName()
             . 'Repository::class)]' . "\n";
-if ($generator->isCreated_include()
-        || $generator->isUpdated_include()
-                || $generator->isModified_include()) {
-    echo($generator->isCreated_include() ?
+if ($generator->isCreatedInclude()
+        || $generator->isUpdatedInclude()
+                || $generator->isModifiedInclude()) {
+    echo($generator->isCreatedInclude() ?
             '#[Behavior\CreatedAt(field: '
             . "'"
             . 'date_created'
             . "',column:'"
             . 'date_created'
             . ')]' : '');
-    echo($generator->isUpdated_include() ? '#[Behavior\UpdatedAt(field: ' . "'"
+    echo($generator->isUpdatedInclude() ? '#[Behavior\UpdatedAt(field: ' . "'"
             . 'date_updated' . "',column:'" . 'date_updated' . ')]' : '');
-    echo($generator->isModified_include() ? '#[Behavior\ModifiedAt(field: ' . "'"
+    echo($generator->isModifiedInclude() ? '#[Behavior\ModifiedAt(field: ' . "'"
             . 'date_modified' . "',column:'" . 'date_modified' . ')]' : '');
 }
 ?>
  
-class <?= $generator->getCamelcase_capital_name() . "\n"; ?>
+class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
 {
     <?php
       /**
        * @var App\Invoice\Entity\GentorRelation $relation
        */
        foreach ($relations as $relation) {
-           echo '    #[BelongsTo(target:' . ($relation->getCamelcase_name() ?? '')
+           echo '    #[BelongsTo(target:' . ($relation->getCamelcaseName() ?? '')
                    . "::class, nullable: false, fkAction:" . "'NO ACTION'" . ")]"
                    . "\n";
-           echo '    private ?' . ($relation->getCamelcase_name() ?? '') . " $"
-                   . ($relation->getLowercase_name() ?? '') . ' = null;' . "\n";
+           echo '    private ?' . ($relation->getCamelcaseName() ?? '') . " $"
+                   . ($relation->getLowercaseName() ?? '') . ' = null;' . "\n";
            echo '    ' . "\n";
        } ?>
     
@@ -386,19 +386,19 @@ echo '    }' . "\n";
 foreach ($relations as $relation) {
     echo '   ' . "\n";
     echo '   public function get'
-    . ($relation->getCamelcase_name() ?? '#')
-            . '() : ?' . ($relation->getCamelcase_name() ?? '#') . "\n";
+    . ($relation->getCamelcaseName() ?? '#')
+            . '() : ?' . ($relation->getCamelcaseName() ?? '#') . "\n";
     echo '   {' . "\n";
     echo '     return $this->'
-    . ($relation->getLowercase_name() ?? '#') . ';' . "\n";
+    . ($relation->getLowercaseName() ?? '#') . ';' . "\n";
     echo '   }' . "\n";
     echo '   ' . "\n";
-    echo '   public function set' . ($relation->getCamelcase_name() ?? '#')
-            . '(?' . ($relation->getCamelcase_name() ?? '#') . ' $'
-            . ($relation->getCamelcase_name() ?? '#') . '): void' . "\n";
+    echo '   public function set' . ($relation->getCamelcaseName() ?? '#')
+            . '(?' . ($relation->getCamelcaseName() ?? '#') . ' $'
+            . ($relation->getCamelcaseName() ?? '#') . '): void' . "\n";
     echo '   {' . "\n";
-    echo '     $this->' . ($relation->getLowercase_name() ?? '#')
-            . ' = $' . ($relation->getLowercase_name() ?? '#') . ';' . "\n";
+    echo '     $this->' . ($relation->getLowercaseName() ?? '#')
+            . ' = $' . ($relation->getLowercaseName() ?? '#') . ';' . "\n";
     echo '   }' . "\n";
 }
 

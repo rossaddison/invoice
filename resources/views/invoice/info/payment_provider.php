@@ -5,7 +5,7 @@ declare(strict_types=1);
 <p><b>How do I setup an online payment provider eg. Mollie? (Developer: https://my.mollie.com) (Tutorial)</b>
 </p>
 
-<p><b>Step 1:</b> Add Keys to src/Invoice/Setting/SettingRepository <code>public function payment_gateways()</code> array e.g.
+<p><b>Step 1:</b> Add Keys to src/Invoice/Setting/SettingRepository <code>public function paymentGateways()</code> array e.g.
     <br>
     <br></p>
     

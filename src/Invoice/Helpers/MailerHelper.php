@@ -59,7 +59,7 @@ class MailerHelper
         $this->flash = new Flash($this->session);
     }
 
-    public function mailer_configured(): bool
+    public function mailerConfigured(): bool
     {
         return
             $this->s->getSetting('email_send_method') == 'symfony'
@@ -75,12 +75,12 @@ class MailerHelper
      * @param UrlGenerator $urlGenerator
      * @return bool
      */
-    private function email_quote_status(string $quote_id,
+    private function emailQuoteStatus(string $quote_id,
             QR $qR,
             UIR $uiR,
             UrlGenerator $urlGenerator): bool
     {
-        if (!$this->mailer_configured()) {
+        if (!$this->mailerConfigured()) {
             return false;
         }
         $quote = $qR->repoCount($quote_id) > 0 ? $qR->repoQuoteLoadedquery($quote_id) : null;
@@ -89,24 +89,24 @@ class MailerHelper
             $user_id = $quote->getUser()?->getId() ?? null;
             $user_inv = null !== $user_id ? $uiR->repoUserInvUserIdquery($user_id) : null;
             if (null !== $user_inv) {
-                if (null !== $quote->getClient()?->getClient_name()) {
+                if (null !== $quote->getClient()?->getClientName()) {
                     $from_email = $user_inv->getUser()?->getEmail() ?? '';
                     $from_name = $user_inv->getName() ?? '';
                     $subject = sprintf(
                         $this->translator->translate('quote.status.email.subject'),
-                        $quote->getClient()?->getClient_name() ?? '',
+                        $quote->getClient()?->getClientName() ?? '',
                         $quote->getNumber() ?? '',
                     );
                     $body = sprintf(
                         nl2br($this->translator->translate('quote.status.email.body')),
-                        $quote->getClient()?->getClient_name() ?? '',
+                        $quote->getClient()?->getClientName() ?? '',
                         // TODO: Hyperlink for base url in Html
                         $quote->getNumber() ?? '',
                         $url,
                     );
 
                     if ($this->s->getSetting('email_send_method') == 'yiimail') {
-                        return $this->yii_mailer_send($from_email, $from_name, $from_email, $subject, $body, null, null, [], '', $uiR);
+                        return $this->yiiMailerSend($from_email, $from_name, $from_email, $subject, $body, null, null, [], '', $uiR);
                     }
                 }
             }
@@ -127,7 +127,7 @@ class MailerHelper
      * @param UIR|null $uiR
      * @return bool
      */
-    public function yii_mailer_send(
+    public function yiiMailerSend(
         string $from_email,
         string $from_name,
         string $to,
@@ -213,7 +213,7 @@ class MailerHelper
         if (null !== $uiR) {
             if ($uiR->repoUserInvUserIdcount((string) 1) == 0) {
                 $admin = new UserInv();
-                $admin->setUser_id(1);
+                $admin->setUserId(1);
                 // Administrator's are given a type of 0, Guests eg. Accountant 1
                 $admin->setType(0);
                 $admin->setName('Administrator');
@@ -222,10 +222,10 @@ class MailerHelper
         }
         try {
             $this->mailer->send($email_attachments_with_pdf_template);
-            $this->flash_message('info', $this->translator->translate('email.successfully.sent'));
+            $this->flashMessage('info', $this->translator->translate('email.successfully.sent'));
             return true;
         } catch (\Exception $e) {
-            $this->flash_message('warning', $this->translator->translate('email.not.sent.successfully')
+            $this->flashMessage('warning', $this->translator->translate('email.not.sent.successfully')
                                             . "\n"
                                             . $this->translator->translate('email.exception')
                                             . "\n");
@@ -238,8 +238,9 @@ class MailerHelper
     * @param string $level
     * @param string $message
     * @return Flash|null
+    * @psalm-suppress UnusedReturnValue
     */
-    private function flash_message(string $level, string $message): ?Flash
+    private function flashMessage(string $level, string $message): ?Flash
     {
         if (strlen($message) > 0) {
             $this->flash->add($level, $message, true);

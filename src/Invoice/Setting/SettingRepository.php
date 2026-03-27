@@ -129,19 +129,19 @@ final class SettingRepository extends Select\Repository
 
     public function getEnv(): string
     {
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
         return (string) $params['env'];
     }
 
-    public function filter_setting_key(string $setting_key): EntityReader
+    public function filterSettingKey(string $setting_key): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['setting_key' => ltrim(rtrim($setting_key))]);
         return $this->prepareDataReader($query);
     }
 
-    public function filter_setting_value(string $setting_value): EntityReader
+    public function filterSettingValue(string $setting_value): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['setting_value' => ltrim(rtrim($setting_value))]);
@@ -153,7 +153,7 @@ final class SettingRepository extends Select\Repository
      */
     public function getServer(): array
     {
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
         return (array) $params['server'];
     }
@@ -163,7 +163,7 @@ final class SettingRepository extends Select\Repository
      */
     public function getLicense(): array
     {
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
         return (array) $params['license'];
     }
@@ -173,7 +173,7 @@ final class SettingRepository extends Select\Repository
      */
     public function getProduct(): array
     {
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
         return (array) $params['product'];
     }
@@ -186,7 +186,7 @@ final class SettingRepository extends Select\Repository
      * @param BigNumber|float|int|string $from
      * @return string
      */
-    public function currency_converter(BigNumber|int|float|string $from): string
+    public function currencyConverter(BigNumber|int|float|string $from): string
     {
         $a = $this->getSetting('currency_code_from');
         $b = $this->getSetting('peppol_document_currency');
@@ -509,14 +509,14 @@ final class SettingRepository extends Select\Repository
     /**
      * Build settings array
      */
-    public function load_settings(): void
+    public function loadSettings(): void
     {
         $all_settings = $this->findAllPreloaded();
         /** @var Setting $setting */
         foreach ($all_settings as $setting) {
-            /** @var string $this->settings[$setting->getSetting_key()] */
-            $this->settings[$setting->getSetting_key()] =
-                    $setting->getSetting_value();
+            /** @var string $this->settings[$setting->getSettingKey()] */
+            $this->settings[$setting->getSettingKey()] =
+                    $setting->getSettingValue();
         }
     }
 
@@ -527,7 +527,7 @@ final class SettingRepository extends Select\Repository
     public function getSetting(string $key): string
     {
         // Build settings array
-        $this->load_settings();
+        $this->loadSettings();
         $setting = '';
         /** @var string $this->settings[$key] */
         if (array_key_exists($key, $this->settings)) {
@@ -557,7 +557,7 @@ final class SettingRepository extends Select\Repository
      */
     public function setting(string $key): string
     {
-        $this->load_settings();
+        $this->loadSettings();
         /** @var string $this->settings[$key] */
         return $this->settings[$key];
     }
@@ -566,7 +566,7 @@ final class SettingRepository extends Select\Repository
      * @param string $key
      * @param string $value
      */
-    public function set_setting(string $key, string $value): void
+    public function setSetting(string $key, string $value): void
     {
         $this->settings[$key] = $value;
     }
@@ -605,7 +605,7 @@ final class SettingRepository extends Select\Repository
      * @param string $operator
      * @param bool $checked
      */
-    public function check_select(mixed $value1, mixed $value2,
+    public function checkSelect(mixed $value1, mixed $value2,
                         string $operator = '==', bool $checked = false): void
     {
         //$select = $checked ? 'checked="checked"' : 'selected="selected"';
@@ -636,7 +636,7 @@ final class SettingRepository extends Select\Repository
      */
     public function specificCommonConfigAliase(string $key): string
     {
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
         /**
          * @var array $params['yiisoft/aliases']
@@ -657,9 +657,9 @@ final class SettingRepository extends Select\Repository
       * @psalm-return array{esmtp_enabled: bool, esmtp_scheme: mixed,
          esmtp_host: mixed, esmtp_port: mixed, use_send_mail: string}
       */
-    public function config_params(): array
+    public function configParams(): array
     {
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
     /**
      * @var array $params['yiisoft/mailer-symfony']
@@ -687,7 +687,7 @@ final class SettingRepository extends Select\Repository
 
     public function mailerEnabled(): bool
     {
-        return $this->config_params()['esmtp_enabled'] == true;
+        return $this->configParams()['esmtp_enabled'] == true;
     }
 
     /**
@@ -695,11 +695,11 @@ final class SettingRepository extends Select\Repository
        C:\wamp64\www\invoice\src\Invoice\Helpers\PdfHelper.php generate_inv_html
      * @return array
      */
-    public function get_private_company_details(): array
+    public function getPrivateCompanyDetails(): array
     {
         $companyLogoFileNameWithSuffix = '';
         $company = $this->getActiveCompany();
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
         if (null !== $company) {
     /**
@@ -721,8 +721,8 @@ final class SettingRepository extends Select\Repository
                     $params['company']['iso_3166_country_identification_list_id'],
                 // Changeable paramters
                 'name' => $company->getName(),
-                'address_1' => $company->getAddress_1(),
-                'address_2' => $company->getAddress_2(),
+                'address_1' => $company->getAddress1(),
+                'address_2' => $company->getAddress2(),
                 'zip' => $company->getZip(),
                 'city' => $company->getCity(),
                 'state' => $company->getState(),
@@ -734,15 +734,15 @@ final class SettingRepository extends Select\Repository
              * @var CompanyPrivate $private
              */
             foreach ($this->compPR->findAllPreloaded() as $private) {
-                if ($private->getCompany_id() == (string) $company->getId()) {
+                if ($private->getCompanyId() == (string) $company->getId()) {
                     // site's logo: take the first logo where the current date
                     //  falls within the logo's start and end dates
-                    if ($private->getStart_date()?->format('Y-m-d') 
+                    if ($private->getStartDate()?->format('Y-m-d') 
                             < (new \DateTimeImmutable('now'))->format('Y-m-d')
-                    && ($private->getEnd_date()?->format('Y-m-d') 
+                    && ($private->getEndDate()?->format('Y-m-d') 
                             > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
                         $companyLogoFileNameWithSuffix =
-                                (string) $private->getLogo_filename();
+                                (string) $private->getLogoFilename();
                         //  break;
                     }
                 }
@@ -762,9 +762,9 @@ final class SettingRepository extends Select\Repository
     /**
      * @return array
      */
-    public function get_config_company_details(): array
+    public function getConfigCompanyDetails(): array
     {
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
 /**
  * @var array $params['company']
@@ -785,7 +785,7 @@ final class SettingRepository extends Select\Repository
  * @var string $params['company']['iso_3166_country_identification_list_id']
  */
         return [
-            'logo_path' => '/site/' . $this->public_logo() . '.png',
+            'logo_path' => '/site/' . $this->publicLogo() . '.png',
             'name' => $params['company']['name'],
             'address_1' => $params['company']['address_1'],
             'address_2' => $params['company']['address_2'],
@@ -812,9 +812,9 @@ final class SettingRepository extends Select\Repository
     public function getDocumentCurrencyCodeFromPeppolDetails(): string
     {
         /*
-         *  @var array $this->get_config_peppol()
+         *  @var array $this->getConfigPeppol()
          */
-        $peppol_details = $this->get_config_peppol();
+        $peppol_details = $this->getConfigPeppol();
         /** @var string $peppol_details['DocumentCurrencyCode'] */
         return $peppol_details['DocumentCurrencyCode'];
     }
@@ -825,9 +825,9 @@ final class SettingRepository extends Select\Repository
     public function getTaxCurrencyFromConfigDetails(): string
     {
         /*
-         *  @var array $this->get_config_company_details()
+         *  @var array $this->getConfigCompanyDetails()
          */
-        $company_details = $this->get_config_company_details();
+        $company_details = $this->getConfigCompanyDetails();
         /** @var string $company_details['tax_currency'] */
         return $company_details['tax_currency'];
     }
@@ -840,7 +840,7 @@ final class SettingRepository extends Select\Repository
      */
     public function getConfigMailerEmails(): array
     {
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
 
         // Currently two adminEmail and senderEmail
@@ -877,7 +877,7 @@ final class SettingRepository extends Select\Repository
      */
     public function getSchemaProvidersMode(): int
     {
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
 
         $yii_cycle_array = (array) $params['yiisoft/yii-cycle'];
@@ -890,9 +890,9 @@ final class SettingRepository extends Select\Repository
     /**
      * @return array
      */
-    public function get_config_peppol(): array
+    public function getConfigPeppol(): array
     {
-        $config = $this->get_config_params();
+        $config = $this->getConfigParams();
         $params = $config->get('params');
         $pp = (array) $params['peppol'];
         $ppi = (array) $pp['invoice'];
@@ -920,7 +920,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return ConfigInterface
      */
-    public function get_config_params(): ConfigInterface
+    public function getConfigParams(): ConfigInterface
     {
         $rootPath = dirname(__DIR__, 3);
         $http_runner = new HttpApplicationRunner(
@@ -965,7 +965,7 @@ final class SettingRepository extends Select\Repository
     Italian: 'it_IT',
     Spanish: 'es_ES'}
  */
-    public function amazon_languages(): array
+    public function amazonLanguages(): array
     {
         return [
             'English' => 'en_GB',
@@ -980,7 +980,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return array
      */
-    public function amazon_regions(): array
+    public function amazonRegions(): array
     {
         return [
             'North America' => 'na',
@@ -992,7 +992,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return array
      */
-    public function locale_language_array(): array
+    public function localeLanguageArray(): array
     {
         // locale => src/Invoice/Language/{language folder name}
         return [
@@ -1031,7 +1031,7 @@ final class SettingRepository extends Select\Repository
      * Used in: Google Translate Dropdown Box in
      * resources/views/invoice/setting/views/
      *  partial_settings_google_translate.php
-     * Related logic: SettingController function tab_index()
+     * Related logic: SettingController function tabIndex()
      *  'google_translate' => ['locales']
      * @return array
      */
@@ -1068,7 +1068,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return array
      */
-    public function load_language_folder(): array
+    public function loadLanguageFolder(): array
     {
         $folder_language = 'English';
         $lang = new Lang();
@@ -1091,15 +1091,15 @@ final class SettingRepository extends Select\Repository
      * @param string $invoice_id
      * @param IR $iR
      */
-    public function invoice_mark_viewed(string $invoice_id, IR $iR): void
+    public function invoiceMarkViewed(string $invoice_id, IR $iR): void
     {
         $invoice = $iR->repoInvUnloadedquery($invoice_id);
         if ($invoice) {
             //mark as viewed if status is 2
             if (($iR->repoCount($invoice_id) > 0)
-                    && $invoice->getStatus_id() === 2) {
+                    && $invoice->getStatusId() === 2) {
                 //set the invoice to viewed status ie 3
-                $invoice->setStatus_id(3);
+                $invoice->setStatusId(3);
                 $iR->save($invoice);
             }
 
@@ -1108,7 +1108,7 @@ final class SettingRepository extends Select\Repository
             if ($this->getSetting('read_only_toggle') == 3) {
                 $invoice = $iR->repoInvUnloadedquery($invoice_id);
                 if ($invoice) {
-                    $invoice->setIs_read_only(true);
+                    $invoice->setIsReadOnly(true);
                     $iR->save($invoice);
                 }
             }
@@ -1119,14 +1119,14 @@ final class SettingRepository extends Select\Repository
      * @param string $quote_id
      * @param QR $qR
      */
-    public function quote_mark_viewed(string $quote_id, QR $qR): void
+    public function quoteMarkViewed(string $quote_id, QR $qR): void
     {
         $quote = $qR->repoQuoteStatusquery($quote_id, 2);
         if ($quote) {
             //mark as viewed if status is 2
             if ($qR->repoCount($quote_id) > 0) {
                 //set the quote to viewed status ie 3
-                $quote->setStatus_id(3);
+                $quote->setStatusId(3);
                 $qR->save($quote);
             }
         }
@@ -1135,22 +1135,22 @@ final class SettingRepository extends Select\Repository
     /**
      * @param string|null $invoice_id
      */
-    public function invoice_mark_sent(?string $invoice_id, IR $iR): void
+    public function invoiceMarkSent(?string $invoice_id, IR $iR): void
     {
         if (null !== $invoice_id) {
             $invoice = $iR->repoInvUnloadedquery($invoice_id);
             if ($invoice) {
                 //draft->sent->view->paid
                 //set the invoice to sent ie. 2
-                if ($invoice->getStatus_id() === 1) {
-                    $invoice->setStatus_id(2);
+                if ($invoice->getStatusId() === 1) {
+                    $invoice->setStatusId(2);
                 }
                 //set the invoice to read only ie. not updateable,
                 // if invoice_status_id is 2
                 if (null !== $this->withKey('read_only_toggle')) {
                     if ($this->withKey(
-                            'read_only_toggle')?->getSetting_value() === '2') {
-                        $invoice->setIs_read_only(true);
+                            'read_only_toggle')?->getSettingValue() === '2') {
+                        $invoice->setIsReadOnly(true);
                     }
                 }
                 $iR->save($invoice);
@@ -1162,13 +1162,13 @@ final class SettingRepository extends Select\Repository
      * @param string|null $quote_id
      * @param QR $qR
      */
-    public function quote_mark_sent(?string $quote_id, QR $qR): void
+    public function quoteMarkSent(?string $quote_id, QR $qR): void
     {
         // Quote exists and has a status of 1 ie. draft
         if ($qR->repoQuoteStatuscount($quote_id, 1) > 0) {
             $quote = $qR->repoQuoteStatusquery($quote_id, 1);
             if ($quote) {
-                $quote->setStatus_id(2);
+                $quote->setStatusId(2);
                 $qR->save($quote);
             }
         }
@@ -1263,9 +1263,9 @@ final class SettingRepository extends Select\Repository
      * @param mixed $amount
      * @return string
      */
-    public function format_currency(mixed $amount): string
+    public function formatCurrency(mixed $amount): string
     {
-        $this->load_settings();
+        $this->loadSettings();
         $currency_symbol = $this->getSetting('currency_symbol');
         $currency_symbol_placement = $this->getSetting('currency_symbol_placement');
         $thousands_separator = $this->getSetting('thousands_separator');
@@ -1292,9 +1292,9 @@ final class SettingRepository extends Select\Repository
      * @param float|null $amount
      * @return string|null
      */
-    public function format_amount(?float $amount = null): ?string
+    public function formatAmount(?float $amount = null): ?string
     {
-        $this->load_settings();
+        $this->loadSettings();
         if (null !== $amount) {
             $thousands_separator = $this->getSetting('thousands_separator');
             $decimal_point = $this->getSetting('decimal_point');
@@ -1310,9 +1310,9 @@ final class SettingRepository extends Select\Repository
      * @param float $amount
      * @return string
      */
-    public function standardize_amount(float $amount): string
+    public function standardizeAmount(float $amount): string
     {
-        $this->load_settings();
+        $this->loadSettings();
         $thousands_separator = $this->getSetting('thousands_separator');
         $decimal_point = $this->getSetting('decimal_point');
         $amt = str_replace($thousands_separator, '', (string) $amount);
@@ -1322,7 +1322,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return Aliases
      */
-    public function get_img(): Aliases
+    public function getImg(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
             '@img' => '@base/public/img',
@@ -1333,7 +1333,7 @@ final class SettingRepository extends Select\Repository
      * @param string $type
      * @return array
      */
-    public function get_invoice_templates(string $type = 'pdf'): array
+    public function getInvoiceTemplates(string $type = 'pdf'): array
     {
         $aliases = new Aliases(['@base' => dirname(__DIR__, 3),
             '@pdf' => '@base/resources/views/invoice/template/invoice/pdf',
@@ -1347,14 +1347,14 @@ final class SettingRepository extends Select\Repository
         } elseif (($type == 'public') && ($public != false)) {
             $templates = array_diff($public, ['..', '.']);
         }
-        return $this->remove_extension($templates);
+        return $this->removeExtension($templates);
     }
 
     /**
      * @param string $type
      * @return array
      */
-    public function get_quote_templates(string $type = 'pdf'): array
+    public function getQuoteTemplates(string $type = 'pdf'): array
     {
         $aliases = new Aliases(['@base' => dirname(__DIR__, 3),
             '@pdf' => '@base/resources/views/invoice/template/quote/pdf',
@@ -1368,13 +1368,13 @@ final class SettingRepository extends Select\Repository
         } elseif (($type == 'public') && ($scanPublic != false)) {
             $templates = array_diff($scanPublic, ['..', '.']);
         }
-        return $this->remove_extension($templates);
+        return $this->removeExtension($templates);
     }
 
     /**
      * @return Aliases
      */
-    public function get_invoice_archived_folder_aliases(): Aliases
+    public function getInvoiceArchivedFolderAliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
             '@archive_invoice' => '@base/src/Invoice/Uploads'
@@ -1385,7 +1385,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return Aliases
      */
-    public function get_customer_files_folder_aliases(): Aliases
+    public function getCustomerFilesFolderAliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
             '@customer_files' => '@base/src/Invoice/Uploads'
@@ -1397,7 +1397,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return Aliases
      */
-    public function get_company_private_logos_folder_aliases(): Aliases
+    public function getCompanyPrivateLogosFolderAliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
             '@company_private_logos' => '@base/src/Invoice/Uploads'
@@ -1412,7 +1412,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return Aliases
      */
-    public function get_google_translate_json_file_aliases(): Aliases
+    public function getGoogleTranslateJsonFileAliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
             '@google_translate_json_file_folder' => '@base/src/Invoice'
@@ -1423,7 +1423,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return Aliases
      */
-    public function get_productimages_files_folder_aliases(): Aliases
+    public function getProductimagesFilesFolderAliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
             // Internal folder not normally used for storage
@@ -1440,10 +1440,9 @@ final class SettingRepository extends Select\Repository
      * @param string $invoice_number
      * @return array
      */
-    public function get_invoice_archived_files_with_filter(
-                                                string $invoice_number): array
+    public function getInvoiceArchivedFilesWithFilter(                                                string $invoice_number): array
     {
-        $aliases = $this->get_invoice_archived_folder_aliases();
+        $aliases = $this->getInvoiceArchivedFolderAliases();
         $filehelper = new FileHelper();
         $filter =  new PathMatcher()
                    ->doNotCheckFilesystem()
@@ -1457,7 +1456,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return Aliases
      */
-    public function get_amazon_pem_file_folder_aliases(): Aliases
+    public function getAmazonPemFileFolderAliases(): Aliases
     {
         return new Aliases(['@base' => dirname(__DIR__, 3),
             '@pem_file_unique_folder' => '@base/src/Invoice'
@@ -1469,7 +1468,7 @@ final class SettingRepository extends Select\Repository
      * @param array $files
      * @return array
      */
-    private function remove_extension(array $files): array
+    private function removeExtension(array $files): array
     {
         /**
          * @var string $file
@@ -1481,7 +1480,7 @@ final class SettingRepository extends Select\Repository
         return $files;
     }
 
-    public function active_payment_gateways(): array
+    public function activePaymentGateways(): array
     {
         return [
             // Below are listed online dashboard tested PCI COMPLIANT
@@ -1603,10 +1602,10 @@ final class SettingRepository extends Select\Repository
      *
      * @psalm-return list<array-key>
      */
-    public function payment_gateways_enabled_DriverList(): array
+    public function paymentGatewaysEnabledDriverList(): array
     {
         $available_drivers = [];
-        $gateways = $this->active_payment_gateways();
+        $gateways = $this->activePaymentGateways();
         foreach ($gateways as $driver => $_fields) {
             $d = strtolower((string) $driver);
             if ($this->getSetting('gateway_' . $d . '_enabled') === '1') {
@@ -1620,7 +1619,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return array
      */
-    public function sandbox_url_array(): array
+    public function sandboxUrlArray(): array
     {
         return [
             'stripe' => 'https://dashboard.stripe.com',
@@ -1640,7 +1639,7 @@ final class SettingRepository extends Select\Repository
         return $this->translator->translate($in_line);
     }
 
-    public function tooltip_array(): array
+    public function tooltipArray(): array
     {
         return [
             'active_only' => [
@@ -1761,8 +1760,8 @@ final class SettingRepository extends Select\Repository
             'default_include_item_tax' => [
                 'why' => 'If true: Add item tax to item subtotal to work out'
                 . ' e.g Quote Tax. Not applicable to VAT',
-                'where' => 'InvController function default_tax_inv and'
-                . ' QuoteController function default_tax_quote and NumberHelper'
+                'where' => 'InvController function defaultTaxInv and'
+                . ' QuoteController function defaultTaxQuote and NumberHelper'
                 . ' calculate_quote_taxes calculate_inv_taxes',
             ],
             'default_language' => [
@@ -2044,7 +2043,7 @@ final class SettingRepository extends Select\Repository
             'mpdf_ltr' => [
                 'why' => 'Settings for https://mpdf.github.io/',
                 'where' =>
-                'src/Invoice/Helpers/MpdfHelper.php function initialize_pdf',
+                'src/Invoice/Helpers/MpdfHelper.php function initializePdf',
             ],
             'number_format' => [
                 'why' => 'When the number format is chosen, the decimal point, '
@@ -2134,7 +2133,7 @@ final class SettingRepository extends Select\Repository
                 . 'DocumentCurrencyCode with a left arrow in the e-invoice and'
                 . ' amounts that change with currency conversion with a'
                 . ' left-right arrow in the e-invoice as well.',
-                'where' => 'settingRepository function currency_converter'
+                'where' => 'settingRepository function currencyConverter'
             ],
             'peppol_xml_stream' => [
                 'why' => 'To show on screen or to save under Uploads/Temp/Peppol'
@@ -2204,14 +2203,14 @@ final class SettingRepository extends Select\Repository
                 . 'It’s first two digits are always the numercial code of the'
                 . ' state that issued it.',
                 'where' => 'src/Invoice/Helpers/StoreCove/StoreCoveHelper'
-                . ' function maximum_pre_json_php_object_for_an_invoice()',
+                . ' A)',
             ],
             'storecove_sender_identifier_basis' => [
                 'why' => 'Before selecting here, check that it is available'
                 . ' in the sender identifier list. If not available, the'
                 . ' available identifier will be chosen.',
                 'where' => 'src/Invoice/Helpers/StoreCove/StoreCoveHelper'
-                . ' function maximum_pre_json_php_object_for_an_invoice()',
+                . ' A)',
             ],
             'tax_rate_decimal_places' => [
                 'why' => 'TODO: Currency decimal places vary per country.'
@@ -2238,7 +2237,7 @@ final class SettingRepository extends Select\Repository
       */
     public function where(string $setting, bool $debug_mode = true): string
     {
-        $tooltip = $this->tooltip_array();
+        $tooltip = $this->tooltipArray();
         $why = '';
         $where = '';
         /**
@@ -2273,7 +2272,7 @@ final class SettingRepository extends Select\Repository
      */
     public function href(string $setting, bool $debug_mode = true): string
     {
-        $tooltip = $this->tooltip_array();
+        $tooltip = $this->tooltipArray();
         $href = '';
         /**
          * @var array $value
@@ -2298,7 +2297,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return array
      */
-    public function number_formats(): array
+    public function numberFormats(): array
     {
         /*
          | -------------------------------------------------------------------
@@ -2430,7 +2429,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return array
      */
-    public function get_payment_term_array(TranslatorInterface $translator): array
+    public function getPaymentTermArray(TranslatorInterface $translator): array
     {
         return [
             $translator->translate('payment.term'),
@@ -2463,13 +2462,13 @@ final class SettingRepository extends Select\Repository
             if ($count == 1) {
                 $setting = $this->withKey('debug_mode');
                 if (null !== $setting) {
-                    $setting->setSetting_value('1');
+                    $setting->setSettingValue('1');
                     $this->save($setting);
                 }
             } else {
                 $setting = new Setting();
-                $setting->setSetting_key('debug_mode');
-                $setting->setSetting_value('1');
+                $setting->setSettingKey('debug_mode');
+                $setting->setSettingValue('1');
                 $this->save($setting);
             }
         }
@@ -2478,13 +2477,13 @@ final class SettingRepository extends Select\Repository
             if ($count == 1) {
                 $setting = $this->withKey('debug_mode');
                 if (null !== $setting) {
-                    $setting->setSetting_value('0');
+                    $setting->setSettingValue('0');
                     $this->save($setting);
                 }
             } else {
                 $setting = new Setting();
-                $setting->setSetting_key('debug_mode');
-                $setting->setSetting_value('0');
+                $setting->setSettingKey('debug_mode');
+                $setting->setSettingValue('0');
                 $this->save($setting);
             }
         }
@@ -2502,13 +2501,13 @@ final class SettingRepository extends Select\Repository
             if ($count == 1) {
                 $setting = $this->withKey('signup_automatically_assign_client');
                 if (null !== $setting) {
-                    $setting->setSetting_value('1');
+                    $setting->setSettingValue('1');
                     $this->save($setting);
                 }
             } else {
                 $setting = new Setting();
-                $setting->setSetting_key('signup_automatically_assign_client');
-                $setting->setSetting_value('1');
+                $setting->setSettingKey('signup_automatically_assign_client');
+                $setting->setSettingValue('1');
                 $this->save($setting);
             }
         }
@@ -2517,13 +2516,13 @@ final class SettingRepository extends Select\Repository
             if ($count == 1) {
                 $setting = $this->withKey('signup_automatically_assign_client');
                 if (null !== $setting) {
-                    $setting->setSetting_value('0');
+                    $setting->setSettingValue('0');
                     $this->save($setting);
                 }
             } else {
                 $setting = new Setting();
-                $setting->setSetting_key('signup_automatically_assign_client');
-                $setting->setSetting_value('0');
+                $setting->setSettingKey('signup_automatically_assign_client');
+                $setting->setSettingValue('0');
                 $this->save($setting);
             }
         }
@@ -2542,7 +2541,7 @@ final class SettingRepository extends Select\Repository
         }
         // Return the file location if in debug_mode
         if ($this->getSetting('debug_mode') === '1') {
-            return $this->debug_mode_file_location($key);
+            return $this->debugModeFileLocation($key);
         }
         return '';
     }
@@ -2551,7 +2550,7 @@ final class SettingRepository extends Select\Repository
      * @param int $key
      * @return string
      */
-    public function debug_mode_file_location(int $key): string
+    public function debugModeFileLocation(int $key): string
     {
         $layout = '..resources/views/layout/';
         $common_route = '..resources/views/invoice/';
@@ -2604,7 +2603,7 @@ final class SettingRepository extends Select\Repository
     /**
      * @return string
      */
-    public function public_logo(): string
+    public function publicLogo(): string
     {
         if (!empty($this->getSetting('public_logo_png_prefix'))) {
             return $this->getSetting('public_logo_png_prefix');
@@ -2612,8 +2611,8 @@ final class SettingRepository extends Select\Repository
         // If no logo has been set use the default file 'logo.png' provided
         //  in the public directory
         $logo_prefix = new Setting();
-        $logo_prefix->setSetting_key('public_logo_png_prefix');
-        $logo_prefix->setSetting_value('logo');
+        $logo_prefix->setSettingKey('public_logo_png_prefix');
+        $logo_prefix->setSettingValue('logo');
         $this->save($logo_prefix);
 
         return $this->getSetting('public_logo_png_prefix');

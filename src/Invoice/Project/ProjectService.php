@@ -25,7 +25,7 @@ final readonly class ProjectService
     ): void {
         $this->persist($model, $array);
         isset($array['client_id']) ? 
-            $model->setClient_id((int) $array['client_id']) : '';
+            $model->setClientId((int) $array['client_id']) : '';
         isset($array['name']) ? 
             $model->setName((string) $array['name']) : '';
         $this->repository->save($model);
@@ -34,14 +34,13 @@ final readonly class ProjectService
     private function persist(
         Project $model,
         array $array
-    ): Project {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
                 $this->cR->repoClientquery(
                     (string) $array[$client]));
         }
-        return $model;
     }
 
     /**

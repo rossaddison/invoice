@@ -14,16 +14,16 @@ use Yiisoft\Html\Html;
 ?>   
 
 <span class="client-address-street-line">
-    <?=(strlen($client->getClient_address_1() ?? '') > 0 ? Html::encode($client->getClient_address_1()) . '<br>' : ''); ?>
+    <?=(strlen($client->getClientAddress1() ?? '') > 0 ? Html::encode($client->getClientAddress1()) . '<br>' : ''); ?>
 </span>
 <span class="client-address-street-line">
-    <?=(strlen($client->getClient_address_2() ?? '') > 0 ? Html::encode($client->getClient_address_2()) . '<br>' : ''); ?>
+    <?=(strlen($client->getClientAddress2() ?? '') > 0 ? Html::encode($client->getClientAddress2()) . '<br>' : ''); ?>
 </span>
 <span class="client-adress-town-line">
-    <?=(strlen($client->getClient_city() ?? '') > 0 ? Html::encode($client->getClient_city()) . ' ' : ''); ?>
-    <?=(strlen($client->getClient_state() ?? '') > 0 ? Html::encode($client->getClient_state()) . ' ' : ''); ?>
-    <?=(strlen($client->getClient_zip() ?? '') > 0 ? Html::encode($client->getClient_zip()) : ''); ?>
+    <?=(strlen($client->getClientCity() ?? '') > 0 ? Html::encode($client->getClientCity()) . ' ' : ''); ?>
+    <?=(strlen($client->getClientState() ?? '') > 0 ? Html::encode($client->getClientState()) . ' ' : ''); ?>
+    <?=(strlen($client->getClientZip() ?? '') > 0 ? Html::encode($client->getClientZip()) : ''); ?>
 </span>
 <span class="client-adress-country-line">
-    <?=(strlen($clientCountry = $client->getClient_country() ?? '') > 0 ? '<br>' . $countryHelper->get_country_name($translator->translate('cldr'), $clientCountry) : ''); ?>
+    <?=(strlen($clientCountry = $client->getClientCountry() ?? '') > 0 ? '<br>' . $countryHelper->getCountryName($translator->translate('cldr'), $clientCountry) : ''); ?>
 </span>

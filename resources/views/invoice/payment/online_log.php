@@ -47,7 +47,7 @@ $columns = [
         content: static function (Merchant $model) use ($urlGenerator): string|A {
             $return = '';
             if (null !== $model->getInv()) {
-                $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]), ['style' => 'text-decoration:none']);
+                $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInvId()]), ['style' => 'text-decoration:none']);
             }
             return $return;
         },

@@ -29,9 +29,9 @@ class UnitFormTest extends BaseUnit
 
     public function testFormInitializationFromEntity(): void
     {
-        $this->assertEquals(1, $this->form->getUnit_id());
-        $this->assertEquals('Piece', $this->form->getUnit_name());
-        $this->assertEquals('Pieces', $this->form->getUnit_name_plrl());
+        $this->assertEquals(1, $this->form->getUnitId());
+        $this->assertEquals('Piece', $this->form->getUnitName());
+        $this->assertEquals('Pieces', $this->form->getUnitNamePlrl());
     }
 
     public function testGetFormName(): void
@@ -48,9 +48,9 @@ class UnitFormTest extends BaseUnit
         );
         $emptyForm = new UnitForm($emptyUnit);
         
-        $this->assertNull($emptyForm->getUnit_id());
-        $this->assertEquals('', $emptyForm->getUnit_name());
-        $this->assertEquals('', $emptyForm->getUnit_name_plrl());
+        $this->assertNull($emptyForm->getUnitId());
+        $this->assertEquals('', $emptyForm->getUnitName());
+        $this->assertEquals('', $emptyForm->getUnitNamePlrl());
     }
 
     public function testUnitWithLongNames(): void
@@ -66,11 +66,11 @@ class UnitFormTest extends BaseUnit
         );
         $longForm = new UnitForm($longUnit);
         
-        $this->assertEquals(99, $longForm->getUnit_id());
-        $this->assertEquals($longName, $longForm->getUnit_name());
-        $this->assertEquals($longPlural, $longForm->getUnit_name_plrl());
-        $this->assertEquals(50, strlen($longForm->getUnit_name()));
-        $this->assertEquals(50, strlen($longForm->getUnit_name_plrl()));
+        $this->assertEquals(99, $longForm->getUnitId());
+        $this->assertEquals($longName, $longForm->getUnitName());
+        $this->assertEquals($longPlural, $longForm->getUnitNamePlrl());
+        $this->assertEquals(50, strlen($longForm->getUnitName()));
+        $this->assertEquals(50, strlen($longForm->getUnitNamePlrl()));
     }
 
     public function testCommonUnitTypes(): void
@@ -91,18 +91,18 @@ class UnitFormTest extends BaseUnit
             );
             $form = new UnitForm($unit);
             
-            $this->assertEquals($singular, $form->getUnit_name());
-            $this->assertEquals($plural, $form->getUnit_name_plrl());
-            $this->assertEquals($index + 10, $form->getUnit_id());
+            $this->assertEquals($singular, $form->getUnitName());
+            $this->assertEquals($plural, $form->getUnitNamePlrl());
+            $this->assertEquals($index + 10, $form->getUnitId());
         }
     }
 
     public function testAllGetterMethods(): void
     {
         // Test that all getter methods return expected types
-        $this->assertIsInt($this->form->getUnit_id());
-        $this->assertIsString($this->form->getUnit_name());
-        $this->assertIsString($this->form->getUnit_name_plrl());
+        $this->assertIsInt($this->form->getUnitId());
+        $this->assertIsString($this->form->getUnitName());
+        $this->assertIsString($this->form->getUnitNamePlrl());
         $this->assertIsString($this->form->getFormName());
     }
 
@@ -115,9 +115,9 @@ class UnitFormTest extends BaseUnit
         );
         $nullIdForm = new UnitForm($nullIdUnit);
         
-        $this->assertNull($nullIdForm->getUnit_id());
-        $this->assertEquals('Test Unit', $nullIdForm->getUnit_name());
-        $this->assertEquals('Test Units', $nullIdForm->getUnit_name_plrl());
+        $this->assertNull($nullIdForm->getUnitId());
+        $this->assertEquals('Test Unit', $nullIdForm->getUnitName());
+        $this->assertEquals('Test Units', $nullIdForm->getUnitNamePlrl());
     }
 
     public function testSameNameSingularAndPlural(): void
@@ -130,9 +130,9 @@ class UnitFormTest extends BaseUnit
         );
         $sameNameForm = new UnitForm($sameNameUnit);
         
-        $this->assertEquals('Sheep', $sameNameForm->getUnit_name());
-        $this->assertEquals('Sheep', $sameNameForm->getUnit_name_plrl());
-        $this->assertEquals(42, $sameNameForm->getUnit_id());
+        $this->assertEquals('Sheep', $sameNameForm->getUnitName());
+        $this->assertEquals('Sheep', $sameNameForm->getUnitNamePlrl());
+        $this->assertEquals(42, $sameNameForm->getUnitId());
     }
 
     public function testSpecialCharactersInNames(): void
@@ -144,9 +144,9 @@ class UnitFormTest extends BaseUnit
         );
         $specialForm = new UnitForm($specialUnit);
         
-        $this->assertEquals('M²', $specialForm->getUnit_name());
-        $this->assertEquals('M²', $specialForm->getUnit_name_plrl());
-        $this->assertEquals(100, $specialForm->getUnit_id());
+        $this->assertEquals('M²', $specialForm->getUnitName());
+        $this->assertEquals('M²', $specialForm->getUnitNamePlrl());
+        $this->assertEquals(100, $specialForm->getUnitId());
     }
 
     public function testFormNameIsConsistent(): void

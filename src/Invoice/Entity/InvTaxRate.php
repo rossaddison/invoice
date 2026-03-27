@@ -57,42 +57,42 @@ class InvTaxRate
         $this->id = $id;
     }
 
-    public function getInv_id(): string
+    public function getInvId(): string
     {
         return (string) $this->inv_id;
     }
 
-    public function setInv_id(int $inv_id): void
+    public function setInvId(int $inv_id): void
     {
         $this->inv_id = $inv_id;
     }
 
-    public function getTax_rate_id(): string
+    public function getTaxRateId(): string
     {
         return (string) $this->tax_rate_id;
     }
 
-    public function setTax_rate_id(int $tax_rate_id): void
+    public function setTaxRateId(int $tax_rate_id): void
     {
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getInclude_item_tax(): ?int
+    public function getIncludeItemTax(): ?int
     {
         return $this->include_item_tax;
     }
 
-    public function setInclude_item_tax(int $include_item_tax): void
+    public function setIncludeItemTax(int $include_item_tax): void
     {
         $this->include_item_tax = $include_item_tax;
     }
 
-    public function getInv_tax_rate_amount(): ?float
+    public function getInvTaxRateAmount(): ?float
     {
         return $this->inv_tax_rate_amount;
     }
 
-    public function setInv_tax_rate_amount(float $inv_tax_rate_amount): void
+    public function setInvTaxRateAmount(float $inv_tax_rate_amount): void
     {
         $this->inv_tax_rate_amount = $inv_tax_rate_amount;
     }

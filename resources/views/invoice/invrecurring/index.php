@@ -35,14 +35,6 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
-$toolbarReset =  new A()
-        ->addAttributes(['type' => 'reset'])
-        ->addClass('btn btn-primary me-1 ajax-loader')
-        ->content( new I()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName() ?? 'invrecurring/index'))
-        ->id('btn-reset')
-        ->render();
-
 /**
  * @var ColumnInterface[] $columns
  */
@@ -64,7 +56,7 @@ $columns = [
             return  new A()
                     ->addClass('style', 'text-decoration:none')
                     ->content($model->getInv()?->getNumber() ?? '#')
-                    ->href($urlGenerator->generate('inv/view', ['id' => $model->getInv_id()]));
+                    ->href($urlGenerator->generate('inv/view', ['id' => $model->getInvId()]));
         },
         encodeContent: false,
     ),
@@ -72,7 +64,7 @@ $columns = [
         'id',
         header: $translator->translate('date.created'),
         content: static fn (InvRecurring $model)
-        => Html::encode(!is_string($dateCreated = $model->getInv()?->getDate_created()) && null !== $dateCreated ? $dateCreated->format('Y-m-d') : ''),
+        => Html::encode(!is_string($dateCreated = $model->getInv()?->getDateCreated()) && null !== $dateCreated ? $dateCreated->format('Y-m-d') : ''),
         withSorting: false,
     ),
     new DataColumn(

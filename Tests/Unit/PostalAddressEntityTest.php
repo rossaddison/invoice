@@ -24,11 +24,11 @@ final class PostalAddressEntityTest extends Unit
         $postalAddress = new PostalAddress();
         
         $this->assertSame('', $postalAddress->getId());
-        $this->assertSame('', $postalAddress->getClient_id());
-        $this->assertSame('', $postalAddress->getStreet_name());
-        $this->assertSame('', $postalAddress->getAdditional_street_name());
-        $this->assertSame('', $postalAddress->getBuilding_number());
-        $this->assertSame('', $postalAddress->getCity_name());
+        $this->assertSame('', $postalAddress->getClientId());
+        $this->assertSame('', $postalAddress->getStreetName());
+        $this->assertSame('', $postalAddress->getAdditionalStreetName());
+        $this->assertSame('', $postalAddress->getBuildingNumber());
+        $this->assertSame('', $postalAddress->getCityName());
         $this->assertSame('', $postalAddress->getPostalzone());
         $this->assertSame('', $postalAddress->getCountrysubentity());
         $this->assertSame('', $postalAddress->getCountry());
@@ -49,11 +49,11 @@ final class PostalAddressEntityTest extends Unit
         );
         
         $this->assertSame('1', $postalAddress->getId());
-        $this->assertSame('123', $postalAddress->getClient_id());
-        $this->assertSame($this->mainStreet, $postalAddress->getStreet_name());
-        $this->assertSame('Apt 2B', $postalAddress->getAdditional_street_name());
-        $this->assertSame('456', $postalAddress->getBuilding_number());
-        $this->assertSame($this->newYork, $postalAddress->getCity_name());
+        $this->assertSame('123', $postalAddress->getClientId());
+        $this->assertSame($this->mainStreet, $postalAddress->getStreetName());
+        $this->assertSame('Apt 2B', $postalAddress->getAdditionalStreetName());
+        $this->assertSame('456', $postalAddress->getBuildingNumber());
+        $this->assertSame($this->newYork, $postalAddress->getCityName());
         $this->assertSame($this->oneThousandOne, $postalAddress->getPostalzone());
         $this->assertSame('NY', $postalAddress->getCountrysubentity());
         $this->assertSame('USA', $postalAddress->getCountry());
@@ -70,41 +70,41 @@ final class PostalAddressEntityTest extends Unit
     public function testClientIdSetterAndGetter(): void
     {
         $postalAddress = new PostalAddress();
-        $postalAddress->setClient_id(999);
+        $postalAddress->setClientId(999);
         
-        $this->assertSame('999', $postalAddress->getClient_id());
+        $this->assertSame('999', $postalAddress->getClientId());
     }
 
     public function testStreetNameSetterAndGetter(): void
     {
         $postalAddress = new PostalAddress();
-        $postalAddress->setStreet_name('Oak Avenue');
+        $postalAddress->setStreetName('Oak Avenue');
         
-        $this->assertSame('Oak Avenue', $postalAddress->getStreet_name());
+        $this->assertSame('Oak Avenue', $postalAddress->getStreetName());
     }
 
     public function testAdditionalStreetNameSetterAndGetter(): void
     {
         $postalAddress = new PostalAddress();
-        $postalAddress->setAdditional_street_name('Suite 100');
+        $postalAddress->setAdditionalStreetName('Suite 100');
         
-        $this->assertSame('Suite 100', $postalAddress->getAdditional_street_name());
+        $this->assertSame('Suite 100', $postalAddress->getAdditionalStreetName());
     }
 
     public function testBuildingNumberSetterAndGetter(): void
     {
         $postalAddress = new PostalAddress();
-        $postalAddress->setBuilding_number('123A');
+        $postalAddress->setBuildingNumber('123A');
         
-        $this->assertSame('123A', $postalAddress->getBuilding_number());
+        $this->assertSame('123A', $postalAddress->getBuildingNumber());
     }
 
     public function testCityNameSetterAndGetter(): void
     {
         $postalAddress = new PostalAddress();
-        $postalAddress->setCity_name('Los Angeles');
+        $postalAddress->setCityName('Los Angeles');
         
-        $this->assertSame('Los Angeles', $postalAddress->getCity_name());
+        $this->assertSame('Los Angeles', $postalAddress->getCityName());
     }
 
     public function testPostalzoneSetterAndGetter(): void
@@ -137,16 +137,16 @@ final class PostalAddressEntityTest extends Unit
         $usAddress = new PostalAddress(
             1, 100, '123 Main St', 'Apt 4B', '123', 'Chicago', '60601', 'IL', 'USA'
         );
-        $this->assertSame('123 Main St', $usAddress->getStreet_name());
-        $this->assertSame('Chicago', $usAddress->getCity_name());
+        $this->assertSame('123 Main St', $usAddress->getStreetName());
+        $this->assertSame('Chicago', $usAddress->getCityName());
         $this->assertSame('60601', $usAddress->getPostalzone());
 
         // UK Address
         $ukAddress = new PostalAddress(
             2, 101, 'Baker Street', 'Flat 2', '221B', 'London', 'NW1 6XE', 'England', 'UK'
         );
-        $this->assertSame('Baker Street', $ukAddress->getStreet_name());
-        $this->assertSame('London', $ukAddress->getCity_name());
+        $this->assertSame('Baker Street', $ukAddress->getStreetName());
+        $this->assertSame('London', $ukAddress->getCityName());
         $this->assertSame('NW1 6XE', $ukAddress->getPostalzone());
     }
 
@@ -156,8 +156,8 @@ final class PostalAddressEntityTest extends Unit
             1, 1, 'Römerstraße', 'Haus & Garten', '12-14', 'München', '80331', 'Bayern', 'Deutschland'
         );
         
-        $this->assertSame('Römerstraße', $postalAddress->getStreet_name());
-        $this->assertSame('München', $postalAddress->getCity_name());
+        $this->assertSame('Römerstraße', $postalAddress->getStreetName());
+        $this->assertSame('München', $postalAddress->getCityName());
         $this->assertSame('Deutschland', $postalAddress->getCountry());
     }
 
@@ -170,29 +170,29 @@ final class PostalAddressEntityTest extends Unit
             1, 1, $longStreet, 'Suite 1000', '9999', $longCity, $this->oneToFive, 'State', 'Country'
         );
         
-        $this->assertSame($longStreet, $postalAddress->getStreet_name());
-        $this->assertSame($longCity, $postalAddress->getCity_name());
+        $this->assertSame($longStreet, $postalAddress->getStreetName());
+        $this->assertSame($longCity, $postalAddress->getCityName());
     }
 
     public function testChainedSetterCalls(): void
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setId(1);
-        $postalAddress->setClient_id(100);
-        $postalAddress->setStreet_name('Test Street');
-        $postalAddress->setAdditional_street_name('Test Apt');
-        $postalAddress->setBuilding_number('100');
-        $postalAddress->setCity_name($this->testCity);
+        $postalAddress->setClientId(100);
+        $postalAddress->setStreetName('Test Street');
+        $postalAddress->setAdditionalStreetName('Test Apt');
+        $postalAddress->setBuildingNumber('100');
+        $postalAddress->setCityName($this->testCity);
         $postalAddress->setPostalzone($this->oneToFive);
         $postalAddress->setCountrysubentity('Test State');
         $postalAddress->setCountry('Test Country');
         
         $this->assertSame('1', $postalAddress->getId());
-        $this->assertSame('100', $postalAddress->getClient_id());
-        $this->assertSame('Test Street', $postalAddress->getStreet_name());
-        $this->assertSame('Test Apt', $postalAddress->getAdditional_street_name());
-        $this->assertSame('100', $postalAddress->getBuilding_number());
-        $this->assertSame($this->testCity, $postalAddress->getCity_name());
+        $this->assertSame('100', $postalAddress->getClientId());
+        $this->assertSame('Test Street', $postalAddress->getStreetName());
+        $this->assertSame('Test Apt', $postalAddress->getAdditionalStreetName());
+        $this->assertSame('100', $postalAddress->getBuildingNumber());
+        $this->assertSame($this->testCity, $postalAddress->getCityName());
         $this->assertSame($this->oneToFive, $postalAddress->getPostalzone());
         $this->assertSame('Test State', $postalAddress->getCountrysubentity());
         $this->assertSame('Test Country', $postalAddress->getCountry());
@@ -204,9 +204,9 @@ final class PostalAddressEntityTest extends Unit
         
         // Verify getters return strings even though setters accept ints for ID fields
         $this->assertIsString($postalAddress->getId());
-        $this->assertIsString($postalAddress->getClient_id());
+        $this->assertIsString($postalAddress->getClientId());
         $this->assertSame('123', $postalAddress->getId());
-        $this->assertSame('456', $postalAddress->getClient_id());
+        $this->assertSame('456', $postalAddress->getClientId());
     }
 
     public function testPublicIdProperty(): void
@@ -247,21 +247,21 @@ final class PostalAddressEntityTest extends Unit
     {
         $postalAddress = new PostalAddress();
         $postalAddress->setId(1000);
-        $postalAddress->setClient_id(2000);
-        $postalAddress->setStreet_name('Complete Street');
-        $postalAddress->setAdditional_street_name('Complete Apt');
-        $postalAddress->setBuilding_number('100');
-        $postalAddress->setCity_name('Complete City');
+        $postalAddress->setClientId(2000);
+        $postalAddress->setStreetName('Complete Street');
+        $postalAddress->setAdditionalStreetName('Complete Apt');
+        $postalAddress->setBuildingNumber('100');
+        $postalAddress->setCityName('Complete City');
         $postalAddress->setPostalzone('54321');
         $postalAddress->setCountrysubentity('Complete State');
         $postalAddress->setCountry('Complete Country');
         
         $this->assertSame('1000', $postalAddress->getId());
-        $this->assertSame('2000', $postalAddress->getClient_id());
-        $this->assertSame('Complete Street', $postalAddress->getStreet_name());
-        $this->assertSame('Complete Apt', $postalAddress->getAdditional_street_name());
-        $this->assertSame('100', $postalAddress->getBuilding_number());
-        $this->assertSame('Complete City', $postalAddress->getCity_name());
+        $this->assertSame('2000', $postalAddress->getClientId());
+        $this->assertSame('Complete Street', $postalAddress->getStreetName());
+        $this->assertSame('Complete Apt', $postalAddress->getAdditionalStreetName());
+        $this->assertSame('100', $postalAddress->getBuildingNumber());
+        $this->assertSame('Complete City', $postalAddress->getCityName());
         $this->assertSame('54321', $postalAddress->getPostalzone());
         $this->assertSame('Complete State', $postalAddress->getCountrysubentity());
         $this->assertSame('Complete Country', $postalAddress->getCountry());
@@ -271,14 +271,14 @@ final class PostalAddressEntityTest extends Unit
     {
         $postalAddress = new PostalAddress(1, 1, 'Test St', 'Unit A', '999', $this->testCity, '99999', 'State', 'Country');
         
-        $this->assertSame('999', $postalAddress->getBuilding_number());
+        $this->assertSame('999', $postalAddress->getBuildingNumber());
     }
 
     public function testAlphanumericBuildingNumbers(): void
     {
         $postalAddress = new PostalAddress(1, 1, 'Test St', 'Unit B', '12A', $this->testCity, $this->oneToFive, 'State', 'Country');
         
-        $this->assertSame('12A', $postalAddress->getBuilding_number());
+        $this->assertSame('12A', $postalAddress->getBuildingNumber());
     }
 
     public function testInternationalPostalCodes(): void

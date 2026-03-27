@@ -38,63 +38,63 @@ final class GeneratorForm extends FormModel
 
     public function __construct(Gentor $generator)
     {
-        $this->route_prefix = $generator->getRoute_prefix();
-        $this->route_suffix = $generator->getRoute_suffix();
-        $this->camelcase_capital_name = $generator->getCamelcase_capital_name();
-        $this->small_singular_name = $generator->getSmall_singular_name();
-        $this->small_plural_name = $generator->getSmall_plural_name();
-        $this->namespace_path = $generator->getNamespace_path();
-        $this->controller_layout_dir = $generator->getController_layout_dir();
-        $this->controller_layout_dir_dot_path = $generator->getController_layout_dir_dot_path();
-        $this->pre_entity_table = $generator->getPre_entity_table();
-        $this->flash_include = $generator->isFlash_include();
-        $this->created_include = $generator->isCreated_include();
-        $this->modified_include = $generator->isModified_include();
-        $this->updated_include = $generator->isUpdated_include();
-        $this->deleted_include = $generator->isDeleted_include();
+        $this->route_prefix = $generator->getRoutePrefix();
+        $this->route_suffix = $generator->getRouteSuffix();
+        $this->camelcase_capital_name = $generator->getCamelcaseCapitalName();
+        $this->small_singular_name = $generator->getSmallSingularName();
+        $this->small_plural_name = $generator->getSmallPluralName();
+        $this->namespace_path = $generator->getNamespacePath();
+        $this->controller_layout_dir = $generator->getControllerLayoutDir();
+        $this->controller_layout_dir_dot_path = $generator->getControllerLayoutDirDotPath();
+        $this->pre_entity_table = $generator->getPreEntityTable();
+        $this->flash_include = $generator->isFlashInclude();
+        $this->created_include = $generator->isCreatedInclude();
+        $this->modified_include = $generator->isModifiedInclude();
+        $this->updated_include = $generator->isUpdatedInclude();
+        $this->deleted_include = $generator->isDeletedInclude();
     }
 
-    public function getRoute_prefix(): string
+    public function getRoutePrefix(): string
     {
         return $this->route_prefix;
     }
 
-    public function getRoute_suffix(): string
+    public function getRouteSuffix(): string
     {
         return $this->route_suffix;
     }
 
-    public function getCamelcase_capital_name(): string
+    public function getCamelcaseCapitalName(): string
     {
         return $this->camelcase_capital_name;
     }
 
-    public function getSmall_singular_name(): string
+    public function getSmallSingularName(): string
     {
         return $this->small_singular_name;
     }
 
-    public function getSmall_plural_name(): string
+    public function getSmallPluralName(): string
     {
         return $this->small_plural_name;
     }
 
-    public function getNamespace_path(): string
+    public function getNamespacePath(): string
     {
         return $this->namespace_path;
     }
 
-    public function getController_layout_dir(): string
+    public function getControllerLayoutDir(): string
     {
         return $this->controller_layout_dir;
     }
 
-    public function getController_layout_dir_dot_path(): string
+    public function getControllerLayoutDirDotPath(): string
     {
         return $this->controller_layout_dir_dot_path;
     }
 
-    public function getPre_entity_table(): string
+    public function getPreEntityTable(): string
     {
         return $this->pre_entity_table;
     }

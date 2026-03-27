@@ -59,8 +59,8 @@ class CompanyPrivate
     public function isActiveToday(): bool
     {
         $today = new \DateTimeImmutable('today');
-        $startDate = $this->getStart_date();
-        $endDate = $this->getEnd_date();
+        $startDate = $this->getStartDate();
+        $endDate = $this->getEndDate();
 
         if ($startDate === null || $endDate === null) {
             return false;
@@ -91,32 +91,32 @@ class CompanyPrivate
         $this->id = $id;
     }
 
-    public function getCompany_id(): string
+    public function getCompanyId(): string
     {
         return (string) $this->company_id;
     }
 
-    public function setCompany_id(int $company_id): void
+    public function setCompanyId(int $company_id): void
     {
         $this->company_id = $company_id;
     }
 
-    public function getVat_id(): string
+    public function getVatId(): string
     {
         return (string) $this->vat_id;
     }
 
-    public function setVat_id(string $vat_id): void
+    public function setVatId(string $vat_id): void
     {
         $this->vat_id = $vat_id;
     }
 
-    public function getTax_code(): ?string
+    public function getTaxCode(): ?string
     {
         return $this->tax_code;
     }
 
-    public function setTax_code(string $tax_code): void
+    public function setTaxCode(string $tax_code): void
     {
         $this->tax_code = $tax_code;
     }
@@ -151,76 +151,76 @@ class CompanyPrivate
         $this->rcc = $rcc;
     }
 
-    public function getLogo_filename(): ?string
+    public function getLogoFilename(): ?string
     {
         return $this->logo_filename;
     }
 
-    public function setLogo_filename(string $logo_filename): void
+    public function setLogoFilename(string $logo_filename): void
     {
         $this->logo_filename = $logo_filename;
     }
 
-    public function getLogo_width(): ?int
+    public function getLogoWidth(): ?int
     {
         return $this->logo_width;
     }
 
-    public function setLogo_width(int $logo_width): void
+    public function setLogoWidth(int $logo_width): void
     {
         $this->logo_width = $logo_width;
     }
 
-    public function getLogo_height(): ?int
+    public function getLogoHeight(): ?int
     {
         return $this->logo_height;
     }
 
-    public function setLogo_height(int $logo_height): void
+    public function setLogoHeight(int $logo_height): void
     {
         $this->logo_height = $logo_height;
     }
 
-    public function getLogo_Margin(): ?int
+    public function getLogoMargin(): ?int
     {
         return $this->logo_margin;
     }
 
-    public function setLogo_margin(int $logo_margin): void
+    public function setLogoMargin(int $logo_margin): void
     {
         $this->logo_margin = $logo_margin;
     }
 
-    public function getDate_created(): DateTimeImmutable
+    public function getDateCreated(): DateTimeImmutable
     {
         return $this->date_created;
     }
 
-    public function getDate_modified(): DateTimeImmutable
+    public function getDateModified(): DateTimeImmutable
     {
         return $this->date_modified;
     }
 
     //cycle
-    public function getStart_date(): ?DateTimeImmutable
+    public function getStartDate(): ?DateTimeImmutable
     {
         /** @var DateTimeImmutable|null $this->start_date */
         return $this->start_date;
     }
 
-    public function setStart_date(?DateTime $start_date): void
+    public function setStartDate(?DateTime $start_date): void
     {
         $this->start_date = $start_date;
     }
 
     //cycle
-    public function getEnd_date(): ?DateTimeImmutable
+    public function getEndDate(): ?DateTimeImmutable
     {
         /** @var DateTimeImmutable|null $this->end_date */
         return $this->end_date;
     }
 
-    public function setEnd_date(?DateTime $end_date): void
+    public function setEndDate(?DateTime $end_date): void
     {
         $this->end_date = $end_date;
     }

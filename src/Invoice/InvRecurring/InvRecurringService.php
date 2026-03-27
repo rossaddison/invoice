@@ -30,7 +30,7 @@ final readonly class InvRecurringService
         array $array
     ): void {
         $this->persist($model, $array);
-        $model->setInv_id((int) $array['inv_id']);
+        $model->setInvId((int) $array['inv_id']);
 
         isset($array['frequency']) ? 
             $model->setFrequency(
@@ -84,7 +84,7 @@ final readonly class InvRecurringService
     private function persist(
         InvRecurring $model,
         array $array
-    ): InvRecurring {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->invR->repoInvUnLoadedquery(
@@ -93,7 +93,6 @@ final readonly class InvRecurringService
                 $model->setInv($invEntity);
             }
         }
-        return $model;
     }
 
     /**

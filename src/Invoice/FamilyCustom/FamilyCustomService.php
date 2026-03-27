@@ -27,9 +27,9 @@ final readonly class FamilyCustomService
     ): void {
         $this->persist($model, $array);
         isset($array['family_id']) ?
-            $model->setFamily_id((int) $array['family_id']) : '';
+            $model->setFamilyId((int) $array['family_id']) : '';
         isset($array['custom_field_id']) ?
-            $model->setCustom_field_id(
+            $model->setCustomFieldId(
                 (int) $array['custom_field_id']) : '';
         isset($array['value']) ?
             $model->setValue((string) $array['value']) : '';
@@ -39,7 +39,7 @@ final readonly class FamilyCustomService
     private function persist(
         FamilyCustom $model,
         array $array
-    ): FamilyCustom {
+    ): void {
         $family = 'family_id';
         if (isset($array[$family])) {
             $model->setFamily(
@@ -52,7 +52,6 @@ final readonly class FamilyCustomService
                 $this->cfR->repoCustomFieldquery(
                     (string) $array[$custom_field]));
         }
-        return $model;
     }
 
     /**

@@ -59,7 +59,7 @@ use Yiisoft\Html\Html;
                              */
                             foreach ($custom_values_types as $type): ?>
                             <?= $alpha = str_replace('-', '_', strtolower($type)); ?>
-                            <option value="<?= $type; ?>" <?php $s->check_select($custom_field->getType(), $type); ?>>
+                            <option value="<?= $type; ?>" <?php $s->checkSelect($custom_field->getType(), $type); ?>>
                                 <?= $translator->translate($alpha . ''); ?>
                             </option>
                         <?php endforeach; ?>

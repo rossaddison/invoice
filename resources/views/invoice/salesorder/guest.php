@@ -161,11 +161,11 @@ $columns = [
         header: $translator->translate('status'),
         content: static function (SalesOrder $model) use ($soR):
         Yiisoft\Html\Tag\CustomTag {
-            if (null !== $model->getStatus_id()) {
+            if (null !== $model->getStatusId()) {
                 $span = $soR->getSpecificStatusArrayLabel(
-                        (string) $model->getStatus_id());
+                        (string) $model->getStatusId());
                 $class = $soR->getSpecificStatusArrayClass(
-                        (int) $model->getStatus_id());
+                        (int) $model->getStatusId());
                 return Html::tag('span', $span, ['id' => '#so-to-invoice',
                     'class' => 'label ' . $class]);
             }
@@ -179,7 +179,7 @@ $columns = [
         content: static function (SalesOrder $model) use ($urlGenerator): A {
             return Html::a($model->getQuote()?->getNumber() ?? '#',
                 $urlGenerator->generate('quote/view', [
-                    'id' => $model->getQuote_id()]), [
+                    'id' => $model->getQuoteId()]), [
                         'style' => 'text-decoration:none']);
         },
         encodeContent: false,
@@ -189,10 +189,10 @@ $columns = [
         header: $translator->translate('date.created'),
         content: static function (SalesOrder $model): string {
 /**
- * @psalm-suppress PossiblyInvalidMethodCall $model->getDate_created()->format('Y-m-d')
+ * @psalm-suppress PossiblyInvalidMethodCall $model->getDateCreated()->format('Y-m-d')
  */
-            return $model->getDate_created() instanceof \DateTimeImmutable ?
-                    $model->getDate_created()->format('Y-m-d') : '';
+            return $model->getDateCreated() instanceof \DateTimeImmutable ?
+                    $model->getDateCreated()->format('Y-m-d') : '';
         },
         encodeContent: true,
     ),
@@ -200,7 +200,7 @@ $columns = [
         'client_id',
         header: $translator->translate('client'),
         content: static function (SalesOrder $model): string {
-            $clientName = $model->getClient()?->getClient_name();
+            $clientName = $model->getClient()?->getClientName();
             if (null !== $clientName) {
                 return Html::encode($clientName);
             } else {
@@ -216,7 +216,7 @@ $columns = [
             $so_amount = (($soaR->repoSalesOrderAmountCount(
                     (string) $so_id) > 0) ? $soaR->repoSalesOrderquery(
                             (string) $so_id) : null);
-            return $s->format_currency(null !== $so_amount ?
+            return $s->formatCurrency(null !== $so_amount ?
                     $so_amount->getTotal() : 0.00);
         },
     ),

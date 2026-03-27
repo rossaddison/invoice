@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see InvController function view_modal_delete_inv
+ * Related logic: see InvController function viewModalDeleteInv
  * Related logic: see inv/view.php id="delete-inv" triggered by <a href="#delete-inv" data-bs-toggle="modal"  style="text-decoration:none">
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator

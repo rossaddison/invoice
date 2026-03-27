@@ -48,7 +48,7 @@ final class AllowanceChargeController extends BaseController
      * @param TaxRateRepository $tR
      * @return Response
      */
-    public function add_allowance(
+    public function addAllowance(
         Request $request,
         FormHydrator $formHydrator,
         TaxRateRepository $tR,
@@ -59,7 +59,7 @@ final class AllowanceChargeController extends BaseController
         $allowances = $peppolArrays->getAllowancesSubsetArray();
         $parameters = [
             'title' => $this->translator->translate('allowance.or.charge.add'),
-            'actionName' => 'allowancecharge/add_allowance',
+            'actionName' => 'allowancecharge/addAllowance',
             'actionArguments' => [],
             'allowances' => $allowances,
             'errors' => [],
@@ -109,7 +109,7 @@ final class AllowanceChargeController extends BaseController
      * @param TaxRateRepository $tR
      * @return Response
      */
-    public function add_charge(
+    public function addCharge(
         Request $request,
         FormHydrator $formHydrator,
         TaxRateRepository $tR,
@@ -120,7 +120,7 @@ final class AllowanceChargeController extends BaseController
         $charges = $peppolArrays->getChargesArray();
         $parameters = [
             'title' => $this->translator->translate('allowance.or.charge.level'),
-            'actionName' => 'allowancecharge/add_charge',
+            'actionName' => 'allowancecharge/addCharge',
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
@@ -215,7 +215,7 @@ final class AllowanceChargeController extends BaseController
      * @param TaxRateRepository $tR
      * @return Response
      */
-    public function edit_allowance(
+    public function editAllowance(
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -231,7 +231,7 @@ final class AllowanceChargeController extends BaseController
                 $allowances = $peppolArrays->getAllowancesSubsetArray();
                 $parameters = [
                     'title' => $this->translator->translate('allowance.or.charge.edit.allowance'),
-                    'actionName' => 'allowancecharge/edit_allowance',
+                    'actionName' => 'allowancecharge/editAllowance',
                     'actionArguments' => ['id' => $allowanceCharge->getId()],
                     'errors' => [],
                     'form' => $form,
@@ -261,7 +261,7 @@ final class AllowanceChargeController extends BaseController
      * @param TaxRateRepository $tR
      * @return Response
      */
-    public function edit_charge(
+    public function editCharge(
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -279,7 +279,7 @@ final class AllowanceChargeController extends BaseController
             //$charges =
             $parameters = [
                 'title' => $this->translator->translate('allowance.or.charge.edit.charge'),
-                'actionName' => 'allowancecharge/edit_allowance',
+                'actionName' => 'allowancecharge/editAllowance',
                 'actionArguments' => ['id' => $allowanceCharge->getId()],
                 'errors' => [],
                 'form' => $form,

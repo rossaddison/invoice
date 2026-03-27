@@ -15,7 +15,7 @@ use Yiisoft\Html\Tag\I;
  */ 
 
 ?>
-<?php if ($invEdit && $quote->getStatus_id() === 1) { ?>
+<?php if ($invEdit && $quote->getStatusId() === 1) { ?>
 <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs nav-tabs-noborder']); ?>
     <?= Html::openTag('li', ['class' => 'active']); ?>
         <?=  new A()

@@ -116,9 +116,9 @@ final class FamilyRepository extends Select\Repository
          * @var Family $family
          */
         foreach ($familyNames as $family) {
-            $familyId = $family->getFamily_id();
+            $familyId = $family->getFamilyId();
             if (null !== $familyId) {
-                $optionsDataFamilyNames[$familyId] = ($family->getFamily_name() ?? '');
+                $optionsDataFamilyNames[$familyId] = ($family->getFamilyName() ?? '');
             }
         }
         return $optionsDataFamilyNames;

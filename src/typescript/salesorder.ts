@@ -1,4 +1,4 @@
-import { parsedata, getJson, ApiResponse } from './utils.js';
+﻿import { parsedata, getJson, ApiResponse } from './utils.js';
 
 // Secure HTML insertion helper to prevent XSS vulnerabilities
 function secureInsertHTML(element: Element, html: string): void {
@@ -188,7 +188,7 @@ export class SalesOrderHandler {
         };
 
         try {
-            const url = location.origin + "/invoice/salesorder/so_to_invoice_confirm";
+            const url = location.origin + "/invoice/salesorder/soToInvoiceConfirm";
             const response = await getJson(url, payload) as SalesOrderConversionResponse;
 
             if (response && response.success === 1) {

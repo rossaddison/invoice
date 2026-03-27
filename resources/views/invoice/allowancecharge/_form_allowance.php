@@ -71,7 +71,7 @@ use Yiisoft\Html\Tag\Form;
 /**
  * @var string $value
  */
-foreach ($allowances as $key => $value) {
+foreach ($allowances as $value) {
     $optionsDataReason[$value] = $value;
 }
 ?>

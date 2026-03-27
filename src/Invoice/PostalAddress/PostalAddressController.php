@@ -193,7 +193,7 @@ final class PostalAddressController extends BaseController
             $origin_id = (int) ($queryParams['origin_id'] ?? 0);
             $action = (string) ($queryParams['action'] ?? '');
             $form = new PostalAddressForm($this->translator,
-                        $postalAddress, (int) $postalAddress->getClient_id());
+                        $postalAddress, (int) $postalAddress->getClientId());
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'postaladdress/edit',
@@ -286,7 +286,7 @@ final class PostalAddressController extends BaseController
             $form = new PostalAddressForm(
                     $this->translator,
                     $postalAddress,
-                    (int) $postalAddress->getClient_id());
+                    (int) $postalAddress->getClientId());
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'postaladdress/view',

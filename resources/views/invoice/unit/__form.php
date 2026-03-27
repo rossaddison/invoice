@@ -51,21 +51,21 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'unit_id')
         ->label($translator->translate('id'))
-        ->value(Html::encode($form->getUnit_id() ?? ''))
+        ->value(Html::encode($form->getUnitId() ?? ''))
         ->disabled(true)
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'unit_name')
     ->label($translator->translate('unit.name'))
-    ->value(Html::encode($form->getUnit_name() ?? ''))
+    ->value(Html::encode($form->getUnitName() ?? ''))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'unit_name_plrl')
     ->label($translator->translate('unit.name.plrl'))
-    ->value(Html::encode($form->getUnit_name_plrl() ?? ''))
+    ->value(Html::encode($form->getUnitNamePlrl() ?? ''))
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
                 <?= Html::closeTag('div'); ?>

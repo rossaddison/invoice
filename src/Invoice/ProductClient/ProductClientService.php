@@ -47,7 +47,7 @@ final class ProductClientService
     private function persist(
         ProductClient $model,
         array $array
-    ): ProductClient {
+    ): void {
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
@@ -62,7 +62,6 @@ final class ProductClientService
                 $this->cR->repoClientquery(
                     (string) $array[$client]));
         }
-        return $model;
     }
 
     /**

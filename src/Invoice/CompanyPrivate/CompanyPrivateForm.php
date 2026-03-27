@@ -45,19 +45,19 @@ final class CompanyPrivateForm extends FormModel
     public function __construct(CompanyPrivate $company_private)
     {
         $this->id = $company_private->getId();
-        $this->company_id = (int) $company_private->getCompany_id();
+        $this->company_id = (int) $company_private->getCompanyId();
         $this->company_public_name = $company_private->getCompany()?->getName();
-        $this->vat_id = $company_private->getVat_id();
-        $this->tax_code = $company_private->getTax_code();
+        $this->vat_id = $company_private->getVatId();
+        $this->tax_code = $company_private->getTaxCode();
         $this->iban = $company_private->getIban();
         $this->gln = $company_private->getGln();
         $this->rcc = $company_private->getRcc();
-        $this->logo_filename = $company_private->getLogo_filename();
-        $this->logo_width = (string) $company_private->getLogo_width();
-        $this->logo_height = (string) $company_private->getLogo_height();
-        $this->logo_margin = (string) $company_private->getLogo_margin();
-        $this->start_date = $company_private->getStart_date();
-        $this->end_date = $company_private->getEnd_date();
+        $this->logo_filename = $company_private->getLogoFilename();
+        $this->logo_width = (string) $company_private->getLogoWidth();
+        $this->logo_height = (string) $company_private->getLogoHeight();
+        $this->logo_margin = (string) $company_private->getLogoMargin();
+        $this->start_date = $company_private->getStartDate();
+        $this->end_date = $company_private->getEndDate();
     }
 
     public function getId(): ?int
@@ -65,17 +65,17 @@ final class CompanyPrivateForm extends FormModel
         return $this->id;
     }
 
-    public function getCompany_id(): ?int
+    public function getCompanyId(): ?int
     {
         return $this->company_id;
     }
 
-    public function getVat_id(): ?string
+    public function getVatId(): ?string
     {
         return $this->vat_id;
     }
 
-    public function getTax_code(): ?string
+    public function getTaxCode(): ?string
     {
         return $this->tax_code;
     }
@@ -90,22 +90,22 @@ final class CompanyPrivateForm extends FormModel
         return $this->gln;
     }
 
-    public function getLogo_filename(): ?string
+    public function getLogoFilename(): ?string
     {
         return $this->logo_filename;
     }
 
-    public function getLogo_width(): ?string
+    public function getLogoWidth(): ?string
     {
         return $this->logo_width;
     }
 
-    public function getLogo_height(): ?string
+    public function getLogoHeight(): ?string
     {
         return $this->logo_height;
     }
 
-    public function getLogo_margin(): ?string
+    public function getLogoMargin(): ?string
     {
         return $this->logo_margin;
     }
@@ -115,7 +115,7 @@ final class CompanyPrivateForm extends FormModel
         return $this->rcc;
     }
 
-    public function getStart_date(): string|DateTimeImmutable|null
+    public function getStartDate(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->start_date
@@ -123,7 +123,7 @@ final class CompanyPrivateForm extends FormModel
         return $this->start_date;
     }
 
-    public function getEnd_date(): string|DateTimeImmutable|null
+    public function getEndDate(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->end_date

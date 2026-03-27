@@ -36,58 +36,58 @@ final class EmailTemplateForm extends FormModel
 
     public function __construct(EmailTemplate $emailtemplate)
     {
-        $this->email_template_title = $emailtemplate->getEmail_template_title();
-        $this->email_template_type = $emailtemplate->getEmail_template_type();
-        $this->email_template_body = $emailtemplate->getEmail_template_body();
-        $this->email_template_subject = $emailtemplate->getEmail_template_subject();
-        $this->email_template_from_name = $emailtemplate->getEmail_template_from_name();
-        $this->email_template_from_email = $emailtemplate->getEmail_template_from_email();
-        $this->email_template_cc = $emailtemplate->getEmail_template_cc();
-        $this->email_template_bcc = $emailtemplate->getEmail_template_bcc();
-        $this->email_template_pdf_template = $emailtemplate->getEmail_template_pdf_template();
+        $this->email_template_title = $emailtemplate->getEmailTemplateTitle();
+        $this->email_template_type = $emailtemplate->getEmailTemplateType();
+        $this->email_template_body = $emailtemplate->getEmailTemplateBody();
+        $this->email_template_subject = $emailtemplate->getEmailTemplateSubject();
+        $this->email_template_from_name = $emailtemplate->getEmailTemplateFromName();
+        $this->email_template_from_email = $emailtemplate->getEmailTemplateFromEmail();
+        $this->email_template_cc = $emailtemplate->getEmailTemplateCc();
+        $this->email_template_bcc = $emailtemplate->getEmailTemplateBcc();
+        $this->email_template_pdf_template = $emailtemplate->getEmailTemplatePdfTemplate();
     }
 
-    public function getEmail_template_title(): ?string
+    public function getEmailTemplateTitle(): ?string
     {
         return $this->email_template_title;
     }
 
-    public function getEmail_template_type(): ?string
+    public function getEmailTemplateType(): ?string
     {
         return $this->email_template_type;
     }
 
-    public function getEmail_template_body(): ?string
+    public function getEmailTemplateBody(): ?string
     {
         return $this->email_template_body;
     }
 
-    public function getEmail_template_subject(): ?string
+    public function getEmailTemplateSubject(): ?string
     {
         return $this->email_template_subject;
     }
 
-    public function getEmail_template_from_name(): ?string
+    public function getEmailTemplateFromName(): ?string
     {
         return $this->email_template_from_name;
     }
 
-    public function getEmail_template_from_email(): ?string
+    public function getEmailTemplateFromEmail(): ?string
     {
         return $this->email_template_from_email;
     }
 
-    public function getEmail_template_cc(): ?string
+    public function getEmailTemplateCc(): ?string
     {
         return $this->email_template_cc;
     }
 
-    public function getEmail_template_bcc(): ?string
+    public function getEmailTemplateBcc(): ?string
     {
         return $this->email_template_bcc;
     }
 
-    public function getEmail_template_pdf_template(): ?string
+    public function getEmailTemplatePdfTemplate(): ?string
     {
         return $this->email_template_pdf_template;
     }

@@ -338,26 +338,26 @@ return [
                 ->name('del/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
                 ->action([DeliveryLocationController::class, 'view']),
-            Route::methods([$mG, $mP], '/inv/pdf_dashboard_include_cf/{id}')
+            Route::methods([$mG, $mP], '/inv/pdfDashboardIncludeCf/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'pdf_dashboard_include_cf'])
-                ->name('inv/pdf_dashboard_include_cf'),
-            Route::methods([$mG, $mP], '/inv/pdf_dashboard_exclude_cf/{id}')
+                ->action([InvController::class, 'pdfDashboardIncludeCf'])
+                ->name('inv/pdfDashboardIncludeCf'),
+            Route::methods([$mG, $mP], '/inv/pdfDashboardExcludeCf/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'pdf_dashboard_exclude_cf'])
-                ->name('inv/pdf_dashboard_exclude_cf'),
-            Route::methods([$mG, $mP], '/inv/pdf_download_include_cf/{url_key}')
+                ->action([InvController::class, 'pdfDashboardExcludeCf'])
+                ->name('inv/pdfDashboardExcludeCf'),
+            Route::methods([$mG, $mP], '/inv/pdfDownloadIncludeCf/{url_key}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'pdf_download_include_cf'])
-                ->name('inv/pdf_download_include_cf'),
-            Route::methods([$mG, $mP], '/inv/pdf_download_exclude_cf/{url_key}')
+                ->action([InvController::class, 'pdfDownloadIncludeCf'])
+                ->name('inv/pdfDownloadIncludeCf'),
+            Route::methods([$mG, $mP], '/inv/pdfDownloadExcludeCf/{url_key}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'pdf_download_exclude_cf'])
-                ->name('inv/pdf_download_exclude_cf'),
+                ->action([InvController::class, 'pdfDownloadExcludeCf'])
+                ->name('inv/pdfDownloadExcludeCf'),
             Route::methods([$mG, $mP], '/download_file/{upload_id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'download_file'])
-                ->name('inv/download_file'),
+                ->action([InvController::class, 'downloadFile'])
+                ->name('inv/downloadFile'),
             // Because the inv/view is accessible to the observer and the admin
             // the inv/view function is further refined with rbac
             Route::methods([$mG, $mP], '/inv/view/{id}')
@@ -369,10 +369,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
                 ->action([InvController::class, 'guest'])
                 ->name('inv/guest'),
-            Route::methods([$mG, $mP], '/inv/url_key/{url_key}/{gateway}')
-                ->name('inv/url_key')
+            Route::methods([$mG, $mP], '/inv/urlKey/{url_key}/{gateway}')
+                ->name('inv/urlKey')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([InvController::class, 'url_key']),
+                ->action([InvController::class, 'urlKey']),
             // id acquired by session
             Route::methods([$mG, $mP], '/inv/pdf/{include}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
@@ -408,10 +408,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
                 ->action([QuoteController::class, 'pdf'])
                 ->name('quote/pdf'),
-            Route::methods([$mG, $mP], '/quote/quote_to_so_confirm')
+            Route::methods([$mG, $mP], '/quote/quoteToSoConfirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'quote_to_so_confirm'])
-                ->name('quote/quote_to_so_confirm'),
+                ->action([QuoteController::class, 'quoteToSoConfirm'])
+                ->name('quote/quoteToSoConfirm'),
             Route::methods([$mG, $mP], '/quote/view/{id}')
                 ->name('quote/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
@@ -419,10 +419,10 @@ return [
 // The individual must have been give the url on the email sent and also
 // have been assigned the observer role under resources/rbac/items by using
 // assignRole command at command prompt
-            Route::methods([$mG, $mP], '/quote/url_key/{url_key}')
-                ->name('quote/url_key')
+            Route::methods([$mG, $mP], '/quote/urlKey/{url_key}')
+                ->name('quote/urlKey')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'url_key']),
+                ->action([QuoteController::class, 'urlKey']),
 // The individual that is sent the quote approves with/without a purchase
 // order number
             Route::methods([$mG, $mP], '/quote/approve')
@@ -439,10 +439,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
                 ->action([SalesOrderController::class, 'guest'])
                 ->name('salesorder/guest'),
-            Route::methods([$mG, $mP], '/salesorder/agree_to_terms/{url_key}')
-                ->name('salesorder/agree_to_terms')
+            Route::methods([$mG, $mP], '/salesorder/agreeToTerms/{url_key}')
+                ->name('salesorder/agreeToTerms')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'agree_to_terms']),
+                ->action([SalesOrderController::class, 'agreeToTerms']),
             Route::methods([$mG, $mP], '/salesorder/edit/{id}')
                 ->name('salesorder/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
@@ -459,10 +459,10 @@ return [
                 ->name('salesorder/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
                 ->action([SalesOrderController::class, 'view']),
-            Route::methods([$mG, $mP], '/salesorder/url_key/{key}')
-                ->name('salesorder/url_key')
+            Route::methods([$mG, $mP], '/salesorder/urlKey/{key}')
+                ->name('salesorder/urlKey')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([SalesOrderController::class, 'url_key']),
+                ->action([SalesOrderController::class, 'urlKey']),
             Route::methods([$mG, $mP], '/salesorderitem/edit/{id}')
                 ->name('salesorderitem/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
@@ -508,25 +508,25 @@ return [
                 ->action([AllowanceChargeController::class, 'index'])
                 ->name('allowancecharge/index'),
             Route::methods([$mG, $mP],
-                    '/allowancecharge/add_allowance')
+                    '/allowancecharge/addAllowance')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([AllowanceChargeController::class, 'add_allowance'])
-                ->name('allowancecharge/add_allowance'),
+                ->action([AllowanceChargeController::class, 'addAllowance'])
+                ->name('allowancecharge/addAllowance'),
             Route::methods([$mG, $mP],
-                    '/allowancecharge/add_charge')
+                    '/allowancecharge/addCharge')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([AllowanceChargeController::class, 'add_charge'])
-                ->name('allowancecharge/add_charge'),
+                ->action([AllowanceChargeController::class, 'addCharge'])
+                ->name('allowancecharge/addCharge'),
             Route::methods([$mG, $mP],
-                    '/allowancecharge/edit_allowance/{id}')
-                ->name('allowancecharge/edit_allowance')
+                    '/allowancecharge/editAllowance/{id}')
+                ->name('allowancecharge/editAllowance')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([AllowanceChargeController::class, 'edit_allowance']),
+                ->action([AllowanceChargeController::class, 'editAllowance']),
             Route::methods([$mG, $mP],
-                    '/allowancecharge/edit_charge/{id}')
-                ->name('allowancecharge/edit_charge')
+                    '/allowancecharge/editCharge/{id}')
+                ->name('allowancecharge/editCharge')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([AllowanceChargeController::class, 'edit_charge']),
+                ->action([AllowanceChargeController::class, 'editCharge']),
             Route::methods([$mG, $mP],
                     '/allowancecharge/delete/{id}')
                 ->name('allowancecharge/delete')
@@ -541,25 +541,25 @@ return [
             // and 1.1.2 completed
             Route::get('/store_cove_call_api')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ICLR::class, 'store_cove_call_api'])
-                ->name('invoice/store_cove_call_api'),
+                ->action([ICLR::class, 'storeCoveCallApi'])
+                ->name('invoice/storeCoveCallApi'),
             // Step 2 - 1.1.4 a
             Route::get('/store_cove_call_api_get_legal_entity_id')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ICLR::class,
-                    'store_cove_call_api_get_legal_entity_id'])
-                ->name('invoice/store_cove_call_api_get_legal_entity_id'),
+                    'storeCoveCallApiGetLegalEntityId'])
+                ->name('invoice/storeCoveCallApiGetLegalEntityId'),
             // Step 3a and/or LEGAL entity identifier - 1.1.4 b
             Route::get('/store_cove_call_api_legal_entity_identifier')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ICLR::class,
-                    'store_cove_call_api_legal_entity_identifier'])
-                ->name('invoice/store_cove_call_api_legal_entity_identifier'),
+                    'storeCoveCallApiLegalEntityIdentifier'])
+                ->name('invoice/storeCoveCallApiLegalEntityIdentifier'),
             // Step 4 - 1.1.5
             Route::get('/store_cove_send_test_json_invoice')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ICLR::class, 'store_cove_send_test_json_invoice'])
-                ->name('invoice/store_cove_send_test_json_invoice'),
+                ->action([ICLR::class, 'storeCoveSendTestJsonInvoice'])
+                ->name('invoice/storeCoveSendTestJsonInvoice'),
             Route::get('/dashboard')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ICLR::class, 'dashboard'])
@@ -574,16 +574,16 @@ return [
                 ->name('invoice/requirements'),
             Route::get('/test_data_remove')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ICLR::class, 'test_data_remove'])
-                ->name('invoice/test_data_remove'),
+                ->action([ICLR::class, 'testDataRemove'])
+                ->name('invoice/testDataRemove'),
             Route::get('/test_data_reset')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ICLR::class, 'test_data_reset'])
-                ->name('invoice/test_data_reset'),
+                ->action([ICLR::class, 'testDataReset'])
+                ->name('invoice/testDataReset'),
             Route::get('/setting_reset')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ICLR::class, 'setting_reset'])
-                ->name('invoice/setting_reset'),
+                ->action([ICLR::class, 'settingReset'])
+                ->name('invoice/settingReset'),
             Route::get('/categoryprimary[/page/{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([CategoryPrimaryController::class, 'index'])
@@ -640,10 +640,10 @@ return [
                 ->name('client/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ClientController::class, 'edit']),
-            Route::methods([$mG, $mP], '/client/edit_submit')
-                ->name('client/edit_submit')
+            Route::methods([$mG, $mP], '/client/editSubmit')
+                ->name('client/editSubmit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ClientController::class, 'edit_submit']),
+                ->action([ClientController::class, 'editSubmit']),
             Route::methods([$mG, $mP], '/client/delete/{id}')
                 ->name('client/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -652,14 +652,18 @@ return [
                 ->name('client/guest')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pECP))
                 ->action([ClientController::class, 'guest']),
-            Route::methods([$mG, $mP], '/client/save_client_note_new')
+            Route::methods([$mG, $mP], '/client/saveClientNoteNew')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ClientController::class, 'save_client_note_new'])
-                ->name('client/save_client_note_new'),
-            Route::methods([$mG, $mP], '/client/delete_client_note')
+                ->action([ClientController::class, 'saveClientNoteNew'])
+                ->name('client/saveClientNoteNew'),
+            Route::methods([$mG, $mP], '/client/deleteClientNote')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ClientController::class, 'delete_client_note'])
-                ->name('client/delete_client_note'),
+                ->action([ClientController::class, 'deleteClientNote'])
+                ->name('client/deleteClientNote'),
+            Route::methods([$mG, $mP], '/client/loadClientNotes')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([ClientController::class, 'loadClientNotes'])
+                ->name('client/loadClientNotes'),
             Route::methods([$mG, $mP],
                     '/client/view/{id}[/page/{page:\d+}[/status/{status}]]')
                 ->name('client/view')
@@ -875,34 +879,34 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([EmailTemplateController::class, 'index'])
                 ->name('emailtemplate/index'),
-            Route::methods([$mG, $mP], '/emailtemplate/add_invoice')
+            Route::methods([$mG, $mP], '/emailtemplate/addInvoice')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([EmailTemplateController::class, 'add_invoice'])
-                ->name('emailtemplate/add_invoice'),
+                ->action([EmailTemplateController::class, 'addInvoice'])
+                ->name('emailtemplate/addInvoice'),
             Route::methods([$mG, $mP],
-                    '/emailtemplate/edit_invoice/{email_template_id}')
-                ->name('emailtemplate/edit_invoice')
+                    '/emailtemplate/editInvoice/{email_template_id}')
+                ->name('emailtemplate/editInvoice')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([EmailTemplateController::class, 'edit_invoice']),
-            Route::methods([$mG, $mP], '/emailtemplate/add_quote')
+                ->action([EmailTemplateController::class, 'editInvoice']),
+            Route::methods([$mG, $mP], '/emailtemplate/addQuote')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([EmailTemplateController::class, 'add_quote'])
-                ->name('emailtemplate/add_quote'),
+                ->action([EmailTemplateController::class, 'addQuote'])
+                ->name('emailtemplate/addQuote'),
             Route::methods([$mG, $mP],
-                    '/emailtemplate/edit_quote/{email_template_id}')
-                ->name('emailtemplate/edit_quote')
+                    '/emailtemplate/editQuote/{email_template_id}')
+                ->name('emailtemplate/editQuote')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([EmailTemplateController::class, 'edit_quote']),
+                ->action([EmailTemplateController::class, 'editQuote']),
             Route::methods([$mG, $mP],
                     '/emailtemplate/delete/{email_template_id}')
                 ->name('emailtemplate/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([EmailTemplateController::class, 'delete']),
             Route::methods([$mG, $mP],
-                    '/emailtemplate/get_content/{email_template_id}')
-                ->name('emailtemplate/get_content')
+                    '/emailtemplate/getContent/{email_template_id}')
+                ->name('emailtemplate/getContent')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([EmailTemplateController::class, 'get_content']),
+                ->action([EmailTemplateController::class, 'getContent']),
             Route::methods([$mG, $mP],
                     '/emailtemplate/preview/{email_template_id}')
                 ->name('emailtemplate/preview')
@@ -960,10 +964,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([FamilyController::class, 'view']),
             // Generate products from selected families
-            Route::methods([$mG, $mP], '/family/generate_products')
-                ->name('family/generate_products')
+            Route::methods([$mG, $mP], '/family/generateProducts')
+                ->name('family/generateProducts')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([FamilyController::class, 'generate_products']),
+                ->action([FamilyController::class, 'generateProducts']),
             Route::get('/from')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([FromDropDownController::class, 'index'])
@@ -1058,24 +1062,24 @@ return [
                 ->name('generator/_route')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([GeneratorController::class, '_route']),
-            Route::methods([$mG, $mP], '/generator/quick_view_schema')
-                ->name('generator/quick_view_schema')
+            Route::methods([$mG, $mP], '/generator/quickViewSchema')
+                ->name('generator/quickViewSchema')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, 'quick_view_schema']),
+                ->action([GeneratorController::class, 'quickViewSchema']),
 // type = eg. 'app', or 'diff'
 // Translate either app_lang, diff_lang.php in src/Invoice/Language/English
 // using Setting google_translate_locale under Settings...
 // View...Google Translate
-            Route::methods([$mG, $mP], '/generator/google_translate_lang/{type}')
-                ->name('generator/google_translate_lang')
+            Route::methods([$mG, $mP], '/generator/googleTranslateLang/{type}')
+                ->name('generator/googleTranslateLang')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, 'google_translate_lang']),
+                ->action([GeneratorController::class, 'googleTranslateLang']),
 // Translate info documentation files like invoice.php
 // from resources/views/invoice/info/en/invoice.php to target language folder
-            Route::methods([$mG, $mP], '/generator/google_translate_info')
-                ->name('generator/google_translate_info')
+            Route::methods([$mG, $mP], '/generator/googleTranslateInfo')
+                ->name('generator/googleTranslateInfo')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([GeneratorController::class, 'google_translate_info']),
+                ->action([GeneratorController::class, 'googleTranslateInfo']),
             Route::get('/generatorrelation')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([GeneratorRelationController::class, 'index'])
@@ -1136,58 +1140,58 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'indexMark'])
                 ->name('inv/indexmark'),
-            Route::methods([$mG, $mP], '/inv/peppol_stream_toggle/{id}')
+            Route::methods([$mG, $mP], '/inv/peppolStreamToggle/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'peppol_stream_toggle'])
-                ->name('inv/peppol_stream_toggle'),
-            Route::methods([$mG, $mP], '/inv/peppol_doc_currency_toggle/{id}')
+                ->action([InvController::class, 'peppolStreamToggle'])
+                ->name('inv/peppolStreamToggle'),
+            Route::methods([$mG, $mP], '/inv/peppolDocCurrencyToggle/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'peppol_doc_currency_toggle'])
-                ->name('inv/peppol_doc_currency_toggle'),
+                ->action([InvController::class, 'peppolDocCurrencyToggle'])
+                ->name('inv/peppolDocCurrencyToggle'),
             Route::methods([$mG, $mP], '/archive')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'archive'])
                 ->name('inv/archive'),
-            Route::methods([$mG, $mP], '/inv/save_custom')
+            Route::methods([$mG, $mP], '/inv/saveCustom')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'save_custom'])
-                ->name('inv/save_custom'),
-            Route::methods([$mG, $mP], '/inv/save_inv_allowance_charge')
+                ->action([InvController::class, 'saveCustom'])
+                ->name('inv/saveCustom'),
+            Route::methods([$mG, $mP], '/inv/saveInvAllowanceCharge')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'save_inv_allowance_charge'])
-                ->name('inv/save_inv_allowance_charge'),
-            Route::methods([$mG, $mP], '/inv/save_inv_tax_rate')
+                ->action([InvController::class, 'saveInvAllowanceCharge'])
+                ->name('inv/saveInvAllowanceCharge'),
+            Route::methods([$mG, $mP], '/inv/saveInvTaxRate')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'save_inv_tax_rate'])
-                ->name('inv/save_inv_tax_rate'),
-            Route::methods([$mG, $mP], '/inv/delete_inv_tax_rate/{id}')
+                ->action([InvController::class, 'saveInvTaxRate'])
+                ->name('inv/saveInvTaxRate'),
+            Route::methods([$mG, $mP], '/inv/deleteInvTaxRate/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'delete_inv_tax_rate'])
-                ->name('inv/delete_inv_tax_rate'),
-            Route::methods([$mG, $mP], '/inv/delete_inv_item/{id}')
+                ->action([InvController::class, 'deleteInvTaxRate'])
+                ->name('inv/deleteInvTaxRate'),
+            Route::methods([$mG, $mP], '/inv/deleteInvItem/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'delete_inv_item'])
-                ->name('inv/delete_inv_item'),
-            Route::methods([$mG, $mP], '/inv/email_stage_0/{id}')
+                ->action([InvController::class, 'deleteInvItem'])
+                ->name('inv/deleteInvItem'),
+            Route::methods([$mG, $mP], '/inv/emailStage0/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'email_stage_0'])
-                ->name('inv/email_stage_0'),
-            Route::methods([$mG, $mP], '/inv/email_stage_2/{id}')
+                ->action([InvController::class, 'emailStage0'])
+                ->name('inv/emailStage0'),
+            Route::methods([$mG, $mP], '/inv/emailStage2/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'email_stage_2'])
-                ->name('inv/email_stage_2'),
-            Route::methods([$mG, $mP], '/inv/mark_as_sent')
+                ->action([InvController::class, 'emailStage2'])
+                ->name('inv/emailStage2'),
+            Route::methods([$mG, $mP], '/inv/markAsSent')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'mark_as_sent'])
-                ->name('inv/mark_as_sent'),
-            Route::methods([$mG, $mP], '/inv/mark_sent_as_draft')
+                ->action([InvController::class, 'markAsSent'])
+                ->name('inv/markAsSent'),
+            Route::methods([$mG, $mP], '/inv/markSentAsDraft')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'mark_sent_as_draft'])
-                ->name('inv/mark_sent_as_draft'),
-            Route::methods([$mG, $mP], '/inv/modal_change_client')
+                ->action([InvController::class, 'markSentAsDraft'])
+                ->name('inv/markSentAsDraft'),
+            Route::methods([$mG, $mP], '/inv/modalChangeClient')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'modal_change_client'])
-                ->name('inv/modal_change_client'),
+                ->action([InvController::class, 'modalChangeClient'])
+                ->name('inv/modalChangeClient'),
             Route::methods([$mG, $mP], '/inv/attachment/{id}')
                 ->name('inv/attachment')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1224,10 +1228,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'html'])
                 ->name('inv/html'),
-            Route::methods([$mG, $mP], '/inv/save_inv_item')
+            Route::methods([$mG, $mP], '/inv/saveInvItem')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'save_inv_item'])
-                ->name('inv/save_inv_item'),
+                ->action([InvController::class, 'saveInvItem'])
+                ->name('inv/saveInvItem'),
             Route::methods([$mG, $mP], '/inv/modalcreate')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'modalcreate'])
@@ -1244,18 +1248,18 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvController::class, 'add'])
                 ->name('inv/add'),
-            Route::methods([$mG, $mP], '/inv/create_confirm')
+            Route::methods([$mG, $mP], '/inv/createConfirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'create_confirm'])
-                ->name('inv/create_confirm'),
-            Route::methods([$mG, $mP], '/inv/create_credit_confirm')
+                ->action([InvController::class, 'createConfirm'])
+                ->name('inv/createConfirm'),
+            Route::methods([$mG, $mP], '/inv/createCreditConfirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'create_credit_confirm'])
-                ->name('inv/create_credit_confirm'),
-            Route::methods([$mG, $mP], '/inv/inv_to_inv_confirm')
+                ->action([InvController::class, 'createCreditConfirm'])
+                ->name('inv/createCreditConfirm'),
+            Route::methods([$mG, $mP], '/inv/invToInvConfirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvController::class, 'inv_to_inv_confirm'])
-                ->name('inv/inv_to_inv_confirm'),
+                ->action([InvController::class, 'invToInvConfirm'])
+                ->name('inv/invToInvConfirm'),
             // InvAllowanceCharge
             Route::get('/invallowancecharge[/page/{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1294,10 +1298,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvRecurringController::class, 'multiple'])
                 ->name('invrecurring/multiple'),
-            Route::methods([$mG, $mP], '/invrecurring/get_recur_start_date')
+            Route::methods([$mG, $mP], '/invrecurring/getRecurStartDate')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvRecurringController::class, 'get_recur_start_date'])
-                ->name('invrecurring/get_recur_start_date'),
+                ->action([InvRecurringController::class, 'getRecurStartDate'])
+                ->name('invrecurring/getRecurStartDate'),
             // Edit
             Route::methods([$mG, $mP], '/invrecurring/start/{id}')
                 ->name('invrecurring/start')
@@ -1319,22 +1323,22 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([InvSentLogController::class, 'index'])
                 ->name('invsentlog/index'),
-            Route::methods([$mP], '/invitem/add_product')
+            Route::methods([$mP], '/invitem/addProduct')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvItemController::class, 'add_product'])
-                ->name('invitem/add_product'),
-            Route::methods([$mP], '/invitem/add_task')
+                ->action([InvItemController::class, 'addProduct'])
+                ->name('invitem/addProduct'),
+            Route::methods([$mP], '/invitem/addTask')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvItemController::class, 'add_task'])
-                ->name('invitem/add_task'),
-            Route::methods([$mG, $mP], '/invitem/edit_product/{id}')
-                ->name('invitem/edit_product')
+                ->action([InvItemController::class, 'addTask'])
+                ->name('invitem/addTask'),
+            Route::methods([$mG, $mP], '/invitem/editProduct/{id}')
+                ->name('invitem/editProduct')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvItemController::class, 'edit_product']),
-            Route::methods([$mG, $mP], '/invitem/edit_task/{id}')
-                ->name('invitem/edit_task')
+                ->action([InvItemController::class, 'editProduct']),
+            Route::methods([$mG, $mP], '/invitem/editTask/{id}')
+                ->name('invitem/editTask')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([InvItemController::class, 'edit_task']),
+                ->action([InvItemController::class, 'editTask']),
             Route::methods([$mG, $mP], '/invitem/delete/{id}')
                 ->name('invitem/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1364,50 +1368,50 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ItemLookupController::class, 'view']),
             Route::methods([$mG, $mP],
-                    '/paymentinformation/amazon_complete/{url_key}')
+                    '/paymentinformation/amazonComplete/{url_key}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
-                ->action([PICLR::class, 'amazon_complete'])
-                ->name('paymentinformation/amazon_complete'),
+                ->action([PICLR::class, 'amazonComplete'])
+                ->name('paymentinformation/amazonComplete'),
             Route::methods([$mG, $mP],
-                    '/paymentinformation/braintree_complete/{url_key}')
+                    '/paymentinformation/braintreeComplete/{url_key}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
-                ->action([PICLR::class, 'braintree_complete'])
-                ->name('paymentinformation/braintree_complete'),
+                ->action([PICLR::class, 'braintreeComplete'])
+                ->name('paymentinformation/braintreeComplete'),
             Route::methods([$mG, $mP],
-                    '/paymentinformation/mollie_complete/{url_key}')
+                    '/paymentinformation/mollieComplete/{url_key}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
-                ->action([PICLR::class, 'mollie_complete'])
-                ->name('paymentinformation/mollie_complete'),
+                ->action([PICLR::class, 'mollieComplete'])
+                ->name('paymentinformation/mollieComplete'),
             Route::methods([$mG, $mP],
-                    '/paymentinformation/openbanking_oauth_complete/{url_key}')
+                    '/paymentinformation/openbankingOauthComplete/{url_key}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
-                ->action([PICLR::class, 'openbanking_oauth_complete'])
-                ->name('paymentinformation/openbanking_oauth_complete'),
+                ->action([PICLR::class, 'openbankingOauthComplete'])
+                ->name('paymentinformation/openbankingOauthComplete'),
             Route::methods([$mG, $mP],
-                    '/paymentinformation/openbanking_token_complete/{url_key}')
+                    '/paymentinformation/openbankingTokenComplete/{url_key}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
-                ->action([PICLR::class, 'openbanking_token_complete'])
-                ->name('paymentinformation/openbanking_token_complete'),
+                ->action([PICLR::class, 'openbankingTokenComplete'])
+                ->name('paymentinformation/openbankingTokenComplete'),
             Route::methods([$mG, $mP],
-                    '/paymentinformation/stripe_complete/{url_key}')
+                    '/paymentinformation/stripeComplete/{url_key}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
-                ->action([PICLR::class, 'stripe_complete'])
-                ->name('paymentinformation/stripe_complete'),
+                ->action([PICLR::class, 'stripeComplete'])
+                ->name('paymentinformation/stripeComplete'),
             Route::methods([$mG, $mP],
-                    '/paymentinformation/stripe_incomplete/{url_key}')
+                    '/paymentinformation/stripeIncomplete/{url_key}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
-                ->action([PICLR::class, 'stripe_incomplete'])
-                ->name('paymentinformation/stripe_incomplete'),
+                ->action([PICLR::class, 'stripeIncomplete'])
+                ->name('paymentinformation/stripeIncomplete'),
             Route::methods([$mG, $mP],
-                    '/paymentinformation/wonderful_complete/{url_key}/{ref}')
+                    '/paymentinformation/wonderfulComplete/{url_key}/{ref}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
-                ->action([PICLR::class, 'wonderful_complete'])
-                ->name('paymentinformation/wonderful_complete'),
+                ->action([PICLR::class, 'wonderfulComplete'])
+                ->name('paymentinformation/wonderfulComplete'),
             Route::methods([$mG, $mP],
-             '/paymentinformation/tink_complete/{url_key}/{payment_request_id}')
+             '/paymentinformation/tinkComplete/{url_key}/{payment_request_id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
-                ->action([PICLR::class, 'tink_complete'])
-                ->name('paymentinformation/tink_complete'),
+                ->action([PICLR::class, 'tinkComplete'])
+                ->name('paymentinformation/tinkComplete'),
             Route::methods([$mG, $mP], '/paymentinformation/fetch')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
                 ->action([PICLR::class, 'fetch'])
@@ -1482,13 +1486,13 @@ return [
                 ->name('product/lookup'),
             Route::get('/product/selection_quote')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ProductController::class, 'selection_quote'])
-                ->name('product/selection_quote'),
+                ->action([ProductController::class, 'selectionQuote'])
+                ->name('product/selectionQuote'),
             Route::get('/product/selection_inv')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->middleware(JsonDataResponseMiddleware::class)
-                ->action([ProductController::class, 'selection_inv'])
-                ->name('product/selection_inv'),
+                ->action([ProductController::class, 'selectionInv'])
+                ->name('product/selectionInv'),
             Route::methods([$mG, $mP], '/product/edit/{id}')
                 ->name('product/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1503,12 +1507,12 @@ return [
                 ->action([ProductController::class, 'view']),
             Route::methods([$mG, $mP], '/image/{product_image_id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ProductController::class, 'download_image_file'])
-                ->name('product/download_image_file'),
+                ->action([ProductController::class, 'downloadImageFile'])
+                ->name('product/downloadImageFile'),
             Route::methods([$mG, $mP], '/image_attachment/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ProductController::class, 'image_attachment'])
-                ->name('product/image_attachment'),
+                ->action([ProductController::class, 'imageAttachment'])
+                ->name('product/imageAttachment'),
             // ProductClient
             Route::methods([$mG, $mP], '/productclient/add')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1660,12 +1664,12 @@ return [
                 ->name('payment/guest'),
             Route::get('/online_log[/page/{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEP))
-                ->action([PaymentController::class, 'online_log'])
-                ->name('payment/online_log'),
+                ->action([PaymentController::class, 'onlineLog'])
+                ->name('payment/onlineLog'),
             Route::get('/guest_online_log[/page/{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVP))
-                ->action([PaymentController::class, 'guest_online_log'])
-                ->name('payment/guest_online_log'),
+                ->action([PaymentController::class, 'guestOnlineLog'])
+                ->name('payment/guestOnlineLog'),
             Route::get('/paymentmethod')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([PaymentMethodController::class, 'index'])
@@ -1690,42 +1694,42 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'add'])
                 ->name('quote/add'),
-            Route::methods([$mG, $mP], '/quote/email_stage_0/{id}')
+            Route::methods([$mG, $mP], '/quote/emailStage0/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'email_stage_0'])
-                ->name('quote/email_stage_0'),
-            Route::methods([$mG, $mP], '/quote/email_stage_2/{id}')
+                ->action([QuoteController::class, 'emailStage0'])
+                ->name('quote/emailStage0'),
+            Route::methods([$mG, $mP], '/quote/emailStage2/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'email_stage_2'])
-                ->name('quote/email_stage_2'),
+                ->action([QuoteController::class, 'emailStage2'])
+                ->name('quote/emailStage2'),
             Route::get('/quote[/page/{page:\d+}[/status/{status:\d+}]]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'index'])
                 ->name('quote/index'),
-            Route::methods([$mG, $mP], '/quote/save_custom')
+            Route::methods([$mG, $mP], '/quote/saveCustom')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'save_custom'])
-                ->name('quote/save_custom'),
-            Route::methods([$mG, $mP], '/quote/save_quote_tax_rate')
+                ->action([QuoteController::class, 'saveCustom'])
+                ->name('quote/saveCustom'),
+            Route::methods([$mG, $mP], '/quote/saveQuoteTaxRate')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'save_quote_tax_rate'])
-                ->name('quote/save_quote_tax_rate'),
-            Route::methods([$mG, $mP], '/quote/delete_quote_tax_rate/{id}')
+                ->action([QuoteController::class, 'saveQuoteTaxRate'])
+                ->name('quote/saveQuoteTaxRate'),
+            Route::methods([$mG, $mP], '/quote/deleteQuoteTaxRate/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'delete_quote_tax_rate'])
-                ->name('quote/delete_quote_tax_rate'),
-            Route::methods([$mG, $mP], '/quote/delete_quote_item/{id}')
+                ->action([QuoteController::class, 'deleteQuoteTaxRate'])
+                ->name('quote/deleteQuoteTaxRate'),
+            Route::methods([$mG, $mP], '/quote/deleteQuoteItem/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'delete_quote_item'])
-                ->name('quote/delete_quote_item'),
-            Route::methods([$mG, $mP], '/quote/pdf_dashboard_include_cf/{id}')
+                ->action([QuoteController::class, 'deleteQuoteItem'])
+                ->name('quote/deleteQuoteItem'),
+            Route::methods([$mG, $mP], '/quote/pdfDashboardIncludeCf/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'pdf_dashboard_include_cf'])
-                ->name('quote/pdf_dashboard_include_cf'),
-            Route::methods([$mG, $mP], '/quote/pdf_dashboard_exclude_cf/{id}')
+                ->action([QuoteController::class, 'pdfDashboardIncludeCf'])
+                ->name('quote/pdfDashboardIncludeCf'),
+            Route::methods([$mG, $mP], '/quote/pdfDashboardExcludeCf/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pVI))
-                ->action([QuoteController::class, 'pdf_dashboard_exclude_cf'])
-                ->name('quote/pdf_dashboard_exclude_cf'),
+                ->action([QuoteController::class, 'pdfDashboardExcludeCf'])
+                ->name('quote/pdfDashboardExcludeCf'),
             Route::methods([$mG, $mP], '/quote/modalcreate')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'modalcreate'])
@@ -1734,22 +1738,22 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'confirm'])
                 ->name('quote/confirm'),
-            Route::methods([$mG, $mP], '/quote/create_confirm')
+            Route::methods([$mG, $mP], '/quote/createConfirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'create_confirm'])
-                ->name('quote/create_confirm'),
-            Route::methods([$mG, $mP], '/quote/quote_to_invoice_confirm')
+                ->action([QuoteController::class, 'createConfirm'])
+                ->name('quote/createConfirm'),
+            Route::methods([$mG, $mP], '/quote/quoteToInvoiceConfirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'quote_to_invoice_confirm'])
-                ->name('quote/quote_to_invoice_confirm'),
-            Route::methods([$mG, $mP], '/quote/quote_to_quote_confirm')
+                ->action([QuoteController::class, 'quoteToInvoiceConfirm'])
+                ->name('quote/quoteToInvoiceConfirm'),
+            Route::methods([$mG, $mP], '/quote/quoteToQuoteConfirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'quote_to_quote_confirm'])
-                ->name('quote/quote_to_quote_confirm'),
-            Route::methods([$mG, $mP], '/quote/modal_change_client')
+                ->action([QuoteController::class, 'quoteToQuoteConfirm'])
+                ->name('quote/quoteToQuoteConfirm'),
+            Route::methods([$mG, $mP], '/quote/modalChangeClient')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'modal_change_client'])
-                ->name('quote/modal_change_client'),
+                ->action([QuoteController::class, 'modalChangeClient'])
+                ->name('quote/modalChangeClient'),
             Route::methods([$mG, $mP], '/quote/edit/{id}')
                 ->name('quote/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1766,10 +1770,10 @@ return [
                 ->name('quote/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'delete']),
-            Route::methods([$mG, $mP], '/quote/generate_quote_pdf/{url_key}')
-                ->name('quote/generate_quote_pdf')
+            Route::methods([$mG, $mP], '/quote/generateQuotePdf/{url_key}')
+                ->name('quote/generateQuotePdf')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteController::class, 'generate_quote_pdf']),
+                ->action([QuoteController::class, 'generateQuotePdf']),
             // QuoteAllowanceCharge
             Route::get('/quoteallowancecharge[/page/{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1796,22 +1800,22 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteItemController::class, 'index'])
                 ->name('quoteitem/index'),
-            Route::methods([$mP], '/quoteitem/add_product')
+            Route::methods([$mP], '/quoteitem/addProduct')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteItemController::class, 'add_product'])
-                ->name('quoteitem/add_product'),
-            Route::methods([$mP], '/quoteitem/add_task')
+                ->action([QuoteItemController::class, 'addProduct'])
+                ->name('quoteitem/addProduct'),
+            Route::methods([$mP], '/quoteitem/addTask')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteItemController::class, 'add_task'])
-                ->name('quoteitem/add_task'),
-            Route::methods([$mG, $mP], '/quoteitem/edit_product/{id}')
-                ->name('quoteitem/edit_product')
+                ->action([QuoteItemController::class, 'addTask'])
+                ->name('quoteitem/addTask'),
+            Route::methods([$mG, $mP], '/quoteitem/editProduct/{id}')
+                ->name('quoteitem/editProduct')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteItemController::class, 'edit_product']),
-            Route::methods([$mG, $mP], '/quoteitem/edit_task/{id}')
-                ->name('quoteitem/edit_task')
+                ->action([QuoteItemController::class, 'editProduct']),
+            Route::methods([$mG, $mP], '/quoteitem/editTask/{id}')
+                ->name('quoteitem/editTask')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([QuoteItemController::class, 'edit_task']),
+                ->action([QuoteItemController::class, 'editTask']),
             Route::methods([$mG, $mP], '/quoteitem/delete/{id}')
                 ->name('quoteitem/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1819,7 +1823,7 @@ return [
             Route::methods([$mG, $mP], '/quoteitem/multiple')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteItemController::class, 'multiple'])
-                ->name('quoteitem/delete_multiple'),
+                ->name('quoteitem/deleteMultiple'),
             Route::methods([$mG, $mP], '/quoteitem/view/{id}')
                 ->name('quoteitem/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1855,60 +1859,60 @@ return [
                 ->name('report/index'),
             Route::methods([$mG, $mP], '/sales_by_client_index')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ReportController::class, 'sales_by_client_index'])
-                ->name('report/sales_by_client_index'),
+                ->action([ReportController::class, 'salesByClientIndex'])
+                ->name('report/salesByClientIndex'),
             Route::methods([$mG, $mP], '/sales_by_product_index')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ReportController::class, 'sales_by_product_index'])
-                ->name('report/sales_by_product_index'),
+                ->action([ReportController::class, 'salesByProductIndex'])
+                ->name('report/salesByProductIndex'),
             Route::methods([$mG, $mP], '/sales_by_task_index')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ReportController::class, 'sales_by_task_index'])
-                ->name('report/sales_by_task_index'),
+                ->action([ReportController::class, 'salesByTaskIndex'])
+                ->name('report/salesByTaskIndex'),
             Route::methods([$mG, $mP], '/sales_by_year_index')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ReportController::class, 'sales_by_year_index'])
-                ->name('report/sales_by_year_index'),
+                ->action([ReportController::class, 'salesByYearIndex'])
+                ->name('report/salesByYearIndex'),
             Route::methods([$mG, $mP], '/invoice_aging_index')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ReportController::class, 'invoice_aging_index'])
-                ->name('report/invoice_aging_index'),
+                ->action([ReportController::class, 'invoiceAgingIndex'])
+                ->name('report/invoiceAgingIndex'),
             Route::methods([$mG, $mP], '/payment_history_index')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ReportController::class, 'payment_history_index'])
-                ->name('report/payment_history_index'),
+                ->action([ReportController::class, 'paymentHistoryIndex'])
+                ->name('report/paymentHistoryIndex'),
             Route::get('/salesorder[/page/{page:\d+}[/status/{status:\d+}]]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SalesOrderController::class, 'index'])
                 ->name('salesorder/index'),
             Route::methods([$mG, $mP], '/sales_by_year')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([ReportController::class, 'sales_by_year'])
-                ->name('report/sales_by_year'),
+                ->action([ReportController::class, 'salesByYear'])
+                ->name('report/salesByYear'),
             Route::methods([$mG, $mP], '/salesorder/delete/{id}')
                 ->name('salesorder/delete')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SalesOrderController::class, 'delete']),
-            Route::methods([$mG, $mP], '/salesorder/so_to_invoice/{id}')
-                ->name('salesorder/so_to_invoice')
+            Route::methods([$mG, $mP], '/salesorder/soToInvoice/{id}')
+                ->name('salesorder/soToInvoice')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SalesOrderController::class, 'so_to_invoice_confirm']),
-            Route::methods([$mG, $mP], '/salesorder/so_to_invoice_confirm')
+                ->action([SalesOrderController::class, 'soToInvoiceConfirm']),
+            Route::methods([$mG, $mP], '/salesorder/soToInvoiceConfirm')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SalesOrderController::class, 'so_to_invoice_confirm'])
-                ->name('salesorder/so_to_invoice_confirm'),
+                ->action([SalesOrderController::class, 'soToInvoiceConfirm'])
+                ->name('salesorder/soToInvoiceConfirm'),
             Route::get('/setting/debug_index[/page{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SettingController::class, 'debug_index'])
-                ->name('setting/debug_index'),
+                ->action([SettingController::class, 'debugIndex'])
+                ->name('setting/debugIndex'),
             Route::methods([$mG, $mP], '/setting/save')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SettingController::class, 'save'])
                 ->name('setting/save'),
             Route::methods([$mG, $mP], '/setting/tab_index[/{active:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SettingController::class, 'tab_index'])
-                ->name('setting/tab_index'),
+                ->action([SettingController::class, 'tabIndex'])
+                ->name('setting/tabIndex'),
             Route::methods([$mG, $mP], '/setting/add')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SettingController::class, 'add'])
@@ -1917,15 +1921,15 @@ return [
                 ->name('setting/draft')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SettingController::class,
-                    'inv_draft_has_number_switch']),
-            Route::methods([$mG, $mP], '/setting/auto_client')
-                ->name('setting/auto_client')
+                    'invDraftHasNumberSwitch']),
+            Route::methods([$mG, $mP], '/setting/autoClient')
+                ->name('setting/autoClient')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SettingController::class, 'auto_client']),
-            Route::methods([$mG, $mP], '/setting/mark_sent/{setting_id}')
-                ->name('setting/mark_sent')
+                ->action([SettingController::class, 'autoClient']),
+            Route::methods([$mG, $mP], '/setting/markSent/{setting_id}')
+                ->name('setting/markSent')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SettingController::class, 'mark_sent']),
+                ->action([SettingController::class, 'markSent']),
             Route::methods([$mG, $mP], '/setting/edit/{setting_id}')
                 ->name('setting/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1942,10 +1946,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SettingController::class, 'index'])
                 ->name('setting/index'),
-            Route::methods([$mG, $mP], '/setting/get_cron_key')
+            Route::methods([$mG, $mP], '/setting/getCronKey')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([SettingController::class, 'get_cron_key'])
-                ->name('setting/get_cron_key'),
+                ->action([SettingController::class, 'getCronKey'])
+                ->name('setting/getCronKey'),
             Route::methods([$mG, $mP], '/setting/view/{setting_id}')
                 ->name('setting/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -1973,12 +1977,12 @@ return [
                 ->name('task/add'),
             Route::methods([$mG, $mP], '/task/selection_inv')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([TaskController::class, 'selection_inv'])
-                ->name('task/selection_inv'),
+                ->action([TaskController::class, 'selectionInv'])
+                ->name('task/selectionInv'),
             Route::methods([$mG, $mP], '/task/selection_quote')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([TaskController::class, 'selection_quote'])
-                ->name('task/selection_quote'),
+                ->action([TaskController::class, 'selectionQuote'])
+                ->name('task/selectionQuote'),
             Route::methods([$mG, $mP], '/task/edit/{id}')
                 ->name('task/edit')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
@@ -2015,22 +2019,22 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([TelegramController::class, 'index'])
                 ->name('telegram/index'),
-            Route::get('/telegram/delete_webhook')
+            Route::get('/telegram/deleteWebhook')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([TelegramController::class, 'delete_webhook'])
-                ->name('telegram/delete_webhook'),
-            Route::get('/telegram/get_webhookinfo')
+                ->action([TelegramController::class, 'deleteWebhook'])
+                ->name('telegram/deleteWebhook'),
+            Route::get('/telegram/getWebhookinfo')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([TelegramController::class, 'get_webhookinfo'])
-                ->name('telegram/get_webhookinfo'),
-            Route::get('/telegram/set_webhook')
+                ->action([TelegramController::class, 'getWebhookinfo'])
+                ->name('telegram/getWebhookinfo'),
+            Route::get('/telegram/setWebhook')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([TelegramController::class, 'set_webhook'])
-                ->name('telegram/set_webhook'),
-            Route::get('/telegram/get_updates')
+                ->action([TelegramController::class, 'setWebhook'])
+                ->name('telegram/setWebhook'),
+            Route::get('/telegram/getUpdates')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
-                ->action([TelegramController::class, 'get_updates'])
-                ->name('telegram/get_updates'),
+                ->action([TelegramController::class, 'getUpdates'])
+                ->name('telegram/getUpdates'),
             Route::methods([$mG, $mP], '/telegram/webhook')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([TelegramController::class, 'webhook'])

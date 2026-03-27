@@ -67,8 +67,8 @@ final class UserClientController extends BaseController
     ): Response {
         $user_client = $this->userclient($currentRoute, $userclientRepository);
         if (null !== $user_client) {
-            $user_id = (int) $user_client->getUser_Id();
-            $client_id = (int) $user_client->getClient_id();
+            $user_id = (int) $user_client->getUserId();
+            $client_id = (int) $user_client->getClientId();
             if (($iR->countAllWithUserClient($user_id, $client_id) === 0)
              && ($qR->countAllWithUserClient($user_id, $client_id) === 0)
              && ($soR->countAllWithUserClient($user_id, $client_id) === 0)){   
@@ -124,7 +124,7 @@ final class UserClientController extends BaseController
         $user_id = $currentRoute->getArgument('user_id');
         if (null !== $user_id) {
         // Get possible client ids as an array that can be presented to this user
-            $availableClientIdList = $ucR->get_not_assigned_to_user($user_id, $cR);
+            $availableClientIdList = $ucR->getNotAssignedToUser($user_id, $cR);
             $user_client = new UserClient();
             $form = new UserClientForm($user_client);
             $parameters = [
@@ -147,10 +147,10 @@ final class UserClientController extends BaseController
                         if (((string) $key === 'user_all_clients')
                                                           && ($value === '1')) {
                             // Unassign currently assigned clients
-                            $ucR->unassign_to_user_client($user_id);
+                            $ucR->unassignToUserClient($user_id);
                             // Search for all clients, including new clients and
                             // assign them aswell
-                            $ucR->reset_users_all_clients(
+                            $ucR->resetUsersAllClients(
                                                 $uiR, $cR, $ucS, $formHydrator);
                             return $this->webService->getRedirectResponse(
                                                                 'userinv/index');

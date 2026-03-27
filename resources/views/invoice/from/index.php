@@ -41,7 +41,7 @@ $columns = [
     new DataColumn(
         'default_email',
         header: $translator->translate('email.default'),
-        content: static fn (FromDropDown $model) => $model->getDefault_email() == 'true' ? $translator->translate('yes') : $translator->translate('no'),
+        content: static fn (FromDropDown $model) => $model->getDefaultEmail() == 'true' ? $translator->translate('yes') : $translator->translate('no'),
     ),
     new DataColumn(
         header: $translator->translate('view'),

@@ -22,7 +22,7 @@ final readonly class UnitPeppolService
         );
         if ($unit) {
             $model->setUnit($unit);
-            $model->setUnit_id((int) $unit->getUnit_id());
+            $model->setUnitId((int) $unit->getUnitId());
         }
     }
 

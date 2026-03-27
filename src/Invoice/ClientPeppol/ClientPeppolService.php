@@ -23,7 +23,7 @@ final readonly class ClientPeppolService
         isset($array['id']) ?
             $model->setId((int) $array['id']) : '';
         isset($array['client_id']) ?
-            $model->setClient_id((int) $array['client_id']) : '';
+            $model->setClientId((int) $array['client_id']) : '';
         isset($array['accounting_cost']) ?
             $model->setAccountingCost(
                 (string) $array['accounting_cost']) : '';
@@ -34,31 +34,31 @@ final readonly class ClientPeppolService
             $model->setEndpointid(
                 (string) $array['endpointid']) : '';
         isset($array['endpointid_schemeid']) ?
-            $model->setEndpointid_schemeid(
+            $model->setEndpointidSchemeid(
                 (string) $array['endpointid_schemeid']) : '';
         isset($array['financial_institution_branchid']) ?
-            $model->setFinancial_institution_branchid(
+            $model->setFinancialInstitutionBranchid(
                 (string) $array['financial_institution_branchid'])
             : '';
         isset($array['identificationid']) ?
             $model->setIdentificationid(
                 (string) $array['identificationid']) : '';
         isset($array['identificationid_schemeid']) ?
-            $model->setIdentificationid_schemeid(
+            $model->setIdentificationidSchemeid(
                 (string) $array['identificationid_schemeid']) : '';
         isset($array['legal_entity_companyid']) ?
-            $model->setLegal_entity_companyid(
+            $model->setLegalEntityCompanyid(
                 (string) $array['legal_entity_companyid']) : '';
         isset($array['legal_entity_companyid_schemeid']) ?
-            $model->setLegal_entity_companyid_schemeid(
+            $model->setLegalEntityCompanyidSchemeid(
                 (string) $array['legal_entity_companyid_schemeid'])
             : '';
         isset($array['legal_entity_company_legal_form']) ?
-            $model->setLegal_entity_company_legal_form(
+            $model->setLegalEntityCompanyLegalForm(
                 (string) $array['legal_entity_company_legal_form'])
             : '';
         isset($array['legal_entity_registration_name']) ?
-            $model->setLegal_entity_registration_name(
+            $model->setLegalEntityRegistrationName(
                 (string) $array['legal_entity_registration_name'])
             : '';
         isset($array['supplier_assigned_accountid']) ?
@@ -77,14 +77,13 @@ final readonly class ClientPeppolService
     private function persist(
         ClientPeppol $model,
         array $array
-    ): ClientPeppol {
+    ): void {
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
                 $this->cR->repoClientquery(
                     (string) $array[$client]));
         }
-        return $model;
     }
 
     public function deleteClientPeppol(ClientPeppol $model): void

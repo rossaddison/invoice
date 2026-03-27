@@ -25,7 +25,7 @@ final readonly class MerchantService
     ): void {
         $this->persist($model, $array);
         isset($array['inv_id']) ? 
-            $model->setInv_id((int) $array['inv_id']) : '';
+            $model->setInvId((int) $array['inv_id']) : '';
         $model->setSuccessful((bool) $array['successful']);
 
         $datetime = new \DateTime();
@@ -49,7 +49,7 @@ final readonly class MerchantService
     private function persist(
         Merchant $model,
         array $array
-    ): Merchant {
+    ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
@@ -58,19 +58,18 @@ final readonly class MerchantService
                 $model->setInv($invEntity);
             }
         }
-        return $model;
     }
 
     /**
      * @param Merchant $model
      * @param array $array
      */
-    public function saveMerchant_via_payment_handler(
+    public function saveMerchantViaPaymentHandler(
         Merchant $model,
         array $array
     ): void {
         $this->persist($model, $array);
-        $model->setInv_id((int) $array['inv_id']);
+        $model->setInvId((int) $array['inv_id']);
         /** @var bool $array['merchant_response_successful'] */
         $model->setSuccessful(
             $array['merchant_response_successful']);

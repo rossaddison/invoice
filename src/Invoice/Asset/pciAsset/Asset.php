@@ -6,7 +6,7 @@ namespace App\Invoice\Asset\pciAsset;
 
 use Yiisoft\Assets\AssetBundle;
 
-class __Asset extends AssetBundle
+class Asset extends AssetBundle
 {
     public ?string $basePath = '@assets';
 

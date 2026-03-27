@@ -44,7 +44,7 @@ $columns = [
     new DataColumn(
         'client_id',
         header: $translator->translate('client'),
-        content: static fn (ClientNote $model): string => Html::encode(($model->getClient()?->getClient_name() ?? '#') . ' ' . ($model->getClient()?->getClient_surname() ?? '#')),
+        content: static fn (ClientNote $model): string => Html::encode(($model->getClient()?->getClientName() ?? '#') . ' ' . ($model->getClient()?->getClientSurname() ?? '#')),
     ),
     new DataColumn(
         'note',
@@ -54,7 +54,7 @@ $columns = [
     new DataColumn(
         'date_note',
         header: $translator->translate('client.note.date'),
-        content: static fn (ClientNote $model): string => Html::encode((!is_string($dateNote = $model->getDate_note()) ? $dateNote->format('Y-m-d') : '')),
+        content: static fn (ClientNote $model): string => Html::encode((!is_string($dateNote = $model->getDateNote()) ? $dateNote->format('Y-m-d') : '')),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

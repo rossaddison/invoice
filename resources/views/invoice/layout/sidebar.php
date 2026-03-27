@@ -83,7 +83,7 @@ echo H::openTag('div', ['class' => 'sidebar hidden-xs']); //1
   }
   echo H::openTag('li'); //3
    echo H::openTag('a', [
-    'href'              => $urlGenerator->generate('setting/tab_index'),
+    'href'              => $urlGenerator->generate('setting/tabIndex'),
     'title'             => $translator->translate('system.settings'),
     'class'             => 'tip',
     'data-bs-placement' => 'right'

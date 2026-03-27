@@ -50,8 +50,8 @@ declare(strict_types=1);
                                      * @var App\Invoice\Entity\Unit $unit
                                      */
                                     foreach ($units as $unit): ?>
-                                    <option value="<?= $unit->getUnit_id(); ?>">
-                                        <?= $unit->getUnit_name(); ?>
+                                    <option value="<?= $unit->getUnitId(); ?>">
+                                        <?= $unit->getUnitName(); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>

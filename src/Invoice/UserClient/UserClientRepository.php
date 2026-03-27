@@ -148,14 +148,14 @@ final class UserClientRepository extends Select\Repository
     /**
      * Get a list of clients that have user accounts associated with their client_id
      */
-    public function getClients_with_user_accounts(): array
+    public function getClientsWithUserAccounts(): array
     {
         $client_ids = [];
         /**
          * @var UserClient $user_client
          */
         foreach ($this->findAllPreloaded() as $user_client) {
-            $client_id = $user_client->getClient_id();
+            $client_id = $user_client->getClientId();
             if (!in_array($client_id, $client_ids)) {
                 $client_ids[] = $client_id;
             }
@@ -167,7 +167,7 @@ final class UserClientRepository extends Select\Repository
      * @param string $user_id
      * @return array
      */
-    public function get_assigned_to_user(string $user_id): array
+    public function getAssignedToUser(string $user_id): array
     {
         // Get all clients assigned to this user
         $count_user_clients = $this->repoClientCountquery($user_id);
@@ -177,7 +177,7 @@ final class UserClientRepository extends Select\Repository
             /** @var UserClient $user_client */
             foreach ($user_clients as $user_client) {
                 // Include Non-active clients as well since these might be reactivated later
-                $assigned_client_ids[] = $user_client->getClient_id();
+                $assigned_client_ids[] = $user_client->getClientId();
             }
         }
         return $assigned_client_ids;
@@ -191,17 +191,17 @@ final class UserClientRepository extends Select\Repository
       *
       * @psalm-return array<int<0, max>, int|null>
       */
-    public function get_not_assigned_to_user(string $user_id, CR $cR): array
+    public function getNotAssignedToUser(string $user_id, CR $cR): array
     {
         // Get an array of client ids that have been assigned to this user
-        $assigned_client_ids = $this->get_assigned_to_user($user_id);
+        $assigned_client_ids = $this->getAssignedToUser($user_id);
 
         // Get all existing clients including non-active ones
         $all_clients = $cR->findAllPreloaded();
         $every_client_ids = [];
         /** @var Client $client */
         foreach ($all_clients as $client) {
-            $client_id = $client->getClient_id();
+            $client_id = $client->getClientId();
             // Exclude clients, that already have user accounts, from the dropdown box
             // if the client id does not appear in the user client table as a client
             // => this client has not been already assigned therefore it can be made available
@@ -221,14 +221,14 @@ final class UserClientRepository extends Select\Repository
      *
      * @psalm-return array<int<0, max>, int|null>
      */
-    public function get_not_assigned_to_any_user(CR $cR): array
+    public function getNotAssignedToAnyUser(CR $cR): array
     {
         // Get all existing clients including non-active ones
         $all_clients = $cR->findAllPreloaded();
         $unassigned_client_ids = [];
         /** @var Client $client */
         foreach ($all_clients as $client) {
-            $client_id = $client->getClient_id();
+            $client_id = $client->getClientId();
             // Exclude clients, that already have user accounts, from the dropdown box
             // if the client id does not appear in the user client table as a client
             // => this client has not been already assigned therefore it can be made available
@@ -245,16 +245,16 @@ final class UserClientRepository extends Select\Repository
      * @param UCS $ucS
      * @param FormHydrator $formHydrator
      */
-    public function reset_users_all_clients(UIR $uiR, CR $cR, UCS $ucS, FormHydrator $formHydrator): void
+    public function resetUsersAllClients(UIR $uiR, CR $cR, UCS $ucS, FormHydrator $formHydrator): void
     {
         // Users that have their all_clients setting active
         if ($uiR->countAllWithAllClients() > 0) {
             $users = $uiR->findAllWithAllClients();
             /** @var UserInv $user */
             foreach ($users as $user) {
-                $user_id = $user->getUser_id();
-                $available_client_ids = $this->get_not_assigned_to_user($user_id, $cR);
-                $this->assign_to_user_client($available_client_ids, $user_id, $formHydrator, $ucS);
+                $user_id = $user->getUserId();
+                $available_client_ids = $this->getNotAssignedToUser($user_id, $cR);
+                $this->assignToUserClient($available_client_ids, $user_id, $formHydrator, $ucS);
             }
         }
     }
@@ -265,7 +265,7 @@ final class UserClientRepository extends Select\Repository
      * @param FormHydrator $formHydrator
      * @param UCS $ucS
      */
-    public function assign_to_user_client(array $available_client_ids, string $user_id, FormHydrator $formHydrator, UCS $ucS): void
+    public function assignToUserClient(array $available_client_ids, string $user_id, FormHydrator $formHydrator, UCS $ucS): void
     {
         /** @var int $value */
         foreach ($available_client_ids as $_key => $value) {
@@ -282,7 +282,7 @@ final class UserClientRepository extends Select\Repository
     /**
      * @param string $user_id
      */
-    public function unassign_to_user_client(string $user_id): void
+    public function unassignToUserClient(string $user_id): void
     {
         $user_clients = $this->repoClientquery($user_id);
         /** @var UserClient $user_client */

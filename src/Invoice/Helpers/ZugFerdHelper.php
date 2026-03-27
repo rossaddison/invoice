@@ -27,7 +27,8 @@ final readonly class ZugFerdHelper
     /**
      * @return Aliases
      */
-    private function ensure_temp_zugferd_folder_and_uploads_folder_exist(): Aliases
+    /** @psalm-suppress UnusedReturnValue */
+    private function ensureTempZugferdFolderAndUploadsFolderExist(): Aliases
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__), '@Uploads' => '@invoice/Uploads']);
         // Invoice/Uploads/Archive
@@ -50,9 +51,9 @@ final readonly class ZugFerdHelper
      * @param InvAmount $inv_amount
      * @return string
      */
-    public function generate_invoice_zugferd_xml_temp_file(Inv $invoice, IIAR $iiaR, InvAmount $inv_amount): string
+    public function generateInvoiceZugferdXmlTempFile(Inv $invoice, IIAR $iiaR, InvAmount $inv_amount): string
     {
-        $this->ensure_temp_zugferd_folder_and_uploads_folder_exist();
+        $this->ensureTempZugferdFolderAndUploadsFolderExist();
         $path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Uploads'
                                 . DIRECTORY_SEPARATOR . 'Temp'
                                 . DIRECTORY_SEPARATOR . 'Zugferd'
@@ -74,7 +75,7 @@ final readonly class ZugFerdHelper
      * Returns the correct RDF string for the Zugferd XML
      * @return string
      */
-    public function zugferd_rdf(): string
+    public function zugferdRdf(): string
     {
         $s = '<rdf:Description rdf:about="" xmlns:zf="urn:ferd:pdfa:CrossIndustryDocument:invoice:1p0#">' . "\n";
         $s .= '  <zf:DocumentType>INVOICE</zf:DocumentType>' . "\n";

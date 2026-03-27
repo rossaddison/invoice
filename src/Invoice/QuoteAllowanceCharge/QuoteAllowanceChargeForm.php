@@ -21,7 +21,7 @@ final class QuoteAllowanceChargeForm extends FormModel
 
     public function __construct(QuoteAllowanceCharge $quoteAllowanceCharge, private readonly ?int $quote_id)
     {
-        $this->allowance_charge_id = (int) $quoteAllowanceCharge->getAllowance_charge_id();
+        $this->allowance_charge_id = (int) $quoteAllowanceCharge->getAllowanceChargeId();
         $this->amount = (int) $quoteAllowanceCharge->getAmount();
         $this->vat_or_tax = (int) $quoteAllowanceCharge->getVatOrTax();
     }
@@ -31,12 +31,12 @@ final class QuoteAllowanceChargeForm extends FormModel
         return $this->id;
     }
 
-    public function getQuote_id(): ?int
+    public function getQuoteId(): ?int
     {
         return $this->quote_id;
     }
 
-    public function getAllowance_charge_id(): ?int
+    public function getAllowanceChargeId(): ?int
     {
         return $this->allowance_charge_id;
     }

@@ -74,8 +74,8 @@ $count = 1;
  * @var App\Invoice\Entity\QuoteItem $item
  */
 foreach ($quoteItems as $item) {
-    $productId = $item->getProduct_id();
-    $taskId = $item->getTask_id();
+    $productId = $item->getProductId();
+    $taskId = $item->getTaskId();
     $productRef = '';
     $taskRef = '';
     if ($productId > 0) {
@@ -111,7 +111,7 @@ foreach ($quoteItems as $item) {
       echo H::openTag('b'); //6
        echo H::openTag('div', ['class' => 'input-group']); //7
        echo (string) $count
-           . '-' . $item->getQuote_id() . '-'
+           . '-' . $item->getQuoteId() . '-'
            . $item->getId() . '-'
            . ($productId > 0 ? $productRef : '')
            . ($taskId > 0 ? $taskRef : '');
@@ -141,9 +141,9 @@ foreach ($quoteItems as $item) {
             */
            foreach ($products as $product) {
                echo  new Option()
-                   ->value($product->getProduct_id())
-                   ->selected($item->getProduct_id() == $product->getProduct_id())
-                   ->content($product->getProduct_name() ?? '');
+                   ->value($product->getProductId())
+                   ->selected($item->getProductId() == $product->getProductId())
+                   ->content($product->getProductName() ?? '');
            }
        }
        if ($taskId > 0) {
@@ -156,7 +156,7 @@ foreach ($quoteItems as $item) {
            foreach ($tasks as $task) {
                echo  new Option()
                    ->value($task->getId())
-                   ->selected($item->getTask_id() == $task->getId())
+                   ->selected($item->getTaskId() == $task->getId())
                    ->content($task->getName() ?? '');
            }
        }
@@ -179,7 +179,7 @@ foreach ($quoteItems as $item) {
            'class' => 'input-sm form-control amount',
            'data-bs-toggle' => 'tooltip',
            'title' => 'quote_item->quantity',
-           'value' => $numberHelper->format_amount($item->getQuantity()),
+           'value' => $numberHelper->formatAmount($item->getQuantity()),
        ]);
        echo H::closeTag('input');
       echo H::closeTag('div'); //6
@@ -200,7 +200,7 @@ foreach ($quoteItems as $item) {
            'class' => 'input-sm form-control amount',
            'data-bs-toggle' => 'tooltip',
            'title' => 'quote_item->price',
-           'value' => $numberHelper->format_amount($item->getPrice()),
+           'value' => $numberHelper->formatAmount($item->getPrice()),
        ]);
        echo H::closeTag('input');
       echo H::closeTag('div'); //6
@@ -224,7 +224,7 @@ foreach ($quoteItems as $item) {
            'title' => $s->getSetting('currency_symbol') . ' ' .
                $translator->translate('per.item'),
            'data-placement' => 'bottom',
-           'value' => $numberHelper->format_amount($item->getDiscount_amount()),
+           'value' => $numberHelper->formatAmount($item->getDiscountAmount()),
        ]);
        echo H::closeTag('input');
       echo H::closeTag('div'); //6
@@ -252,7 +252,7 @@ foreach ($quoteItems as $item) {
         * @var App\Invoice\Entity\TaxRate $taxRate
         */
        foreach ($taxRates as $taxRate) {
-           $taxRatePercent = $numberHelper->format_amount(
+           $taxRatePercent = $numberHelper->formatAmount(
                $taxRate->getTaxRatePercent()
            );
            $taxRateName = $taxRate->getTaxRateName();
@@ -264,7 +264,7 @@ foreach ($quoteItems as $item) {
            }
            echo  new Option()
                ->value((string) $taxRate->getTaxRateId())
-               ->selected($item->getTax_rate_id() == $taxRate->getTaxRateId())
+               ->selected($item->getTaxRateId() == $taxRate->getTaxRateId())
                ->content($taxRateContent);
        }
        echo H::closeTag('select'); //7
@@ -273,12 +273,12 @@ foreach ($quoteItems as $item) {
     // Buttons for line item start here
      echo H::openTag('td', ['class' => 'td-vert-middle btn-group']); //5
     if ($invEdit === true) {
-        if ($piR->repoCount((int) $item->getProduct_id()) > 0) {
+        if ($piR->repoCount((int) $item->getProductId()) > 0) {
             echo H::openTag('span', [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('productimage.gallery')
                     . ($productId > 0
-                        ? ($item->getProduct()?->getProduct_name()
+                        ? ($item->getProduct()?->getProductName()
                             ?? '') : ($item->getTask()?->getName()
                                 ?? '')),
             ]); //6
@@ -318,20 +318,20 @@ foreach ($quoteItems as $item) {
                  ]);
                  echo H::closeTag('input');
                  $productImages = $piR->repoProductImageProductquery(
-                     (int) $item->getProduct_id()
+                     (int) $item->getProductId()
                  );
                  /**
                   * @var App\Invoice\Entity\ProductImage $productImage
                   */
                  foreach ($productImages as $productImage) {
-                     if (!empty($productImage->getFile_name_original())) {
+                     if (!empty($productImage->getFileNameOriginal())) {
                          echo H::openTag('a', [
                              'data-bs-toggle' => 'modal',
                              'class' => 'col-sm-4',
                          ]); //12
                          echo H::openTag('img', [
                              'src' => '/products/' .
-                                 $productImage->getFile_name_original(),
+                                 $productImage->getFileNameOriginal(),
                              'class' => 'img-fluid',
                              'alt' => 'Original File Name',
                          ]);
@@ -381,7 +381,7 @@ foreach ($quoteItems as $item) {
             echo H::closeTag('a'); //6
         }
         echo H::openTag('a', [
-            'href' => $urlGenerator->generate('quote/delete_quote_item', [
+            'href' => $urlGenerator->generate('quote/deleteQuoteItem', [
                 'id' => $item->getId(),
                 '_language' => $currentRoute->getArgument('_language'),
             ]),
@@ -393,7 +393,7 @@ foreach ($quoteItems as $item) {
         echo H::closeTag('a'); //6
         if ($taskId > 0) {
             echo H::openTag('a', [
-                'href' => $urlGenerator->generate('quoteitem/edit_task', [
+                'href' => $urlGenerator->generate('quoteitem/editTask', [
                     'id' => $item->getId(),
                     '_language' => $currentRoute->getArgument('_language'),
                 ]),
@@ -404,7 +404,7 @@ foreach ($quoteItems as $item) {
         }
         if ($productId > 0) {
             echo H::openTag('a', [
-                'href' => $urlGenerator->generate('quoteitem/edit_product', [
+                'href' => $urlGenerator->generate('quoteitem/editProduct', [
                     'id' => $item->getId(),
                     '_language' => $currentRoute->getArgument('_language'),
                 ]),
@@ -453,7 +453,7 @@ foreach ($quoteItems as $item) {
               'class' => 'input-group-text',
               'name' => 'item_product_unit',
           ]); //7
-          echo $item->getProduct_unit();
+          echo $item->getProductUnit();
           echo H::closeTag('span'); //7
       }
       if ($taskId > 0) {
@@ -468,7 +468,7 @@ foreach ($quoteItems as $item) {
           ]); //7
           echo !is_string(
               $finishDate =
-                  $item->getTask()?->getFinish_date()
+                  $item->getTask()?->getFinishDate()
           ) ?
                       $finishDate?->format('Y-m-d') : '';
           echo H::closeTag('span'); //7
@@ -478,7 +478,7 @@ foreach ($quoteItems as $item) {
      echo H::openTag('td', ['class' => 'td-amount']); //5
      if ($productId > 0) {
           echo H::openTag('b'); //6
-          echo $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+          echo $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
                                             * ($item->getPrice() ?? 0.00));
           echo H::closeTag('b'); //6
      }
@@ -487,7 +487,7 @@ foreach ($quoteItems as $item) {
      echo H::closeTag('td'); //5
      echo H::openTag('td', ['class' => 'td-amount']); //5
       echo H::openTag('b'); //6
-      echo $numberHelper->format_amount(($item->getQuantity() ?? 0.00)
+      echo $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
                                         * ($item->getPrice() ?? 0.00)
                                         * ($item->getTaxRate()?->getTaxRatePercent()
                                         ?? 0.00) / 100);
@@ -529,7 +529,7 @@ foreach ($quoteItems as $item) {
              echo H::closeTag('td'); //5
              echo H::openTag('td', ['class' => 'td-amount']); //5
               echo H::openTag('b'); //6
-              echo ($isCharge ? '' : '(') . $numberHelper->format_currency(
+              echo ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
                   $quoteItemAllowanceCharge->getAmount()
               ) . ($isCharge ? '' : ')');
               echo H::closeTag('b'); //6
@@ -538,7 +538,7 @@ foreach ($quoteItems as $item) {
              echo H::closeTag('td'); //5
              echo H::openTag('td', ['class' => 'td-amount']); //5
               echo H::openTag('b'); //6
-              echo ($isCharge ? '' : '(') . $numberHelper->format_currency(
+              echo ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
                   $quoteItemAllowanceCharge->getVatOrTax()
               ) . ($isCharge ? '' : ')');
               echo H::closeTag('b'); //6
@@ -576,7 +576,7 @@ foreach ($quoteItems as $item) {
       echo "\n";
       echo '    <!-- This subtotal is worked out in' . "\n";
       echo '        QuoteItemController/edit_product->saveQuoteItemAmount function -->' . "\n";
-      echo $numberHelper->format_currency($qiaR->repoQuoteItemAmountquery(
+      echo $numberHelper->formatCurrency($qiaR->repoQuoteItemAmountquery(
           $item->getId()
       )?->getSubtotal());
       echo H::closeTag('span'); //6
@@ -596,7 +596,7 @@ foreach ($quoteItems as $item) {
           'data-bs-toggle' => 'tooltip',
           'title' => 'quote_item_amount->discount',
       ]); //6
-      echo '(' . $numberHelper->format_currency(
+      echo '(' . $numberHelper->formatCurrency(
           $qiaR->repoQuoteItemAmountquery(
               $item->getId()
           )?->getDiscount()
@@ -621,10 +621,10 @@ foreach ($quoteItems as $item) {
           'data-bs-toggle' => 'tooltip',
           'title' => 'quote_item_amount->tax_total',
       ]); //6
-      echo $numberHelper->format_currency(
+      echo $numberHelper->formatCurrency(
           $qiaR->repoQuoteItemAmountquery(
               $item->getId()
-          )?->getTax_total()
+          )?->getTaxTotal()
       );
       echo H::closeTag('span'); //6
      echo H::closeTag('td'); //5
@@ -645,7 +645,7 @@ foreach ($quoteItems as $item) {
           'data-bs-toggle' => 'tooltip',
           'title' => 'quote_item_amount->total',
       ]); //6
-      echo $numberHelper->format_currency(
+      echo $numberHelper->formatCurrency(
           $qiaR->repoQuoteItemAmountquery(
               $item->getId()
           )?->getTotal()
@@ -714,7 +714,7 @@ echo H::closeTag('br');
           'title' => 'quote_amount->item_subtotal=quote_item(s)->
                             subtotal - quote_item(s)->discount + quote_item(s)->charge',
       ]); //6
-      echo $numberHelper->format_currency($quoteAmount->getItem_subtotal() ?? 0.00);
+      echo $numberHelper->formatCurrency($quoteAmount->getItemSubtotal() ?? 0.00);
       echo H::closeTag('td'); //6
      echo H::closeTag('tr'); //5
      echo H::openTag('tr'); //5
@@ -733,7 +733,7 @@ echo H::closeTag('br');
           'id' => 'amount_item_tax_total',
           'title' => 'quote_amount->item_tax_total',
       ]); //6
-      echo $numberHelper->format_currency($quoteAmount->getItem_tax_total() ?? 0.00);
+      echo $numberHelper->formatCurrency($quoteAmount->getItemTaxTotal() ?? 0.00);
       echo H::closeTag('td'); //6
      echo H::closeTag('tr'); //5
      echo H::openTag('tr'); //5
@@ -749,7 +749,7 @@ echo H::closeTag('br');
           'title' => 'quote_amount->packhandleship_total',
       ]); //6
        echo H::openTag('b'); //7
-       echo $numberHelper->format_currency(
+       echo $numberHelper->formatCurrency(
            $packHandleShipTotal['totalAmount'] ?? 0.00
        );
        echo H::closeTag('b'); //7
@@ -778,7 +778,7 @@ echo H::closeTag('br');
           'title' => 'quote_amount->packhandleship_tax',
       ]); //6
        echo H::openTag('b'); //7
-       echo $numberHelper->format_currency(
+       echo $numberHelper->formatCurrency(
            $packHandleShipTotal['totalTax'] ?? 0.00
        );
        echo H::closeTag('b'); //7
@@ -809,7 +809,7 @@ if ($vat === '0') {
         foreach ($quoteTaxRates as $quoteTaxRate) {
              echo H::openTag('div', [
                  'data-bs-toggle' => 'tooltip',
-                 'title' => $quoteTaxRate->getInclude_item_tax()
+                 'title' => $quoteTaxRate->getIncludeItemTax()
                      == '1' ? $included : $excluded,
                  'tabindex' => '0',
              ]); //7
@@ -829,7 +829,7 @@ if ($vat === '0') {
                          'title' => $translator->translate('delete'),
                      ])
                      ->content('❌')
-                     ->href($urlGenerator->generate('quote/delete_quote_tax_rate', [
+                     ->href($urlGenerator->generate('quote/deleteQuoteTaxRate', [
                          '_language' => $currentRoute->getArgument('_language'),
                          'id'        => $quoteTaxRate->getId(),
                      ]));
@@ -837,7 +837,7 @@ if ($vat === '0') {
             }
              echo H::openTag('span', ['class' => 'text-muted']); //8
              $taxRatePercent = $quoteTaxRate->getTaxRate()?->getTaxRatePercent();
-             $numberPercent = $numberHelper->format_amount($taxRatePercent);
+             $numberPercent = $numberHelper->formatAmount($taxRatePercent);
              $taxRateName = $quoteTaxRate->getTaxRate()?->getTaxRateName();
              if ($taxRatePercent >= 0.00
                      && null !== $taxRateName
@@ -854,19 +854,19 @@ if ($vat === '0') {
                  'data-bs-toggle' => 'tooltip',
                  'title' => 'quote_tax_rate->quote_tax_rate_amount',
              ]); //8
-             echo $numberHelper->format_currency($quoteTaxRate->getQuote_tax_rate_amount());
+             echo $numberHelper->formatCurrency($quoteTaxRate->getQuoteTaxRateAmount());
              echo H::closeTag('span'); //8
              echo H::openTag('br');
              echo H::closeTag('br');
              echo H::closeTag('div'); //7
         }
     } else {
-        echo $numberHelper->format_currency('0');
+        echo $numberHelper->formatCurrency('0');
     }
       echo H::closeTag('td'); //6
      echo H::closeTag('tr'); //5
 }
-if (($quote->getDiscount_amount() ?? 0.00) !== 0.00) {
+if (($quote->getDiscountAmount() ?? 0.00) !== 0.00) {
      echo H::openTag('tr'); //5
       echo H::openTag('td', ['class' => 'td-vert-middle']); //6
        echo H::openTag('b'); //7
@@ -876,7 +876,7 @@ if (($quote->getDiscount_amount() ?? 0.00) !== 0.00) {
       echo H::openTag('td', ['class' => 'clearfix']); //6
        echo H::openTag('div', ['class' => 'discount-field']); //7
         echo H::openTag('div', ['class' => 'input-group input-group']); //8
-        echo $numberHelper->format_currency($quote->getDiscount_amount() ?? 0.00);
+        echo $numberHelper->formatCurrency($quote->getDiscountAmount() ?? 0.00);
         echo H::closeTag('div'); //8
        echo H::closeTag('div'); //7
       echo H::closeTag('td'); //6
@@ -896,7 +896,7 @@ if (($quote->getDiscount_amount() ?? 0.00) !== 0.00) {
           'title' => 'quote_amount->total',
       ]); //6
        echo H::openTag('b'); //7
-       echo $numberHelper->format_currency($quoteAmount->getTotal() ?? 0.00);
+       echo $numberHelper->formatCurrency($quoteAmount->getTotal() ?? 0.00);
        echo H::closeTag('b'); //7
       echo H::closeTag('td'); //6
      echo H::closeTag('tr'); //5

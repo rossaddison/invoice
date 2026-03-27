@@ -59,19 +59,19 @@ echo H::openTag('div', ['class' => 'table-responsive']);
     * @var App\Invoice\Entity\Payment $payment
     */
    foreach ($payments as $payment) {
-       if ($payment->getInv()?->getClient_id() === $client->getClient_id()) {
+       if ($payment->getInv()?->getClientId() === $client->getClientId()) {
            echo H::openTag('tr');
             echo H::openTag('td');
-             echo (!is_string($paymentDate = $payment->getPayment_date()) ?
+             echo (!is_string($paymentDate = $payment->getPaymentDate()) ?
                                         ($paymentDate->format('Y-m-d')) : '');
             echo H::closeTag('td');
             echo H::openTag('td');
-             echo ($payment->getInv()?->getDate_created())->format('Y-m-d');
+             echo ($payment->getInv()?->getDateCreated())->format('Y-m-d');
             echo H::closeTag('td');
             echo H::openTag('td');
              echo H::openTag('a', [
                  'href' => $urlGenerator->generate('inv/view',
-                         ['id' => $payment->getInv_id()])
+                         ['id' => $payment->getInvId()])
              ]);
               echo H::encode($payment->getInv()?->getNumber() ?? '#');
              echo H::closeTag('a');
@@ -79,15 +79,15 @@ echo H::openTag('div', ['class' => 'table-responsive']);
             echo H::openTag('td');
              echo H::openTag('a', [
                  'href' => $urlGenerator->generate('client/view',
-                         ['id' => $payment->getInv()?->getClient_id()]),
+                         ['id' => $payment->getInv()?->getClientId()]),
                  'title' => $translator->translate('view.client')
              ]);
-              echo H::encode($clientHelper->format_client(
+              echo H::encode($clientHelper->formatClient(
                       $payment->getInv()?->getClient()));
              echo H::closeTag('a');
             echo H::closeTag('td');
             echo H::openTag('td', ['class' => 'amount']);
-             echo $s->format_currency($payment->getAmount() ?? 0.00);
+             echo $s->formatCurrency($payment->getAmount() ?? 0.00);
             echo H::closeTag('td');
             echo H::openTag('td');
              echo H::encode($payment->getPaymentMethod()?->getName() ?? '');
@@ -110,10 +110,10 @@ echo H::openTag('div', ['class' => 'table-responsive']);
                echo H::openTag('li');
                 echo H::openTag('a', [
                     'href' => $urlGenerator->generate('client/view',
-                            ['id' => $payment->getInv()?->getClient_id()]),
+                            ['id' => $payment->getInv()?->getClientId()]),
                     'title' => $translator->translate('view.client')
                 ]);
-                 echo H::encode($clientHelper->format_client(
+                 echo H::encode($clientHelper->formatClient(
                          $payment->getInv()?->getClient()));
                 echo H::closeTag('a');
                 echo H::openTag('a', [

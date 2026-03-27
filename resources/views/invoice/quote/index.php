@@ -155,7 +155,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('default.quote.group'),
              url: $urlGenerator->generate(
-                 'setting/tab_index',
+                 'setting/tabIndex',
                  [],
                  ['active' => 'quotes'],
                  'settings[default_quote_group]',
@@ -171,7 +171,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('default.notes'),
              url: $urlGenerator->generate(
-                 'setting/tab_index',
+                 'setting/tabIndex',
                  [],
                  ['active' => 'quotes'],
                  'settings[default_quote_notes]',
@@ -187,7 +187,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('quotes.expire.after'),
              url: $urlGenerator->generate(
-                 'setting/tab_index',
+                 'setting/tabIndex',
                  [],
                  ['active' => 'quotes'],
                  'settings[quotes_expire_after]',
@@ -203,7 +203,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('generate.quote.number.for.draft'),
              url: $urlGenerator->generate(
-                 'setting/tab_index',
+                 'setting/tabIndex',
                  [],
                  ['active' => 'quotes'],
                  'settings[generate_quote_number_for_draft]',
@@ -219,7 +219,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('default.email.template'),
              url: $urlGenerator->generate(
-                 'setting/tab_index',
+                 'setting/tabIndex',
                  [],
                  ['active' => 'quotes'],
                  'settings[email_quote_template]',
@@ -236,7 +236,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('pdf.quote.footer'),
              url: $urlGenerator->generate(
-                 'setting/tab_index',
+                 'setting/tabIndex',
                  [],
                  ['active' => 'quotes'],
                  'settings[pdf_quote_footer]',
@@ -319,17 +319,17 @@ $columns = [
         ),
         new ActionButton(
             content: static function (Quote $model): string {
-                return ($model->getSo_id() == 0) && ($model->getInv_id() == 0)
+                return ($model->getSoId() == 0) && ($model->getInvId() == 0)
                 ? '❌'
                 : '🚫';
             },
             url: static function (Quote $model) use ($urlGenerator): string {
-                return ($model->getSo_id() == 0) && ($model->getInv_id() == 0)
+                return ($model->getSoId() == 0) && ($model->getInvId() == 0)
                 ? $urlGenerator->generate('quote/delete', ['id' => $model->getId()])
                 : '';
             },
             attributes: static function (Quote $model) use ($translator): array {
-                return ($model->getSo_id() == 0) && ($model->getInv_id() == 0)
+                return ($model->getSoId() == 0) && ($model->getInvId() == 0)
                 ?  
                 [
                     'onclick' => "return confirm("
@@ -362,7 +362,7 @@ $columns = [
                 . $translator->translate('status') . '</span>',
         encodeHeader: false,
         content: static function (Quote $model) use ($qR): string {
-            $statusId = $model->getStatus_id();
+            $statusId = $model->getStatusId();
             if ($statusId === null) {
                 return '<span class="label label-default">N/A</span>';
             }
@@ -387,11 +387,11 @@ $columns = [
         'so_id',
         header: $translator->translate('salesorder.number.status'),
         content: static function (Quote $model) use ($urlGenerator, $soR): A {
-            $so_id = $model->getSo_id();
+            $so_id = $model->getSoId();
             $so = $soR->repoSalesOrderUnloadedquery($so_id);
             if (null !== $so) {
                 $number = $so->getNumber();
-                $statusId = $so->getStatus_id();
+                $statusId = $so->getStatusId();
                 if (null !== $number && ($statusId > 0)) {
                     return   new A()
                         ->addAttributes(['style' => 'text-decoration:none',
@@ -399,7 +399,7 @@ $columns = [
                         ->content($number . ' ' . $soR->getSpecificStatusArrayLabel((string) $statusId))
                         ->href($urlGenerator->generate('salesorder/view', ['id' => $so_id]));
                 }
-                if ($model->getSo_id() === '0' && $model->getStatus_id() === 7) {
+                if ($model->getSoId() === '0' && $model->getStatusId() === 7) {
                     if ($statusId > 0) {
                         return  new A()
                         ->addAttributes(['class' => 'btn btn-warning'])
@@ -425,24 +425,24 @@ $columns = [
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static fn (Quote $model): string => ($model->getDate_created())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDateCreated())->format('Y-m-d'),
         withSorting: true,
     ),
     new DataColumn(
         'date_expires',
-        content: static fn (Quote $model): string => ($model->getDate_expires())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDateExpires())->format('Y-m-d'),
         withSorting: true,
     ),
     new DataColumn(
         'date_required',
-        content: static fn (Quote $model): string => ($model->getDate_required())->format('Y-m-d'),
+        content: static fn (Quote $model): string => ($model->getDateRequired())->format('Y-m-d'),
     ),
     new DataColumn(
         property: 'filterClient',
         header: $translator->translate('client'),
         content: static function (Quote $model): string {
-            $clientName = $model->getClient()?->getClient_name();
-            $clientSurname = $model->getClient()?->getClient_surname();
+            $clientName = $model->getClient()?->getClientName();
+            $clientSurname = $model->getClient()?->getClientSurname();
             if (null !== $clientName && null !== $clientSurname) {
                 return Html::encode($clientName . str_repeat(' ', 2) . $clientSurname);
             }
@@ -503,12 +503,12 @@ $previousGroupValue = '';
 // Function to get group value based on selected field
 $getGroupValue = static function (Quote $quote) use ($groupBy, $qR): string {
     return match ($groupBy) {
-        'client' => $quote->getClient()?->getClient_full_name() ?? 'Unknown Client',
-        'status' => $qR->getSpecificStatusArrayLabel((string) $quote->getStatus_id()),
-        'month' => $quote->getDate_created()->format('Y-m'),
-        'year' => $quote->getDate_created()->format('Y'),
-        'date' => $quote->getDate_created()->format('Y-m-d'),
-        'client_group' => $quote->getClient()?->getClient_group() ?? 'No Group',
+        'client' => $quote->getClient()?->getClientFullName() ?? 'Unknown Client',
+        'status' => $qR->getSpecificStatusArrayLabel((string) $quote->getStatusId()),
+        'month' => $quote->getDateCreated()->format('Y-m'),
+        'year' => $quote->getDateCreated()->format('Y'),
+        'date' => $quote->getDateCreated()->format('Y-m-d'),
+        'client_group' => $quote->getClient()?->getClientGroup() ?? 'No Group',
         'amount_range' => match (true) {
             ($quote->getQuoteAmount()->getTotal() ?? 0) < 100 => '< $100',
             ($quote->getQuoteAmount()->getTotal() ?? 0) < 500 => '$100 - $500',

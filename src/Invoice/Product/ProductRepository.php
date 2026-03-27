@@ -120,28 +120,28 @@ final class ProductRepository extends Select\Repository
         );
     }
 
-    public function filter_family_id(string $family_id): EntityReader
+    public function filterFamilyId(string $family_id): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['family_id' => ltrim(rtrim($family_id))]);
         return $this->prepareDataReader($query);
     }
 
-    public function filter_product_sku(string $product_sku): EntityReader
+    public function filterProductSku(string $product_sku): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['product_sku' => ltrim(rtrim($product_sku))]);
         return $this->prepareDataReader($query);
     }
 
-    public function filter_product_price(string $product_price): EntityReader
+    public function filterProductPrice(string $product_price): EntityReader
     {
         $select = $this->select();
         $query = $select->where(['product_price' => ltrim(rtrim($product_price))]);
         return $this->prepareDataReader($query);
     }
 
-    public function filter_product_sku_price(string $product_price,
+    public function filterProductSkuPrice(string $product_price,
             string $product_sku): EntityReader
     {
         $select = $this->select();

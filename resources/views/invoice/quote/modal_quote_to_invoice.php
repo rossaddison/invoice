@@ -26,8 +26,8 @@ use Yiisoft\Html\Html;
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="client_id" id="client_id" value="<?= $quote->getClient_id(); ?>">            
-                    <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUser_id(); ?>">
+                    <input type="hidden" name="client_id" id="client_id" value="<?= $quote->getClientId(); ?>">            
+                    <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUserId(); ?>">
                     <div class="form-group">
                         <label for="password"><?= $translator->translate('password'); ?></label>
                         <input type="text" name="password" id="invoice_password" class="form-control"
@@ -45,7 +45,7 @@ use Yiisoft\Html\Html;
                                  */
                                 foreach ($groups as $group) { ?>
                                 <option value="<?= $group->getId(); ?>"
-                                    <?php $s->check_select($s->getSetting('default_invoice_group'), $group->getId()); ?>>
+                                    <?php $s->checkSelect($s->getSetting('default_invoice_group'), $group->getId()); ?>>
                                     <?= Html::encode($group->getName()); ?></option>
                             <?php } ?>
                         </select>

@@ -57,7 +57,7 @@ class GenerateCodeFileHelper
         // $this->basepath used in function relativepath
         $this->basepath = dirname(__DIR__, 3);
         /**
-         *  Related logic: see GeneratorController function build_and_save
+         *  Related logic: see GeneratorController function buildAndSave
          *  The MD5 hash algorithm was developed in 1991 and released in 1992.
          *  Only a year later, researchers were already finding flaws!
          *  However, it continued to be used and adopted by developers around the world.
@@ -78,6 +78,7 @@ class GenerateCodeFileHelper
      * Saves the code into the file specified by [[path]].
      *
      * @return string|true the error occurred while saving the code file, or true if no error.
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function save(): bool|string
     {

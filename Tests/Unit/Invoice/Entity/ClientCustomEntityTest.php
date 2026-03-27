@@ -17,8 +17,8 @@ class ClientCustomEntityTest extends TestCase
         
         // ID getters return string conversion of null values, which becomes empty strings
         $this->assertSame('', $clientCustom->getId());
-        $this->assertSame('', $clientCustom->getClient_id());
-        $this->assertSame('', $clientCustom->getCustom_field_id());
+        $this->assertSame('', $clientCustom->getClientId());
+        $this->assertSame('', $clientCustom->getCustomFieldId());
         $this->assertNull($clientCustom->getValue());
         $this->assertNull($clientCustom->getClient());
         $this->assertNull($clientCustom->getCustomField());
@@ -34,8 +34,8 @@ class ClientCustomEntityTest extends TestCase
         );
         
         $this->assertSame('1', $clientCustom->getId());
-        $this->assertSame('100', $clientCustom->getClient_id());
-        $this->assertSame('200', $clientCustom->getCustom_field_id());
+        $this->assertSame('100', $clientCustom->getClientId());
+        $this->assertSame('200', $clientCustom->getCustomFieldId());
         $this->assertSame('Test Custom Value', $clientCustom->getValue());
     }
 
@@ -50,17 +50,17 @@ class ClientCustomEntityTest extends TestCase
     public function testClientIdSetterAndGetter(): void
     {
         $clientCustom = new ClientCustom();
-        $clientCustom->setClient_id(150);
+        $clientCustom->setClientId(150);
         
-        $this->assertSame('150', $clientCustom->getClient_id());
+        $this->assertSame('150', $clientCustom->getClientId());
     }
 
     public function testCustomFieldIdSetterAndGetter(): void
     {
         $clientCustom = new ClientCustom();
-        $clientCustom->setCustom_field_id(300);
+        $clientCustom->setCustomFieldId(300);
         
-        $this->assertSame('300', $clientCustom->getCustom_field_id());
+        $this->assertSame('300', $clientCustom->getCustomFieldId());
     }
 
     public function testValueSetterAndGetter(): void
@@ -107,19 +107,19 @@ class ClientCustomEntityTest extends TestCase
     public function testClientIdTypeConversion(): void
     {
         $clientCustom = new ClientCustom();
-        $clientCustom->setClient_id(777);
+        $clientCustom->setClientId(777);
         
-        $this->assertIsString($clientCustom->getClient_id());
-        $this->assertSame('777', $clientCustom->getClient_id());
+        $this->assertIsString($clientCustom->getClientId());
+        $this->assertSame('777', $clientCustom->getClientId());
     }
 
     public function testCustomFieldIdTypeConversion(): void
     {
         $clientCustom = new ClientCustom();
-        $clientCustom->setCustom_field_id(888);
+        $clientCustom->setCustomFieldId(888);
         
-        $this->assertIsString($clientCustom->getCustom_field_id());
-        $this->assertSame('888', $clientCustom->getCustom_field_id());
+        $this->assertIsString($clientCustom->getCustomFieldId());
+        $this->assertSame('888', $clientCustom->getCustomFieldId());
     }
 
     public function testEmptyStringValue(): void
@@ -178,24 +178,24 @@ class ClientCustomEntityTest extends TestCase
     {
         $clientCustom = new ClientCustom();
         $clientCustom->setId(0);
-        $clientCustom->setClient_id(0);
-        $clientCustom->setCustom_field_id(0);
+        $clientCustom->setClientId(0);
+        $clientCustom->setCustomFieldId(0);
         
         $this->assertSame('0', $clientCustom->getId());
-        $this->assertSame('0', $clientCustom->getClient_id());
-        $this->assertSame('0', $clientCustom->getCustom_field_id());
+        $this->assertSame('0', $clientCustom->getClientId());
+        $this->assertSame('0', $clientCustom->getCustomFieldId());
     }
 
     public function testNegativeIds(): void
     {
         $clientCustom = new ClientCustom();
         $clientCustom->setId(-1);
-        $clientCustom->setClient_id(-5);
-        $clientCustom->setCustom_field_id(-10);
+        $clientCustom->setClientId(-5);
+        $clientCustom->setCustomFieldId(-10);
         
         $this->assertSame('-1', $clientCustom->getId());
-        $this->assertSame('-5', $clientCustom->getClient_id());
-        $this->assertSame('-10', $clientCustom->getCustom_field_id());
+        $this->assertSame('-5', $clientCustom->getClientId());
+        $this->assertSame('-10', $clientCustom->getCustomFieldId());
     }
 
     public function testCompleteClientCustomSetup(): void
@@ -203,13 +203,13 @@ class ClientCustomEntityTest extends TestCase
         $clientCustom = new ClientCustom();
         
         $clientCustom->setId(1);
-        $clientCustom->setClient_id(100);
-        $clientCustom->setCustom_field_id(200);
+        $clientCustom->setClientId(100);
+        $clientCustom->setCustomFieldId(200);
         $clientCustom->setValue('Complete setup value');
         
         $this->assertSame('1', $clientCustom->getId());
-        $this->assertSame('100', $clientCustom->getClient_id());
-        $this->assertSame('200', $clientCustom->getCustom_field_id());
+        $this->assertSame('100', $clientCustom->getClientId());
+        $this->assertSame('200', $clientCustom->getCustomFieldId());
         $this->assertSame('Complete setup value', $clientCustom->getValue());
         $this->assertNull($clientCustom->getClient());
         $this->assertNull($clientCustom->getCustomField());
@@ -225,8 +225,8 @@ class ClientCustomEntityTest extends TestCase
         );
         
         $this->assertIsString($clientCustom->getId());
-        $this->assertIsString($clientCustom->getClient_id());
-        $this->assertIsString($clientCustom->getCustom_field_id());
+        $this->assertIsString($clientCustom->getClientId());
+        $this->assertIsString($clientCustom->getCustomFieldId());
         $this->assertIsString($clientCustom->getValue());
         $this->assertNull($clientCustom->getClient());
         $this->assertNull($clientCustom->getCustomField());
@@ -386,19 +386,19 @@ class ClientCustomEntityTest extends TestCase
         
         // Verify initial state
         $this->assertSame('999', $clientCustom->getId());
-        $this->assertSame('888', $clientCustom->getClient_id());
-        $this->assertSame('777', $clientCustom->getCustom_field_id());
+        $this->assertSame('888', $clientCustom->getClientId());
+        $this->assertSame('777', $clientCustom->getCustomFieldId());
         $this->assertSame('Consistency test', $clientCustom->getValue());
         
         // Modify and verify changes
         $clientCustom->setId(111);
-        $clientCustom->setClient_id(222);
-        $clientCustom->setCustom_field_id(333);
+        $clientCustom->setClientId(222);
+        $clientCustom->setCustomFieldId(333);
         $clientCustom->setValue('Modified value');
         
         $this->assertSame('111', $clientCustom->getId());
-        $this->assertSame('222', $clientCustom->getClient_id());
-        $this->assertSame('333', $clientCustom->getCustom_field_id());
+        $this->assertSame('222', $clientCustom->getClientId());
+        $this->assertSame('333', $clientCustom->getCustomFieldId());
         $this->assertSame('Modified value', $clientCustom->getValue());
     }
 
@@ -408,11 +408,11 @@ class ClientCustomEntityTest extends TestCase
         
         $largeId = PHP_INT_MAX;
         $clientCustom->setId($largeId);
-        $clientCustom->setClient_id($largeId - 1);
-        $clientCustom->setCustom_field_id($largeId - 2);
+        $clientCustom->setClientId($largeId - 1);
+        $clientCustom->setCustomFieldId($largeId - 2);
         
         $this->assertSame((string)$largeId, $clientCustom->getId());
-        $this->assertSame((string)($largeId - 1), $clientCustom->getClient_id());
-        $this->assertSame((string)($largeId - 2), $clientCustom->getCustom_field_id());
+        $this->assertSame((string)($largeId - 1), $clientCustom->getClientId());
+        $this->assertSame((string)($largeId - 2), $clientCustom->getCustomFieldId());
     }
 }

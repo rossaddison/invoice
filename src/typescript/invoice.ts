@@ -1,4 +1,4 @@
-import { parsedata, getJson, ApiResponse, RequestParams, closestSafe } from './utils.js';
+﻿import { parsedata, getJson, ApiResponse, RequestParams, closestSafe } from './utils.js';
 
 // Invoice-specific interfaces
 interface RecurringInvoiceData extends RequestParams {
@@ -249,7 +249,7 @@ export class InvoiceHandler {
 
         try {
             const selected = this.getCheckedInvoiceIds();
-            const url = `${location.origin}/invoice/inv/mark_as_sent`;
+            const url = `${location.origin}/invoice/inv/markAsSent`;
 
             const response = await getJson<ApiResponse>(url, { keylist: selected });
             const data = parsedata(response);
@@ -280,7 +280,7 @@ export class InvoiceHandler {
 
         try {
             const selected = this.getCheckedInvoiceIds();
-            const url = `${location.origin}/invoice/inv/mark_sent_as_draft`;
+            const url = `${location.origin}/invoice/inv/markSentAsDraft`;
 
             const response = await getJson<ApiResponse>(url, { keylist: selected });
             const data = parsedata(response);
@@ -445,7 +445,7 @@ export class InvoiceHandler {
                 include_inv_item_tax: getFieldValue('include_inv_item_tax'),
             };
 
-            const url = `${location.origin}/invoice/inv/save_inv_tax_rate`;
+            const url = `${location.origin}/invoice/inv/saveInvTaxRate`;
             const response = await getJson<ApiResponse>(url, payload);
             const data = parsedata(response);
 
@@ -496,7 +496,7 @@ export class InvoiceHandler {
                 user_id: getFieldValue('user_id'),
             };
 
-            const url = `${location.origin}/invoice/inv/inv_to_inv_confirm`;
+            const url = `${location.origin}/invoice/inv/invToInvConfirm`;
             const response = await getJson<ApiResponse>(url, payload);
             const data = parsedata(response);
 
@@ -750,7 +750,7 @@ export class InvoiceHandler {
         }
 
         try {
-            const url = `${location.origin}/invoice/inv/delete_item/${itemId}`;
+            const url = `${location.origin}/invoice/inv/deleteItem/${itemId}`;
             const response = await getJson<ApiResponse>(url, { id: itemId });
             const data = parsedata(response);
 

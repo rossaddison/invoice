@@ -28,7 +28,7 @@ final class InvRecurringForm extends FormModel
         $this->end = $invRecurring->getEnd();
     }
 
-    public function getInv_id(): ?int
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }

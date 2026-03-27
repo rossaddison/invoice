@@ -32,20 +32,20 @@ class CustomValuesHelper
         $this->d = new DHelp($this->s);
     }
 
-    public function format_date(mixed $txt): string
+    public function formatDate(mixed $txt): string
     {
         if ($txt == null) {
             return '';
         }
         /** @var \DateTimeImmutable $txt */
-        return $this->d->date_from_mysql($txt);
+        return $this->d->dateFromMysql($txt);
     }
 
     /**
      * @param $txt
      * @return string
      */
-    public function format_text(?string $txt): string
+    public function formatText(?string $txt): string
     {
         if ($txt == null) {
             return '';
@@ -59,7 +59,7 @@ class CustomValuesHelper
      *
      * @return string
      */
-    public function format_boolean(Translator $translator, string $txt): string
+    public function formatBoolean(Translator $translator, string $txt): string
     {
         if ($txt === '1') {
             return $translator->translate('true');
@@ -74,7 +74,7 @@ class CustomValuesHelper
      * @param $txt
      * @return string
      */
-    public function format_avs(string $txt)
+    public function formatAvs(string $txt)
     {
         $matches = [];
         if (!preg_match('/(\d{3})(\d{4})(\d{4})(\d{2})/', $txt, $matches)) {
@@ -87,14 +87,14 @@ class CustomValuesHelper
      * @param $txt
      * @return string
      */
-    public function format_fallback(string $txt): string
+    public function formatFallback(string $txt): string
     {
-        return $this->format_text($txt);
+        return $this->formatText($txt);
     }
 
     // Note: $custom_value can be an array of dropdown list values
     // eg see payment/_form.php
-    public function print_field_for_form(
+    public function printFieldForForm(
         CustomField $custom_field,
         FormModel $formModel,
         Translator $translator,        
@@ -104,7 +104,7 @@ class CustomValuesHelper
     ): void {
         $customFieldId = $custom_field->getId();
         $customBracketCustomField = 'custom[' . $customFieldId . ']'; 
-        $fieldValue = $this->form_value($entity_custom_values, $customFieldId) ?? '';
+        $fieldValue = $this->formValue($entity_custom_values, $customFieldId) ?? '';
         $label = $custom_field->getLabel() ?? '';
         $cfEditableAt =  new A()
                 ->href($urlGenerator->generate('customfield/edit', ['id' => $customFieldId]))
@@ -168,7 +168,7 @@ class CustomValuesHelper
                 // The mySql serialized $fieldValue eg. a:2:{i:0;s:2:"41";i:1;s:2:"43";}
                 // must now be unserialized to an array and placed in '->values($selChoices)'
                 // Search 'serialize' in e.g. src/Invoice/Client/ClientController
-                $selChoices = $this->is_serialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];
+                $selChoices = $this->isSerialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];
                 $optionsData = [];
                 /** @var CustomValue $choice */
                 foreach ($choices as $choice) {
@@ -256,7 +256,7 @@ class CustomValuesHelper
                     $formModel,
                     'custom_field_id',
                     [],
-                    //$this->s->get_config_theme_bootstrap5_horizontal(),
+                    //$this->s->getConfigThemeBootstrap5Horizontal(),
                     'bootstrap5-vertical',
                 )
                 ->label($label)
@@ -337,10 +337,10 @@ class CustomValuesHelper
      * @param FormModel $formModel
      * @param array $entity_custom_values
      */
-    public function print_field_for_view(CustomField $custom_field, FormModel $formModel, array $entity_custom_values): void
+    public function printFieldForView(CustomField $custom_field, FormModel $formModel, array $entity_custom_values): void
     {
         $customFieldId = $custom_field->getId();
-        $fieldValue = $this->form_value($entity_custom_values, $customFieldId) ?? '';
+        $fieldValue = $this->formValue($entity_custom_values, $customFieldId) ?? '';
         $customBracketCustomField = 'custom[' . $customFieldId . ']';
         switch ($custom_field->getType()) {
             case 'DATE':
@@ -372,7 +372,7 @@ class CustomValuesHelper
 
                 break;
             case 'MULTIPLE-CHOICE':
-                $selChoices = $this->is_serialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];
+                $selChoices = $this->isSerialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];
 
                 $fieldValues = '';
                 /**
@@ -496,7 +496,7 @@ class CustomValuesHelper
      * @param CustomField $custom_field
      * @param cvR $cvR
      */
-    public function print_field_for_pdf(Translator $translator, array $entity_custom_values, CustomField $custom_field, cvR $cvR): void
+    public function printFieldForPdf(Translator $translator, array $entity_custom_values, CustomField $custom_field, cvR $cvR): void
     {
         $customFieldId = $custom_field->getId();
         echo  new Br();
@@ -505,7 +505,7 @@ class CustomValuesHelper
              ->content($content)
              ->render();
 
-        $fieldValue = $this->form_value($entity_custom_values, $customFieldId) ?? '';
+        $fieldValue = $this->formValue($entity_custom_values, $customFieldId) ?? '';
 
         echo Html::openTag('div');
         switch ($custom_field->getType()) {
@@ -518,17 +518,17 @@ class CustomValuesHelper
                 break;
             case 'SINGLE-CHOICE':
                 echo  new Label()
-                ->content((string) $this->selected_value($entity_custom_values, $customFieldId, $cvR));
+                ->content((string) $this->selectedValue($entity_custom_values, $customFieldId, $cvR));
                 echo  new Br();
                 break;
             case 'MULTIPLE-CHOICE':
-                if ($this->is_serialized($fieldValue, true)) {
+                if ($this->isSerialized($fieldValue, true)) {
                     $array = (array) unserialize((string) $fieldValue);
                     /**
                      * @var int $key
                      * @var string $value
                      */
-                    foreach ($array as $key => $value) {
+                    foreach ($array as $value) {
                         $custom_value = $cvR->repoCustomValuequery($value);
                         if (null !== $custom_value) {
                             $customValue = $custom_value->getValue();
@@ -541,12 +541,12 @@ class CustomValuesHelper
                 break;
             case 'RADIOLIST-CHOICE':
                 echo  new Label()
-                ->content((string) $this->selected_value($entity_custom_values, $customFieldId, $cvR));
+                ->content((string) $this->selectedValue($entity_custom_values, $customFieldId, $cvR));
                 echo  new Br();
                 break;
             case 'BOOLEAN':
                 echo  new Label()
-                ->content(null !== $this->form_value($entity_custom_values, $customFieldId)
+                ->content(null !== $this->formValue($entity_custom_values, $customFieldId)
                                   ? $translator->translate('true')
                                   : $translator->translate('false'));
                 echo  new Br();
@@ -570,7 +570,7 @@ class CustomValuesHelper
      * @param bool $strict
      * @return bool
      */
-    public function is_serialized(mixed $entry_data, $strict = true): bool
+    public function isSerialized(mixed $entry_data, $strict = true): bool
     {
         // If it isn't a string, it isn't serialized.
         if (!is_string($entry_data)) {
@@ -639,11 +639,11 @@ class CustomValuesHelper
      * @param string $custom_field_id
      * @return int|string|null
      */
-    public function form_value(array $entity_custom_values, string $custom_field_id): string|int|null
+    public function formValue(array $entity_custom_values, string $custom_field_id): string|int|null
     {
         /** @var CustomValue $entity_custom_value */
         foreach ($entity_custom_values as $entity_custom_value) {
-            if ($entity_custom_value->getCustom_field_id() == $custom_field_id) {
+            if ($entity_custom_value->getCustomFieldId() == $custom_field_id) {
                 return $entity_custom_value->getValue();
             }
         }
@@ -656,9 +656,9 @@ class CustomValuesHelper
      * @param cvR $cvR
      * @return int|string|null
      */
-    public function selected_value(array $entity_custom_values, string $custom_field_id, cvR $cvR): string|int|null
+    public function selectedValue(array $entity_custom_values, string $custom_field_id, cvR $cvR): string|int|null
     {
-        $form_custom_value = $this->form_value($entity_custom_values, $custom_field_id);
+        $form_custom_value = $this->formValue($entity_custom_values, $custom_field_id);
         if (($form_custom_value !== '') && (null !== $form_custom_value)) {
             $custom_value = $cvR->repoCustomValuequery((string) $form_custom_value);
             /** @var CustomValue $custom_value */

@@ -108,7 +108,7 @@ Html::closeTag('div')
 <?= Field::select($form, 'client_frequency')
     ->label($translator->translate('client.frequency'))
     ->addInputAttributes([
-        'value' => Html::encode($form->getClient_frequency() ?? ''),
+        'value' => Html::encode($form->getClientFrequency() ?? ''),
         'placeholder' => $translator->translate('client.frequency'),
         'class' => 'form-control',
     ])
@@ -121,7 +121,7 @@ Html::closeTag('div')
 <?php
     $languageOptions = [];
 /** @var string $language */
-foreach ($s->locale_language_array() as $language) {
+foreach ($s->localeLanguageArray() as $language) {
     $languageOptions[$language] = ucfirst($language);
 }
 ?>
@@ -156,7 +156,7 @@ foreach ($s->locale_language_array() as $language) {
             <?php
                 $countryOptions = [];
 /** @var string $country */
-foreach ($countries as $cldr => $country) {
+foreach ($countries as $country) {
     $countryOptions[$country] = ucfirst($country);
 }
 ?>
@@ -173,7 +173,7 @@ foreach ($countries as $cldr => $country) {
         continue;
     }
         ?>
-                <?php $cvH->print_field_for_form($customField, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
+                <?php $cvH->printFieldForForm($customField, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
             <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>    
     <?= Html::closeTag('div'); ?>
@@ -202,7 +202,7 @@ foreach ($countries as $cldr => $country) {
             ->label($translator->translate('client.postaladdress.available'))
             ->required(false)
             ->addInputAttributes([
-                'value' => Html::encode($form->getPostaladdress_id() ?? ''),
+                'value' => Html::encode($form->getPostaladdressId() ?? ''),
                 'class' => 'form-control  alert alert-warning',
             ])
             ->optionsData($optionsDataPostalAddresses);
@@ -211,7 +211,7 @@ foreach ($countries as $cldr => $country) {
         }
 if ($postal_address_count ===  0 && $origin == 'edit') {
     // hide the field but maintain the postaladdress_id that will appear in the $request->bodyParams array
-    echo Html::a($translator->translate('client.postaladdress.add'), $urlGenerator->generate('postaladdress/add', ['client_id' => $client->getClient_id(), 'origin' => 'client']), ['class' => 'btn btn-warning btn-lg mt-3']);
+    echo Html::a($translator->translate('client.postaladdress.add'), $urlGenerator->generate('postaladdress/add', ['client_id' => $client->getClientId(), 'origin' => 'client']), ['class' => 'btn btn-warning btn-lg mt-3']);
 }
 ?>
             <?= Html::closeTag('div'); ?>            
@@ -228,7 +228,7 @@ if ($custom_field->getLocation() !== 2) {
     continue;
 }
     ?>
-                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
+                <?php $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
         <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
@@ -245,7 +245,7 @@ if ($custom_field->getLocation() !== 2) {
         ->label($translator->translate('gender'))
         ->addInputAttributes(['class' => 'form-control'])
         ->optionsData($optionsDataGender)
-        ->value(Html::encode($form->getClient_gender() ?? 0));
+        ->value(Html::encode($form->getClientGender() ?? 0));
 ?> 
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
@@ -260,15 +260,15 @@ echo Field::date($form, 'client_birthdate')
     'role' => 'presentation',
     'autocomplete' => 'off',
 ])
-->value(Html::encode(!is_string($form->getClient_birthdate()) && null !== $form->getClient_birthdate()
-                                ? $form->getClient_birthdate()->format('Y-m-d') : ''))
+->value(Html::encode(!is_string($form->getClientBirthdate()) && null !== $form->getClientBirthdate()
+                                ? $form->getClientBirthdate()->format('Y-m-d') : ''))
 ->required(false);
 ?>    
             <?= Field::number($form, 'client_age')
     ->label($translator->translate('client.age'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('client.age'),
-        'value' => Html::encode($form->getClient_age() ?? '18'),
+        'value' => Html::encode($form->getClientAge() ?? '18'),
         'class' => 'form-control',
         'id' => 'client_age',
     ])
@@ -290,7 +290,7 @@ echo Field::date($form, 'client_birthdate')
             continue;
         }
             ?>
-                    <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
+                    <?php $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
                 <?php endforeach; ?>
             <?= Html::closeTag('div'); ?>    
         <?= Html::closeTag('div'); ?>
@@ -315,7 +315,7 @@ echo Field::date($form, 'client_birthdate')
             continue;
         }
             ?>
-                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator,  $clientCustomValues, $customValues); ?>
+                <?php $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator,  $clientCustomValues, $customValues); ?>
             <?php endforeach; ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'form-group']); ?>
@@ -337,7 +337,7 @@ echo Field::date($form, 'client_birthdate')
                                 continue;
                             }
                                 ?>
-                                <?php $cvH->print_field_for_form($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
+                                <?php $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues); ?>
                             <?php endforeach; ?>
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>

@@ -6,7 +6,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Img;
 
 /**
- * Related logic: see QuoteController function url_key
+ * Related logic: see QuoteController function urlKey
  * @var App\Invoice\Entity\Client $client
  * @var App\Invoice\Entity\Quote $quote
  * @var App\Invoice\Entity\QuoteAmount $quote_amount
@@ -59,7 +59,7 @@ $vat = $s->getSetting('enable_vat_registration');
             <h2><?= $translator->translate('quote'); ?>&nbsp;<?= $quote->getNumber(); ?></h2>
             <div class="btn-group">
                 <?php
-                    if (in_array($quote->getStatus_id(), [2, 3, 5]) && $quote->getSo_id() === '0') : ?>
+                    if (in_array($quote->getStatusId(), [2, 3, 5]) && $quote->getSoId() === '0') : ?>
                     <?= 
 //  src/typescript/quote.ts#quote_with_purchase_order_number_confirm,
 //  .quote_with_purchase_order_number_confirm ...
@@ -75,24 +75,24 @@ $vat = $s->getSetting('enable_vat_registration');
                 <?php
                     // Only show the reject button if it was not previously approved ie there is no sales order id attached to this quote
                     // if there is a sales order id (ie approved previously) the client can reject the subsequent sales order only
-                    if ($quote->getStatus_id() !== 4 && $quote->getStatus_id() !== 5 && $quote->getSo_id() === '0') { ?>
-                    <a href="<?= $urlGenerator->generate('quote/reject', ['url_key' => $quote->getUrl_key()]); ?>" class="btn btn-danger ajax-loader">
+                    if ($quote->getStatusId() !== 4 && $quote->getStatusId() !== 5 && $quote->getSoId() === '0') { ?>
+                    <a href="<?= $urlGenerator->generate('quote/reject', ['url_key' => $quote->getUrlKey()]); ?>" class="btn btn-danger ajax-loader">
                         <i class="fa fa-check"></i><?= $translator->translate('quote.reject'); ?>
                     </a>
                 <?php } ?>                
                 <?php
                     // Show an approved message if the quote is approved
-                    if ($quote->getStatus_id()  === 4) :  ?>
+                    if ($quote->getStatusId()  === 4) :  ?>
                     <label class="btn btn-success" disabled><?= $translator->translate('approved'); ?></label>
                 <?php endif; ?>
                 <?php
                     // Show a rejected message if the quote has been rejected by the client. A new quote will have to be issued
-                    if ($quote->getStatus_id() === 5) :  ?>
+                    if ($quote->getStatusId() === 5) :  ?>
                     <label class="btn btn-danger" disabled><?= $translator->translate('rejected'); ?></label>
                 <?php endif; ?>
                 <?php
                     // Show a canceled message if the quote has been canceled by the company
-                    if ($quote->getStatus_id() === 6) :  ?>
+                    if ($quote->getStatusId() === 6) :  ?>
                     <label class="btn btn-danger" disabled><?= $translator->translate('canceled'); ?></label>
                 <?php endif; ?>    
             </div>
@@ -119,17 +119,17 @@ $vat = $s->getSetting('enable_vat_registration');
             <div class='row'>
                 <div class="col-xs-12 col-md-6 col-lg-5">
                     <h4><?= Html::encode($userInv->getName()); ?></h4>
-                    <p><?php if (strlen($userInv->getVat_id() ?: '') > 0) {
-                        echo $translator->translate('vat.id.short') . ": " . ($userInv->getVat_id() ?: '') . '<br>';
+                    <p><?php if (strlen($userInv->getVatId() ?: '') > 0) {
+                        echo $translator->translate('vat.id.short') . ": " . ($userInv->getVatId() ?: '') . '<br>';
                     } ?>
-                        <?php if (strlen($userInv->getTax_code() ?? '') > 0) {
-                            echo $translator->translate('tax.code.short') . ": " . ($userInv->getTax_code() ?? '') . '<br>';
+                        <?php if (strlen($userInv->getTaxCode() ?? '') > 0) {
+                            echo $translator->translate('tax.code.short') . ": " . ($userInv->getTaxCode() ?? '') . '<br>';
                         } ?>
-                        <?php if (strlen($userInv->getAddress_1() ?? '') > 0) {
-                            echo Html::encode($userInv->getAddress_1()) . '<br>';
+                        <?php if (strlen($userInv->getAddress1() ?? '') > 0) {
+                            echo Html::encode($userInv->getAddress1()) . '<br>';
                         } ?>
-                        <?php if (strlen($userInv->getAddress_2() ?? '') > 0) {
-                            echo Html::encode($userInv->getAddress_2()) . '<br>';
+                        <?php if (strlen($userInv->getAddress2() ?? '') > 0) {
+                            echo Html::encode($userInv->getAddress2()) . '<br>';
                         } ?>
                         <?php if (strlen($userInv->getCity() ?? '') > 0) {
                             echo Html::encode($userInv->getCity()) . ' ';
@@ -148,29 +148,29 @@ $vat = $s->getSetting('enable_vat_registration');
                 <div class="col-lg-2"></div>
                 <div class="col-xs-12 col-md-6 col-lg-5 text-right">
 
-                    <h4><?= Html::encode($clientHelper->format_client($client)); ?></h4>
-                        <p><?php if (strlen($client->getClient_vat_id()) > 0) {
-                            echo $translator->translate('vat.id.short') . ": " . ($client->getClient_vat_id()) . '<br>';
+                    <h4><?= Html::encode($clientHelper->formatClient($client)); ?></h4>
+                        <p><?php if (strlen($client->getClientVatId()) > 0) {
+                            echo $translator->translate('vat.id.short') . ": " . ($client->getClientVatId()) . '<br>';
                         } ?>
-                            <?php if (strlen($client->getClient_tax_code() ?? '') > 0) {
-                                echo $translator->translate('tax.code.short') . ": " . ($client->getClient_tax_code() ?? '') . '<br>';
+                            <?php if (strlen($client->getClientTaxCode() ?? '') > 0) {
+                                echo $translator->translate('tax.code.short') . ": " . ($client->getClientTaxCode() ?? '') . '<br>';
                             } ?>
-                            <?php if (strlen($client->getClient_address_1() ?? '') > 0) {
-                                echo Html::encode($client->getClient_address_1()) . '<br>';
+                            <?php if (strlen($client->getClientAddress1() ?? '') > 0) {
+                                echo Html::encode($client->getClientAddress1()) . '<br>';
                             } ?>
-                            <?php if (strlen($client->getClient_address_2() ?? '') > 0) {
-                                echo Html::encode($client->getClient_address_2()) . '<br>';
+                            <?php if (strlen($client->getClientAddress2() ?? '') > 0) {
+                                echo Html::encode($client->getClientAddress2()) . '<br>';
                             } ?>
-                            <?php if (strlen($client->getClient_city() ?? '') > 0) {
-                                echo Html::encode($client->getClient_city()) . ' ';
+                            <?php if (strlen($client->getClientCity() ?? '') > 0) {
+                                echo Html::encode($client->getClientCity()) . ' ';
                             } ?>
-                            <?php if (strlen($client->getClient_state() ?? '') > 0) {
-                                echo Html::encode($client->getClient_state()) . ' ';
+                            <?php if (strlen($client->getClientState() ?? '') > 0) {
+                                echo Html::encode($client->getClientState()) . ' ';
                             } ?>
-                            <?php if (strlen($client->getClient_zip() ?? '') > 0) {
-                                echo Html::encode($client->getClient_zip()) . '<br>';
+                            <?php if (strlen($client->getClientZip() ?? '') > 0) {
+                                echo Html::encode($client->getClientZip()) . '<br>';
                             } ?>
-                            <?php if (strlen($clientPhone = $client->getClient_phone() ?? '') > 0) {
+                            <?php if (strlen($clientPhone = $client->getClientPhone() ?? '') > 0) {
                                 echo $translator->translate('phone.abbr') . ': ' . Html::encode($clientPhone); ?>
                                 <br>
                             <?php } ?>
@@ -181,12 +181,12 @@ $vat = $s->getSetting('enable_vat_registration');
                         <tbody>
                         <tr>
                             <td><?= $vat == '1' ? $translator->translate('date.issued') : $translator->translate('quote.date'); ?></td>
-                            <td style="text-align:right;"><?= $quote->getDate_created()->format('Y-m-d'); ?></td>
+                            <td style="text-align:right;"><?= $quote->getDateCreated()->format('Y-m-d'); ?></td>
                         </tr>
                         <tr class="<?= ($has_expired ? 'overdue' : '') ?>">
                             <td><?= $translator->translate('expires'); ?></td>
                             <td class="text-right">
-                                <?= $quote->getDate_expires()->format('Y-m-d') ?>
+                                <?= $quote->getDateExpires()->format('Y-m-d') ?>
                             </td>
                         </tr>
                         </tbody>
@@ -276,7 +276,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td class="amount">
                                     <?= ($isCharge ? '' : '(')
                                         . $numberHelper
-                                            ->format_currency(
+                                            ->formatCurrency(
                                                 $quoteItemAllowanceCharge
                                                     ->getAmount()
                                             ) . ($isCharge ? '' : ')'); ?>
@@ -284,7 +284,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td class="amount">
                                     <?php $vatQuoteItem = $quoteItemAllowanceCharge->getVatOrTax();
                                         echo ($isCharge ? '' : '(')
-                                            . $numberHelper->format_currency($vatQuoteItem)
+                                            . $numberHelper->formatCurrency($vatQuoteItem)
                                             . ($isCharge ? '' : ')'); ?>
                                 </td>
                             </tr>
@@ -297,14 +297,14 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td><?= Html::encode($item->getName()); ?></td>
                                 <td><?= nl2br(Html::encode($item->getDescription())); ?></td>
                                 <td class="amount">
-                                    <?= $numberHelper->format_amount($item->getQuantity()); ?>
-                                    <?php if (strlen($item->getProduct_unit() ?? '') > 0) : ?>
+                                    <?= $numberHelper->formatAmount($item->getQuantity()); ?>
+                                    <?php if (strlen($item->getProductUnit() ?? '') > 0) : ?>
                                         <br>
-                                        <small><?= Html::encode($item->getProduct_unit()); ?></small>
+                                        <small><?= Html::encode($item->getProductUnit()); ?></small>
                                     <?php endif; ?>
                                 </td>
-                                <td class="amount"><?= $numberHelper->format_currency($item->getPrice()); ?></td>
-                                <td class="amount"><?= $numberHelper->format_currency($item->getDiscount_amount()); ?></td>
+                                <td class="amount"><?= $numberHelper->formatCurrency($item->getPrice()); ?></td>
+                                <td class="amount"><?= $numberHelper->formatCurrency($item->getDiscountAmount()); ?></td>
                                 <?php
                                     $query =
                                         $qiaR
@@ -314,7 +314,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 ?>
                                 <td class="amount">
                                     <b>
-                                    <?= $numberHelper->format_currency(
+                                    <?= $numberHelper->formatCurrency(
                                         null !== $query
                                             ? $query->getSubtotal()
                                             : 0.00
@@ -327,18 +327,18 @@ $vat = $s->getSetting('enable_vat_registration');
                         <tr>
                             <td colspan="4"></td>
                             <td class="text-right"><?= $translator->translate('subtotal'); ?>:</td>
-                            <td class="amount"><b><?= $numberHelper->format_currency($quote_amount->getItem_subtotal()); ?></b></td>
+                            <td class="amount"><b><?= $numberHelper->formatCurrency($quote_amount->getItemSubtotal()); ?></b></td>
                         </tr>
-                        <?php if ($quote_amount->getItem_tax_total() > 0) { ?>
+                        <?php if ($quote_amount->getItemTaxTotal() > 0) { ?>
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>
                                 <td class="text-right"><?= $vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax'); ?></td>
-                                <td class="amount"><b><?= $numberHelper->format_currency($quote_amount->getItem_tax_total()); ?></b></td>
+                                <td class="amount"><b><?= $numberHelper->formatCurrency($quote_amount->getItemTaxTotal()); ?></b></td>
                             </tr>
                         <?php } ?>
                         <?php
                         if ($s->getSetting('enable_peppol') == '1') {
-                            if ($quote_amount->getPackhandleship_total()
+                            if ($quote_amount->getPackhandleshipTotal()
                                 != 0.00
                             ) { ?>
                             <tr>
@@ -350,14 +350,14 @@ $vat = $s->getSetting('enable_vat_registration');
                                     ); ?>
                                 </td>
                                 <td class="amount">
-                                    <b><?= $numberHelper->format_currency(
+                                    <b><?= $numberHelper->formatCurrency(
                                         $quote_amount
-                                            ->getPackhandleship_total()
+                                            ->getPackhandleshipTotal()
                                     ); ?></b>
                                 </td>
                             </tr>
                         <?php }
-                            if ($quote_amount->getPackhandleship_tax()
+                            if ($quote_amount->getPackhandleshipTax()
                                 != 0.00
                             ) { ?>
                             <tr>
@@ -373,9 +373,9 @@ $vat = $s->getSetting('enable_vat_registration');
                                         ); ?>
                                 </td>
                                 <td class="amount">
-                                    <b><?= $numberHelper->format_currency(
+                                    <b><?= $numberHelper->formatCurrency(
                                         $quote_amount
-                                            ->getPackhandleship_tax()
+                                            ->getPackhandleshipTax()
                                     ); ?></b>
                                 </td>
                             </tr>
@@ -394,15 +394,15 @@ $vat = $s->getSetting('enable_vat_registration');
                                             $taxRatePercent = $quote_tax_rate->getTaxRate()?->getTaxRatePercent();
                                     $taxRateName = $quote_tax_rate->getTaxRate()?->getTaxRateName();
                                     if (($taxRatePercent >= 0.00) && (strlen($taxRateName ?? '') > 0)) {
-                                        echo Html::encode(($taxRateName ?? '#') . ' ' . ($numberHelper->format_amount($taxRatePercent) ?? '#'));
+                                        echo Html::encode(($taxRateName ?? '#') . ' ' . ($numberHelper->formatAmount($taxRatePercent) ?? '#'));
                                     }
                                     ?>%
                                     </td>
                                     <td class="amount">
                                         <b><?php
-                                    $quoteTaxRate = $quote_tax_rate->getQuote_tax_rate_amount();
+                                    $quoteTaxRate = $quote_tax_rate->getQuoteTaxRateAmount();
                                     if ($quoteTaxRate >= 0.00) {
-                                        echo $numberHelper->format_currency($quoteTaxRate);
+                                        echo $numberHelper->formatCurrency($quoteTaxRate);
                                     } ?></b>
                                     </td>
                                 </tr>
@@ -413,7 +413,7 @@ $vat = $s->getSetting('enable_vat_registration');
                             <td class="no-bottom-border" colspan="4"></td>
                             <td class="text-right"><?= $translator->translate('discount'); ?>:</td>
                             <td class="amount">
-                                <b><?php echo $numberHelper->format_amount($quote->getDiscount_amount()); ?></b>
+                                <b><?php echo $numberHelper->formatAmount($quote->getDiscountAmount()); ?></b>
                             </td>
                         </tr>
                         <tr>
@@ -421,7 +421,7 @@ $vat = $s->getSetting('enable_vat_registration');
                             <td class="text-right"><?= $translator->translate('total'); ?>:</td>
                             <td class="amount">
                                 <b>
-              <?= $numberHelper->format_currency($quote_amount->getTotal()); ?>
+              <?= $numberHelper->formatCurrency($quote_amount->getTotal()); ?>
                                 </b>
                             </td>
                         </tr>

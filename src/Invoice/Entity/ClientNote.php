@@ -49,17 +49,17 @@ class ClientNote
         $this->id = $id;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
 
-    public function getDate_note(): string|DateTimeImmutable
+    public function getDateNote(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->date_note
@@ -67,7 +67,7 @@ class ClientNote
         return $this->date_note;
     }
 
-    public function setDate_note(DateTime $date_note): void
+    public function setDateNote(DateTime $date_note): void
     {
         $this->date_note = $date_note;
     }

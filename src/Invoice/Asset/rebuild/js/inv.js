@@ -1,4 +1,4 @@
-// inv.js - Complete functionality restored from pre_jquery_deletion branch
+﻿// inv.js - Complete functionality restored from pre_jquery_deletion branch
 // Systematically converted from jQuery to vanilla JavaScript
 // All original selectors and event handlers preserved
 
@@ -106,7 +106,7 @@
                     var itemRow = btn.closest('.item');
                     if (itemRow) itemRow.remove();
                 } else {
-                    var url = getOrigin() + "/invoice/inv/delete_item/" + id;
+                    var url = getOrigin() + "/invoice/inv/deleteItem/" + id;
                     
                     fetch(url, {
                         method: 'GET',
@@ -258,7 +258,7 @@
                         });
                     }
 
-                    var url = getOrigin() + "/invoice/inv/mark_as_sent";
+                    var url = getOrigin() + "/invoice/inv/markAsSent";
                     var params = new URLSearchParams();
                     selected.forEach(function (id) {
                         params.append('keylist[]', id);
@@ -308,7 +308,7 @@
                         });
                     }
 
-                    var url = getOrigin() + "/invoice/inv/mark_sent_as_draft";
+                    var url = getOrigin() + "/invoice/inv/markSentAsDraft";
                     var params = new URLSearchParams();
                     selected.forEach(function (id) {
                         params.append('keylist[]', id);
@@ -479,7 +479,7 @@
         // 13. INV TAX SUBMIT - #inv_tax_submit
         document.addEventListener('click', function (e) {
             if (e.target.matches('#inv_tax_submit') || e.target.closest('#inv_tax_submit')) {
-                var url = getOrigin() + "/invoice/inv/save_inv_tax_rate";
+                var url = getOrigin() + "/invoice/inv/saveInvTaxRate";
                 var btn = document.querySelector('.inv_tax_submit');
                 var absoluteUrl = new URL(window.location.href);
                 if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
@@ -524,7 +524,7 @@
         // 14. CREATE CREDIT CONFIRM - #create-credit-confirm
         document.addEventListener('click', function (e) {
             if (e.target.matches('#create-credit-confirm') || e.target.closest('#create-credit-confirm')) {
-                var url = getOrigin() + "/invoice/inv/create_credit_confirm";
+                var url = getOrigin() + "/invoice/inv/createCreditConfirm";
                 var btn = document.querySelector('.create-credit-confirm');
                 var absoluteUrl = new URL(window.location.href);
                 if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';
@@ -577,7 +577,7 @@
         // 15. INV TO INV CONFIRM - #inv_to_inv_confirm
         document.addEventListener('click', function (e) {
             if (e.target.matches('#inv_to_inv_confirm') || e.target.closest('#inv_to_inv_confirm')) {
-                var url = getOrigin() + "/invoice/inv/inv_to_inv_confirm";
+                var url = getOrigin() + "/invoice/inv/invToInvConfirm";
                 var btn = document.querySelector('.inv_to_inv_confirm');
                 var absoluteUrl = new URL(window.location.href);
                 if (btn) btn.innerHTML = '<h6 class="text-center"><i class="fa fa-spin fa-spinner"></i></h6>';

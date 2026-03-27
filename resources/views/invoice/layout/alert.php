@@ -325,7 +325,7 @@ foreach ($flashMessages as $key => $value) {
         /**
          * @var Stringable|string $body
          */
-        foreach ($value as $key2 => $body) {
+        foreach ($value as $body) {
             $matchedKey = match ($key) {
                 'danger' => $danger,
                 'info' => $info,

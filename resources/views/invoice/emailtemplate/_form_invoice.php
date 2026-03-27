@@ -90,7 +90,7 @@ use Yiisoft\Html\Tag\Span;
             ->addInputAttributes([
                 'class' => 'form-control',
             ])
-            ->value(Html::encode($form->getEmail_template_title() ?? ''))
+            ->value(Html::encode($form->getEmailTemplateTitle() ?? ''))
             ->placeholder($translator->translate('title'))
             ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
@@ -101,7 +101,7 @@ use Yiisoft\Html\Tag\Span;
             ->addInputAttributes([
                 'class' => 'form-control',
             ])
-            ->value(Html::encode($form->getEmail_template_from_name() ?? ''))
+            ->value(Html::encode($form->getEmailTemplateFromName() ?? ''))
             ->placeholder($translator->translate('from.name'))
             ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
@@ -158,7 +158,7 @@ use Yiisoft\Html\Tag\Span;
                             ->addInputAttributes([
                                 'class' => 'form-control',
                             ])
-                            ->value(Html::encode($form->getEmail_template_from_email() ?? ''))
+                            ->value(Html::encode($form->getEmailTemplateFromEmail() ?? ''))
                             ->placeholder($translator->translate('from.email'))
                             ->hint($translator->translate('hint.this.field.is.required')); ?>
                     <?= Html::closeTag('div'); ?>
@@ -173,7 +173,7 @@ use Yiisoft\Html\Tag\Span;
             ->addInputAttributes([
                 'class' => 'form-control taggable',
             ])
-            ->value(Html::encode($form->getEmail_template_cc() ?? ''))
+            ->value(Html::encode($form->getEmailTemplateCc() ?? ''))
             ->placeholder($translator->translate('cc'))
             ->hint($translator->translate('hint.this.field.is.not.required')); ?>
     <?= Html::closeTag('div'); ?>
@@ -184,7 +184,7 @@ use Yiisoft\Html\Tag\Span;
             ->addInputAttributes([
                 'class' => 'form-control taggable',
             ])
-            ->value(Html::encode($form->getEmail_template_bcc() ?? ''))
+            ->value(Html::encode($form->getEmailTemplateBcc() ?? ''))
             ->placeholder($translator->translate('bcc'))
             ->hint($translator->translate('hint.this.field.is.not.required')); ?>         
     <?= Html::closeTag('div'); ?>
@@ -195,7 +195,7 @@ use Yiisoft\Html\Tag\Span;
             ->addInputAttributes([
                 'class' => 'form-control taggable',
             ])
-            ->value(Html::encode($form->getEmail_template_subject() ?? ''))
+            ->value(Html::encode($form->getEmailTemplateSubject() ?? ''))
             ->placeholder($translator->translate('subject'))
             ->hint($translator->translate('hint.this.field.is.required')); ?>         
     <?= Html::closeTag('div'); ?>
@@ -205,7 +205,7 @@ use Yiisoft\Html\Tag\Span;
                 'class' => 'form-control',
             ])
             ->name('email_template_pdf_template')
-            ->value(Html::encode($form->getEmail_template_pdf_template() ?? 'invoice'))
+            ->value(Html::encode($form->getEmailTemplatePdfTemplate() ?? 'invoice'))
             ->form('EmailTemplateForm')
             ->optionsData($invoiceTemplates)
             ->prompt($translator->translate('none'))
@@ -296,7 +296,7 @@ use Yiisoft\Html\Tag\Span;
     'class' => 'email-template-body form-control taggable',
     'rows' => '20',
 ])
-->value($form->getEmail_template_body() ?? '')
+->value($form->getEmailTemplateBody() ?? '')
 ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
     <?php

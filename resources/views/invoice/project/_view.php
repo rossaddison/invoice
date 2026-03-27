@@ -47,9 +47,9 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Entity\Client $client
  */
 foreach ($clients as $client) {
-    $clientName = $client->getClient_name();
-    $clientSurname = $client->getClient_surname() ?? '';
-    $clientId = $client->getClient_id();
+    $clientName = $client->getClientName();
+    $clientSurname = $client->getClientSurname() ?? '';
+    $clientId = $client->getClientId();
     // Only add to the dropdown if the following conditions are satisfied
     if ((strlen($clientName) > 0) && (strlen(($clientSurname)) > 0) && (null !== $clientId)) {
         $optionsDataClient[$clientId] = $clientName . ' ' . $clientSurname;

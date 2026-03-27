@@ -46,12 +46,12 @@ class QuoteItemAmount
         $this->id = $id;
     }
 
-    public function getQuote_item_id(): string
+    public function getQuoteItemId(): string
     {
         return (string) $this->quote_item_id;
     }
 
-    public function setQuote_item_id(int $quote_item_id): void
+    public function setQuoteItemId(int $quote_item_id): void
     {
         $this->quote_item_id = $quote_item_id;
     }
@@ -66,12 +66,12 @@ class QuoteItemAmount
         $this->subtotal = $subtotal;
     }
 
-    public function getTax_total(): ?float
+    public function getTaxTotal(): ?float
     {
         return $this->tax_total;
     }
 
-    public function setTax_total(float $tax_total): void
+    public function setTaxTotal(float $tax_total): void
     {
         $this->tax_total = $tax_total;
     }

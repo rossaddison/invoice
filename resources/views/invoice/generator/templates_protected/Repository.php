@@ -12,9 +12,9 @@ echo "<?php\n";
 
 declare(strict_types=1); 
 
-namespace <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . ';' . "\n"; ?>
+namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ';' . "\n"; ?>
 
-use <?= $generator->getNamespace_path() . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . $generator->getCamelcase_capital_name() . ';' . "\n"; ?>
+use <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . 'Entity' . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ';' . "\n"; ?>
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -22,10 +22,10 @@ use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
- * @template TEntity of <?php echo $generator->getCamelcase_capital_name() . "\n"; ?>
+ * @template TEntity of <?php echo $generator->getCamelcaseCapitalName() . "\n"; ?>
  * @extends Select\Repository<TEntity>
  */
-final class <?= $generator->getCamelcase_capital_name(); ?>Repository extends Select\Repository
+final class <?= $generator->getCamelcaseCapitalName(); ?>Repository extends Select\Repository
 {
 private EntityWriter $entityWriter;
     /**
@@ -39,7 +39,7 @@ private EntityWriter $entityWriter;
     }
 
     /**
-     * Get <?= $generator->getSmall_singular_name(); ?>s  without filter
+     * Get <?= $generator->getSmallSingularName(); ?>s  without filter
      *
      * @psalm-return EntityReader
      */
@@ -51,7 +51,7 @@ private EntityWriter $entityWriter;
              * @var App\Invoice\Entity\GentorRelation $relation
              */
             foreach ($relations as $relation) {
-                $echo .= "->load('" . ($relation->getLowercase_name() ?? '#') . "')";
+                $echo .= "->load('" . ($relation->getLowercaseName() ?? '#') . "')";
             }
             echo $echo . ";";
         } else {
@@ -80,25 +80,25 @@ private EntityWriter $entityWriter;
     
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|<?= $generator->getCamelcase_capital_name() ?>|null $<?php echo $generator->getSmall_singular_name() . "\n" ?>
-     * @psalm-param TEntity $<?php echo $generator->getSmall_singular_name() . "\n" ?>
+     * @param array|<?= $generator->getCamelcaseCapitalName() ?>|null $<?php echo $generator->getSmallSingularName() . "\n" ?>
+     * @psalm-param TEntity $<?php echo $generator->getSmallSingularName() . "\n" ?>
      * @throws Throwable 
      * @return void
      */
-    public function save(array|<?= $generator->getCamelcase_capital_name() ?>|null $<?= $generator->getSmall_singular_name(); ?>): void
+    public function save(array|<?= $generator->getCamelcaseCapitalName() ?>|null $<?= $generator->getSmallSingularName(); ?>): void
     {
-        $this->entityWriter->write([$<?= $generator->getSmall_singular_name(); ?>]);
+        $this->entityWriter->write([$<?= $generator->getSmallSingularName(); ?>]);
     }
     
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|<?= $generator->getCamelcase_capital_name(); ?>|null $<?= $generator->getSmall_singular_name() . "\n" ?>  
+     * @param array|<?= $generator->getCamelcaseCapitalName(); ?>|null $<?= $generator->getSmallSingularName() . "\n" ?>  
      * @throws Throwable 
      * @return void
      */
-    public function delete(array|<?= $generator->getCamelcase_capital_name(); ?>|null $<?= $generator->getSmall_singular_name(); ?>): void
+    public function delete(array|<?= $generator->getCamelcaseCapitalName(); ?>|null $<?= $generator->getSmallSingularName(); ?>): void
     {
-        $this->entityWriter->delete([$<?= $generator->getSmall_singular_name(); ?>]);
+        $this->entityWriter->delete([$<?= $generator->getSmallSingularName(); ?>]);
     }
     
     /**
@@ -116,9 +116,9 @@ private EntityWriter $entityWriter;
     /**
      * @param string $id
      * @psalm-return TEntity|null
-     * @return <?= $generator->getCamelcase_capital_name(); ?>|null
+     * @return <?= $generator->getCamelcaseCapitalName(); ?>|null
      */
-    public function repo<?= $generator->getCamelcase_capital_name(); ?><?= !empty($relations) ? 'Loaded' : 'Unloaded' ?>query(string $id): <?= $generator->getCamelcase_capital_name(); ?>|null
+    public function repo<?= $generator->getCamelcaseCapitalName(); ?><?= !empty($relations) ? 'Loaded' : 'Unloaded' ?>query(string $id): <?= $generator->getCamelcaseCapitalName(); ?>|null
     {
         <?php if (!empty($relations)) {
             echo '$query = $this->select()';
@@ -126,7 +126,7 @@ private EntityWriter $entityWriter;
              * @var App\Invoice\Entity\GentorRelation $relation
              */
             foreach ($relations as $relation) {
-                echo "->load('" . ($relation->getLowercase_name() ?? '#') . "')" . "\n";
+                echo "->load('" . ($relation->getLowercaseName() ?? '#') . "')" . "\n";
             }
             echo "->where(['id' =>" . '$id]);';
         } else {

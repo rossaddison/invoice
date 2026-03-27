@@ -16,7 +16,7 @@ class CountryHelper
      * @param string $cldr
      * @return mixed
      */
-    public function get_country_list(string $cldr): mixed
+    public function getCountryList(string $cldr): mixed
     {
         $new_aliases = new Aliases(
             [
@@ -53,10 +53,10 @@ class CountryHelper
      * @param string $countrycode
      * @return string
      */
-    public function get_country_name(string $cldr, string $countrycode): string
+    public function getCountryName(string $cldr, string $countrycode): string
     {
         /** @var array $countries */
-        $countries = $this->get_country_list($cldr);
+        $countries = $this->getCountryList($cldr);
         /** @var string $countries[$countrycode] */
         return $countries[$countrycode] ?? $countrycode;
     }
@@ -66,11 +66,11 @@ class CountryHelper
      * @param string $country_name
      * @return string
      */
-    public function get_country_identification_code_with_country_list(
+    public function getCountryIdentificationCodeWithCountryList(
                                     string $cldr, string $country_name): string
     {
         /** @var array $countries */
-        $countries = $this->get_country_list($cldr);
+        $countries = $this->getCountryList($cldr);
         /**
          * @var array $key
          * @var string $value
@@ -88,7 +88,7 @@ class CountryHelper
      * @param string $name
      * @return string
      */
-    public function get_country_identification_code_with_league(
+    public function getCountryIdentificationCodeWithLeague(
         string $name): string
     {
         //https://github.com/thephpleague/iso3166

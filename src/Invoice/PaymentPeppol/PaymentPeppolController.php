@@ -284,7 +284,7 @@ final class PaymentPeppolController extends BaseController
      * @return bool
      */
     private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
-        $statusId = $inv->getStatus_id();
+        $statusId = $inv->getStatusId();
         if (null!==$statusId) {
             // has observer role
             if ($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -292,12 +292,12 @@ final class PaymentPeppolController extends BaseController
                 // the invoice  is not a draft i.e. has been sent
                 && !($statusId === 1)
                 // the invoice is intended for the current user        
-                && ($inv->getUser_id() ===
+                && ($inv->getUserId() ===
                                         $this->userService->getUser()?->getId())
                 // the invoice client is associated with the above user
                 // the observer user may be paying for more than one client    
-                && ($ucR->repoUserClientqueryCount($inv->getUser_id(),
-                                                $inv->getClient_id()) > 0)) {
+                && ($ucR->repoUserClientqueryCount($inv->getUserId(),
+                                                $inv->getClientId()) > 0)) {
                 $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {

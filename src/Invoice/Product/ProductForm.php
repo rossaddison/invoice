@@ -72,118 +72,118 @@ final class ProductForm extends FormModel
     
     public function __construct(Product $product)
     {
-        $this->product_sku = $product->getProduct_sku();
-        $this->product_sii_schemeid = $product->getProduct_sii_schemeid();
-        $this->product_sii_id = $product->getProduct_sii_id();
-        $this->product_icc_listid = $product->getProduct_icc_listid();
-        $this->product_icc_listversionid = $product->getProduct_icc_listversionid();
-        $this->product_icc_id = $product->getProduct_icc_id();
-        $this->product_country_of_origin_code = $product->getProduct_country_of_origin_code();
-        $this->product_name = $product->getProduct_name();
-        $this->product_description = $product->getProduct_description();
-        $this->product_price = $product->getProduct_price();
-        $this->product_price_base_quantity = $product->getProduct_price_base_quantity();
-        $this->purchase_price = $product->getPurchase_price();
-        $this->provider_name = $product->getProvider_name();
-        $this->product_additional_item_property_name = $product->getProduct_additional_item_property_name();
-        $this->product_additional_item_property_value = $product->getProduct_additional_item_property_value();
-        $this->tax_rate_id = $product->getTax_rate_id();
-        $this->unit_id = $product->getUnit_id();
-        $this->unit_peppol_id = $product->getUnit_peppol_id();
-        $this->family_id = $product->getFamily_id();
+        $this->product_sku = $product->getProductSku();
+        $this->product_sii_schemeid = $product->getProductSiiSchemeid();
+        $this->product_sii_id = $product->getProductSiiId();
+        $this->product_icc_listid = $product->getProductIccListid();
+        $this->product_icc_listversionid = $product->getProductIccListversionid();
+        $this->product_icc_id = $product->getProductIccId();
+        $this->product_country_of_origin_code = $product->getProductCountryOfOriginCode();
+        $this->product_name = $product->getProductName();
+        $this->product_description = $product->getProductDescription();
+        $this->product_price = $product->getProductPrice();
+        $this->product_price_base_quantity = $product->getProductPriceBaseQuantity();
+        $this->purchase_price = $product->getPurchasePrice();
+        $this->provider_name = $product->getProviderName();
+        $this->product_additional_item_property_name = $product->getProductAdditionalItemPropertyName();
+        $this->product_additional_item_property_value = $product->getProductAdditionalItemPropertyValue();
+        $this->tax_rate_id = $product->getTaxRateId();
+        $this->unit_id = $product->getUnitId();
+        $this->unit_peppol_id = $product->getUnitPeppolId();
+        $this->family_id = $product->getFamilyId();
     }
 
-    public function getProduct_sku(): ?string
+    public function getProductSku(): ?string
     {
         return $this->product_sku;
     }
 
-    public function getProduct_sii_schemeid(): ?string
+    public function getProductSiiSchemeid(): ?string
     {
         return $this->product_sii_schemeid;
     }
 
-    public function getProduct_sii_id(): ?string
+    public function getProductSiiId(): ?string
     {
         return $this->product_sii_id;
     }
 
-    public function getProduct_icc_listid(): ?string
+    public function getProductIccListid(): ?string
     {
         return $this->product_icc_listid;
     }
 
-    public function getProduct_icc_listversionid(): ?string
+    public function getProductIccListversionid(): ?string
     {
         return $this->product_icc_listversionid;
     }
 
-    public function getProduct_icc_id(): ?string
+    public function getProductIccId(): ?string
     {
         return $this->product_icc_id;
     }
 
-    public function getProduct_country_of_origin_code(): ?string
+    public function getProductCountryOfOriginCode(): ?string
     {
         return $this->product_country_of_origin_code;
     }
 
-    public function getProduct_name(): ?string
+    public function getProductName(): ?string
     {
         return $this->product_name;
     }
 
-    public function getProduct_description(): ?string
+    public function getProductDescription(): ?string
     {
         return $this->product_description;
     }
 
-    public function getProduct_price(): ?float
+    public function getProductPrice(): ?float
     {
         return $this->product_price;
     }
 
-    public function getProduct_price_base_quantity(): float
+    public function getProductPriceBaseQuantity(): float
     {
         return $this->product_price_base_quantity;
     }
 
-    public function getPurchase_price(): ?float
+    public function getPurchasePrice(): ?float
     {
         return $this->purchase_price;
     }
 
-    public function getProvider_name(): ?string
+    public function getProviderName(): ?string
     {
         return $this->provider_name;
     }
 
-    public function getProduct_additional_item_property_name(): ?string
+    public function getProductAdditionalItemPropertyName(): ?string
     {
         return $this->product_additional_item_property_name;
     }
 
-    public function getProduct_additional_item_property_value(): ?string
+    public function getProductAdditionalItemPropertyValue(): ?string
     {
         return $this->product_additional_item_property_value;
     }
 
-    public function getFamily_id(): ?string
+    public function getFamilyId(): ?string
     {
         return $this->family_id;
     }
 
-    public function getTax_rate_id(): ?string
+    public function getTaxRateId(): ?string
     {
         return $this->tax_rate_id;
     }
 
-    public function getUnit_id(): ?string
+    public function getUnitId(): ?string
     {
         return $this->unit_id;
     }
 
-    public function getUnit_peppol_id(): ?string
+    public function getUnitPeppolId(): ?string
     {
         return $this->unit_peppol_id;
     }

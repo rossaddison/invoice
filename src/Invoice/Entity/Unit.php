@@ -17,32 +17,32 @@ class Unit
     {
     }
 
-    public function getUnit_id(): ?int
+    public function getUnitId(): ?int
     {
         return $this->id;
     }
 
-    public function setUnit_id(int $id): void
+    public function setUnitId(int $id): void
     {
         $this->id = $id;
     }
 
-    public function getUnit_name(): string
+    public function getUnitName(): string
     {
         return $this->unit_name;
     }
 
-    public function setUnit_name(string $unit_name): void
+    public function setUnitName(string $unit_name): void
     {
         $this->unit_name = $unit_name;
     }
 
-    public function getUnit_name_plrl(): string
+    public function getUnitNamePlrl(): string
     {
         return $this->unit_name_plrl;
     }
 
-    public function setUnit_name_plrl(string $unit_name_plrl): void
+    public function setUnitNamePlrl(string $unit_name_plrl): void
     {
         $this->unit_name_plrl = $unit_name_plrl;
     }

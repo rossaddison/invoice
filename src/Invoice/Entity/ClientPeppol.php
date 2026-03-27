@@ -71,12 +71,12 @@ class ClientPeppol
         $this->id = $id;
     }
 
-    public function getClient_id(): string
+    public function getClientId(): string
     {
         return (string) $this->client_id;
     }
 
-    public function setClient_id(int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
@@ -91,12 +91,12 @@ class ClientPeppol
         $this->endpointid = $input;
     }
 
-    public function getEndpointid_schemeid(): string
+    public function getEndpointidSchemeid(): string
     {
         return $this->endpointid_schemeid;
     }
 
-    public function setEndpointid_schemeid(string $input): void
+    public function setEndpointidSchemeid(string $input): void
     {
         $this->endpointid_schemeid = $input;
     }
@@ -111,12 +111,12 @@ class ClientPeppol
         $this->identificationid = $input;
     }
 
-    public function getIdentificationid_schemeid(): string
+    public function getIdentificationidSchemeid(): string
     {
         return $this->identificationid_schemeid;
     }
 
-    public function setIdentificationid_schemeid(string $input): void
+    public function setIdentificationidSchemeid(string $input): void
     {
         $this->identificationid_schemeid = $input;
     }
@@ -141,52 +141,52 @@ class ClientPeppol
         $this->taxschemeid = $input;
     }
 
-    public function getLegal_entity_registration_name(): string
+    public function getLegalEntityRegistrationName(): string
     {
         return $this->legal_entity_registration_name;
     }
 
-    public function setLegal_entity_registration_name(string $input): void
+    public function setLegalEntityRegistrationName(string $input): void
     {
         $this->legal_entity_registration_name = $input;
     }
 
-    public function getLegal_entity_companyid(): string
+    public function getLegalEntityCompanyid(): string
     {
         return $this->legal_entity_companyid;
     }
 
-    public function setLegal_entity_companyid(string $input): void
+    public function setLegalEntityCompanyid(string $input): void
     {
         $this->legal_entity_companyid = $input;
     }
 
-    public function getLegal_entity_companyid_schemeid(): string
+    public function getLegalEntityCompanyidSchemeid(): string
     {
         return $this->legal_entity_companyid_schemeid;
     }
 
-    public function setLegal_entity_companyid_schemeid(string $input): void
+    public function setLegalEntityCompanyidSchemeid(string $input): void
     {
         $this->legal_entity_companyid_schemeid = $input;
     }
 
-    public function getLegal_entity_company_legal_form(): string
+    public function getLegalEntityCompanyLegalForm(): string
     {
         return $this->legal_entity_company_legal_form;
     }
 
-    public function setLegal_entity_company_legal_form(string $input): void
+    public function setLegalEntityCompanyLegalForm(string $input): void
     {
         $this->legal_entity_company_legal_form = $input;
     }
 
-    public function getFinancial_institution_branchid(): string
+    public function getFinancialInstitutionBranchid(): string
     {
         return $this->financial_institution_branchid;
     }
 
-    public function setFinancial_institution_branchid(string $input): void
+    public function setFinancialInstitutionBranchid(string $input): void
     {
         $this->financial_institution_branchid = $input;
     }

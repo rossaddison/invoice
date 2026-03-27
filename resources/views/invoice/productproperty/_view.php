@@ -57,11 +57,11 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::text($form, 'product_id')
                         ->label($translator->translate('product.name'))
                         ->readonly(true)
-                        ->value($form->getProduct()?->getProduct_name() ?? ''); ?>
+                        ->value($form->getProduct()?->getProductName() ?? ''); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::a(
-                    $form->getProduct()?->getProduct_name() ?? '',
-                    $urlGenerator->generate('product/view', ['id' => $form->getProduct()?->getProduct_id()]),
+                    $form->getProduct()?->getProductName() ?? '',
+                    $urlGenerator->generate('product/view', ['id' => $form->getProduct()?->getProductId()]),
                 ); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

@@ -33,9 +33,9 @@ final class ContractForm extends FormModel
         $this->id = $contract->getId();
         $this->reference = $contract->getReference();
         $this->name = $contract->getName();
-        $this->period_start = $contract->getPeriod_start();
-        $this->period_end = $contract->getPeriod_end();
-        $this->client_id = $contract->getClient_id();
+        $this->period_start = $contract->getPeriodStart();
+        $this->period_end = $contract->getPeriodEnd();
+        $this->client_id = $contract->getClientId();
     }
 
     public function getId(): ?int
@@ -53,17 +53,17 @@ final class ContractForm extends FormModel
         return $this->name;
     }
 
-    public function getPeriod_start(): DateTimeImmutable
+    public function getPeriodStart(): DateTimeImmutable
     {
         return $this->period_start;
     }
 
-    public function getPeriod_end(): DateTimeImmutable
+    public function getPeriodEnd(): DateTimeImmutable
     {
         return $this->period_end;
     }
 
-    public function getClient_id(): ?string
+    public function getClientId(): ?string
     {
         return $this->client_id;
     }

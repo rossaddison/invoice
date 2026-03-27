@@ -27,7 +27,7 @@ final class CustomValueForm extends FormModel
     public function __construct(CustomValue $custom_value)
     {
         $this->id = (int) $custom_value->getId();
-        $this->custom_field_id = $custom_value->getCustom_field_id();
+        $this->custom_field_id = $custom_value->getCustomFieldId();
         $this->value = $custom_value->getValue();
         $this->customfield = $custom_value->getCustomField();
     }
@@ -37,7 +37,7 @@ final class CustomValueForm extends FormModel
         return $this->id;
     }
 
-    public function getCustom_field_id(): ?int
+    public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;
     }

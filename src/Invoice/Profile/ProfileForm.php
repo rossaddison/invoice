@@ -25,16 +25,16 @@ final class ProfileForm extends FormModel
 
     public function __construct(Profile $profile, private readonly Translator $translator)
     {
-        $this->company_id = (int) $profile->getCompany_id();
+        $this->company_id = (int) $profile->getCompanyId();
         $this->current = $profile->getCurrent();
         $this->mobile = $profile->getMobile();
         $this->email = $profile->getEmail();
         $this->description = $profile->getDescription();
-        $this->date_created = $profile->getDate_created();
-        $this->date_modified = $profile->getDate_modified();
+        $this->date_created = $profile->getDateCreated();
+        $this->date_modified = $profile->getDateModified();
     }
 
-    public function getCompany_id(): ?int
+    public function getCompanyId(): ?int
     {
         return $this->company_id;
     }
@@ -59,7 +59,7 @@ final class ProfileForm extends FormModel
         return $this->description;
     }
 
-    public function getDate_created(): string|DateTimeImmutable|null
+    public function getDateCreated(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->date_created
@@ -67,7 +67,7 @@ final class ProfileForm extends FormModel
         return $this->date_created;
     }
 
-    public function getDate_modified(): string|DateTimeImmutable|null
+    public function getDateModified(): string|DateTimeImmutable|null
     {
         /**
          * @var DateTimeImmutable|string|null $this->date_modified

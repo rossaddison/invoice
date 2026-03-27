@@ -167,7 +167,7 @@ class MpdfHelper
      * @param object|null $quote_or_invoice
      * @return string
      */
-    public function pdf_create(
+    public function pdfCreate(
         string $html,
         string $filename,
         bool $stream,
@@ -183,13 +183,13 @@ class MpdfHelper
         array $associated_files = [],
         ?object $quote_or_invoice = null,
     ): string {
-        $sR->load_settings();
-        $aliases = $this->ensure_uploads_folder_exists($sR);
+        $sR->loadSettings();
+        $aliases = $this->ensureUploadsFolderExists($sR);
         $archived_file = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
         $title = $sR->getSetting('pdf_archive_inv') == '1' ? $archived_file : $filename . '.pdf';
-        $start_mpdf = $this->initialize_pdf($password, $sR, $title, $quote_or_invoice, $iiaR, $inv_amount, $aliases, $zugferd_invoice, $associated_files);
-        $css = $this->get_css_file($aliases);
-        $mpdf = $this->write_html_to_pdf($css, $html, $start_mpdf);
+        $start_mpdf = $this->initializePdf($password, $sR, $title, $quote_or_invoice, $iiaR, $inv_amount, $aliases, $zugferd_invoice, $associated_files);
+        $css = $this->getCssFile($aliases);
+        $mpdf = $this->writeHtmlToPdf($css, $html, $start_mpdf);
         if ($isInvoice) {
             $this->isInvoice($filename, $mpdf, $aliases, $sR);
         }
@@ -216,6 +216,7 @@ class MpdfHelper
      * @param Aliases $aliases
      * @param SR $sR
      * @return string
+     * @psalm-suppress UnusedReturnValue
      */
     private function isInvoice(string $filename, \Mpdf\Mpdf $mpdf, Aliases $aliases, SR $sR): string
     {
@@ -232,7 +233,7 @@ class MpdfHelper
         return '';
     }
 
-    private function ensure_tmp_folder_exists(): Aliases
+    private function ensureTmpFolderExists(): Aliases
     {
         // Define aliases for paths
         $aliases = new Aliases([
@@ -254,7 +255,7 @@ class MpdfHelper
         return $aliases;
     }
 
-    private function ensure_uploads_folder_exists(SR $sR): Aliases
+    private function ensureUploadsFolderExists(SR $sR): Aliases
     {
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@uploads' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Uploads' . DIRECTORY_SEPARATOR]);
@@ -280,7 +281,7 @@ class MpdfHelper
      * @param array $associated_files
      * @return \Mpdf\Mpdf
      */
-    private function initialize_pdf(?string $password, SR $sR, string $title, ?object $quote_or_invoice, ?iiaR $iiaR, ?InvAmount $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
+    private function initializePdf(?string $password, SR $sR, string $title, ?object $quote_or_invoice, ?iiaR $iiaR, ?InvAmount $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
     {
         $optionsArray = $this->options();
         $mpdf = new \Mpdf\Mpdf($optionsArray);
@@ -308,7 +309,7 @@ class MpdfHelper
             $mpdf->PDFA = false;
 
             $mpdf->PDFAauto = true;
-            $mpdf->SetAdditionalXmpRdf($z->zugferd_rdf());
+            $mpdf->SetAdditionalXmpRdf($z->zugferdRdf());
             $mpdf->SetAssociatedFiles($associated_files);
         }
 
@@ -328,8 +329,8 @@ class MpdfHelper
         }
 
         if (($quote_or_invoice instanceof Quote) || ($quote_or_invoice instanceof Inv)) {
-            if (null !== $quote_or_invoice->getClient()?->getClient_language()) {
-                if ($quote_or_invoice->getClient()?->getClient_language() === 'Arabic') {
+            if (null !== $quote_or_invoice->getClient()?->getClientLanguage()) {
+                if ($quote_or_invoice->getClient()?->getClientLanguage() === 'Arabic') {
                     $mpdf->SetDirectionality('rtl');
                 }
             }
@@ -344,7 +345,7 @@ class MpdfHelper
     /**
      * @return false|string
      */
-    private function get_css_file(Aliases $aliases): string|false
+    private function getCssFile(Aliases $aliases): string|false
     {
         $cssFile = $aliases->get('@invoice/Asset/kartik-v/kv-mpdf-bootstrap.min.css');
         return file_get_contents($cssFile);
@@ -356,7 +357,7 @@ class MpdfHelper
      * @param \Mpdf\Mpdf $mpdf
      * @return \Mpdf\Mpdf
      */
-    private function write_html_to_pdf(string|false $css, string $html, \Mpdf\Mpdf $mpdf): \Mpdf\Mpdf
+    private function writeHtmlToPdf(string|false $css, string $html, \Mpdf\Mpdf $mpdf): \Mpdf\Mpdf
     {
         if (is_string($css)) {
             $mpdf->writeHtml($css, 1);
@@ -376,7 +377,7 @@ class MpdfHelper
      */
     private function options(): array
     {
-        $aliases = $this->ensure_tmp_folder_exists();
+        $aliases = $this->ensureTmpFolderExists();
 
         $this->options['mode'] = $this->mode;
         $this->options['format'] = $this->format;

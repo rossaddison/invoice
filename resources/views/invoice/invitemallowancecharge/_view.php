@@ -70,7 +70,7 @@ foreach ($allowance_charges as $allowance_charge) {
         'disabled' => 'disabled',
     ])
     ->optionsData($optionsDataAllowanceCharge)
-    ->value($form->getAllowance_charge_id())
+    ->value($form->getAllowanceChargeId())
     ->prompt($translator->translate('none'));
 ?>
             <?= Field::text($form, 'amount')
@@ -80,7 +80,7 @@ foreach ($allowance_charges as $allowance_charge) {
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
-    ->value($s->format_amount($form->getAmount() ?? 0.00));
+    ->value($s->formatAmount($form->getAmount() ?? 0.00));
 ?>    
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+/** @psalm-suppress UnusedVariable */
 $lang = array (
   'account.information' => 'Account Information',
   'active' => 'Active',

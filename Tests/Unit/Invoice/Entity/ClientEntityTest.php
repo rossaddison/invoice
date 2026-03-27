@@ -18,36 +18,36 @@ final class ClientEntityTest extends TestCase
     {
         $client = new Client();
         
-        $this->assertNull($client->getClient_id());
-        $this->assertSame('', $client->getClient_email());
-        $this->assertSame('', $client->getClient_mobile());
-        $this->assertSame('', $client->getClient_title());
-        $this->assertSame('', $client->getClient_name());
-        $this->assertSame('', $client->getClient_surname());
-        $this->assertSame('', $client->getClient_group());
-        $this->assertSame('', $client->getClient_frequency());
-        $this->assertSame('', $client->getClient_number());
-        $this->assertSame('', $client->getClient_address_1());
-        $this->assertSame('', $client->getClient_address_2());
-        $this->assertSame('', $client->getClient_building_number());
-        $this->assertSame('', $client->getClient_city());
-        $this->assertSame('', $client->getClient_state());
-        $this->assertSame('', $client->getClient_zip());
-        $this->assertSame('', $client->getClient_country());
-        $this->assertSame('', $client->getClient_phone());
-        $this->assertSame('', $client->getClient_fax());
-        $this->assertSame('', $client->getClient_web());
-        $this->assertSame('', $client->getClient_vat_id());
-        $this->assertSame('', $client->getClient_tax_code());
-        $this->assertSame('', $client->getClient_language());
-        $this->assertFalse($client->getClient_active());
-        $this->assertNull($client->getClient_birthdate());
-        $this->assertSame(0, $client->getClient_age());
-        $this->assertSame(0, $client->getClient_gender());
-        $this->assertNull($client->getPostaladdress_id());
-        $this->assertInstanceOf(DateTimeImmutable::class, $client->getClient_date_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $client->getClient_date_modified());
-        $this->assertInstanceOf(ArrayCollection::class, $client->getDelivery_locations());
+        $this->assertNull($client->getClientId());
+        $this->assertSame('', $client->getClientEmail());
+        $this->assertSame('', $client->getClientMobile());
+        $this->assertSame('', $client->getClientTitle());
+        $this->assertSame('', $client->getClientName());
+        $this->assertSame('', $client->getClientSurname());
+        $this->assertSame('', $client->getClientGroup());
+        $this->assertSame('', $client->getClientFrequency());
+        $this->assertSame('', $client->getClientNumber());
+        $this->assertSame('', $client->getClientAddress1());
+        $this->assertSame('', $client->getClientAddress2());
+        $this->assertSame('', $client->getClientBuildingNumber());
+        $this->assertSame('', $client->getClientCity());
+        $this->assertSame('', $client->getClientState());
+        $this->assertSame('', $client->getClientZip());
+        $this->assertSame('', $client->getClientCountry());
+        $this->assertSame('', $client->getClientPhone());
+        $this->assertSame('', $client->getClientFax());
+        $this->assertSame('', $client->getClientWeb());
+        $this->assertSame('', $client->getClientVatId());
+        $this->assertSame('', $client->getClientTaxCode());
+        $this->assertSame('', $client->getClientLanguage());
+        $this->assertFalse($client->getClientActive());
+        $this->assertNull($client->getClientBirthdate());
+        $this->assertSame(0, $client->getClientAge());
+        $this->assertSame(0, $client->getClientGender());
+        $this->assertNull($client->getPostaladdressId());
+        $this->assertInstanceOf(DateTimeImmutable::class, $client->getClientDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $client->getClientDateModified());
+        $this->assertInstanceOf(ArrayCollection::class, $client->getDeliveryLocations());
         $this->assertInstanceOf(ArrayCollection::class, $client->getInvs());
         $this->assertTrue($client->isNewRecord());
     }
@@ -83,276 +83,276 @@ final class ClientEntityTest extends TestCase
             postaladdress_id: 1001
         );
 
-        $this->assertSame('john.doe@example.com', $client->getClient_email());
-        $this->assertSame('+1-234-567-8900', $client->getClient_mobile());
-        $this->assertSame('Mr.', $client->getClient_title());
-        $this->assertSame('John', $client->getClient_name());
-        $this->assertSame('Doe', $client->getClient_surname());
-        $this->assertSame('VIP', $client->getClient_group());
-        $this->assertSame('monthly', $client->getClient_frequency());
-        $this->assertSame('CLI-001', $client->getClient_number());
-        $this->assertSame('123 Main Street', $client->getClient_address_1());
-        $this->assertSame('Suite 456', $client->getClient_address_2());
-        $this->assertSame('123A', $client->getClient_building_number());
-        $this->assertSame('New York', $client->getClient_city());
-        $this->assertSame('NY', $client->getClient_state());
-        $this->assertSame('10001', $client->getClient_zip());
-        $this->assertSame('USA', $client->getClient_country());
-        $this->assertSame('+1-234-567-8901', $client->getClient_phone());
-        $this->assertSame('+1-234-567-8902', $client->getClient_fax());
-        $this->assertSame('https://johndoe.com', $client->getClient_web());
-        $this->assertSame('VAT123456', $client->getClient_vat_id());
-        $this->assertSame('TAX789', $client->getClient_tax_code());
-        $this->assertSame('en-US', $client->getClient_language());
-        $this->assertTrue($client->getClient_active());
-        $this->assertSame(35, $client->getClient_age());
-        $this->assertSame(1, $client->getClient_gender());
-        $this->assertSame(1001, $client->getPostaladdress_id());
-        $this->assertSame('John Doe', $client->getClient_full_name());
+        $this->assertSame('john.doe@example.com', $client->getClientEmail());
+        $this->assertSame('+1-234-567-8900', $client->getClientMobile());
+        $this->assertSame('Mr.', $client->getClientTitle());
+        $this->assertSame('John', $client->getClientName());
+        $this->assertSame('Doe', $client->getClientSurname());
+        $this->assertSame('VIP', $client->getClientGroup());
+        $this->assertSame('monthly', $client->getClientFrequency());
+        $this->assertSame('CLI-001', $client->getClientNumber());
+        $this->assertSame('123 Main Street', $client->getClientAddress1());
+        $this->assertSame('Suite 456', $client->getClientAddress2());
+        $this->assertSame('123A', $client->getClientBuildingNumber());
+        $this->assertSame('New York', $client->getClientCity());
+        $this->assertSame('NY', $client->getClientState());
+        $this->assertSame('10001', $client->getClientZip());
+        $this->assertSame('USA', $client->getClientCountry());
+        $this->assertSame('+1-234-567-8901', $client->getClientPhone());
+        $this->assertSame('+1-234-567-8902', $client->getClientFax());
+        $this->assertSame('https://johndoe.com', $client->getClientWeb());
+        $this->assertSame('VAT123456', $client->getClientVatId());
+        $this->assertSame('TAX789', $client->getClientTaxCode());
+        $this->assertSame('en-US', $client->getClientLanguage());
+        $this->assertTrue($client->getClientActive());
+        $this->assertSame(35, $client->getClientAge());
+        $this->assertSame(1, $client->getClientGender());
+        $this->assertSame(1001, $client->getPostaladdressId());
+        $this->assertSame('John Doe', $client->getClientFullName());
     }
 
     public function testClientEmailSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_email($this->testExampleCom);
-        $this->assertSame($this->testExampleCom, $client->getClient_email());
+        $client->setClientEmail($this->testExampleCom);
+        $this->assertSame($this->testExampleCom, $client->getClientEmail());
         
-        $client->setClient_email('');
-        $this->assertSame('', $client->getClient_email());
+        $client->setClientEmail('');
+        $this->assertSame('', $client->getClientEmail());
     }
 
     public function testClientMobileSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_mobile('+1-555-0123');
-        $this->assertSame('+1-555-0123', $client->getClient_mobile());
+        $client->setClientMobile('+1-555-0123');
+        $this->assertSame('+1-555-0123', $client->getClientMobile());
         
-        $client->setClient_mobile('');
-        $this->assertSame('', $client->getClient_mobile());
+        $client->setClientMobile('');
+        $this->assertSame('', $client->getClientMobile());
     }
 
     public function testClientTitleSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_title('Dr.');
-        $this->assertSame('Dr.', $client->getClient_title());
+        $client->setClientTitle('Dr.');
+        $this->assertSame('Dr.', $client->getClientTitle());
         
-        $client->setClient_title(null);
-        $this->assertNull($client->getClient_title());
+        $client->setClientTitle(null);
+        $this->assertNull($client->getClientTitle());
     }
 
     public function testClientNameSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_name('Jane');
-        $this->assertSame('Jane', $client->getClient_name());
+        $client->setClientName('Jane');
+        $this->assertSame('Jane', $client->getClientName());
         
-        $client->setClient_name('');
-        $this->assertSame('', $client->getClient_name());
+        $client->setClientName('');
+        $this->assertSame('', $client->getClientName());
     }
 
     public function testClientSurnameSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_surname('Smith');
-        $this->assertSame('Smith', $client->getClient_surname());
+        $client->setClientSurname('Smith');
+        $this->assertSame('Smith', $client->getClientSurname());
         
-        $client->setClient_surname('');
-        $this->assertSame('', $client->getClient_surname());
+        $client->setClientSurname('');
+        $this->assertSame('', $client->getClientSurname());
     }
 
     public function testClientGroupSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_group('A');
-        $this->assertSame('A', $client->getClient_group());
+        $client->setClientGroup('A');
+        $this->assertSame('A', $client->getClientGroup());
         
-        $client->setClient_group('');
-        $this->assertSame('', $client->getClient_group());
+        $client->setClientGroup('');
+        $this->assertSame('', $client->getClientGroup());
     }
 
     public function testClientFrequencySetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_frequency('weekly');
-        $this->assertSame('weekly', $client->getClient_frequency());
+        $client->setClientFrequency('weekly');
+        $this->assertSame('weekly', $client->getClientFrequency());
         
-        $client->setClient_frequency('');
-        $this->assertSame('', $client->getClient_frequency());
+        $client->setClientFrequency('');
+        $this->assertSame('', $client->getClientFrequency());
     }
 
     public function testClientNumberSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_number('C-12345');
-        $this->assertSame('C-12345', $client->getClient_number());
+        $client->setClientNumber('C-12345');
+        $this->assertSame('C-12345', $client->getClientNumber());
         
-        $client->setClient_number(null);
-        $this->assertNull($client->getClient_number());
+        $client->setClientNumber(null);
+        $this->assertNull($client->getClientNumber());
     }
 
     public function testClientAddress1SetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_address_1('456 Oak Avenue');
-        $this->assertSame('456 Oak Avenue', $client->getClient_address_1());
+        $client->setClientAddress1('456 Oak Avenue');
+        $this->assertSame('456 Oak Avenue', $client->getClientAddress1());
         
-        $client->setClient_address_1('');
-        $this->assertSame('', $client->getClient_address_1());
+        $client->setClientAddress1('');
+        $this->assertSame('', $client->getClientAddress1());
     }
 
     public function testClientAddress2SetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_address_2('Apartment 789');
-        $this->assertSame('Apartment 789', $client->getClient_address_2());
+        $client->setClientAddress2('Apartment 789');
+        $this->assertSame('Apartment 789', $client->getClientAddress2());
         
-        $client->setClient_address_2('');
-        $this->assertSame('', $client->getClient_address_2());
+        $client->setClientAddress2('');
+        $this->assertSame('', $client->getClientAddress2());
     }
 
     public function testClientBuildingNumberSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_building_number('45B');
-        $this->assertSame('45B', $client->getClient_building_number());
+        $client->setClientBuildingNumber('45B');
+        $this->assertSame('45B', $client->getClientBuildingNumber());
         
-        $client->setClient_building_number('');
-        $this->assertSame('', $client->getClient_building_number());
+        $client->setClientBuildingNumber('');
+        $this->assertSame('', $client->getClientBuildingNumber());
     }
 
     public function testClientCitySetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_city('Los Angeles');
-        $this->assertSame('Los Angeles', $client->getClient_city());
+        $client->setClientCity('Los Angeles');
+        $this->assertSame('Los Angeles', $client->getClientCity());
         
-        $client->setClient_city('');
-        $this->assertSame('', $client->getClient_city());
+        $client->setClientCity('');
+        $this->assertSame('', $client->getClientCity());
     }
 
     public function testClientStateSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_state('California');
-        $this->assertSame('California', $client->getClient_state());
+        $client->setClientState('California');
+        $this->assertSame('California', $client->getClientState());
         
-        $client->setClient_state('');
-        $this->assertSame('', $client->getClient_state());
+        $client->setClientState('');
+        $this->assertSame('', $client->getClientState());
     }
 
     public function testClientZipSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_zip('90210');
-        $this->assertSame('90210', $client->getClient_zip());
+        $client->setClientZip('90210');
+        $this->assertSame('90210', $client->getClientZip());
         
-        $client->setClient_zip('');
-        $this->assertSame('', $client->getClient_zip());
+        $client->setClientZip('');
+        $this->assertSame('', $client->getClientZip());
     }
 
     public function testClientCountrySetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_country('Canada');
-        $this->assertSame('Canada', $client->getClient_country());
+        $client->setClientCountry('Canada');
+        $this->assertSame('Canada', $client->getClientCountry());
         
-        $client->setClient_country('');
-        $this->assertSame('', $client->getClient_country());
+        $client->setClientCountry('');
+        $this->assertSame('', $client->getClientCountry());
     }
 
     public function testClientPhoneSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_phone('+1-800-555-0199');
-        $this->assertSame('+1-800-555-0199', $client->getClient_phone());
+        $client->setClientPhone('+1-800-555-0199');
+        $this->assertSame('+1-800-555-0199', $client->getClientPhone());
         
-        $client->setClient_phone('');
-        $this->assertSame('', $client->getClient_phone());
+        $client->setClientPhone('');
+        $this->assertSame('', $client->getClientPhone());
     }
 
     public function testClientFaxSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_fax('+1-800-555-0200');
-        $this->assertSame('+1-800-555-0200', $client->getClient_fax());
+        $client->setClientFax('+1-800-555-0200');
+        $this->assertSame('+1-800-555-0200', $client->getClientFax());
         
-        $client->setClient_fax('');
-        $this->assertSame('', $client->getClient_fax());
+        $client->setClientFax('');
+        $this->assertSame('', $client->getClientFax());
     }
 
     public function testClientWebSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_web('https://company.example.com');
-        $this->assertSame('https://company.example.com', $client->getClient_web());
+        $client->setClientWeb('https://company.example.com');
+        $this->assertSame('https://company.example.com', $client->getClientWeb());
         
-        $client->setClient_web('');
-        $this->assertSame('', $client->getClient_web());
+        $client->setClientWeb('');
+        $this->assertSame('', $client->getClientWeb());
     }
 
     public function testClientVatIdSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_vat_id('VAT-987654321');
-        $this->assertSame('VAT-987654321', $client->getClient_vat_id());
+        $client->setClientVatId('VAT-987654321');
+        $this->assertSame('VAT-987654321', $client->getClientVatId());
         
-        $client->setClient_vat_id('');
-        $this->assertSame('', $client->getClient_vat_id());
+        $client->setClientVatId('');
+        $this->assertSame('', $client->getClientVatId());
     }
 
     public function testClientTaxCodeSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_tax_code('TC-456789');
-        $this->assertSame('TC-456789', $client->getClient_tax_code());
+        $client->setClientTaxCode('TC-456789');
+        $this->assertSame('TC-456789', $client->getClientTaxCode());
         
-        $client->setClient_tax_code('');
-        $this->assertSame('', $client->getClient_tax_code());
+        $client->setClientTaxCode('');
+        $this->assertSame('', $client->getClientTaxCode());
     }
 
     public function testClientLanguageSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_language('fr-FR');
-        $this->assertSame('fr-FR', $client->getClient_language());
+        $client->setClientLanguage('fr-FR');
+        $this->assertSame('fr-FR', $client->getClientLanguage());
         
-        $client->setClient_language('');
-        $this->assertSame('', $client->getClient_language());
+        $client->setClientLanguage('');
+        $this->assertSame('', $client->getClientLanguage());
     }
 
     public function testClientActiveSetterAndGetter(): void
     {
         $client = new Client();
         
-        $this->assertFalse($client->getClient_active());
+        $this->assertFalse($client->getClientActive());
         
-        $client->setClient_active(true);
-        $this->assertTrue($client->getClient_active());
+        $client->setClientActive(true);
+        $this->assertTrue($client->getClientActive());
         
-        $client->setClient_active(false);
-        $this->assertFalse($client->getClient_active());
+        $client->setClientActive(false);
+        $this->assertFalse($client->getClientActive());
     }
     
     public function testClientBirthdateNullHandling(): void
@@ -360,8 +360,8 @@ final class ClientEntityTest extends TestCase
         $client = new Client();
         
         // Test with null value - this is the only safe test given the mixed return type
-        $client->setClient_birthdate(null);
-        $this->assertNull($client->getClient_birthdate());
+        $client->setClientBirthdate(null);
+        $this->assertNull($client->getClientBirthdate());
         
         // Note: The getter returns DateTimeImmutable|string|null which is effectively mixed
         // We avoid testing with actual DateTime objects to prevent type issues
@@ -371,41 +371,41 @@ final class ClientEntityTest extends TestCase
     {
         $client = new Client();
         
-        $client->setClient_age(42);
-        $this->assertSame(42, $client->getClient_age());
+        $client->setClientAge(42);
+        $this->assertSame(42, $client->getClientAge());
         
-        $client->setClient_age(0);
-        $this->assertSame(0, $client->getClient_age());
+        $client->setClientAge(0);
+        $this->assertSame(0, $client->getClientAge());
     }
 
     public function testClientGenderSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setClient_gender(2);
-        $this->assertSame(2, $client->getClient_gender());
+        $client->setClientGender(2);
+        $this->assertSame(2, $client->getClientGender());
         
-        $client->setClient_gender(0);
-        $this->assertSame(0, $client->getClient_gender());
+        $client->setClientGender(0);
+        $this->assertSame(0, $client->getClientGender());
     }
 
     public function testPostaladdressIdSetterAndGetter(): void
     {
         $client = new Client();
         
-        $client->setPostaladdress_id(5001);
-        $this->assertSame(5001, $client->getPostaladdress_id());
+        $client->setPostaladdressId(5001);
+        $this->assertSame(5001, $client->getPostaladdressId());
         
-        $client->setPostaladdress_id(0);
-        $this->assertSame(0, $client->getPostaladdress_id());
+        $client->setPostaladdressId(0);
+        $this->assertSame(0, $client->getPostaladdressId());
     }
 
     public function testClientDateCreatedSetter(): void
     {
         $client = new Client();
         
-        $client->setClient_date_created('2023-01-15 10:30:45');
-        $created = $client->getClient_date_created();
+        $client->setClientDateCreated('2023-01-15 10:30:45');
+        $created = $client->getClientDateCreated();
         $this->assertInstanceOf(DateTimeImmutable::class, $created);
         $this->assertSame('2023-01-15', $created->format('Y-m-d'));
     }
@@ -414,8 +414,8 @@ final class ClientEntityTest extends TestCase
     {
         $client = new Client();
         
-        $client->setClient_date_created('invalid-date');
-        $created = $client->getClient_date_created();
+        $client->setClientDateCreated('invalid-date');
+        $created = $client->getClientDateCreated();
         $this->assertInstanceOf(DateTimeImmutable::class, $created);
         // Should default to now when format is invalid
         $now = new DateTimeImmutable();
@@ -426,8 +426,8 @@ final class ClientEntityTest extends TestCase
     {
         $client = new Client();
         
-        $client->setClient_date_modified('2023-02-20 02:45:30');
-        $modified = $client->getClient_date_modified();
+        $client->setClientDateModified('2023-02-20 02:45:30');
+        $modified = $client->getClientDateModified();
         $this->assertInstanceOf(DateTimeImmutable::class, $modified);
         $this->assertSame('2023-02-20', $modified->format('Y-m-d'));
     }
@@ -436,8 +436,8 @@ final class ClientEntityTest extends TestCase
     {
         $client = new Client();
         
-        $client->setClient_date_modified('bad-format');
-        $modified = $client->getClient_date_modified();
+        $client->setClientDateModified('bad-format');
+        $modified = $client->getClientDateModified();
         $this->assertInstanceOf(DateTimeImmutable::class, $modified);
         // Should default to now when format is invalid
         $now = new DateTimeImmutable();
@@ -448,14 +448,14 @@ final class ClientEntityTest extends TestCase
     {
         $client = new Client();
         
-        $client->setClient_full_name('Custom Full Name');
-        $this->assertSame('Custom Full Name', $client->getClient_full_name());
+        $client->setClientFullName('Custom Full Name');
+        $this->assertSame('Custom Full Name', $client->getClientFullName());
     }
 
     public function testClientFullNameGenerationWithSurname(): void
     {
         $client = new Client(client_name: 'Alice', client_surname: 'Johnson');
-        $this->assertSame('Alice Johnson', $client->getClient_full_name());
+        $this->assertSame('Alice Johnson', $client->getClientFullName());
     }
 
     public function testClientFullNameGenerationWithoutSurname(): void
@@ -471,12 +471,12 @@ final class ClientEntityTest extends TestCase
         $property->setValue($client, null);
         
         // Also set surname to null explicitly
-        $client->setClient_surname('');
+        $client->setClientSurname('');
         $surnameProperty = $reflection->getProperty('client_surname');
         $surnameProperty->setAccessible(true);
         $surnameProperty->setValue($client, null);
         
-        $this->assertSame('Bob', $client->getClient_full_name());
+        $this->assertSame('Bob', $client->getClientFullName());
     }
 
     public function testClientFullNameWhenNull(): void
@@ -490,13 +490,13 @@ final class ClientEntityTest extends TestCase
         $property->setValue($client, null);
         
         // The getter will reconstruct from name + surname
-        $this->assertSame('Charlie Brown', $client->getClient_full_name());
+        $this->assertSame('Charlie Brown', $client->getClientFullName());
     }
 
     public function testClientFullNameTrimsWhitespace(): void
     {
         $client = new Client(client_name: ' David ', client_surname: ' Wilson ');
-        $fullName = $client->getClient_full_name();
+        $fullName = $client->getClientFullName();
         $this->assertStringStartsNotWith(' ', $fullName);
         $this->assertStringEndsNotWith(' ', $fullName);
     }
@@ -574,16 +574,16 @@ final class ClientEntityTest extends TestCase
             client_active: true
         );
         
-        $this->assertSame('contact@acmecorp.com', $client->getClient_email());
-        $this->assertSame('ACME Corporation', $client->getClient_name());
-        $this->assertSame('123 Business Blvd', $client->getClient_address_1());
-        $this->assertSame('Enterprise City', $client->getClient_city());
-        $this->assertSame('Business State', $client->getClient_state());
-        $this->assertSame('Corporate Nation', $client->getClient_country());
-        $this->assertSame('+1-555-BUSINESS', $client->getClient_phone());
-        $this->assertSame('https://acmecorp.com', $client->getClient_web());
-        $this->assertSame('VAT-BUSINESS-001', $client->getClient_vat_id());
-        $this->assertTrue($client->getClient_active());
+        $this->assertSame('contact@acmecorp.com', $client->getClientEmail());
+        $this->assertSame('ACME Corporation', $client->getClientName());
+        $this->assertSame('123 Business Blvd', $client->getClientAddress1());
+        $this->assertSame('Enterprise City', $client->getClientCity());
+        $this->assertSame('Business State', $client->getClientState());
+        $this->assertSame('Corporate Nation', $client->getClientCountry());
+        $this->assertSame('+1-555-BUSINESS', $client->getClientPhone());
+        $this->assertSame('https://acmecorp.com', $client->getClientWeb());
+        $this->assertSame('VAT-BUSINESS-001', $client->getClientVatId());
+        $this->assertTrue($client->getClientActive());
     }
 
     public function testPersonalClientScenario(): void
@@ -606,22 +606,22 @@ final class ClientEntityTest extends TestCase
             client_gender: 2
         );
         
-        $this->assertSame('personal@email.com', $client->getClient_email());
-        $this->assertSame('+1-555-MOBILE', $client->getClient_mobile());
-        $this->assertSame('Ms.', $client->getClient_title());
-        $this->assertSame('Sarah', $client->getClient_name());
-        $this->assertSame('Williams', $client->getClient_surname());
-        $this->assertSame('Sarah Williams', $client->getClient_full_name());
-        $this->assertSame('456 Residential St', $client->getClient_address_1());
-        $this->assertSame('Apt 789', $client->getClient_address_2());
-        $this->assertSame('Hometown', $client->getClient_city());
-        $this->assertSame('Home State', $client->getClient_state());
-        $this->assertSame('12345', $client->getClient_zip());
-        $this->assertSame('Home Country', $client->getClient_country());
-        $this->assertSame('en-US', $client->getClient_language());
-        $this->assertTrue($client->getClient_active());
-        $this->assertSame(28, $client->getClient_age());
-        $this->assertSame(2, $client->getClient_gender());
+        $this->assertSame('personal@email.com', $client->getClientEmail());
+        $this->assertSame('+1-555-MOBILE', $client->getClientMobile());
+        $this->assertSame('Ms.', $client->getClientTitle());
+        $this->assertSame('Sarah', $client->getClientName());
+        $this->assertSame('Williams', $client->getClientSurname());
+        $this->assertSame('Sarah Williams', $client->getClientFullName());
+        $this->assertSame('456 Residential St', $client->getClientAddress1());
+        $this->assertSame('Apt 789', $client->getClientAddress2());
+        $this->assertSame('Hometown', $client->getClientCity());
+        $this->assertSame('Home State', $client->getClientState());
+        $this->assertSame('12345', $client->getClientZip());
+        $this->assertSame('Home Country', $client->getClientCountry());
+        $this->assertSame('en-US', $client->getClientLanguage());
+        $this->assertTrue($client->getClientActive());
+        $this->assertSame(28, $client->getClientAge());
+        $this->assertSame(2, $client->getClientGender());
     }
 
     public function testInternationalClientScenario(): void
@@ -638,45 +638,45 @@ final class ClientEntityTest extends TestCase
             client_active: true
         );
         
-        $this->assertSame('international@global.com', $client->getClient_email());
-        $this->assertSame('André', $client->getClient_name());
-        $this->assertSame('Müller', $client->getClient_surname());
-        $this->assertSame('André Müller', $client->getClient_full_name());
-        $this->assertSame('Hauptstraße 123', $client->getClient_address_1());
-        $this->assertSame('München', $client->getClient_city());
-        $this->assertSame('Deutschland', $client->getClient_country());
-        $this->assertSame('de-DE', $client->getClient_language());
-        $this->assertSame('DE123456789', $client->getClient_vat_id());
-        $this->assertTrue($client->getClient_active());
+        $this->assertSame('international@global.com', $client->getClientEmail());
+        $this->assertSame('André', $client->getClientName());
+        $this->assertSame('Müller', $client->getClientSurname());
+        $this->assertSame('André Müller', $client->getClientFullName());
+        $this->assertSame('Hauptstraße 123', $client->getClientAddress1());
+        $this->assertSame('München', $client->getClientCity());
+        $this->assertSame('Deutschland', $client->getClientCountry());
+        $this->assertSame('de-DE', $client->getClientLanguage());
+        $this->assertSame('DE123456789', $client->getClientVatId());
+        $this->assertTrue($client->getClientActive());
     }
 
     public function testSpecialCharactersInFields(): void
     {
         $client = new Client();
         
-        $client->setClient_name('José-María O\'Connor');
-        $client->setClient_address_1('123 "Main" Street & Co.');
-        $client->setClient_web('https://example.com/path?param=value&other=123');
+        $client->setClientName('José-María O\'Connor');
+        $client->setClientAddress1('123 "Main" Street & Co.');
+        $client->setClientWeb('https://example.com/path?param=value&other=123');
         
-        $this->assertSame('José-María O\'Connor', $client->getClient_name());
-        $this->assertSame('123 "Main" Street & Co.', $client->getClient_address_1());
-        $this->assertSame('https://example.com/path?param=value&other=123', $client->getClient_web());
+        $this->assertSame('José-María O\'Connor', $client->getClientName());
+        $this->assertSame('123 "Main" Street & Co.', $client->getClientAddress1());
+        $this->assertSame('https://example.com/path?param=value&other=123', $client->getClientWeb());
     }
 
     public function testUnicodeCharactersInFields(): void
     {
         $client = new Client();
         
-        $client->setClient_name('李小明');
-        $client->setClient_surname('王大华');
-        $client->setClient_city('北京市');
-        $client->setClient_country('中国');
+        $client->setClientName('李小明');
+        $client->setClientSurname('王大华');
+        $client->setClientCity('北京市');
+        $client->setClientCountry('中国');
         
-        $this->assertSame('李小明', $client->getClient_name());
-        $this->assertSame('王大华', $client->getClient_surname());
-        $this->assertSame('北京市', $client->getClient_city());
-        $this->assertSame('中国', $client->getClient_country());
-        $this->assertSame('李小明 王大华', $client->getClient_full_name());
+        $this->assertSame('李小明', $client->getClientName());
+        $this->assertSame('王大华', $client->getClientSurname());
+        $this->assertSame('北京市', $client->getClientCity());
+        $this->assertSame('中国', $client->getClientCountry());
+        $this->assertSame('李小明 王大华', $client->getClientFullName());
     }
 
     public function testLongFieldValues(): void
@@ -684,12 +684,12 @@ final class ClientEntityTest extends TestCase
         $client = new Client();
         
         $longText = str_repeat('Lorem ipsum dolor sit amet ', 20); // Very long text
-        $client->setClient_address_1($longText);
-        $this->assertSame($longText, $client->getClient_address_1());
+        $client->setClientAddress1($longText);
+        $this->assertSame($longText, $client->getClientAddress1());
         
         $longEmail = str_repeat('very', 50) . '@example.com';
-        $client->setClient_email($longEmail);
-        $this->assertSame($longEmail, $client->getClient_email());
+        $client->setClientEmail($longEmail);
+        $this->assertSame($longEmail, $client->getClientEmail());
     }
 
     public function testEmptyStringVsNullHandling(): void
@@ -697,19 +697,19 @@ final class ClientEntityTest extends TestCase
         $client = new Client();
         
         // Some fields accept empty strings
-        $client->setClient_email('');
-        $this->assertSame('', $client->getClient_email());
+        $client->setClientEmail('');
+        $this->assertSame('', $client->getClientEmail());
         
-        $client->setClient_name('');
-        $this->assertSame('', $client->getClient_name());
+        $client->setClientName('');
+        $this->assertSame('', $client->getClientName());
         
         // Most nullable fields default to empty string, not null
-        $this->assertSame('', $client->getClient_title());
-        $this->assertSame('', $client->getClient_surname());
-        $this->assertSame('', $client->getClient_group());
+        $this->assertSame('', $client->getClientTitle());
+        $this->assertSame('', $client->getClientSurname());
+        $this->assertSame('', $client->getClientGroup());
         
         // Mobile defaults to empty string, not null
-        $this->assertSame('', $client->getClient_mobile());
+        $this->assertSame('', $client->getClientMobile());
     }
 
     public function testCommonGroupValues(): void
@@ -719,8 +719,8 @@ final class ClientEntityTest extends TestCase
         $groups = ['A', 'B', 'C', 'VIP', 'PRM', '1', '2', '3'];
         
         foreach ($groups as $group) {
-            $client->setClient_group($group);
-            $this->assertSame($group, $client->getClient_group());
+            $client->setClientGroup($group);
+            $this->assertSame($group, $client->getClientGroup());
         }
     }
 
@@ -731,8 +731,8 @@ final class ClientEntityTest extends TestCase
         $frequencies = ['daily', 'weekly', 'biweekly', 'monthly', 'quarterly', 'annually', 'one-time'];
         
         foreach ($frequencies as $frequency) {
-            $client->setClient_frequency($frequency);
-            $this->assertSame($frequency, $client->getClient_frequency());
+            $client->setClientFrequency($frequency);
+            $this->assertSame($frequency, $client->getClientFrequency());
         }
     }
 
@@ -743,8 +743,8 @@ final class ClientEntityTest extends TestCase
         $languages = ['en-US', 'en-GB', 'fr-FR', 'de-DE', 'es-ES', 'it-IT', 'pt-BR', 'zh-CN', 'ja-JP'];
         
         foreach ($languages as $language) {
-            $client->setClient_language($language);
-            $this->assertSame($language, $client->getClient_language());
+            $client->setClientLanguage($language);
+            $this->assertSame($language, $client->getClientLanguage());
         }
     }
 
@@ -756,8 +756,8 @@ final class ClientEntityTest extends TestCase
         $genders = [0, 1, 2, 3]; // 0 = unknown/unspecified, 1 = male, 2 = female, 3 = other
         
         foreach ($genders as $gender) {
-            $client->setClient_gender($gender);
-            $this->assertSame($gender, $client->getClient_gender());
+            $client->setClientGender($gender);
+            $this->assertSame($gender, $client->getClientGender());
         }
     }
 
@@ -768,8 +768,8 @@ final class ClientEntityTest extends TestCase
         $ages = [0, 18, 25, 35, 45, 55, 65, 75, 100];
         
         foreach ($ages as $age) {
-            $client->setClient_age($age);
-            $this->assertSame($age, $client->getClient_age());
+            $client->setClientAge($age);
+            $this->assertSame($age, $client->getClientAge());
         }
     }
 
@@ -788,8 +788,8 @@ final class ClientEntityTest extends TestCase
         ];
         
         foreach ($vatIds as $vatId) {
-            $client->setClient_vat_id($vatId);
-            $this->assertSame($vatId, $client->getClient_vat_id());
+            $client->setClientVatId($vatId);
+            $this->assertSame($vatId, $client->getClientVatId());
         }
     }
 
@@ -800,22 +800,22 @@ final class ClientEntityTest extends TestCase
         $this->assertTrue($client->isNewRecord());
         
         // Update client information
-        $client->setClient_surname('User');
-        $client->setClient_active(true);
-        $client->setClient_phone('+1-555-0199');
-        $client->setClient_address_1('123 Test Street');
-        $client->setClient_city('Test City');
-        $client->setClient_country('Test Country');
+        $client->setClientSurname('User');
+        $client->setClientActive(true);
+        $client->setClientPhone('+1-555-0199');
+        $client->setClientAddress1('123 Test Street');
+        $client->setClientCity('Test City');
+        $client->setClientCountry('Test Country');
         
         // Reset full name to null so getter reconstructs it
-        $client->setClient_full_name('');
+        $client->setClientFullName('');
         // Verify updates
-        $this->assertSame('Test User', $client->getClient_full_name());
-        $this->assertTrue($client->getClient_active());
-        $this->assertSame('+1-555-0199', $client->getClient_phone());
-        $this->assertSame('123 Test Street', $client->getClient_address_1());
-        $this->assertSame('Test City', $client->getClient_city());
-        $this->assertSame('Test Country', $client->getClient_country());
+        $this->assertSame('Test User', $client->getClientFullName());
+        $this->assertTrue($client->getClientActive());
+        $this->assertSame('+1-555-0199', $client->getClientPhone());
+        $this->assertSame('123 Test Street', $client->getClientAddress1());
+        $this->assertSame('Test City', $client->getClientCity());
+        $this->assertSame('Test Country', $client->getClientCountry());
         
         // Add invoices
         $inv1 = $this->createMock(Inv::class);
@@ -828,23 +828,23 @@ final class ClientEntityTest extends TestCase
         // Simulate saving (set ID)
         $client->id = 12345;
         $this->assertFalse($client->isNewRecord());
-        $this->assertSame(12345, $client->getClient_id());
+        $this->assertSame(12345, $client->getClientId());
     }
 
     public function testMethodReturnTypes(): void
     {
         $client = new Client();
         
-        $this->assertTrue($client->getClient_id() === null || is_int($client->getClient_id()));
-        $this->assertIsString($client->getClient_email());
-        $this->assertTrue($client->getClient_mobile() === null || is_string($client->getClient_mobile()));
-        $this->assertIsString($client->getClient_name());
-        $this->assertIsBool($client->getClient_active());
-        $this->assertIsInt($client->getClient_age());
-        $this->assertIsInt($client->getClient_gender());
-        $this->assertInstanceOf(DateTimeImmutable::class, $client->getClient_date_created());
-        $this->assertInstanceOf(DateTimeImmutable::class, $client->getClient_date_modified());
-        $this->assertInstanceOf(ArrayCollection::class, $client->getDelivery_locations());
+        $this->assertTrue($client->getClientId() === null || is_int($client->getClientId()));
+        $this->assertIsString($client->getClientEmail());
+        $this->assertTrue($client->getClientMobile() === null || is_string($client->getClientMobile()));
+        $this->assertIsString($client->getClientName());
+        $this->assertIsBool($client->getClientActive());
+        $this->assertIsInt($client->getClientAge());
+        $this->assertIsInt($client->getClientGender());
+        $this->assertInstanceOf(DateTimeImmutable::class, $client->getClientDateCreated());
+        $this->assertInstanceOf(DateTimeImmutable::class, $client->getClientDateModified());
+        $this->assertInstanceOf(ArrayCollection::class, $client->getDeliveryLocations());
         $this->assertInstanceOf(ArrayCollection::class, $client->getInvs());
         $this->assertIsBool($client->isNewRecord());
     }
@@ -858,16 +858,16 @@ final class ClientEntityTest extends TestCase
             client_age: 30
         );
         
-        $this->assertSame('mixed@test.com', $client->getClient_email());
-        $this->assertSame('Mixed', $client->getClient_name());
-        $this->assertTrue($client->getClient_active());
-        $this->assertSame(30, $client->getClient_age());
+        $this->assertSame('mixed@test.com', $client->getClientEmail());
+        $this->assertSame('Mixed', $client->getClientName());
+        $this->assertTrue($client->getClientActive());
+        $this->assertSame(30, $client->getClientAge());
         
         // Other parameters should use defaults
-        $this->assertSame('', $client->getClient_mobile());
-        $this->assertSame('', $client->getClient_title());
-        $this->assertSame('', $client->getClient_surname());
-        $this->assertSame(0, $client->getClient_gender());
+        $this->assertSame('', $client->getClientMobile());
+        $this->assertSame('', $client->getClientTitle());
+        $this->assertSame('', $client->getClientSurname());
+        $this->assertSame(0, $client->getClientGender());
     }
 
     public function testEntityStateConsistency(): void
@@ -876,18 +876,18 @@ final class ClientEntityTest extends TestCase
         
         // Verify initial state is consistent
         $this->assertTrue($client->isNewRecord());
-        $this->assertFalse($client->getClient_active());
-        $this->assertSame(0, $client->getClient_age());
-        $this->assertSame(0, $client->getClient_gender());
+        $this->assertFalse($client->getClientActive());
+        $this->assertSame(0, $client->getClientAge());
+        $this->assertSame(0, $client->getClientGender());
         
         // Change state and verify consistency
-        $client->setClient_active(true);
-        $client->setClient_age(25);
-        $client->setClient_gender(1);
+        $client->setClientActive(true);
+        $client->setClientAge(25);
+        $client->setClientGender(1);
         
-        $this->assertTrue($client->getClient_active());
-        $this->assertSame(25, $client->getClient_age());
-        $this->assertSame(1, $client->getClient_gender());
+        $this->assertTrue($client->getClientActive());
+        $this->assertSame(25, $client->getClientAge());
+        $this->assertSame(1, $client->getClientGender());
         $this->assertTrue($client->isNewRecord()); // Still new until ID is set
     }
 }
