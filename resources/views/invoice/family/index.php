@@ -32,7 +32,7 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $families
  * @var Yiisoft\Data\Paginator\OffsetPaginator $sortedAndPagedPaginator
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
  * @var string $csrf
@@ -47,30 +47,30 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
  * Used with the checkbox column to generate products from selected families
  * Related logic: see family.js handleGenerateProducts function
  */
-$generateProductsButton =  new A()
-        ->addAttributes(['type' => 'reset'])
-        ->addClass('btn btn-success')
-        ->href('#')
-        ->content('☑️' . $translator->translate('generate')
-            . ' '
-            . $translator->translate('products') 
-            . '🏭')
-        ->id('btn-generate-products')
-        ->render();
+$generateProductsButton = new A()
+    ->addAttributes(['type' => 'reset'])
+    ->addClass('btn btn-success')
+    ->href('#')
+    ->content('☑️' . $translator->translate('generate')
+        . ' '
+        . $translator->translate('products') 
+        . '🏭')
+    ->id('btn-generate-products')
+    ->render();
 
-$toolbarReset =  new A()
+$toolbarReset = new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href($urlGenerator->generate($currentRoute->getName() ?? 'family/index'))
     ->id('btn-reset')
     ->render();
 
-$toolbarFilter =  new A()
+$toolbarFilter = new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('family_filters_submit')
     ->addClass('btn btn-info me-1')
-    ->content( new I()->addClass('bi bi-bootstrap-reboot'))
+    ->content(new I()->addClass('bi bi-bootstrap-reboot'))
     ->href('#family_filters_submit')
     ->id('family_filters_submit')
     ->render();
@@ -205,13 +205,26 @@ $toolbarString =  new Form()->post($urlGenerator->generate('family/index'))->csr
         ->content('➕')
         ->render()
     // use the checkboxcolumn to generate products from selected families
-    .  new Div()->addClass('float-end m-3')->content($generateProductsButton)->encode(false)->render()
-    .  new Div()->addClass('float-end m-3')->content($toolbarFilter)->encode(false)->render()
-    .  new Div()->addClass('float-end m-3')->content($toolbarReset)->encode(false)->render()
+    .  new Div()
+        ->addClass('float-end m-3')
+        ->content($generateProductsButton)
+        ->encode(false)
+        ->render()
+    .  new Div()
+        ->addClass('float-end m-3')
+        ->content($toolbarFilter)
+        ->encode(false)
+        ->render()
+    .  new Div()
+        ->addClass('float-end m-3')
+        ->content($toolbarReset)
+        ->encode(false)
+        ->render()
     .  new Form()->close();
 
 $sortedAndPagedPaginator = (new OffsetPaginator($families))
-    ->withPageSize($s->positiveListLimit())
+    ->withPageSize($defaultPageSizeOffsetPaginator > 0 ?
+            $defaultPageSizeOffsetPaginator : 1)
     ->withCurrentPage($page)
     ->withSort($sort)
     ->withToken(PageToken::next((string) $page));
@@ -233,11 +246,12 @@ echo GridView::widget()
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
 ->header($translator->translate('families'))
 ->multiSort(true)
-->urlQueryParameters(['filter_product_sku', 'filter_product_price'])
 ->id('w4-grid')
-->paginationWidget($gridComponents->offsetPaginationWidget($sortedAndPagedPaginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($gridSummary)
+->summaryTemplate('<div class="d-flex align-items-center">'
+        . $pageSizeLimiter::buttons(
+            $currentRoute, $s, $translator, $urlGenerator, 'family')
+        . ' ' . $gridSummary . '</div>')
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

@@ -78,6 +78,54 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
        echo H::openTag('label', [
+        'for' => 'settings[app_cdn_not_node_module]'
+       ]);
+        echo $translator->translate('app.cdn.not.node.module');
+       echo H::closeTag('label');
+       $body['settings[app_cdn_not_node_module]'] = 
+       $s->getSetting('app_cdn_not_node_module');
+       echo H::openTag('select', [
+        'name' => 'settings[app_cdn_not_node_module]',
+        'id' => 'settings[app_cdn_not_node_module]',
+        'class' => 'form-control'
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body['settings[app_cdn_not_node_module]'] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
+      echo H::openTag('div', ['class' => 'form-group']); //7
+       echo H::openTag('label', [
+        'for' => 'settings[inv_cdn_not_node_module]'
+       ]);
+        echo $translator->translate('inv.cdn.not.node.module');
+       echo H::closeTag('label');
+       $body['settings[inv_cdn_not_node_module]'] = 
+       $s->getSetting('inv_cdn_not_node_module');
+       echo H::openTag('select', [
+        'name' => 'settings[inv_cdn_not_node_module]',
+        'id' => 'settings[inv_cdn_not_node_module]',
+        'class' => 'form-control'
+       ]);
+        echo  new Option()
+         ->value('0')
+         ->content($translator->translate('no'));
+        echo  new Option()
+         ->value('1')
+         ->selected($body['settings[inv_cdn_not_node_module]'] == '1')
+         ->content($translator->translate('yes'));
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
+     echo H::closeTag('div'); //6
+     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
+      echo H::openTag('div', ['class' => 'form-group']); //7
+       echo H::openTag('label', [
         'for' => 'settings[install_test_data]'
        ]);
         echo $translator->translate('test.data.install');

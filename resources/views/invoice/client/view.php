@@ -445,7 +445,7 @@ endforeach; ?>
                             <input type="hidden" name="client_id" id="client_id"
                                    value="<?= $client->getClientId(); ?>">
                             <div class="input-group">
-                                <textarea id="client_note" class="form-control" rows="2" style="resize:none"></textarea>
+                                <textarea id="client_note" class="form-control form-control-lg" rows="2" style="resize:none"></textarea>
                                 <span id="save_client_note_new" class="input-text-addon btn btn-info">
                                     <?= $translator->translate('add.note'); ?>
                                 </span>

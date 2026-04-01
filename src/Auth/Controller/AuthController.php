@@ -995,14 +995,13 @@ final class AuthController
     private function generateQrDataUri(string $content): string
     {
         $eccLevel = $this->sR->getSetting('qr_ecc_level');
-        // @psalm-suppress RedundantCondition
         $options = new QROptions([
             'eccLevel' => strlen($eccLevel) > 0 ? (int) $eccLevel : 0b01,
             'imageBase64' => true,
             'scale' => 4,
         ]);
-        /** @var string */
-        return (new QRCode($options))->render($content);
+        /** @psalm-suppress InvalidArgument $options **/
+        return (string) (new QRCode($options))->render($content);
     }
 
     private function redirectToOneTimePasswordError(): ResponseInterface

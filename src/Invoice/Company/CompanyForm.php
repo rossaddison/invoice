@@ -53,6 +53,9 @@ final class CompanyForm extends FormModel
     #[Url()]
     #[Length(min: 0, max: 255, skipOnEmpty: true)]
     private ?string $web = '';
+    
+    #[Length(min: 0, max: 255, skipOnEmpty: true)]
+    private ?string $seo_description = '';
 
     #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $slack = '';
@@ -90,6 +93,7 @@ final class CompanyForm extends FormModel
         $this->fax = $company->getFax();
         $this->email = $company->getEmail();
         $this->web = $company->getWeb();
+        $this->seo_description = $company->getSeoDescription();
         $this->slack = $company->getSlack();
         $this->facebook = $company->getFacebook();
         $this->twitter = $company->getTwitter();
@@ -162,6 +166,11 @@ final class CompanyForm extends FormModel
     public function getWeb(): ?string
     {
         return $this->web;
+    }
+    
+    public function getSeoDescription(): ?string
+    {
+        return $this->seo_description;
     }
 
     public function getSlack(): ?string

@@ -15,9 +15,9 @@ use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
 // Yiisoft
 use Yiisoft\Bootstrap5\DropdownItem;
 use Yiisoft\I18n\Locale;
+use Yiisoft\Rbac\Manager;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface as UrlGenerator;
-use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\Renderer\LayoutParametersInjectionInterface;
 
@@ -34,9 +34,9 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         private CompanyRepository $companyRepository,
         private CompanyPrivateRepository $companyPrivateRepository,
         private SettingRepository $settingRepository,
-        private Translator $translator,
         private UrlGenerator $urlGenerator,
         private CurrentRoute $currentRoute,
+        private Manager $manager,
     ) {
     }
 
@@ -58,7 +58,8 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $companyEmail = '';
         $companyLogoFileName = '';
         /**
-         * Related logic: see src/Invoice/Entity/CompanyPrivate for default values 80, 40, 10 respectively
+         * Related logic: see src/Invoice/Entity/CompanyPrivate for default
+         *  values 80, 40, 10 respectively
          */
         $companyLogoWidth = 80;
         $companyLogoHeight = 40;
@@ -115,6 +116,30 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             $this->settingRepository
                  ->getSetting('bootstrap5_layout_invoice_navbar_font_size')
                    ?: '10';
+        $bootstrap5LayoutGuestNavbarFont =
+            $this->settingRepository
+                 ->getSetting('bootstrap5_layout_guest_navbar_font')
+                   ?: 'Arial';
+        $bootstrap5LayoutGuestNavbarFontSize =
+            $this->settingRepository
+                 ->getSetting('bootstrap5_layout_guest_navbar_font_size')
+                   ?: '10';
+        $bootstrap5LayoutMainNavbarFont =
+            $this->settingRepository
+                 ->getSetting('bootstrap5_layout_main_navbar_font')
+                   ?: 'Arial';
+        $bootstrap5LayoutMainNavbarFontSize =
+            $this->settingRepository
+                 ->getSetting('bootstrap5_layout_main_navbar_font_size')
+                   ?: '10';
+        $appCdnNotNodeModule =
+            $this->settingRepository
+                 ->getSetting('app_cdn_not_node_module') == '1'
+                   ? true : false;
+        $invCdnNotNodeModule =
+            $this->settingRepository
+                 ->getSetting('inv_cdn_not_node_module') == '1'
+                   ? true : false;
         $bootstrap5CdnNotNodeModule =
             $this->settingRepository
                  ->getSetting('bootstrap5_cdn_not_node_module') == '1'
@@ -172,25 +197,63 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
          */
         $debugMode = $_ENV['YII_DEBUG'] == 'true' ? true : false;
         $buildDatabase = $_ENV['BUILD_DATABASE'] == 'true' ? true : false;
-        // Record the debugMode in a setting so that 'debug_mode' can be used in e.g. salesorder\guest.php`
+        // Record the debugMode in a setting so that 'debug_mode' can be used
+        //  in e.g. salesorder\guest.php`
         $this->settingRepository->debugMode($debugMode);
         $user = $identity instanceof Identity ? $identity->getUser() : null;
         $isGuest = ($user === null || $user->getId() === null);
         $userLogin = (null !== $user ? $user->getLogin() : null);
-        // Show the default logo if the logo applicable dates have expired under CompanyPrivate
+        // Show the default logo if the logo applicable dates have expired
+        //  under CompanyPrivate
         $logoPath = ((isset($companyLogoFileName)
                       && !empty($companyLogoFileName))
                       ? '/logo/' . $companyLogoFileName
                       : '/site/logo.png');
-        $_language = '_language';
+        $argLang = '_language';
         $localeSplitter =  new Locale($this->currentRoute->getArgument('_language') ?? 'en');
         $siteIndex = 'site/index';
+        
+        $status = '';
+        if (null!== $user && null!==($userId = $user->getId())) {
+            if (!$isGuest && $this->manager->getPermissionsByUserId($userId)
+                  === $this->manager->getPermissionsByRoleName('observer')) {
+                $status = 'observer';
+            }
+            if (!$isGuest && $this->manager->getPermissionsByUserId($userId)
+                  === $this->manager->getPermissionsByRoleName('admin')) {
+                $status = 'admin';
+            }
+            if (!$isGuest && $this->manager->getPermissionsByUserId($userId)
+                  === $this->manager->getPermissionsByRoleName('accountant')) {
+                $status = 'accountant';
+            }
+        }
+        
+        $translateSize =  match ($status) {
+            'accountant' => $bootstrap5LayoutInvoiceNavbarFontSize,
+            'observer' => $bootstrap5LayoutGuestNavbarFontSize,
+            'admin' => $bootstrap5LayoutInvoiceNavbarFontSize,
+            default => $bootstrap5LayoutMainNavbarFontSize,
+        };
+        
+        $itemFontArray = [
+            'style' => 'font-size: '
+            . $translateSize                
+            . 'px;'
+            . ' color: black;'
+        ];
         return [
             'bootstrap5OffcanvasEnable' => $bootstrap5OffcanvasEnable,
             'bootstrap5OffcanvasPlacement' => $bootstrap5OffcanvasPlacement,
             'bootstrap5LayoutInvoiceNavbarFont' => $bootstrap5LayoutInvoiceNavbarFont,
             'bootstrap5LayoutInvoiceNavbarFontSize' => $bootstrap5LayoutInvoiceNavbarFontSize,
+            'bootstrap5LayoutGuestNavbarFont' => $bootstrap5LayoutGuestNavbarFont,
+            'bootstrap5LayoutGuestNavbarFontSize' => $bootstrap5LayoutGuestNavbarFontSize,
+            'bootstrap5LayoutMainNavbarFont' => $bootstrap5LayoutMainNavbarFont,
+            'bootstrap5LayoutMainNavbarFontSize' => $bootstrap5LayoutMainNavbarFontSize,
             'bootstrap5CdnNotNodeModule' => $bootstrap5CdnNotNodeModule,
+            'appCdnNotNodeModule' => $appCdnNotNodeModule,
+            'invCdnNotNodeModule' => $invCdnNotNodeModule,
             'title' => 'Home',
             'logoPath' => $logoPath,
             'buildDatabase' => $buildDatabase,
@@ -240,94 +303,154 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
             'splitterRegion' => $localeSplitter->region(),
             'afZA' => DropdownItem::link('Afrikaans South African',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'af-ZA'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'af-ZA'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'arBH' => DropdownItem::link('Arabic Bahrainian/ عربي',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'ar-BH'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'ar-BH'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'az' => DropdownItem::link('Azerbaijani / Azərbaycan',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'az'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'az'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'beBY' => DropdownItem::link('Belarusian / Беларуская',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'be-BY'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'be-BY'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'bs' => DropdownItem::link('Bosnian / Bosanski',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'bs'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'bs'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'zhCN' => DropdownItem::link('Chinese Simplified / 简体中文',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'zh-CN'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'zh-CN'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'zhTW' => DropdownItem::link('Tiawanese Mandarin / 简体中文',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'zh-TW'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'zh-TW'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'en' => DropdownItem::link('English',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'en'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'en'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'fil' => DropdownItem::link('Filipino / Filipino',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'fil'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'fil'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'fr' => DropdownItem::link('French / Français',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'fr'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'fr'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'gdGB' => DropdownItem::link('Scots Gaelic / Gàidhlig na h-Alba',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'gd-GB'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'gd-GB'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'haNG' => DropdownItem::link('Hausa Nigerian / Hausawa Ɗan Najeriya',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'ha-NG'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'ha-NG'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'heIL' => DropdownItem::link('Hebrew Israel / העברית ישראל',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'he-IL'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'he-IL'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'nl' =>DropdownItem::link('Dutch / Nederlands',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'nl'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'nl'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'de' => DropdownItem::link('German / Deutsch',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'de'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'de'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'id' => DropdownItem::link('Indonesian / bahasa Indonesia',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'id'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'id'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'igNG' => DropdownItem::link('Igbo Nigerian / Igbo Naịjirịa',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'ig-NG'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'ig-NG'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'it' => DropdownItem::link('Italian / Italiano',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'it'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'it'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'ja' => DropdownItem::link('Japanese / 日本',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'ja'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'ja'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'pl' => DropdownItem::link('Polish / Polski',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'pl'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'pl'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'ptBR' => DropdownItem::link('Portugese Brazilian / Português Brasileiro',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'pt-BR'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'pt-BR'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'ru' => DropdownItem::link('Russian / Русский',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'ru'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'ru'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'sk' => DropdownItem::link('Slovakian / Slovenský',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'sk'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'sk'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'sl' => DropdownItem::link('Slovenian / Slovenski',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'sl'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'sl'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'es' => DropdownItem::link('Spanish /  Española x',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'es'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'es'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'uk' => DropdownItem::link('Ukrainian / українська',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'uk'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'uk'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'uz' => DropdownItem::link('Uzbek / o' . "'" . 'zbek',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'uz'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'uz'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'vi' => DropdownItem::link('Vietnamese / Tiếng Việt',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'vi'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'vi'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'yoNG' => DropdownItem::link('Yoruba Nigerian / Ọmọ orílẹ̀-èdè Nàìjíríà',
                 $this->urlGenerator
-                     ->generateFromCurrent([$_language => 'yo-NG'], fallbackRouteName: $siteIndex)),
+                     ->generateFromCurrent([$argLang => 'yo-NG'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
             'zuZA' => DropdownItem::link('Zulu South African/ Zulu South African',
                 $this->urlGenerator
-                    ->generateFromCurrent([$_language => 'zu-ZA'], fallbackRouteName: $siteIndex)),
+                    ->generateFromCurrent([$argLang => 'zu-ZA'],
+                     fallbackRouteName: $siteIndex),
+                     itemAttributes: $itemFontArray),
         ];
     }
 }

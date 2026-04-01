@@ -51,6 +51,7 @@ use App\Invoice\{
     Prometheus\PrometheusController,
     Profile\ProfileController,
     Project\ProjectController,
+    Qa\QaController,
     Quote\QuoteController,
     QuoteAllowanceCharge\QuoteAllowanceChargeController,
     QuoteItem\QuoteItemController,
@@ -968,6 +969,26 @@ return [
                 ->name('family/generateProducts')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([FamilyController::class, 'generateProducts']),
+            Route::get('/qa[/page/{page:\d+}]')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([QaController::class, 'index'])
+                ->name('qa/index'),
+            Route::methods([$mG, $mP], '/qa/add')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([QaController::class, 'add'])
+                ->name('qa/add'),
+            Route::methods([$mG, $mP], '/qa/edit/{id}')
+                ->name('qa/edit')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([QaController::class, 'edit']),
+            Route::methods([$mG, $mP], '/qa/delete/{id}')
+                ->name('qa/delete')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([QaController::class, 'delete']),
+            Route::methods([$mG, $mP], '/qa/view/{id}')
+                ->name('qa/view')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([QaController::class, 'view']),
             Route::get('/from')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([FromDropDownController::class, 'index'])

@@ -25,7 +25,7 @@ declare(strict_types=1);
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="form-group">
                         <label for="change_client_id"><?= $translator->translate('client'); ?></label>
-                        <select name="change_client_id" id="change_client_id" class="form-control">
+                        <select name="change_client_id" id="change_client_id" class="form-control form-control-lg">
                             <option value="0"><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**

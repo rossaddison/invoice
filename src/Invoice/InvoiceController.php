@@ -79,6 +79,7 @@ final class InvoiceController extends BaseController
  */
 
             'active_only' => 0,
+            'app_cdn_not_node_module' => 1,
             'bootstrap5_cdn_not_node_module' => 1,
             'bootstrap5_offcanvas_enable' => 0,
             'bootstrap5_offcanvas_placement' => 'top',
@@ -86,6 +87,10 @@ final class InvoiceController extends BaseController
             'bootstrap5_alert_close_button_font_size' => '10',
             'bootstrap5_layout_invoice_navbar_font' => 'Arial',
             'bootstrap5_layout_invoice_navbar_font_size' => '10',
+            'bootstrap5_layout_guest_navbar_font' => 'Arial',
+            'bootstrap5_layout_guest_navbar_font_size' => '10',
+            'bootstrap5_layout_main_navbar_font' => 'Arial',
+            'bootstrap5_layout_main_navbar_font_size' => '10',
             'cron_key' => Random::string(32),
             'currency_symbol' => '£',
             'currency_symbol_placement' => 'before',
@@ -134,6 +139,7 @@ final class InvoiceController extends BaseController
             'generate_quote_number_for_draft' => 1,
             'generate_so_number_for_draft' => 1,
             'install_test_data' => 0,
+            'inv_cdn_not_node_module' => 1,
             //1=>None, 2=>Cash, 3=>Cheque, 4=>Card/Direct Debit-Succeeded
             //5=>Card/Direct Debit-Processing 6=>Card/Direct Debit-Customer Ready
             'invoice_default_payment_method' => 6,

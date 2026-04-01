@@ -30,7 +30,8 @@ final readonly class CompanyService
         isset($array['fax']) ? $model->setFax((string) $array['fax']) : '';
         isset($array['email']) ? $model->setEmail((string) $array['email']) : '';
         isset($array['web']) ? $model->setWeb((string) $array['web']) : '';
-
+        isset($array['seo_description']) ?
+            $model->setSeoDescription((string) $array['seo_description']) : '';
         // Social media fields
         isset($array['slack']) ? $model->setSlack((string) $array['slack']) : '';
         isset($array['facebook']) ? $model->setFacebook((string) $array['facebook']) : '';

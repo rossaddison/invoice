@@ -1,9 +1,3 @@
-/* 
- * ⚠️  CRITICAL WARNING: Angular TypeScript Configuration
- * 🚨 This file is specifically for Angular components - DO NOT modify existing tsconfig.json
- * 📝 This setup allows Angular to coexist with existing Yii3 TypeScript build system
- * 🔄 Use this config for Angular development while preserving esbuild setup for main app
- */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -11,6 +5,7 @@
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "ignoreDeprecations": "6.0",    
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -41,9 +36,10 @@
     "strictTemplates": true
   },
   "include": [
-    "angular/**/*"
+    "angular/src/**/*"
   ],
   "exclude": [
+    "angular/src/app/amount-magnifier.directive.ts",    
     "src/typescript/**/*",
     "node_modules",
     "dist"

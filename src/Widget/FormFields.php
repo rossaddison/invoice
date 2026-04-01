@@ -72,7 +72,7 @@ final readonly class FormFields
         return Html::openTag('div')
             . Field::select($form, 'group_id')
                 ->label($this->translator->translate('group'))
-                ->addInputAttributes(['class' => 'form-control'])
+                ->addInputAttributes(['class' => 'form-control form-control-lg'])
                 ->value($form->getGroupId() ?? $defaultValue)
                 ->prompt($this->translator->translate('none'))
                 ->optionsData($groupOptions)
@@ -100,7 +100,7 @@ final readonly class FormFields
         return Html::openTag('div')
             . Field::select($form, 'status_id')
                 ->label($this->translator->translate('status'))
-                ->addInputAttributes(['class' => 'form-control'])
+                ->addInputAttributes(['class' => 'form-control form-control-lg'])
                 ->value($form->getStatusId())
                 ->prompt($this->translator->translate('none'))
                 ->optionsData($statusOptions)
@@ -121,7 +121,7 @@ final readonly class FormFields
                         . ' '
                         . $this->settingRepository->getSetting('currency_symbol'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                     'id' => 'inv_discount_amount'])
                 ->value(Html::encode($this->settingRepository->formatAmount($form->getDiscountAmount() ?? 0.00)))
                 ->placeholder($this->translator->translate('discount.amount'))
@@ -179,7 +179,7 @@ final readonly class FormFields
         return Html::openTag('div')
             . Field::textarea($form, $fieldName)
                 ->label($this->translator->translate('note'))
-                ->addInputAttributes(['class' => 'form-control'])
+                ->addInputAttributes(['class' => 'form-control form-control-lg'])
                 ->value(Html::encode($value ?? ''))
                 ->placeholder($this->translator->translate('note'))
                 ->hint(
@@ -197,8 +197,8 @@ final readonly class FormFields
     {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control alert alert-warning' :
-                'form-control alert alert-success';
+        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
+                'form-control form-control-lg alert alert-success';
 
         return Field::select($form, 'family_id')
             ->label($this->translator->translate('family'))
@@ -219,8 +219,8 @@ final readonly class FormFields
     {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control alert alert-warning' :
-                'form-control alert alert-success';
+        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
+                'form-control form-control-lg alert alert-success';
 
         return Field::select($form, 'unit_id')
             ->label($this->translator->translate('unit'))
@@ -241,7 +241,7 @@ final readonly class FormFields
     {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control alert alert-warning' :
+        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
                 'form-control alert alert-success';
 
         return Field::select($form, 'tax_rate_id')
@@ -266,8 +266,8 @@ final readonly class FormFields
     ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control alert alert-warning' :
-                'form-control alert alert-success';
+        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
+                'form-control form-control-lg alert alert-success';
 
         // Handle specific field name mappings for ProductForm
         $value = match ($fieldName) {
@@ -333,8 +333,8 @@ final readonly class FormFields
     {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = $required ? 'form-control alert alert-warning' :
-                'form-control alert alert-success';
+        $cssClass = $required ? 'form-control form-control-lg alert alert-warning' :
+                'form-control form-control-lg alert alert-success';
 
         return Field::select($form, 'unit_peppol_id')
             ->label($this->translator->translate('product.peppol.unit'))
@@ -357,7 +357,7 @@ final readonly class FormFields
     ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = 'form-control';
+        $cssClass = 'form-control form-control-lg';
 
         // Handle specific field name mappings for ClientForm
         $value = match ($fieldName) {
@@ -404,7 +404,7 @@ final readonly class FormFields
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate('email'),
                 'value' => Html::encode($form->getClientEmail() ?? ''),
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'id' => 'client_email',
             ])
             ->required(false)
@@ -429,7 +429,7 @@ final readonly class FormFields
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate($labelKey),
                 'value' => Html::encode($value ?? ''),
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'id' => $fieldName,
             ])
             ->required(false)
@@ -446,7 +446,7 @@ final readonly class FormFields
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate('web'),
                 'value' => Html::encode($form->getClientWeb() ?? ''),
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'id' => 'client_web',
             ])
             ->required(false)
@@ -461,7 +461,7 @@ final readonly class FormFields
     {
         return Field::select($form, 'client_title')
             ->label($this->translator->translate('client.title'))
-            ->addInputAttributes(['class' => 'form-control'])
+            ->addInputAttributes(['class' => 'form-control form-control-lg'])
             ->value($form->getClientTitle())
             ->prompt($this->translator->translate('none'))
             ->optionsData($titleOptions)
@@ -478,7 +478,7 @@ final readonly class FormFields
     {
         return Field::select($form, 'client_language')
             ->label($this->translator->translate('language'))
-            ->addInputAttributes(['class' => 'form-control',
+            ->addInputAttributes(['class' => 'form-control form-control-lg',
                 'id' => 'client_language'])
             ->value(strlen($form->getClientLanguage() ?? '') > 0 ?
                     $form->getClientLanguage() : $selectedLanguage)
@@ -498,7 +498,7 @@ final readonly class FormFields
             ->label($this->translator->translate('country'))
             ->addInputAttributes([
                 'id' => 'client_country',
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
             ])
             ->value($form->getClientCountry() ?? $selectedCountry)
             ->optionsData($countryOptions)
@@ -517,7 +517,7 @@ final readonly class FormFields
     ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = 'form-control';
+        $cssClass = 'form-control form-control-lg';
 
         // Handle specific field name mappings for UserInvForm
         $value = match ($fieldName) {
@@ -570,7 +570,7 @@ final readonly class FormFields
         return Field::select($form, 'user_id')
             ->label($this->translator->translate('users'))
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'id' => 'user_id',
             ])
             ->optionsData($userOptions)
@@ -587,7 +587,7 @@ final readonly class FormFields
         return Field::text($form, 'user_id')
             ->label($this->translator->translate('users'))
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'id' => 'user_id',
             ])
             ->readonly(true)
@@ -605,7 +605,7 @@ final readonly class FormFields
         return Field::select($form, 'type')
             ->label($this->translator->translate('type'))
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'id' => 'type',
             ])
             ->optionsData($typeOptions)
@@ -623,7 +623,7 @@ final readonly class FormFields
         return Field::select($form, 'language')
             ->label($this->translator->translate('language'))
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'id' => 'language',
             ])
             ->optionsData($languageOptions)
@@ -664,7 +664,7 @@ final readonly class FormFields
         $field = Field::number($form, $fieldName)
             ->label($this->translator->translate($labelKey))
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'placeholder' => $this->translator->translate($labelKey),
                 'value' => $value !== null ? (string) $value : '',
                 'id' => $fieldName,
@@ -690,7 +690,7 @@ final readonly class FormFields
     ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
             'hint.this.field.is.not.required';
-        $cssClass = 'form-control';
+        $cssClass = 'form-control form-control-lg';
 
         // Handle specific field name mappings for CompanyForm
         $value = match ($fieldName) {
@@ -701,6 +701,7 @@ final readonly class FormFields
             'state' => $form->getState(),
             'zip' => $form->getZip(),
             'country' => $form->getCountry(),
+            'seo_description' => $form->getSeoDescription(),
             'web' => $form->getWeb(),
             'arbitrationBody' => $form->getArbitrationBody(),
             'arbitrationJurisdiction' => $form->getArbitrationJurisdiction(),
@@ -734,7 +735,7 @@ final readonly class FormFields
             ->label($this->translator->translate('email'))
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate('email'),
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'value' => Html::encode($form->getEmail() ?? ''),
             ])
             ->required(true)
@@ -758,7 +759,7 @@ final readonly class FormFields
             ->label($this->translator->translate($labelKey))
             ->addInputAttributes([
                 'placeholder' => $this->translator->translate($labelKey),
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'value' => Html::encode($value ?? ''),
             ])
             ->required(false)
@@ -790,7 +791,7 @@ final readonly class FormFields
 
         return Field::hidden($form, $fieldName)
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'value' => Html::encode($value !== null ? (string) $value : ''),
             ])
             ->hideLabel()
@@ -850,7 +851,7 @@ final readonly class FormFields
         return Field::select($form, 'company_id')
             ->label($labelKey)
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'id' => 'company_id',
             ])
             ->optionsData($companyOptions)
@@ -872,7 +873,7 @@ final readonly class FormFields
 
         return Field::hidden($form, $fieldName)
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'value' => Html::encode($value !== null ? (string) $value : ''),
             ])
             ->hideLabel()
@@ -921,7 +922,7 @@ final readonly class FormFields
 
         return Field::date($form, $fieldName)
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'placeholder' => $placeholder,
             ])
             ->value(Html::encode($formattedValue))

@@ -30,7 +30,7 @@ use Yiisoft\Html\Tag\Button;
                         <div class="form-group">
                             <label for="filter_family_inv"><?= $translator->translate('any.family'); ?></label>
                             <div class="form-group">
-                                <select name="filter_family_quote" id="filter_family_quote" class="form-control">
+                                <select name="filter_family_quote" id="filter_family_quote" class="form-control form-control-lg">
                                     <option value="0"><?= $translator->translate('any.family'); ?></option>
                                     <?php
                                         /**
@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\Button;
                             </div>
                             <div class="form-group panel panel-primary">
                                 <label for="filter_product_quote"><?= $translator->translate('product.name'); ?></label>
-                                <input type="text" class="form-control" name="filter_product_quote" id="filter_product_quote"
+                                <input type="text" class="form-control form-control-lg" name="filter_product_quote" id="filter_product_quote"
                                        placeholder="<?= $translator->translate('product.name'); ?>"
                                        value="<?= $filter_product ?>">                
                                 <button type="button" id="filter-button-quote" class="btn btn-info"><?= $translator->translate('search.product'); ?></button>

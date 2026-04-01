@@ -36,7 +36,6 @@ use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
-use Yiisoft\Injector\Inject;
 
 final class FamilyController extends BaseController
 {
@@ -56,7 +55,8 @@ final class FamilyController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+                $webViewRenderer, $session, $sR, $flash);
         $this->familyService = $familyService;
         $this->factory = $factory;
         $this->urlGenerator = $urlGenerator;

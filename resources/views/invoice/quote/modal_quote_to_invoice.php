@@ -30,7 +30,7 @@ use Yiisoft\Html\Html;
                     <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUserId(); ?>">
                     <div class="form-group">
                         <label for="password"><?= $translator->translate('password'); ?></label>
-                        <input type="text" name="password" id="invoice_password" class="form-control"
+                        <input type="text" name="password" id="invoice_password" class="form-control form-control-lg"
                                value="<?= $s->getSetting('invoice_pre_password') == '' ? '' : $s->getSetting('invoice_pre_password') ?>"
                                autocomplete="off">
                     </div>
@@ -38,7 +38,7 @@ use Yiisoft\Html\Html;
                         <label for="group_id">
                             <?= $translator->translate('group'); ?>
                         </label>
-                        <select name="group_id" id="group_id" class="form-control">
+                        <select name="group_id" id="group_id" class="form-control form-control-lg">
                             <?php
                                 /**
                                  * @var App\Invoice\Entity\Group $group

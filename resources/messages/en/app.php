@@ -105,6 +105,8 @@ return [
   'amount.settings' => 'Amount Settings',
   'amounts' => 'Invoice Amounts',
   'any.family' => 'Any family',
+  'app.cdn.not.node.module' => 'Use AppCdnAsset'
+    . ' (Not AppNodeModulesAsset)',    
   'apply.after.item.tax' => 'Apply After Item Tax',
   'apply.before.item.tax' => 'Apply Before Item Tax',
   'approve' => 'Approve',
@@ -148,10 +150,18 @@ return [
   'bootstrap5.alert.message.font.size' =>
     'Alert Message Font Size',
   'bootstrap5.cdn.not.node.module' => 'Bootstrap5 Cdn (Not Node Module)',
+  'bootstrap5.layout.guest.navbar.font' =>
+    'Layout Guest Navbar Font',
+  'bootstrap5.layout.guest.navbar.font.size' =>
+    'Layout Guest Navbar Font Size',
   'bootstrap5.layout.invoice.navbar.font' =>
     'Layout Invoice Navbar Font',
   'bootstrap5.layout.invoice.navbar.font.size' =>
     'Layout Invoice Navbar Font Size',
+  'bootstrap5.layout.main.navbar.font' =>
+    'Layout Main Navbar Font',
+  'bootstrap5.layout.main.navbar.font.size' =>
+    'Layout Main Navbar Font Size',  
   'bootstrap5.offcanvas.enable' =>
     'Enable Offcanvas',
   'bootstrap5.offcanvas.placement' =>
@@ -382,6 +392,7 @@ return [
     'Logo will be deleted from'
     . ' uploads and public folder',
   'company.public' => 'Company Public',
+  'company.seo' => 'Search Engine Optimization (SEO) Description',
   'complete' => 'Complete',
   'confirm' => 'Confirm',
   'confirm.deletion' => 'Confirm deletion',
@@ -751,7 +762,8 @@ return [
   'family.history' => 'Family History exists. Cannot delete',
   'family.comma.list' => 'Product Number List e.g. 1, 2, 5, 7 for Product Generator',
   'family.product.prefix' => 'Product Number List Prefix e.g. House',
-  'family.product.prefix.required.when.commalist.filled' => 'Product prefix is required when a comma list is provided.',
+  'family.product.prefix.required.when.commalist.filled' =>
+    'Product prefix is required when a comma list is provided.',
   'family.name' => 'Family name',
   'family.search' => 'Family Search',
   'faq' => 'FAQ\'s',
@@ -761,6 +773,7 @@ return [
     . 'blob/master/src/StateStorage/SessionStateStorage.php'
     . ' to improve the state management '
     . 'in the `callbackGithub` function?',
+  'faq.answer' => 'Answer',
   'faq.business.rules' => 'What are the Peppol Business Rules?',
   'faq.gov.developer.sandbox.hmrc' => 'How do I connect'
     . ' this repository to the HMRC Developer Sandbox?',
@@ -779,7 +792,9 @@ return [
   'faq.php.info.licence' => 'License',
   'faq.php.info.modules' => 'Modules',
   'faq.php.info.variables' => 'Variables',
+  'faq.question' => 'Question',  
   'faq.shared.hosting' => 'How do I host yii3i on shared hosting?',
+  'faq.sort.order' => 'Sort Order',  
   'faq.taxpoint' => 'How to determine what the Tax Point is?',
   'faq.wsl.to.alpine' => 'How do I update an alpine hosted site using'
     . ' Windows 11\'s wsl (Windows Subsystem for Linux)',
@@ -1030,6 +1045,8 @@ return [
   'interface' => 'Interface',
   'invalid.amount' => 'Invalid Amount',
   'invalid.subscriber.number' => 'Invalid Subscriber Number',
+  'inv.cdn.not.node.module' => 'Use InvoiceCdnAsset'
+    . ' (Not InvoiceNodeModulesAsset)',  
   'invoice' => 'Invoice',
   'invoice.to.html' => 'Invoice to Html',
   'invoice.created.from.quote' => 'Invoice created from quote',

@@ -7,7 +7,7 @@ declare(strict_types=1);
  */
 
 ?>
-
+<div style='font-size: 18px;'>
 <p><b><?php echo $translator->translate('faq.wsl.to.alpine'); ?></b></p>
 <pre><p><b>WSL to Alpine running on Apache2:
  Updating with latest changes seen on Github Repo</b>
@@ -54,9 +54,10 @@ declare(strict_types=1);
          chmod -R 775 /var/www/invoice/resources/
          chmod -R 775 /var/www/invoice/runtime/
          chmod -R 775 /var/www/invoice/public/assets/</b>
- <b>17. Ensure that the resources/rbac/items.php file, when logged in
-        as the admin, is rotating between a visible 'entry.to.base.controller'
-        and invisible or not existing.
+ <b>17. There is no need to ensure that the resources/rbac/items.php file,
+        when logged in as the admin, is rotating between a visible
+        'entry.to.base.controller' and an invisible one. These settings are now
+        permanent. RBAC Mutation is avoided as a security measure.
  </b>
  <b>18. Install telnet to check that port 465 is open for smtps
         On alpine: apk add busybox-extras
@@ -95,3 +96,4 @@ declare(strict_types=1);
  </b>             
 </p>
 </pre>
+</div>

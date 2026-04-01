@@ -143,7 +143,7 @@ foreach ($soItems as $item) {
                                 </b>
                             </span>
                             <select name="item_name"
-                                    class="form-control"
+                                    class="form-control form-control-lg"
                                     disabled>
                             <?php if ($item->getProductId() > 0) { ?>    
                                 <option value="0">
@@ -249,7 +249,7 @@ foreach ($soItems as $item) {
                             </span>
                             <select disabled
                                     name="item_tax_rate_id"
-                                    class="form-control"
+                                    class="form-control form-control-lg"
                                     data-bs-toggle = "tooltip"
                                     title="quote_item->tax_rate_id">
                                 <option value="0">
@@ -367,7 +367,7 @@ foreach ($soItems as $item) {
                             </span>
                             <textarea disabled
                                       name="item_description"
-                                      class="form-control"
+                                      class="form-control form-control-lg"
                                       rows="1">
                                 <?= Html::encode($item->getDescription()); ?>
                             </textarea>

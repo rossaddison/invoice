@@ -23,17 +23,17 @@ declare(strict_types=1);
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div>
-                        <input type="text" name="url_key" id="url_key" class="form-control"
+                        <input type="text" name="url_key" id="url_key" class="form-control form-control-lg"
                                value="<?= $urlKey; ?>" hidden>
                     </div>
                     <div>
                         <label for="quote_with_purchase_order_number"><?= $translator->translate('quote.with.purchase.order.number') ?></label>
-                        <input type="text" name="quote_with_purchase_order_number" id="quote_with_purchase_order_number" class="form-control"
+                        <input type="text" name="quote_with_purchase_order_number" id="quote_with_purchase_order_number" class="form-control form-control-lg"
                                value="" autocomplete="off">
                     </div> 
                     <div>
                         <label for="quote_with_purchase_order_person"><?= $translator->translate('quote.with.purchase.order.person') ?></label>
-                        <input type="text" name="quote_with_purchase_order_person" id="quote_with_purchase_order_person" class="form-control"
+                        <input type="text" name="quote_with_purchase_order_person" id="quote_with_purchase_order_person" class="form-control form-control-lg"
                                value="" autocomplete="off">
                     </div>   
                 </form>    

@@ -63,7 +63,7 @@ $vat = $s->getSetting('enable_vat_registration');
                 <h1><?= $translator->translate('term'); ?></h1>
                 <div class="col-xs-12 col-sm-6 label label-info">
                     <div class="input-group label label-info">
-                        <textarea  class="form-control" rows="20" cols="20">
+                        <textarea  class="form-control form-control-lg" rows="20" cols="20">
                             <?= $terms_and_conditions_file; ?></textarea>
                     </div>
                 </div>    

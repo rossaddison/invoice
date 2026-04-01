@@ -9,5 +9,9 @@
         "connectionId": "rossaddison",
         "projectKey": "rossaddison_invoice"
     },
-    "typescript.experimental.useTsgo": true
+    "typescript.experimental.useTsgo": true,
+    "typescript.preferences.quoteStyle": "single",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    }
 }

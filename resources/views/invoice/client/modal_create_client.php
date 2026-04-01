@@ -23,15 +23,15 @@ use Yiisoft\Html\Html;
         </div>
         <div class="mb-3 form-group">
             <label for="client_name" class="form-label"><?= $translator->translate('client.name'); ?><span style="color:red">*</span></label>
-            <input type="text" class="form-control" name="client_name" id="client_name" placeholder="<?= $translator->translate('client.name'); ?>" value="<?= Html::encode($body['client_name'] ?? '') ?>" required>
+            <input type="text" class="form-control form-control-lg" name="client_name" id="client_name" placeholder="<?= $translator->translate('client.name'); ?>" value="<?= Html::encode($body['client_name'] ?? '') ?>" required>
         </div>
         <div class="mb-3 form-group">
             <label for="client_surname" class="form-label"><?= $translator->translate('client.surname'); ?></label>
-            <input type="text" class="form-control" name="client_surname" id="client_surname" placeholder="<?= $translator->translate('client.surname'); ?>" value="<?= Html::encode($body['client_surname'] ?? '') ?>">
+            <input type="text" class="form-control form-control-lg" name="client_surname" id="client_surname" placeholder="<?= $translator->translate('client.surname'); ?>" value="<?= Html::encode($body['client_surname'] ?? '') ?>">
         </div>
         <div class="mb-3 form-group">
             <label for="client_email" class="form-label"><?= $translator->translate('email'); ?><span style="color:red">*</span></label>
-            <input type="text" class="form-control" name="client_email" id="client_email" placeholder="<?= $translator->translate('email'); ?>" value="<?= Html::encode($body['client_email'] ?? '') ?>" required>
+            <input type="text" class="form-control form-control-lg" name="client_email" id="client_email" placeholder="<?= $translator->translate('email'); ?>" value="<?= Html::encode($body['client_email'] ?? '') ?>" required>
         </div>
         <div class="modal-header">
             <div class="btn-group">

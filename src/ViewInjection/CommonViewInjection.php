@@ -15,7 +15,11 @@ use App\Invoice\Setting\SettingRepository;
 
 final readonly class CommonViewInjection implements CommonParametersInjectionInterface
 {
-    public function __construct(private UrlGeneratorInterface $url, private CompanyRepository $companyRepository, private CompanyPrivateRepository $companyPrivateRepository, private SettingRepository $settingRepository, private Translator $translator)
+    public function __construct(private UrlGeneratorInterface $url,
+        private CompanyRepository $companyRepository,
+        private CompanyPrivateRepository $companyPrivateRepository,
+        private SettingRepository $settingRepository,
+        private Translator $translator)
     {
     }
 
@@ -49,6 +53,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             if ($company->getCurrent() == '1') {
                 $companyName = $company->getName();
                 $companyWeb = $company->getWeb();
+                $companySeoDescription = $company->getSeoDescription();
                 $companyAddress1 = $company->getAddress1();
                 $companyAddress2 = $company->getAddress2();
                 $companyCity = $company->getCity();
@@ -65,13 +70,16 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                  */
                 foreach ($companyPrivates as $private) {
                     if ($private->getCompanyId() == (string) $company->getId()) {
-                        // site's logo: take the first logo where the current date falls within the logo's start and end dates
-                        if (($private->getStartDate()?->format('Y-m-d') < (new \DateTimeImmutable('now'))->format('Y-m-d')) && ($private->getEndDate()?->format('Y-m-d') > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
+// site's logo: take the first logo where the current date falls within
+//  the logo's start and end dates
+                        if (($private->getStartDate()?->format('Y-m-d') <
+                            (new \DateTimeImmutable('now'))->format('Y-m-d'))
+                            && ($private->getEndDate()?->format('Y-m-d') >
+                            (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
                             $companyLogoFileName = $private->getLogoFilename();
                             $companyLogoWidth = $private->getLogoWidth();
                             $companyLogoHeight = $private->getLogoHeight();
                             $companyStartDate = $private->getStartDate()?->format('Y-m-d');
-                            //  break;
                         }
                     }
                 }
@@ -98,6 +106,8 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             'companyLogoWidth' => $companyLogoWidth ?? 80,
             'companyLogoHeight' => $companyLogoHeight ?? 40,
             'companyName' => $companyName ?? '',
+            'companySeoDescription' => $companySeoDescription ??
+                'Search Engine Optimization Description',
             'companyStartDate' => $companyStartDate ?? date('Y-m-d'),
             'companyWeb' => $companyWeb ?? 'mywebpage.com',
             'logoPath' => $logoPath,
@@ -106,7 +116,8 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
 
             /**
              * Related logic: see \invoice\resources\messages\en\app.php
-             * Related logic: see \invoice\vendor\yiisoft\yii-view\src\ViewRenderer.php function getCommonParameters
+             * Related logic: see \invoice\vendor\yiisoft\yii-view\src\
+             *  ViewRenderer.php function getCommonParameters
              */
             'about' => [
                 'we' => $this->translator->translate('site.soletrader.about.we'),

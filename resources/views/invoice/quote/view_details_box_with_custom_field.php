@@ -22,7 +22,7 @@ use Yiisoft\Html\Html;
         <label for="quote_number">
         	<?= $translator->translate('quote'); ?> #
         </label>
-            <input type="text" id="quote_number" class="form-control" readonly
+            <input type="text" id="quote_number" class="form-control form-control-lg" readonly
                 <?php if (null !== ($quote->getNumber())) : ?> value="<?= $quote->getNumber(); ?>"
                 <?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
                 <?php endif; ?>>
@@ -33,7 +33,7 @@ use Yiisoft\Html\Html;
     </label>
     <div class="input-group">
         <input name="quote_date_created" id="quote_date_created" disabled
-               class="form-control"
+               class="form-control form-control-lg"
                value="<?= Html::encode($quote->getDateCreated()->format('Y-m-d')); ?>"/>
         <span class="input-group-text">
             <i class="fa fa-calendar fa-fw"></i>
@@ -46,7 +46,7 @@ use Yiisoft\Html\Html;
     </label>
     <div class="input-group">
         <input name="quote_date_expires" id="quote_date_expires" readonly
-               class="form-control"
+               class="form-control form-control-lg"
                value="<?= Html::encode($quote->getDateExpires()->format('Y-m-d')); ?>">
         <span class="input-group-text">
             <i class="fa fa-calendar fa-fw"></i>

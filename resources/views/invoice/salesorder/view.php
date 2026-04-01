@@ -219,7 +219,7 @@ Html::encode($so->getClient()?->getClientAddress1()) . '<br>' : ''; ?>
                                     </label>
                                     <input type="text"
                                            id="salesorder_number"
-                                           class="form-control"
+                                           class="form-control form-control-lg"
                                            readonly
  <?php if (null !== $so->getNumber()) : ?> value="<?= $so->getNumber(); ?>"
 <?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
@@ -234,7 +234,7 @@ Html::encode($so->getClient()?->getClientAddress1()) . '<br>' : ''; ?>
                                         <input name="salesorder_date_created"
                                                id="salesorder_date_created"
                                                disabled
-                                               class="form-control"
+                                               class="form-control form-control-lg"
                                                value="<?=Html::encode(
 $so->getDateCreated() instanceof \DateTimeImmutable ?
         $so->getDateCreated()->format('Y-m-d') :
@@ -288,7 +288,7 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
                                     <select name="status_id"
                                             id="status_id"
                                             disabled
-                                            class="form-control">
+                                            class="form-control form-control-lg">
 <?php
     /**
      * @var string $key
@@ -312,7 +312,7 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
                                     </label>
                                     <input type="text"
                                            id="salesorder_password"
-                                           class="form-control"
+                                           class="form-control form-control-lg"
                                            disabled
                                            value="<?=
                                     Html::encode($so->getPassword() ?? ''); ?>"
@@ -324,7 +324,7 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
                                     </label>
                                     <input type="text"
                                            id="salesorder_client_purchase_order_number"
-                                           class="form-control"
+                                           class="form-control form-control-lg"
                                            disabled
                                            value="<?= 
                             Html::encode($so->getClientPoNumber() ?? ''); ?>">
@@ -335,7 +335,7 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
                                     </label>
                                     <input type="text"
                                            id="salesorder_client_purchase_order_person"
-                                           class="form-control"
+                                           class="form-control form-control-lg"
                                            disabled
                                            value="<?= 
                             Html::encode($so->getClientPoPerson() ?? ''); ?>">
@@ -359,7 +359,7 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
                                        id="dropzone_client_id"
                                        readonly
                                        hidden
-                                       class="form-control"
+                                       class="form-control form-control-lg"
                                        value="<?=
                                         $so->getClient()?->getClientId(); ?>">
                             </div>

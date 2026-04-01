@@ -1,5 +1,18 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
+interface MagnifierStyles {
+  fontSize: string;
+  fontWeight: string;
+  backgroundColor: string;
+  border: string;
+  borderRadius: string;
+  padding: string;
+  zIndex: string;
+  position: string;
+  transform: string;
+  boxShadow: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -46,9 +59,9 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
       elements.forEach((element: Element) => {
         const htmlElement = element as HTMLElement;
         
-        if (this.isAmountElement(htmlElement) && !htmlElement.dataset.magnifierInitialized) {
+        if (this.isAmountElement(htmlElement) && !htmlElement.dataset['magnifierInitialized']) {
           this.addMagnificationBehavior(htmlElement);
-          htmlElement.dataset.magnifierInitialized = 'true';
+          htmlElement.dataset['magnifierInitialized'] = 'true';
         }
       });
     });
@@ -128,7 +141,7 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
     });
   }
 
-  private applyMagnification(element: HTMLElement, originalStyles: CSSStyleDeclaration, borderColor: string, bgColor: string): void {
+  private applyMagnification(element: HTMLElement, originalStyles: MagnifierStyles, borderColor: string, bgColor: string): void {
     const currentFontSize = Number.parseFloat(originalStyles.fontSize);
     const newFontSize = currentFontSize * this.magnificationFactor;
     
@@ -144,11 +157,11 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
     element.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
   }
 
-  private removeMagnification(element: HTMLElement, originalStyles: CSSStyleDeclaration): void {
+  private removeMagnification(element: HTMLElement, originalStyles: MagnifierStyles): void {
     const propertiesToRestore = ['fontSize', 'fontWeight', 'backgroundColor', 'border', 'borderRadius', 'padding', 'zIndex', 'position', 'transform', 'boxShadow'];
     
     propertiesToRestore.forEach(property => {
-      element.style.setProperty(property, originalStyles.getPropertyValue(property));
+        element.style.setProperty(property, originalStyles[property as keyof MagnifierStyles]);
     });
   }
 

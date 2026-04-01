@@ -145,6 +145,7 @@ final class SettingController extends BaseController
         $peppol_arrays = new PeppolArrays();
         $languages = $this->sR->localeLanguageArray();
         $body = $request->getParsedBody();
+        $p = '//invoice/setting/views/partial_settings_'; 
         $parameters = [
             'actionName' => 'setting/tabIndex',
             'actionArguments' => [],
@@ -157,13 +158,14 @@ final class SettingController extends BaseController
             'alert' => $this->alert(),
             'head' => $head,
             'body' => $body,
-            'frontPage' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_front_page'),
-            'general' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_general', [
+            'frontPage' => $this->webViewRenderer->renderPartialAsString($p . 'front_page'),
+            'general' => $this->webViewRenderer->renderPartialAsString($p . 'general', [
                 /**
                  * @psalm-suppress PossiblyInvalidArgument
                  */
                 'languages' => $languages,
-                'first_days_of_weeks' => ['0' => $this->sR->lang('i.sunday'), '1' => $this->sR->lang('i.monday')],
+                'first_days_of_weeks' => ['0' => $this->sR->lang('sunday'),
+                    '1' => $this->sR->lang('monday')],
                 'date_formats' => $datehelper->dateFormats(),
                 // Used in ClientForm
                 'time_zones' => DateTimeZone::listIdentifiers(),
@@ -173,44 +175,44 @@ final class SettingController extends BaseController
                 'current_date' => new \DateTime(),
                 'icon' => $aliases->get('@icon'),
             ]),
-            'invoices' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoices', [
+            'invoices' => $this->webViewRenderer->renderPartialAsString($p . 'invoices', [
                 'invoice_groups' => $gR->findAllPreloaded(),
                 'payment_methods' => $pm->findAllPreloaded(),
                 'public_invoice_templates' => $this->sR->getInvoiceTemplates('public'),
                 'pdf_invoice_templates' => $this->sR->getInvoiceTemplates('pdf'),
                 'email_templates_invoice' => $eR->repoEmailTemplateType('invoice'),
             ]),
-            'quotes' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_quotes', [
+            'quotes' => $this->webViewRenderer->renderPartialAsString($p . 'quotes', [
                 'invoice_groups' => $gR->findAllPreloaded(),
                 'public_quote_templates' => $this->sR->getQuoteTemplates('public'),
                 'pdf_quote_templates' => $this->sR->getQuoteTemplates('pdf'),
                 'email_templates_quote' => $eR->repoEmailTemplateType('quote'),
             ]),
-            'salesorders' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_client_purchase_orders', [
+            'salesorders' => $this->webViewRenderer->renderPartialAsString($p . 'client_purchase_orders', [
                 'gR' => $gR,
             ]),
-            'oauth2' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_oauth2', [
+            'oauth2' => $this->webViewRenderer->renderPartialAsString($p . 'oauth2', [
                 'openBankingProviders' => $this->getOpenBankingProvidersWithAuthUrl(),
             ]),
-            'taxes' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_taxes', [
+            'taxes' => $this->webViewRenderer->renderPartialAsString($p . 'taxes', [
                 'tax_rates' => $tR->findAllPreloaded(),
             ]),
-            'email' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_email'),
-            'google_translate' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_google_translate', [
+            'email' => $this->webViewRenderer->renderPartialAsString($p . 'email'),
+            'google_translate' => $this->webViewRenderer->renderPartialAsString($p . 'google_translate', [
                 'locales' => $this->sR->locales(),
             ]),
-            'online_payment' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_online_payment', [
+            'online_payment' => $this->webViewRenderer->renderPartialAsString($p . 'online_payment', [
                 'gateway_drivers' => $this->sR->activePaymentGateways(),
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 'gateway_regions' => $this->sR->amazonRegions(),
                 'openBankingProviders' => $this->getOpenBankingProviderNames(),
                 'payment_methods' => $pm->findAllPreloaded(),
             ]),
-            'mpdf' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_mpdf'),
-            'mtd' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_making_tax_digital'),
-            'projects_tasks' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_projects_tasks'),
-            'vat_registered' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_vat_registered'),
-            'peppol_electronic_invoicing' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_peppol', [
+            'mpdf' => $this->webViewRenderer->renderPartialAsString($p . 'mpdf'),
+            'mtd' => $this->webViewRenderer->renderPartialAsString($p . 'making_tax_digital'),
+            'projects_tasks' => $this->webViewRenderer->renderPartialAsString($p . 'projects_tasks'),
+            'vat_registered' => $this->webViewRenderer->renderPartialAsString($p . 'vat_registered'),
+            'peppol_electronic_invoicing' => $this->webViewRenderer->renderPartialAsString($p . 'peppol', [
                 'config_tax_currency' => $this->sR->getConfigPeppol()['TaxCurrencyCode'] ?: $this->sR->getConfigCompanyDetails()['tax_currency'],
                 'gateway_currency_codes' => CurrencyHelper::all(),
                 // if delivery/invoice periods are used, a tax point date cannot be determined
@@ -221,22 +223,22 @@ final class SettingController extends BaseController
                 // They cannot both exist at the same time.
                 'stand_in_codes' => $peppol_arrays->getUncl2005subset(),
             ]),
-            'storecove' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_storecove', [
+            'storecove' => $this->webViewRenderer->renderPartialAsString($p . 'storecove', [
                 'countries' => $countries->getCountryList((string) $this->session->get('_language')),
                 'sender_identifier_array' => StoreCoveArrays::storeCoveSenderIdentifierArray(),
             ]),
-            'invoiceplane' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_invoiceplane', [
+            'invoiceplane' => $this->webViewRenderer->renderPartialAsString($p . 'invoiceplane', [
                 'actionTestConnectionName' => 'import/testconnection',
                 'actionTestConnectionArguments' => ['_language' => 'en'],
                 'actionImportName' => 'import/invoiceplane',
                 'actionImportArguments' => ['_language' => 'en'],
             ]),
-            'qrcode' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_qr_code', [
+            'qrcode' => $this->webViewRenderer->renderPartialAsString($p . 'qr_code', [
             ]),
-            'telegram' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_telegram', [
+            'telegram' => $this->webViewRenderer->renderPartialAsString($p . 'telegram', [
             ]),
             // two-factor-authentication
-            'tfa' => $this->webViewRenderer->renderPartialAsString('//invoice/setting/views/partial_settings_two_factor_authentication'),
+            'tfa' => $this->webViewRenderer->renderPartialAsString($p . 'two_factor_authentication'),
             'bootstrap5' => $this->bootstrap5Partial(),
         ];
         if ($request->getMethod() === Method::POST) {
@@ -249,12 +251,13 @@ final class SettingController extends BaseController
                  */
                 foreach ($settings as $key => $value) {
                     $key === 'tax_rate_decimal_places' && (int) $value !== 2 ?
-                            $this->tabIndexChangeDecimalColumn((int) $value) : '';
+                           $this->tabIndexChangeDecimalColumn((int) $value) : '';
                     // Deal with existing keys after first installation
                     if ($this->sR->repoCount($key) > 0) {
                         // Warn if duplicates
                         if ($this->sR->repoCount($key) > 1) {
-                            $this->flashMessage('danger', $this->translator->translate('setting.duplicate.key') . $key);
+                            $this->flashMessage('danger',
+                                $this->translator->translate('setting.duplicate.key') . $key);
                             return $this->webService->getRedirectResponse('setting/tabIndex');
                         }
                         if (str_contains($key, 'field_is_password') || str_contains($key, 'field_is_amount')) {
@@ -276,16 +279,9 @@ final class SettingController extends BaseController
                         }
 
                         if (($key == 'number_format') && in_array($value, $this->sR->numberFormats())) {
-                            // Set thousands_separator and decimal_point according to number_format
-                            // Derive the 'decimal_point' and 'thousands_separator' setting from the chosen ..number format eg. 1000,000.00 if it has a value
                             $this->tabIndexNumberFormat($value);
                         }
                     } else {
-                        // The key does not exist because the repoCount is not greater than zero => add
-                        // Note:
-                        // The settings 'decimal_point' and 'thousands_separator' which are derived from number_format array
-                        // and were installed on the first run in InvoiceController
-                        // will be derived automatically => their repoCount will be greater than zero and will not cause this to run
                             $this->tabIndexDebugModeEnsureAllSettingsIncluded(true, $key, $value);
                         }
                     }
@@ -293,7 +289,7 @@ final class SettingController extends BaseController
                 return $this->webService->getRedirectResponse('setting/tabIndex');
             }
         }
-        return $this->webViewRenderer->render('tab_index', $parameters);
+        return $this->webViewRenderer->render('//invoice/setting/tab_index', $parameters);
     }
 
     /**
@@ -319,7 +315,8 @@ final class SettingController extends BaseController
             'scalingFactor' => $query_params['scalingFactor'],
             'colourDepth' => $query_params['colourDepth'],
             'timestamp' =>  new DateTimeImmutable()->getTimestamp(),
-            'windowSize' => (string) $query_params['windowInnerWidth'] . 'x' . (string) $query_params['windowInnerHeight'],
+            'windowSize' => (string) $query_params['windowInnerWidth']
+                . 'x' . (string) $query_params['windowInnerHeight'],
             'userUuid' => $userUuid,
         ]));
     }
@@ -336,14 +333,13 @@ final class SettingController extends BaseController
             $this->sR->save($setting);
         }
     }
-    
+        
     /**
      * @param int $value
-     * @psalm-suppress UnusedParam $value
      */
     public function tabIndexChangeDecimalColumn(int $value): void
     {
-        // Change the decimal column dynamically using cycle and the Fragment command. SyncTable has been commented out from config/params.php
+        $this->tabIndexSettingsSave('tax_rate_decimal_places', (string) $value);
     }
 
     /**
@@ -371,7 +367,8 @@ final class SettingController extends BaseController
         }
     }
 
-    // This procedure is used in the above procedure to ensure that all settings are being captured.
+    // This procedure is used in the above procedure to ensure that all
+    //  settings are being captured.
     /**
      * @param bool $bool
      * @param string $key
@@ -380,9 +377,7 @@ final class SettingController extends BaseController
     public function tabIndexDebugModeEnsureAllSettingsIncluded(bool $bool,
             string $key, string $value): void
     {
-        // The setting does not exist because repoCount is not greater than 0;
         if ($bool) {
-            // Make sure the setting is available to be set in the database if there is no such like setting in the database
             $setting = new Setting();
             $setting->setSettingKey($key);
             $setting->setSettingValue($value);
@@ -411,7 +406,9 @@ final class SettingController extends BaseController
             $body = $request->getParsedBody() ?? [];
             $key = (string) ($body['setting_key'] ?? '');
             if ($this->sR->repoCount($key) == 1) {
-                $this->flashMessage('danger', $this->translator->translate('setting.duplicate.key') . $key);
+                $this->flashMessage('danger',
+                    $this->translator->translate('setting.duplicate.key')
+                        . $key);
                 return $this->webService->getRedirectResponse('setting/debugIndex');
             }
             /**
@@ -429,7 +426,8 @@ final class SettingController extends BaseController
     }
 
     /**
-     * Use: Toggle between draft invoice has 1. invoice number generated or 2. no Invoice number generated
+     * Use: Toggle between draft invoice has 1. invoice number generated
+     *  or 2. no Invoice number generated
      * Route name: setting/draft route action setting/inv_draft_has_number_switch
      * Related logic: see /config/common/routes.php
      * @param CurrentRoute $currentRoute
@@ -455,8 +453,10 @@ final class SettingController extends BaseController
 
     /**
      * Purpose: A warning is given if this setting is ON during production
-     * Use: Toggle between 1. On (Development) or 2. Off (Production) on the flash message under invoice/index
-     * Location: Settings ... View ... Invoices ... Other Settings ... Mark invoices as sent when copying an invoice
+     * Use: Toggle between 1. On (Development) or
+     *  2. Off (Production) on the flash message under invoice/index
+     * Location: Settings ... View ... Invoices ... Other Settings
+     *  ... Mark invoices as sent when copying an invoice
      * Route name: setting/mark_sent route action setting/mark_sent
      * Related logic: see /config/common/routes.php
      * @param CurrentRoute $currentRoute
@@ -481,8 +481,10 @@ final class SettingController extends BaseController
     }
 
     /**
-     * Purpose: Save the users toggle button choice on flash message: 'Assign a client to a user automatically after signup'
-     * Related logic: see App\Widget\Button static function setOrUnsetAssignClientToUserAutomatically
+     * Purpose: Save the users toggle button choice on flash message:
+     *  'Assign a client to a user automatically after signup'
+     * Related logic:
+     *  see App\Widget\Button static function setOrUnsetAssignClientToUserAutomatically
      * Related logic: see src\Invoice\UserInv\UserInvController function signup
      * @return Response
      */

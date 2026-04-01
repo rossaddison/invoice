@@ -31,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Eslint Sonarqube Build Session](docs/ESLINT_SONARQUBE_BUILD_SESSION.md) (March 2026)
+
 [Avoiding RBAC Mutation](docs/AVOIDING_RBAC_MUTATION.md) (March 2026)
 
 [Php 8.4 Alpine Setup](docs/PHP84_ALPINE_SETUP.md) (March 2026)

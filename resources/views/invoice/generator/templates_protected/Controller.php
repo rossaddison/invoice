@@ -65,8 +65,9 @@ use Psr\Http\Message\{
 use Yiisoft\{Data\Cycle\Reader\EntityReader, Data\Paginator\PageToken,
     Data\Paginator\OffsetPaginator,
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
-    FormModel\FormHydrator, Http\Method, Router\HydratorAttribute\RouteArgument,
-    Session\SessionInterface, Translator\TranslatorInterface,
+    FormModel\FormHydrator, Input\Http\Attribute\Parameter\Query,
+    Http\Method, Router\FastRoute\UrlGenerator, Router\HydratorAttribute\RouteArgument,
+    Session\SessionInterface, Session\Flash\Flash, Translator\TranslatorInterface,
     Yii\View\Renderer\WebViewRenderer}
 
 use \Exception;
@@ -80,18 +81,21 @@ final class <?= $generator->getCamelcaseCapitalName(); ?>
     public function __construct(
         private <?= $generator->getCamelcaseCapitalName(); ?>
             Service $<?= $generator->getSmallSingularName(); ?>Service,
+        private UrlGenerator,    
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
         UserService $userService,
         WebViewRenderer $webViewRenderer,
-        WebControllerService $webService
+        WebControllerService $webService,
+        Flash $flash,
     )
     ) {
         parent::__construct($webService, $userService, $translator,
             $webViewRenderer, $session, $sR, $flash);
         $this-><?= $generator->getSmallSingularName(); ?>Service = $
             <?= $generator->getSmallSingularName(); ?>Service;
+        $this->urlGenerator = $urlGenerator;    
     }
     
     public function add(Request $request, 
@@ -162,25 +166,28 @@ foreach ($relations as $relation) {
     public function index(
         <?= $generator->getCamelcaseCapitalName(); ?>Repository $
         <?= lcfirst($generator->getCamelcaseCapitalName()); ?>Repository, 
-                          sR $sR, #[RouteArgument('page')] int $page = 1): Response
+        sR $sR,
+        #[RouteArgument('page')] string $page = '1',
+        #[Query('page')]
+        ?string $queryPage = null,
+        #[Query('sort')]
+        ?string $querySort = null
+    ): Response
     {      
       $<?= $generator->getSmallSingularName(); ?> = $
       <?= lcfirst($generator->getCamelcaseCapitalName()); ?>
       Repository->findAllPreloaded();
-      $paginator = (new OffsetPaginator($
-      <?= $generator->getSmallSingularName(); ?>))
-      ->withPageSize($settingRepository->positiveListLimit())
-      ->withCurrentPage($page)
-      ->withToken(PageToken::next((string)$page));
+      $page = $queryPage ?? $page;
       $parameters = [
       '<?= $generator->getSmallSingularName(); ?>s' => $this->
       <?= $generator->getSmallSingularName(); ?>
       s($<?= lcfirst($generator->getCamelcaseCapitalName()); ?>Repository),
-      'paginator' => $paginator,
+      'page' => (int) $page > 0 ? (int) $page : 1,
+      'sortString' => $querySort ?? '-id',
       'alert' => $this->alert(),
       'defaultPageSizeOffsetPaginator' => $sR->getSetting('default_list_limit')
             ? (int)$sR->getSetting('default_list_limit') : 1
-    ];
+      ];
     return $this->webViewRenderer->render('index', $parameters);
     }
     
@@ -335,8 +342,7 @@ echo rtrim($rel, ",\n") . "\n";
     /**
      * @param <?= $generator->getCamelcaseCapitalName(); ?>Repository $
         <?= $generator->getSmallSingularName(); ?>Repository
-     * @param SettingRepository $settingRepository
-     * @param int id
+     * @param int $id
      * @return Response
      */
     public function view(<?= $generator->getCamelcaseCapitalName(); ?>

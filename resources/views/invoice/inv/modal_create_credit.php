@@ -26,7 +26,7 @@ use Yiisoft\Html\Html;
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="user_id" id="user_id" class="form-control" value="<?= $inv->getUserId(); ?>">
+                    <input type="hidden" name="user_id" id="user_id" class="form-control form-control-lg" value="<?= $inv->getUserId(); ?>">
 
                     <input type="hidden" name="parent_id" id="parent_id"
                            value="<?= $inv->getId(); ?>">
@@ -41,7 +41,7 @@ echo $credit_date; ?>">
 
                     <div class="form-group">
                         <label for="inv_password"><?= $translator->translate('password'); ?></label>
-                        <input type="text" name="inv_password" id="inv_password" class="form-control"
+                        <input type="text" name="inv_password" id="inv_password" class="form-control form-control-lg"
                                value="<?= $s->getSetting('invoice_pre_password') == '' ? '' : $s->getSetting('invoice_pre_password'); ?>"
                                style="margin: 0 auto;" autocomplete="off">
                     </div>

@@ -55,6 +55,8 @@ class Company
         #[Column(type: 'text', nullable: true)]
         private ?string $email = '',
         #[Column(type: 'text', nullable: true)]
+        private ?string $seo_description = '',
+        #[Column(type: 'text', nullable: true)]
         private ?string $web = '',
         #[Column(type: 'text', nullable: true)]
         private ?string $slack = '',
@@ -201,6 +203,18 @@ class Company
         $this->email = $email;
     }
 
+    // Related logic: resources/views/layout/soletrader/main.php
+    // src/ViewInjection/CommonViewInjection
+    public function getSeoDescription(): ?string
+    {
+        return $this->seo_description;
+    }
+
+    public function setSeoDescription(string $seoDescription): void
+    {
+        $this->seo_description = $seoDescription;
+    }
+    
     public function getWeb(): ?string
     {
         return $this->web;

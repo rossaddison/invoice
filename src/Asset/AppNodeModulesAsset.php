@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Asset;
 
-use App\Invoice\Asset\NodeModulesAsset;
+use App\Invoice\Asset\NodeModulesBootstrapIconsAsset;
 use Yiisoft\Assets\AssetBundle;
 
-final class AppAsset extends AssetBundle
+final class AppNodeModulesAsset extends AssetBundle
 {
     public ?string $basePath = '@assets';
 
     public ?string $baseUrl = '@assetsUrl';
 
     public ?string $sourcePath = '@resources/asset';
+    
+    public bool $cdn = false;
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [
@@ -25,6 +27,6 @@ final class AppAsset extends AssetBundle
 
     public array $depends = [
         // loads the package.json's node_module/bootstrap-icons
-        NodeModulesAsset::class,
+        NodeModulesBootstrapIconsAsset::class,
     ];
 }

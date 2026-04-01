@@ -46,6 +46,14 @@ trait SettingsTabBootstrap5
                 => $this->sR->getSetting('bootstrap5_layout_invoice_navbar_font'),
             'settings[bootstrap5_layout_invoice_navbar_font_size]'
                 => $this->sR->getSetting('bootstrap5_layout_invoice_navbar_font_size'),
+            'settings[bootstrap5_layout_guest_navbar_font]'
+                => $this->sR->getSetting('bootstrap5_layout_guest_navbar_font'),
+            'settings[bootstrap5_layout_guest_navbar_font_size]'
+                => $this->sR->getSetting('bootstrap5_layout_guest_navbar_font_size'),
+            'settings[bootstrap5_layout_main_navbar_font]'
+                => $this->sR->getSetting('bootstrap5_layout_main_navbar_font'),
+            'settings[bootstrap5_layout_main_navbar_font_size]'
+                => $this->sR->getSetting('bootstrap5_layout_main_navbar_font_size'),
         ];
     }
 
@@ -85,8 +93,26 @@ trait SettingsTabBootstrap5
             ],
         );
 
-        $navbar = $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/views/bootstrap5/partial_navbar',
+        $navbarInvoice = $this->webViewRenderer->renderPartialAsString(
+            '//invoice/setting/views/bootstrap5/partial_navbar_invoice',
+            [
+                'body' => $body,
+                'fonts' => $fonts,
+                'fontSizes' => $fontSizes,
+            ],
+        );
+        
+        $navbarGuest = $this->webViewRenderer->renderPartialAsString(
+            '//invoice/setting/views/bootstrap5/partial_navbar_guest',
+            [
+                'body' => $body,
+                'fonts' => $fonts,
+                'fontSizes' => $fontSizes,
+            ],
+        );
+        
+        $navbarMain = $this->webViewRenderer->renderPartialAsString(
+            '//invoice/setting/views/bootstrap5/partial_navbar_main',
             [
                 'body' => $body,
                 'fonts' => $fonts,
@@ -116,7 +142,9 @@ trait SettingsTabBootstrap5
             . $sep
             . $alert
             . $sep
-            . $navbar
+            . $navbarInvoice
+            . $navbarGuest
+            . $navbarMain    
             . $cdn    
             . H::closeTag('div')   // row (inner)
             . H::closeTag('div')   // panel-body

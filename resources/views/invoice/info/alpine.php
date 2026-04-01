@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 ?>
 
+<div style='font-size: 18px;'>
 <p><b>How can I setup this repository onto Linux Alpine, Apache2, mySql/mariadb and php?</b><p>
 <p>To set up the rossaddison/invoice repository on Linux Alpine using Apache2, MySQL/MariaDB, and PHP, follow these steps:</p>
 
@@ -133,5 +134,5 @@ If SSL is required, consider installing and configuring Let's Encrypt with certb
 
 By following these steps, the rossaddison/invoice repository should be set up and running with Linux Alpine, Apache2, MySQL/MariaDB, and PHP. Let me know if you need further assistance!
 </pre>
-
+</div>
 

@@ -9,6 +9,7 @@ use App\ViewInjection\MetaTagsViewInjection;
 use Psr\Log\LogLevel;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Definitions\Reference;
+use Yiisoft\Form\Field\Text;
 use Yiisoft\Form\Field\SubmitButton;
 use Yiisoft\Form\Field\Checkbox;
 use Yiisoft\Form\Field\ErrorSummary;
@@ -248,9 +249,11 @@ return [
             'defaultTheme' => 'bootstrap5-vertical',
             'validationRulesEnricher' => new ValidationRulesEnricher(),
             // currently being used
+            // Note src/Widget/FormFields settings will override
+            // some of these settings
             'default' => [
                 'containerClass' => 'form-floating mb-3',
-                'inputClass' => 'form-control h3',
+                'inputClass' => 'form-control form-control-lg',
                 'invalidClass' => 'is-invalid',
                 'validClass' => 'is-valid',
                 'template' => '{input}{label}{hint}{error}',
@@ -261,7 +264,7 @@ return [
                 * product/_form.php and adjust the h6 below to h1 and see the
                 * effect
                 */
-                'hintClass' => 'text-danger h4',
+                'hintClass' => 'text-danger h6',
                 'fieldConfigs' => [
                     $submitButtonConfigs['default'],
                     // if this Checkbox class is not used then the checkbox ends
@@ -376,7 +379,6 @@ return [
     ],
     'yiisoft/yii-view-renderer' => [
         'viewPath' => '@views',
-        //'layout' => '@views/layout/main.php',
         'layout' => '@views/layout/templates/soletrader/main.php',
         'injections' => [
             Reference::to(CommonViewInjection::class),

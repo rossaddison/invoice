@@ -16,10 +16,13 @@ class NodeModulesGovUkFrontEndGovUkAsset extends AssetBundle
     public ?string $baseUrl = '@assetsUrl';
 
     /**
-     * Related logic: see https://frontend.design-system.service.gov.uk/installing-with-npm/#get-the-css-assets-and-javascript-working
+     * Related logic: see https://frontend.design-system.service.gov.uk/
+     * installing-with-npm/#get-the-css-assets-and-javascript-working
      * Related logic: see config/common/params 'yiisoft/aliases @npm'
      */
     public ?string $sourcePath = '@npm/govuk-frontend/dist/govuk';
+    
+    public bool $cdn = false;
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [

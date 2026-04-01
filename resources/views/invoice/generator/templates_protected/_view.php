@@ -35,9 +35,9 @@ use Yiisoft\Html\Tag\Form;
 <?php
     echo "?>\n";
 echo '<?= Html::openTag(\'h1\'); ?><?= Html::encode($title) ?><?= Html::closeTag(\'h1\'); ?>' . "\n";
-echo "<?= Html::openTag('div',['class'=>'container py-5 h-100']); ?>" . "\n";
-echo "<?= Html::openTag('div',['class'=>'row d-flex justify-content-center align-items-center h-100']); ?>" . "\n";
-echo "<?= Html::openTag('div',['class'=>'col-12 col-md-8 col-lg-6 col-xl-8']); ?>" . "\n";
+echo "<?= Html::openTag('div',['class'=>'container-fluid py-3']); ?>" . "\n";
+echo "<?= Html::openTag('div',['class'=>'row justify-content-center']); ?>" . "\n";
+echo "<?= Html::openTag('div',['class'=>'col-12 col-lg-10 col-xl-10']); ?>" . "\n";
 echo "<?= Html::openTag('div',['class'=>'card border border-dark shadow-2-strong rounded-3']); ?>";
 echo "<?= Html::openTag('div',['class'=>'card-header']); ?>" . "\n";
 

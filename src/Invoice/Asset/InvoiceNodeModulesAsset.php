@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\Asset;
 
+use App\Invoice\Asset\NodeModulesBootstrapLightboxAsset;
+use App\Invoice\Asset\NodeModulesClipBoardAsset;
 use Yiisoft\Assets\AssetBundle;
 
-class InvoiceAsset extends AssetBundle
+class InvoiceNodeModulesAsset extends AssetBundle
 {
     public ?string $sourcePath = '@src/Invoice/Asset';
 
@@ -28,6 +30,8 @@ class InvoiceAsset extends AssetBundle
         // QuoteToolbar Widget styles
         'rebuild/css/quote-toolbar.css',
     ];
+    
+    public bool $cdn = false;
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $js = [
@@ -37,28 +41,13 @@ class InvoiceAsset extends AssetBundle
         // setting, scripts, modal-product-lookups, modal-task-lookups
         'rebuild/js/invoice-typescript-iife.js',
 
-        // Individual JS files included in TypeScript bundle
-        //'rebuild/js/quote.js',
-        //'rebuild/js/inv.js',
-        //'rebuild/js/salesorder.js',
-        //'rebuild/js/client.js',
-        //'rebuild/js/family.js',
-        //'rebuild/js/product.js',
-        //'rebuild/js/productclient.js',
-        //'rebuild/js/setting.js',
-        //'rebuild/js/scripts.js',
-
-        //'rebuild/js/modal-product-lookups.js',
-
-        //'rebuild/js/modal-task-lookups-inv.js',
-        //'rebuild/js/modal-task-lookups-quote.js',
-
         'rebuild/js/cron.js',
         'rebuild/js/emailtemplate.js',
         'rebuild/js/mailer_ajax_email_addresses.js',
-
-        // External CDN libraries
-        '//cdn.jsdelivr.net/npm/bs5-lightbox@1.8.5/dist/index.bundle.min.js',
-        '//cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js',
+    ];
+    
+    public array $depends = [
+        NodeModulesBootstrapLightboxAsset::class,
+        NodeModulesClipBoardAsset::class,
     ];
 }

@@ -38,7 +38,7 @@ declare(strict_types=1);
                             <?= $translator->translate('every'); ?>
                         </label>
                         <select name="recur_frequency" id="recur_frequency"
-                            class="form-control">
+                            class="form-control form-control-lg">
                             <?php
                                 /**
                                  * @var string $key
@@ -58,7 +58,7 @@ declare(strict_types=1);
                         <div class="input-group">
                             <input name="recur_start_date"
                                    id="recur_start_date"
-                                   class="form-control"
+                                   class="form-control form-control-lg"
                                    type="date"
                                    autocomplete="off">
                         </div>
@@ -82,7 +82,7 @@ declare(strict_types=1);
                         <div class="input-group">
                             <input name="recur_end_date"
                                    id="recur_end_date"
-                                   class="form-control"
+                                   class="form-control form-control-lg"
                                    type="date"
                                    autocomplete="off">
                         </div>

@@ -43,9 +43,9 @@ use Yiisoft\Html\Tag\Form;
  */
 
 ?>
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
+<?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
+<?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
+<?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
@@ -110,7 +110,7 @@ Html::closeTag('div')
     ->addInputAttributes([
         'value' => Html::encode($form->getClientFrequency() ?? ''),
         'placeholder' => $translator->translate('client.frequency'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
     ])
     ->optionsData($optionsDataClientFrequencyDropdownFilter)
     ->required(false);

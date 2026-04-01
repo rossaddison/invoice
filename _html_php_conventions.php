@@ -47,11 +47,11 @@ $panel          = ['class' => 'panel panel-default'];
 $panelHead      = ['class' => 'panel-heading'];
 $panelBody      = ['class' => 'panel-body'];
 $formGroup      = ['class' => 'form-group'];
-$formControl    = ['class' => 'form-control'];
+$formControl    = ['class' => 'form-control form-control-lg'];
 $checkbox       = ['class' => 'checkbox'];
 $inputGroup     = ['class' => 'input-group'];
 $inputGroupText = ['class' => 'input-group-text'];
-$inputSm        = ['class' => 'input-sm form-control'];
+$inputSm        = ['class' => 'input-sm form-control form-control-lg'];
 $helpBlock      = ['class' => 'help-block'];
 
 // ════════════════════════════════════════════════════════════════════════════

@@ -43,7 +43,7 @@ declare(strict_types=1);
      YYYY-MM-DD format -->
                             <input name="modal_created_date"
                                    id="modal_created_date"
-                                   class="form-control"
+                                   class="form-control form-control-lg"
                                    type="date"
                                    autocomplete="off">
                        

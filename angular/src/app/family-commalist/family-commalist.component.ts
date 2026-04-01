@@ -121,4 +121,7 @@ export class FamilyCommalistComponent implements OnInit, OnDestroy {
   get selectedNumbersArray(): number[] {
     return Array.from(this.selectedNumbers).sort((a, b) => a - b);
   }
+  ngOnDestroy(): void {
+    // No subscriptions or timers to clean up
+  }
 }

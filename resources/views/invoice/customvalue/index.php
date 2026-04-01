@@ -43,7 +43,7 @@ use Yiisoft\Html\Html;
 
                 <div class="form-group">
                     <label for="label"><?= $translator->translate('field'); ?>: </label>
-                    <input type="text" name="label" id="label" class="form-control"
+                    <input type="text" name="label" id="label" class="form-control form-control-lg"
                            value="<?= Html::encode(strlen($customFieldLabel = ($custom_field->getLabel() ?? '')) > 0
                                                         ? $customFieldLabel
                                                         : ''); ?>" disabled="disabled">
@@ -51,7 +51,7 @@ use Yiisoft\Html\Html;
 
                 <div class="form-group">
                     <label for="types"><?= $translator->translate('type'); ?>: </label>
-                    <select name="types" id="types" class="form-control"
+                    <select name="types" id="types" class="form-control form-control-lg"
                             disabled="disabled">
                         <?php
                             /**

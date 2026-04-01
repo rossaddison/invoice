@@ -29,15 +29,15 @@ use Yiisoft\Html\Html;
                     <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUserId(); ?>">
                     <div class="form-group">
                         <label for="po_number"><?= $translator->translate('quote.with.purchase.order.number') ?></label>
-                        <input type="text" name="po_number" id="po_number" class="form-control" value="">
+                        <input type="text" name="po_number" id="po_number" class="form-control form-control-lg" value="">
                     </div>
                     <div class="form-group">
                         <label for="po_person"><?= $translator->translate('quote.with.purchase.order.person') ?></label>
-                        <input type="text" name="po_person" id="po_person" class="form-control" value="">
+                        <input type="text" name="po_person" id="po_person" class="form-control form-control-lg" value="">
                     </div>
                     <div class="form-group">
                         <label for="password"><?= $translator->translate('quote.to.so.password'); ?></label>
-                        <input type="text" name="password" id="password" class="form-control"
+                        <input type="text" name="password" id="password" class="form-control form-control-lg"
                                value="<?= $s->getSetting('so_pre_password') == '' ? '' : $s->getSetting('so_pre_password') ?>"
                                autocomplete="off">
                     </div>
@@ -45,7 +45,7 @@ use Yiisoft\Html\Html;
                         <label for="so_group_id">
                             <?= $translator->translate('salesorder.default.group'); ?>
                         </label>
-                        <select name="so_group_id" id="so_group_id" class="form-control">
+                        <select name="so_group_id" id="so_group_id" class="form-control form-control-lg">
                             <?php
                                 /**
                                  * @var App\Invoice\Entity\Group $group

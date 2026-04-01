@@ -31,7 +31,7 @@ declare(strict_types=1);
                             <?= $translator->translate('tax.rate'); ?>
                         </label>
                         <div>
-                            <select name="inv_tax_rate_id" id="inv_tax_rate_id" class="form-control" required>
+                            <select name="inv_tax_rate_id" id="inv_tax_rate_id" class="form-control form-control-lg" required>
                                 <option value="0"><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
@@ -58,7 +58,7 @@ declare(strict_types=1);
                         </label>
 
                         <div>
-                            <select name="include_inv_item_tax" id="include_inv_item_tax" class="form-control">
+                            <select name="include_inv_item_tax" id="include_inv_item_tax" class="form-control form-control-lg">
                                 <?php if ($s->getSetting('enable_vat_registration') === '0') { ?>
                                 <option value="0">
                                     <?php echo $translator->translate('apply.before.item.tax'); ?>

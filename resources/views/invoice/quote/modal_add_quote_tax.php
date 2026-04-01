@@ -17,7 +17,7 @@ declare(strict_types=1);
                 <form>
                     <div class="mb-3">
                         <label for="tax_rate_id" class="form-label">Tax Rate</label>
-                        <select name="tax_rate_id" id="tax_rate_id" class="form-control" required>
+                        <select name="tax_rate_id" id="tax_rate_id" class="form-control form-control-lg" required>
                             <option value="">None</option>
                             <option value="1">0% - Zero</option>
                             <option value="2">20% - Standard</option>
@@ -26,7 +26,7 @@ declare(strict_types=1);
                     
                     <div class="mb-3">
                         <label for="include_item_tax" class="form-label">Tax Placement</label>
-                        <select name="include_item_tax" id="include_item_tax" class="form-control">
+                        <select name="include_item_tax" id="include_item_tax" class="form-control form-control-lg">
                             <option value="0">Apply before item tax</option>
                             <option value="1">Apply after item tax</option>
                         </select>

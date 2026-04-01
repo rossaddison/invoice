@@ -85,7 +85,7 @@ $vat = $s->getSetting('enable_vat_registration');
                 <td td-vert-middle>
                     <div class="input-group">
                         <span class="input-group-text"><?= $translator->translate('tax.rate'); ?></span>
-                        <select name="item_tax_rate_id" class="form-control">
+                        <select name="item_tax_rate_id" class="form-control form-control-lg">
                             <option value="0"><?= $translator->translate('none'); ?></option>
                             <?php
                     /**
@@ -117,13 +117,13 @@ $vat = $s->getSetting('enable_vat_registration');
                 <td class="td-textarea">
                     <div class="input-group">
                         <span class="input-group-text"><?= $translator->translate('description'); ?></span>
-                        <textarea name="item_description" class="form-control"></textarea>
+                        <textarea name="item_description" class="form-control form-control-lg"></textarea>
                     </div>
                 </td>
                 <td class="td-amount">
                     <div class="input-group">
                             <span class="input-group-text"><?= $translator->translate('product.unit'); ?></span>
-                            <select name="item_product_unit_id" class="form-control" disabled>
+                            <select name="item_product_unit_id" class="form-control form-control-lg" disabled>
                                 <option value="0"><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
@@ -182,7 +182,7 @@ foreach ($soItems as $item) { ?>
                         </div>    
                         <div class="input-group">
                             <span class="input-group-text"><?= $translator->translate('item'); ?></span>
-                            <select name="item_name" class="form-control" disabled>                                
+                            <select name="item_name" class="form-control form-control-lg" disabled>                                
                                 <?php
                     /**
                      * @var App\Invoice\Entity\Product $product
@@ -222,7 +222,7 @@ foreach ($soItems as $item) { ?>
                     <td>
                         <div class="input-group">
                             <span class="input-group-text"><?= $vat === '0' ? $translator->translate('tax.rate') : $translator->translate('vat.rate') ?></span>
-                            <select disabled name="item_tax_rate_id" class="form-control" data-bs-toggle = "tooltip" title="salesorder_item->tax_rate_id">
+                            <select disabled name="item_tax_rate_id" class="form-control form-control-lg" data-bs-toggle = "tooltip" title="salesorder_item->tax_rate_id">
                                 <?php
                     /**
                      * @var App\Invoice\Entity\TaxRate $taxRate
@@ -254,7 +254,7 @@ foreach ($soItems as $item) { ?>
                     <td class="td-textarea">
                         <div class="input-group">
                             <span class="input-group-text" data-bs-toggle = "tooltip" title="salesorder_item->description"><?= $translator->translate('description'); ?></span>
-                            <textarea disabled name="item_description" class="form-control" ><?= Html::encode($item->getDescription()); ?></textarea>
+                            <textarea disabled name="item_description" class="form-control form-control-lg" ><?= Html::encode($item->getDescription()); ?></textarea>
                         </div>
                     </td>
                     <td class="td-amount">

@@ -29,7 +29,7 @@ use Yiisoft\Html\Html;
                     <input type="hidden" name="user_id" id="user_id" value="<?= $inv->getUserId(); ?>">
                     <div class="form-group">
                         <label for="create_inv_client_id"><?= $translator->translate('client'); ?></label>
-                        <select name="create_inv_client_id" id="create_inv_client_id" class="form-control">
+                        <select name="create_inv_client_id" id="create_inv_client_id" class="form-control form-control-lg">
                             <option value="<?= $inv->getClient()?->getClientId(); ?>"><?= $inv->getClient()?->getClientName() ?? '#'; ?></option>
                                 <?php
                                     /**

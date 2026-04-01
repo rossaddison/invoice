@@ -58,6 +58,8 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= $formFields->companyTextField($form, 'web', 'web', false); ?>
+                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
+                    <?= $formFields->companyTextField($form, 'seo_description', 'company.seo', false); ?>    
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= $formFields->companyTextField($form, 'address_1', 'street.address', false); ?>    

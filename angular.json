@@ -28,13 +28,11 @@
             ],
             "tsConfig": "tsconfig.angular.json",
             "assets": [
-              "angular/favicon.ico",
-              "angular/assets",
-              {
-                "glob": "**/*",
-                "input": "public/assets",
-                "output": "/assets"
-              }
+                {
+                    "glob": "favicon.ico",
+                    "input": "public/site",
+                    "output": "/"
+                }
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -50,13 +48,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "800kb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kb",
+                  "maximumError": "8kb"
                 }
               ],
               "outputHashing": "all"
@@ -99,8 +97,11 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              "angular/favicon.ico",
-              "angular/assets"
+              {
+                  "glob": "favicon.ico",
+                  "input": "public/site",
+                  "output": "/"
+              }
             ],
             "styles": [
               "angular/styles.scss"

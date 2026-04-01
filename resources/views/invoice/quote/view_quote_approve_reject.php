@@ -21,7 +21,7 @@ use App\Widget\LabelSwitch;
     <label for="status_id">
     	<?= $translator->translate('status'); ?>
     </label>
-    <select name="status_id" id="status_id" disabled class="form-control">
+    <select name="status_id" id="status_id" disabled class="form-control form-control-lg">
         <?php
             /**
              * @var string $key
@@ -41,7 +41,7 @@ use App\Widget\LabelSwitch;
     <label for="quote_password" hidden>
         <?= $translator->translate('quote.password'); ?>
 </label>
-<input type="text" id="quote_password" class="form-control" disabled value="<?= Html::encode($body['password'] ?? ''); ?>" hidden>
+<input type="text" id="quote_password" class="form-control form-control-lg" disabled value="<?= Html::encode($body['password'] ?? ''); ?>" hidden>
 </div>
 
 <?php
@@ -51,7 +51,7 @@ use App\Widget\LabelSwitch;
     <div class="quote-properties">
         <label for="quote_guest_url" hidden><?php echo $translator->translate('guest.url'); ?></label>
         <div class="input-group" hidden>
-            <input type="text" id="quote_guest_url" disabled class="form-control" value="<?= $quote->getUrlKey(); ?>">
+            <input type="text" id="quote_guest_url" disabled class="form-control form-control-lg" value="<?= $quote->getUrlKey(); ?>">
             <span class="input-group-text to-clipboard cursor-pointer"
                   data-clipboard-target="#quote_guest_url">
                 <i class="fa fa-clipboard fa-fw"></i>
@@ -89,7 +89,7 @@ use App\Widget\LabelSwitch;
         </a>
     </div>
 <?php } ?>
-<input type="text" id="dropzone_client_id" readonly  hidden class="form-control" value="<?= $quote->getClient()?->getClientId(); ?>">
+<input type="text" id="dropzone_client_id" readonly  hidden class="form-control form-control-lg" value="<?= $quote->getClient()?->getClientId(); ?>">
 <?php 
     // the quote has already been approved because it has a sales order number associated with it => it can only be viewed
     if ($quote->getSoId()) 

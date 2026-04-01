@@ -109,7 +109,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                <div class="form-group">
                                             <label for="delivery_location_id"><?= $translator->translate('delivery.location'); ?>: </label>
                                             <select name="delivery_location_id" id="delivery_location_id"
-                                                    class="form-control" disabled>
+                                                    class="form-control form-control-lg" disabled>
                                                 <?php
                                                     /**
                                                      * @var App\Invoice\Entity\DeliveryLocation $del
@@ -212,12 +212,12 @@ foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
                         <?= Html::openTag('div'); ?>
                             <div class="row">
                                  <label for="terms_and_conditions_file" class="control-label"><?= $translator->translate('term') ?></label>
-                                 <textarea id="terms_and_conditions_file" class="form-control" rows="20" cols="20"><?= $terms_and_conditions_file; ?></textarea>
+                                 <textarea id="terms_and_conditions_file" class="form-control form-control-lg" rows="20" cols="20"><?= $terms_and_conditions_file; ?></textarea>
                             </div>
                             <div class="row">
                                 <div class="col-xs-12 col-sm-2">  
                                     <label for="inv_number" class="control-label"><?= $translator->translate('salesorder.invoice.number'); ?></label>
-                                    <input type="text" name="inv_number" id="inv_number" class="form-control" required disabled value="<?= $invNumber ?: $translator->translate('not.set'); ?>">
+                                    <input type="text" name="inv_number" id="inv_number" class="form-control form-control-lg" required disabled value="<?= $invNumber ?: $translator->translate('not.set'); ?>">
                                 </div>
                             </div>
                         <?= Html::closeTag('div'); ?>

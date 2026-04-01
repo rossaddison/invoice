@@ -45,7 +45,7 @@ use Yiisoft\Html\Html;
                             <label for="from_date"><?= $translator->translate('from.date') . ' (' . $dateHelper->display() . ')'; ?></label>
                             <div class="input-group">
                                 <input type="text" name="from_date" id="from_date" placeholder="<?= ' (' . $dateHelper->display() . ')';?>"
-                                       class="form-control" readonly                   
+                                       class="form-control form-control-lg" readonly                   
                                        value="<?= $body['from_date'] = $startTaxYear; ?>" role="presentation" autocomplete="off">
                                 <span class="input-group-text">
                                 <i class="fa fa-calendar fa-fw"></i>
@@ -57,7 +57,7 @@ use Yiisoft\Html\Html;
                             <label for="to_date"><?= $translator->translate('to.date') . ' (' . $dateHelper->display() . ')'; ?></label>
                             <div class="input-group">
                                 <input type="text" name="to_date" id="to_date" placeholder="<?= ' (' . $dateHelper->display() . ')';?>"
-                                       class="form-control" readonly                   
+                                       class="form-control form-control-lg" readonly                   
                                        value="<?= $body['to_date'] = (new \DateTimeImmutable('now'))->format('Y-m-d'); ?>" role="presentation" autocomplete="off">
                                 <span class="input-group-text">
                                 <i class="fa fa-calendar fa-fw"></i>
