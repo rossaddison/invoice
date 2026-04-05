@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98c8094f84d5715e274243b20e6e6c37",
+    "content-hash": "a2796b9d2a239797509d8e8367005088",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -7089,16 +7089,16 @@
         },
         {
             "name": "phptg/bot-api",
-            "version": "0.17",
+            "version": "0.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phptg/bot-api.git",
-                "reference": "603ff1d356ad6cbea73df2e5dd7e66156bb0b7f7"
+                "reference": "3f60f48a0a881e1cc4a4f1b636624224136e1e27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phptg/bot-api/zipball/603ff1d356ad6cbea73df2e5dd7e66156bb0b7f7",
-                "reference": "603ff1d356ad6cbea73df2e5dd7e66156bb0b7f7",
+                "url": "https://api.github.com/repos/phptg/bot-api/zipball/3f60f48a0a881e1cc4a4f1b636624224136e1e27",
+                "reference": "3f60f48a0a881e1cc4a4f1b636624224136e1e27",
                 "shasum": ""
             },
             "require": {
@@ -7161,7 +7161,7 @@
                     "type": "cloudtips"
                 }
             ],
-            "time": "2026-03-01T13:39:54+00:00"
+            "time": "2026-04-05T05:33:29+00:00"
         },
         {
             "name": "promphp/prometheus_client_php",
@@ -25263,5 +25263,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
