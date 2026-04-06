@@ -1,0 +1,50 @@
+name: Claude – Reduce String Duplication (SonarQube Aid)
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - '**/*.php'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  claude-string-dedup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            You are a PHP code quality assistant helping reduce SonarQube
+            duplication warnings.
+
+            Review the changed PHP files in this pull request and look
+            specifically for:
+
+            1. **Duplicated string literals** — the same string appearing 3+
+               times across files or within a single file. Suggest extracting
+               these into:
+               - PHP constants (e.g. `const STATUS_ACTIVE = 'active';`)
+               - Class constants or enums
+               - A dedicated constants file if multiple strings belong together
+
+            2. **Repeated translation keys or label strings** — flag any
+               hardcoded UI strings that appear in multiple places
+
+            3. **Duplicated SQL fragments or query strings** — suggest
+               extracting into named methods or query builder patterns
+
+            For each issue found:
+            - Quote the duplicated string and list the files/lines where it
+              appears
+            - Suggest the constant name and where to define it
+              (following PSR-1: UPPER_SNAKE_CASE)
+            - Show a before/after code snippet
+
+            Be concise. Only flag genuine duplication that SonarQube would
+            likely report (3+ occurrences or cross-file duplication).
+            Do not flag strings that are intentionally repeated (e.g. HTML tags,
+            single-character strings).
