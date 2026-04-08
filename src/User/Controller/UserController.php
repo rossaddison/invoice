@@ -28,8 +28,6 @@ final class UserController
 
     public function index(
         UserRepository $userRepository,
-        #[Body]
-        ?array $body,
         #[Query('sort')]
         ?string $querySort = null,
         #[RouteArgument('page')]
