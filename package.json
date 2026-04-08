@@ -4,12 +4,13 @@
   "description": "Yii3 Invoice",
   "type": "module",
   "dependencies": {
-    "@angular/compiler": "21.2.6",
+    "@angular/compiler": "21.2.7",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "bs5-lightbox": "^1.8.5",
     "clipboard": "^2.0.11",
     "govuk-frontend": "^6.1.0",
+    "hono": ">=4.12.12",
     "rxjs": "^7.8.2",
     "tslib": "^2.8.1",
     "zone.js": "^0.16.1"
@@ -27,12 +28,12 @@
     "@angular/core": "21.2.6",
     "@angular/platform-browser": "21.2.6",
     "@eslint/js": "^10.0.1",
-    "@types/node": "^25.5.0",
-    "@typescript-eslint/eslint-plugin": "^8.58.0",
-    "@typescript-eslint/parser": "^8.58.0",
-    "@typescript/native-preview": "^7.0.0-dev.20260401.1",
-    "esbuild": "^0.27.4",
-    "eslint": "^10.1.0",
+    "@types/node": "^25.5.2",
+    "@typescript-eslint/eslint-plugin": "^8.58.1",
+    "@typescript-eslint/parser": "^8.58.1",
+    "@typescript/native-preview": "^7.0.0-dev.20260408.1",
+    "esbuild": "^0.28.0",
+    "eslint": "^10.2.0",
     "eslint-plugin-deprecation": "^3.0.0",
     "globals": "^17.4.0",
     "minimatch": ">=10.2.5",
@@ -42,7 +43,7 @@
     "rollup": ">=4.60.1",
     "typedoc": "^0.28.18",
     "typescript": "^6.0.2",
-    "vitepress": "^2.0.0-alpha.15"
+    "vitepress": "^2.0.0-alpha.17"
   },
   "scripts": {
     "//": "=== IMPORTANT WARNING ===",
@@ -96,17 +97,22 @@
     "npm": ">=10.0.0"
   },
   "overrides": {
-    "undici": ">=7.24.0",
-    "serialize-javascript": ">=7.0.3",
-    "@typescript-eslint/utils": {
-      "typescript": "*"
-    },
-    "@typescript-eslint/types": {
-      "typescript": "*"
-    },
-    "@typescript-eslint/typescript-estree": {
-      "typescript": "*"
-    }
+   "@angular/build": {
+     "vite": "^7.3.2",
+     "esbuild": "^0.28.0"
+   },
+   "vite": "^7.3.2",
+   "undici": ">=7.24.0",
+   "serialize-javascript": ">=7.0.3",
+   "@typescript-eslint/utils": {
+     "typescript": "*"
+   },
+   "@typescript-eslint/types": {
+     "typescript": "*"
+   },
+   "@typescript-eslint/typescript-estree": {
+     "typescript": "*"
+   }
   },
   "keywords": [
     "yii3",
