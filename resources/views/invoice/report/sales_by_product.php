@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use App\Invoice\Asset\ReportAsset;
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
 
 /**
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -41,16 +41,22 @@ $this->beginPage();
         /**
          * @var array $result
          */
-        foreach ($results as $result) { ?>
+        foreach ($results as $result) { 
+         $style = 'width:15%;text-align:right;border-bottom: 0px solid black;'; ?>
         <tr>
-            <td><?= Html::encode(($result['product_name'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($result['inv_count']); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->formatCurrency($result['sales_no_tax'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->formatCurrency($result['item_tax_total'])); ?></td>
+            <td><?= H::encode(($result['product_name'])); ?></td>
+            <td style="<?= $style ?>">
+                <?= H::encode($result['inv_count']); ?>
+            </td>
+            <td style="<?= $style ?>">
+                <?= H::encode($numberHelper->formatCurrency($result['sales_no_tax'])); ?>
+            </td>
+            <td style="<?= $style ?>">
+                <?= H::encode($numberHelper->formatCurrency($result['item_tax_total'])); ?>                 </td>
         </tr>
     <?php } ?>
 </table>
 <?php $this->endBody() ?>
 </body>
 </html>
-<?php $this->endPage(true); ?> 
+<?php $this->endPage(true); ?>

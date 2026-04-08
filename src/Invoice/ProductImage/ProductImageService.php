@@ -31,21 +31,21 @@ final readonly class ProductImageService
         $datetime_created = new \DateTimeImmutable();
         $model->setUploadedDate(
             $datetime_created::createFromFormat(
-                'Y-m-d', 
+                'Y-m-d',
                 (string) $array['uploaded_date'])
             ?: new \DateTimeImmutable('now'),
         );
 
-        isset($array['product_id']) ? 
+        isset($array['product_id']) ?
             $model->setProductId(
                 (int) $array['product_id']) : '';
-        isset($array['file_name_original']) ? 
+        isset($array['file_name_original']) ?
             $model->setFileNameOriginal(
                 (string) $array['file_name_original']) : '';
-        isset($array['file_name_new']) ? 
+        isset($array['file_name_new']) ?
             $model->setFileNameNew(
                 (string) $array['file_name_new']) : '';
-        isset($array['description']) ? 
+        isset($array['description']) ?
             $model->setDescription(
                 (string) $array['description']) : '';
 
@@ -76,15 +76,15 @@ final readonly class ProductImageService
     ): void {
         $aliases = $sR->getProductimagesFilesFolderAliases();
         $targetPath = $aliases->get('@public_product_images');
-        $file_path = $targetPath . '/' 
+        $file_path = $targetPath . '/'
             . $model->getFileNameNew();
-        // see vendor/yiisoft/files/src/FileHelper::unlink 
+        // see vendor/yiisoft/files/src/FileHelper::unlink
         // will delete the file
         $realTargetPath = realpath($targetPath);
         $realFilePath = realpath($file_path);
-        if (($realTargetPath != false) 
+        if (($realTargetPath != false)
             && ($realFilePath != false)) {
-            str_starts_with($realTargetPath, $realFilePath) ? 
+            str_starts_with($realTargetPath, $realFilePath) ?
                 FileHelper::unlink($file_path) : '';
             $this->repository->delete($model);
         }

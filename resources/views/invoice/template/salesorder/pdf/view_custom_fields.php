@@ -24,6 +24,6 @@ declare(strict_types=1);
     } ?>
     <div class="col-md-4">
           <?php $cvH->printFieldForPdf($translator, $salesorder_custom_values, $custom_field, $cvR); ?>
-    </div>    
-    <?php endforeach; ?>        
-</div> 
+    </div>
+    <?php endforeach; ?>
+</div>

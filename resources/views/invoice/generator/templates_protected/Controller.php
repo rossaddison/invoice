@@ -12,7 +12,7 @@ declare(strict_types=1);
 echo "<?php\n";
 ?>
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace <?= $generator->getNamespacePath()
         . DIRECTORY_SEPARATOR
@@ -81,7 +81,7 @@ final class <?= $generator->getCamelcaseCapitalName(); ?>
     public function __construct(
         private <?= $generator->getCamelcaseCapitalName(); ?>
             Service $<?= $generator->getSmallSingularName(); ?>Service,
-        private UrlGenerator,    
+        private UrlGenerator,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,
@@ -95,10 +95,10 @@ final class <?= $generator->getCamelcaseCapitalName(); ?>
             $webViewRenderer, $session, $sR, $flash);
         $this-><?= $generator->getSmallSingularName(); ?>Service = $
             <?= $generator->getSmallSingularName(); ?>Service;
-        $this->urlGenerator = $urlGenerator;    
+        $this->urlGenerator = $urlGenerator;
     }
-    
-    public function add(Request $request, 
+
+    public function add(Request $request,
                         FormHydrator $formHydrator,
                         <?php
                         $rel = '';
@@ -118,9 +118,9 @@ echo rtrim($rel, ",\n") . "\n";
 ?>
     ) : Response
     {
-        $<?= $generator->getSmallSingularName(); ?> = new 
+        $<?= $generator->getSmallSingularName(); ?> = new
          <?= $generator->getCamelcaseCapitalName(); ?>();
-        $form = new 
+        $form = new
             <?= $generator->getCamelcaseCapitalName(); ?>
             Form($<?= $generator->getSmallSingularName(); ?>);
         $parameters = [
@@ -144,7 +144,7 @@ foreach ($relations as $relation) {
 }
 ?>
         ];
-        
+
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
@@ -158,14 +158,14 @@ foreach ($relations as $relation) {
                 $parameters['errors'] = $form->getValidationResult()
                                              ->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
-            } // is_array($body)   
+            } // is_array($body)
         }
         return $this->webViewRenderer->render('_form', $parameters);
     }
-        
+
     public function index(
         <?= $generator->getCamelcaseCapitalName(); ?>Repository $
-        <?= lcfirst($generator->getCamelcaseCapitalName()); ?>Repository, 
+        <?= lcfirst($generator->getCamelcaseCapitalName()); ?>Repository,
         sR $sR,
         #[RouteArgument('page')] string $page = '1',
         #[Query('page')]
@@ -173,7 +173,7 @@ foreach ($relations as $relation) {
         #[Query('sort')]
         ?string $querySort = null
     ): Response
-    {      
+    {
       $<?= $generator->getSmallSingularName(); ?> = $
       <?= lcfirst($generator->getCamelcaseCapitalName()); ?>
       Repository->findAllPreloaded();
@@ -190,9 +190,9 @@ foreach ($relations as $relation) {
       ];
     return $this->webViewRenderer->render('index', $parameters);
     }
-    
+
     /**
-     * @param 
+     * @param
       <?= $generator->getCamelcaseCapitalName(); ?>Repository $
       <?= $generator->getSmallSingularName();?>Repository
      * @param int $id
@@ -201,7 +201,7 @@ foreach ($relations as $relation) {
     public function delete(
       <?= $generator->getCamelcaseCapitalName(); ?>Repository $
       <?= lcfirst($generator->getCamelcaseCapitalName());?>Repository,
-        #[RouteArgument('id')] int $id 
+        #[RouteArgument('id')] int $id
     ): Response {
         try {
             $<?= $generator->getSmallSingularName();?> = $this->
@@ -210,22 +210,22 @@ foreach ($relations as $relation) {
             if ($<?= $generator->getSmallSingularName();?>) {
                 $this-><?= $generator->getSmallSingularName();?>Service->delete
                 <?= $generator->getCamelcaseCapitalName(); ?>($
-                <?= $generator->getSmallSingularName();?>);               
+                <?= $generator->getSmallSingularName();?>);
                 $this->flashMessage('info',
                     $this->translator->translate('record.successfully.deleted'));
                 return $this->webService->getRedirectResponse('
-                <?= $generator->getSmallSingularName();?>/index'); 
+                <?= $generator->getSmallSingularName();?>/index');
             }
             return $this->webService->getRedirectResponse('
-                <?= $generator->getSmallSingularName();?>/index'); 
+                <?= $generator->getSmallSingularName();?>/index');
 	} catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('
-                <?= $generator->getSmallSingularName();?>/index'); 
+                <?= $generator->getSmallSingularName();?>/index');
         }
     }
-        
-    public function edit(Request $request, 
+
+    public function edit(Request $request,
                          FormHydrator $formHydrator,
         <?php if ($generator->getCamelcaseCapitalName()) {
             echo $generator->getCamelcaseCapitalName()
@@ -234,7 +234,7 @@ foreach ($relations as $relation) {
                     . $generator->getSmallSingularName()
                     . 'Repository,';
         }
-?> 
+?>
         <?php
 $rel = '';
 echo "\n";
@@ -254,12 +254,12 @@ echo rtrim($rel, ",\n") . ",";
         <?= $generator->getSmallSingularName(); ?>($
         <?= $generator->getSmallSingularName(); ?>Repository, $id);
         if ($<?= $generator->getSmallSingularName(); ?>){
-            $form = new 
+            $form = new
             <?= $generator->getCamelcaseCapitalName(); ?>Form($
             <?= $generator->getSmallSingularName(); ?>);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
-                'actionName' => '<?= $generator->getSmallSingularName(); ?>/edit', 
+                'actionName' => '<?= $generator->getSmallSingularName(); ?>/edit',
                 'actionArguments' => ['id' => $id],
                 'errors' => [],
                 'form' => $form,
@@ -295,17 +295,17 @@ echo rtrim($rel, ",\n") . "\n";
                         $form->getValidationResult()
                              ->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
-                }    
+                }
             }
             return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('
                     <?= $generator->getSmallSingularName(); ?>/index');
     }
-    
-    //For rbac refer to AccessChecker    
-    
-    /**     
+
+    //For rbac refer to AccessChecker
+
+    /**
      * @param <?= $generator->getCamelcaseCapitalName();?>Repository $
                     <?= $generator->getSmallSingularName();?>Repository
      * @param int $id
@@ -313,7 +313,7 @@ echo rtrim($rel, ",\n") . "\n";
      */
     private function <?= $generator->getSmallSingularName();?>(
         <?= $generator->getCamelcaseCapitalName();?>Repository $
-        <?= $generator->getSmallSingularName();?>Repository, int $id) : 
+        <?= $generator->getSmallSingularName();?>Repository, int $id) :
         <?= $generator->getCamelcaseCapitalName();?>|null
     {
         if ($id) {
@@ -335,10 +335,10 @@ echo rtrim($rel, ",\n") . "\n";
             <?= $generator->getSmallSingularName();?>Repository) : EntityReader
     {
         $<?= $generator->getSmallPluralName();?> = $
-         <?= $generator->getSmallSingularName();?>Repository->findAllPreloaded(); 
+         <?= $generator->getSmallSingularName();?>Repository->findAllPreloaded();
         return $<?= $generator->getSmallPluralName();?>;
     }
-        
+
     /**
      * @param <?= $generator->getCamelcaseCapitalName(); ?>Repository $
         <?= $generator->getSmallSingularName(); ?>Repository
@@ -348,24 +348,24 @@ echo rtrim($rel, ",\n") . "\n";
     public function view(<?= $generator->getCamelcaseCapitalName(); ?>
     Repository $
         <?= $generator->getSmallSingularName();?>Repository,
-            #[RouteArgument('id')] int $id) 
-                         : Response 
+            #[RouteArgument('id')] int $id)
+                         : Response
     {
         $<?= $generator->getSmallSingularName(); ?> = $this->
         <?= $generator->getSmallSingularName(); ?>($
-        <?= $generator->getSmallSingularName(); ?>Repository, $id); 
+        <?= $generator->getSmallSingularName(); ?>Repository, $id);
         if ($<?= $generator->getSmallSingularName(); ?>) {
             $form = new <?= $generator->getCamelcaseCapitalName(); ?>Form($
             <?= $generator->getSmallSingularName(); ?>);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => '
-            <?= $generator->getSmallSingularName(); ?>/view', 
+            <?= $generator->getSmallSingularName(); ?>/view',
                 'actionArguments' => ['id' => $id],
                 'form' => $form,
                 '<?= $generator->getSmallPluralName();?>' => $
                 <?= $generator->getSmallSingularName();?>,
-            ];        
+            ];
         return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('

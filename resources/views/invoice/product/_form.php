@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
     ->csrf($csrf)
     ->id('ProductForm')
     ->open()
-?> 
+?>
 
 <?= Field::errorSummary($form)
     ->errors($errors)
@@ -88,11 +88,11 @@ use Yiisoft\Html\Tag\Form;
             ->id('not-required-tab')
             ->render();
 ?>
-    <?= Html::closeTag('li'); ?>    
+    <?= Html::closeTag('li'); ?>
 <?= Html::closeTag('ul'); ?>
 
 <?= Html::openTag('div', ['class' => 'tab-content', 'id' => 'product-tab-content']); ?>
-    
+
     <?= Html::openTag('div', [
         'id' => 'product-required',
         'class' => 'tab-pane active',
@@ -111,7 +111,7 @@ use Yiisoft\Html\Tag\Form;
         <?= $formFields->taxRateSelect(
             $form, $taxRates, true); ?>
         <?= Html::tag('br'); ?>
-        
+
         <?= $formFields->productPriceField(
             $form, 'purchase_price', 'purchase.price', true); ?>
         <?= Html::tag('br'); ?>
@@ -123,11 +123,11 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::tag('br'); ?>
         <?= $formFields->productPriceField(
             $form, 'product_tariff', 'product.tariff', true); ?>
-        
-        <?= '-----------------------------------------------'; ?>    
+
+        <?= '-----------------------------------------------'; ?>
         <?= $formFields->productTextField(
             $form, 'product_description', 'product.description', false); ?>
-        <?= Html::tag('br'); ?>        
+        <?= Html::tag('br'); ?>
         <?= $formFields->productTextField(
             $form, 'product_sku', 'product.sku', false); ?>
         <?= Html::tag('br'); ?>
@@ -139,7 +139,7 @@ use Yiisoft\Html\Tag\Form;
             'role' => 'tabpanel',
             'aria-labelledby' => 'not-required-tab',
         ]); ?>
-        
+
         <?= $formFields->unitPeppolSelect(
             $form, $unitPeppols, false); ?>
         <?= Html::tag('br'); ?>
@@ -170,7 +170,7 @@ use Yiisoft\Html\Tag\Form;
         <?= $formFields->productTextField(
             $form, 'provider_name', 'provider.name', false); ?>
         <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>     
+    <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>

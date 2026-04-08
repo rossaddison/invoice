@@ -25,16 +25,16 @@ class SalesOrderAllowanceCharge
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
-            
+
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $sales_order_id = null,
-            
+
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $allowance_charge_id = null,
-            
+
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $amount = null,
-        
+
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $vat_or_tax = null)
     {

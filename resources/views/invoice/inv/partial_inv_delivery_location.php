@@ -48,5 +48,5 @@ use Yiisoft\Html\Html;
               </div>
           </div>
         </div>
-      </div> 
-</div>    
+      </div>
+</div>

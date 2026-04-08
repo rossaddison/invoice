@@ -41,12 +41,12 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::openTag('h5'); ?>
         <?= Html::encode($title); ?>
-    <?= Html::closeTag('h5'); ?>    
+    <?= Html::closeTag('h5'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'name')
             ->label($translator->translate('name'))
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
             ])
             ->value(Html::encode($form->getName()))
             ->readonly(true)

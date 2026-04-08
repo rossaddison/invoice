@@ -13,7 +13,7 @@ class NodeModulesClipBoardAsset extends AssetBundle
     public ?string $baseUrl = '@assetsUrl';
 
     public ?string $sourcePath = '@npm/clipboard/dist';
-    
+
     public bool $cdn = false;
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */

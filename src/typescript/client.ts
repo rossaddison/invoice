@@ -1,4 +1,4 @@
-﻿import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
+import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
 
 // Client-specific interfaces
 interface ClientFormData extends RequestParams {
@@ -67,7 +67,7 @@ export class ClientHandler {
 
     private bindEventListeners(): void {
         document.addEventListener('click', this.handleClick.bind(this), true);
-        
+
         // Instead of global submit listener, target specific forms only
         this.bindSpecificFormHandlers();
     }
@@ -201,7 +201,7 @@ export class ClientHandler {
                             credentials: 'same-origin',
                         });
                         const html = await notesResponse.text();
-                        
+
                         // Only update if we get valid partial HTML (not a full page)
                         if (html && !html.includes('<!DOCTYPE') && !html.includes('<html')) {
                             // Sanitize HTML content to prevent XSS attacks
@@ -312,7 +312,7 @@ export class ClientHandler {
                     statusText: response.statusText,
                     body: responseText.substring(0, 500)
                 });
-                
+
                 deleteBtn.innerHTML = originalHtml;
                 (deleteBtn as HTMLButtonElement).disabled = false;
                 alert('Failed to delete note. Please try again.');
@@ -343,11 +343,11 @@ export class ClientHandler {
 
     private async handleQuoteFormSubmit(event: SubmitEvent): Promise<void> {
         event.preventDefault(); // Prevent default form submission
-        
+
         const form = event.target as HTMLFormElement;
         const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
         const originalHtml = submitButton?.innerHTML;
-        
+
         if (submitButton) {
             setButtonLoading(submitButton, true);
         }
@@ -359,7 +359,7 @@ export class ClientHandler {
             checkIcon.className = 'fa fa-check';
             submitButton.appendChild(checkIcon);
         }
-        
+
         // Close the modal if it exists
         const modal = document.getElementById('modal-add-quote') || document.getElementById('modal-add-client');
         if (modal) {
@@ -378,11 +378,11 @@ export class ClientHandler {
 
     private async handleInvoiceFormSubmit(event: SubmitEvent): Promise<void> {
         event.preventDefault(); // Prevent default form submission
-        
+
         const form = event.target as HTMLFormElement;
         const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
         const originalHtml = submitButton?.innerHTML;
-        
+
         if (submitButton) {
             setButtonLoading(submitButton, true);
         }
@@ -394,7 +394,7 @@ export class ClientHandler {
             checkIcon.className = 'fa fa-check';
             submitButton.appendChild(checkIcon);
         }
-        
+
         // Close the modal if it exists
         const modal = document.getElementById('modal-add-inv') || document.getElementById('modal-add-client');
         if (modal) {

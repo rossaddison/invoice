@@ -145,7 +145,7 @@ final class SettingController extends BaseController
         $peppol_arrays = new PeppolArrays();
         $languages = $this->sR->localeLanguageArray();
         $body = $request->getParsedBody();
-        $p = '//invoice/setting/views/partial_settings_'; 
+        $p = '//invoice/setting/views/partial_settings_';
         $parameters = [
             'actionName' => 'setting/tabIndex',
             'actionArguments' => [],
@@ -158,6 +158,10 @@ final class SettingController extends BaseController
             'alert' => $this->alert(),
             'head' => $head,
             'body' => $body,
+            'font' => $this->sR->getSetting('bootstrap5_layout_invoice_navbar_font')
+                ?: 'Arial',
+            'fontSize' => (int) $this->sR->getSetting('bootstrap5_layout_invoice_navbar_font_size')
+                ?: 16,
             'frontPage' => $this->webViewRenderer->renderPartialAsString($p . 'front_page'),
             'general' => $this->webViewRenderer->renderPartialAsString($p . 'general', [
                 /**
@@ -333,7 +337,7 @@ final class SettingController extends BaseController
             $this->sR->save($setting);
         }
     }
-        
+
     /**
      * @param int $value
      */
@@ -508,7 +512,7 @@ final class SettingController extends BaseController
 
     public function visible(#[RouteArgument('origin')] string $origin): Response
     {
-        
+
         $setting = $this->sR->withKey('columns_all_visible');
         if ($setting) {
             if ($setting->getSettingValue() == '0') {

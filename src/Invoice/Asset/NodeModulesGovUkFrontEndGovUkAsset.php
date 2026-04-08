@@ -21,7 +21,7 @@ class NodeModulesGovUkFrontEndGovUkAsset extends AssetBundle
      * Related logic: see config/common/params 'yiisoft/aliases @npm'
      */
     public ?string $sourcePath = '@npm/govuk-frontend/dist/govuk';
-    
+
     public bool $cdn = false;
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */

@@ -361,12 +361,12 @@ class Client
     {
         return $this->client_active;
     }
-    
+
     public function setClientActive(bool $client_active): void
     {
         $this->client_active = $client_active;
     }
-    
+
     //cycle
     public function getClientBirthdate(): DateTimeImmutable|string|null
     {

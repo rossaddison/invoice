@@ -80,7 +80,7 @@ final readonly class SalesOrderAmountService
         $model->setTotal($array['total']);
         $this->repository->save($model);
     }
-    
+
     /**
      * @param SoAmount $model
      * @param SalesOrderAmountForm $form
@@ -107,7 +107,7 @@ final readonly class SalesOrderAmountService
         $model->setTotal($form->getTotal() ?? 0.00);
         $this->repository->save($model);
     }
-    
+
     /**
      * Update the SalesOrder Amounts when a salesorder item
      * allowance or charge is added to a salesorder item. Also

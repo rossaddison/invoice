@@ -18,6 +18,7 @@ use chillerlan\QRCode\QRCode;
 * @var array $body
 */
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
   'class' => 'col-xs-12 col-md-8 col-md-offset-2'
@@ -40,10 +41,10 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('label');
        $body['settings[qr_version]'] =
        $s->getSetting('qr_version') ?: '40';
-       echo H::input('text', 'settings[qr_version]', 
+       echo H::input('text', 'settings[qr_version]',
         $body['settings[qr_version]'] ?? (string) Version::AUTO, [
         'id' => 'settings[qr_version]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
       echo H::closeTag('div'); //7
       echo H::openTag('div', ['class' => 'form-group']); //7
@@ -55,7 +56,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => 'settings[qr_ecc_level]',
         'id' => 'settings[qr_ecc_level]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         $ecc_levels = ['0' => 'L', '1' => 'M', '2' => 'Q', '3' => 'H'];
         /**
@@ -66,7 +67,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value($value)
          ->selected($value == ($body['settings[qr_ecc_level]'] ?? '0'))
-         ->content(H::encode($label));
+         ->content($label);
         }
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
@@ -84,12 +85,12 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::input('text', 'settings[qr_height_and_width]',
         (string) $qr_size, [
         'id' => 'settings[qr_height_and_width]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
       echo H::closeTag('div'); //7
       echo H::openTag('div', ['class' => 'panel-heading']); //7
        echo  new H6()
-        ->attributes(['class' => 'label label-info'])
+        ->attributes(['class' => 'badge text-bg-info'])
         ->content($translator->translate('qr.code.1'));
        echo H::openTag('pre');
         echo "Html::openTag('div', ['id' => 'qr_code']);";
@@ -97,7 +98,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo "    QrCodeWidget::absoluteUrl(";
         echo "\$urlGenerator->generateAbsolute('inv/view', [";
         echo H::tag('br');
-        echo "        'id' => \$inv_id,"; 
+        echo "        'id' => \$inv_id,";
         echo H::tag('br');
         echo "        '_language' => \$_language";
         echo H::tag('br');

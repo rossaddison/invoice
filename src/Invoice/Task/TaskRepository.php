@@ -155,19 +155,19 @@ final class TaskRepository extends Select\Repository
         return [
             '1' => [
                 'label' => $translator->translate('not.started'),
-                'class' => 'draft',
+                'class' => 'secondary',
             ],
             '2' => [
                 'label' => $translator->translate('in.progress'),
-                'class' => 'viewed',
+                'class' => 'warning',
             ],
             '3' => [
                 'label' => $translator->translate('complete'),
-                'class' => 'sent',
+                'class' => 'success',
             ],
             '4' => [
                 'label' => $translator->translate('invoiced'),
-                'class' => 'paid',
+                'class' => 'primary',
             ],
         ];
     }

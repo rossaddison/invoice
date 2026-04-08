@@ -67,7 +67,7 @@ class PeppolValidator
     private ?string $customerCountry = null;
     private ?string $documentCurrencyCode = null;
     private ?string $documentType = null;
-    
+
     public function __construct(
         private readonly TranslatorInterface $t
     )
@@ -435,7 +435,7 @@ class PeppolValidator
         if ($taxTotalWithSub !== false
             && $taxTotalWithSub->length !== 1
         ) {
-            $node = $taxTotalWithSub->length > 0 
+            $node = $taxTotalWithSub->length > 0
                 ? $taxTotalWithSub->item(1)
                 : $this->getNode('//cac:TaxTotal');
             $domNode = ($node instanceof DOMNode) ? $node : null;
@@ -462,7 +462,7 @@ class PeppolValidator
                     ? $taxTotalWithoutSub->item(0)
                     : null;
                 $domNode = ($node instanceof DOMNode) ? $node : null;
-                // Invalid tax total without subtotals count 
+                // Invalid tax total without subtotals count
                 $this->addError(
                     'PEPPOL-EN16931-R054: '
                     . $this->t->translate('PEPPOL.EN16931.R054'),
@@ -940,7 +940,7 @@ class PeppolValidator
         }
 
         $node = $nodes->item(0);
-        
+
         // Ensure we only return DOMNode, not DOMNameSpaceNode
         return ($node instanceof DOMNode) ? $node : null;
     }
@@ -975,7 +975,7 @@ class PeppolValidator
 
         if ($node !== null) {
             $lineNo = (string) $node->getLineNo();
-            
+
             // Try to build XPath if not provided
             if ($computedXPath === null) {
                 $computedXPath = $this->getNodeXPath($node);
@@ -1010,7 +1010,7 @@ class PeppolValidator
 
         if ($node !== null) {
             $lineNo = $node->getLineNo();
-            
+
             if ($computedXPath === null) {
                 $computedXPath = $this->getNodeXPath($node);
             }
@@ -1032,26 +1032,26 @@ class PeppolValidator
     private function getNodeXPath(DOMNode $node): string
     {
         $path = '';
-        
+
         while ($node !== null && $node->nodeType === XML_ELEMENT_NODE) {
             $nodeName = $node->nodeName;
-            
+
             // Count preceding siblings with same name
             $position = 1;
             $sibling = $node->previousSibling;
             while ($sibling !== null) {
-                if ($sibling->nodeType === XML_ELEMENT_NODE 
+                if ($sibling->nodeType === XML_ELEMENT_NODE
                     && $sibling->nodeName === $nodeName
                 ) {
                     $position++;
                 }
                 $sibling = $sibling->previousSibling;
             }
-            
+
             $path = "/{$nodeName}[{$position}]" . $path;
             $node = $node->parentNode;
         }
-        
+
         return $path ?: '/';
     }
 
@@ -1102,21 +1102,21 @@ class PeppolValidator
     public function getFormattedErrors(): array
     {
         $formatted = [];
-        
+
         foreach ($this->errors as $error) {
             $msg = $error['message'];
-            
+
             if ($error['line'] !== null) {
                 $msg = "[Line {$error['line']}] " . $msg;
             }
-            
+
             if ($error['xpath'] !== null) {
                 $msg .= " (at {$error['xpath']})";
             }
-            
+
             $formatted[] = $msg;
         }
-        
+
         return $formatted;
     }
 
@@ -1128,21 +1128,21 @@ class PeppolValidator
     public function getFormattedWarnings(): array
     {
         $formatted = [];
-        
+
         foreach ($this->warnings as $warning) {
             $msg = $warning['message'];
-            
+
             if ($warning['line'] !== null) {
                 $msg = "[Line {$warning['line']}] " . $msg;
             }
-            
+
             if ($warning['xpath'] !== null) {
                 $msg .= " (at {$warning['xpath']})";
             }
-            
+
             $formatted[] = $msg;
         }
-        
+
         return $formatted;
     }
 }

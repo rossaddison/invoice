@@ -30,12 +30,12 @@ use Yiisoft\Html\Tag\Form;
     ->id('AllowanceChargeForm')
     ->open() ?>
     <?= $button::backSave(); ?>
-    <?= Html::openTag('div', ['id' => 'headerbar']); ?>    
+    <?= Html::openTag('div', ['id' => 'headerbar']); ?>
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= $title; ?>
         <?= Html::closeTag('h1'); ?>
     <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div'); ?> 
+    <?= Html::openTag('div'); ?>
         <?= Field::errorSummary($form)
             ->errors($errors)
             ->header($translator->translate('error.summary'))
@@ -47,12 +47,12 @@ use Yiisoft\Html\Tag\Form;
                 'base_amount',
                 'tax_rate_id'])
             ->onlyCommonErrors();
-?>    
+?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?= Field::hidden($form, 'id')
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
             ])
             ->hideLabel()
             ->value(Html::encode($form->getId()));
@@ -64,7 +64,7 @@ use Yiisoft\Html\Tag\Form;
     ->inputLabelAttributes(['class' => 'form-check-label fs-4'])
     ->inputClass('form-check-input')
 ?>
-        <?= Html::closeTag('div'); ?>   
+        <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?php
     $optionsDataReason = [];
@@ -78,7 +78,7 @@ foreach ($allowances as $value) {
             <?= Field::select($form, 'reason')
     ->label($translator->translate('allowance.or.charge.reason'))
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'reason',
     ])
     ->value(Html::encode($form->getReason() ?? 'Discount'))
@@ -93,12 +93,12 @@ foreach ($allowances as $value) {
     ->label($translator->translate('allowance.or.charge.multiplier.factor.numeric'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('allowance.or.charge.multiplier.factor.numeric'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'multiplier_factor_numeric',
     ])
     ->value(Html::encode($form->getMultiplierFactorNumeric() ??  '20'))
     ->hint($translator->translate('hint.this.field.is.required'));
-?>   
+?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?=
@@ -106,7 +106,7 @@ foreach ($allowances as $value) {
     ->label($translator->translate('allowance.or.charge.amount'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('allowance.or.charge.amount'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'amount',
     ])
     ->value(Html::encode($form->getAmount() ??  ''))
@@ -119,7 +119,7 @@ foreach ($allowances as $value) {
     ->label($translator->translate('allowance.or.charge.base.amount'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('allowance.or.charge.base.amount'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'base_amount',
     ])
     ->value(Html::encode($form->getBaseAmount() ??  '1000'))
@@ -146,7 +146,7 @@ foreach ($taxRates as $taxRate) {
             <?= Field::select($form, 'tax_rate_id')
     ->label($translator->translate('tax.rate'))
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'tax_rate_id',
     ])
     ->value($form->getTaxRateId() ?? '')

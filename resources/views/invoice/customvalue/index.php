@@ -27,10 +27,10 @@ use Yiisoft\Html\Html;
         <div class="headerbar-item pull-right">
             <div class="btn-group btn-group-sm">
                 <a class="btn btn-default" href="<?= $urlGenerator->generate('customfield/index'); ?>">
-                    <i class="fa fa-arrow-left"></i> <?= $translator->translate('back'); ?>
+                    <i class="bi bi-arrow-left"></i> <?= $translator->translate('back'); ?>
                 </a>
                 <a class="btn btn-primary" href="<?= $urlGenerator->generate('customvalue/new', ['id' => $custom_field_id]) ?>">
-                    <i class="fa fa-plus"></i> <?= $translator->translate('new'); ?>
+                    <i class="bi bi-plus-lg"></i> <?= $translator->translate('new'); ?>
                 </a>
             </div>
         </div>
@@ -88,17 +88,17 @@ use Yiisoft\Html\Html;
                                     <div class="options btn-group">
                                         <a class="btn btn-default btn-sm dropdown-toggle" data-bs-toggle="dropdown"
                                            href="#">
-                                            <i class="fa fa-cog"></i> <?= $translator->translate('options'); ?>
+                                            <i class="bi bi-gear"></i> <?= $translator->translate('options'); ?>
                                         </a>
                                         <ul class="dropdown-menu">
                                             <li>
                                                 <a href="<?= $urlGenerator->generate('customvalue/edit', ['id' => $custom_value->getId()]); ?>" style="text-decoration:none">
-                                                    <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('edit'); ?>
+                                                    <i class="bi-pencil-square"></i> <?= $translator->translate('edit'); ?>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="<?= $urlGenerator->generate('customvalue/delete', ['id' => $custom_value->getId()]); ?>" style="text-decoration:none" onclick="return confirm('<?= $translator->translate('delete.record.warning'); ?>');">
-                                                    <i class="fa fa-trash fa-margin"></i><?= $translator->translate('delete'); ?>                                    
+                                                    <i class="bi-trash"></i><?= $translator->translate('delete'); ?>
                                                 </a>
                                             </li>
                                         </ul>

@@ -17,7 +17,9 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class Button
 {
-    public function __construct(private CurrentRoute $currentRoute, private Translator $translator, private UrlGenerator $generator)
+    public function __construct(private CurrentRoute $currentRoute,
+        private readonly Translator $translator,
+        private readonly UrlGenerator $generator)
     {
     }
 
@@ -69,20 +71,23 @@ final readonly class Button
                 'type' => 'button',
                 'onclick' => 'window.history.back()',
                 'class' => 'btn btn-danger bi bi-arrow-left',
+                'data-bs-toggle' => 'tooltip',
+                'title' => 'Back',
                 'value' => 'main',
             ],
             [
                 '',
                 'type' => 'submit',
-                'class' => 'btn btn-success bi bi-save pull-right',
+                'class' => 'btn btn-success bi bi-floppy',
                 'id' => 'btn-submit',
+                'data-bs-toggle' => 'tooltip',
+                'title' => 'Save',
                 'value' => '1',
             ],
         ];
-        return Html::openTag('div', ['class' => 'headerbar-item pull-right'])
-                . (string) Field::buttongroup()
-                    ->buttonsData($buttonsDataArray)
-                .  Html::closeTag('div');
+        return (string) Field::buttongroup()
+            ->buttonsData($buttonsDataArray)
+            ->containerAttributes(['class' => 'btn-group mb-2', 'role' => 'group']);
     }
 
     public static function save(): string
@@ -96,12 +101,12 @@ final readonly class Button
                 'value' => '1',
             ],
         ];
-        return html::openTag('div', ['class' => 'headerbar-item pull-right'])
+        return Html::openTag('div', ['class' => 'headerbar-item pull-right'])
             . (string) Field::buttongroup()
                 ->buttonsData($buttonsDataArray)
             .  Html::closeTag('div');
     }
-        
+
     public function saveCancel(): string
     {
         $buttonsDataArray = [
@@ -121,8 +126,8 @@ final readonly class Button
         return Html::openTag('div', ['class' => 'headerbar-item pull-right'])
             . (string) Field::buttongroup()
                 ->buttonsData($buttonsDataArray)
-            .  Html::closeTag('div');        
-    }    
+            .  Html::closeTag('div');
+    }
 
     public static function activeLabel(Translator $translator): Span
     {
@@ -138,18 +143,21 @@ final readonly class Button
                 ->content(Html::encode($translator->translate('no')));
     }
 
-    public static function inactiveWithAddUserAccount(UrlGenerator $generator, Translator $translator): Span
+    public static function inactiveWithAddUserAccount(
+        UrlGenerator $generator,
+        Translator $translator): Span
     {
         return  new Span()
                 ->content(
                     Html::a(
-                        '',
+                        Html::tag('i', '', ['class' => 'bi bi-person-plus']),
                         $generator->generate('userinv/index'),
                         [
-                            'class' => 'fa fa-plus',
+                            'class' => 'btn btn-outline-secondary btn-sm',
                             'style' => 'text-decoration:none',
-                            'tooltip' => 'data-bs-toggle',
-                            'title' => $translator->translate('client.has.not.user.account'),
+                            'data-bs-toggle' => 'tooltip',
+                            'title' => $translator->translate(
+                                    'client.has.not.user.account'),
                         ],
                     ),
                 );
@@ -229,7 +237,9 @@ final readonly class Button
     {
         return  new A()
         ->addClass('btn btn-primary')
-        ->content($translator->translate('telegram.bot.api.webhook.delete') . ' ' . '️❌')
+        ->content($translator->translate('telegram.bot.api.webhook.delete')
+            . ' '
+            . '️❌')
         ->href($generator->generate('telegram/deleteWebhook', ['_language' => 'en']))
         ->id('btn-primary')
         ->render();
@@ -338,7 +348,8 @@ final readonly class Button
         Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
             .  new A()
             ->addClass('btn btn-dark')
-            ->content('🏦  ' . $this->translator->translate('continue.with.openbanking') . '➡️' . ucfirst($provider))
+            ->content('🏦  ' . $this->translator->translate('continue.with.openbanking')
+                    . '➡️' . ucfirst($provider))
             ->href($openBankingAuthUrl)
             ->id('btn-openbanking')
             ->render()

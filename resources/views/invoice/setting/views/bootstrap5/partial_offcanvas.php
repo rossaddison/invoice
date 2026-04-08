@@ -41,7 +41,7 @@ echo H::openTag('div', ['class' => 'border border-1 border-primary']); //1
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_offcanvas_placement]',
     'id' => 'settings[bootstrap5_offcanvas_placement]',
-    'class' => 'form-control',
+    'class' => 'form-control form-control-lg',
    ]);
     echo  new Option()
      ->value('0')

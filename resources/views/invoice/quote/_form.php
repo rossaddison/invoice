@@ -41,7 +41,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
  * Related logic: see alert if there are no delivery locations associated with this quote
  */
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
-
+$formControlLg = 'form-control form-control-lg';
 ?>
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
@@ -63,26 +63,26 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
                                          ->hideLabel(false)
                                          ->label($translator->translate('quote'))
                                          ->addInputAttributes([
-                                             'class' => 'form-control',
+                                             'class' => $formControlLg,
                                              'readonly' => 'readonly',
                                          ])
                                          ->value(Html::encode($form->getNumber()))
 ?>
                                 <?= Html::closeTag('div'); ?>
                                 <?= $formFields->clientSelect($form, $optionsData, 'user.account.clients'); ?>
-                                <?= $formFields->groupSelect($form, $optionsData); ?>   
-                            
+                                <?= $formFields->groupSelect($form, $optionsData); ?>
+
                             <?php if ($delCount > 0) { ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'delivery_location_id')
     ->label($translator->translate('delivery.location'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => $formControlLg])
     ->value($form->getDeliveryLocationId())
     ->prompt($translator->translate('none'))
     ->optionsData($optionsData['deliveryLocation'])
     ->hint($translator->translate('hint.this.field.is.not.required'));
                                 ?>
-                                <?= Html::closeTag('div'); ?>           
+                                <?= Html::closeTag('div'); ?>
                                 <?php if (null !== $form->getDeliveryLocationId() && !empty($form->getDeliveryLocationId())) { ?>
                                 <span class="input-group-text">
                                     <!-- Remember second set of square brackets in urlGenerator are query Parameters NOT currentRoute arguments -->
@@ -98,8 +98,8 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
                                             'origin_id' => $quote->getId(),
                                             'action' => 'edit',
                                         ],
-                                    ); ?>"><i class="fa fa-pencil fa-fw"></i><?php echo $translator->translate('delivery.location'); ?></a>
-                                </span>  
+                                    ); ?>"><i class="bi bi-pencil"></i><?php echo $translator->translate('delivery.location'); ?></a>
+                                </span>
                                 <?php } ?>
                                 <?php
                             } else {
@@ -124,8 +124,8 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
                                 );
                             }
 ?>
-                        <?= Html::openTag('br'); ?>    
-                        <?= Html::openTag('br'); ?>    
+                        <?= Html::openTag('br'); ?>
+                        <?= Html::openTag('br'); ?>
                         <?= $formFields->dateCreatedField($form, 'date.issued'); ?>
                         <?= $formFields->passwordField($form); ?>
                         <?= $formFields->statusSelect($form, $optionsData, 'quoteStatus'); ?>
@@ -145,7 +145,7 @@ if ($form->getStatusId() == 1) { ?>
                         <?= Html::closeTag('div'); ?>
                     <?php   if ($vat === false) { ?>
                         <?= $formFields->discountFields($form); ?>
-                        <?= $formFields->notesField($form); ?>    
+                        <?= $formFields->notesField($form); ?>
                     <?php } ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::hidden($form, 'inv_id')
@@ -160,12 +160,12 @@ if ($form->getStatusId() == 1) { ?>
                         <?php $cvH->printFieldForForm($customField, $quoteCustomForm, $translator, $urlGenerator, $quoteCustomValues, $customValues); ?>
                     <?php endforeach; ?>
                     <?= Html::closeTag('div'); ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
         <?= $button::backSave(); ?>
     <?= Html::closeTag('div'); ?>
-    
+
 <?= Html::closeTag('div'); ?>
 
 <?= Html::closeTag('form'); ?>
@@ -174,4 +174,4 @@ if ($form->getStatusId() == 1) { ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>  
+<?= Html::closeTag('div'); ?>

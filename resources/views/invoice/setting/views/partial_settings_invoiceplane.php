@@ -16,6 +16,7 @@ use Yiisoft\Html\Tag\A;
 * @psalm-var array<string, Stringable|null|scalar> $actionImportArguments
 */
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
   'class' => 'col-xs-12 col-md-8 col-md-offset-2'
@@ -39,7 +40,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'type' => 'text',
         'name' => 'settings[invoiceplane_database_name]',
         'id' => 'settings[invoiceplane_database_name]',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'value' => $body['settings[invoiceplane_database_name]']
        ]);
       echo H::closeTag('div'); //7
@@ -57,7 +58,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'type' => 'text',
         'name' => 'settings[invoiceplane_database_username]',
         'id' => 'settings[invoiceplane_database_username]',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'value' => $body['settings[invoiceplane_database_username]']
        ]);
       echo H::closeTag('div'); //7
@@ -75,7 +76,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'type' => 'password',
         'name' => 'settings[invoiceplane_database_password]',
         'id' => 'settings[invoiceplane_database_password]',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'value' => $body['settings[invoiceplane_database_password]']
        ]);
       echo H::closeTag('div'); //7

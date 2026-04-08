@@ -172,7 +172,7 @@ final readonly class SalesOrderService
         isset($array['payment_term'])
             ? $model->setPaymentTerm((string) $array['payment_term'])
             : '';
-        
+
         // Handle date_created like InvService does
         if (isset($array['date_created'])) {
             /**
@@ -187,7 +187,7 @@ final readonly class SalesOrderService
                 $model->setDateCreated($datetime);
             }
         }
-        
+
         $this->repository->save($model);
         return $model;
     }

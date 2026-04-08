@@ -14,20 +14,20 @@ final class FamilyForm extends FormModel
     private ?string $family_name = '';
 
     public ?string $family_commalist = '';
-    
+
     public ?string $family_productprefix = '';
-    
+
     public ?string $category_primary_id = null;
 
     public ?string $category_secondary_id = null;
-    
+
     public function __construct(Family $family)
     {
         $this->family_name = $family->getFamilyName();
         $this->family_commalist = $family->getFamilyCommalist();
         $this->family_productprefix = $family->getFamilyProductprefix();
         $this->category_primary_id = $family->getCategoryPrimaryId();
-        $this->category_secondary_id = $family->getCategorySecondaryId();        
+        $this->category_secondary_id = $family->getCategorySecondaryId();
      }
 
     public function getFamilyName(): ?string
@@ -44,12 +44,12 @@ final class FamilyForm extends FormModel
     {
         return (string) $this->category_secondary_id;
     }
-    
+
     public function getFamilyCommalist(): ?string
     {
         return $this->family_commalist;
     }
-    
+
     public function getFamilyProductprefix(): ?string
     {
         return $this->family_productprefix;

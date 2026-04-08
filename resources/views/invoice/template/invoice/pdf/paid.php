@@ -38,15 +38,15 @@ $vat = $s->getSetting('enable_vat_registration');
 <?php
     /** Set the locale when the view is being rendered partially i.e. without a layout */
     $translator->setLocale($cldr);
-?>    
+?>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1"> 
-</head>    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
 <header class="clearfix">
-    <?= $company_logo_and_address; ?>    
+    <?= $company_logo_and_address; ?>
     <div id="client">
         <div>
             <b><?= Html::encode($inv->getClient()?->getClientName()); ?></b>
@@ -95,7 +95,7 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
         <table>
             <tr>
                 <td><?php echo $translator->translate('date.issued') . ':'; ?></td>
-                     
+
                 <td><?php echo Html::encode(!is_string($dateCreated = $inv->getDateCreated())
                                                ? $dateCreated->format('Y-m-d') : ''); ?></td>
             </tr>
@@ -111,9 +111,9 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
                 <td><?php echo Html::encode(!is_string($dateDueNext = $inv->getDateDue())
                                                ? $dateDueNext->format('Y-m-d') : ''); ?></td>
             </tr>
-            <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>    
+            <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>
         </table>
-    </div>    
+    </div>
     <h3 class="invoice-title"><b><?= $vat === '0' ? Html::encode($translator->translate('invoice') . ' ' . ($inv->getNumber() ?? '#')) : ''; ?></b></h3>
 
     <table class="items table-primary table table-borderless no-margin">
@@ -126,14 +126,14 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
             <?php if ($show_item_discounts) : ?>
                 <th class="item-discount text-right"><?= Html::encode($translator->translate('discount')); ?></th>
             <?php endif; ?>
-            <?php if ($vat === '0') { ?>     
+            <?php if ($vat === '0') { ?>
             <th class="item-price text-right"><?= Html::encode($translator->translate('tax')); ?></th>
             <th class="item-price text-right"></th>
             <th class="item-price text-right">%</th>
             <?php } else { ?>
-                <th class="item-price text-right"><?= Html::encode($translator->translate('vat.abbreviation')); ?></th>    
+                <th class="item-price text-right"><?= Html::encode($translator->translate('vat.abbreviation')); ?></th>
                 <th class="item-price text-right">%</th>
-            <?php } ?> 
+            <?php } ?>
             <th class="item-total text-right"><?= Html::encode($translator->translate('total')); ?></th>
         </tr>
         </thead>
@@ -174,19 +174,19 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
                     ? Html::encode($s->formatCurrency($quantity * $price * $taxPercent))
                 : Html::encode($s->formatCurrency(0.00));
                 ?>
-                        </td>    
+                        </td>
                         <td class="text-right">
                             <?php
                 echo Html::encode($s->formatCurrency($inv_item_amount?->getTaxTotal()));
                 ?>
-                        
+
                         <td class="text-right">
                             <?php
                     echo Html::encode($item->getTaxRate()?->getTaxRatePercent());
                 ?>
                         </td>
                         <td class="text-right">
-                           
+
                         </td>
                     </tr>
                     <?php $invItemAllowanceCharges = $aciiR->repoInvItemquery((string) $item->getId());
@@ -221,12 +221,12 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
                     ?>
                         </td>
                         <td class="text-right">
-                            
+
                         </td>
                         <td class="text-right">
                         </td>
-                    </tr>    
-                    <?php } ?>        
+                    </tr>
+                    <?php } ?>
                 <?php
             }
         } ?>
@@ -243,12 +243,12 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
                     class="text-right"><?= Html::encode(
                         $translator->translate('subtotal'),
                     ) . " (" . Html::encode($translator->translate('price')) . "-" . Html::encode($translator->translate('discount')) . ") x " . Html::encode($translator->translate('qty')); ?></td>
-            <?php } else { ?>            
+            <?php } else { ?>
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?>
                     class="text-right"><?= Html::encode(
                         $translator->translate('subtotal'),
-                    ); ?></td> 
-            <?php } ?> 
+                    ); ?></td>
+            <?php } ?>
             <td class="text-right"></td>
             <td class="text-right"><?php echo Html::encode($s->formatCurrency($inv_amount->getItemSubtotal())); ?></td>
         </tr>
@@ -266,8 +266,8 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
                 </td>
             </tr>
         <?php } ?>
-            
-        <?php if ($vat == '0') { ?>    
+
+        <?php if ($vat == '0') { ?>
         <?php
 /**
  * @var App\Invoice\Entity\InvTaxRate $inv_tax_rate
@@ -283,8 +283,8 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
                 </td>
             </tr>
         <?php endforeach ?>
-        <?php } ?>   
-        <?php if ($vat == '0') { ?>    
+        <?php } ?>
+        <?php if ($vat == '0') { ?>
            <?php if ($inv->getDiscountAmount() !== 0.00) { ?>
                 <tr>
                     <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
@@ -296,7 +296,7 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
                     </td>
                 </tr>
             <?php } ?>
-        <?php } ?>           
+        <?php } ?>
         <tr>
             <td colspan="6" class="text-right">
                 <?= Html::encode($translator->translate('allowance.or.charge.shipping.handling.packaging')); ?>
@@ -320,7 +320,7 @@ echo $total != 0 ? number_format(100 * ($tax / $total), 2) : '0.00';
             <td class="text-right">
                 <?php echo Html::encode($s->formatCurrency($inv_amount->getPackHandleShipTax())); ?>
             </td>
-        </tr>     
+        </tr>
         <tr>
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?> class="text-right">
                 <b><?= Html::encode($translator->translate('total')); ?></b>
@@ -339,7 +339,7 @@ echo $total != 0 ? number_format(100 * ($tax / $total), 2) : '0.00';
         <?php echo $delivery_location; ?>
     </div>
 </main>
-<watermarkimage src="/img/". <?php basename(__FILE__, '.php') . "png" ?> alpha="0.1"></watermarkimage>           
+<watermarkimage src="/img/". <?php basename(__FILE__, '.php') . "png" ?> alpha="0.1"></watermarkimage>
 <footer class="notes">
     <br>
     <?php if ($inv->getTerms()) { ?>
@@ -356,7 +356,7 @@ echo $total != 0 ? number_format(100 * ($tax / $total), 2) : '0.00';
     <?php } ?>
     <div>
     <?= $show_custom_fields ? $view_custom_fields : ''; ?>
-    </div>    
+    </div>
 </footer>
 </body>
 </html>

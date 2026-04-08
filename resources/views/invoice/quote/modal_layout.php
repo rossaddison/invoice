@@ -32,9 +32,8 @@ use Yiisoft\Html\Html;
                 <?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'modal-body']); ?>
-                <?php echo $form; ?>    
+                <?php echo $form; ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-   

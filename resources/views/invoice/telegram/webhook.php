@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\Setting\SettingRepository $s 
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var string $alert
  */
 

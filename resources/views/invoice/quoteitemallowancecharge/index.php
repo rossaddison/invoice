@@ -102,7 +102,7 @@ $columns = [
         content: static function (QuoteItemAllowanceCharge $model)
             use ($urlGenerator): A {
             return Html::a(
-                Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
+                Html::tag('i', '', ['class' => 'bi bi-pencil']),
                     $urlGenerator->generate('quoteitemallowancecharge/edit',
                         ['id' => $model->getId()]), []);
         },
@@ -112,7 +112,7 @@ $columns = [
         content: static function (QuoteItemAllowanceCharge $model)
             use ($urlGenerator): A {
                 return Html::a(Html::tag('i', '',
-                    ['class' => 'fa fa-eye fa-margin']),
+                    ['class' => 'bi-eye']),
                         $urlGenerator->generate('quoteitemallowancecharge/view',
                             ['id' => $model->getId()]), []);
         },
@@ -124,7 +124,7 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',

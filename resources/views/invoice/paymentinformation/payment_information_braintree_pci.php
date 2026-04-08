@@ -62,7 +62,7 @@ if ($disable_form === false) {
              'class' => 'btn btn-sm btn-primary fw-normal h3 text-center',
              'style' => 'text-decoration:none'
          ]);
-          echo H::openTag('i', ['class' => 'fa fa-file-pdf-o']);
+          echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
           echo H::closeTag('i');
           echo ' ' . $translator->translate('download.pdf') . '=>' . $translator->translate('yes') . ' ' . $translator->translate('custom.fields');
          echo H::closeTag('a');
@@ -71,7 +71,7 @@ if ($disable_form === false) {
              'class' => 'btn btn-sm btn-danger fw-normal h3 text-center',
              'style' => 'text-decoration:none'
          ]);
-          echo H::openTag('i', ['class' => 'fa fa-file-pdf-o']);
+          echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
           echo H::closeTag('i');
           echo ' ' . $translator->translate('download.pdf') . '=>' . $translator->translate('no') . ' ' . $translator->translate('custom.fields');
          echo H::closeTag('a');
@@ -138,16 +138,14 @@ if ($disable_form === false) {
               echo H::encode($numberHelper->formatCurrency($balance));
              echo H::closeTag('td');
             echo H::closeTag('tr');
-            if ($payment_method) {
-                echo H::openTag('tr');
-                 echo H::openTag('td');
-                  echo $translator->translate('payment.method') . ': ';
-                 echo H::closeTag('td');
-                 echo H::openTag('td', ['class' => 'text-right']);
-                  echo $payment_method;
-                 echo H::closeTag('td');
-                echo H::closeTag('tr');
-            }
+            echo H::openTag('tr');
+             echo H::openTag('td');
+              echo $translator->translate('payment.method') . ': ';
+             echo H::closeTag('td');
+             echo H::openTag('td', ['class' => 'text-right']);
+              echo 'Card / Direct Debit - Customer Ready for Payment';
+             echo H::closeTag('td');
+            echo H::closeTag('tr');
            echo H::closeTag('tbody');
           echo H::closeTag('table');
          echo H::closeTag('div');

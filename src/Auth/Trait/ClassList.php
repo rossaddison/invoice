@@ -20,7 +20,7 @@ trait ClassList
             8 => 'card-body p-2 text-center fade-out',
             9 => 'badge bg-primary',
             10 => 'card-body p-2 text-center',
-            11 => 'form-control',
+            11 => 'form-control form-control-lg',
             12 => 'form-check form-switch text-start mt-2',
             13 => 'form-check-input form-control',
             14 => 'form-check-label',

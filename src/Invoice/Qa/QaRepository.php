@@ -26,7 +26,7 @@ final class QaRepository extends Select\Repository
     {
         parent::__construct($select);
     }
-    
+
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Qa|null $qa
@@ -36,7 +36,7 @@ final class QaRepository extends Select\Repository
     {
         $this->entityWriter->write([$qa]);
     }
-    
+
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|Qa|null $qa
@@ -69,7 +69,7 @@ final class QaRepository extends Select\Repository
         $query = $this->select();
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @return Qa|null
      *
@@ -82,7 +82,7 @@ final class QaRepository extends Select\Repository
             ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
-    
+
     public function findAllActive(): EntityReader
     {
         $query = $this->select()

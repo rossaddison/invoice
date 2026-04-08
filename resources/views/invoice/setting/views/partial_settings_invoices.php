@@ -29,6 +29,7 @@ $panelBody = ['class' => 'panel-body'];
 $formGroup = ['class' => 'form-group'];
 $helpBlock = ['class' => 'help-block'];
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
 
@@ -47,31 +48,31 @@ echo H::openTag('div', $row); //1
        ]);
         echo $translator->translate(
          'default.invoice.group'
-        ); 
+        );
        echo H::closeTag('label');
-       $body['settings[default_invoice_group]'] = 
+       $body['settings[default_invoice_group]'] =
        $s->getSetting('default_invoice_group');
        echo H::openTag('select', [
         'name' => 'settings[default_invoice_group]',
         'id' => 'settings[default_invoice_group]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('')
-         ->content($translator->translate('none')); 
+         ->content($translator->translate('none'));
         /**
         * @var App\Invoice\Entity\Group $invoice_group
         */
-        foreach ($invoice_groups as $invoice_group) { 
+        foreach ($invoice_groups as $invoice_group) {
         echo  new Option()
          ->value($invoice_group->getId())
          ->selected(
           $body['settings[default_invoice_group]']
           == $invoice_group->getId()
          )
-         ->content($invoice_group->getName() 
+         ->content($invoice_group->getName()
           ?? '');
-          } 
+          }
           echo H::closeTag('select');
           echo H::closeTag('div'); //11
 
@@ -81,14 +82,14 @@ echo H::openTag('div', $row); //1
          ]);
         echo $translator->translate('default.terms');
        echo H::closeTag('label');
-       $body['settings[default_invoice_terms]'] = 
+       $body['settings[default_invoice_terms]'] =
        $s->getSetting('default_invoice_terms');
        echo H::openTag('textarea', [
         'name' => 'settings[default_invoice_terms]',
         'id' => 'settings[default_invoice_terms]',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'rows' => '4'
-       ]); 
+       ]);
         echo $body['settings[default_invoice_terms]'];
        echo H::closeTag('textarea');
       echo H::closeTag('div'); //7
@@ -98,33 +99,33 @@ echo H::openTag('div', $row); //1
 
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 
+        'for' =>
         'settings[invoice_default_payment_method]'
        ]);
         echo $translator->translate(
          'default.payment.method'
         );
        echo H::closeTag('label');
-       $body['settings[invoice_default_payment_method]'] 
+       $body['settings[invoice_default_payment_method]']
        = $s->getSetting(
         'invoice_default_payment_method'
        );
        echo H::openTag('select', [
-        'name' => 
+        'name' =>
         'settings[invoice_default_payment_method]',
-        'class' => 'form-control',
-        'id' => 
+        'class' => 'form-control form-control-lg',
+        'id' =>
         'settings[invoice_default_payment_method]'
        ]);
         /**
-        * @var App\Invoice\Entity\PaymentMethod 
+        * @var App\Invoice\Entity\PaymentMethod
         *      $payment_method
         */
-        foreach ($payment_methods as $payment_method) { 
+        foreach ($payment_methods as $payment_method) {
         echo  new Option()
          ->value($payment_method->getId())
          ->selected(
-          $payment_method->getId() == 
+          $payment_method->getId() ==
           $body[
           'settings[invoice_default_'
           . 'payment_method]'
@@ -133,7 +134,7 @@ echo H::openTag('div', $row); //1
          ->content(
           $payment_method->getName() ?? ''
          );
-        } 
+        }
 
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
@@ -147,21 +148,21 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[invoices_due_after]'] = 
+       $body['settings[invoices_due_after]'] =
        $s->getSetting('invoices_due_after');
 
        echo H::openTag('input', [
         'type' => 'number',
         'name' => 'settings[invoices_due_after]',
         'id' => 'settings[invoices_due_after]',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'value' => $body['settings[invoices_due_after]']
        ]);
       echo H::closeTag('div'); //7
 
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 
+        'for' =>
         'settings[generate_invoice_number_for_'
         . 'draft]'
        ]);
@@ -177,11 +178,11 @@ echo H::openTag('div', $row); //1
        );
 
        echo H::openTag('select', [
-        'name' => 
+        'name' =>
         'settings[generate_invoice_number_for_'
         . 'draft]',
-        'class' => 'form-control',
-        'id' => 
+        'class' => 'form-control form-control-lg',
+        'id' =>
         'settings[generate_invoice_number_for_'
         . 'draft]'
        ]);
@@ -224,13 +225,13 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[mark_invoices_sent_pdf]'] = 
+       $body['settings[mark_invoices_sent_pdf]'] =
        $s->getSetting('mark_invoices_sent_pdf');
 
        echo H::openTag('select', [
         'name' => 'settings[mark_invoices_sent_pdf]',
         'id' => 'settings[mark_invoices_sent_pdf]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -257,15 +258,15 @@ echo H::openTag('div', $row); //1
         echo $translator->translate('pre.password');
        echo H::closeTag('label');
 
-       $body['settings[invoice_pre_password]'] = 
+       $body['settings[invoice_pre_password]'] =
        $s->getSetting('invoice_pre_password');
 
        echo H::openTag('input', [
         'type' => 'text',
         'name' => 'settings[invoice_pre_password]',
         'id' => 'settings[invoice_pre_password]',
-        'class' => 'form-control',
-        'value' => 
+        'class' => 'form-control form-control-lg',
+        'value' =>
         $body['settings[invoice_pre_password]']
        ]);
       echo H::closeTag('div'); //7
@@ -279,13 +280,13 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[include_zugferd]'] = 
+       $body['settings[include_zugferd]'] =
        $s->getSetting('include_zugferd');
 
        echo H::openTag('select', [
         'name' => 'settings[include_zugferd]',
         'id' => 'settings[include_zugferd]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -295,7 +296,7 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[include_zugferd]'] 
+          $body['settings[include_zugferd]']
           == '1'
          )
          ->content(
@@ -318,13 +319,13 @@ echo H::openTag('div', $row); //1
         echo $translator->translate('pdf.watermark');
        echo H::closeTag('label');
 
-       $body['settings[pdf_watermark]'] = 
+       $body['settings[pdf_watermark]'] =
        $s->getSetting('pdf_watermark');
 
        echo H::openTag('select', [
         'name' => 'settings[pdf_watermark]',
         'id' => 'settings[pdf_watermark]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -334,7 +335,7 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[pdf_watermark]'] 
+          $body['settings[pdf_watermark]']
           == '1'
          )
          ->content(
@@ -346,18 +347,16 @@ echo H::openTag('div', $row); //1
        echo H::openTag('label', [
         'for' => 'settings[pdf_stream_inv]'
        ]);
-        echo  new I()
-         ->class('fa fa-brands fa-google');
         echo $translator->translate('stream');
        echo H::closeTag('label');
 
-       $body['settings[pdf_stream_inv]'] = 
+       $body['settings[pdf_stream_inv]'] =
        $s->getSetting('pdf_stream_inv');
 
        echo H::openTag('select', [
         'name' => 'settings[pdf_stream_inv]',
         'id' => 'settings[pdf_stream_inv]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -367,7 +366,7 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[pdf_stream_inv]'] 
+          $body['settings[pdf_stream_inv]']
           == '1'
          )
          ->content(
@@ -379,17 +378,17 @@ echo H::openTag('div', $row); //1
        echo H::openTag('label', [
         'for' => 'settings[pdf_archive_inv]'
        ]);
-        echo  new I()->class('fa fa-folder');
+        echo  new I()->class('bi bi-folder');
         echo $translator->translate('archive');
        echo H::closeTag('label');
 
-       $body['settings[pdf_archive_inv]'] = 
+       $body['settings[pdf_archive_inv]'] =
        $s->getSetting('pdf_archive_inv');
 
        echo H::openTag('select', [
         'name' => 'settings[pdf_archive_inv]',
         'id' => 'settings[pdf_archive_inv]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -399,7 +398,7 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[pdf_archive_inv]'] 
+          $body['settings[pdf_archive_inv]']
           == '1'
          )
          ->content(
@@ -411,17 +410,16 @@ echo H::openTag('div', $row); //1
        echo H::openTag('label', [
         'for' => 'settings[pdf_html_inv]'
        ]);
-        echo  new I()
-         ->class('fa fa-solid fa-code');
+        echo  'Preview Invoice Pdf as Webpage';
        echo H::closeTag('label');
 
-       $body['settings[pdf_html_inv]'] = 
+       $body['settings[pdf_html_inv]'] =
        $s->getSetting('pdf_html_inv');
 
        echo H::openTag('select', [
         'name' => 'settings[pdf_html_inv]',
         'id' => 'settings[pdf_html_inv]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -431,7 +429,7 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[pdf_html_inv]'] 
+          $body['settings[pdf_html_inv]']
           == '1'
          )
          ->content(
@@ -462,13 +460,13 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[pdf_invoice_template]'] = 
+       $body['settings[pdf_invoice_template]'] =
        $s->getSetting('pdf_invoice_template');
 
        echo H::openTag('select', [
         'name' => 'settings[pdf_invoice_template]',
         'id' => 'settings[pdf_invoice_template]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('')
@@ -479,8 +477,8 @@ echo H::openTag('div', $row); //1
         /**
         * @var string $invoice_template
         */
-        foreach ($pdf_invoice_templates 
-         as $invoice_template) { 
+        foreach ($pdf_invoice_templates
+         as $invoice_template) {
          echo  new Option()
          ->value($invoice_template)
          ->selected(
@@ -492,14 +490,14 @@ echo H::openTag('div', $row); //1
          ->content(
           ucfirst($invoice_template)
          );
-        } 
+        }
 
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 
+        'for' =>
         'settings[pdf_invoice_template_paid]'
        ]);
         echo $translator->translate(
@@ -507,14 +505,14 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[pdf_invoice_template_paid]'] = 
+       $body['settings[pdf_invoice_template_paid]'] =
        $s->getSetting('pdf_invoice_template_paid');
 
        echo H::openTag('select', [
-        'name' => 
+        'name' =>
         'settings[pdf_invoice_template_paid]',
         'id' => 'settings[pdf_invoice_template_paid]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('')
@@ -525,8 +523,8 @@ echo H::openTag('div', $row); //1
         /**
         * @var string $invoice_template
         */
-        foreach ($pdf_invoice_templates 
-         as $invoice_template) { 
+        foreach ($pdf_invoice_templates
+         as $invoice_template) {
          echo  new Option()
          ->value($invoice_template)
          ->selected(
@@ -538,14 +536,14 @@ echo H::openTag('div', $row); //1
          ->content(
           ucfirst($invoice_template)
          );
-        } 
+        }
 
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 
+        'for' =>
         'settings[pdf_invoice_template_overdue]'
        ]);
         echo $translator->translate(
@@ -553,16 +551,16 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[pdf_invoice_template_overdue]'] 
+       $body['settings[pdf_invoice_template_overdue]']
        = $s->getSetting(
         'pdf_invoice_template_overdue'
        );
 
        echo H::openTag('select', [
-        'name' => 
+        'name' =>
         'settings[pdf_invoice_template_overdue]',
-        'class' => 'form-control',
-        'id' => 
+        'class' => 'form-control form-control-lg',
+        'id' =>
         'settings[pdf_invoice_template_overdue]'
        ]);
         echo  new Option()
@@ -574,8 +572,8 @@ echo H::openTag('div', $row); //1
         /**
         * @var string $invoice_template
         */
-        foreach ($pdf_invoice_templates 
-         as $invoice_template) { 
+        foreach ($pdf_invoice_templates
+         as $invoice_template) {
          echo  new Option()
          ->value($invoice_template)
          ->selected(
@@ -587,7 +585,7 @@ echo H::openTag('div', $row); //1
          ->content(
           ucfirst($invoice_template)
          );
-        } 
+        }
 
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
@@ -601,13 +599,13 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[public_invoice_template]'] = 
+       $body['settings[public_invoice_template]'] =
        $s->getSetting('public_invoice_template');
 
        echo H::openTag('select', [
         'name' => 'settings[public_invoice_template]',
         'id' => 'settings[public_invoice_template]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('')
@@ -618,8 +616,8 @@ echo H::openTag('div', $row); //1
         /**
         * @var string $invoice_template
         */
-        foreach ($public_invoice_templates 
-         as $invoice_template) { 
+        foreach ($public_invoice_templates
+         as $invoice_template) {
          echo  new Option()
          ->value($invoice_template)
          ->selected(
@@ -631,7 +629,7 @@ echo H::openTag('div', $row); //1
          ->content(
           ucfirst($invoice_template)
          );
-        } 
+        }
 
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
@@ -648,26 +646,26 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[email_invoice_template]'] = 
+       $body['settings[email_invoice_template]'] =
        $s->getSetting('email_invoice_template');
 
        echo H::openTag('select', [
         'name' => 'settings[email_invoice_template]',
         'id' => 'settings[email_invoice_template]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('')
          ->content(
           $translator->translate('none')
-         ); 
+         );
 
         /**
-        * @var App\Invoice\Entity\EmailTemplate 
+        * @var App\Invoice\Entity\EmailTemplate
         *      $email_template
         */
-        foreach ($email_templates_invoice 
-         as $email_template) { 
+        foreach ($email_templates_invoice
+         as $email_template) {
          echo  new Option()
          ->value(
          $email_template
@@ -685,14 +683,14 @@ echo H::openTag('div', $row); //1
           ->getEmailTemplateTitle()
           ?? ''
          );
-        } 
+        }
 
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 
+        'for' =>
         'settings[email_invoice_template_paid]'
        ]);
         echo $translator->translate(
@@ -700,28 +698,28 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[email_invoice_template_paid]'] = 
+       $body['settings[email_invoice_template_paid]'] =
        $s->getSetting('email_invoice_template_paid');
 
        echo H::openTag('select', [
-        'name' => 
+        'name' =>
         'settings[email_invoice_template_paid]',
-        'id' => 
+        'id' =>
         'settings[email_invoice_template_paid]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('')
          ->content(
           $translator->translate('none')
-         ); 
+         );
 
         /**
-        * @var App\Invoice\Entity\EmailTemplate 
+        * @var App\Invoice\Entity\EmailTemplate
         *      $email_template
         */
-        foreach ($email_templates_invoice 
-         as $email_template) { 
+        foreach ($email_templates_invoice
+         as $email_template) {
          echo  new Option()
          ->value(
          $email_template
@@ -739,14 +737,14 @@ echo H::openTag('div', $row); //1
           ->getEmailTemplateTitle()
           ?? ''
          );
-        } 
+        }
 
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 
+        'for' =>
         'settings[email_invoice_template_'
         . 'overdue]'
        ]);
@@ -762,25 +760,25 @@ echo H::openTag('div', $row); //1
        );
 
        echo H::openTag('select', [
-        'name' => 
+        'name' =>
         'settings[email_invoice_template_'
         . 'overdue]',
-        'class' => 'form-control',
-        'id' => 
+        'class' => 'form-control form-control-lg',
+        'id' =>
         'settings[email_invoice_template_overdue]'
        ]);
         echo  new Option()
          ->value('')
          ->content(
           $translator->translate('none')
-         ); 
+         );
 
         /**
-        * @var App\Invoice\Entity\EmailTemplate 
+        * @var App\Invoice\Entity\EmailTemplate
         *      $email_template
         */
-        foreach ($email_templates_invoice 
-         as $email_template) { 
+        foreach ($email_templates_invoice
+         as $email_template) {
          echo  new Option()
          ->value(
          $email_template
@@ -798,7 +796,7 @@ echo H::openTag('div', $row); //1
           ->getEmailTemplateTitle()
           ?? ''
          );
-        } 
+        }
 
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
@@ -818,14 +816,14 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[pdf_invoice_footer]'] = 
+       $body['settings[pdf_invoice_footer]'] =
        $s->getSetting('pdf_invoice_footer');
 
        echo H::openTag('textarea', [
         'name' => 'settings[pdf_invoice_footer]',
         'id' => 'settings[pdf_invoice_footer]',
         'class' => 'form-control no-margin'
-       ]); 
+       ]);
         echo $body['settings[pdf_invoice_footer]'];
        echo H::closeTag('textarea');
        echo H::openTag('p', $helpBlock);
@@ -852,7 +850,7 @@ echo H::openTag('div', $row); //1
 
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 
+        'for' =>
         'settings[automatic_email_on_recur]'
        ]);
         echo $translator->translate(
@@ -860,20 +858,20 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[automatic_email_on_recur]'] = 
+       $body['settings[automatic_email_on_recur]'] =
        $s->getSetting('automatic_email_on_recur');
 
        echo H::openTag('select', [
-        'name' => 
+        'name' =>
         'settings[automatic_email_on_recur]',
         'id' => 'settings[automatic_email_on_recur]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
          ->content(
           $translator->translate('no')
-         ); 
+         );
         echo  new Option()
          ->value('1')
          ->selected(
@@ -884,7 +882,7 @@ echo H::openTag('div', $row); //1
         )
          ->content(
           $translator->translate('yes')
-         ); 
+         );
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
@@ -912,41 +910,41 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[read_only_toggle]'] = 
+       $body['settings[read_only_toggle]'] =
        $s->getSetting('read_only_toggle');
 
        echo H::openTag('select', [
         'name' => 'settings[read_only_toggle]',
         'id' => 'settings[read_only_toggle]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('2')
          ->selected(
-          $body['settings[read_only_toggle]'] 
+          $body['settings[read_only_toggle]']
           == '2'
          )
          ->content(
           $translator->translate('sent')
-         ); 
+         );
         echo  new Option()
          ->value('3')
          ->selected(
-          $body['settings[read_only_toggle]'] 
+          $body['settings[read_only_toggle]']
           == '3'
          )
          ->content(
           $translator->translate('viewed')
-         ); 
+         );
         echo  new Option()
          ->value('4')
          ->selected(
-          $body['settings[read_only_toggle]'] 
+          $body['settings[read_only_toggle]']
           == '4'
          )
          ->content(
           $translator->translate('paid')
-         ); 
+         );
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 
@@ -959,19 +957,19 @@ echo H::openTag('div', $row); //1
         );
        echo H::closeTag('label');
 
-       $body['settings[mark_invoices_sent_copy]'] = 
+       $body['settings[mark_invoices_sent_copy]'] =
        $s->getSetting('mark_invoices_sent_copy');
 
        echo H::openTag('select', [
         'name' => 'settings[mark_invoices_sent_copy]',
         'id' => 'settings[mark_invoices_sent_copy]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
          ->content(
           $translator->translate('no')
-         ); 
+         );
         echo  new Option()
          ->value('1')
          ->selected(
@@ -982,7 +980,7 @@ echo H::openTag('div', $row); //1
         )
          ->content(
           $translator->translate('yes')
-         ); 
+         );
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
 

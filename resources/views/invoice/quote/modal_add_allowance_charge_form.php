@@ -36,7 +36,7 @@ echo  new Form()
     'class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>

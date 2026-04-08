@@ -41,7 +41,7 @@ use Yiisoft\Html\Tag\I;
  * @var string $view_quote_number
  * @var string $view_quote_client_details
  * @var string $view_quote_vat_enabled_switch
- * @var string $view_quote_approve_reject 
+ * @var string $view_quote_approve_reject
  * @var string $_language
  */
 
@@ -53,7 +53,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']);
  echo H::openTag('div', ['class' => 'panel-heading']);
   echo H::encode($this->getTitle());
  echo H::closeTag('div');
- 
+
 echo $modal_delete_quote;
 if ($vat === '0') {
     echo $modal_add_quote_tax;
@@ -108,14 +108,14 @@ echo H::openTag('div', ['id' => 'content']);
    echo H::closeTag('div');
   echo H::closeTag('div');
  echo H::closeTag('div');
- 
+
  echo H::openTag('div', [
      'id' => 'partial_item_table_parameters',
      'disabled' => true
  ]);
   echo $partial_item_table;
  echo H::closeTag('div');
- 
+
  echo H::openTag('div', ['class' => 'row']);
   echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']);
    echo H::openTag('div', ['class' => 'panel panel-default no-margin']);

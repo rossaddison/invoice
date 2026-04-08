@@ -3,19 +3,26 @@
 declare(strict_types=1);
 
 use Yiisoft\Html\Tag\Br;
+use Yiisoft\Html\Tag\Div;
+use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Table;
 use Yiisoft\Html\Tag\Tr;
-use Yiisoft\Html\Tag\H3;
+
+/**
+ * (no view variables required)
+ */
 
 ?>
 
 <?php
-    echo  new H3()
-         ->content('Yii Console Commands  (FAQ\'s - {root}/resources/views/layout/invoice.php //FAQ)');
-echo  new Br();
-echo  new Table()
-->attributes([ 'class' => 'table table-info table-striped table-bordered'])
-->rows(
+    echo new Div()
+         ->content(Html::b('Yii Console Commands  (FAQ\'s - {root}/resources/views/layout/invoice.php //FAQ'))
+         ->addStyle('font-size: var(--inv-form-fs);');
+echo new Br();
+echo new Table()
+     ->attributes([ 'class' => 'table table-info table-striped table-bordered'])
+     ->addStyle('font-size: var(--inv-form-fs);')
+     ->rows(
      new Tr()
     ->headerStrings([
         'Purpose',
@@ -88,4 +95,5 @@ echo  new Table()
     ]),
 )
 ->render();
+echo Html::closeTag('div');
 ?>

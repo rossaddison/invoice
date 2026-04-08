@@ -40,7 +40,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
     <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div'); ?>
-            <?= Html::openTag('body'); ?>                
+            <?= Html::openTag('body'); ?>
                 <?= $form->getEmailTemplateBody(); ?>
         <?= Html::closeTag('body'); ?>
         <?=  new Br(); ?>

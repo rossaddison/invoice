@@ -9,7 +9,7 @@ use App\Widget\LabelSwitch;
 /**
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
- */ 
+ */
 
 // Purpose: To remind the user that VAT is enabled
 $s->getSetting('display_vat_enabled_message') === '1'

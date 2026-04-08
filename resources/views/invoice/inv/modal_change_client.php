@@ -39,12 +39,12 @@ declare(strict_types=1);
                         </select>
                     </div>
                     <input class="hidden" id="inv_id" value="<?= $inv->getId(); ?>">
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="client_change_confirm btn btn-success" id="client_change_confirm" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
+                        <i class="bi bi-check-lg"></i> <?= $translator->translate('submit'); ?>
                     </button>
                 </div>
             </div>

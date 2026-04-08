@@ -12,7 +12,7 @@ declare(strict_types=1);
 echo "<?php\n";
 ?>
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ";\n"; ?>
 
@@ -141,10 +141,10 @@ foreach ($orm_schema->getColumns() as $column) {
         }
     }
 }
-?> 
+?>
         $this->repository->save($model);
     }
-    
+
     public function delete<?= $generator->getCamelcaseCapitalName(); ?>(<?= $generator->getCamelcaseCapitalName(); ?> $model): void
     {
         $this->repository->delete($model);

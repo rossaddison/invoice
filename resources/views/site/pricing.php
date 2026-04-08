@@ -29,13 +29,13 @@ use Yiisoft\Html\Tag\P;
                 <?=  new P()
                         ->addClass('fs-4 mb-4 mb-xl-5')
                         ->content((string) $pricing['explore'])
-                        ->render(); ?>    
+                        ->render(); ?>
                 <?=  new A()
                         ->addClass('btn bsb-btn-2xl btn-primary rounded-pill')
                         ->href('#!')
                         ->content((string) $pricing['plans'])
                         ->render(); ?>
-            <?= Html::closeTag('div'); ?>  
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col-12 col-lg-8']); ?>
                 <?= Html::openTag('div', ['class' => 'row justify-content-xl-end']); ?>
                     <?= Html::openTag('div', ['class' => 'col-12 col-xl-11']); ?>
@@ -61,7 +61,7 @@ use Yiisoft\Html\Tag\P;
                                                   <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
                                                 </svg>
                                                 <span><strong>5</strong><?= str_repeat(' ', 1) . (string) $pricing['basic']; ?></span>
-                                            <?= Html::closeTag('li'); ?>    
+                                            <?= Html::closeTag('li'); ?>
                                             <?= Html::openTag('li', ['class' => 'list-group-item']); ?>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
                                                   <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
@@ -73,13 +73,13 @@ use Yiisoft\Html\Tag\P;
                                             ->addClass('btn bsb-btn-2xl btn-accent rounded-pill')
                                             ->href('#!')
                                             ->content((string) $pricing['choosePlan'])
-                                            ->render(); ?>                                
-                                    <?= Html::closeTag('div'); ?>            
+                                            ->render(); ?>
+                                    <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
-                            <?= Html::openTag('div', ['class' => 'col-12 col-md-6']); ?>                            
-                                <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-lg pt-md-4 pb-md-4']); ?>                            
-                                    <?= Html::openTag('div', ['class' => 'card-body p-4 p-xxl-5']); ?>                            
+                            <?= Html::openTag('div', ['class' => 'col-12 col-md-6']); ?>
+                                <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-lg pt-md-4 pb-md-4']); ?>
+                                    <?= Html::openTag('div', ['class' => 'card-body p-4 p-xxl-5']); ?>
                                         <?=  new H2()
                                             ->addClass('h4 mb-2')
                                             ->content((string) $pricing['pro']); ?>
@@ -97,7 +97,7 @@ use Yiisoft\Html\Tag\P;
                                                     <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
                                                 </svg>
                                                 <span><strong>20</strong><?= str_repeat(' ', 1) . (string) $pricing['special']; ?></span>
-                                            <?= Html::closeTag('li'); ?>    
+                                            <?= Html::closeTag('li'); ?>
                                             <?= Html::openTag('li', ['class' => 'list-group-item']); ?>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
                                                   <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
@@ -109,14 +109,14 @@ use Yiisoft\Html\Tag\P;
                                             ->addClass('btn btn-accent rounded-pill')
                                             ->href('#!')
                                             ->content((string) $pricing['choosePlan'])
-                                            ->render(); ?>        
-                                    <?= Html::closeTag('div'); ?>            
+                                            ->render(); ?>
+                                    <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
-                        <?= Html::closeTag('div'); ?>                        
+                        <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('section'); ?> 
+<?= Html::closeTag('section'); ?>
 

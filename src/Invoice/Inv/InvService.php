@@ -110,49 +110,49 @@ final readonly class InvService
         $model->setStandInCode($s->getSetting('stand_in_code'));
 
         /**
-         * The following fields can be edited and set on the form 
+         * The following fields can be edited and set on the form
          * with a value that is not null.
          */
-        isset($array['client_id']) ? 
+        isset($array['client_id']) ?
             $model->setClientId((int) $array['client_id']) : '';
-        isset($array['group_id']) ? 
+        isset($array['group_id']) ?
             $model->setGroupId((int) $array['group_id']) : '';
         /** user_id set on adding */
 
-        isset($array['so_id']) ? 
+        isset($array['so_id']) ?
             $model->setSoId((int) $array['so_id']) : '';
-        isset($array['quote_id']) ? 
+        isset($array['quote_id']) ?
             $model->setQuoteId((int) $array['quote_id']) : '';
-        isset($array['status_id']) ? 
+        isset($array['status_id']) ?
             $model->setStatusId((int) $array['status_id']) : '';
-        isset($array['delivery_id']) ? 
+        isset($array['delivery_id']) ?
             $model->setDeliveryId((int) $array['delivery_id']) : '';
-        isset($array['delivery_location_id']) ? 
+        isset($array['delivery_location_id']) ?
             $model->setDeliveryLocationId(
                 (int) $array['delivery_location_id']) : '';
-        isset($array['postal_address_id']) ? 
+        isset($array['postal_address_id']) ?
             $model->setPostalAddressId(
                 (int) $array['postal_address_id']) : '';
-        isset($array['discount_amount']) ? 
+        isset($array['discount_amount']) ?
             $model->setDiscountAmount(
                 (float) $array['discount_amount']) : '';
-        isset($array['password']) ? 
+        isset($array['password']) ?
             $model->setPassword((string) $array['password']) : '';
-        isset($array['payment_method']) ? 
+        isset($array['payment_method']) ?
             $model->setPaymentMethod(
                 (int) $array['payment_method']) : '';
-        isset($array['terms']) ? 
-            $model->setTerms((string) $array['terms']) : 
+        isset($array['terms']) ?
+            $model->setTerms((string) $array['terms']) :
             $this->translator->translate('payment.term.general');
-        isset($array['note']) ? 
+        isset($array['note']) ?
             $model->setNote((string) $array['note']) : '';
-        isset($array['document_description']) ? 
+        isset($array['document_description']) ?
             $model->setDocumentDescription(
                 (string) $array['document_description']) : '';
-        isset($array['creditinvoice_parent_id']) ? 
+        isset($array['creditinvoice_parent_id']) ?
             $model->setCreditinvoiceParentId(
                 (int) $array['creditinvoice_parent_id'] ?: 0) : '';
-        isset($array['contract_id']) ? 
+        isset($array['contract_id']) ?
             $model->setContractId((int) $array['contract_id']) : '';
 
         if ($model->isNewRecord()) {
@@ -224,12 +224,12 @@ final readonly class InvService
         $model->setPassword((string) $array['password']);
         $model->setDateDue($s);
         $model->setDateSupplied(
-            $array['date_supplied'] instanceof DateTimeImmutable ? 
-                $array['date_supplied'] : 
+            $array['date_supplied'] instanceof DateTimeImmutable ?
+                $array['date_supplied'] :
                 new DateTimeImmutable('now'));
         $model->setDateTaxPoint(
-            $array['date_tax_point'] instanceof DateTimeImmutable ? 
-                $array['date_tax_point'] : 
+            $array['date_tax_point'] instanceof DateTimeImmutable ?
+                $array['date_tax_point'] :
                 new DateTimeImmutable('now'));
         $model->setTimeCreated((string) $array['time_created']);
         $model->setStandInCode((string) $array['stand_in_code']);
@@ -237,7 +237,7 @@ final readonly class InvService
         $model->setDiscountAmount(
             (float) $array['discount_amount']);
         $model->setTerms(
-            (string) $array['terms'] ?: 
+            (string) $array['terms'] ?:
                 $this->translator->translate(
                     'payment.term.general'));
         $model->setNote((string) $array['note']);
@@ -259,7 +259,7 @@ final readonly class InvService
     }
 
     /**
-     * Related logic: see 
+     * Related logic: see
      * https://www.gov.uk/hmrc-internal-manuals/
      * vat-time-of-supply/vattos3600
      * @param Inv $inv
@@ -272,11 +272,11 @@ final readonly class InvService
         ?DateTimeImmutable $date_supplied,
         ?DateTimeImmutable $date_created
     ): ?DateTimeImmutable {
-        // Terminoligy: 'Date created' is used 
+        // Terminoligy: 'Date created' is used
         // interchangeably with 'Date issued'
         if (null !== $inv->getClient()?->getClientVatId()) {
-            if ($date_created > $date_supplied 
-                && null !== $date_created 
+            if ($date_created > $date_supplied
+                && null !== $date_created
                 && null !== $date_supplied) {
                 $diff = $date_supplied->diff($date_created)->format(
                     '%R%a');

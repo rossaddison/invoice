@@ -60,7 +60,7 @@ foreach ($generators as $generator) {
 echo Field::select($form, 'gentor_id')
 ->label($translator->translate('generator.relation.form.entity.generator'))
 ->addInputAttributes([
-    'class' => 'form-control',
+    'class' => 'form-control form-control-lg',
     'id' => 'gentor_id',
 ])
 ->prompt($translator->translate('none'))
@@ -75,7 +75,7 @@ echo Field::select($form, 'gentor_id')
     ->label($translator->translate('generator.relation.form.lowercase.name'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.lowercase.name'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'lowercasename',
     ])
     ->value(Html::encode($form->getLowercaseName()))
@@ -89,7 +89,7 @@ echo Field::select($form, 'gentor_id')
     ->label($translator->translate('generator.relation.form.camelcase.name'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.camelcase.name'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'camelcasename',
     ])
     ->value(Html::encode($form->getCamelcaseName()))
@@ -103,7 +103,7 @@ echo Field::select($form, 'gentor_id')
     ->label($translator->translate('generator.relation.form.view.field.name'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('generator.relation.form.view.field.name'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'view_field_name',
     ])
     ->value(Html::encode($form->getViewFieldName()))
@@ -112,7 +112,7 @@ echo Field::select($form, 'gentor_id')
 ?>
 <?= Html::closeTag('div'); ?>
 
-<?= $button::backSave(); ?>    
+<?= $button::backSave(); ?>
 <?=  new Form()->close(); ?>
 
 <?= Html::closeTag('div'); ?>

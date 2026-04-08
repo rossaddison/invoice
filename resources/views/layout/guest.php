@@ -19,6 +19,7 @@ use Yiisoft\Html\Tag\Html as TagHtml;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Meta;
+use Yiisoft\Html\Tag\Style;
 use Yiisoft\Html\Tag\Title;
 use Yiisoft\Bootstrap5\Assets\BootstrapCdnAsset as BsCdn;
 use Yiisoft\Bootstrap5\Assets\BootstrapAsset as BsNm;
@@ -42,11 +43,13 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var Yiisoft\Assets\AssetManager $assetManager
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this
- * @var bool $bootstrap5CdnNotNodeModule 
+ * @var bool $bootstrap5CdnNotNodeModule
  * @var bool $appCdnNotNodeModule
  * @var bool $invCdnNotNodeModule
  * @var string $bootstrap5LayoutGuestNavbarFont
- * @var string $bootstrap5LayoutGuestNavbarFontSize 
+ * @var string $bootstrap5LayoutGuestNavbarFontSize
+ * @var int $bootstrap5FormInputHeight
+ * @var int $bootstrap5FormFontSize
  * @var string $csrf
  * @var string $content
  * @var string $brandLabel
@@ -84,6 +87,8 @@ use Yiisoft\Bootstrap5\NavStyle;
  * @var DropdownItem $vi
  * @var DropdownItem $yoNG
  * @var DropdownItem $zuZA
+ * @var string $currentLocaleFlag
+ * @var array<string,string> $localeFlags
  */
 // Settings ... View ... General
 $assetManager->register($appCdnNotNodeModule ? AppCdn::class : AppNm::class);
@@ -110,19 +115,27 @@ $this->beginPage();
 ?>
 <!DOCTYPE html>
 <?php
-echo new TagHtml()->lang($currentRoute->getArgument('_language') ?? 'en');     
+echo new TagHtml()->lang($currentRoute->getArgument('_language') ?? 'en');
 echo Html::openTag('head');
 echo Meta::documentEncoding('utf-8');
 echo Meta::data('viewport', 'width=device-width, initial-scale=1');
-echo Meta::data('robots', 'NOINDEX,NOFOLLOW'); 
+ echo new Style()->content(
+    ':root {'
+    . ' --guest-nav-fs: ' . $bootstrap5LayoutGuestNavbarFontSize . 'px;'
+    . ' --guest-nav-ff: ' . $bootstrap5LayoutGuestNavbarFont . ';'
+    . ' --guest-input-height: ' . $bootstrap5FormInputHeight . 'px;'
+    . ' --guest-form-fs: ' . $bootstrap5FormFontSize . 'px;'
+    . ' }'
+  )->render();
+echo Meta::data('robots', 'NOINDEX,NOFOLLOW');
 echo new Title()->content($s->getSetting('custom_title') ?: 'Yii-Invoice');
 $this->head();
-echo Html::closeTag('head'); 
-echo Html::openTag('body'); 
+echo Html::closeTag('head');
+echo Html::openTag('body');
 echo Html::tag('Noscript', Html::tag('div',
     $t->translate('please.enable.js'),
     ['class' => 'alert alert-danger no-margin']));
-echo Html::openTag('header'); 
+echo Html::openTag('header');
 $this->beginBody();
 echo NavBar::widget()
     ->addAttributes([])
@@ -138,7 +151,7 @@ echo NavBar::widget()
     ->addCssStyle([
       'font-size' => $bootstrap5LayoutGuestNavbarFontSize,
       'font-family' => $bootstrap5LayoutGuestNavbarFont,
-    ])    
+    ])
     ->expand(NavBarExpand::LG)
     ->id('navbar')
     ->innerContainerAttributes(['class' => 'container-md'])
@@ -244,7 +257,7 @@ if ((null !== $currentPath) && !$isGuest) {
         'font-family' => $bootstrap5LayoutGuestNavbarFont,
     ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent((string)  new I()->addClass('fa fa-cogs')
+    ->togglerContent((string)  new I()->addClass('bi bi-gears')
             . ' ' . $t->translate('settings'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
@@ -270,9 +283,11 @@ if ((null !== $currentPath) && !$isGuest) {
     ->addTogglerCssStyle([
         'font-size' => $bootstrap5LayoutGuestNavbarFontSize . 'px',
         'font-family' => $bootstrap5LayoutGuestNavbarFont,
-    ])        
+    ])
     ->togglerVariant(ButtonVariant::INFO)
-    ->togglerContent( new I()->addClass('bi bi-translate'))
+    ->togglerContent($currentLocaleFlag
+            . ' '
+            . new I()->addClass('bi bi-translate'))
     ->togglerSize(ButtonSize::LARGE)
     ->items(
         // Related logic: config/web/params, src/ViewInjection/LayoutViewInjection
@@ -321,42 +336,46 @@ if (!$isGuest) {
     ->post($urlGenerator->generate('auth/logout'))
     ->csrf($csrf)
     ->open()
-    . Html::openTag('div') 
-    . (string) Button::submit(null !== $user ?
-        (string) preg_replace('/\d+/', '', $user->getLogin()
-        . ' ' . $t->translate('logout')) : '' . ' '
-        . $t->translate('logout'))
+    . Html::openTag('div')
+    . Button::submit(null !== $user ?
+        (new I())->addClass('bi bi-box-arrow-right me-1')->render()
+        . Html::encode((preg_replace('/\d+/', '', $user->getLogin()) ?? '')
+        . ' ' . $t->translate('logout')) :
+        (new I())->addClass('bi bi-box-arrow-right me-1')->render()
+        . ' ' . Html::encode($t->translate('logout')))
+        ->encode(false)
+        ->addClass('btn btn-outline-danger')
         ->addStyle('font-size: '
                 . $bootstrap5LayoutGuestNavbarFontSize
                 . 'px; padding: '
                 . ((int) $bootstrap5LayoutGuestNavbarFontSize * 0.15)
                 . 'px '
-                . ((int) $bootstrap5LayoutGuestNavbarFontSize * 0.4) . 'px;')  
+                . ((int) $bootstrap5LayoutGuestNavbarFontSize * 0.4) . 'px;')
     . Html::closeTag('div')
     . new Form()->close();
 }
 echo NavBar::end();
-echo Html::closeTag('header');  
-echo Html::openTag('div', ['id' => 'main-area']);    
-  echo Html::openTag('main', ['class' => 'container-fluid py-4']);         
+echo Html::closeTag('header');
+echo Html::openTag('div', ['id' => 'main-area']);
+  echo Html::openTag('main', ['class' => 'container-fluid py-4']);
   echo $content;
   echo Html::openTag('div', [
     'id' => 'fullpage-loader',
     'style' => 'display: none'
-   ]); //2                     
+   ]); //2
    echo Html::openTag('div', ['class' => 'loader-content']); //3
     echo new I()
           ->addAttributes(['id' => 'loader-icon'])
-          ->addClass('fa fa-cog fa-spin')
-          ->render(); //4                
-   echo Html::CloseTag('div'); //3   
+          ->addClass('bi bi-gear-fill')
+          ->render(); //4
+   echo Html::CloseTag('div'); //3
   echo Html::closeTag('div'); //2
  echo Html::closeTag('main');
 echo Html::closeTag('div');
-  echo Html::openTag('footer', ['class' => 'container-fluid py-4']); //2          
+  echo Html::openTag('footer', ['class' => 'container-fluid py-4']); //2
    echo PerformanceMetrics::widget(); //3
   echo Html::closeTag('footer'); //2
  $this->endBody();
  echo Html::closeTag('body'); //1
-echo Html::closeTag('html'); 
+echo Html::closeTag('html');
 $this->endPage(true);

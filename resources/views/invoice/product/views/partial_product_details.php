@@ -40,7 +40,7 @@ use Yiisoft\Html\Tag\Form;
     ->csrf($csrf)
     ->id('ProductForm')
     ->open()
-?> 
+?>
 
 <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs nav-tabs-noborder']); ?>
     <?= Html::openTag('li', ['class' => 'active']); ?>
@@ -68,19 +68,19 @@ use Yiisoft\Html\Tag\Form;
     ->id('btn-reset')
     ->render();
 ?>
-    <?= Html::closeTag('li'); ?>    
+    <?= Html::closeTag('li'); ?>
 <?= Html::closeTag('ul'); ?>
 
 <?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
 
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
-        
+
         <?= Html::openTag('div', ['id' => 'product-required', 'class' => 'tab-pane active']); ?>
             <?= Field::text($form, 'product_name')
         ->disabled(true); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_description')
-        ->disabled(true); ?>                    
+        ->disabled(true); ?>
             <?= Html::tag('br'); ?>
             <?= Field::select($form, 'family_id')
         ->label($translator->translate('family'))
@@ -138,7 +138,7 @@ use Yiisoft\Html\Tag\Form;
                               ? $form->getPurchasePrice() : 0.00))
     ->placeholder($translator->translate('purchase.price'))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.required')); ?>         
+    ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_price')
     ->label($translator->translate('product.price'))
@@ -151,7 +151,7 @@ use Yiisoft\Html\Tag\Form;
                                ? $form->getProductPrice() : 0.00)))
     ->placeholder($translator->translate('product.price'))
 
-        ->hint($translator->translate('hint.this.field.is.required')); ?>         
+        ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::number($form, 'product_price_base_quantity')
     ->label($translator->translate('product.price.base.quantity'))
@@ -168,7 +168,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::closeTag('div'); ?>
 
         <?= Html::openTag('div', ['id' => 'product-not-required', 'class' => 'tab-pane']); ?>
-            
+
             <?= Field::select($form, 'unit_peppol_id')
     ->label($translator->translate('product.peppol.unit'))
     ->addInputAttributes([
@@ -178,7 +178,7 @@ use Yiisoft\Html\Tag\Form;
     ->optionsData($unit_peppols)
     ->value(Html::encode($form->getUnitPeppolId()))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_sii_id')
     ->label($translator->translate('product.sii.id'))
@@ -188,7 +188,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getProductSiiId()))
     ->placeholder($translator->translate('product.sii.id'))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_sii_schemeid')
     ->label($translator->translate('product.sii.schemeid'))
@@ -198,7 +198,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getProductSiiSchemeid()))
     ->placeholder($translator->translate('product.sii.schemeid'))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_icc_listid')
     ->label($translator->translate('product.icc.listid'))
@@ -208,7 +208,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getProductIccListid()))
     ->placeholder($translator->translate('product.icc.listid'))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_icc_listversionid')
     ->label($translator->translate('product.icc.listversionid'))
@@ -218,7 +218,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getProductIccListversionid()))
     ->placeholder($translator->translate('product.icc.listversionid'))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_icc_id')
     ->label($translator->translate('product.icc.id'))
@@ -228,7 +228,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getProductIccId()))
     ->placeholder($translator->translate('product.icc.id'))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_country_of_origin_code')
     ->label($translator->translate('product.country.of.origin.code') . $s->where('default_country'))
@@ -238,7 +238,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getProductCountryOfOriginCode()))
     ->placeholder($translator->translate('product.country.of.origin.code') . $s->where('default_country'))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_additional_item_property_name')
     ->label($translator->translate('product.additional.item.property.name'))
@@ -248,7 +248,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getProductAdditionalItemPropertyName()))
     ->placeholder($translator->translate('product.additional.item.property.name'))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?> 
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'product_additional_item_property_value')
     ->label($translator->translate('product.additional.item.property.value'))
@@ -258,7 +258,7 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getProductAdditionalItemPropertyValue()))
     ->placeholder($translator->translate('product.additional.item.property.value'))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>         
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
             <?= Html::tag('br'); ?>
             <?= Field::text($form, 'provider_name')
     ->label($translator->translate('provider.name'))
@@ -268,10 +268,10 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode($form->getProviderName()))
     ->placeholder($translator->translate('provider.name'))
     ->disabled(true)
-    ->hint($translator->translate('hint.this.field.is.not.required')); ?>             
+    ->hint($translator->translate('hint.this.field.is.not.required')); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>     
+<?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>

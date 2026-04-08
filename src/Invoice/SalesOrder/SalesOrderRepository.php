@@ -45,7 +45,7 @@ final class SalesOrderRepository extends Select\Repository
         }
         return $this->findAllPreloaded();
     }
-    
+
     /**
      * @param int $user_id
      * @param int $client_id
@@ -251,65 +251,65 @@ final class SalesOrderRepository extends Select\Repository
         return [
             '0' => [
                 'label' => $translator->translate('all'),
-                'class' => 'all',
+                'class' => 'secondary',
                 'href' => 0,
             ],
             '1' => [
                 'label' => $translator->translate('draft'),
-                'class' => 'draft',
+                'class' => 'secondary',
                 'href' => 1,
             ],
             '2' => [
                 // Terms Agreement required
                 'label' => $translator->translate('salesorder.sent.to.customer'),
-                'class' => 'sent',
+                'class' => 'primary',
                 'href' => 2,
             ],
             '3' => [
                 // Client Confirmed Terms
                 'label' => $translator->translate('salesorder.client.confirmed.terms'),
-                'class' => 'viewed',
+                'class' => 'warning',
                 'href' => 3,
             ],
             '4' => [
                 // Assembled/Packaged/Prepared
                 'label' => $translator->translate('salesorder.assembled.packaged.prepared'),
-                'class' => 'assembled',
+                'class' => 'info',
                 'href' => 4,
             ],
             '5' => [
                 // Goods/Services Delivered
                 'label' => $translator->translate('salesorder.goods.services.delivered'),
-                'class' => 'approved',
+                'class' => 'success',
                 'href' => 5,
             ],
             '6' => [
                 // Customer Confirmed Delivery
                 'label' => $translator->translate('salesorder.goods.services.confirmed'),
                 // 'Related logic: see App(src)/Invoice/Asset/invoice/css/yii3i.css
-                'class' => 'confirmed',
+                'class' => 'success',
                 'href' => 6,
             ],
             '7' => [
                 'label' => $translator->translate('salesorder.invoice.generate'),
                 // 'Related logic: see App(src)/Invoice/Asset/invoice/css/yii3i.css
-                'class' => 'generate',
+                'class' => 'warning',
                 'href' => 7,
             ],
             '8' => [
                 'label' => $translator->translate('salesorder.invoice.generated'),
                 // 'Related logic: see App(src)/Invoice/Asset/invoice/css/yii3i.css
-                'class' => 'generated',
+                'class' => 'success',
                 'href' => 8,
             ],
             '9' => [
                 'label' => $translator->translate('rejected'),
-                'class' => 'rejected',
+                'class' => 'danger',
                 'href' => 9,
             ],
             '10' => [
                 'label' => $translator->translate('canceled'),
-                'class' => 'canceled',
+                'class' => 'secondary',
                 'href' => 10,
             ],
         ];

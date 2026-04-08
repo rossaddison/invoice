@@ -92,13 +92,13 @@ $columns = [
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']), $urlGenerator->generate('invitemallowancecharge/edit', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil']), $urlGenerator->generate('invitemallowancecharge/edit', ['id' => $model->getId()]), []);
         },
     ),
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('invitemallowancecharge/view', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('invitemallowancecharge/view', ['id' => $model->getId()]), []);
         },
     ),
     new DataColumn(
@@ -107,7 +107,7 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',

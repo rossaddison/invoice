@@ -3,34 +3,34 @@
   border-radius: 0.375rem;
   padding: 1rem;
   background: #fff;
-  
+
   .picker-header {
     border-bottom: 1px solid #e9ecef;
     padding-bottom: 0.75rem;
-    
+
     h5 {
       color: #495057;
       font-weight: 600;
-      
+
       i {
         color: #6c757d;
         margin-right: 0.5rem;
       }
     }
   }
-  
+
   .selected-info {
     .badge {
       font-size: 0.75rem;
     }
   }
-  
+
   .quick-ranges {
     .btn-group {
       gap: 0.25rem;
     }
   }
-  
+
   .numbers-grid {
     max-height: 300px;
     overflow-y: auto;
@@ -39,12 +39,12 @@
     padding: 0.75rem;
     background: #f8f9fa;
   }
-  
+
   .number-buttons {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
     gap: 0.375rem;
-    
+
     .number-btn {
       min-width: 50px;
       height: 40px;
@@ -53,18 +53,18 @@
       font-weight: 500;
       border-width: 1px;
       transition: all 0.15s ease-in-out;
-      
+
       &.btn-success {
         background-color: #198754;
         border-color: #157347;
         color: white;
-        
+
         &:hover {
           background-color: #157347;
           border-color: #146c43;
         }
       }
-      
+
       &.btn-outline-secondary {
         &:hover {
           background-color: #6c757d;
@@ -74,22 +74,22 @@
       }
     }
   }
-  
+
   .pagination-controls {
     border-top: 1px solid #e9ecef;
     padding-top: 0.75rem;
-    
+
     .page-buttons {
       .btn {
         min-width: 40px;
       }
     }
   }
-  
+
   .selected-preview {
     border-top: 1px solid #e9ecef;
     padding-top: 0.75rem;
-    
+
     .selected-numbers-display {
       max-height: 60px;
       overflow-y: auto;
@@ -111,37 +111,37 @@
       .d-flex {
         flex-direction: column;
         align-items: stretch !important;
-        
+
         .selected-info {
           margin-bottom: 0.5rem;
         }
       }
     }
-    
+
     .quick-ranges .btn-group {
       flex-direction: column;
-      
+
       .btn {
         border-radius: 0.25rem !important;
         margin-bottom: 0.25rem;
       }
     }
-    
+
     .numbers-grid .number-buttons {
       grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
       gap: 0.25rem;
-      
+
       .number-btn {
         min-width: 45px;
         height: 35px;
         font-size: 0.8rem;
       }
     }
-    
+
     .pagination-controls {
       flex-direction: column;
       gap: 0.75rem;
-      
+
       .page-buttons {
         order: -1;
       }
@@ -155,26 +155,26 @@
     background: #2d3436;
     border-color: #636e72;
     color: #ddd;
-    
+
     .picker-header {
       border-color: #636e72;
-      
+
       h5 {
         color: #ddd;
       }
     }
-    
+
     .numbers-grid {
       background: #636e72;
       border-color: #636e72;
     }
-    
+
     .selected-preview .selected-numbers-display {
       background-color: #ffffff;
       border-color: #636e72;
       color: #595959;
     }
-    
+
     .pagination-controls {
       border-color: #636e72;
     }

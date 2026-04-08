@@ -24,9 +24,9 @@ final readonly class ProjectService
         array $array
     ): void {
         $this->persist($model, $array);
-        isset($array['client_id']) ? 
+        isset($array['client_id']) ?
             $model->setClientId((int) $array['client_id']) : '';
-        isset($array['name']) ? 
+        isset($array['name']) ?
             $model->setName((string) $array['name']) : '';
         $this->repository->save($model);
     }

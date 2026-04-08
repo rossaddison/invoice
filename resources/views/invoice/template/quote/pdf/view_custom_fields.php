@@ -24,6 +24,6 @@ declare(strict_types=1);
     } ?>
     <div>
           <?php $cvH->printFieldForPdf($translator, $quote_custom_values, $custom_field, $cvR); ?>
-    </div>    
-    <?php endforeach; ?>        
-</div> 
+    </div>
+    <?php endforeach; ?>
+</div>

@@ -50,7 +50,7 @@ use Yiisoft\FormModel\Field;
         <?= Field::text($form, 'inv_id')
    ->label($translator->translate('number'))
    ->addInputAttributes([
-       'class' => 'form-control',
+       'class' => 'form-control form-control-lg',
    ])
    ->value(Html::encode($form->getInv()?->getNumber() ?? '#'))
    ->placeholder($translator->translate('number'))
@@ -61,7 +61,7 @@ use Yiisoft\FormModel\Field;
         <?= Field::text($form, 'date_sent')
    ->label($translator->translate('email.date'))
    ->addInputAttributes([
-       'class' => 'form-control',
+       'class' => 'form-control form-control-lg',
    ])
    ->value(Html::encode(!is_string($form->getDateSent()) ? $form->getDateSent()?->format('l, d-M-y H:i:s T') : ''))
    ->placeholder($translator->translate('date.sent'))

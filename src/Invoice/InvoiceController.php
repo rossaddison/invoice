@@ -91,8 +91,13 @@ final class InvoiceController extends BaseController
             'bootstrap5_layout_guest_navbar_font_size' => '10',
             'bootstrap5_layout_main_navbar_font' => 'Arial',
             'bootstrap5_layout_main_navbar_font_size' => '10',
+            'bootstrap5_sidebar_background' => '#1a1a2e',
+            'bootstrap5_sidebar_guest_background' => '#1a1a2e',
+            'bootstrap5_client_form_font_size' => '14',
+            'bootstrap5_form_font_size' => '14',
+            'bootstrap5_form_input_height' => '38',
             'cron_key' => Random::string(32),
-            'currency_symbol' => '£',
+            'currency_symbol' => 'Ã‚Â£',
             'currency_symbol_placement' => 'before',
             // default payment gateway currency code
             'currency_code' => 'GBP',
@@ -233,37 +238,50 @@ final class InvoiceController extends BaseController
         $this->installDefaultSettings($default_settings, $sR);
     }
 
-    public function faq(#[RouteArgument('topic')] string $topic): Response
+    public function faq(SettingRepository $sR, #[RouteArgument('topic')] string $topic): Response
     {
+        $fontSize = (int) ($sR->getSetting('bootstrap5_form_font_size') ?: 16);
         $view = match ($topic) {
             'ai_callback_session' =>
                 $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/ai/ai_callback_session'),
+                        '//invoice/info/ai/ai_callback_session',
+                            ['fontSize' => $fontSize]),
             'javascript_analysis' =>
                 $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/javascript_analysis'),
+                        '//invoice/info/javascript_analysis',
+                            ['fontSize' => $fontSize]),
             'codeception_selectors_checklist' =>
                 $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/codeception_selectors_checklist'),
+                        '//invoice/info/codeception_selectors_checklist',
+                            ['fontSize' => $fontSize]),
             'tp' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/taxpoint'),
+                        '//invoice/info/taxpoint',
+                            ['fontSize' => $fontSize]),
             'shared' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/shared_hosting'),
+                        '//invoice/info/shared_hosting',
+                            ['fontSize' => $fontSize]),
             'alpine' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/alpine'),
+                        '//invoice/info/alpine',
+                            ['fontSize' => $fontSize]),
             'wsl_to_alpine' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/wsl_to_alpine'),
+                        '//invoice/info/wsl_to_alpine',
+                            ['fontSize' => $fontSize]),
             'oauth2' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/oauth2'),
+                        '//invoice/info/oauth2',
+                            ['fontSize' => $fontSize]),
             'paymentprovider' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/payment_provider'),
+                        '//invoice/info/payment_provider',
+                            ['fontSize' => $fontSize]),
             'consolecommands' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/console_commands'),
+                        '//invoice/info/console_commands',
+                            ['fontSize' => $fontSize]),
             'ipaddress' => $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/ip_address'),
+                        '//invoice/info/ip_address',
+                            ['fontSize' => $fontSize]),
             default => '',
         };
-        return $this->webViewRenderer->render('info/view', ['topic' => $view]);
+        return $this->webViewRenderer->render('info/view',
+            ['topic' => $view]);
     }
 
     /**
@@ -308,7 +326,6 @@ final class InvoiceController extends BaseController
                     . ' "metaScheme": "iso6523-actorid-upis",'
                     . ' "scheme": "nl:kvk", "identifier":"60881119"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
-            curl_close($site);
             $message = curl_error($site) ?:
             $this->translator->translate('curl.store.cove.api.setup.successful');
             $parameters = [
@@ -357,7 +374,6 @@ final class InvoiceController extends BaseController
                     . ' "city": "Test City", "zip": "Zippy", "country": "'
                     . $country_code_identifier . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
-            curl_close($site);
             $message = curl_error($site) ?: $this->translator->translate(
                          'curl.store.cove.api.get.legal.entity.id.successful');
             $parameters = [
@@ -414,7 +430,6 @@ final class InvoiceController extends BaseController
                     . $scheme_tax_identifier . '", "identifier": "'
                     . $combo_id . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
-            curl_close($site);
             $message = curl_error($site) ?: $this->translator->translate(
                     'curl.store.cove.api.legal.entity.identifier.successful');
             $parameters = [
@@ -530,7 +545,6 @@ final class InvoiceController extends BaseController
                 }
             }';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
-            curl_close($site);
             $message = curl_error($site) ?: $this->translator->translate(
                     'curl.store.cove.api.send.test.json.invoice.successful');
             $parameters = [
@@ -643,10 +657,10 @@ final class InvoiceController extends BaseController
             $t = "Ci9UeXBlIC9QYWdlcwovTWVkaWFCb3ggWyAwIDAgMjUwIDUwIF0KPj4KZW5k";
             $u = "b2JqCjMgMCBvYmoKPDwKL1BhZ2VzIDUgMCBSCi9UeXBlIC9DYXRhbG9nCj4+";
             $v = "CmVuZG9iagp0cmFpbGVyCjw8Ci9Sb290IDMgMCBSCj4+CiUlRU9G";
-            $w = "This is the invoice note. Senders can enter free text."; 
+            $w = "This is the invoice note. Senders can enter free text.";
             $x = "This may not be read by the receiver,";
             $y = "so it is not encouraged to use this.";
-            
+
             $data = '{
                 "legalEntityId": 100000099999,
                 "idempotencyGuid": "61b37456-5f9e-4d56-b63b-3b1a23fa5c73",
@@ -665,7 +679,7 @@ final class InvoiceController extends BaseController
                 "attachments": [
                   {
                     "filename": "myname.pdf",
-                    "document":' . $p . $q . $r . $s . $t . $u . $v . 
+                    "document":' . $p . $q . $r . $s . $t . $u . $v .
                     '"mimeType": "application/pdf",
                     "primaryImage": false,
                     "documentId": "myId",
@@ -685,7 +699,7 @@ final class InvoiceController extends BaseController
                     "references": [
                       {
                         "documentType": "purchase_order",
-                        "documentId": 
+                        "documentId":
                     "buyer reference or purchase order reference is recommended",
                         "lineId": "1",
                         "issueDate": "2021-12-01"
@@ -860,7 +874,6 @@ final class InvoiceController extends BaseController
               }';
 
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
-            curl_close($site);
             $message = curl_error($site) ?: $this->translator->translate(
                           'curl.store.cove.api.setup.legal.entity.successful');
             $parameters = [
@@ -972,7 +985,7 @@ final class InvoiceController extends BaseController
             // (e.g., ru/invoice.php)
             $language = (string) $session->get('_language', 'en');
             $languageFile = "//invoice/info/{$language}/invoice";
-            
+
             // Check if language-specific file exists by attempting to render it
             try {
                 $content = $this->webViewRenderer->renderPartialAsString(
@@ -980,9 +993,9 @@ final class InvoiceController extends BaseController
                 $this->flashMessage('info', $content);
             } catch (\Throwable) {
                 // Fallback to default English version
-                $this->flashMessage('info',
-                    $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/info/en/invoice'));
+                //$this->flashMessage('info',
+                //    $this->webViewRenderer->renderPartialAsString(
+                //        '//invoice/info/en/invoice'));
             }
         }
         $gR->repoCountAll() === 0 ?

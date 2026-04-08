@@ -31,6 +31,14 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Language Flag Dropdown](docs/LANGUAGE_FLAG_DROPDOWN.md) (April 2026)
+
+[Settings Tabs Improvements](docs/SETTINGS_TABS_IMPROVEMENTS.md) (April 2026)
+
+[Soletrader Layout Improvements](docs/SOLETRADER_LAYOUT_IMPROVEMENTS.md) (April 2026)
+
+[Sidebar Improvements](docs/SIDEBAR_IMPROVEMENTS.md) (April 2026)
+
 [Eslint Sonarqube Build Session](docs/ESLINT_SONARQUBE_BUILD_SESSION.md) (March 2026)
 
 [Avoiding RBAC Mutation](docs/AVOIDING_RBAC_MUTATION.md) (March 2026)

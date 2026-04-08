@@ -10,7 +10,7 @@ declare global {
   providedIn: 'root'
 })
 export class FlashMessageService {
-  
+
   constructor() {}
 
   /**
@@ -83,7 +83,7 @@ export class FlashMessageService {
   getPausedCount(): number {
     const flashTimer = this.getFlashTimer();
     if (!flashTimer || !flashTimer.paused) return 0;
-    
+
     let pausedCount = 0;
     flashTimer.paused.forEach((isPaused: boolean) => {
       if (isPaused) pausedCount++;
@@ -133,7 +133,7 @@ export class FlashMessageService {
       const activeCount = this.getActiveCount();
       const pausedCount = this.getPausedCount();
       callback({ activeCount, pausedCount });
-      
+
       // Stop polling if no active messages
       if (activeCount === 0) {
         clearInterval(checkInterval);

@@ -53,7 +53,7 @@ $generateProductsButton = new A()
     ->href('#')
     ->content('☑️' . $translator->translate('generate')
         . ' '
-        . $translator->translate('products') 
+        . $translator->translate('products')
         . '🏭')
     ->id('btn-generate-products')
     ->render();

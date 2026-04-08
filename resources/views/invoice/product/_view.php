@@ -35,7 +35,7 @@ use Yiisoft\Html\Html;
     </li>
     <li class="nav-item">
         <?= $button::back(); ?>
-    </li>    
+    </li>
 </ul>
 
 <div class="tabbable tabs-below">
@@ -53,7 +53,7 @@ use Yiisoft\Html\Html;
         <div id="product-images" class="tab-pane">
             <?= $partial_product_images ?: ''; ?>
         </div>
-        
+
         <div id="product-gallery" class="tab-pane">
             <?= $partial_product_gallery ?: ''; ?>
         </div>

@@ -112,7 +112,7 @@ return [
             $checker->withPermission($pEI))
         ->action([PrometheusController::class, 'dashboard'])
         ->name('prometheus/dashboard'),
-        
+
     // Lonely pages of site
     Route::get('/')
         ->action([SiteController::class, 'index'])
@@ -290,7 +290,7 @@ return [
     Group::create('/user')
         ->routes(
             // User
-            Route::methods(['GET', 'POST'], '[/{page:\d+}/{pagesize:\d+}]')
+            Route::methods(['GET', 'POST'], '[/{page:\d+}]')
                 ->name('user/index')
                 ->action([UserController::class, 'index']),
             // Profile page
@@ -1555,7 +1555,7 @@ return [
                 ->name('productclient/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ProductClientController::class, 'view']),
-                
+
             Route::get('/productimage')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([ProductImageController::class, 'index'])
@@ -1849,7 +1849,7 @@ return [
                 ->name('quoteitem/view')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteItemController::class, 'view']),
-                
+
             // QuoteItemAllowanceCharge
             Route::get('/quoteitemallowancecharge')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))

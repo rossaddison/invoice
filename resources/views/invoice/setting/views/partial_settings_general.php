@@ -19,171 +19,203 @@ use Yiisoft\Html\Tag\Option;
 * @var DateTime $current_date
 */
 
-echo H::openTag('div', ['class' => 'row']); //1
- echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']); //2
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+$row = ['class' => 'row'];
+$colMd6 = ['class' => 'col-xs-12 col-md-6'];
+$colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
+$panel = ['class' => 'panel panel-default'];
+$panelHead = ['class' => 'panel-heading'];
+$panelBody = ['class' => 'panel-body'];
+$formGroup = ['class' => 'form-group'];
+$kStopLoggingIn = 'settings[stop_logging_in]';
+$kStopSigningUp = 'settings[stop_signing_up]';
+$kAppCdn = 'settings[app_cdn_not_node_module]';
+$kInvCdn = 'settings[inv_cdn_not_node_module]';
+$kInstallTest = 'settings[install_test_data]';
+$kUseTest = 'settings[use_test_data]';
+$kDefaultLanguage = 'settings[default_language]';
+$kTimeZone = 'settings[time_zone]';
+$kDefaultCountry = 'settings[default_country]';
+$kDisableFlash = 'settings[disable_flash_messages]';
+$kSignupAssignClient = 'settings[signup_automatically_assign_client]';
+$kSignupAgeMin = 'settings[signup_default_age_minimum_eighteen]';
+$kCurrencySymbol = 'settings[currency_symbol]';
+$kCurrencySymbolPlacement = 'settings[currency_symbol_placement]';
+$kCurrencyCode = 'settings[currency_code]';
+$kTaxDecimal = 'settings[tax_rate_decimal_places]';
+$kNumberFormat = 'settings[number_format]';
+$kQuotePeriod = 'settings[quote_overview_period]';
+$kInvoicePeriod = 'settings[invoice_overview_period]';
+$kDisableSidebar = 'settings[disable_sidebar]';
+$kCustomTitle = 'settings[custom_title]';
+$kOpenReports = 'settings[open_reports_in_new_tab]';
+$kBccMails = 'settings[bcc_mails_to_admin]';
+$kCronKey = 'settings[cron_key]';
+
+echo H::openTag('div', $row); //1
+ echo H::openTag('div', $colMd8); //2
+  echo H::openTag('div', $panel); //3
+   echo H::openTag('div', $panelHead); //4
     echo $translator->translate('general');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+   echo H::openTag('div', $panelBody); //4
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[stop_logging_in]'
+        'for' => $kStopLoggingIn
        ]);
         echo $translator->translate('stop.logging.in');
        echo H::closeTag('label');
-       $body['settings[stop_logging_in]'] = 
+       $body[$kStopLoggingIn] =
        $s->getSetting('stop_logging_in');
        echo H::openTag('select', [
-        'name' => 'settings[stop_logging_in]',
-        'id' => 'settings[stop_logging_in]',
-        'class' => 'form-control'
+        'name' => $kStopLoggingIn,
+        'id' => $kStopLoggingIn,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
         echo  new Option()
          ->value('1')
-         ->selected($body['settings[stop_logging_in]'] == '1')
+         ->selected($body[$kStopLoggingIn] == '1')
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[stop_signing_up]'
+        'for' => $kStopSigningUp
        ]);
         echo $translator->translate('stop.signing.up');
        echo H::closeTag('label');
-       $body['settings[stop_signing_up]'] = 
+       $body[$kStopSigningUp] =
        $s->getSetting('stop_signing_up');
        echo H::openTag('select', [
-        'name' => 'settings[stop_signing_up]',
-        'id' => 'settings[stop_signing_up]',
-        'class' => 'form-control'
+        'name' => $kStopSigningUp,
+        'id' => $kStopSigningUp,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
         echo  new Option()
          ->value('1')
-         ->selected($body['settings[stop_signing_up]'] == '1')
+         ->selected($body[$kStopSigningUp] == '1')
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[app_cdn_not_node_module]'
+        'for' => $kAppCdn
        ]);
         echo $translator->translate('app.cdn.not.node.module');
        echo H::closeTag('label');
-       $body['settings[app_cdn_not_node_module]'] = 
+       $body[$kAppCdn] =
        $s->getSetting('app_cdn_not_node_module');
        echo H::openTag('select', [
-        'name' => 'settings[app_cdn_not_node_module]',
-        'id' => 'settings[app_cdn_not_node_module]',
-        'class' => 'form-control'
+        'name' => $kAppCdn,
+        'id' => $kAppCdn,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
         echo  new Option()
          ->value('1')
-         ->selected($body['settings[app_cdn_not_node_module]'] == '1')
+         ->selected($body[$kAppCdn] == '1')
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[inv_cdn_not_node_module]'
+        'for' => $kInvCdn
        ]);
         echo $translator->translate('inv.cdn.not.node.module');
        echo H::closeTag('label');
-       $body['settings[inv_cdn_not_node_module]'] = 
+       $body[$kInvCdn] =
        $s->getSetting('inv_cdn_not_node_module');
        echo H::openTag('select', [
-        'name' => 'settings[inv_cdn_not_node_module]',
-        'id' => 'settings[inv_cdn_not_node_module]',
-        'class' => 'form-control'
+        'name' => $kInvCdn,
+        'id' => $kInvCdn,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
         echo  new Option()
          ->value('1')
-         ->selected($body['settings[inv_cdn_not_node_module]'] == '1')
+         ->selected($body[$kInvCdn] == '1')
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[install_test_data]'
+        'for' => $kInstallTest
        ]);
         echo $translator->translate('test.data.install');
        echo H::closeTag('label');
-       $body['settings[install_test_data]'] =
+       $body[$kInstallTest] =
        $s->getSetting('install_test_data');
        echo H::openTag('select', [
-        'name' => 'settings[install_test_data]',
-        'id' => 'settings[install_test_data]',
-        'class' => 'form-control'
+        'name' => $kInstallTest,
+        'id' => $kInstallTest,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
         echo  new Option()
          ->value('1')
-         ->selected($body['settings[install_test_data]'] == '1')
+         ->selected($body[$kInstallTest] == '1')
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[use_test_data]'
+        'for' => $kUseTest
        ]);
         echo $translator->translate('test.data.use');
        echo H::closeTag('label');
-       $body['settings[use_test_data]'] =
+       $body[$kUseTest] =
        $s->getSetting('use_test_data');
        echo H::openTag('select', [
-        'name' => 'settings[use_test_data]',
-        'id' => 'settings[use_test_data]',
-        'class' => 'form-control'
+        'name' => $kUseTest,
+        'id' => $kUseTest,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
          ->content($translator->translate('no'));
         echo  new Option()
          ->value('1')
-         ->selected($body['settings[use_test_data]'] == '1')
+         ->selected($body[$kUseTest] == '1')
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[default_language]'
+        'for' => $kDefaultLanguage
        ]);
         echo $translator->translate('language');
        echo H::closeTag('label');
-       $body['settings[default_language]'] = 
+       $body[$kDefaultLanguage] =
        $s->getSetting('default_language');
        echo H::openTag('select', [
-        'name' => 'settings[default_language]',
-        'id' => 'settings[default_language]',
-        'class' => 'form-control'
+        'name' => $kDefaultLanguage,
+        'id' => $kDefaultLanguage,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -195,25 +227,25 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value($language)
          ->selected(
-          $body['settings[default_language]'] == $language
+          $body[$kDefaultLanguage] == $language
          )
          ->content(ucfirst($language));
         }
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[time_zone]'
+        'for' => $kTimeZone
        ]);
         echo $translator->translate('time.zone');
        echo H::closeTag('label');
-       $body['settings[time_zone]'] = $s->getSetting('time_zone');
+       $body[$kTimeZone] = $s->getSetting('time_zone');
        echo H::openTag('select', [
-        'name' => 'settings[time_zone]',
-        'id' => 'settings[time_zone]',
-        'class' => 'form-control'
+        'name' => $kTimeZone,
+        'id' => $kTimeZone,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -224,27 +256,27 @@ echo H::openTag('div', ['class' => 'row']); //1
         foreach ($time_zones as $value) {
         echo  new Option()
          ->value($value)
-         ->selected($body['settings[time_zone]'] == $value)
+         ->selected($body[$kTimeZone] == $value)
          ->content($value);
         }
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[default_country]'
+        'for' => $kDefaultCountry
        ]);
         echo $translator->translate('default.country');
        echo H::closeTag('label');
-       $body['settings[default_country]'] = 
+       $body[$kDefaultCountry] =
        $s->getSetting('default_country');
        echo H::openTag('select', [
-        'name' => 'settings[default_country]',
-        'id' => 'settings[default_country]',
-        'class' => 'form-control'
+        'name' => $kDefaultCountry,
+        'id' => $kDefaultCountry,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -260,15 +292,15 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value($cldr)
          ->selected(
-          $body['settings[default_country]'] == $cldr
+          $body[$kDefaultCountry] == $cldr
          )
          ->content($country);
         }
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
         'for' => 'default_list_limit'
        ]);
@@ -280,7 +312,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'type' => 'number',
         'name' => 'settings[default_list_limit]',
         'id' => 'default_list_limit',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'minlength' => '1',
         'min' => '1',
         'required' => true,
@@ -288,19 +320,19 @@ echo H::openTag('div', ['class' => 'row']); //1
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[disable_flash_messages]'
+        'for' => $kDisableFlash
        ]);
         echo $translator->translate('disable.flash.messages');
        echo H::closeTag('label');
-       $body['settings[disable_flash_messages]'] =
+       $body[$kDisableFlash] =
        $s->getSetting('disable_flash_messages');
        echo H::openTag('select', [
-        'name' => 'settings[disable_flash_messages]',
-        'id' => 'settings[disable_flash_messages]',
-        'class' => 'form-control'
+        'name' => $kDisableFlash,
+        'id' => $kDisableFlash,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -308,25 +340,25 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[disable_flash_messages]'] == '1'
+          $body[$kDisableFlash] == '1'
          )
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[signup_automatically_assign_client]'
+        'for' => $kSignupAssignClient
        ]);
         echo $translator->translate('assign.client.on.signup');
        echo H::closeTag('label');
-       $body['settings[signup_automatically_assign_client]'] = 
+       $body[$kSignupAssignClient] =
        $s->getSetting('signup_automatically_assign_client');
        echo H::openTag('select', [
-        'name' => 'settings[signup_automatically_assign_client]',
-        'id' => 'settings[signup_automatically_assign_client]',
-        'class' => 'form-control'
+        'name' => $kSignupAssignClient,
+        'id' => $kSignupAssignClient,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -335,31 +367,31 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('1')
          ->selected(
           $body[
-          'settings[signup_automatically_assign_client]'
+          $kSignupAssignClient
          ] == '1'
         )
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 
-        'settings[signup_default_age_minimum_eighteen]'
+        'for' =>
+        $kSignupAgeMin
        ]);
         echo $translator->translate(
          'assign.client.on.signup.default.age.minimum.eighteen'
         );
        echo H::closeTag('label');
-       $body['settings[signup_default_age_minimum_eighteen]'] = 
+       $body[$kSignupAgeMin] =
        $s->getSetting('signup_default_age_minimum_eighteen');
        echo H::openTag('select', [
-        'name' => 
-        'settings[signup_default_age_minimum_eighteen]',
-        'id' => 
-        'settings[signup_default_age_minimum_eighteen]',
-        'class' => 'form-control'
+        'name' =>
+        $kSignupAgeMin,
+        'id' =>
+        $kSignupAgeMin,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -368,7 +400,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('1')
          ->selected(
           $body[
-          'settings[signup_default_age_minimum_eighteen]'
+          $kSignupAgeMin
          ] == '1'
         )
          ->content($translator->translate('yes'));
@@ -378,52 +410,52 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::closeTag('div'); //5
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //3
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+  echo H::openTag('div', $panel); //3
+   echo H::openTag('div', $panelHead); //4
     echo $translator->translate('amount.settings');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+   echo H::openTag('div', $panelBody); //4
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[currency_symbol]'
+        'for' => $kCurrencySymbol
        ]);
         echo $translator->translate('currency.symbol');
        echo H::closeTag('label');
-       $body['settings[currency_symbol]'] =
+       $body[$kCurrencySymbol] =
        $s->getSetting('currency_symbol');
        echo H::openTag('input', [
         'type' => 'text',
-        'name' => 'settings[currency_symbol]',
-        'id' => 'settings[currency_symbol]',
-        'class' => 'form-control',
-        'value' => $body['settings[currency_symbol]']
+        'name' => $kCurrencySymbol,
+        'id' => $kCurrencySymbol,
+        'class' => 'form-control form-control-lg',
+        'value' => $body[$kCurrencySymbol]
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[currency_symbol_placement]'
+        'for' => $kCurrencySymbolPlacement
        ]);
         echo $translator->translate(
          'currency.symbol.placement'
         );
        echo H::closeTag('label');
-       $body['settings[currency_symbol_placement]'] = 
+       $body[$kCurrencySymbolPlacement] =
        $s->getSetting('currency_symbol_placement');
        echo H::openTag('select', [
-        'name' => 'settings[currency_symbol_placement]',
-        'id' => 'settings[currency_symbol_placement]',
-        'class' => 'form-control',
+        'name' => $kCurrencySymbolPlacement,
+        'id' => $kCurrencySymbolPlacement,
+        'class' => 'form-control form-control-lg',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
         echo  new Option()
          ->value('before')
          ->selected(
           $body[
-          'settings[currency_symbol_placement]'
+          $kCurrencySymbolPlacement
          ] == 'before'
         )
          ->content($translator->translate('before.amount'));
@@ -431,7 +463,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('after')
          ->selected(
           $body[
-          'settings[currency_symbol_placement]'
+          $kCurrencySymbolPlacement
          ] == 'after'
         )
          ->content($translator->translate('after.amount'));
@@ -439,7 +471,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('afterspace')
          ->selected(
           $body[
-          'settings[currency_symbol_placement]'
+          $kCurrencySymbolPlacement
          ] == 'afterspace'
         )
          ->content(
@@ -449,19 +481,19 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[currency_code]'
+        'for' => $kCurrencyCode
        ]);
         echo $translator->translate('currency.code');
        echo H::closeTag('label');
-       $body['settings[currency_code]'] =
+       $body[$kCurrencyCode] =
        $s->getSetting('currency_code');
        echo H::openTag('select', [
-        'name' => 'settings[currency_code]',
-        'id' => 'settings[currency_code]',
+        'name' => $kCurrencyCode,
+        'id' => $kCurrencyCode,
         'class' => 'input-sm form-control'
        ]);
         echo  new Option()
@@ -475,28 +507,28 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value($key)
          ->selected(
-          $body['settings[currency_code]'] == $key
+          $body[$kCurrencyCode] == $key
          )
          ->content($key);
         }
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[tax_rate_decimal_places]'
+        'for' => $kTaxDecimal
        ]);
         echo $translator->translate(
          'tax.rate.decimal.places'
         );
        echo H::closeTag('label');
-       $body['settings[tax_rate_decimal_places]'] = 
+       $body[$kTaxDecimal] =
        $s->getSetting('tax_rate_decimal_places');
        echo H::openTag('select', [
-        'name' => 'settings[tax_rate_decimal_places]',
-        'id' => 'settings[tax_rate_decimal_places]',
-        'class' => 'form-control'
+        'name' => $kTaxDecimal,
+        'id' => $kTaxDecimal,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -504,33 +536,33 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value('2')
          ->selected(
-          $body['settings[tax_rate_decimal_places]'] == '2'
+          $body[$kTaxDecimal] == '2'
          )
          ->content('2');
         echo  new Option()
          ->value('3')
          ->selected(
-          $body['settings[tax_rate_decimal_places]'] == '3'
+          $body[$kTaxDecimal] == '3'
          )
          ->content('3');
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[number_format]'
+        'for' => $kNumberFormat
        ]);
         echo $translator->translate('number.format');
        echo H::closeTag('label');
-       $body['settings[number_format]'] = 
+       $body[$kNumberFormat] =
        $s->getSetting('number_format');
        echo H::openTag('select', [
-        'name' => 'settings[number_format]',
-        'id' => 'settings[number_format]',
-        'class' => 'form-control'
+        'name' => $kNumberFormat,
+        'id' => $kNumberFormat,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -544,7 +576,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value($key)
          ->selected(
-          $body['settings[number_format]'] == 
+          $body[$kNumberFormat] ==
           $value['label']
          )
          ->content(
@@ -557,25 +589,25 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::closeTag('div'); //5
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //3
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+  echo H::openTag('div', $panel); //3
+   echo H::openTag('div', $panelHead); //4
     echo $translator->translate('dashboard');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+   echo H::openTag('div', $panelBody); //4
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[quote_overview_period]'
+        'for' => $kQuotePeriod
        ]);
         echo $translator->translate('quote.overview.period');
        echo H::closeTag('label');
-       $body['settings[quote_overview_period]'] = 
+       $body[$kQuotePeriod] =
        $s->getSetting('quote_overview_period');
        echo H::openTag('select', [
-        'name' => 'settings[quote_overview_period]',
-        'id' => 'settings[quote_overview_period]',
-        'class' => 'form-control',
+        'name' => $kQuotePeriod,
+        'id' => $kQuotePeriod,
+        'class' => 'form-control form-control-lg',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
         echo  new Option()
@@ -585,7 +617,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('this-month')
          ->selected(
           $body[
-          'settings[quote_overview_period]'
+          $kQuotePeriod
          ] == 'this-month'
         )
          ->content($translator->translate('this.month'));
@@ -593,7 +625,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('last-month')
          ->selected(
           $body[
-          'settings[quote_overview_period]'
+          $kQuotePeriod
          ] == 'last-month'
         )
          ->content($translator->translate('last.month'));
@@ -601,7 +633,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('this-quarter')
          ->selected(
           $body[
-          'settings[quote_overview_period]'
+          $kQuotePeriod
          ] == 'this-quarter'
         )
          ->content($translator->translate('this.quarter'));
@@ -609,7 +641,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('last-quarter')
          ->selected(
           $body[
-          'settings[quote_overview_period]'
+          $kQuotePeriod
          ] == 'last-quarter'
         )
          ->content($translator->translate('last.quarter'));
@@ -617,7 +649,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('this-year')
          ->selected(
           $body[
-          'settings[quote_overview_period]'
+          $kQuotePeriod
          ] == 'this-year'
         )
          ->content($translator->translate('this.year'));
@@ -625,26 +657,26 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('last-year')
          ->selected(
           $body[
-          'settings[quote_overview_period]'
+          $kQuotePeriod
          ] == 'last-year'
         )
          ->content($translator->translate('last.year'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[invoice_overview_period]'
+        'for' => $kInvoicePeriod
        ]);
         echo $translator->translate('overview.period');
        echo H::closeTag('label');
-       $body['settings[invoice_overview_period]'] = 
+       $body[$kInvoicePeriod] =
        $s->getSetting('invoice_overview_period');
        echo H::openTag('select', [
-        'name' => 'settings[invoice_overview_period]',
-        'id' => 'settings[invoice_overview_period]',
-        'class' => 'form-control',
+        'name' => $kInvoicePeriod,
+        'id' => $kInvoicePeriod,
+        'class' => 'form-control form-control-lg',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
         echo  new Option()
@@ -654,7 +686,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('this-month')
          ->selected(
           $body[
-          'settings[invoice_overview_period]'
+          $kInvoicePeriod
          ] == 'this-month'
         )
          ->content($translator->translate('this.month'));
@@ -662,7 +694,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('last-month')
          ->selected(
           $body[
-          'settings[invoice_overview_period]'
+          $kInvoicePeriod
          ] == 'last-month'
         )
          ->content($translator->translate('last.month'));
@@ -670,7 +702,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('this-quarter')
          ->selected(
           $body[
-          'settings[invoice_overview_period]'
+          $kInvoicePeriod
          ] == 'this-quarter'
         )
          ->content($translator->translate('this.quarter'));
@@ -678,7 +710,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('last-quarter')
          ->selected(
           $body[
-          'settings[invoice_overview_period]'
+          $kInvoicePeriod
          ] == 'last-quarter'
         )
          ->content($translator->translate('last.quarter'));
@@ -686,7 +718,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('this-year')
          ->selected(
           $body[
-          'settings[invoice_overview_period]'
+          $kInvoicePeriod
          ] == 'this-year'
         )
          ->content($translator->translate('this.year'));
@@ -694,7 +726,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('last-year')
          ->selected(
           $body[
-          'settings[invoice_overview_period]'
+          $kInvoicePeriod
          ] == 'last-year'
         )
          ->content($translator->translate('last.year'));
@@ -702,19 +734,19 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
         'for' => 'disable_quickactions'
        ]);
         echo $translator->translate('disable.quickactions');
        echo H::closeTag('label');
-       $body['settings[disable_quickactions]'] = 
+       $body['settings[disable_quickactions]'] =
        $s->getSetting('disable_quickactions');
        echo H::openTag('select', [
         'name' => 'settings[disable_quickactions]',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'disable_quickactions',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
@@ -733,25 +765,25 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::closeTag('div'); //5
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //3
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+  echo H::openTag('div', $panel); //3
+   echo H::openTag('div', $panelHead); //4
     echo $translator->translate('interface');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+   echo H::openTag('div', $panelBody); //4
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[disable_sidebar]'
+        'for' => $kDisableSidebar
        ]);
         echo $translator->translate('disable.sidebar');
        echo H::closeTag('label');
-       $body['settings[disable_sidebar]'] = 
+       $body[$kDisableSidebar] =
        $s->getSetting('disable_sidebar');
        echo H::openTag('select', [
-        'name' => 'settings[disable_sidebar]',
-        'id' => 'settings[disable_sidebar]',
-        'class' => 'form-control'
+        'name' => $kDisableSidebar,
+        'id' => $kDisableSidebar,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -759,34 +791,34 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[disable_sidebar]'] == '1'
+          $body[$kDisableSidebar] == '1'
          )
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[custom_title]'
+        'for' => $kCustomTitle
        ]);
         echo $translator->translate('custom.title');
        echo H::closeTag('label');
-       $body['settings[custom_title]'] =
+       $body[$kCustomTitle] =
        $s->getSetting('custom_title');
        echo H::openTag('input', [
         'type' => 'text',
-        'name' => 'settings[custom_title]',
-        'id' => 'settings[custom_title]',
-        'class' => 'form-control',
-        'value' => $body['settings[custom_title]']
+        'name' => $kCustomTitle,
+        'id' => $kCustomTitle,
+        'class' => 'form-control form-control-lg',
+        'value' => $body[$kCustomTitle]
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
         'for' => 'monospace_amounts'
        ]);
@@ -794,11 +826,11 @@ echo H::openTag('div', ['class' => 'row']); //1
          'monospaced.font.for.amounts'
         );
        echo H::closeTag('label');
-       $body['settings[monospace_amounts]'] = 
+       $body['settings[monospace_amounts]'] =
        $s->getSetting('monospace_amounts');
        echo H::openTag('select', [
         'name' => 'settings[monospace_amounts]',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'monospace_amounts'
        ]);
         echo  new Option()
@@ -822,21 +854,21 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('p');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[open_reports_in_new_tab]'
+        'for' => $kOpenReports
        ]);
         echo $translator->translate(
          'open.reports.in.new.tab'
         );
        echo H::closeTag('label');
-       $body['settings[open_reports_in_new_tab]'] = 
+       $body[$kOpenReports] =
        $s->getSetting('open_reports_in_new_tab');
        echo H::openTag('select', [
-        'name' => 'settings[open_reports_in_new_tab]',
-        'id' => 'settings[open_reports_in_new_tab]',
-        'class' => 'form-control'
+        'name' => $kOpenReports,
+        'id' => $kOpenReports,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -844,7 +876,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[open_reports_in_new_tab]'] == '1'
+          $body[$kOpenReports] == '1'
          )
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
@@ -853,25 +885,25 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::closeTag('div'); //5
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //3
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+  echo H::openTag('div', $panel); //3
+   echo H::openTag('div', $panelHead); //4
     echo $translator->translate('system.settings');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+   echo H::openTag('div', $panelBody); //4
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[bcc_mails_to_admin]'
+        'for' => $kBccMails
        ]);
         echo $translator->translate('bcc.mails.to.admin');
        echo H::closeTag('label');
-       $body['settings[bcc_mails_to_admin]'] = 
+       $body[$kBccMails] =
        $s->getSetting('bcc_mails_to_admin');
        echo H::openTag('select', [
-        'name' => 'settings[bcc_mails_to_admin]',
-        'id' => 'settings[bcc_mails_to_admin]',
-        'class' => 'form-control'
+        'name' => $kBccMails,
+        'id' => $kBccMails,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -879,47 +911,47 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[bcc_mails_to_admin]'] == '1'
+          $body[$kBccMails] == '1'
          )
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[cron_key]'
+        'for' => $kCronKey
        ]);
         echo $translator->translate('cron.key');
        echo H::closeTag('label');
        echo H::openTag('div', ['class' => 'input-group']); //8
         echo H::openTag('input', [
          'type' => 'text',
-         'name' => 'settings[cron_key]',
-         'id' => 'settings[cron_key]',
+         'name' => $kCronKey,
+         'id' => $kCronKey,
          'class' => 'cron_key form-control',
-         'value' => (string) ($body['settings[cron_key]'] ?? 
+         'value' => (string) ($body[$kCronKey] ??
          $s->getSetting('cron_key'))
         ]);
         echo H::openTag('div', [ //9
          'class' => 'input-group-text'
         ]);
          /**
-         * Related logic: see 
+         * Related logic: see
          * ..\src\Invoice\Asset\rebuild-1.13
          * \js\setting.js
-         * Related logic: see 
-         * $(document).on('click', 
+         * Related logic: see
+         * $(document).on('click',
           * '#btn_generate_cron_key', function ()
           */
           echo H::openTag('button', [
           'id' => 'btn_generate_cron_key',
           'type' => 'button',
-          'class' => 
+          'class' =>
           'btn_generate_cron_key btn btn-primary btn-block'
          ]);
           echo H::openTag('i', [
-           'class' => 'fa fa-recycle fa-margin'
+           'class' => 'bi bi-recycle'
           ]);
           echo H::closeTag('i');
          echo H::closeTag('button');

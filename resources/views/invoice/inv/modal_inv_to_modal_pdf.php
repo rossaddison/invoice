@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 
 ?>
-   
+
 <div id="inv-to-modal-pdf" class="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -23,7 +23,7 @@ declare(strict_types=1);
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="control-label">
-                        <?= $translator->translate('custom.fields'); ?>?                
+                        <?= $translator->translate('custom.fields'); ?>?
                     </div>
                     <input type="hidden" name="inv_id" id="inv_id" value="<?php $inv->getId(); ?>">
                 </form>
@@ -31,15 +31,15 @@ declare(strict_types=1);
             <div class="modal-footer">
               <div class="btn-group">
                     <button class="inv_to_modal_pdf_confirm_with_custom_fields btn btn-success" id="inv_to_modal_pdf_confirm_with_custom_fields" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('yes'); ?>
+                        <i class="bi bi-check-lg"></i> <?= $translator->translate('yes'); ?>
                     </button>
                     <button class="inv_to_modal_pdf_confirm_without_custom_fields btn btn-info" id="inv_to_modal_pdf_confirm_without_custom_fields" type="button">
-                        <i class="fa fa-times"></i> <?= $translator->translate('no'); ?>
-                    </button>                
-                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('back'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('no'); ?>
                     </button>
-                </div>  
+                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('back'); ?>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

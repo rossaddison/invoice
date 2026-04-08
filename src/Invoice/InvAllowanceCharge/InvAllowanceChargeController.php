@@ -174,7 +174,7 @@ final class InvAllowanceChargeController extends BaseController
             return $this->webService->getRedirectResponse('invallowancecharge/index');
         }
     }
-    
+
     public function edit(
         Request $request,
         CurrentRoute $currentRoute,

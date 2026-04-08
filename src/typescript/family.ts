@@ -1,4 +1,4 @@
-﻿import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
+import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
 
 // Family-specific interfaces
 interface FamilySecondaryRequest extends RequestParams {
@@ -72,15 +72,13 @@ export class FamilyHandler {
                 return;
             }
             const modalEl = document.getElementById('generate-products-modal');
-            if (modalEl && typeof (window as any).bootstrap?.Modal !== 'undefined') {
+            if (modalEl && (window as any).bootstrap?.Modal !== undefined) {
                 (window as any).bootstrap.Modal.getOrCreateInstance(modalEl).show();
             }
-            return;
         }
 
         if (target.closest('#process-generate-products')) {
             this.processProductGeneration();
-            return;
         }
     }
 
@@ -111,20 +109,20 @@ export class FamilyHandler {
      */
     private initializeSelector(callback: () => void): void {
         const { promise, resolve, reject } = Promise.withResolvers<void>();
-        
+
         // Schedule callback with timeout protection
         const timeoutId = setTimeout(() => {
-            reject(new Error('Selector initialization timeout', { 
-                cause: 'DOM not ready within expected timeframe' 
+            reject(new Error('Selector initialization timeout', {
+                cause: 'DOM not ready within expected timeframe'
             }));
         }, 5000);
-        
+
         // Schedule callback to run after current execution stack
         setTimeout(() => {
             clearTimeout(timeoutId);
             resolve();
         }, 0);
-        
+
         promise
             .then(() => callback())
             .catch(error => {
@@ -290,26 +288,26 @@ export class FamilyHandler {
     private getFamilyDataFromCheckedBoxes(): FamilyData[] {
         const families: FamilyData[] = [];
         const checkedBoxes = document.querySelectorAll<HTMLInputElement>('input[name="family_ids[]"]:checked');
-        
+
         checkedBoxes.forEach(checkbox => {
             const row = checkbox.closest('tr');
             if (!row) return;
-            
+
             const familyId = checkbox.value;
             const familyNameCell = row.querySelector('[data-family-name]') as HTMLElement;
             const familyPrefixCell = row.querySelector('[data-family-prefix]') as HTMLElement;
             const familyCommaListCell = row.querySelector('[data-family-commalist]') as HTMLElement;
-            
+
             const familyData: FamilyData = {
                 family_id: familyId,
                 family_name: familyNameCell?.textContent?.trim() || '',
                 family_productprefix: familyPrefixCell?.textContent?.trim() || '',
                 family_commalist: familyCommaListCell?.textContent?.trim() || ''
             };
-            
+
             families.push(familyData);
         });
-        
+
         return families;
     }
 
@@ -322,7 +320,7 @@ export class FamilyHandler {
         const taxRateSelect = document.getElementById('tax_rate_id') as HTMLSelectElement;
         const unitSelect = document.getElementById('unit_id') as HTMLSelectElement;
         const processBtn = document.getElementById('process-generate-products') as HTMLButtonElement;
-        
+
         if (!taxRateSelect?.value || !unitSelect?.value) {
             alert('Please select both tax rate and unit.');
             return;
@@ -369,7 +367,7 @@ export class FamilyHandler {
                 const parsed = JSON.parse(rawText);
                 // Handle double-encoded JSON (server wrapped JSON string in another JSON string)
                 data = (typeof parsed === 'string' ? JSON.parse(parsed) : parsed) as FamilyGenerateResponse;
-            } catch (parseError) {
+            } catch {
                 alert('Server returned non-JSON response (HTTP ' + response.status + '). Check PHP error log.');
                 processBtn.innerHTML = originalText;
                 processBtn.disabled = false;
@@ -377,28 +375,7 @@ export class FamilyHandler {
             }
 
             if (data.success) {
-                processBtn.innerHTML = '<i class="fa fa-check"></i> Success!';
-                alert(data.message || `Successfully generated ${data.count || 0} products!`);
-                
-                if (data.warnings && data.warnings.length > 0) {
-                    console.warn('Warnings during product generation:', data.warnings);
-                }
-
-                // Close modal then redirect or reload
-                const modal = document.getElementById('generate-products-modal');
-                if (modal && typeof (window as any).bootstrap?.Modal !== 'undefined') {
-                    const bsModal = (window as any).bootstrap.Modal.getInstance(modal);
-                    if (bsModal) {
-                        bsModal.hide();
-                    }
-                }
-                setTimeout(() => {
-                    if (data.redirect_url) {
-                        window.location.href = data.redirect_url;
-                    } else {
-                        window.location.reload();
-                    }
-                }, 1000);
+                this.handleGenerationSuccess(data, processBtn);
             } else {
                 processBtn.innerHTML = originalText;
                 processBtn.disabled = false;
@@ -410,6 +387,28 @@ export class FamilyHandler {
             processBtn.disabled = false;
             alert('An error occurred while generating products. Please try again.');
         }
+    }
+
+    private handleGenerationSuccess(data: FamilyGenerateResponse, processBtn: HTMLButtonElement): void {
+        processBtn.innerHTML = '<i class="fa fa-check"></i> Success!';
+        alert(data.message || `Successfully generated ${data.count || 0} products!`);
+        if (data.warnings?.length) {
+            console.warn('Warnings during product generation:', data.warnings);
+        }
+        const modal = document.getElementById('generate-products-modal');
+        if (modal && (window as any).bootstrap?.Modal !== undefined) {
+            const bsModal = (window as any).bootstrap.Modal.getInstance(modal);
+            if (bsModal) {
+                bsModal.hide();
+            }
+        }
+        setTimeout(() => {
+            if (data.redirect_url) {
+                window.location.href = data.redirect_url;
+            } else {
+                window.location.reload();
+            }
+        }, 1000);
     }
 
 

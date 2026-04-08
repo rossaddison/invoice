@@ -23,7 +23,7 @@ final class QaForm extends FormModel
     private ?string $answer = '';
 
     private ?string $sort_order = null;
-    
+
     public function __construct(Qa $qa)
     {
         $this->id = $qa->getId();
@@ -52,7 +52,7 @@ final class QaForm extends FormModel
     {
         return $this->answer;
     }
-    
+
     public function getSortOrder(): ?string
     {
         return $this->sort_order;

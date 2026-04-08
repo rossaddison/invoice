@@ -106,7 +106,7 @@ final readonly class SalesOrderItemService
         // when adding a po using the modal
         $array['sales_order_id'] = $sales_order_id;
         $this->persist($model, $array);
-        $product_id = (int) ($array['product_id'] ?? null);        
+        $product_id = (int) ($array['product_id'] ?? null);
         $task_id = (int) ($array['task_id'] ?? null);
         if (isset($array['product_id'])) {
             $product = $pr->repoProductquery(

@@ -14,7 +14,7 @@ Entity\CustomField, Entity\DeliveryLocation, Entity\Group, Entity\Inv,
 Entity\InvAllowanceCharge, Entity\InvAmount, Entity\InvCustom,
 Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrder,
 Entity\SalesOrderAmount, Entity\SalesOrderCustom, Entity\SalesOrderItem,
-Entity\SalesOrderTaxRate, Entity\SalesOrderItemAllowanceCharge, 
+Entity\SalesOrderTaxRate, Entity\SalesOrderItemAllowanceCharge,
 Group\GroupRepository as GR, Entity\SalesOrderAllowanceCharge,
 Helpers\CustomValuesHelper as CVH, Helpers\PdfHelper, Inv\InvForm,
 Inv\InvRepository as InvRepo, Inv\InvService,
@@ -361,7 +361,7 @@ final class SalesOrderController extends BaseController
         $body = $request->getParsedBody();
         /** @var string|null $url_key */
         $url_key = $body['url_key'] ?? null;
-        
+
         if (null === $url_key) {
             return $this->factory->createResponse(
                 Json::encode([
@@ -370,7 +370,7 @@ final class SalesOrderController extends BaseController
                 ])
             );
         }
-        
+
         // Verify the sales order exists and is accessible
         if ($soR->repoUrlKeyGuestCount($url_key) < 1) {
             return $this->factory->createResponse(
@@ -381,7 +381,7 @@ final class SalesOrderController extends BaseController
                 ])
             );
         }
-        
+
         $salesorder = $soR->repoUrlKeyGuestLoaded($url_key);
         if (!$salesorder) {
             return $this->factory->createResponse(
@@ -392,7 +392,7 @@ final class SalesOrderController extends BaseController
                 ])
             );
         }
-        
+
         // Only allow updates when status is 3 (Client Agreed to Terms) or 4
         // (Delivery/Completion)
         if (!in_array($salesorder->getStatusId(), [3, 4])) {
@@ -404,29 +404,29 @@ final class SalesOrderController extends BaseController
                 ])
             );
         }
-        
+
         /** @var array<string, string> $item_ids */
         $item_ids = $body['item_id'] ?? [];
         /** @var array<string, string> $peppol_po_itemids */
         $peppol_po_itemids = $body['peppol_po_itemid'] ?? [];
         /** @var array<string, string> $peppol_po_lineids */
         $peppol_po_lineids = $body['peppol_po_lineid'] ?? [];
-        
+
         $updated_count = 0;
-        
+
         // Update each item
         foreach ($item_ids as $item_id) {
             $item = $soiR->repoSalesOrderItemquery($item_id);
             if ($item && $item->getSalesOrderId() === $salesorder->getId()) {
                 $peppol_po_itemid = $peppol_po_itemids[$item_id] ?? '';
                 $peppol_po_lineid = $peppol_po_lineids[$item_id] ?? '';
-                
+
                 // Update the item with Peppol data
                 $array = [
                     'peppol_po_itemid' => trim($peppol_po_itemid),
                     'peppol_po_lineid' => trim($peppol_po_lineid)
                 ];
-                
+
                 if ($soiS->savePeppolPoItemid($item, $array)) {
                     $updated_count++;
                 }
@@ -435,7 +435,7 @@ final class SalesOrderController extends BaseController
                 }
             }
         }
-        
+
         if ($updated_count > 0) {
             return $this->factory->createResponse(
                 Json::encode([
@@ -446,7 +446,7 @@ final class SalesOrderController extends BaseController
                 ])
             );
         }
-        
+
         return $this->factory->createResponse(
             Json::encode([
                 'success' => 0,
@@ -674,7 +674,7 @@ final class SalesOrderController extends BaseController
         }
         return $custom_field_form_values;
     }
-    
+
     public function pdf(CurrentRoute $currentRoute, CR $cR, CVR $cvR, CFR $cfR,
         SoAR $soaR, SoCR $socR, SoIR $soiR, SoIAR $soiaR,
         ACSOIR $acsoiR, SoR $soR, SoTRR $sotrR, SettingRepository $sR,
@@ -766,7 +766,7 @@ final class SalesOrderController extends BaseController
         SoTRR $sotrR,
         TRR $trR,
         UCR $ucR,
-        UIR $uiR,    
+        UIR $uiR,
         UNR $uR,
         SoCR $socR,
         InvRepo $invRepo,
@@ -899,7 +899,7 @@ final class SalesOrderController extends BaseController
         } // $so->getId()
         return $this->webService->getNotFoundResponse();
     }
-    
+
     /**
      * Purpose:
      * Prevent browser manipulation and ensure that views are only accessible
@@ -931,10 +931,10 @@ final class SalesOrderController extends BaseController
                     return true;
                 }
             }
-        }    
+        }
         return false;
     }
-    
+
     private function rbacAccountant() : bool {
         // has accountant role
         if (($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -945,7 +945,7 @@ final class SalesOrderController extends BaseController
             return false;
         }
     }
-    
+
     private function rbacAdmin() : bool {
         // has observer role
         if ($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -972,7 +972,7 @@ final class SalesOrderController extends BaseController
         }
         return null;
     }
-    
+
      /**
      * @param int $id
      * @param SoR $soR
@@ -1054,7 +1054,7 @@ final class SalesOrderController extends BaseController
                 (string) ($body['client_id'] ?? '');
             // Use default invoice group, not the sales order group
             $group_id = $sR->getSetting('default_invoice_group');
-            
+
             $inv_body = [
                 'client_id' => $client_id,
                 'group_id' => $group_id,
@@ -1114,11 +1114,11 @@ final class SalesOrderController extends BaseController
                                     $this->translator->translate(
                                         'salesorder.invoice.generated'));
                                 $soR->save($so);
-                                
+
                                 // Check if this is an AJAX request
                                 $isAjax = $request->getHeaderLine(
                                     'X-Requested-With') === 'XMLHttpRequest';
-                                
+
                                 if ($isAjax) {
                                     // Return JSON for AJAX requests
                                     $parameters = [
@@ -1144,7 +1144,7 @@ final class SalesOrderController extends BaseController
                 // Check if this is an AJAX request
                 $isAjax = $request->getHeaderLine(
                     'X-Requested-With') === 'XMLHttpRequest';
-                
+
                 if ($isAjax) {
                     // Return JSON for AJAX requests
                     $parameters = [
@@ -1201,10 +1201,10 @@ final class SalesOrderController extends BaseController
             $form = new InvItemForm($newInvItem, (int) $new_inv_id);
             if ($formHydrator->populateAndValidate($form, $inv_item)) {
                 $savedInvItem = $this->invItemService->addInvItemProductTask(
-                    $newInvItem, $inv_item, $new_inv_id, $pR, $taskR, $unR, 
+                    $newInvItem, $inv_item, $new_inv_id, $pR, $taskR, $unR,
                     $this->translator);
                 $this->copySoItemAllowanceChargesToInv(
-                        $origSoItemId, $acsoiR, $new_inv_id, 
+                        $origSoItemId, $acsoiR, $new_inv_id,
                         $savedInvItem, $aciiR);
                 $tax_rate_percentage = $this->invItemService->taxratePercentage(
                         (int) $inv_item['tax_rate_id'], $trR);
@@ -1232,12 +1232,12 @@ final class SalesOrderController extends BaseController
             }
         } // items
     }
-    
-    
+
+
     private function copySoItemAllowanceChargesToInv(
         string $origSoItemId, ACSOIR $acsoiR, string $new_inv_id,
             InvItem $newInvItem, ACIIR $aciiR): void {
-         
+
         $all = $acsoiR->repoSalesOrderItemquery($origSoItemId);
         /**
          * @var SalesOrderItemAllowanceCharge $salesOrderItemAllowanceCharge
@@ -1248,14 +1248,14 @@ final class SalesOrderController extends BaseController
             $acInvItem->setInvItem($newInvItem);
             $acInvItem->setAllowanceCharge(
                             $salesOrderItemAllowanceCharge->getAllowanceCharge());
-            
+
             // Also set FK IDs for consistency
             $acInvItem->setInvId((int) $new_inv_id);
             $acInvItem->setInvItemId((int) $newInvItem->getId());
             $acInvItem->setAllowanceChargeId(
             (int) $salesOrderItemAllowanceCharge->getAllowanceCharge()?->getId()
             );
-            
+
             // Set other properties
             $acInvItem->setAmount((float)
                 $salesOrderItemAllowanceCharge->getAmount());
@@ -1264,7 +1264,7 @@ final class SalesOrderController extends BaseController
             $aciiR->save($acInvItem);
         }
     }
-    
+
     /**
      * @param string $so_id
      * @param string|null $inv_id

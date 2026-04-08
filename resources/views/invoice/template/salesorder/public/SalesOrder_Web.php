@@ -61,12 +61,12 @@ $vat = $s->getSetting('enable_vat_registration');
         <div class="webpreview-header">
             <div class='row'>
                 <h1><?= $translator->translate('term'); ?></h1>
-                <div class="col-xs-12 col-sm-6 label label-info">
-                    <div class="input-group label label-info">
+                <div class="col-xs-12 col-sm-6 badge text-bg-info">
+                    <div class="input-group badge text-bg-info">
                         <textarea  class="form-control form-control-lg" rows="20" cols="20">
                             <?= $terms_and_conditions_file; ?></textarea>
                     </div>
-                </div>    
+                </div>
             </div>
             <br>
         </div>
@@ -84,17 +84,17 @@ $vat = $s->getSetting('enable_vat_registration');
                    data-bs-toggle = "tooltip"
                    title=
                    "Goods and Services will now be assembled/packaged/prepared">
-                    <i class="fa fa-check"></i>
+                    <i class="bi bi-check-lg"></i>
                      <?= $translator->translate('salesorder.agree.to.terms'); ?>
                 </a>
-            <?php endif; ?>                
+            <?php endif; ?>
             <?php if (in_array($salesorder->getStatusId(), [2])
                     && $salesorder->getQuoteId() !== '0'
                     && $salesorder->getInvId() === '0') :  ?>
                 <a href="<?= $urlGenerator->generate('salesorder/reject',
                         ['url_key' => $salesorder_url_key]); ?>"
                    class="btn btn-danger">
-                    <i class="fa fa-times-circle"></i>
+                    <i class="bi bi-x-circle"></i>
                         <?= $translator->translate('salesorder.reject'); ?>
                 </a>
             <?php endif; ?>
@@ -107,16 +107,16 @@ $vat = $s->getSetting('enable_vat_registration');
             <?php endif; ?>
         </div>
         <br>
-        
-        <?php 
+
+        <?php
         // Show Peppol form for guests when terms are agreed (status 3 or 4) and before invoice is generated
-        if (in_array($salesorder->getStatusId(), [3, 4]) 
+        if (in_array($salesorder->getStatusId(), [3, 4])
             && $salesorder->getInvId() === '0'
-            && isset($isGuest) && $isGuest === true) : 
+            && isset($isGuest) && $isGuest === true) :
         ?>
             <div class="alert alert-info" role="alert">
                 <h4 class="alert-heading">
-                    <i class="fa fa-file-text-o"></i>
+                    <i class="bi bi-file-text"></i>
                     <?= $translator->translate('invoice.peppol.information.required'); ?>
                 </h4>
                 <p><?= $translator->translate('invoice.peppol.guest.instructions'); ?></p>
@@ -126,7 +126,7 @@ $vat = $s->getSetting('enable_vat_registration');
                 </p>
             </div>
         <?php endif; ?>
-        
+
         <br>
         <h2><?= $translator->translate('salesorder'); ?>&nbsp;
             <?= $salesorder->getNumber(); ?>
@@ -274,11 +274,11 @@ $vat = $s->getSetting('enable_vat_registration');
                             <th class="text-right">
                                 <?= $translator->translate('total'); ?>
                             </th>
-                            <?php 
+                            <?php
                             // Show edit column for guests when they can edit Peppol fields
-                            if (in_array($salesorder->getStatusId(), [3, 4]) 
+                            if (in_array($salesorder->getStatusId(), [3, 4])
                                 && $salesorder->getInvId() === '0'
-                                && isset($isGuest) && $isGuest === true) : 
+                                && isset($isGuest) && $isGuest === true) :
                             ?>
                             <th class="text-center">
                                 <?= $translator->translate('invoice.peppol.edit'); ?>
@@ -291,7 +291,7 @@ $vat = $s->getSetting('enable_vat_registration');
                            /**
                              * @var App\Invoice\Entity\SalesOrderItem $item
                              */
-                            foreach ($items as $item) : 
+                            foreach ($items as $item) :
                                 // Show Peppol fields if they have been entered
                                 $peppolItemId = $item->getPeppolPoItemid();
                                 $peppolLineId = $item->getPeppolPoLineid();
@@ -302,26 +302,26 @@ $vat = $s->getSetting('enable_vat_registration');
                                            <?php if (null !== $peppolItemId || null !== $peppolLineId) : ?>
                                                <br><small class="text-muted">
                                                    <?php if (null !== $peppolItemId) : ?>
-                                                       <i class="fa fa-barcode"></i> <?= Html::encode($peppolItemId); ?>
+                                                       <i class="bi bi-upc-scan"></i> <?= Html::encode($peppolItemId); ?>
                                                    <?php endif; ?>
                                                    <?php if (null !== $peppolLineId) : ?>
-                                                       <br><i class="fa fa-list-ol"></i> <?= Html::encode($peppolLineId); ?>
+                                                       <br><i class="bi bi-list-ol"></i> <?= Html::encode($peppolLineId); ?>
                                                    <?php endif; ?>
                                                </small>
                                            <?php endif; ?>
                                 </td>
-                                <?php 
+                                <?php
                                 // Show edit button for guests when they can edit Peppol fields
-                                if (in_array($salesorder->getStatusId(), [3, 4]) 
+                                if (in_array($salesorder->getStatusId(), [3, 4])
                                     && $salesorder->getInvId() === '0'
-                                    && isset($isGuest) && $isGuest === true) : 
+                                    && isset($isGuest) && $isGuest === true) :
                                 ?>
                                 <td class="text-center">
-                                    <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]); ?>" 
+                                    <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]); ?>"
                                        class="btn btn-sm btn-primary"
                                        data-bs-toggle="tooltip"
                                        title="<?= $translator->translate('invoice.peppol.edit.item'); ?>">
-                                        <i class="fa fa-edit"></i>
+                                        <i class="bi bi-pencil-square"></i>
                                         <?= $translator->translate('invoice.peppol.enter'); ?>
                                     </a>
                                 </td>
@@ -577,8 +577,8 @@ $vat = $s->getSetting('enable_vat_registration');
                         </p>
                     </div>
                 <?php } ?>
-            </div>           
-            
+            </div>
+
         </div><!-- .salesorder-items -->
     </div><!-- #content -->
 </div>

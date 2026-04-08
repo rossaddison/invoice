@@ -19,7 +19,7 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 /**
  * Prometheus Metrics Controller
- * 
+ *
  * Exposes /metrics endpoint for Prometheus scraping and provides
  * health check endpoint for monitoring integration.
  */
@@ -43,7 +43,7 @@ final class PrometheusController extends BaseController
 
     /**
      * Prometheus metrics endpoint
-     * 
+     *
      * This endpoint is scraped by Prometheus server to collect metrics.
      * Compatible with Grafana dashboards and integrates with node_exporter
      * and windows_exporter metrics.
@@ -54,24 +54,24 @@ final class PrometheusController extends BaseController
         try {
             // Update system metrics before rendering
             $this->updateSystemMetrics();
-            
+
             // Get metrics in Prometheus text format
             $metricsOutput = $this->prometheusService->renderMetrics();
-            
+
             // Create response with proper Prometheus content type
             $response = $this->responseFactory->createResponse($metricsOutput);
-            
+
             return $response->withHeader('Content-Type', $this->prometheusService->getContentType())
                            ->withHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
                            ->withHeader('Pragma', 'no-cache')
                            ->withHeader('Expires', '0');
-                           
+
         } catch (\Throwable $e) {
             // Set application as unhealthy and return error
             $this->prometheusService->setApplicationHealth(false);
-            
+
             $errorMetrics = $this->getErrorMetrics();
-            
+
             return $this->responseFactory->createResponse($errorMetrics, 500)
                                          ->withHeader('Content-Type', $this->prometheusService->getContentType());
         }
@@ -87,23 +87,23 @@ final class PrometheusController extends BaseController
     {
         try {
             $healthData = $this->prometheusService->performHealthCheck();
-            
+
             // Add additional application-specific health checks
             if (isset($healthData['checks']) && is_array($healthData['checks'])) {
                 $healthData['checks']['database'] = $this->checkDatabaseHealth();
                 $healthData['checks']['file_permissions'] = $this->checkFilePermissions();
             }
-            
+
             $statusCode = match ($healthData['status']) {
                 'healthy' => 200,
                 'warning' => 200,
                 'error' => 503,
                 default => 503
             };
-            
+
             return $this->responseFactory->createResponse(json_encode($healthData, JSON_PRETTY_PRINT), $statusCode)
                                         ->withHeader('Content-Type', 'application/json');
-                                        
+
         } catch (\Throwable $e) {
             $errorHealth = [
                 'status' => 'error',
@@ -111,7 +111,7 @@ final class PrometheusController extends BaseController
                 'error' => $e->getMessage(),
                 'checks' => []
             ];
-            
+
             return $this->responseFactory->createResponse(json_encode($errorHealth), 503)
                                         ->withHeader('Content-Type', 'application/json');
         }
@@ -128,10 +128,10 @@ final class PrometheusController extends BaseController
     {
         $healthData = $this->prometheusService->performHealthCheck();
         $metricsOutput = $this->prometheusService->renderMetrics();
-        
+
         // Parse metrics for display
         $parsedMetrics = $this->parseMetricsForDisplay($metricsOutput);
-        
+
         $parameters = [
             'title' => 'Prometheus Metrics Dashboard',
             'health' => $healthData,
@@ -141,7 +141,7 @@ final class PrometheusController extends BaseController
             'metrics_url' => '/prometheus/metrics',
             'health_url' => '/prometheus/health',
         ];
-        
+
         return $this->webViewRenderer->render('dashboard', $parameters);
     }
 
@@ -149,20 +149,20 @@ final class PrometheusController extends BaseController
     {
         // Update PHP memory usage
         $this->prometheusService->updateMemoryUsage();
-        
+
         // Update database connections (mock - you'd implement actual DB connection counting)
         $this->prometheusService->updateDatabaseConnections($this->getActiveConnectionCount());
-        
+
         // Update active user sessions
         $this->prometheusService->updateActiveUsers($this->getActiveUserCount());
-        
+
         // Initialize build info if not already set
         static $buildInfoInitialized = false;
         if (!$buildInfoInitialized) {
             $this->prometheusService->initializeBuildInfo('1.0.0', PHP_VERSION, '3.0');
             $buildInfoInitialized = true;
         }
-        
+
         // Windows-specific metrics
         if (PHP_OS_FAMILY === 'Windows') {
             $this->updateWindowsMetrics();
@@ -211,7 +211,7 @@ final class PrometheusController extends BaseController
         try {
             // Mock implementation - replace with actual database health check
             // You might execute a simple SELECT query to verify connectivity
-            
+
             return [
                 'status' => 'ok',
                 'connections' => $this->getActiveConnectionCount(),
@@ -232,7 +232,7 @@ final class PrometheusController extends BaseController
             'public' => dirname(__DIR__, 3) . '/public',
             'logs' => dirname(__DIR__, 3) . '/runtime/logs'
         ];
-        
+
         $results = [];
         foreach ($paths as $name => $path) {
             $results[$name] = [
@@ -242,7 +242,7 @@ final class PrometheusController extends BaseController
                 'status' => (is_dir($path) && is_writable($path)) ? 'ok' : 'error'
             ];
         }
-        
+
         $allOk = true;
         foreach ($results as $result) {
             if ($result['status'] === 'error') {
@@ -250,7 +250,7 @@ final class PrometheusController extends BaseController
                 break;
             }
         }
-        
+
         return [
             'status' => $allOk ? 'ok' : 'error',
             'paths' => $results
@@ -273,11 +273,11 @@ final class PrometheusController extends BaseController
         $lines = explode("\n", $metricsOutput);
         $metrics = [];
         $currentMetric = null;
-        
+
         foreach ($lines as $line) {
             $line = trim($line);
             if (empty($line)) continue;
-            
+
             if (str_starts_with($line, '# HELP ')) {
                 $parts = explode(' ', $line, 4);
                 $metricName = $parts[2] ?? 'unknown';
@@ -303,7 +303,7 @@ final class PrometheusController extends BaseController
                 }
             }
         }
-        
+
         return $metrics;
     }
 

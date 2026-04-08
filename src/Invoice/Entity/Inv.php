@@ -204,7 +204,7 @@ class Inv
     {
         return $this->items;
     }
-    
+
     public function getFirstItemFamilyName(): string
     {
         foreach ($this->items as $item) {
@@ -212,7 +212,7 @@ class Inv
         }
         return '';
     }
-    
+
     public function getFirstItemFamilyProductName(): string
     {
         foreach ($this->items as $item) {

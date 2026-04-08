@@ -30,12 +30,12 @@ $client_helper = new ClientHelper($s);
         <div class="btn-group btn-group-sm">
             <a class="btn btn-default" href="<?= $urlGenerator->generate(
                                                             'userinv/index'); ?>">
-                <i class="fa fa-arrow-left"></i> <?= $translator->translate(
+                <i class="bi bi-arrow-left"></i> <?= $translator->translate(
                                                                      'back'); ?>
             </a>
             <a class="btn btn-primary" href="<?= $urlGenerator->generate(
                    'userclient/new', ['user_id' => $userInv->getUserId()]); ?>">
-                <i class="fa fa-plus"></i> <?= $translator->translate('new'); ?>
+                <i class="bi bi-plus-lg"></i> <?= $translator->translate('new'); ?>
             </a>
         </div>
     </div>
@@ -67,7 +67,7 @@ $client_helper = new ClientHelper($s);
     foreach ($ucR->repoClientquery($userInv->getUserId()) as $userClient) { ?>
                             <tr>
                                 <td>
-                                    <a href="<?= 
+                                    <a href="<?=
                                         $urlGenerator->generate(
                                         'client/view',
                                         ['id' => $userClient->getClientId()]); ?>"
@@ -97,7 +97,7 @@ $client_helper = new ClientHelper($s);
                                                 onclick="return confirm('<?=
                                                 $translator->translate(
                                                 'delete.user.client.warning'); ?>');">
-                                            <i class="fa fa-trash fa-margin">
+                                            <i class="bi-trash">
                                             </i><?= $translator->translate('remove'); ?>
                                         </button>
                                     </form>

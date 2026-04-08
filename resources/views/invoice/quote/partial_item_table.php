@@ -42,7 +42,7 @@ $vat = $s->getSetting('enable_vat_registration');
    echo H::openTag('thead'); //3
     echo H::openTag('tr'); //4
      echo H::openTag('i', [
-         'class' => 'fa fa-info-circle',
+         'class' => 'bi bi-info-circle',
          'data-bs-toggle' => 'tooltip',
          'title' => $s->isDebugMode(19),
      ]); //5
@@ -129,7 +129,7 @@ foreach ($quoteItems as $item) {
        echo H::closeTag('span'); //7
        echo H::openTag('select', [
            'name' => 'item_name',
-           'class' => 'form-control',
+           'class' => 'form-control form-control-lg',
            'disabled' => true,
        ]); //7
        if ($productId > 0) {
@@ -241,7 +241,7 @@ foreach ($quoteItems as $item) {
        echo H::openTag('select', [
            'disabled' => true,
            'name' => 'item_tax_rate_id',
-           'class' => 'form-control',
+           'class' => 'form-control form-control-lg',
            'data-bs-toggle' => 'tooltip',
            'title' => 'quote_item->tax_rate_id',
        ]); //7
@@ -288,7 +288,7 @@ foreach ($quoteItems as $item) {
                  'href' => '#view-product-' . $item->getId(),
                  'style' => 'text-decoration:none',
              ]); //7
-              echo H::openTag('i', ['class' => 'fa fa-eye']); //8
+              echo H::openTag('i', ['class' => 'bi bi-eye']); //8
               echo H::closeTag('i'); //8
              echo H::closeTag('a'); //7
             echo H::closeTag('span'); //6
@@ -375,7 +375,7 @@ foreach ($quoteItems as $item) {
                  'class' => ($acqiR->repoQuoteItemCount(
                      $item->getId()
                  ) > 0 ?
-                         'fa fa-list' : 'fa fa-plus'),
+                         'bi bi-list' : 'bi bi-plus-lg'),
              ]); //7
              echo H::closeTag('i'); //7
             echo H::closeTag('a'); //6
@@ -434,7 +434,7 @@ foreach ($quoteItems as $item) {
        echo H::openTag('textarea', [
            'disabled' => true,
            'name' => 'item_description',
-           'class' => 'form-control',
+           'class' => 'form-control form-control-lg',
            'rows' => '1',
        ]); //7
        echo H::encode($item->getDescription());
@@ -694,7 +694,7 @@ echo H::closeTag('br');
     echo H::openTag('tbody'); //4
      echo H::openTag('tr'); //5
       echo H::openTag('i', [
-          'class' => 'fa fa-info-circle',
+          'class' => 'bi bi-info-circle',
           'data-bs-toggle' => 'tooltip',
           'title' => $s->isDebugMode(19),
       ]); //6

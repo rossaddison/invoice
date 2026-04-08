@@ -44,7 +44,7 @@ final readonly class FormFields
         return Html::openTag('div')
             . Field::select($form, 'client_id')
                 ->label($this->translator->translate($labelKey))
-                ->addInputAttributes(['class' => 'form-control'])
+                ->addInputAttributes(['class' => 'form-control form-control-lg',])
                 ->value($form->getClientId())
                 ->prompt($this->translator->translate('none'))
                 ->optionsData($clientOptions)
@@ -157,7 +157,7 @@ final readonly class FormFields
             . Field::password($form, 'password')
                 ->label($this->translator->translate('password'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                     'autocomplete' => 'current-password'])
                 ->value(Html::encode($form->getPassword()))
                 ->placeholder($this->translator->translate('password'))
@@ -809,7 +809,7 @@ final readonly class FormFields
     ): string {
         $hintKey = $required ? 'hint.this.field.is.required' :
                 'hint.this.field.is.not.required';
-        $cssClass = 'form-control';
+        $cssClass = 'form-control form-control-lg';
 
         // Handle specific field name mappings for CompanyPrivateForm
         $value = match ($fieldName) {

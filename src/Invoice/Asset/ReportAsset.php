@@ -19,7 +19,7 @@ class ReportAsset extends AssetBundle
     public array $css = [
         'invoice/css/reports.css',
     ];
-    
+
     public function __construct()
     {
         $pathMatcher = new PathMatcher();

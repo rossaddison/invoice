@@ -15,6 +15,20 @@ use Yiisoft\Html\Tag\I;
 * @var string $config_tax_currency
 */
 
+$kEnablePeppol = 'settings[enable_peppol]';
+$kPeppolDebugEmojis = 'settings[peppol_debug_with_emojis]';
+$kPeppolDebugValidator = 'settings[peppol_debug_with_internal_validator]';
+$kPeppolXmlStream = 'settings[peppol_xml_stream]';
+$kPeppolDocCurrency = 'settings[peppol_document_currency]';
+$kCurrencyCodeFrom = 'settings[currency_code_from]';
+$kCurrencyCodeTo = 'settings[currency_code_to]';
+$kCurrencyFromTo = 'settings[currency_from_to]';
+$kCurrencyToFrom = 'settings[currency_to_from]';
+$kStandInCode = 'settings[stand_in_code]';
+$kEnableClientPeppol = 'settings[enable_client_peppol_defaults]';
+$kIncludeDelivery = 'settings[include_delivery_period]';
+$inputSmFormControl = 'input-sm form-control';
+
 $row = ['class' => 'row'];
 $colMd6 = ['class' => 'col-xs-12 col-md-6'];
 $colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
@@ -32,26 +46,26 @@ echo H::openTag('div', $row); //1
    echo H::openTag('div', $panelHead); //4
     echo $translator->translate('peppol.electronic.invoicing');
    echo H::closeTag('div'); //4
-   /* Enable Peppol */            
+   /* Enable Peppol */
    echo H::openTag('div', $panelBody); //4
     echo H::openTag('div', $row); //5
      echo H::openTag('div', $colMd6); //6
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('div', $checkbox); //8
-        $body['settings[enable_peppol]'] = 
+        $body[$kEnablePeppol] =
         $s->getSetting('enable_peppol');
         echo H::openTag('label');
          echo H::openTag('input', [
           'type' => 'hidden',
-          'name' => 'settings[enable_peppol]',
+          'name' => $kEnablePeppol,
           'value' => '0'
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
-          'name' => 'settings[enable_peppol]',
+          'name' => $kEnablePeppol,
           'value' => '1',
           'checked' => ($body[
-          'settings[enable_peppol]'
+          $kEnablePeppol
          ] == '1') ? 'checked' : null
          ]);
          echo H::a(
@@ -69,20 +83,20 @@ echo H::openTag('div', $row); //1
      echo H::closeTag('div'); //6
      echo H::openTag('div', $formGroup); //6
       echo H::openTag('label', [
-       'for' => 'settings[peppol_debug_with_emojis]'
+       'for' => $kPeppolDebugEmojis
       ]);
        echo $translator->translate(
         'peppol.debug.with.emojis'
        );
       echo H::closeTag('label');
-      $body['settings[peppol_debug_with_emojis]'] =
+      $body[$kPeppolDebugEmojis] =
       $s->getSetting(
        'peppol_debug_with_emojis'
       );
       echo H::openTag('select', [
-       'name' => 'settings[peppol_debug_with_emojis]',
-       'id' => 'settings[peppol_debug_with_emojis]',
-       'class' => 'form-control'
+       'name' => $kPeppolDebugEmojis,
+       'id' => $kPeppolDebugEmojis,
+       'class' => 'form-control form-control-lg',
       ]);
        echo  new Option()
         ->value('0')
@@ -90,35 +104,35 @@ echo H::openTag('div', $row); //1
        echo  new Option()
         ->value('1')
         ->selected(
-         $body['settings[peppol_debug_with_emojis]']
+         $body[$kPeppolDebugEmojis]
          == '1'
         )
         ->content($translator->translate('yes'));
       echo H::closeTag('select');
      echo H::closeTag('div'); //6
-     /* Use Helpers\Peppol\PeppolValidator to validate the e-invoice using 
+     /* Use Helpers\Peppol\PeppolValidator to validate the e-invoice using
      https://docs.peppol.eu/poacc/billing/3.0/2025-Q4/rules/ubl-peppol/ rules
-     Defaults to Yes. Refer to */                    
+     Defaults to Yes. Refer to */
      echo H::openTag('div', $formGroup); //6
       echo H::openTag('label', [
-       'for' => 
-       'settings[peppol_debug_with_internal_validator]'
+       'for' =>
+       $kPeppolDebugValidator
       ]);
        echo $translator->translate(
         'peppol.debug.with.internal.validator'
        );
       echo H::closeTag('label');
       $body[
-       'settings[peppol_debug_with_internal_validator]'
+       $kPeppolDebugValidator
       ] = $s->getSetting(
       'peppol_debug_with_internal_validator'
       );
       echo H::openTag('select', [
-       'name' => 
-       'settings[peppol_debug_with_internal_validator]',
-       'id' => 
-       'settings[peppol_debug_with_internal_validator]',
-       'class' => 'form-control'
+       'name' =>
+       $kPeppolDebugValidator,
+       'id' =>
+       $kPeppolDebugValidator,
+       'class' => 'form-control form-control-lg',
       ]);
        echo  new Option()
         ->value('0')
@@ -127,7 +141,7 @@ echo H::openTag('div', $row); //1
         ->value('1')
         ->selected(
          $body[
-         'settings[peppol_debug_with_internal_validator]'
+         $kPeppolDebugValidator
         ] == '1'
        )
         ->content($translator->translate('yes'));
@@ -137,24 +151,24 @@ echo H::openTag('div', $row); //1
      echo H::openTag('div', $colMd6); //6
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('div', $checkbox); //8
-        $body['settings[enable_client_peppol_defaults]']
+        $body[$kEnableClientPeppol]
         = $s->getSetting(
          'enable_client_peppol_defaults'
         );
         echo H::openTag('label');
          echo H::openTag('input', [
           'type' => 'hidden',
-          'name' => 
-          'settings[enable_client_peppol_defaults]',
+          'name' =>
+          $kEnableClientPeppol,
           'value' => '0'
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
-          'name' => 
-          'settings[enable_client_peppol_defaults]',
+          'name' =>
+          $kEnableClientPeppol,
           'value' => '1',
           'checked' => ($body[
-          'settings[enable_client_peppol_defaults]'
+          $kEnableClientPeppol
          ] == '1') ? 'checked' : null
          ]);
          echo $translator->translate(
@@ -164,23 +178,23 @@ echo H::openTag('div', $row); //1
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     /* Peppol From Currency e.g. GBP */                    
+     /* Peppol From Currency e.g. GBP */
      echo H::openTag('div', $formGroup); //6
       echo H::openTag('label', [
-       'for' => 'settings[currency_code_from]'
+       'for' => $kCurrencyCodeFrom
       ]);
        echo $translator->translate(
         'peppol.currency.code.from'
        );
       echo H::closeTag('label');
-      $body['settings[currency_code_from]'] =
-      $s->getSetting('currency_code_from') ?: 
+      $body[$kCurrencyCodeFrom] =
+      $s->getSetting('currency_code_from') ?:
       $config_tax_currency;
       echo H::openTag('select', [
-       'name' => 'settings[currency_code_from]',
+       'name' => $kCurrencyCodeFrom,
        'disabled' => 'disabled',
-       'id' => 'settings[currency_code_from]',
-       'class' => 'input-sm form-control'
+       'id' => $kCurrencyCodeFrom,
+       'class' => $inputSmFormControl
       ]);
        echo  new Option()
         ->value('0')
@@ -192,7 +206,7 @@ echo H::openTag('div', $row); //1
        echo  new Option()
         ->value($val)
         ->selected(
-         $body['settings[currency_code_from]'] 
+         $body[$kCurrencyCodeFrom]
          == $val
         )
         ->content($val);
@@ -202,19 +216,19 @@ echo H::openTag('div', $row); //1
      /* Peppol To Currency e.g. ZAR */
      echo H::openTag('div', $formGroup); //6
       echo H::openTag('label', [
-       'for' => 'settings[currency_code_to]'
+       'for' => $kCurrencyCodeTo
       ]);
        echo $translator->translate(
         'peppol.currency.code.to'
        );
       echo H::closeTag('label');
-      $body['settings[currency_code_to]'] =
+      $body[$kCurrencyCodeTo] =
       $s->getSetting('currency_code_to') ?:
       $config_tax_currency;
       echo H::openTag('select', [
-       'name' => 'settings[currency_code_to]',
-       'id' => 'settings[currency_code_to]',
-       'class' => 'input-sm form-control'
+       'name' => $kCurrencyCodeTo,
+       'id' => $kCurrencyCodeTo,
+       'class' => $inputSmFormControl
       ]);
        echo  new Option()
         ->value('0')
@@ -226,7 +240,7 @@ echo H::openTag('div', $row); //1
        echo  new Option()
         ->value($val)
         ->selected(
-         $body['settings[currency_code_to]']
+         $body[$kCurrencyCodeTo]
          == $val
         )
         ->content($val);
@@ -236,21 +250,21 @@ echo H::openTag('div', $row); //1
      /* Peppol Document Currency */
      echo H::openTag('div', $formGroup); //6
       echo H::openTag('label', [
-       'for' => 'settings[peppol_document_currency]'
+       'for' => $kPeppolDocCurrency
       ]);
        echo '🛈';
        echo $translator->translate(
         'peppol.document.currency'
        );
       echo H::closeTag('label');
-      $body['settings[peppol_document_currency]'] =
+      $body[$kPeppolDocCurrency] =
       $s->getSetting(
        'peppol_document_currency'
       ) ?: $config_tax_currency;
       echo H::openTag('select', [
-       'name' => 'settings[peppol_document_currency]',
-       'id' => 'settings[peppol_document_currency]',
-       'class' => 'input-sm form-control'
+       'name' => $kPeppolDocCurrency,
+       'id' => $kPeppolDocCurrency,
+       'class' => $inputSmFormControl
       ]);
        echo  new Option()
         ->value('0')
@@ -263,53 +277,53 @@ echo H::openTag('div', $row); //1
         ->value($val)
         ->selected(
          $body[
-         'settings[peppol_document_currency]'
+         $kPeppolDocCurrency
         ] == $val
        )
         ->content($val);
        }
       echo H::closeTag('select');
      echo H::closeTag('div'); //6
-     /* One of 'From' Currency Today converts to this of 'To' Currency */                    
+     /* One of 'From' Currency Today converts to this of 'To' Currency */
      echo H::openTag('div', $formGroup); //6
       echo H::openTag('label', [
-       'for' => 'settings[currency_from_to]'
+       'for' => $kCurrencyFromTo
       ]);
        echo $translator->translate(
         'peppol.currency.from.to'
        );
        echo '(' . (string) H::a('xe.com', 'https://www.xe.com/') . ')';
       echo H::closeTag('label');
-      $body['settings[currency_from_to]'] =
-      $s->getSetting('currency_from_to') ?: 
+      $body[$kCurrencyFromTo] =
+      $s->getSetting('currency_from_to') ?:
       '1.00';
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[currency_from_to]',
-       'id' => 'settings[currency_from_to]',
-       'class' => 'form-control',
-       'value' => $body['settings[currency_from_to]']
+       'name' => $kCurrencyFromTo,
+       'id' => $kCurrencyFromTo,
+       'class' => 'form-control form-control-lg',
+       'value' => $body[$kCurrencyFromTo]
       ]);
 
      echo H::closeTag('div'); //6
      /* One of 'To' Currency Today converts to this of 'From' Currency */
      echo H::openTag('div', $formGroup); //6
       echo H::openTag('label', [
-       'for' => 'settings[currency_to_from]'
+       'for' => $kCurrencyToFrom
       ]);
        echo $translator->translate(
         'peppol.currency.to.from'
        );
       echo H::closeTag('label');
-      $body['settings[currency_to_from]'] =
-      $s->getSetting('currency_to_from') ?: 
+      $body[$kCurrencyToFrom] =
+      $s->getSetting('currency_to_from') ?:
       '1.00';
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[currency_to_from]',
-       'id' => 'settings[currency_to_from]',
-       'class' => 'form-control',
-       'value' => $body['settings[currency_to_from]']
+       'name' => $kCurrencyToFrom,
+       'id' => $kCurrencyToFrom,
+       'class' => 'form-control form-control-lg',
+       'value' => $body[$kCurrencyToFrom]
       ]);
 
      echo H::closeTag('div'); //6
@@ -317,24 +331,24 @@ echo H::openTag('div', $row); //1
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('div', $checkbox); //8
         $body[
-         'settings[include_delivery_period]'
+         $kIncludeDelivery
         ] = ($s->getSetting(
          'include_delivery_period'
         ) ?: '0');
         echo H::openTag('label');
          echo H::openTag('input', [
           'type' => 'hidden',
-          'name' => 
-          'settings[include_delivery_period]',
+          'name' =>
+          $kIncludeDelivery,
           'value' => '0'
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
-          'name' => 
-          'settings[include_delivery_period]',
+          'name' =>
+          $kIncludeDelivery,
           'value' => '1',
           'checked' => ($body[
-          'settings[include_delivery_period]'
+          $kIncludeDelivery
          ] == '1') ? 'checked' : null
          ]);
          echo H::a(
@@ -348,22 +362,22 @@ echo H::openTag('div', $row); //1
      echo H::closeTag('div'); //6
      echo H::openTag('div', $formGroup); //6
       echo H::openTag('label', [
-       'for' => 'settings[stand_in_code]'
+       'for' => $kStandInCode
       ]);
        echo H::a(
         $translator->translate('peppol.stand.in.code'),
         'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/'
-        . 'cbc-DescriptionCode/', 
+        . 'cbc-DescriptionCode/',
         ['style' => 'text-decoration:none']
        );
       echo H::closeTag('label');
       echo H::openTag('div', $inputGroup); //7
-       $body['settings[stand_in_code]'] = 
+       $body[$kStandInCode] =
        $s->getSetting('stand_in_code') ?: '';
        echo H::openTag('select', [
-        'name' => 'settings[stand_in_code]',
-        'id' => 'settings[stand_in_code]',
-        'class' => 'input-sm form-control'
+        'name' => $kStandInCode,
+        'id' => $kStandInCode,
+        'class' => $inputSmFormControl
        ]);
         /**
         * @var array $value
@@ -374,22 +388,22 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value($value['rdf:value'])
          ->selected(
-          ($body['settings[stand_in_code]'] 
+          ($body[$kStandInCode]
           ?? '') == $value['rdf:value']
          )
          ->content(
-          $value['rdf:value'] . ' ' . 
+          $value['rdf:value'] . ' ' .
           (string) $value['rdfs:comment']
          );
         }
        echo H::closeTag('select');
        echo H::openTag('span', $inputGroupText);
         echo H::openTag('a', [
-         'href' => 
+         'href' =>
          'https://invoice.local/w/Peppol-stand-in-code'
         ]);
          echo  new I()->class(
-          'fa fa-question fa-fw'
+          'bi bi-question-circle'
          );
         echo H::closeTag('a');
        echo H::closeTag('span');
@@ -397,20 +411,20 @@ echo H::openTag('div', $row); //1
      echo H::closeTag('div'); //6
      echo H::openTag('div', $formGroup); //6
       echo H::openTag('label', [
-       'for' => 'settings[peppol_xml_stream]'
+       'for' => $kPeppolXmlStream
       ]);
        echo $translator->translate(
         'peppol.xml.stream'
        );
       echo H::closeTag('label');
-      $body['settings[peppol_xml_stream]'] =
+      $body[$kPeppolXmlStream] =
       $s->getSetting(
        'peppol_xml_stream'
       );
       echo H::openTag('select', [
-       'name' => 'settings[peppol_xml_stream]',
-       'id' => 'settings[peppol_xml_stream]',
-       'class' => 'form-control'
+       'name' => $kPeppolXmlStream,
+       'id' => $kPeppolXmlStream,
+       'class' => 'form-control form-control-lg',
       ]);
        echo  new Option()
         ->value('0')
@@ -418,7 +432,7 @@ echo H::openTag('div', $row); //1
        echo  new Option()
         ->value('1')
         ->selected(
-         $body['settings[peppol_xml_stream]'] == '1'
+         $body[$kPeppolXmlStream] == '1'
         )
         ->content($translator->translate('yes'));
       echo H::closeTag('select');

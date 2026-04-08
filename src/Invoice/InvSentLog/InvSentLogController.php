@@ -215,11 +215,11 @@ final class InvSentLogController extends BaseController
                 if ($this->rbacAccountant()) {
                     return $this->webViewRenderer->render('view', $parameters);
                 }
-            }    
+            }
         }
         return $this->webService->getRedirectResponse('invsentlog/index');
     }
-    
+
     private function rbacAccountant() : bool {
         // has accountant role
         if (($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -230,7 +230,7 @@ final class InvSentLogController extends BaseController
             return false;
         }
     }
-    
+
     private function rbacAdmin() : bool {
         // has observer role
         if ($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -240,11 +240,11 @@ final class InvSentLogController extends BaseController
             return false;
         }
     }
-    
+
     /**
      * Purpose:
      * Prevent browser manipulation and ensure that views are only accessible
-     * to users 1. with the observer role's VIEW_INV permission and 2. supervise a 
+     * to users 1. with the observer role's VIEW_INV permission and 2. supervise a
      * client requested invoice and are an active current user for these client's
      * invoices.
      * @param Inv $inv
@@ -260,10 +260,10 @@ final class InvSentLogController extends BaseController
                 && !($this->userService->hasPermission(Permissions::EDIT_INV))
                 // the invoice  is not a draft i.e. has been sent
                 && !($statusId === 1)
-                // the invoice is intended for the current user        
+                // the invoice is intended for the current user
                 && ($inv->getUserId() === $this->userService->getUser()?->getId())
                 // the invoice client is associated with the above user
-                // the observer user may be paying for more than one client    
+                // the observer user may be paying for more than one client
                 && ($ucR->repoUserClientqueryCount($inv->getUserId(),
                                                 $inv->getClientId()) > 0)) {
                 $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);

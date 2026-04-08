@@ -216,7 +216,7 @@ final class ProductRepository extends Select\Repository
 
         // Convert family_id to integer for proper comparison
         $family_id_int = (int) $family_id;
-        
+
         // Debug logging (remove in production)
         error_log("repoProductwithfamilyquery - product_name: '$product_name', family_id: '$family_id', family_id_int: $family_id_int");
 

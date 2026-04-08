@@ -97,10 +97,10 @@ return [
             'compressRotatedFiles' => false,
         ],
     ],
-    
+
     // DeveloperSandboxHmrc
     'env' => $_ENV['YII_ENV'] ?? 'dev',
-    
+
     'server' => [
         'remote_port' => $_SERVER['REMOTE_PORT'] ?? null,
         'http_x_forwarded_for' => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? null,
@@ -291,7 +291,7 @@ return [
                 'template' => "{label}\n{input}\n{hint}\n{error}",
                 'containerClass' => 'mb-3',
                 'labelClass' => 'form-label',
-                'inputClass' => 'form-control',
+                'inputClass' => 'form-control form-control-lg',
                 'hintClass' => 'form-text',
                 'errorClass' => 'invalid-feedback',
                 'inputValidClass' => 'is-valid',
@@ -312,7 +312,7 @@ return [
              "{label}\n<div class=\"col-sm-10\">{input}\n{hint}\n{error}</div>",
                 'containerClass' => 'row mb-3',
                 'labelClass' => 'col-sm-2 col-form-label',
-                'inputClass' => 'form-control',
+                'inputClass' => 'form-control form-control-lg',
                 'hintClass' => 'form-text',
                 'errorClass' => 'invalid-feedback',
                 'inputValidClass' => 'is-valid',

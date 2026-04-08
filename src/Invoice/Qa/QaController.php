@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace App\Invoice\Qa;
 
@@ -34,14 +34,14 @@ final class QaController extends BaseController
         UserService $userService,
         WebViewRenderer $webViewRenderer,
         WebControllerService $webService,
-        Flash $flash,    
+        Flash $flash,
     ) {
         parent::__construct(
             $webService, $userService, $translator,
             $webViewRenderer, $session, $sR, $flash);
         $this->qaService = $qaService;
-    }  
-           
+    }
+
     public function index(
         QaRepository $qaRepository,
         sR $sR,
@@ -61,8 +61,8 @@ final class QaController extends BaseController
         'sortString' => $querySort ?? '-id',
       ];
       return $this->webViewRenderer->render('index', $parameters);
-    } 
-    
+    }
+
     /**
      * @param Request $request
      * @param FormHydrator $formHydrator
@@ -78,7 +78,7 @@ final class QaController extends BaseController
             'actionArguments' => [],
             'errors' => [],
             'form' => $form,
-        ];        
+        ];
         if ($request->getMethod() === Method::POST) {
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
@@ -92,34 +92,34 @@ final class QaController extends BaseController
                 $parameters['errors'] = $form->getValidationResult()
                                              ->getErrorMessagesIndexedByProperty();
                 $parameters['form'] = $form;
-            } // is_array($body)   
+            } // is_array($body)
         }
         return $this->webViewRenderer->render('_form', $parameters);
     }
-    
+
     /**
      * @param QaRepository $qaRepository
      * @param int $id
      * @return Response
      */
     public function delete(QaRepository $qaRepository,
-        #[RouteArgument('id')] int $id 
+        #[RouteArgument('id')] int $id
     ): Response {
         try {
             $qa = $this->qa($qaRepository, $id);
             if ($qa) {
-                $this->qaService->deleteQa($qa);               
+                $this->qaService->deleteQa($qa);
                 $this->flashMessage('info',
                     $this->translator->translate('record.successfully.deleted'));
-                return $this->webService->getRedirectResponse('qa/index'); 
+                return $this->webService->getRedirectResponse('qa/index');
             }
-            return $this->webService->getRedirectResponse('qa/index'); 
+            return $this->webService->getRedirectResponse('qa/index');
 	} catch (Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
-            return $this->webService->getRedirectResponse('qa/index'); 
+            return $this->webService->getRedirectResponse('qa/index');
         }
     }
-        
+
     public function edit(Request $request, FormHydrator $formHydrator,
         QaRepository $qaRepository, #[RouteArgument('id')] int $id): Response {
         $qa = $this->qa($qaRepository, $id);
@@ -127,11 +127,11 @@ final class QaController extends BaseController
             $form = new QaForm($qa);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
-                'actionName' => 'qa/edit', 
+                'actionName' => 'qa/edit',
                 'actionArguments' => ['id' => $id],
                 'errors' => [],
                 'form' => $form,
-                
+
             ];
             if ($request->getMethod() === Method::POST) {
                 $body = $request->getParsedBody() ?? [];
@@ -144,14 +144,14 @@ final class QaController extends BaseController
                         $form->getValidationResult()
                              ->getErrorMessagesIndexedByProperty();
                     $parameters['form'] = $form;
-                }    
+                }
             }
             return $this->webViewRenderer->render('_form', $parameters);
         }
         return $this->webService->getRedirectResponse('qa/index');
     }
-    
-    /**     
+
+    /**
      * @param QaRepository $qaRepository
      * @param int $id
      * @return Qa|null
@@ -164,25 +164,25 @@ final class QaController extends BaseController
         }
         return null;
     }
-        
+
     /**
      * @param QaRepository $qaRepository
      * @param int $id
      * @return Response
      */
     public function view(QaRepository $qaRepository,
-        #[RouteArgument('id')] int $id): Response 
+        #[RouteArgument('id')] int $id): Response
     {
-        $qa = $this->qa($qaRepository, $id); 
+        $qa = $this->qa($qaRepository, $id);
         if ($qa) {
             $form = new QaForm($qa);
             $parameters = [
                 'title' => $this->translator->translate('view'),
-                'actionName' => 'qa/view', 
+                'actionName' => 'qa/view',
                 'actionArguments' => ['id' => $id],
                 'form' => $form,
                 'qa' => $qa,
-            ];        
+            ];
         return $this->webViewRenderer->render('_view', $parameters);
         }
         return $this->webService->getRedirectResponse('

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use App\Invoice\Asset\ReportAsset;
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
 
 /**
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -30,7 +30,9 @@ $this->beginPage();
     <title><?= $translator->translate('sales.by.client'); ?></title>
 </head>
 <body>
-<?php $this->beginBody() ?>
+<?php $this->beginBody();
+      $style0px = 'width:15%;text-align:right;border-bottom: 0px solid black;';
+?>
 <h3 class="report_title">
     <?= $translator->translate('sales.by.client'); ?><br/>
     <small><?= $from_date . ' - ' . $to_date ?></small>
@@ -50,16 +52,26 @@ $this->beginPage();
          */
         foreach ($results as $result) { ?>
         <tr>
-            <td><?= Html::encode(($result['client_name_surname'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($result['inv_count']); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->formatCurrency($result['sales_no_tax'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->formatCurrency($result['item_tax_total'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->formatCurrency($result['tax_total'])); ?></td>
-            <td style="width:15%;text-align:right;border-bottom: 0px solid black;"><?= Html::encode($numberHelper->formatCurrency($result['sales_with_tax'])); ?></td>
+            <td><?= H::encode(($result['client_name_surname'])); ?></td>
+            <td style="<?= $style0px ?>">
+                <?= H::encode($result['inv_count']); ?>
+            </td>
+            <td style="<?= $style0px ?>">
+                <?= H::encode($numberHelper->formatCurrency($result['sales_no_tax'])); ?>
+            </td>
+            <td style="<?= $style0px ?>">
+                <?= H::encode($numberHelper->formatCurrency($result['item_tax_total'])); ?>
+            </td>
+            <td style="<?= $style0px ?>">
+                <?= H::encode($numberHelper->formatCurrency($result['tax_total'])); ?>
+            </td>
+            <td style="<?= $style0px ?>">
+                <?= H::encode($numberHelper->formatCurrency($result['sales_with_tax'])); ?>
+            </td>
         </tr>
     <?php } ?>
 </table>
 <?php $this->endBody() ?>
 </body>
 </html>
-<?php $this->endPage(true); ?> 
+<?php $this->endPage(true); ?>

@@ -85,7 +85,7 @@ class QuoteItemAmount
     {
         $this->discount = $discount;
     }
-    
+
     public function getCharge(): ?float
     {
         return $this->charge;

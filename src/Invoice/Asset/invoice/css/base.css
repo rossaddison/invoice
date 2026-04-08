@@ -2,16 +2,16 @@
 |   =========================================================
 |   Base Styles - Yii3i Reorganized CSS
 |   =========================================================
-|   
+|
 |   This file contains foundational styles:
 |   - CSS Reset/Normalize
 |   - Basic element styling
 |   - Typography base styles
 |   - Form element defaults
-|   
+|
 |   Original source: src/Invoice/Asset/invoice/css/style.css (lines 1-300)
 |   Based on normalize.css v3.0.3
-|   
+|
 |   TODO: Complete migration of remaining normalize rules from style.css
 */
 
@@ -147,7 +147,7 @@ code, kbd, pre, samp {
 
 /* Form Elements Base - From style.css */
 input, button, select, textarea {
-  font: inherit;  
+  font: inherit;
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
@@ -266,45 +266,45 @@ body *:focus {
     background: transparent !important;
     box-shadow: none !important;
   }
-  
+
   a, a:visited {
     text-decoration: underline;
   }
-  
+
   a[href]:after {
     content: " (" attr(href) ")";
   }
-  
+
   abbr[title]:after {
     content: " (" attr(title) ")";
   }
-  
+
   a[href^="#"]:after, a[href^="javascript:"]:after {
     content: "";
   }
-  
+
   pre, blockquote {
     border: 1px solid #999;
     page-break-inside: avoid;
   }
-  
+
   thead {
     display: table-header-group;
   }
-  
+
   tr, img {
     page-break-inside: avoid;
   }
-  
+
   img {
     max-width: 100% !important;
   }
-  
+
   p, h2, h3 {
     orphans: 3;
     widows: 3;
   }
-  
+
   h2, h3 {
     page-break-after: avoid;
   }

@@ -46,7 +46,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('div'); ?>
 
 <?= Html::openTag('div', ['id' => 'content']); ?>
-    <?= Html::openTag('div', ['class' => 'row']); ?>   
+    <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'input-group']); ?>
             <?php
                 $optionsDataAllowanceCharge = [];
@@ -67,7 +67,7 @@ foreach ($allowance_charges as $allowance_charge) {
             <?= Field::select($form, 'allowance_charge_id')
     ->label($translator->translate('allowance.or.charge.item.quote'))
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
@@ -80,15 +80,15 @@ foreach ($allowance_charges as $allowance_charge) {
         . '('
         . $s->getSetting('currency_symbol') . ')')
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'readonly' => 'readonly',
         'disabled' => 'disabled',
     ])
     ->value($s->formatAmount($form->getAmount() ?? 0.00));
-?>    
+?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>         
+<?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
 <?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>

@@ -2864,7 +2864,7 @@ return [
 'years' => 'Iminyaka',
 'yes' => 'Yebo',
 'zip' => 'Ikhodi Yeposi',
-    
+
 'zip.code' => 'Ikhodi Yeposi','allowance.or.charge.allowance.tax' => 'Intela yesibonelelo',
 'allowance.or.charge.charge.tax' =>
 	'Intela ekhokhiswayo',

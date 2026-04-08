@@ -23,7 +23,7 @@ declare(strict_types=1);
                             <option value="2">20% - Standard</option>
                         </select>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="include_item_tax" class="form-label">Tax Placement</label>
                         <select name="include_item_tax" id="include_item_tax" class="form-control form-control-lg">
@@ -31,14 +31,14 @@ declare(strict_types=1);
                             <option value="1">Apply after item tax</option>
                         </select>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <button id="quote_tax_submit" class="btn btn-success" type="button">
-                    <i class="fa fa-check"></i> Submit
+                    <i class="bi bi-check-lg"></i> Submit
                 </button>
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
-                    <i class="fa fa-times"></i> Cancel
+                    <i class="bi bi-x-lg"></i> Cancel
                 </button>
             </div>
         </div>

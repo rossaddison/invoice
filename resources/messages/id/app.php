@@ -1759,7 +1759,7 @@ return [
 'yes' => 'Ya',
 'zip' => 'Kode Pos',
 'zip.code' => 'Kode Pos',
-    
+
 'allowance.or.charge.allowance.tax' => 'Pajak atas tunjangan',
 'allowance.or.charge.charge.tax' => 'Pajak atas biaya',
 'allowance.or.charge.inv.add' => 'Tambahkan Tunjangan atau Biaya Faktur',
@@ -1816,5 +1816,5 @@ return [
 'variant' => 'Variasi',
 'approval.required' => 'Persetujuan Diperlukan',
 'quote.approval.required' => 'Persetujuan penawaran diperlukan',
-'quote.must.be.approved.first' => 'Kutipan harus disetujui sebelum konversi',    
+'quote.must.be.approved.first' => 'Kutipan harus disetujui sebelum konversi',
 ];

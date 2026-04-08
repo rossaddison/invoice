@@ -13,9 +13,9 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
  * @var App\Invoice\Family\FamilyForm $form
  * @var App\Invoice\FamilyCustom\FamilyCustomForm $familyCustomForm
  * @var App\Invoice\Entity\Family $family
- * 
+ *
  * Related logic: see config\common\params.php 'cvH'
- * @var App\Invoice\Helpers\CustomValuesHelper $cvH 
+ * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  *
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
@@ -49,7 +49,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
     <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
       <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
         <?= Html::openTag('div', ['class' => 'card-header']); ?>
-          <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+          <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
             <?= Html::encode($title) ?>
           <?= Html::closeTag('h1'); ?>
           <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -70,12 +70,12 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('family.name'),
                         'value' => Html::encode($form->getFamilyName() ?? ''),
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'family_name',
                     ])
                     ->hint($translator->translate('hint.this.field.is.required'));
                   ?>
-                <?= Html::closeTag('div'); ?>  
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'category_primary_id')
     ->label($translator->translate('category.primary'))
@@ -104,21 +104,21 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('family.comma.list'),
                         'value' => Html::encode($form->getFamilyCommalist() ?? ''),
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'family_commalist',
                         'rows' => '3',
                     ])
                     ->hint($translator->translate('hint.this.field.is.not.required'));
                   ?>
-                  
+
                   <!-- Angular Number Picker Container -->
                   <div class="mt-2">
-                    <button type="button" class="btn btn-outline-primary btn-sm" 
+                    <button type="button" class="btn btn-outline-primary btn-sm"
                             onclick="toggleCommalistPicker()" id="toggle-picker-btn">
                       <i class="bi bi-grid-3x3-gap"></i> Show Number Picker
                     </button>
                   </div>
-                  
+
                   <div id="commalist-picker-container" class="mt-3" style="display: none;">
                     <div class="alert alert-info">
                       <small><i class="bi bi-info-circle"></i> Click numbers below to add them to your comma list. The textarea above will be automatically updated.</small>
@@ -132,7 +132,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('family.product.prefix'),
                         'value' => Html::encode($form->getFamilyProductprefix() ?? ''),
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'family_productprefix',
                     ])
                     ->hint($translator->translate('hint.this.field.is.not.required'));

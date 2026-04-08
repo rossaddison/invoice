@@ -19,7 +19,7 @@ class MonospaceAsset extends AssetBundle
     public array $css = [
         'invoice/css/monospace.css',
     ];
-    
+
     public function __construct()
     {
         $pathMatcher = new PathMatcher();

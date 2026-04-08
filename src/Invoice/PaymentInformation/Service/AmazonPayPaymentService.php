@@ -52,7 +52,7 @@ class AmazonPayPaymentService
                 'details' => null,
             ];
         }
-        
+
         $sandboxOrLive = '';
         try {
             if ($this->sR->getSetting('gateway_amazon_pay_sandbox') === '1') {

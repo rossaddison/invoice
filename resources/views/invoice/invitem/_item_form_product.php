@@ -48,27 +48,27 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ])
             ->content(' ' . $translator->translate('product'));
 ?>
-    <?= Html::closeTag('div'); ?>    
+    <?= Html::closeTag('div'); ?>
     <?=  new Form()
 ->post($urlGenerator->generate($actionName))
 ->enctypeMultipartFormData()
 ->csrf($csrf)
 ->id('InvItemForm')
 ->open() ?>
-        
+
         <?= Html::openTag('div', ['class' => 'table-striped table-responsive']); ?>
             <?= Html::openTag('table', ['id' => 'item_table', 'class' => 'items table-primary table table-bordered no-margin']); ?>
                 <?= Html::openTag('tbody', ['id' => 'new_inv_item_row']); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['rowspan' => '2', 'class' => 'td-icon']); ?>
                             <?=  new I()
-                        ->addClass('fa fa-arrows cursor-move'); ?> 
+                        ->addClass('bi bi-grip-vertical cursor-move'); ?>
                                 <?php if ($isRecurring) : ?>
                                     <?= Html::tag('br'); ?>
                                         <?=  new I()
                                     ->addAttributes([
                                         'title' => $translator->translate('recurring'),
-                                        'class' => 'js-item-recurrence-toggler cursor-pointer fa fa-calendar-o text-muted',
+                                        'class' => 'js-item-recurrence-toggler cursor-pointer bi bi-calendar text-muted',
                                     ]);
                                     ?>
                                         <?= Html::openTag('input', ['type' => 'hidden', 'name' => 'is_recurring', 'value' => '/']); ?>
@@ -82,7 +82,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             <?= Field::hidden($form, 'task_id')
                                 ->value('0')
                                 ->hideLabel(); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group', 'id' => 'product-no-task']); ?>    
+                            <?= Html::openTag('div', ['class' => 'input-group', 'id' => 'product-no-task']); ?>
                                 <?php
                                     $optionsDataProduct = [];
 /**
@@ -99,7 +99,7 @@ foreach ($products as $product) {
                                 <?= Field::select($form, 'product_id')
     ->optionsData($optionsDataProduct)
     ->value(Html::encode($form->getProductId())); ?>
-                            <?= Html::closeTag('div'); ?> 
+                            <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-quality']); ?>
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
@@ -152,11 +152,11 @@ foreach ($taxRates as $taxRate) {
 ?>
                                 <?= Field::select($form, 'tax_rate_id')
     ->label($vat === false ? $translator->translate('tax.rate') : $translator->translate('vat.rate'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->optionsData($optionsDataTaxRate)
     ->value(Html::encode($form->getTaxRateId()))
     ->hint($translator->translate('hint.this.field.is.required'));
-?>        
+?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-icon text-right td-vert-middle']); ?>
@@ -169,10 +169,10 @@ foreach ($taxRates as $taxRate) {
                                 'class' => 'btn btn-info',
                                 'data-bs-toggle' => 'tooltip',
                                 'title' => 'invitem/addProduct']); ?>
-                                <?=  new I()->addClass('fa fa-plus'); ?>
+                                <?=  new I()->addClass('bi bi-plus-lg'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>
-                        <?= Html::closeTag('td'); ?>              
+                        <?= Html::closeTag('td'); ?>
                     <?= Html::closeTag('tr'); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['class' => 'td-textarea']); ?>
@@ -189,7 +189,7 @@ foreach ($taxRates as $taxRate) {
                                 <?= Field::text($form, 'order')
     ->value(Html::encode($form->getOrder() ?? ''));
 ?>
-                            <?= Html::closeTag('div'); ?> 
+                            <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount']); ?>
                             <?= Html::openTag('div', ['class' => 'input-group']); ?>
@@ -206,44 +206,44 @@ foreach ($units as $unit) {
         $optionsDataProductUnit[$unitId] = Html::encode($unitName) . "/" . Html::encode($unitNamePlrl);
     }
 }
-?>     
+?>
                                 <?= Field::select($form, 'product_unit_id')
     ->label($translator->translate('product.unit'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->optionsData($optionsDataProductUnit)
     ->value(Html::encode($form->getProductUnitId() ?? ''))
     ->hint($translator->translate('hint.this.field.is.required'));
-?>            
+?>
                             <?= Html::closeTag('div'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $translator->translate('subtotal'); ?><?= Html::closeTag('span'); ?>
-                                <?= Html::tag('br'); ?>    
-                            <?= Html::openTag('span', ['name' => 'subtotal', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>        
+                                <?= Html::tag('br'); ?>
+                            <?= Html::openTag('span', ['name' => 'subtotal', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $vat === false ? $translator->translate('discount') : $translator->translate('early.settlement.cash.discount') ?><?= Html::closeTag('span'); ?>
-                                <?= Html::tag('br'); ?>    
-                            <?= Html::openTag('span', ['name' => 'discount_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>        
+                                <?= Html::tag('br'); ?>
+                            <?= Html::openTag('span', ['name' => 'discount_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $vat === false ? $translator->translate('tax') : $translator->translate('vat.abbreviation')  ?><?= Html::closeTag('span'); ?>
-                                <?= Html::tag('br'); ?>    
-                            <?= Html::openTag('span', ['name' => 'tax_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>        
-                        <?= Html::closeTag('td'); ?>        
+                                <?= Html::tag('br'); ?>
+                            <?= Html::openTag('span', ['name' => 'tax_total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
+                        <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-amount td-vert-middle']); ?>
                             <?= Html::openTag('span'); ?><?= $translator->translate('total'); ?><?= Html::closeTag('span'); ?>
-                                <?= Html::tag('br'); ?>    
-                            <?= Html::openTag('span', ['name' => 'total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>        
+                                <?= Html::tag('br'); ?>
+                            <?= Html::openTag('span', ['name' => 'total', 'class' => 'amount']); ?><?= Html::closeTag('span'); ?>
                         <?= Html::closeTag('td'); ?>
-                    <?= Html::closeTag('tr'); ?>        
+                    <?= Html::closeTag('tr'); ?>
                 <?= Html::closeTag('tbody'); ?>
             <?= Html::closeTag('table'); ?>
         <?= Html::closeTag('div'); ?>
         <?=Html::openTag('div', ['class' => 'col-xs-12 col-md-4']); ?>
             <?= Html::openTag('div', ['class' => 'btn-group']); ?>
                 <?= Html::Tag('button', '', ['hidden' => 'hidden', 'class' => 'btn_inv_item_add_row btn btn-primary btn-md active bi bi-plus'])
-                    ->content($translator->translate('add.new.row')); ?>           
+                    ->content($translator->translate('add.new.row')); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?=  new Form()->close(); ?>

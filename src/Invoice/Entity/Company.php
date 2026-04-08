@@ -214,7 +214,7 @@ class Company
     {
         $this->seo_description = $seoDescription;
     }
-    
+
     public function getWeb(): ?string
     {
         return $this->web;

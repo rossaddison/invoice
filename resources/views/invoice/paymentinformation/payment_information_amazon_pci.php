@@ -80,7 +80,7 @@ if ($disable_form === false) {
                 )
               )
               ->content( new I()->addAttributes([
-                  'class' => 'fa fa-file-pdf-o'
+                  'class' => 'bi bi-file-pdf'
               ]) . ' ' . $translator->translate('download.pdf')
                  . '=>' . $translator->translate('yes')
                  . ' ' . $translator->translate('custom.fields'))
@@ -97,7 +97,7 @@ if ($disable_form === false) {
                 )
               )
               ->content( new I()->addAttributes([
-                  'class' => 'fa fa-file-pdf-o'
+                  'class' => 'bi bi-file-pdf'
               ]) . ' ' . $translator->translate('download.pdf')
                  . '=>' . $translator->translate('no')
                  . ' ' . $translator->translate('custom.fields'))
@@ -119,7 +119,7 @@ if ($disable_form === false) {
          echo H::openTag('button', [
              'type' => 'submit',
              'id' => 'submit',
-             'class' => 'btn btn-lg btn-success fa fa-credit-card fa-margin'
+             'class' => 'btn btn-lg btn-success bi bi-credit-card'
          ]);
           echo H::openTag('div', ['class' => 'spinner hidden', 'id' => 'spinner']);
           echo H::closeTag('div');
@@ -168,16 +168,14 @@ if ($disable_form === false) {
               echo H::encode($numberHelper->formatCurrency($balance));
              echo H::closeTag('td');
             echo H::closeTag('tr');
-            if ($payment_method) {
-                echo H::openTag('tr');
-                 echo H::openTag('td');
-                  echo $translator->translate('payment.method') . ': ';
-                 echo H::closeTag('td');
-                 echo H::openTag('td', ['class' => 'text-right']);
-                  echo $payment_method;
-                 echo H::closeTag('td');
-                echo H::closeTag('tr');
-            }
+            echo H::openTag('tr');
+             echo H::openTag('td');
+              echo $translator->translate('payment.method') . ': ';
+             echo H::closeTag('td');
+             echo H::openTag('td', ['class' => 'text-right']);
+              echo 'Card / Direct Debit - Customer Ready for Payment';
+             echo H::closeTag('td');
+            echo H::closeTag('tr');
            echo H::closeTag('tbody');
           echo H::closeTag('table');
          echo H::closeTag('div');

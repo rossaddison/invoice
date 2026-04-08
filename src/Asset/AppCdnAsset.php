@@ -12,6 +12,6 @@ final class AppCdnAsset extends AssetBundle
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [
-        '//cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css',
+        '//cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css',
     ];
 }

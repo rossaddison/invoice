@@ -11,7 +11,7 @@ use Yiisoft\Html\Html;
  * @var Yiisoft\Translator\TranslatorInterface $translator
  */
 
-?>   
+?>
 
 <span class="client-address-street-line">
     <?=(strlen($client->getClientAddress1() ?? '') > 0 ? Html::encode($client->getClientAddress1()) . '<br>' : ''); ?>

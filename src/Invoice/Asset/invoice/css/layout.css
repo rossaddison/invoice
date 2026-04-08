@@ -2,16 +2,16 @@
 |   =========================================================
 |   Layout Styles - Yii3i Reorganized CSS
 |   =========================================================
-|   
+|
 |   This file contains layout and structural styles:
 |   - Grid system and containers
 |   - Page layout structure (sidebar, main content, header)
 |   - Navigation layout
 |   - Responsive breakpoints
 |   - Flexbox layouts
-|   
+|
 |   Original source: src/Invoice/Asset/invoice/css/style.css (layout sections)
-|   
+|
 |   TODO: Complete migration of Bootstrap grid system from style.css
 */
 
@@ -193,14 +193,14 @@
 }
 
 /* Form Settings Layout - From style.css lines ~8340-8346 */
-#form-settings .tab-content .tab-pane, 
+#form-settings .tab-content .tab-pane,
 div.table-content .tab-pane {
   padding-bottom: 50px;
 }
 
-#form-settings .tab-content #filter_results, 
-#form-settings .tab-content .table-responsive, 
-div.table-content #filter_results, 
+#form-settings .tab-content #filter_results,
+#form-settings .tab-content .table-responsive,
+div.table-content #filter_results,
 div.table-content .table-responsive {
   min-height: 300px;
   overflow-x: inherit;
@@ -211,7 +211,7 @@ div.table-content .table-responsive {
   .navbar-nav .visible-lg {
     display: inline-block !important;
   }
-  
+
   #submenu .submenu-row {
     float: left;
     margin-right: var(--spacing-md);
@@ -229,23 +229,23 @@ div.table-content .table-responsive {
   .sidebar li a {
     padding: 7px;
   }
-  
+
   #content {
     padding: var(--spacing-lg);
   }
-  
+
   .navbar-nav {
     margin: 7px 0;
   }
-  
+
   .text-left-xs {
     text-align: left;
   }
-  
+
   #submenu .navbar-collapse {
     margin-top: 7px;
   }
-  
+
   .navbar-nav .visible-xs {
     display: inline-block !important;
   }
@@ -255,24 +255,24 @@ div.table-content .table-responsive {
   .navbar-nav {
     margin: 7px 0;
   }
-  
+
   .navbar-nav .dropdown .dropdown-menu {
     background: #1e242c;
   }
-  
+
   #content {
     padding: var(--spacing-md);
   }
-  
+
   #content .row {
     margin-left: calc(-1 * var(--spacing-md));
     margin-right: calc(-1 * var(--spacing-md));
   }
-  
+
   .headerbar {
     padding: 8px !important;
   }
-  
+
   .pull-right {
     margin-left: 5px !important;
   }

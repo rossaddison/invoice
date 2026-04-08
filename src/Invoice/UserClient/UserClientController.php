@@ -63,7 +63,7 @@ final class UserClientController extends BaseController
         UIR $uiR,
         IR $iR,
         QR $qR,
-        SOR $soR    
+        SOR $soR
     ): Response {
         $user_client = $this->userclient($currentRoute, $userclientRepository);
         if (null !== $user_client) {
@@ -71,7 +71,7 @@ final class UserClientController extends BaseController
             $client_id = (int) $user_client->getClientId();
             if (($iR->countAllWithUserClient($user_id, $client_id) === 0)
              && ($qR->countAllWithUserClient($user_id, $client_id) === 0)
-             && ($soR->countAllWithUserClient($user_id, $client_id) === 0)){   
+             && ($soR->countAllWithUserClient($user_id, $client_id) === 0)){
                 $this->userclientService->deleteUserClient($user_client);
                 $user_inv = $uiR->repoUserInvUserIdquery((string) $user_id);
                 if (null !== $user_inv) {

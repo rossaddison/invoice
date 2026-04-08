@@ -13,7 +13,7 @@ class NodeModulesBootstrapLightboxAsset extends AssetBundle
     public ?string $baseUrl = '@assetsUrl';
 
     public ?string $sourcePath = '@npm/bs5-lightbox/dist';
-    
+
     public bool $cdn = false;
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */

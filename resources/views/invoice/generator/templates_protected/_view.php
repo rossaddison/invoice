@@ -12,7 +12,7 @@ declare(strict_types=1);
 echo "<?php\n";
 ?>
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -29,7 +29,7 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string, list<string>> $errors
- * @psalm-var array<array-key, array<array-key, string>|string> $<?= $generator->getSmallSingularName(); ?>    
+ * @psalm-var array<array-key, array<array-key, string>|string> $<?= $generator->getSmallSingularName(); ?>
  */
 
 <?php
@@ -68,7 +68,7 @@ foreach ($relations as $relation) {
     echo "    <?= Html::openTag('div'); ?>" . "\n";
     echo '        <?= Field::select($' . 'form, ' . "'" . ($relation->getLowercaseName() ?? '#') . "_id')" . "\n";
     echo "            ->addInputAttributes([" . "\n";
-    echo "                 'class' => 'form-control'" . "\n";
+    echo "                 'class' => 'form-control form-control-lg'," . "\n";
     echo "            ])" . "\n";
     echo '            ->value($form->get' . ucfirst($relation->getLowercaseName() ?? '#') . "_id())" . "\n";
     echo '            ->prompt($translator->translate(\'i.none\'))' . "\n";
@@ -125,7 +125,7 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '        <?= Field::text($form,' . "'" . $column->getName() . "')" . "\n";
             echo '            ->label($translator->translate(' . "'" . $column->getName() . "'" . '))' . "\n";
             echo '            ->addInputAttributes([' . "\n";
-            echo "                'class' => 'form-control'" . "\n";
+            echo "                'class' => 'form-control form-control-lg'," . "\n";
             echo '            ])' . "\n";
             echo '            ->value($s->formatAmount((float)($form->get' . ucfirst($column->getName()) . '() ?? 0.00)))' . "\n";
             echo '            ->placeholder($' . 'translator->translate(' . "'" . $column->getName() . "'" . '))' . "\n";
@@ -143,7 +143,7 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '        <?= Field::text($form,' . "'" . $column->getName() . "')" . "\n";
             echo '            ->label($translator->translate(' . $column->getName() . '))' . "\n";
             echo '            ->addInputAttributes([' . "\n";
-            echo "                'class' => 'form-control'" . "\n";
+            echo "                'class' => 'form-control form-control-lg'," . "\n";
             echo '            ])' . "\n";
             echo '            ->value(Html::encode(' . '$' . 'form->get' . ucfirst($column->getName()) . '()))' . "\n";
             echo '            ->readonly(true)';
@@ -157,7 +157,7 @@ foreach ($orm_schema->getColumns() as $column) {
             echo '        <?= Field::text($form,' . "'" . $column->getName() . "')" . "\n";
             echo '            ->label($translator->translate(' . $column->getName() . '))' . "\n";
             echo '            ->addInputAttributes([' . "\n";
-            echo "                'class' => 'form-control'" . "\n";
+            echo "                'class' => 'form-control form-control-lg'," . "\n";
             echo '            ])' . "\n";
             echo '            ->value(Html::encode(' . '$' . 'form->get' . ucfirst($column->getName()) . '()))' . "\n";
             echo '            ->readonly(true)';

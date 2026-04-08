@@ -25,7 +25,7 @@ use Yiisoft\Html\Html;
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="client_id" id="client_id" value="<?= $quote->getClientId(); ?>">            
+                    <input type="hidden" name="client_id" id="client_id" value="<?= $quote->getClientId(); ?>">
                     <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUserId(); ?>">
                     <div class="form-group">
                         <label for="po_number"><?= $translator->translate('quote.with.purchase.order.number') ?></label>
@@ -57,15 +57,15 @@ use Yiisoft\Html\Html;
                             <?php } ?>
                         </select>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="quote_to_so_confirm btn btn-success" id="quote_to_so_confirm" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
+                        <i class="bi bi-check-lg"></i> <?= $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

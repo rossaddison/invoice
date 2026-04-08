@@ -30,15 +30,15 @@ final class ProductClientService
         $datetime_updated = new \DateTimeImmutable();
         $model->setUpdatedAt(
             $datetime_updated::createFromFormat(
-                'Y-m-d', 
+                'Y-m-d',
                 (string) $array['updated_at'])
             ?: new \DateTimeImmutable('now'),
         );
 
-        isset($array['product_id']) ? 
+        isset($array['product_id']) ?
             $model->setProductId(
                 (int) $array['product_id']) : '';
-        isset($array['client_id']) ? 
+        isset($array['client_id']) ?
             $model->setClientId(
                 (int) $array['client_id']) : '';
         $this->repository->save($model);

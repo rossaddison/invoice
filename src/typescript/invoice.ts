@@ -1,4 +1,4 @@
-﻿import { parsedata, getJson, ApiResponse, RequestParams, closestSafe } from './utils.js';
+import { parsedata, getJson, ApiResponse, RequestParams, closestSafe } from './utils.js';
 
 // Invoice-specific interfaces
 interface RecurringInvoiceData extends RequestParams {
@@ -67,7 +67,7 @@ export class InvoiceHandler {
     private bindEventListeners(): void {
         document.addEventListener('click', this.handleClick.bind(this), true);
         document.addEventListener('change', this.handleChange.bind(this), true);
-        
+
         // Initialize all clients check on page load
         this.initializeAllClientsCheck();
     }
@@ -538,12 +538,12 @@ export class InvoiceHandler {
         try {
             // Get selected item checkboxes from the modal table
             const selected: string[] = [];
-            
+
             // Use the same selector pattern as quote for consistency
             const checkboxes = document.querySelectorAll(
                 "input[name='item_ids[]']:checked"
             ) as NodeListOf<HTMLInputElement>;
-            
+
             checkboxes.forEach(checkbox => {
                 if (checkbox.value) {
                     selected.push(checkbox.value);
@@ -608,7 +608,7 @@ export class InvoiceHandler {
     private handleModalPdfView(withCustomFields: boolean): void {
         const endpoint = withCustomFields ? '1' : '0';
         const url = `${location.origin}/invoice/inv/pdf/${endpoint}`;
-        
+
         // Set the iframe src to the URL of the PDF
         const iframe = document.getElementById('modal-view-inv-pdf') as HTMLIFrameElement;
         if (iframe) {
@@ -687,7 +687,7 @@ export class InvoiceHandler {
         const currentUrl = new URL(location.href);
         const inv_id = currentUrl.pathname.split('/').at(-1) || '';
         const url = `${location.origin}/invoice/invitem/add/${inv_id}`;
-        
+
         // Load content into modal placeholder
         const modalPlaceholder = document.getElementById('modal-placeholder-invitem');
         if (modalPlaceholder) {
@@ -727,7 +727,7 @@ export class InvoiceHandler {
         // Clone the new row template and append to item table
         const newRow = document.getElementById('new_row');
         const itemTable = document.getElementById('item_table');
-        
+
         if (newRow && itemTable) {
             const clonedRow = newRow.cloneNode(true) as HTMLElement;
             clonedRow.removeAttribute('id');
@@ -739,7 +739,7 @@ export class InvoiceHandler {
 
     private async handleDeleteSingleItem(deleteItem: HTMLElement): Promise<void> {
         const itemId = deleteItem.getAttribute('data-id');
-        
+
         if (!itemId) {
             // If no ID, just remove the DOM element (unsaved item)
             const itemRow = deleteItem.closest('.item');

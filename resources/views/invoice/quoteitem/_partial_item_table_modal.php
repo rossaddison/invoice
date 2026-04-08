@@ -18,7 +18,7 @@ use Yiisoft\Html\Html;
         <tr>
             <th>&nbsp;</th>
             <th><?= $translator->translate('item'); ?></th>
-            <th><?= $translator->translate('product.sku') . ' / ' . $translator->translate('task') . ' ' . $translator->translate('status'); ?></th>            
+            <th><?= $translator->translate('product.sku') . ' / ' . $translator->translate('task') . ' ' . $translator->translate('status'); ?></th>
             <th><?= $translator->translate('product.name') . ' / ' . $translator->translate('task.name'); ?></th>
             <th><?= $translator->translate('product.description') . ' / ' . $translator->translate('task.description'); ?></th>
             <th class="text-right"><?= $translator->translate('product.price'); ?></th>
@@ -67,7 +67,7 @@ use Yiisoft\Html\Html;
                     <td class="text-right">
                         <?= $numberHelper->formatCurrency($quoteItem->getTask()?->getPrice()); ?>
                     </td>
-                <?php } ?>    
+                <?php } ?>
                 <td class="text-right">
                     <?= $quoteItem->getQuantity(); ?>
                 </td>

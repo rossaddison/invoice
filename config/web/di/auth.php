@@ -45,4 +45,4 @@ return [
                 $currentUser->clear();
             },
         ],
-];   
+];

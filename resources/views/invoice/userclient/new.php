@@ -52,14 +52,14 @@ use Yiisoft\Security\Random;
                                 ->onlyProperties(...['client_name', 'client_surname', 'client_email', 'client_age'])
                                 ->onlyCommonErrors()
 ?>
-                            
+
                             <?= Field::checkbox($form, 'user_all_clients')
     ->inputLabelAttributes([
         'class' => 'form-check-label',
     ])
     ->inputClass('form-check-input')
     ->ariaDescribedBy($translator->translate('user.all.clients'))
-?>    
+?>
                             <?= Html::openTag('div'); ?>
                                 <?= $translator->translate('user.all.clients.text') ?>
                             <?= Html::closeTag('div'); ?>
@@ -84,7 +84,7 @@ if ($clients) {
     ->label($translator->translate('client'))
     ->addInputAttributes([
         'id' => 'client_id',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'autofocus' => 'autofocus',
         'selected' => $s->checkSelect(Html::encode($body['client_id'] ?? ''), $client->getClientId()),
     ])
@@ -97,7 +97,7 @@ if ($clients) {
     ->label($translator->translate('client'))
     ->addInputAttributes([
         'id' => 'client_id',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'autofocus' => 'autofocus',
     ])
     ->optionsData($optionsDataClient);

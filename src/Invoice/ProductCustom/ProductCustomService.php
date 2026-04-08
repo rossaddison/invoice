@@ -26,13 +26,13 @@ final readonly class ProductCustomService
         array $array
     ): void {
         $this->persist($model, $array);
-        $array['product_id'] ? 
+        $array['product_id'] ?
             $model->setProductId(
                 (int) $array['product_id']) : '';
-        $array['custom_field_id'] ? 
+        $array['custom_field_id'] ?
             $model->setCustomFieldId(
                 (int) $array['custom_field_id']) : '';
-        $array['value'] ? 
+        $array['value'] ?
             $model->setValue((string) $array['value']) : '';
         $this->repository->save($model);
     }

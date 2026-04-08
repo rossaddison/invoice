@@ -221,7 +221,7 @@ final class InvController extends BaseController
 // instance, /etc/passwd. This sort of check is especially important if there
 // is any chance that anything done with uploaded files could reveal their
 // contents to the user, or even to other users on the same system. For proper
-// working, the function isUploadedFile() needs an argument like 
+// working, the function isUploadedFile() needs an argument like
 // $_FILES['userfile']['tmp_name'], - the name of the uploaded file on the
 // client's machine
 // $_FILES['userfile']['name'] does not work.
@@ -418,7 +418,7 @@ $original_file_name = preg_replace(
 // available clients. So this line is an extra measure to ensure that the
 // invoice is being made out to the correct payer ie. not more than one user
 // is associated with the client.
-                    
+
 $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                     if (null !== $user) {
                         $saved_model = $this->inv_service->saveInv(
@@ -565,7 +565,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                     // Only clients that were assigned to user accounts were
                     // made available in dropdown therefore use the 'user client'
                     // user id
-                    
+
                     /**
                      * @var string $body['client_id']
                      */
@@ -931,7 +931,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
     private function editInputAttributesUrlKey(InvForm $form): array
     {
         $inputAttributesUrlKey = [
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'readonly' => 'readonly',
             'value' => Html::encode($form->getUrlKey()),
         ];
@@ -950,12 +950,12 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
     {
         if ($form->getIsReadOnly() == true && $form->getStatusId() == 4) {
             $inputAttributesPaymentMethod = [
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'disabled' => 'disabled',
             ];
         } else {
             $inputAttributesPaymentMethod = [
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'value' => Html::encode($form->getPaymentMethod() ??
                 ($this->sR->getSetting('invoice_default_payment_method') ?: 1)),
             ];
@@ -1223,7 +1223,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
             }
             if ($this->rbacAdmin()) {
                 return $this->webViewRenderer->render('_form_edit', $parameters);
-            }    
+            }
         } // if $inv_id
         return $this->webService->getRedirectResponse('inv/index');
     }
@@ -1239,7 +1239,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
         }
         return false;
     }
-    
+
     public function editSaveFormFields(array|object|null $body, int $id,
         FormHydrator $formHydrator, IR $invRepo, GR $groupRepo, UR $uR,
             UCR $ucR, UIR $uiR): ?InvForm
@@ -1261,7 +1261,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
         }  // $inv
         return null;
     }
-    
+
     public function emailGetInvoiceTemplates(string $type = 'pdf'): array
     {
         return $this->sR->getInvoiceTemplates($type);
@@ -1531,7 +1531,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
         } // inv_id
         return false;
     }
-    
+
     public function emailStage2(
         Request $request,
         #[RouteArgument('id')]
@@ -1912,7 +1912,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
         IR $invRepo,
         IRR $irR,
         ISLR $islR,
-        CR $clientRepo,   
+        CR $clientRepo,
         GR $groupRepo,
         QR $qR,
         PMR $pmR,
@@ -2058,7 +2058,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                     null !==
                         ($pmR = $pmR->repoPaymentMethodquery(
                         $this->sR->getSetting('invoice_default_payment_method')))
-                        ? (strlen($paymentMethodName = $pmR->getName() ?? '') > 0 
+                        ? (strlen($paymentMethodName = $pmR->getName() ?? '') > 0
                         ? $paymentMethodName : $this->sR->getSetting('not.set'))
                         : $this->sR->getSetting('not.set'),
                 // numbered tiles between the arrrows
@@ -2305,7 +2305,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
         $inv = $iR->repoUrlKeyGuestLoaded($url_key);
         if (null!==$inv) {
             $this->pdfNotFoundException($inv, $ucR, $uiR);
-        }    
+        }
         if ($url_key) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
             if ($iR->repoUrlKeyGuestCount($url_key) < 1) {
@@ -2400,7 +2400,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
         $inv = $iR->repoUrlKeyGuestLoaded($urlKey);
         if (null!==$inv) {
             $this->pdfNotFoundException($inv, $ucR, $uiR);
-        }    
+        }
         if ($urlKey) {
             // If the status is sent 2, viewed 3, or paid 4 and the url key exists
             if ($iR->repoUrlKeyGuestCount($urlKey) < 1) {
@@ -2550,7 +2550,7 @@ echo file_get_contents($temp_aliase, true);
             $this->translator->translate('caution.deleted.invoices'));
         return $this->webService->getRedirectResponse('inv/index');
     }
-    
+
     public function generateInvNumberIfApplicable(?string $inv_id, IR $iR,
         SR $sR, GR $gR): void
     {
@@ -3013,7 +3013,7 @@ echo file_get_contents($temp_aliase, true);
  * only effects i.e. disable_read_only, are being used. 'disable_read_only' is
  * false by default in InvoiceController on setting up.
  *
- * Related logic: see 'read_only_toggle' Settings .... 
+ * Related logic: see 'read_only_toggle' Settings ....
  * Invoices ... Other Settings ... Disable the read only button on ... {status}
  */
                     if (($this->sR->getSetting('read_only_toggle') == '2')
@@ -3237,7 +3237,7 @@ echo file_get_contents($temp_aliase, true);
         $parameters['success'] = 1;
         return $this->factory->createResponse(Json::encode($parameters));
     }
-    
+
     /**
      * Related logic: see src/Invoice/Asset/rebuild-1.13/js/inv.js
      */
@@ -3267,7 +3267,7 @@ echo file_get_contents($temp_aliase, true);
         //return response to inv.js to reload page at location
         return $this->factory->createResponse(Json::encode($parameters));
     }
-    
+
     public function urlKey(
         #[RouteArgument('url_key')]
         string $urlKey,
@@ -3571,7 +3571,7 @@ echo file_get_contents($temp_aliase, true);
                                 $this->sR->getSetting('currency_from_to'),
                                 // one of 'to currency' converts to this
                                 // of 'from currency':
-                                $this->sR->getSetting('currency_to_from'),  
+                                $this->sR->getSetting('currency_to_from'),
                             );
                             $uploads_temp_peppol_absolute_path_dot_xml =
                         $peppolhelper->generateInvoicePeppolUblXmlTempFile(
@@ -3655,7 +3655,7 @@ echo file_get_contents($temp_aliase, true);
         } // null !==id
         return $this->webService->getNotFoundResponse();
     }
-    
+
     /**
      * Purpose: Use the toggle button to convert the Ubl invoice's amounts
      * either to the Sender's currency or the Recipient's currency
@@ -3715,7 +3715,7 @@ echo file_get_contents($temp_aliase, true);
                 . ' ' . $documentCurrency);
         return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
     } // peppol document currency toggle
-    
+
     /**
      * Purpose: Use the toggle button to
      * stream Ubl invoice to screen or alternatively output to file
@@ -3747,7 +3747,7 @@ echo file_get_contents($temp_aliase, true);
         $this->flashMessage('info',
             $this->translator->translate('peppol.stream.toggle'));
         return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
-    } // peppol stream toggle    
+    } // peppol stream toggle
 
     /**
      * Related logic: see https://www.storecove.com/docs#_json_object
@@ -3872,9 +3872,9 @@ echo file_get_contents($temp_aliase, true);
         }
         return '';
     }
-    
+
     // The accesschecker in config/routes ensures that only users with viewInv
-    // permission can reach this 
+    // permission can reach this
 
     public function view(
         WebViewRenderer $head,
@@ -4188,11 +4188,11 @@ echo file_get_contents($temp_aliase, true);
         } // if $inv
         return $this->webService->getNotFoundResponse();
     }
-    
+
     /**
      * Purpose:
      * Prevent browser manipulation and ensure that views are only accessible
-     * to users 1. with the observer role's VIEW_INV permission and 2. supervise a 
+     * to users 1. with the observer role's VIEW_INV permission and 2. supervise a
      * client requested invoice and are an active current user for these client's
      * invoices.
      */
@@ -4204,10 +4204,10 @@ echo file_get_contents($temp_aliase, true);
                 && !($this->userService->hasPermission(Permissions::EDIT_INV))
                 // the invoice  is not a draft i.e. has been sent
                 && !($statusId === 1)
-                // the invoice is intended for the current user        
+                // the invoice is intended for the current user
                 && ($inv->getUserId() === $this->userService->getUser()?->getId())
                 // the invoice client is associated with the above user
-                // the observer user may be paying for more than one client    
+                // the observer user may be paying for more than one client
                 && ($ucR->repoUserClientqueryCount($inv->getUserId(),
                                                 $inv->getClientId()) > 0)) {
                 $userInv = $uiR->repoUserInvUserIdquery($inv->getUserId());
@@ -4219,7 +4219,7 @@ echo file_get_contents($temp_aliase, true);
         }
         return false;
     }
-    
+
     private function rbacAccountant() : bool {
         // has accountant role
         if (($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -4230,7 +4230,7 @@ echo file_get_contents($temp_aliase, true);
             return false;
         }
     }
-    
+
     private function rbacAdmin() : bool {
         // has observer role
         if ($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -4240,7 +4240,7 @@ echo file_get_contents($temp_aliase, true);
             return false;
         }
     }
-    
+
     private function pdfNotFoundException(Inv $inv, UCR $ucR, UIR $uiR) : void {
         if (($this->rbacObserver($inv, $ucR, $uiR))
                 ||
@@ -4253,7 +4253,7 @@ echo file_get_contents($temp_aliase, true);
             throw new PdfNotFoundException($this->translator);
         }
     }
- 
+
     private function indexModalCreateRecurringMultiple(IRR $irR): string
     {
         return $this->webViewRenderer->renderPartialAsString(
@@ -4372,7 +4372,7 @@ echo file_get_contents($temp_aliase, true);
                 '_language' => $_language],
         ]);
     }
-    
+
     private function viewPartialItemTable(bool $show_buttons, int $id,
         ACIR $aciR, ACIIR $aciiR, PR $pR, PIR $piR, TASKR $taskR, IIR $iiR,
             IIAR $iiaR, IR $iR, TRR $trR, UNR $uR, ITRR $itrR,
@@ -4445,12 +4445,12 @@ echo file_get_contents($temp_aliase, true);
         $message = $this->translator->translate('draft.number.'
           . $on_off) . str_repeat('&nbsp;', 2)
           . (!empty($setting_url) ? (string) Html::a(Html::tag('i', '',
-                ['class' => 'fa fa-pencil']), $setting_url,
+                ['class' => 'bi bi-pencil']), $setting_url,
                     ['class' => 'btn btn-primary'])
           : '');
         $this->flashMessage($level, $message);
     }
-    
+
     /**
      * Purpose: Warning: Setting 'Mark invoices as sent when copy' should
      * only be ON during development
@@ -4481,7 +4481,7 @@ echo file_get_contents($temp_aliase, true);
               Html::tag(
                   'i',
                   '',
-                  ['class' => 'fa fa-pencil'],
+                  ['class' => 'bi bi-pencil'],
               ),
               $setting_url,
               ['class' =>
@@ -4490,7 +4490,7 @@ echo file_get_contents($temp_aliase, true);
           : '');
         $this->flashMessage($level, $message);
     }
-    
+
     public function optionsDataClientsFilter(IR $iR): array
     {
         $optionsDataClients = [];
@@ -4521,7 +4521,7 @@ echo file_get_contents($temp_aliase, true);
         $optionsDataClients = [];
         $userClients = $ucR->repoClientquery($userId);
         /**
-         * @var UserClient userClient 
+         * @var UserClient userClient
          */
         foreach ($userClients as $userClient) {
             $client = $userClient->getClient();
@@ -4591,7 +4591,7 @@ echo file_get_contents($temp_aliase, true);
         }
         return $optionsDataInvNumbers;
     }
-    
+
     public function optionsDataFamilyNameFilter(IR $iR): array
     {
         $optionsDataFamilyNames = [];
@@ -4615,7 +4615,7 @@ echo file_get_contents($temp_aliase, true);
     /**
      * Note function invsStatusWithSortGuest(
      *         $iR, $status, $user_clients, $sort)
-     * has been used to generate 
+     * has been used to generate
      */
     public function optionsDataCreditInvNumberFilter(IR $iR): array
     {
@@ -4686,14 +4686,14 @@ echo file_get_contents($temp_aliase, true);
     {
         $optionsDataStatus = [];
         $statuses = $iR->getStatuses($this->translator);
-        
+
         /** @var array<int, array<string, string>> $statuses */
         foreach (array_keys($statuses) as $statusId) {
             $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
             $optionsDataStatus[$statusId] = $emoji . ' ' . $label;
         }
-        
+
         return $optionsDataStatus;
     }
 }

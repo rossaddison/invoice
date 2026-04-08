@@ -14,7 +14,7 @@ final class AppNodeModulesAsset extends AssetBundle
     public ?string $baseUrl = '@assetsUrl';
 
     public ?string $sourcePath = '@resources/asset';
-    
+
     public bool $cdn = false;
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */

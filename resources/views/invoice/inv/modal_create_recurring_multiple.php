@@ -24,8 +24,8 @@ declare(strict_types=1);
                     <?= $translator->translate('create.recurring'); ?>
                </h5>
                <button
-                   type="button" 
-                   class="btn-close" 
+                   type="button"
+                   class="btn-close"
                    data-bs-dismiss="modal"
                    aria-label="Close">
                </button>
@@ -64,10 +64,10 @@ declare(strict_types=1);
                         </div>
                     </div>
                     <div class="form-group">
-                        <label 
+                        <label
                             for="recur_next_date"
                             class="label-info">
-                                <?= $translator->translate('start') 
+                                <?= $translator->translate('start')
                                     . '➕'
                                     . $translator->translate('every')
                                     . '🟰'
@@ -87,24 +87,24 @@ declare(strict_types=1);
                                    autocomplete="off">
                         </div>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <!-- inv.js superceded by typescript/invoice.ts =>
-                    create_recurring_confirm_multiple 
+                    create_recurring_confirm_multiple
                     => invrecurring/multiple -->
-                    <button 
+                    <button
                         class="create_recurring_confirm_multiple btn btn-success"
                         id="create_recurring_confirm_multiple"
                         type="button">
-                        <i class="fa fa-check"></i>
+                        <i class="bi bi-check-lg"></i>
                              <?= $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger"
                             type="button"
                             data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i>
+                        <i class="bi bi-x-lg"></i>
                              <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>

@@ -412,7 +412,7 @@ a.list-group-item {
     &.active {
       background-color: $state-warning-bg;
     }
-    
+
     &.active:hover,
     &.active:focus {
       background-color: darken($state-warning-bg, 5%);
@@ -423,7 +423,7 @@ a.list-group-item {
     &.active {
       background-color: $state-danger-bg;
     }
-    
+
     &.active:hover,
     &.active:focus {
       background-color: darken($state-danger-bg, 5%);

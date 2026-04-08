@@ -79,7 +79,7 @@ class Party implements XmlSerializable
  * For Danish Suppliers it is mandatory to use schemeID when
  * PartyIdentification/ID is used for AccountingCustomerParty or
  * AccountingSupplierParty
- * Related logic: 
+ * Related logic:
  * https://github.com/search?q=org%3AOpenPEPPOL+PartyIdentification&type=code
  */
             if (null !== $this->partyIdentificationSchemeId) {

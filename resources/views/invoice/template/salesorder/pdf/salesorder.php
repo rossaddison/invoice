@@ -39,10 +39,10 @@ $vat = $s->getSetting('enable_vat_registration');
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">    
-</head>    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
-<header class="clearfix">    
+<header class="clearfix">
     <?= $company_logo_and_address; ?>
     <div id="client">
         <div>
@@ -102,7 +102,7 @@ if (strlen($clientPhone = $salesorder->getClient()?->getClientPhone() ?? '') > 0
                     <?= $salesorder->getDateExpires()->format('Y-m-d'); ?>
                 </td>
             </tr>
-            <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>    
+            <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>
             }
         </table>
     </div>
@@ -119,11 +119,11 @@ if (strlen($clientPhone = $salesorder->getClient()?->getClientPhone() ?? '') > 0
             <?php if ($show_item_discounts) : ?>
                 <th class="item-discount text-right"><?= Html::encode($translator->translate('discount')); ?></th>
             <?php endif; ?>
-            <?php if ($vat === '0') { ?>     
-            <th class="item-price text-right"><?= Html::encode($translator->translate('tax')); ?></th>    
+            <?php if ($vat === '0') { ?>
+            <th class="item-price text-right"><?= Html::encode($translator->translate('tax')); ?></th>
             <?php } else { ?>
-                <th class="item-price text-right"><?= Html::encode($translator->translate('vat.abbreviation')); ?></th>    
-            <?php } ?> 
+                <th class="item-price text-right"><?= Html::encode($translator->translate('vat.abbreviation')); ?></th>
+            <?php } ?>
             <th class="item-total text-right"><?= Html::encode($translator->translate('total')); ?></th>
         </tr>
         </thead>
@@ -264,8 +264,8 @@ if ($items) {
             <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?>
                     class="text-right"><?= Html::encode(
                         $translator->translate('subtotal'),
-                    ); ?></td> 
-            <?php } ?> 
+                    ); ?></td>
+            <?php } ?>
             <td class="text-right"><b><?php echo Html::encode($s->formatCurrency($so_amount->getItemSubtotal())); ?></b></td>
         </tr>
 
@@ -323,9 +323,9 @@ if ($items) {
             </tr>
         <?php }
         } ?>
-            
+
         <?php if (!empty($so_tax_rates) && ($vat === '0')) { ?>
-            
+
         <?php
                         /**
                          * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
@@ -341,7 +341,7 @@ if ($items) {
             </tr>
         <?php endforeach ?>
         <?php } ?>
-        <?php if ($vat == '0') { ?> 
+        <?php if ($vat == '0') { ?>
         <?php if ($salesorder->getDiscountAmount() !== 0.00) : ?>
             <tr>
                 <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?> class="text-right">
@@ -352,7 +352,7 @@ if ($items) {
                 </td>
             </tr>
         <?php endif; ?>
-        <?php } ?>    
+        <?php } ?>
         <tr>
             <td <?php echo($show_item_discounts ? 'colspan="6"' : 'colspan="5"'); ?> class="text-right">
                 <b><?= Html::encode($translator->translate('total')); ?></b>
@@ -376,7 +376,7 @@ if ($items) {
     <?php if ($show_custom_fields) {
         echo $view_custom_fields;
     }
-?>   
+?>
 </footer>
 </body>
 </html>

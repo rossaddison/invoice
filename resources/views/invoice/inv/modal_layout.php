@@ -23,16 +23,16 @@ use Yiisoft\Html\Html;
                     <?= Html::openTag(
                         'button',
                         ['class' => 'btn btn-light',
-                                                            'type' => 'button',
-                                                            'data-bs-dismiss' => 'modal',
-                                                        ],
+                            'type' => 'button',
+                            'data-bs-dismiss' => 'modal',
+                        ],
                     ); ?>
-                        <?= '❌'; ?>        
+                        <?= '❌'; ?>
                     <?= Html::closeTag('button'); ?>
                 <?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'modal-body']); ?>
-                <?php echo $form; ?>    
+                <?php echo $form; ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

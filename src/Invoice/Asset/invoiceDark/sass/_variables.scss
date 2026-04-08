@@ -184,7 +184,7 @@ $btn-border-radius-small:        $border-radius-small !default;
 //== Forms
 //
 //##
- 
+
 //** `<input>` background color
 $input-bg:                       $gray !default; // #fff
 //** `<input disabled>` background color
@@ -208,7 +208,7 @@ $input-border-radius-small:      $border-radius-small !default;
 $input-border-focus:             #66afe9 !default;
 
 //** Placeholder text color
-$input-color-placeholder:        $text-color !default; //$gray-light 
+$input-color-placeholder:        $text-color !default; //$gray-light
 
 //** Default `.form-control` height
 $input-height-base:              ($line-height-computed + ($padding-base-vertical * 2) + 2) !default;
@@ -396,12 +396,12 @@ $navbar-default-toggle-border-color:       darken($navbar-default-bg, 8%) !defau
 //=== Inverted navbar
 // Reset inverted navbar basics
 
-/** Due to an error in layout/views/includes/navbar.php 
+/** Due to an error in layout/views/includes/navbar.php
     <nav class="navbar navbar-inverse" role="navigation"> which should be
     <nav class="navbar navbar-default" role="navigation">!
     => therefor I changed "navbar-inverse colors" to "navbar-default colors"!
-**/ 
-/*   
+**/
+/*
 $navbar-inverse-color:                      #ccc !default;
 $navbar-inverse-bg:                         $brand-primary !default;
 $navbar-inverse-border:                     darken($navbar-inverse-bg, 10%) !default;

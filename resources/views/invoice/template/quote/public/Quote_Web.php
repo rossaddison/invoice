@@ -60,26 +60,26 @@ $vat = $s->getSetting('enable_vat_registration');
             <div class="btn-group">
                 <?php
                     if (in_array($quote->getStatusId(), [2, 3, 5]) && $quote->getSoId() === '0') : ?>
-                    <?= 
+                    <?=
 //  src/typescript/quote.ts#quote_with_purchase_order_number_confirm,
 //  .quote_with_purchase_order_number_confirm ...
 //  handleQuotePurchaseOrderConfirm ...
 //  'quote/approve'
                         $modal_purchase_order_number;
                     ?>
-                    <a href="#purchase-order-number" data-bs-toggle="modal" 
+                    <a href="#purchase-order-number" data-bs-toggle="modal"
                        class="btn btn-warning">
-                        <i class="fa fa-check"></i><?= $translator->translate('quote.approve'); ?>
+                        <i class="bi bi-check-lg"></i><?= $translator->translate('quote.approve'); ?>
                     </a>
-                <?php endif; ?>                
+                <?php endif; ?>
                 <?php
                     // Only show the reject button if it was not previously approved ie there is no sales order id attached to this quote
                     // if there is a sales order id (ie approved previously) the client can reject the subsequent sales order only
                     if ($quote->getStatusId() !== 4 && $quote->getStatusId() !== 5 && $quote->getSoId() === '0') { ?>
                     <a href="<?= $urlGenerator->generate('quote/reject', ['url_key' => $quote->getUrlKey()]); ?>" class="btn btn-danger ajax-loader">
-                        <i class="fa fa-check"></i><?= $translator->translate('quote.reject'); ?>
+                        <i class="bi bi-check-lg"></i><?= $translator->translate('quote.reject'); ?>
                     </a>
-                <?php } ?>                
+                <?php } ?>
                 <?php
                     // Show an approved message if the quote is approved
                     if ($quote->getStatusId()  === 4) :  ?>
@@ -94,13 +94,13 @@ $vat = $s->getSetting('enable_vat_registration');
                     // Show a canceled message if the quote has been canceled by the company
                     if ($quote->getStatusId() === 6) :  ?>
                     <label class="btn btn-danger" disabled><?= $translator->translate('canceled'); ?></label>
-                <?php endif; ?>    
+                <?php endif; ?>
             </div>
 
         </div>
 
         <hr>
-        
+
         <?= $alert; ?>
 
         <div class="invoice">
@@ -408,7 +408,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </tr>
                             <?php endforeach;
                             } ?>
-                       
+
                         <tr>
                             <td class="no-bottom-border" colspan="4"></td>
                             <td class="text-right"><?= $translator->translate('discount'); ?>:</td>
@@ -439,9 +439,6 @@ $vat = $s->getSetting('enable_vat_registration');
                     </div>
                 <?php } ?>
             </div>
-            
-             <?php //TODO attachments?>            
-            
         </div><!-- .quote-items -->
     </div><!-- #content -->
 </div>

@@ -28,7 +28,7 @@ $this->beginPage();
 <html lang="<?= $translator->translate('cldr'); ?>">
 
 <body>
-<?php $this->beginBody() ?>   
+<?php $this->beginBody() ?>
 <h3 class="report_title">
     <?= Html::encode($translator->translate('sales.by.date')); ?>
     <br/>
@@ -71,7 +71,7 @@ $this->beginPage();
         </td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;"><b>
             <?= Html::encode($n->formatCurrency($result['period_total_paid'] ?? 0.00)); ?></b>
-        </td>       
+        </td>
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
@@ -86,7 +86,7 @@ $this->beginPage();
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
             <?= Html::encode($n->formatCurrency($result['quarters']['first']['sales_with_tax'] ?? 0.00)); ?></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
-            <?= Html::encode($n->formatCurrency($result['quarters']['first']['paid'] ?? 0.00)); ?></td>       
+            <?= Html::encode($n->formatCurrency($result['quarters']['first']['paid'] ?? 0.00)); ?></td>
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
@@ -102,7 +102,7 @@ $this->beginPage();
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
             <?= Html::encode($n->formatCurrency($result['quarters']['second']['sales_with_tax'] ?? 0.00)); ?></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
-            <?= Html::encode($n->formatCurrency($result['quarters']['second']['paid'] ?? 0.00)); ?></td>       
+            <?= Html::encode($n->formatCurrency($result['quarters']['second']['paid'] ?? 0.00)); ?></td>
     </tr>
     <tr>
         <td style="width:20%;text-align:left;border-bottom: 1px solid black;">
@@ -118,7 +118,7 @@ $this->beginPage();
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
             <?= Html::encode($n->formatCurrency($result['quarters']['third']['sales_with_tax'] ?? 0.00)); ?></td>
         <td style="width:20%;text-align:right;border-bottom: 1px solid black;">
-            <?= Html::encode($n->formatCurrency($result['quarters']['third']['paid'] ?? 0.00)); ?></td>       
+            <?= Html::encode($n->formatCurrency($result['quarters']['third']['paid'] ?? 0.00)); ?></td>
     </tr>
     <tr>
         <td  style="width:20%;text-align:left;border-bottom: 1px solid black;">
@@ -134,7 +134,7 @@ $this->beginPage();
         <td  style="width:20%;text-align:right;border-bottom: 1px solid black;">
             <?= Html::encode($n->formatCurrency($result['quarters']['fourth']['sales_with_tax'] ?? 0.00)); ?></td>
         <td  style="width:20%;text-align:right;border-bottom: 1px solid black;">
-            <?= Html::encode($n->formatCurrency($result['quarters']['fourth']['paid'] ?? 0.00)); ?></td>       
+            <?= Html::encode($n->formatCurrency($result['quarters']['fourth']['paid'] ?? 0.00)); ?></td>
     </tr>
     <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
     <?php } ?>

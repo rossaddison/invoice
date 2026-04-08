@@ -10,7 +10,7 @@ use Yiisoft\Html\Html;
  * @var array $locations
  */
 
-?>   
+?>
 <?php
     /**
      * @var App\Invoice\Entity\DeliveryLocation $delivery_location

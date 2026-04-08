@@ -179,7 +179,7 @@ final class ItemsCommand extends Command
             'With Item Tax',
             "\033[32m" . $this->format($withItemTax) . "\033[0m",
         ]);
-        
+
         // Display Invoice Taxes right after 'With Item Tax'
         $table->addRow(new TableSeparator());
         $totalInvTaxRate = 0;
@@ -194,7 +194,7 @@ final class ItemsCommand extends Command
             'Invoice Taxes (20% ' . $this->format($firstRate->getInvTaxRateAmount() ?? 0.00) . ', 15% ' . $this->format($secondRate->getInvTaxRateAmount() ?? 0.00) . ')',
             $this->format($totalInvTaxRate),
         ]);
-        
+
         // Add InvAllowanceCharge section (shipping, handling, etc.)
         $table->addRow(new TableSeparator());
         $invAllowanceChargeTotal = 0;
@@ -204,7 +204,7 @@ final class ItemsCommand extends Command
             $allowanceCharge = $this->allowanceCharges[$offSet] ?? null;
             $isCharge = $allowanceCharge?->getIdentifier() ?? false;
             $reason = $allowanceCharge?->getReason() ?? 'N/A';
-            
+
             if ($isCharge) {
                 $table->addRow([
                     'Add: ' . $reason . ' (charge)',
@@ -287,7 +287,7 @@ final class ItemsCommand extends Command
             $totalDiscount = $quantity * $discount;
             $itemTax = $netDiscount * ($percentage / 100);
             $itemTotal = $netDiscount + $itemTax;
-            
+
             // Check if this item has any allowances or charges
             $itemId = $currentIndex + 1;
             $hasAllowancesOrCharges = false;
@@ -297,11 +297,11 @@ final class ItemsCommand extends Command
                     break;
                 }
             }
-            
+
             // Use purple color for items without allowances/charges
             $colorCode = $hasAllowancesOrCharges ? '' : "\033[35m";
             $colorEnd = $hasAllowancesOrCharges ? '' : "\033[0m";
-            
+
             $table->addRow(
                 [
                     $colorCode . ($invItem->getName() ?? 'None Available') . $colorEnd,
@@ -323,7 +323,7 @@ final class ItemsCommand extends Command
             $itemAllowanceTax = 0;
             $itemChargeAmount = 0;
             $itemChargeTax = 0;
-            
+
             foreach ($this->invItemAllowanceCharges as $invItemAllowanceCharge) {
                 if ($invItemAllowanceCharge->getInvItemId() == (string)$itemId) {
                     $allowanceChargeId = (int)$invItemAllowanceCharge->getAllowanceChargeId();
@@ -332,7 +332,7 @@ final class ItemsCommand extends Command
                     $reason = $allowanceCharge?->getReason() ?? 'N/A';
                     $amount = (float)$invItemAllowanceCharge->getAmount();
                     $vatOrTax = (float)$invItemAllowanceCharge->getVatOrTax();
-                    
+
                     // Get the tax rate percentage from the AllowanceCharge entity
                     $taxRateId = (int)($allowanceCharge?->getTaxRateId() ?? 1);
                     $taxRatePercent = 0;
@@ -342,13 +342,13 @@ final class ItemsCommand extends Command
                             break;
                         }
                     }
-                    
+
                     if ($isCharge) {
                         $itemChargeAmount += $amount;
                         $itemChargeTax += $vatOrTax;
                         $chargeTotal = $amount + $vatOrTax;
                         $table->addRow([
-                            '  → ' . $reason,
+                            '  â†’ ' . $reason,
                             '',
                             '',
                             '',
@@ -365,7 +365,7 @@ final class ItemsCommand extends Command
                         $itemAllowanceTax += $vatOrTax;
                         $allowanceTotal = $amount + $vatOrTax;
                         $table->addRow([
-                            '  → ' . $reason,
+                            '  â†’ ' . $reason,
                             '',
                             '',
                             '',
@@ -380,12 +380,12 @@ final class ItemsCommand extends Command
                     }
                 }
             }
-            
+
             // Add subtotal row if there are any allowances or charges
             if ($itemAllowanceAmount > 0 || $itemChargeAmount > 0) {
                 $subtotalTax = $itemTax + $itemChargeTax - $itemAllowanceTax;
                 $subtotalAmount = $itemTotal + ($itemChargeAmount + $itemChargeTax) - ($itemAllowanceAmount + $itemAllowanceTax);
-                
+
                 $table->addRow([
                     '  Subtotal',
                     '',
@@ -399,7 +399,7 @@ final class ItemsCommand extends Command
                     "\033[35m" . $this->format($subtotalTax) . "\033[0m",
                     "\033[35m" . $this->format($subtotalAmount) . "\033[0m",
                 ]);
-                
+
                 // Use the subtotal for grand total calculation
                 $grandTotal += $subtotalAmount;
             } else {
@@ -616,7 +616,7 @@ final class ItemsCommand extends Command
             $itemDiscountTotal = $itemDiscountTotal + ($invItemAmount->getDiscount() ?? 0.00);
             $itemTaxTotal = $itemTaxTotal + ($invItemAmount->getTaxTotal() ?? 0.00);
         }
-        
+
         // Add item-level allowances and charges
         $itemAllowanceChargeAmountTotal = 0;
         $itemAllowanceChargeTaxTotal = 0;
@@ -626,7 +626,7 @@ final class ItemsCommand extends Command
             $isCharge = $allowanceCharge?->getIdentifier() ?? false;
             $amount = (float)$invItemAllowanceCharge->getAmount();
             $tax = (float)$invItemAllowanceCharge->getVatOrTax();
-            
+
             if ($isCharge) {
                 $itemAllowanceChargeAmountTotal += $amount;
                 $itemAllowanceChargeTaxTotal += $tax;
@@ -635,12 +635,12 @@ final class ItemsCommand extends Command
                 $itemAllowanceChargeTaxTotal -= $tax;
             }
         }
-        
+
         $itemAfterDiscount = $itemSubTotal - $itemDiscountTotal + $itemAllowanceChargeAmountTotal;
         $itemTaxTotalWithAllowanceCharges = $itemTaxTotal + $itemAllowanceChargeTaxTotal;
         $invAmount->setItemSubtotal($itemAfterDiscount);
         $invAmount->setItemTaxTotal($itemTaxTotalWithAllowanceCharges);
-        
+
         // Call addInvTaxRates to populate invoice tax rates (returns void)
         if ($summaryTaxesExist) {
             $this->addInvTaxRates(
@@ -660,7 +660,7 @@ final class ItemsCommand extends Command
     ): void {
         /** Assume Invoice Taxes are applied to the 'With Item Tax' amount (item subtotal + item tax) **/
         $baseAmount = $invAmountItemSubTotal + $invAmountItemTaxTotal;
-        
+
         $invTaxRateTwenty = new InvTaxRate();
         $invTaxRateTwenty->setInvId($this->invId);
         $invTaxRateTwenty->setTaxRateId(2);
@@ -721,7 +721,7 @@ final class ItemsCommand extends Command
     private function addAllowanceCharges(): void
     {
         $this->allowanceChargeId = 1;
-        
+
         // Allowance (discount) - level 0 (Overall/Invoice level)
         $allowance = new AllowanceCharge();
         $allowance->setId($this->allowanceChargeId++);
@@ -796,16 +796,16 @@ final class ItemsCommand extends Command
     {
         $itemLevelAllowanceChargeId = 4; // References the "Item Allowance" AllowanceCharge
         $itemLevelChargeId = 5; // References the "Item Charge" AllowanceCharge
-        
+
         foreach (array_keys($this->invItems) as $index) {
             $invItemAmount = $this->invItemAmounts[(int) $index] ?? null;
-            
+
             // Add an allowance (discount) to some items
             if (((int) $index) % 2 === 0) {
                 $amount = (float) $this->faker->numberBetween(100, 300) / 100; // Random 1.00 to 3.00
                 $taxRate = 0.15; // 15% tax rate for allowances
                 $vatOrTax = $amount * $taxRate;
-                
+
                 $invItemAllowanceCharge = new InvItemAllowanceCharge();
                 $invItemAllowanceCharge->setInvId($this->invId);
                 $invItemAllowanceCharge->setInvItemId(((int) $index) + 1);
@@ -813,7 +813,7 @@ final class ItemsCommand extends Command
                 $invItemAllowanceCharge->setAmount($amount);
                 $invItemAllowanceCharge->setVatOrTax($vatOrTax);
                 $this->invItemAllowanceCharges[] = $invItemAllowanceCharge;
-                
+
                 // Update InvItemAmount allowance field and recalculate total
                 if ($invItemAmount) {
                     $invItemAmount->setAllowance($amount);
@@ -822,13 +822,13 @@ final class ItemsCommand extends Command
                     $invItemAmount->setTotal($currentTotal - $amount - $vatOrTax);
                 }
             }
-            
+
             // Add a charge (surcharge) to some items
             if (((int)$index) % 3 === 0) {
                 $amount = (float) $this->faker->numberBetween(100, 200) / 100; // Random 1.00 to 2.00
                 $taxRate = 0.15; // 15% tax rate for charges
                 $vatOrTax = $amount * $taxRate;
-                
+
                 $invItemCharge = new InvItemAllowanceCharge();
                 $invItemCharge->setInvId($this->invId);
                 $invItemCharge->setInvItemId(((int)$index) + 1);
@@ -836,7 +836,7 @@ final class ItemsCommand extends Command
                 $invItemCharge->setAmount($amount);
                 $invItemCharge->setVatOrTax($vatOrTax);
                 $this->invItemAllowanceCharges[] = $invItemCharge;
-                
+
                 // Update InvItemAmount charge field and recalculate total
                 if ($invItemAmount) {
                     $invItemAmount->setCharge($amount);

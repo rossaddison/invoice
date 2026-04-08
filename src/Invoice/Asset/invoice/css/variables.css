@@ -2,17 +2,17 @@
 |   =========================================================
 |   CSS Variables - Yii3i Reorganized CSS
 |   =========================================================
-|   
+|
 |   This file contains CSS custom properties (variables) for:
 |   - Color scheme and theming
-|   - Typography settings  
+|   - Typography settings
 |   - Spacing and sizing
 |   - Border radius and shadows
-|   
-|   Original sources: 
+|
+|   Original sources:
 |   - src/Invoice/Asset/invoice/scss/_ip_variables.scss
 |   - Various color definitions throughout style.css
-|   
+|
 |   TODO: Migrate remaining hard-coded values from existing CSS files
 */
 
@@ -64,7 +64,7 @@
 
   /* Spacing System */
   --spacing-xs: 3px;
-  --spacing-sm: 5px;  
+  --spacing-sm: 5px;
   --spacing-md: 10px;
   --spacing-lg: 15px;
   --spacing-xl: 20px;
@@ -139,7 +139,7 @@
 
 /* TODO: Additional variables to extract from style.css:
  * - Datepicker specific colors and sizes
- * - Modal specific dimensions  
+ * - Modal specific dimensions
  * - Alert/notification colors
  * - Progress bar colors
  * - Label/badge colors for different states

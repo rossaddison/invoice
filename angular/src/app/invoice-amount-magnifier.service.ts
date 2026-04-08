@@ -17,8 +17,8 @@ interface MagnifierStyles {
   providedIn: 'root'
 })
 export class InvoiceAmountMagnifierService implements OnDestroy {
-  private magnificationFactor: number = 1.4;
-  private animationDuration: number = 250;
+  private readonly magnificationFactor: number = 1.4;
+  private readonly animationDuration: number = 250;
   private observer?: MutationObserver;
   private initialized: boolean = false;
 
@@ -49,16 +49,16 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
   private attachMagnifiersToAmounts(): void {
     // Target amount elements in invoice table
     const amountSelectors: string[] = [
-      '.label.label-success', // Total amounts (positive)
-      '.label.label-warning', // Zero amounts  
-      '.label.label-danger'   // Paid amounts (incomplete)
+      '.badge.text-bg-success', // Total amounts (positive)
+      '.badge.text-bg-warning', // Zero amounts
+      '.badge.text-bg-danger'   // Paid amounts (incomplete)
     ];
 
     amountSelectors.forEach(selector => {
       const elements = document.querySelectorAll(selector);
       elements.forEach((element: Element) => {
         const htmlElement = element as HTMLElement;
-        
+
         if (this.isAmountElement(htmlElement) && !htmlElement.dataset['magnifierInitialized']) {
           this.addMagnificationBehavior(htmlElement);
           htmlElement.dataset['magnifierInitialized'] = 'true';
@@ -78,14 +78,14 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
     // Determine colors based on label type
     let borderColor = '#007bff';
     let bgColor = 'rgba(255, 255, 255, 0.95)';
-    
-    if (element.classList.contains('label-success')) {
+
+    if (element.classList.contains('text-bg-success')) {
       borderColor = '#28a745';
       bgColor = '#d4edda';
-    } else if (element.classList.contains('label-warning')) {
+    } else if (element.classList.contains('text-bg-warning')) {
       borderColor = '#ffc107';
       bgColor = '#fff3cd';
-    } else if (element.classList.contains('label-danger')) {
+    } else if (element.classList.contains('text-bg-danger')) {
       borderColor = '#dc3545';
       bgColor = '#f8d7da';
     }
@@ -120,7 +120,7 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
       }
     });
 
-    // Mouse leave event  
+    // Mouse leave event
     element.addEventListener('mouseleave', () => {
       if (isHovered) {
         isHovered = false;
@@ -144,7 +144,7 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
   private applyMagnification(element: HTMLElement, originalStyles: MagnifierStyles, borderColor: string, bgColor: string): void {
     const currentFontSize = Number.parseFloat(originalStyles.fontSize);
     const newFontSize = currentFontSize * this.magnificationFactor;
-    
+
     element.style.fontSize = `${newFontSize}px`;
     element.style.fontWeight = 'bold';
     element.style.backgroundColor = bgColor;
@@ -159,7 +159,7 @@ export class InvoiceAmountMagnifierService implements OnDestroy {
 
   private removeMagnification(element: HTMLElement, originalStyles: MagnifierStyles): void {
     const propertiesToRestore = ['fontSize', 'fontWeight', 'backgroundColor', 'border', 'borderRadius', 'padding', 'zIndex', 'position', 'transform', 'boxShadow'];
-    
+
     propertiesToRestore.forEach(property => {
         element.style.setProperty(property, originalStyles[property as keyof MagnifierStyles]);
     });

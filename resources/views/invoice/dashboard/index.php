@@ -59,7 +59,7 @@ use Yiisoft\Html\Html;
                        disabled data-bs-toggle = "tooltip"
                        title="<?= $translator->translate('add.client'); ?>"
                        style="text-decoration:none">
-                        <i class="fa fa-plus"></i>
+                        <i class="bi bi-plus-lg"></i>
                         <?= $translator->translate('client'); ?>
                     </a>
                     <?php } else { ?>
@@ -67,7 +67,7 @@ use Yiisoft\Html\Html;
                             ['origin' => 'dashboard']); ?>"
                         class="btn btn-success"
                         style="text-decoration:none">
-                        <i class="fa fa-plus"></i>
+                        <i class="bi bi-plus-lg"></i>
                         <?= $translator->translate('client'); ?>
                     </a>
                     <?php } ?>
@@ -78,7 +78,7 @@ use Yiisoft\Html\Html;
                        disabled data-bs-toggle = "tooltip"
                        title="<?= $translator->translate('add.client'); ?>"
                        style="text-decoration:none">
-                       <i class="fa fa-plus"></i>
+                       <i class="bi bi-plus-lg"></i>
                        <?= $translator->translate('quote'); ?>
                     </a>
                     <?php } else { ?>
@@ -86,7 +86,7 @@ use Yiisoft\Html\Html;
                             ['origin' => 'dashboard']);?>"
                        class="btn btn-success"
                        style="text-decoration:none">
-                       <i class="fa fa-plus"></i>
+                       <i class="bi bi-plus-lg"></i>
                        <?= $translator->translate('quote'); ?>
                     </a>
                     <?php } ?>
@@ -97,7 +97,7 @@ use Yiisoft\Html\Html;
                        disabled data-bs-toggle = "tooltip"
                        title="<?= $translator->translate('add.client'); ?>"
                        style="text-decoration:none">
-                       <i class="fa fa-plus"></i>
+                       <i class="bi bi-plus-lg"></i>
                        <?= $translator->translate('invoice'); ?>
                     </a>
                     <?php } else { ?>
@@ -105,13 +105,13 @@ use Yiisoft\Html\Html;
                             ['origin' => 'dashboard']);?>"
                        class="btn btn-success"
                        style="text-decoration:none">
-                       <i class="fa fa-plus"></i>
+                       <i class="bi bi-plus-lg"></i>
                        <?= $translator->translate('invoice'); ?>
                     </a>
                     <?php } ?>
                     <a href="<?= $urlGenerator->generate('payment/add') ; ?>"
                        class="btn btn-default" style="text-decoration:none">
-                       <i class="fa fa-credit-card fa-margin"></i>
+                       <i class="bi bi-credit-card"></i>
                        <span class="hidden-xs">
                             <?= $translator->translate('enter.payment'); ?>
                        </span>
@@ -129,7 +129,7 @@ use Yiisoft\Html\Html;
                  class="panel panel-default overview">
                 <div class="panel-heading">
                     <b>
-                        <i class="fa fa-bar-chart fa-margin"></i>
+                        <i class="bi bi-bar-chart"></i>
                         <?= $translator->translate('quote.overview'); ?>
                     </b>
                     <span class="pull-right text-muted">
@@ -176,14 +176,14 @@ use Yiisoft\Html\Html;
         </div>
 <?php
     // Invoice Overview
-?>        
+?>
         <div class="col-xs-12 col-md-6">
 
             <div id="panel-invoice-overview" class="panel panel-default overview">
 
                 <div class="panel-heading">
                     <b>
-                        <i class="fa fa-bar-chart fa-margin"></i>
+                        <i class="bi bi-bar-chart"></i>
                             <?= $translator->translate('overview'); ?>
                     </b>
                     <span class="pull-right text-muted">
@@ -235,7 +235,7 @@ use Yiisoft\Html\Html;
             <div id="panel-recent-quotes" class="panel panel-default">
                 <div class="panel-heading">
                     <b>
-                        <i class="fa fa-history fa-margin"></i>
+                        <i class="bi bi-clock-history"></i>
                         <?= $translator->translate('recent.quotes'); ?>
                     </b>
                 </div>
@@ -274,9 +274,8 @@ use Yiisoft\Html\Html;
                             <tr>
                                 <td>
                                 <?php if (
-                                null !== $statusId = $quote->getStatusId()) { ?>    
-                                    <span class="label label-
-                                    <?= $qR->getSpecificStatusArrayClass(
+                                null !== $statusId = $quote->getStatusId()) { ?>
+                                    <span class="badge text-bg-<?= $qR->getSpecificStatusArrayClass(
                                             (string) $statusId); ?>">
                                         <?= $qR->getSpecificStatusArrayLabel(
                                                 (string) $statusId); ?>
@@ -305,12 +304,12 @@ use Yiisoft\Html\Html;
                                        class="btn btn-default"
                                        style="text-decoration:none">
             <?= Html::encode($clientHelper->formatClient($quote->getClient())); ?>
-                                    </a>                                   
+                                    </a>
                                 </td>
                                 <td class="amount">
 <?php $quote_amount = (($qaR->repoQuoteAmountCount((string) $quote->getId()) > 0) ?
         $qaR->repoQuotequery((string) $quote->getId()) : null) ?>
-<?= $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00) ?>                                    
+<?= $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00) ?>
                                 </td>
                                 <td style="text-align: center;">
                                     <a href="<?= $urlGenerator->generate(
@@ -319,7 +318,7 @@ use Yiisoft\Html\Html;
                                        title="<?= $translator->translate('download.pdf'); ?>"
                                        class="btn btn-default"
                                        style="text-decoration:none">
-                                       <i class="fa fa-file-pdf-o"></i>
+                                       <i class="fa bi-file-pdf"></i>
                                     </a>
                                 </td>
                                 <td style="text-align: center;">
@@ -330,11 +329,11 @@ use Yiisoft\Html\Html;
                                                'download.pdf'); ?>"
                                        class="btn btn-default"
                                        style="text-decoration:none">
-                                       <i class="fa fa-file-pdf-o"></i>
+                                       <i class="fa bi-file-pdf"></i>
                                     </a>
                                 </td>
                             </tr>
-                        <?php } ?>           
+                        <?php } ?>
                         </tbody>
                     </table>
                 </div>
@@ -343,14 +342,14 @@ use Yiisoft\Html\Html;
         </div>
 <?php
     // Recent Invoices
-?>        
+?>
         <div class="col-xs-12 col-md-6">
 
             <div id="panel-recent-invoices-1" class="panel panel-default">
 
                 <div class="panel-heading">
                     <b>
-                        <i class="fa fa-history fa-margin"></i>
+                        <i class="bi bi-clock-history"></i>
                         <?= $translator->translate('recent.invoices'); ?>
                     </b>
                 </div>
@@ -394,25 +393,15 @@ use Yiisoft\Html\Html;
                             <tr>
                                 <td>
                  <?php if (null !== ($statusId = $invoice->getStatusId())) { ?>
-                                    <span class="label label-<?=
+                                    <span class="badge text-bg-<?=
                                 $iR->getSpecificStatusArrayClass($statusId); ?>">
                         <?= $iR->getSpecificStatusArrayLabel((string) $statusId);
-     if (null !== $iaR->repoCreditInvoicequery((string) $invoice->getId())) { ?>
-                                        &nbsp;
-                                        <i class="fa fa-credit-invoice"
-                                           title="<?= $translator->translate(
-                                                    'credit.invoice') ?>"></i>
-                                            <?php } ?>
-
-                                            <?php if ($invoice->getIsReadOnly()) { ?>
-                                        &nbsp;
-                                        <i class="fa fa-read-only"
-                                           title="<?= $translator->translate(
-                                                   'read.only') ?>"></i>
-                                            <?php } ?>
+    if (null !== $iaR->repoCreditInvoicequery((string) $invoice->getId())) { 
+        $translator->translate('credit.invoice'); } 
+    if ($invoice->getIsReadOnly()) { $translator->translate('read.only'); } ?>
                <?php if (($irR->repoCount((string) $invoice->getId()) > 0)) { ?>
                                         &nbsp;
-                                        <i class="fa fa-refresh"
+                                        <i class="bi bi-arrow-clockwise"
                                            title="<?php $translator->translate(
                                                    'recurring') ?>"></i>
                                             <?php } ?>
@@ -446,8 +435,8 @@ use Yiisoft\Html\Html;
                                 <td class="amount">
     <?php $inv_amount = (($iaR->repoInvAmountCount((int) $invoice->getId()) > 0)
                         ? $iaR->repoInvquery((int) $invoice->getId()) : null) ?>
-<?= $s->formatCurrency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00) ?> 
-                                </td>                               
+<?= $s->formatCurrency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00) ?>
+                                </td>
                                 <td style="text-align: center;">
                                     <a href="<?= $urlGenerator->generate(
                                             'inv/pdfDashboardIncludeCf',
@@ -456,7 +445,7 @@ use Yiisoft\Html\Html;
                                                'download.pdf'); ?>"
                                        class="btn btn-default"
                                        style="text-decoration:none">
-                                       <i class="fa fa-file-pdf-o"></i>
+                                       <i class="fa bi-file-pdf"></i>
                                     </a>
                                 </td>
                                 <td style="text-align: center;">
@@ -467,7 +456,7 @@ use Yiisoft\Html\Html;
                                                'download.pdf'); ?>"
                                        class="btn btn-default"
                                        style="text-decoration:none">
-                                       <i class="fa fa-file-pdf-o"></i>
+                                       <i class="fa bi-file-pdf"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -487,7 +476,7 @@ use Yiisoft\Html\Html;
                 <div id="panel-projects" class="panel panel-default">
                     <div class="panel-heading">
                         <b>
-                            <i class="fa fa-list fa-margin"></i>
+                            <i class="bi bi-list-ul"></i>
                             <?= $translator->translate('projects'); ?>
                         </b>
                     </div>
@@ -549,7 +538,7 @@ use Yiisoft\Html\Html;
                 <div id="panel-recent-invoices-2" class="panel panel-default">
                      <div class="panel-heading">
                         <b>
-                            <i class="fa fa-check-square-o fa-margin"></i>
+                            <i class="bi bi-check-square"></i>
                             <?= $translator->translate('tasks'); ?>
                         </b>
                     </div>
@@ -590,7 +579,7 @@ use Yiisoft\Html\Html;
                                         <a href="<?= $urlGenerator->generate(
                                                 'task/edit',
                                                 ['id' => $task->getId()]); ?>">
-                                         <?= Html::encode($task->getName()); ?>   
+                                         <?= Html::encode($task->getName()); ?>
                                         </a>
                                     </td>
                                     <td>

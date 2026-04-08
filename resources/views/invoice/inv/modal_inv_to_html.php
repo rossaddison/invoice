@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 // id="inv-to-html" triggered by <a href="#inv-to-html" data-bs-toggle="modal"  style="text-decoration:none"> on views/inv/view.php
 ?>
-   
+
 <div id="inv-to-html" class="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -23,31 +23,31 @@ declare(strict_types=1);
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="control-label">
-                        <?= $translator->translate('custom.fields'); ?>?                
+                        <?= $translator->translate('custom.fields'); ?>?
                     </div>
                     <input type="hidden" name="inv_id" id="inv_id" value="<?php echo $inv->getId(); ?>">
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <button type="button" data-bs-toggle = "tooltip" title="html">
                     <div>
-                        <i class="fa fa-code"></i>
+                        <i class="bi bi-code-slash"></i>
                         <?php if ((!empty($s->getSetting('pdf_html_inv'))) && ($s->getSetting('pdf_html_inv') === '1')) { ?>
-                            <i class="fa fa-check"></i>
+                            <i class="bi bi-check-lg"></i>
                         <?php } else {?>
-                            <i class="fa fa-times"></i>
+                            <i class="bi bi-x-lg"></i>
                         <?php } ?>
                     </div>
                     </button>
                     <button class="inv_to_html_confirm_with_custom_fields btn btn-success" id="inv_to_html_confirm_with_custom_fields" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('yes'); ?>
+                        <i class="bi bi-check-lg"></i> <?= $translator->translate('yes'); ?>
                     </button>
                     <button class="inv_to_html_confirm_without_custom_fields btn btn-info" id="inv_to_html_confirm_without_custom_fields" type="button">
-                        <i class="fa fa-times"></i> <?= $translator->translate('no'); ?>
-                    </button>                
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('no'); ?>
+                    </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('back'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('back'); ?>
                     </button>
                 </div>
             </div>

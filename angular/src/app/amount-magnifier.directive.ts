@@ -9,7 +9,7 @@ export class AmountMagnifierDirective implements OnInit {
   @Input() animationDuration: number = 300;
   @Input() backgroundColor: string = 'rgba(255, 255, 255, 0.95)';
   @Input() borderColor: string = '#007bff';
-  
+
   private originalStyles: { [key: string]: string } = {};
   private isHovered: boolean = false;
 
@@ -24,7 +24,7 @@ export class AmountMagnifierDirective implements OnInit {
 
   private initializeStyles() {
     const element = this.elementRef.nativeElement;
-    
+
     // Store original styles
     const computedStyle = window.getComputedStyle(element);
     this.originalStyles = {
@@ -76,11 +76,11 @@ export class AmountMagnifierDirective implements OnInit {
 
   private applyMagnification() {
     const element = this.elementRef.nativeElement;
-    
+
     // Calculate new font size
     const currentFontSize = Number.parseFloat(this.originalStyles['fontSize']);
     const newFontSize = currentFontSize * this.magnificationFactor;
-    
+
     // Apply magnified styles
     this.renderer.setStyle(element, 'font-size', `${newFontSize}px`);
     this.renderer.setStyle(element, 'font-weight', 'bold');
@@ -96,7 +96,7 @@ export class AmountMagnifierDirective implements OnInit {
 
   private removeMagnification() {
     const element = this.elementRef.nativeElement;
-    
+
     // Restore original styles
     Object.keys(this.originalStyles).forEach(property => {
       this.renderer.setStyle(element, property, this.originalStyles[property]);

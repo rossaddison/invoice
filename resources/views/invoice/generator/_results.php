@@ -21,7 +21,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 <?= Html::tag('h1')
     ->content(Html::encode($translator->translate('generator')));
 ?>
-<?= Html::openTag('div'); ?>    
+<?= Html::openTag('div'); ?>
     <?php
     if ($canEdit) {
         $highlight = PHP_SAPI !== 'cli';

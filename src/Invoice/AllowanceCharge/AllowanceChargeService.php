@@ -37,7 +37,7 @@ final readonly class AllowanceChargeService
             $model->setTaxRateId((int) $array['tax_rate_id']) : '';
         $this->repository->save($model);
     }
-    
+
     private function persist(AC $model, array $array): AC
     {
         $tr = 'tax_rate_id';

@@ -30,7 +30,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>            
+        <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::text($form, 'party_name')
                     ->addInputAttributes(['style' => 'background:lightblue'])
@@ -39,7 +39,7 @@ use Yiisoft\Html\Tag\Form;
                     ->readonly(true);
 ?>
             <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>

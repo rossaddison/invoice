@@ -305,7 +305,7 @@ class Quote
     {
         $this->discount_amount = $discount_amount;
     }
-    
+
     public function getUrlKey(): string
     {
         return $this->url_key;

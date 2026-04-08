@@ -77,7 +77,7 @@ use Yiisoft\Html\Tag\Span;
 ?>
 
 <?= Html::openTag('div', ['class' => 'row']); ?>
-    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>        
+    <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Field::text($form, 'email_template_type', theme: 'A')
             ->value(Html::encode('Invoice'))
             ->readonly(true)
@@ -88,7 +88,7 @@ use Yiisoft\Html\Tag\Span;
             ->label($translator->translate('title'))
             ->required(true)
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
             ])
             ->value(Html::encode($form->getEmailTemplateTitle() ?? ''))
             ->placeholder($translator->translate('title'))
@@ -99,7 +99,7 @@ use Yiisoft\Html\Tag\Span;
             ->label($translator->translate('from.name'))
             ->required(true)
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
             ])
             ->value(Html::encode($form->getEmailTemplateFromName() ?? ''))
             ->placeholder($translator->translate('from.name'))
@@ -108,7 +108,7 @@ use Yiisoft\Html\Tag\Span;
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
             <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
-                <?= Html::openTag('fieldset'); ?>    
+                <?= Html::openTag('fieldset'); ?>
                     <?= Html::openTag('h5'); ?>
                         <?= $translator->translate('email.template.from.source'); ?>
                     <?= Html::closeTag('h5'); ?>
@@ -127,20 +127,20 @@ use Yiisoft\Html\Tag\Span;
                         <?= Html::openTag('label', ['for' => 'adminEmail']); ?>
                             <?= $translator->translate('email.template.from.source.admin.email'); ?>
                         <?= Html::closeTag('label'); ?>
-                        
+
                         <?= str_repeat("&nbsp;", 2); ?>
                         <?= Html::openTag('br'); ?>
-                        
+
                         <?= Html::tag('input', '', [
                             'type' => 'radio',
                             'id' => 'senderEmail',
                             'name' => 'from_email',
                             'value' => $sender_email]); ?>
-                        
+
                         <?= Html::openTag('label', ['for' => 'senderEmail']); ?>
                             <?= $translator->translate('email.template.from.source.sender.email'); ?>
                         <?= Html::closeTag('label'); ?>
-                        
+
                         <?= str_repeat("&nbsp;", 2); ?>
                         <?= Html::openTag('br'); ?>
                         <?= Html::tag('input', '', [
@@ -148,7 +148,7 @@ use Yiisoft\Html\Tag\Span;
                             'id' => 'fromEmail',
                             'name' => 'from_email',
                             'value' => $from_email]); ?>
-                        
+
                         <?= Html::openTag('label', ['for' => 'fromEmail']); ?>
                             <?= $translator->translate('email.template.from.source.froms.email'); ?>
                         <?= Html::closeTag('label'); ?>
@@ -156,7 +156,7 @@ use Yiisoft\Html\Tag\Span;
                         <?= Field::text($form, 'email_template_from_email')
                             ->label($translator->translate('from.email'))
                             ->addInputAttributes([
-                                'class' => 'form-control',
+                                'class' => 'form-control form-control-lg',
                             ])
                             ->value(Html::encode($form->getEmailTemplateFromEmail() ?? ''))
                             ->placeholder($translator->translate('from.email'))
@@ -164,7 +164,7 @@ use Yiisoft\Html\Tag\Span;
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
+        <?= Html::closeTag('div'); ?>
     <?= Html::tag('br'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Field::text($form, 'email_template_cc', theme: 'A')
@@ -186,7 +186,7 @@ use Yiisoft\Html\Tag\Span;
             ])
             ->value(Html::encode($form->getEmailTemplateBcc() ?? ''))
             ->placeholder($translator->translate('bcc'))
-            ->hint($translator->translate('hint.this.field.is.not.required')); ?>         
+            ->hint($translator->translate('hint.this.field.is.not.required')); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
         <?= Field::text($form, 'email_template_subject', theme: 'A')
@@ -197,12 +197,12 @@ use Yiisoft\Html\Tag\Span;
             ])
             ->value(Html::encode($form->getEmailTemplateSubject() ?? ''))
             ->placeholder($translator->translate('subject'))
-            ->hint($translator->translate('hint.this.field.is.required')); ?>         
+            ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'mb-3 input-group']); ?>
         <?php echo  new Select()
             ->addAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
             ])
             ->name('email_template_pdf_template')
             ->value(Html::encode($form->getEmailTemplatePdfTemplate() ?? 'invoice'))
@@ -220,7 +220,7 @@ use Yiisoft\Html\Tag\Span;
             <?=  new Span()
         ->addClass('html-tag btn btn-default')
         ->addAttributes(['data-tag-type' => 'text-paragraph'])
-        ->content( new I()->addClass('fa fa-fw fa-paragraph'))
+        ->content( new I()->addClass('bi bi-text-paragraph'))
         ->render();
 ?>
             <?=  new Span()
@@ -228,17 +228,17 @@ use Yiisoft\Html\Tag\Span;
     ->addAttributes(['data-tag-type' => 'text-linebreak'])
     ->content(Html::b(NoEncode::string('&lt;br&gt;')))
     ->render();
-?> 
+?>
             <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-bold'])
-    ->content( new I()->addClass('fa fa-fw fa-bold')->content('b'))
+    ->content( new I()->addClass('bi bi-type-bold')->content('b'))
     ->render();
 ?>
             <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-italic'])
-    ->content( new I()->addClass('fa fa-fw fa-italic'))
+    ->content( new I()->addClass('bi bi-type-italic'))
     ->render();
 ?>
         <?= Html::closeTag('div'); ?>
@@ -266,13 +266,13 @@ use Yiisoft\Html\Tag\Span;
     ->addAttributes(['data-tag-type' => 'text-h4'])
     ->content('H4')
     ->render();
-?>            
+?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'html-tags btn-group btn-group-sm']); ?>
             <?=  new Span()
     ->addClass('html-tag btn btn-default')
     ->addAttributes(['data-tag-type' => 'text-code'])
-    ->content( new I()->addClass('fa fa-fw fa-code'))
+    ->content( new I()->addClass('bi bi-code-slash'))
     ->render();
 ?>
             <?=  new Span()
@@ -308,7 +308,7 @@ use Yiisoft\Html\Tag\Span;
     <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
        <?=
         $email_template_tags;
-?>  
+?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>

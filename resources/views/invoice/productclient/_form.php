@@ -37,7 +37,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' =>
     'row justify-content-center']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
-<?= Html::openTag('div', ['class' => 
+<?= Html::openTag('div', ['class' =>
     'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
@@ -77,7 +77,7 @@ use Yiisoft\Html\Tag\Form;
             ?>
             <?php if ($remainingProducts): ?>
                 <?= Html::openTag('small', ['class' => 'd-block mt-1']); ?>
-                    <?= Html::openTag('i', ['class' => 'fa fa-info-circle']); ?>
+                    <?= Html::openTag('i', ['class' => 'bi bi-info-circle']); ?>
                     <?= Html::closeTag('i'); ?>
                     <?= $remainingProducts; ?>
                     <?= $translator->translate('products.remaining.after.this'); ?>
@@ -93,7 +93,7 @@ use Yiisoft\Html\Tag\Form;
         <?= $translator->translate('product.client.association.options'); ?>
     <?= Html::closeTag('h4'); ?>
     <!-- Option 1: Select Existing Client -->
-    <?= Html::openTag('div', ['class' => 'form-check mb-3']); ?>    
+    <?= Html::openTag('div', ['class' => 'form-check mb-3']); ?>
     <?=  new Input()
          ->attributes([
             'class' => 'form-check-input',
@@ -108,12 +108,12 @@ use Yiisoft\Html\Tag\Form;
             <?= $translator->translate('select.existing.client'); ?>
         <?= Html::closeTag('label'); ?>
     <?= Html::closeTag('div'); ?>
-    
+
     <?= Html::openTag('div',
             ['id' => 'existing-client-section', 'class' => 'mb-3']); ?>
         <?= Field::select($form, 'client_id')
             ->label($translator->translate('client'))
-            ->addInputAttributes(['class' => 'form-control'])
+            ->addInputAttributes(['class' => 'form-control form-control-lg',])
             ->prompt($translator->translate('select.existing.client'))
             ->optionsData($clients)
             ->render()
@@ -134,7 +134,7 @@ use Yiisoft\Html\Tag\Form;
             <?= $translator->translate('create.new.client'); ?>
         <?= Html::closeTag('label'); ?>
     <?= Html::closeTag('div'); ?>
-    
+
     <?= Html::openTag('div', [
         'id' => 'new-client-section',
         'class' => 'mb-3',
@@ -143,40 +143,40 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
                 <?= Field::text($form, 'new_client_name')
                     ->label($translator->translate('name'))
-                    ->addInputAttributes(['class' => 'form-control'])
+                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
                     ->render()
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
                 <?= Field::text($form, 'new_client_surname')
                     ->label($translator->translate('surname'))
-                    ->addInputAttributes(['class' => 'form-control'])
+                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
                     ->render()
                 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        
+
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
                 <?= Field::email($form, 'new_client_email')
                     ->label($translator->translate('email'))
-                    ->addInputAttributes(['class' => 'form-control'])
+                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
                     ->render()
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col-md-6']); ?>
                 <?= Field::text($form, 'new_client_mobile')
                     ->label($translator->translate('mobile'))
-                    ->addInputAttributes(['class' => 'form-control'])
+                    ->addInputAttributes(['class' => 'form-control form-control-lg',])
                     ->render()
                 ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        
+
         <?= Html::openTag('div', ['class' => 'mb-3']); ?>
             <?= Field::text($form, 'new_client_group')
                 ->label($translator->translate('client_group'))
-                ->addInputAttributes(['class' => 'form-control',
+                ->addInputAttributes(['class' => 'form-control form-control-lg',
                     'value' => $suggestedClientGroup])
                 ->render()
             ?>
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const newClientRadio = document.getElementById('new_client');
     const existingClientSection = document.getElementById('existing-client-section');
     const newClientSection = document.getElementById('new-client-section');
-    
+
     function toggleSections() {
         if (existingClientRadio.checked) {
             existingClientSection.style.display = 'block';
@@ -221,10 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
             newClientSection.style.display = 'block';
         }
     }
-    
+
     existingClientRadio.addEventListener('change', toggleSections);
     newClientRadio.addEventListener('change', toggleSections);
-    
+
     // Initialize
     toggleSections();
 
@@ -236,14 +236,14 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleSections();
             event.preventDefault();
         }
-        
-        // Alt + 2: Create new client  
+
+        // Alt + 2: Create new client
         if (event.altKey && event.key === '2') {
             newClientRadio.checked = true;
             toggleSections();
             event.preventDefault();
         }
-        
+
         // Ctrl + Enter: Submit form
         if (event.ctrlKey && event.key === 'Enter') {
             document.getElementById('ProductClientForm').submit();

@@ -97,13 +97,13 @@ class CustomValuesHelper
     public function printFieldForForm(
         CustomField $custom_field,
         FormModel $formModel,
-        Translator $translator,        
-        UrlGenerator $urlGenerator,    
+        Translator $translator,
+        UrlGenerator $urlGenerator,
         array $entity_custom_values,
         array $custom_value,
     ): void {
         $customFieldId = $custom_field->getId();
-        $customBracketCustomField = 'custom[' . $customFieldId . ']'; 
+        $customBracketCustomField = 'custom[' . $customFieldId . ']';
         $fieldValue = $this->formValue($entity_custom_values, $customFieldId) ?? '';
         $label = $custom_field->getLabel() ?? '';
         $cfEditableAt =  new A()
@@ -149,7 +149,7 @@ class CustomValuesHelper
                     [
                         'id' => $customFieldId,
                         'name' => $customBracketCustomField,
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                     ],
                 )
                 ->disabled(false)
@@ -184,7 +184,7 @@ class CustomValuesHelper
                  */
                 echo  new Select()
                 ->addAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                     'id' => $customFieldId,
                     'name' => $customBracketCustomField,
                 ])
@@ -269,7 +269,7 @@ class CustomValuesHelper
                 ->required($custom_field->getRequired() == 1 ? true : false)
                 ->hint($custom_field->getRequired() == 1
                     ? $translator->translate('hint.this.field.is.required')
-                    : $translator->translate('hint.this.field.is.not.required'))    
+                    : $translator->translate('hint.this.field.is.not.required'))
                 ->value((int) $fieldValue ?: 0) . $upArrowCfEditableAt;
                 break;
 

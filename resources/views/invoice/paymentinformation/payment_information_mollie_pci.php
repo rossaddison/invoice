@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use Psr\Http\Message\ResponseInterface as Response;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Label;
 
 /**
  * Related logic: see PaymentInformationController function mollieInForm
@@ -26,7 +28,7 @@ use Yiisoft\Html\Tag\A;
  *  => ['parameters' => ['s' => Reference::to(SettingRepository::class)]]
  * @var App\Invoice\Setting\SettingRepository $s
  *
- * @var Mollie\Api\Resources\Payment $payment
+ * @var Mollie\Api\Resources\Payment|Response $payment
  *
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -65,7 +67,7 @@ if ($disable_form === false) {
              'class' => 'btn btn-sm btn-primary fw-normal h3 text-center',
              'style' => 'text-decoration:none'
          ]);
-          echo H::openTag('i', ['class' => 'fa fa-file-pdf-o']);
+          echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
           echo H::closeTag('i');
           echo ' ' . $translator->translate('download.pdf')
                   . '=>' . $translator->translate('yes')
@@ -77,7 +79,7 @@ if ($disable_form === false) {
              'class' => 'btn btn-sm btn-danger fw-normal h3 text-center',
              'style' => 'text-decoration:none'
          ]);
-          echo H::openTag('i', ['class' => 'fa fa-file-pdf-o']);
+          echo H::openTag('i', ['class' => 'bi bi-file-pdf']);
           echo H::closeTag('i');
           echo ' ' . $translator->translate('download.pdf')
                    . '=>' . $translator->translate('no')
@@ -96,15 +98,17 @@ if ($disable_form === false) {
              ->addClass('btn btn-lg btn-primary bi bi-info-circle')
              ->content(' ' . $translator->translate('read.this.please'))
              ->render();
-         $paymentCheckoutUrl = $payment->getCheckOutUrl();
-         if (!empty($paymentCheckOutUrl)) {
-              new A()
-             ->href($paymentCheckoutUrl)
+         
+         if ($payment instanceof Mollie\Api\Resources\Payment) {
+             echo new A()
+             ->href($payment->getCheckoutUrl())
              ->target('_blank')
-             ->addClass('btn btn-lg btn-success fa fa-credit-card fa-margin')
+             ->addClass('btn btn-lg btn-success bi bi-credit-card')
              ->content(' ' . $translator->translate('pay.now')
                      . ': ' . $numberHelper->formatCurrency($balance))
              ->render();
+         } else {
+             echo new Label()->content('There is no Payment Instance')->render();
          }
          echo H::tag('br');
          echo H::openTag('div', ['class' => 'card-header']);
@@ -115,7 +119,7 @@ if ($disable_form === false) {
          echo H::tag('br');
          echo H::openTag('div', ['class' => 'table-responsive']);
           echo H::openTag('table',
-                  ['class' => 'table table-bordered table-condensed no-margin']);
+            ['class' => 'table table-bordered table-condensed no-margin']);
            echo H::openTag('tbody');
             echo H::openTag('tr');
              echo H::openTag('td');
@@ -149,16 +153,14 @@ if ($disable_form === false) {
               echo H::encode($numberHelper->formatCurrency($balance));
              echo H::closeTag('td');
             echo H::closeTag('tr');
-            if ($invoice_payment_method) {
-                echo H::openTag('tr');
-                 echo H::openTag('td');
-                  echo $translator->translate('payment.method') . ': ';
-                 echo H::closeTag('td');
-                 echo H::openTag('td', ['class' => 'text-right']);
-                  echo $invoice_payment_method;
-                 echo H::closeTag('td');
-                echo H::closeTag('tr');
-            }
+            echo H::openTag('tr');
+             echo H::openTag('td');
+              echo $translator->translate('payment.method') . ': ';
+             echo H::closeTag('td');
+             echo H::openTag('td', ['class' => 'text-right']);
+              echo 'Card / Direct Debit - Customer Ready for Payment';
+             echo H::closeTag('td');
+            echo H::closeTag('tr');
            echo H::closeTag('tbody');
           echo H::closeTag('table');
          echo H::closeTag('div');

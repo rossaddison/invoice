@@ -24,8 +24,8 @@ final class SubMenu
         string $title,
         UrlGenerator $urlGenerator,
         array $items = [],
-        string $navBarFont,    
-        string $navBarFontSize,  
+        string $navBarFont,
+        string $navBarFontSize,
         ): string
     {
         $finalString = '';

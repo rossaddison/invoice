@@ -61,7 +61,7 @@ $vat = $s->getSetting('enable_vat_registration');
 </head>
 <body>
 <?= $alert; ?>
-<section class="py-3 py-md-5">    
+<section class="py-3 py-md-5">
     <div class="container">
         <div id="content">
             <div class="webpreview-header">
@@ -75,24 +75,24 @@ $vat = $s->getSetting('enable_vat_registration');
                                 'inv/pdfDownloadIncludeCf',
                                 ['url_key' => $inv_url_key]); ?>"
                            class="btn btn-primary" style="text-decoration:none">
-                           <i class="fa fa-file-pdf-o"></i>
+                           <i class="fa bi-file-pdf"></i>
                              <?= $translator->translate('download.pdf')
                                         . '=>'
                                         . $translator->translate('yes')
                                         . ' '
                                         . $translator->translate('custom.fields'); ?>
                         </a>
-                    <!-- Exclude custom fields -->         
+                    <!-- Exclude custom fields -->
                         <a href="<?= $urlGenerator->generate(
                                 'inv/pdfDownloadExcludeCf',
                                 ['url_key' => $inv_url_key]); ?>"
                            class="btn btn-danger" style="text-decoration:none">
-                            <i class="fa fa-file-pdf-o"></i>
+                            <i class="fa bi-file-pdf"></i>
                              <?= $translator->translate('download.pdf')
                                         . '=>'
                                         . $translator->translate('no')
                                         . ' '
-                                        . $translator->translate('custom.fields'); ?>    
+                                        . $translator->translate('custom.fields'); ?>
                         </a>
 
                     <?php if ($s->getSetting('enable_online_payments') == 1
@@ -102,7 +102,7 @@ $vat = $s->getSetting('enable_vat_registration');
                             ['url_key' => $inv_url_key,
                                 'gateway' => $client_chosen_gateway],); ?>"
                            class="btn btn-success">
-                        <i class="fa fa-credit-card"></i>
+                        <i class="bi bi-credit-card"></i>
                             <?= $translator->translate('pay.now')
                                 . ' '
                                 . str_replace('_', ' ', $client_chosen_gateway); ?>
@@ -112,7 +112,7 @@ $vat = $s->getSetting('enable_vat_registration');
                             && $inv_amount->getBalance() == 0) { ?>
                         <a href="" class="btn btn-success">
                             <?= $translator->translate('paid'); ?>
-                        </a>    
+                        </a>
                     <?php } ?>
                 </div>
             </div>
@@ -244,7 +244,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td style="text-align:right;">
        <?= $numberHelper->formatCurrency($inv_amount->getBalance() ?? 0.00); ?>
                                 </td>
-                            </tr>                            
+                            </tr>
                             <tr>
                                 <td>
                                     <?= $translator->translate('payment.method')
@@ -254,7 +254,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <?= Html::encode($payment_method->getName()); ?>
                                 </td>
                             </tr>
-                            
+
                             </tbody>
                         </table>
                     </div>
@@ -322,7 +322,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                             ? $query->getSubtotal()
                                             : 0.00
                                     ); ?>
-                                </td>                                   
+                                </td>
                             </tr>
                     <?php
                     // Display item-level allowances/charges
@@ -415,7 +415,7 @@ $vat = $s->getSetting('enable_vat_registration');
          <?= $numberHelper->formatCurrency($inv_amount->getItemSubtotal()); ?>
                                     </b>
                                 </td>
-                            </tr>                            
+                            </tr>
 
                             <?php if ($inv_amount->getItemTaxTotal() > 0) { ?>
                             <tr>
@@ -522,7 +522,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </td>
                                 <td class="amount">
                                     <b>
-                                    <?php                                    
+                                    <?php
                                         $discountAmount = $inv->getDiscountAmount();
                                         if ($discountAmount >= 0.00) {
                                             echo $numberHelper->formatAmount($discountAmount);
@@ -532,7 +532,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 </td>
                             </tr>
                             <?php } ?>
-                               
+
                             </tr>
                             <tr>
                                 <td class="no-bottom-border" colspan="4"></td>

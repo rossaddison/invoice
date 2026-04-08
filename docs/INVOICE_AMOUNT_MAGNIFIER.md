@@ -34,9 +34,9 @@ The magnifier automatically targets invoice amounts with these CSS classes:
 
 | Class | Purpose | Color Scheme |
 |-------|---------|--------------|
-| `.label.label-success` | Positive total amounts | Green border (`#28a745`) |
-| `.label.label-warning` | Zero amounts | Yellow border (`#ffc107`) |  
-| `.label.label-danger` | Incomplete payments | Red border (`#dc3545`) |
+| `.badge.text-bg-success` | Positive total amounts | Green border (`#28a745`) |
+| `.badge.text-bg-warning` | Zero amounts | Yellow border (`#ffc107`) |  
+| `.badge.text-bg-danger` | Incomplete payments | Red border (`#dc3545`) |
 
 ### Animation Effects
 

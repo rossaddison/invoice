@@ -35,7 +35,7 @@ use App\Widget\QrCode as QrCodeWidget;
 ?>
 <div style="width:100%;height:175px;overflow:auto;">
     <table style="width:100%">
-        <tr> 
+        <tr>
             <td style="width:33%;text-align:left">
                 <div id="logo">
 <?php
@@ -87,7 +87,7 @@ echo  new Img()
 ->width(150)
 ->src($logoFileNameWithPath)
 ->render();
-?>    
+?>
                 </div>
             </td>
             <?php if ($isInvoice) { ?>
@@ -99,7 +99,7 @@ echo  new Img()
                 ]), $translator->translate('qr.code'), 150);
                 Html::closeTag('div');
                 ?>
-            </td> 
+            </td>
             <?php } ?>
             <td style="width:33%;text-align:left">
                 <?php
@@ -139,5 +139,5 @@ echo '<div>' . $translator->translate('fax.abbr') . ': ' . Html::encode($company
 ?>
             </td>
         </tr>
-    </table>    
+    </table>
 </div>

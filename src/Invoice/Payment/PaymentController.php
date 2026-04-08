@@ -517,7 +517,7 @@ final class PaymentController extends BaseController
             $userinv = ($uiR->repoUserInvUserIdcount((string) $user->getId()) > 0
                      ? $uiR->repoUserInvUserIdquery((string) $user->getId())
                      : null);
-// Determine what clients have been allocated to this user 
+// Determine what clients have been allocated to this user
 // (Related logic: see Settings...User Account) by looking at UserClient table
 // eg. If the user is a guest-accountant, they will have been allocated certain
 // clients.
@@ -606,7 +606,7 @@ final class PaymentController extends BaseController
 /**
  * @psalm-var RDI<array-key, array<array-key, mixed>|object>&LDI&ODI&CDI $merchants
  */
-            
+
             $merchants = $this->merchantWithSortGuest($merchR,
                 $client_id_array, $sort_by);
             if (!empty($client_id_array)) {
@@ -625,7 +625,7 @@ final class PaymentController extends BaseController
                     'max' => 10,
                 ];
                 return $this->webViewRenderer->render('guest_online_log', $params);
-            }    
+            }
         }
         return $this->webService->getNotFoundResponse();
     }

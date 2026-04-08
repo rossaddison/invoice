@@ -21,6 +21,6 @@ foreach ($custom_fields as $custom_field) : ?>
         continue;
     } ?>
     <?php echo '<td>'; ?>
-    <?php  $cvH->printFieldForPdf($translator, $inv_custom_values, $custom_field, $cvR); ?>                                   
+    <?php  $cvH->printFieldForPdf($translator, $inv_custom_values, $custom_field, $cvR); ?>
     <?php echo '</td>'; ?>
 <?php endforeach;

@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -89,7 +89,7 @@ use Yiisoft\Html\Tag\Form;
                     ])
                     ->value(Html::encode($form->getBuildingNumber() ?? ''))
                 ?>
-            <?= Html::closeTag('div'); ?>    
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'address_1')
                     ->label($translator->translate('street.address'))

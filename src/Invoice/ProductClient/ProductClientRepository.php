@@ -26,9 +26,9 @@ final class ProductClientRepository extends Select\Repository
     {
         parent::__construct($select);
     }
-    
 
-    
+
+
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ProductClient|null $productclient
@@ -38,7 +38,7 @@ final class ProductClientRepository extends Select\Repository
     {
         $this->entityWriter->write([$productclient]);
     }
-    
+
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|ProductClient|null $productclient
@@ -48,7 +48,7 @@ final class ProductClientRepository extends Select\Repository
     {
         $this->entityWriter->delete([$productclient]);
     }
-    
+
     private function prepareDataReader(Select $query): EntityReader
     {
         return (new EntityReader($query))->withSort(
@@ -68,7 +68,7 @@ final class ProductClientRepository extends Select\Repository
                       ->load('product');
         return $this->prepareDataReader($query);
     }
-    
+
     public function getCreatedAt(): string|DateTimeImmutable|null
     {
         /**
@@ -76,7 +76,7 @@ final class ProductClientRepository extends Select\Repository
          */
         return $this->created_at;
     }
-    
+
     public function getUpdatedAt(): string|DateTimeImmutable|null
     {
         /**
@@ -84,13 +84,13 @@ final class ProductClientRepository extends Select\Repository
          */
         return $this->updated_at;
     }
-    
+
     public function repoProductClientQuery(int $id): ?ProductClient
     {
         $query = $this->select()
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
-    }    
+    }
 
 
     /**

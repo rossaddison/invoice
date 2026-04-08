@@ -20,8 +20,9 @@ $panel = ['class' => 'panel panel-default'];
 $panelHead = ['class' => 'panel-heading'];
 $panelBody = ['class' => 'panel-body'];
 $formGroup = ['class' => 'form-group'];
-$formControl = 'form-control';
+$formControl = 'form-control form-control-lg';
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
   echo H::openTag('div', $panel); //3

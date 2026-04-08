@@ -48,7 +48,7 @@ if (!$isGuest) {
                 $temp .= " " . $enum;
             }
             echo '<td>' . $temp . '</td>';
-            
+
             $var = '';
 
             /**

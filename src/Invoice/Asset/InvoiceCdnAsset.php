@@ -19,6 +19,7 @@ class InvoiceCdnAsset extends AssetBundle
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [
         'invoice/css/style.css',
+        'invoice/css/overrides.css',
         'yii3i/yii3i.css',
 
         // Automatic asterisk * for required form fields
@@ -43,9 +44,9 @@ class InvoiceCdnAsset extends AssetBundle
         'rebuild/js/emailtemplate.js',
         'rebuild/js/mailer_ajax_email_addresses.js',
     ];
-    
+
     public bool $cdn = false;
-    
+
     public array $depends = [
         Bootstrap5LightBoxCdnAsset::class,
         ClipBoardCdnAsset::class,

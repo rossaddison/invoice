@@ -29,10 +29,10 @@ class SalesOrder
 
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
-    
+
     #[BelongsTo(target: Quote::class, nullable: false)]
     private ?Quote $quote = null;
-    
+
     /**
      * Note: HasOne will default to fkAction: CASCADE & Camelcase salesOrder_id
      * foreign key which creates a conflict with snake case sales_order_id.
@@ -142,7 +142,7 @@ class SalesOrder
     {
         $this->user = $user;
     }
-    
+
     public function getQuote(): ?Quote
     {
         return $this->quote;
@@ -364,12 +364,12 @@ class SalesOrder
     {
         $this->notes = $notes;
     }
-    
+
     public function getItems(): ArrayCollection
     {
         return $this->items;
     }
-    
+
     public function getSalesOrderAmount(): SalesOrderAmount
     {
         return $this->sales_order_amount;

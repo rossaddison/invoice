@@ -37,23 +37,27 @@ $toolbarReset =  new A()
     <?= Html::openTag('div', ['class' => 'btn-group']);?>
     <?php
         if ($canEdit) {
-            echo Html::a(
-                'Add Allowance',
-                $urlGenerator->generate('allowancecharge/addAllowance'),
-                ['class' => 'btn btn-outline-secondary btn-md-12 mb-3'],
-            );
-            echo Html::a(
-                'Add Charge',
-                $urlGenerator->generate('allowancecharge/addCharge'),
-                ['class' => 'btn btn-outline-secondary btn-md-12 mb-3'],
-            );
-        } ?>    
+            echo (new A())
+                ->addClass('btn btn-outline-success btn-sm mb-3 me-1')
+                ->encode(false)
+                ->content(Html::tag('i', '', ['class' => 'bi bi-plus-circle me-1'])
+                    . $translator->translate('allowance.or.charge.allowance'))
+                ->href($urlGenerator->generate('allowancecharge/addAllowance'))
+                ->render();
+            echo (new A())
+                ->addClass('btn btn-outline-primary btn-sm mb-3')
+                ->encode(false)
+                ->content(Html::tag('i', '', ['class' => 'bi bi-plus-circle me-1'])
+                    . $translator->translate('allowance.or.charge.charge'))
+                ->href($urlGenerator->generate('allowancecharge/addCharge'))
+                ->render();
+        } ?>
     <?= Html::closeTag('div');?>
     <?= Html::Tag('br'); ?>
     <?= Html::Tag('br'); ?>
 <?= Html::closeTag('div');?>
 <?= Html::openTag('div');?>
-    <?= Html::Tag('br'); ?>    
+    <?= Html::Tag('br'); ?>
 <?= Html::closeTag('div');?>
 
 <?php
@@ -89,7 +93,10 @@ $columns = [
         'multiplier_factor_numeric',
         header: $translator->translate('allowance.or.charge.multiplier.factor.numeric'),
         content: static function (AllowanceCharge $model): string {
-            return ($model->getMultiplierFactorNumeric() == 0 || $model->getMultiplierFactorNumeric() == 1) ? '0 or 1 => Fixed Amount' : (string) $model->getMultiplierFactorNumeric() . '>1 => Variable Amount';
+            return ($model->getMultiplierFactorNumeric() == 0
+                    || $model->getMultiplierFactorNumeric() == 1) ?
+        '0 or 1 => Fixed Amount' : (string) $model->getMultiplierFactorNumeric()
+                . '>1 => Variable Amount';
         },
     ),
     new DataColumn(
@@ -101,9 +108,9 @@ $columns = [
         header: $translator->translate('view'),
         content: static function (AllowanceCharge $model) use ($urlGenerator): A {
             return Html::a(
-                Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
+                Html::tag('i', '', ['class' => 'bi bi-eye']),
                 $urlGenerator->generate('allowancecharge/view', ['id' => $model->getId()]),
-                [],
+                ['class' => 'btn btn-outline-info btn-sm'],
             );
         },
         encodeContent: false,
@@ -114,12 +121,12 @@ $columns = [
         content: static function (AllowanceCharge $model) use ($urlGenerator): A {
             return !$model->getIdentifier()
                   ? Html::a(
-                      Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
+                      Html::tag('i', '', ['class' => 'bi bi-pencil-square']),
                       $urlGenerator->generate(
                           'allowancecharge/editAllowance',
                           ['id' => $model->getId()],
                       ),
-                      [],
+                      ['class' => 'btn btn-outline-warning btn-sm'],
                   ) : Html::a();
         },
         encodeContent: false,
@@ -130,12 +137,12 @@ $columns = [
         content: static function (AllowanceCharge $model) use ($urlGenerator): A {
             return $model->getIdentifier()
                 ? Html::a(
-                    Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi bi-pencil-square']),
                     $urlGenerator->generate(
-                        'allowancecharge/edit_charge',
+                        'allowancecharge/editCharge',
                         ['id' => $model->getId()],
                     ),
-                    [],
+                    ['class' => 'btn btn-outline-warning btn-sm'],
                 ) : Html::a();
         },
         encodeContent: false,
@@ -146,10 +153,10 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi bi-trash']),
                     [
                         'type' => 'submit',
-                        'class' => 'dropdown-button',
+                        'class' => 'btn btn-outline-danger btn-sm',
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
@@ -183,7 +190,8 @@ echo GridView::widget()
     ->columns(...$columns)
     ->dataReader($paginator)
     ->bodyRowAttributes(['class' => 'align-middle'])
-    ->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-allowancecharge'])
+    ->tableAttributes(['class' => 'table table-striped text-center h-75',
+        'id' => 'table-allowancecharge'])
     ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
     ->header($translator->translate('allowance.or.charge'))
     ->id('w3-grid')

@@ -6,13 +6,13 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\I;
 
-/** 
- * @var App\Invoice\Entity\Quote $quote 
+/**
+ * @var App\Invoice\Entity\Quote $quote
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var bool $invEdit
  * @var string $add_quote_product
  * @var string $add_quote_task
- */ 
+ */
 
 ?>
 <?php if ($invEdit && $quote->getStatusId() === 1) { ?>
@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\I;
         ->id('btn-reset')
         ->render();
     ?>
-    <?= Html::closeTag('li'); ?> 
+    <?= Html::closeTag('li'); ?>
     <?= Html::openTag('li', ['id' => 'back', 'class' => 'tab-pane']); ?>
         <?=  new A()
         ->addAttributes([
@@ -55,9 +55,9 @@ use Yiisoft\Html\Tag\I;
         ->addClass('btn btn-danger bi bi-arrow-left')
         ->id('back')
         ->render(); ?>
-    <?= Html::closeTag('li'); ?>    
+    <?= Html::closeTag('li'); ?>
 <?= Html::closeTag('ul'); ?>
-    
+
 <?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
         <?= Html::openTag('div', ['id' => 'add-product-tab', 'class' => 'tab-pane']); ?>
@@ -74,7 +74,7 @@ use Yiisoft\Html\Tag\I;
                         );
                     ?>
                     <?=  new I()
-                        ->addClass('fa fa-list')
+                        ->addClass('bi bi-list-ul')
                         ->addAttributes([
                             'data-bs-toggle' => 'tooltip',
                             'title' => $translator->translate('add.product'),

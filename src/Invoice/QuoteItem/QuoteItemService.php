@@ -618,7 +618,7 @@ final readonly class QuoteItemService
         }
         $all_vat_or_tax = $all_charges_vat_or_tax - $all_allowances_vat_or_tax;
         $new_tax_total = $current_tax_total + $all_vat_or_tax;
-        $qias_array['discount'] = $discount_total; 
+        $qias_array['discount'] = $discount_total;
         $qias_array['charge'] = $all_charges;
         $qias_array['allowance'] = $all_allowances;
         $qias_array['subtotal'] = $qpIncAc;
@@ -633,7 +633,7 @@ final readonly class QuoteItemService
             }
         }
     }
-    
+
     /**
      * @param array|QuoteItem|null $model
      */

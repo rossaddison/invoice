@@ -13,7 +13,7 @@ declare(strict_types=1);
 echo "<?php\n";
 ?>
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace <?= $generator->getNamespacePath() . '\Entity'; ?>;
 
@@ -74,7 +74,7 @@ if ($generator->isCreatedInclude()
             . 'date_modified' . "',column:'" . 'date_modified' . ')]' : '');
 }
 ?>
- 
+
 class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
 {
     <?php
@@ -89,7 +89,7 @@ class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
                    . ($relation->getLowercaseName() ?? '') . ' = null;' . "\n";
            echo '    ' . "\n";
        } ?>
-    
+
     <?php
            $construct = '';
 /**
@@ -181,7 +181,7 @@ foreach ($orm_schema->getColumns() as $column) {
             $result = (string) $column->getSize();
             $ab = '    #[Column(type:' . "'" . $column->getAbstractType() . '('
                     . $result . ")', nullable: " . $nullable
-                    . ((string) $column->hasDefaultvalue() ? ',default: ' 
+                    . ((string) $column->hasDefaultvalue() ? ',default: '
                     . (string) $column->getDefaultvalue() . ')]' : ')]') . "\n";
             $ate_or_lic = 'private ';
             break;
@@ -433,7 +433,7 @@ foreach ($orm_schema->getColumns() as $column) {
                     . '(): ' . ($column->isNullable() ? $questionmark : '')
                     . 'DateTimeImmutable' . "\n";
         }
-        if (($column->getAbstractType() <> 'date')                
+        if (($column->getAbstractType() <> 'date')
                 && ($column->getAbstractType() <> 'datetime')) {
             echo '   public function get' . ucfirst($column->getName())
                     . '(): ' . ($column->isNullable() ? $questionmark : '')

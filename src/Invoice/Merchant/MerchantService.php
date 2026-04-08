@@ -24,7 +24,7 @@ final readonly class MerchantService
         array $array
     ): void {
         $this->persist($model, $array);
-        isset($array['inv_id']) ? 
+        isset($array['inv_id']) ?
             $model->setInvId((int) $array['inv_id']) : '';
         $model->setSuccessful((bool) $array['successful']);
 
@@ -36,11 +36,11 @@ final readonly class MerchantService
         $model->setDate(
             $datetime::createFromFormat('Y-m-d', $date));
 
-        isset($array['driver']) ? 
+        isset($array['driver']) ?
             $model->setDriver((string) $array['driver']) : '';
-        isset($array['response']) ? 
+        isset($array['response']) ?
             $model->setResponse((string) $array['response']) : '';
-        isset($array['reference']) ? 
+        isset($array['reference']) ?
             $model->setReference(
                 (string) $array['reference']) : '';
         $this->repository->save($model);
@@ -75,15 +75,15 @@ final readonly class MerchantService
             $array['merchant_response_successful']);
         /** @var \DateTime $array['merchant_response_date'] */
         $model->setDate($array['merchant_response_date']);
-        /** 
-         * @var string $array['merchant_response_driver'] 
+        /**
+         * @var string $array['merchant_response_driver']
          */
         $model->setDriver($array['merchant_response_driver']);
         // Payment success message
         /** @var string $array['merchant_response'] */
         $model->setResponse($array['merchant_response']);
-        /** 
-         * @var string $array['merchant_response_reference'] 
+        /**
+         * @var string $array['merchant_response_reference']
          */
         $model->setReference(
             $array['merchant_response_reference']);

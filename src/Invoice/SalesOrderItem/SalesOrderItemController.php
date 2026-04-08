@@ -64,7 +64,7 @@ final class SalesOrderItemController extends BaseController
         PR $pR,
         TaskR $taskR,
         UCR $ucR,
-        UIR $uiR,    
+        UIR $uiR,
         UR $uR,
         SOR $qR,
     ): \Psr\Http\Message\ResponseInterface {
@@ -120,11 +120,11 @@ final class SalesOrderItemController extends BaseController
                     $parameters['form'] = $form;
                 }
                 return $this->webViewRenderer->render('_item_edit_form', $parameters);
-            } // rbac 
+            } // rbac
         } //so_item
         return $this->webService->getNotFoundResponse();
     }
-    
+
     /**
      * Purpose:
      * Prevent browser manipulation and ensure that views are only accessible
@@ -156,10 +156,10 @@ final class SalesOrderItemController extends BaseController
                     return true;
                 }
             }
-        }    
+        }
         return false;
     }
-    
+
     private function rbacAccountant() : bool {
         // has accountant role
         if (($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -170,7 +170,7 @@ final class SalesOrderItemController extends BaseController
             return false;
         }
     }
-    
+
     private function rbacAdmin() : bool {
         // has observer role
         if ($this->userService->hasPermission(Permissions::VIEW_INV)

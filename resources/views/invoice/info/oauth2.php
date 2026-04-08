@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 ?>
-
+<div style="font-size: calc(var(--inv-form-fs) + 2px);">
 <p><b>How do I add an OAuth2 Identity Provider e.g. LinkedIn or Facebook?</b></p>
 
 <p><b>Purpose</b></p>
@@ -17,10 +17,10 @@ declare(strict_types=1);
 <pre>
 'yiisoft/yii-auth-client' => [
       'enabled' => true,
-      'clients' => [          
+      'clients' => [
           'facebook' => [
               'class' => 'Yiisoft\Yii\AuthClient\Client\Facebook::class',
-              'clientId' => $_ENV['FACEBOOK_API_CLIENT_ID'] ?? '', 
+              'clientId' => $_ENV['FACEBOOK_API_CLIENT_ID'] ?? '',
               'clientSecret' => $_ENV['FACEBOOK_API_CLIENT_SECRET'] ?? '',
               'returnUrl' => $_ENV['FACEBOOK_API_CLIENT_RETURN_URL'] ?? ''
           ],
@@ -34,16 +34,16 @@ declare(strict_types=1);
               'class' => 'Yiisoft\Yii\AuthClient\Client\Google::class',
               'clientId' => $_ENV['GOOGLE_PEOPLE_API_V1_CLIENT_ID'] ?? '',
               'clientSecret' => $_ENV['GOOGLE_PEOPLE_API_V1_CLIENT_SECRET'] ?? '',
-              'returnUrl' => $_ENV['GOOGLE_PEOPLE_API_VI_CLIENT_RETURN_URL'] ?? ''  
+              'returnUrl' => $_ENV['GOOGLE_PEOPLE_API_VI_CLIENT_RETURN_URL'] ?? ''
           ],
           'linkedin' => [
               'class' => 'Yiisoft\Yii\AuthClient\Client\LinkedIn::class',
               'clientId' => $_ENV['LINKEDIN_API_CLIENT_ID'] ?? '',
               'clientSecret' => $_ENV['LINKEDIN_API_CLIENT_SECRET'] ?? '',
-              'returnUrl' => $_ENV['LINKEDIN_API_CLIENT_RETURN_URL'] ?? ''  
+              'returnUrl' => $_ENV['LINKEDIN_API_CLIENT_RETURN_URL'] ?? ''
           ],
-     ],   
-],   
+     ],
+],
 </pre>
 </p>
 <p><b>3. Adjust src\Auth\Controller\AuthController.php so that the button can be enabled or disabled.</b></p>
@@ -53,11 +53,11 @@ declare(strict_types=1);
     $noGoogleContinueButton = $this->sR->getSetting('no_google_continue_button') == '1' ? true : false;
     $noFacebookContinueButton = $this->sR->getSetting('no_facebook_continue_button') == '1' ? true : false;
     $noLinkedInContinueButton = $this->sR->getSetting('no_linkedin_continue_button') == '1' ? true : false;
-    return $this->webViewRenderer->render('login', 
+    return $this->webViewRenderer->render('login',
         [
             'formModel' => $loginForm,
             'facebookAuthUrl' => strlen($this->facebook->getClientId()) > 0 ? $this->facebook->buildAuthUrl($request, $params = []) : '',
-            'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',   
+            'githubAuthUrl' => strlen($this->github->getClientId()) > 0 ? $this->github->buildAuthUrl($request, $params = []) : '',
             'googleAuthUrl' => strlen($this->google->getClientId()) > 0 ? $this->google->buildAuthUrl($request, $params = []) : '',
             'linkedInAuthUrl' => strlen($this->linkedIn->getClientId()) > 0 ? $this->linkedIn->buildAuthUrl($request, $params = []) : '',
             'noGithubContinueButton' => $noGithubContinueButton,
@@ -77,7 +77,7 @@ declare(strict_types=1);
 <p><b>11. Add a button at src\Widget\Button.php</b></p>
 <p>
 <pre>
-    public function linkedin(string $linkedInAuthUrl) : string {       
+    public function linkedin(string $linkedInAuthUrl) : string {
         return  new A()
         ->addClass('btn btn-info bi bi-linkedin')
         ->content(' '.$this->translator->translate('continue.with.linkedin'))
@@ -87,3 +87,4 @@ declare(strict_types=1);
     }
 </pre>
 </p>
+</div>

@@ -35,7 +35,7 @@ final readonly class ClientCustomService
             $model->setValue((string) $array['value']) : '';
         $this->repository->save($model);
     }
-    
+
     private function persist(ClientCustom $model, array $array): void
     {
         $client = 'client_id';

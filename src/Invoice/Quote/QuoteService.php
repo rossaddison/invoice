@@ -91,7 +91,7 @@ final readonly class QuoteService
         GR $gR
     ): Quote {
         $this->persist($array, $model);
-        
+
         /**
          * Give a legitimate quote number to a quote that currently:
          * 1. Exists
@@ -191,7 +191,7 @@ final readonly class QuoteService
         Quote $model,
         ACQR $acqR,
         ACQIR $acqiR,
-        QIAR $qiaR,    
+        QIAR $qiaR,
         QCR $qcR,
         QCS $qcS,
         QIR $qiR,
@@ -245,12 +245,12 @@ final readonly class QuoteService
             foreach ($qcR->repoFields($quote_id) as $quote_custom) {
                 $qcS->deleteQuoteCustom($quote_custom);
             }
-            
+
             /** @var QuoteAllowanceCharge $quote_allowance_charge */
             foreach ($acqR->repoACQquery($quote_id) as $quote_allowance_charge) {
                 $acqR->delete($quote_allowance_charge);
             }
-            
+
             $this->repository->delete($model);
         }
     }

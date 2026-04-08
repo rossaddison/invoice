@@ -42,12 +42,12 @@ return [
                 ],
                 'namespace_prefix' => 'yii3_invoice',
                 'enabled' => (bool) ($_ENV['PROMETHEUS_ENABLED'] ?? true),
-                
+
                 // Metric collection configuration
                 'collect_system_metrics' => true,
                 'collect_business_metrics' => true,
                 'collect_http_metrics' => true,
-                
+
                 // Integration settings
                 'grafana_compatible' => true,
                 'node_exporter_compatible' => true,
@@ -75,7 +75,7 @@ return [
     // Collector Registry Configuration
     CollectorRegistry::class => static function (): CollectorRegistry {
         $storageType = $_ENV['PROMETHEUS_STORAGE_TYPE'] ?? 'memory';
-        
+
         return match ($storageType) {
             'redis' => new CollectorRegistry(
                 new Redis([
@@ -101,11 +101,11 @@ return [
     Route::get('/metrics')
         ->action([PrometheusController::class, 'metrics'])
         ->name('prometheus/metrics'),
-        
+
     Route::get('/prometheus/health')
         ->action([PrometheusController::class, 'health'])
         ->name('prometheus/health'),
-        
+
     Route::get('/prometheus/dashboard')
         ->action([PrometheusController::class, 'dashboard'])
         ->name('prometheus/dashboard'),

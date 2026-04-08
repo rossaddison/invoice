@@ -44,12 +44,12 @@ class InvoiceApp {
 
         this.initializeTooltips();
         this.initializeTaggableFocus();
-        
+
         // Initialize enhanced scripts functionality
         initTooltips();
         initSimpleSelects();
         initPasswordMeter();
-        
+
         // Set up fullpage loader handlers
         this.initializeFullpageLoader();
 

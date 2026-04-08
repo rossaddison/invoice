@@ -42,7 +42,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
      echo $translator->translate($tfa . '.scan');
      echo  new A()
           ->href('https://getaegis.app')
-          ->addAttributes(['target' => '_blank'])   
+          ->addAttributes(['target' => '_blank'])
           ->content( new Img()
                     ->size(60, 60)
                     ->src('/img/aegis.png')
@@ -64,7 +64,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
        'style' => 'max-width:400px;']);
     echo H::openTag('div', ['class' => 'input-group']);
      echo H::input('password', 'secret', H::encode($totpSecret), [
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'secretInput',
         'readonly' => true,
      ]);
@@ -92,7 +92,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
       ])
       ->error($error ?? '')
       ->required(true)
-      ->inputClass('form-control')
+      ->inputClass('form-control form-control-lg',)
       ->label($translator->translate('layout.password.otp.6.first'))
       ->autofocus();
      echo F::submitButton()

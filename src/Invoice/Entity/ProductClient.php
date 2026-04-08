@@ -94,7 +94,7 @@ class ProductClient
     {
         return $this->created_at;
     }
-    
+
     public function setCreatedAt(DateTimeImmutable $createdAt): void
     {
         $this->created_at = $createdAt;
@@ -104,7 +104,7 @@ class ProductClient
     {
         return $this->updated_at;
     }
-    
+
     public function setUpdatedAt(DateTimeImmutable $updatedAt): void
     {
         $this->updated_at = $updatedAt;

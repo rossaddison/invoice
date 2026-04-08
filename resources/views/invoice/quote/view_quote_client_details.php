@@ -8,9 +8,9 @@ use App\Widget\LabelSwitch;
 
 /**
  * @var App\Invoice\Entity\Quote $quote
- * @var App\Invoice\Helpers\ClientHelper $clientHelper 
+ * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
- * @var App\Invoice\Setting\SettingRepository $s 
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $_language

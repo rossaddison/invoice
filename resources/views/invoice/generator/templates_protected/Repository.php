@@ -10,7 +10,7 @@ declare(strict_types=1);
 echo "<?php\n";
 ?>
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName() . ';' . "\n"; ?>
 
@@ -60,7 +60,7 @@ private EntityWriter $entityWriter;
 ?>
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @psalm-return EntityReader
      */
@@ -69,38 +69,38 @@ private EntityWriter $entityWriter;
         return (new EntityReader($this->select()))
             ->withSort($this->getSort());
     }
-    
+
     /**
      * @return Sort
      */
     private function getSort(): Sort
     {
         return Sort::only(['id'])->withOrder(['id' => 'asc']);
-    }    
-    
+    }
+
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
      * @param array|<?= $generator->getCamelcaseCapitalName() ?>|null $<?php echo $generator->getSmallSingularName() . "\n" ?>
      * @psalm-param TEntity $<?php echo $generator->getSmallSingularName() . "\n" ?>
-     * @throws Throwable 
+     * @throws Throwable
      * @return void
      */
     public function save(array|<?= $generator->getCamelcaseCapitalName() ?>|null $<?= $generator->getSmallSingularName(); ?>): void
     {
         $this->entityWriter->write([$<?= $generator->getSmallSingularName(); ?>]);
     }
-    
+
     /**
      * Related logic: see Reader/ReadableDataInterface|InvalidArgumentException
-     * @param array|<?= $generator->getCamelcaseCapitalName(); ?>|null $<?= $generator->getSmallSingularName() . "\n" ?>  
-     * @throws Throwable 
+     * @param array|<?= $generator->getCamelcaseCapitalName(); ?>|null $<?= $generator->getSmallSingularName() . "\n" ?>
+     * @throws Throwable
      * @return void
      */
     public function delete(array|<?= $generator->getCamelcaseCapitalName(); ?>|null $<?= $generator->getSmallSingularName(); ?>): void
     {
         $this->entityWriter->delete([$<?= $generator->getSmallSingularName(); ?>]);
     }
-    
+
     /**
      * @param Select $query
      * @return EntityReader
@@ -111,8 +111,8 @@ private EntityWriter $entityWriter;
             Sort::only(['id'])
                 ->withOrder(['id' => 'asc'])
         );
-    }    
-    
+    }
+
     /**
      * @param string $id
      * @psalm-return TEntity|null
@@ -134,9 +134,9 @@ private EntityWriter $entityWriter;
             echo "->where(['id' =>" . '$id]);';
         }
 ?>
-        return  $query->fetchOne() ?: null;        
+        return  $query->fetchOne() ?: null;
     }
-    
+
     /**
      * @param string $id
      * @return int
@@ -145,5 +145,5 @@ private EntityWriter $entityWriter;
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
-    }   
+    }
 }

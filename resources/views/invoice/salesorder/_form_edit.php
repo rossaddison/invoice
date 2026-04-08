@@ -70,7 +70,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                         ->hideLabel(false)
                                         ->label($translator->translate('salesorder'))
                                         ->addInputAttributes([
-                                            'class' => 'form-control',
+                                            'class' => 'form-control form-control-lg',
                                             'readonly' => 'readonly',
                                         ])
                                         ->value(Html::encode($form->getNumber()))
@@ -79,24 +79,24 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'client_id')
                                         ->label($translator->translate('user.account.clients'))
-                                        ->addInputAttributes(['class' => 'form-control'])
+                                        ->addInputAttributes(['class' => 'form-control form-control-lg',])
                                         ->value($form->getClientId())
                                         ->prompt($translator->translate('none'))
                                         ->optionsData($optionsData['client'])
                                         ->hint($translator->translate('hint.this.field.is.required'));
                                      ?>
-                                <?= Html::closeTag('div'); ?>            
+                                <?= Html::closeTag('div'); ?>
                                 <?= Html::openTag('div'); ?>
                                     <?= Field::select($form, 'group_id')
     ->label($translator->translate('salesorder.default.group'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value($form->getGroupId() ?? $defaultGroupId)
     ->prompt($translator->translate('none'))
     ->optionsData($optionsData['group'])
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-                                <?= Html::closeTag('div'); ?>   
-                            
+                                <?= Html::closeTag('div'); ?>
+
                             <?php
                             // If there is no delivery location for this client, create the delivery location now for later use by invoice construction
                             // and to avoid undeliverable locations
@@ -130,11 +130,11 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                                 <?php } ?>
                                             </select>
                                         </div>
-                                    </div>    
-                                </div> 
+                                    </div>
+                                </div>
                         <?php } ?>
-                        <?= Html::openTag('br'); ?>    
-                        <?= Html::openTag('br'); ?>    
+                        <?= Html::openTag('br'); ?>
+                        <?= Html::openTag('br'); ?>
                         <?= Html::openTag('div'); ?>
                             <?= Field::date($form, 'date_created')
                                 ->label($translator->translate('date.issued'))
@@ -151,7 +151,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('div'); ?>
                             <?= Field::password($form, 'password')
     ->label($translator->translate('password'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($form->getPassword()))
     ->placeholder($translator->translate('password'))
     ->hint($translator->translate('hint.this.field.is.not.required'));
@@ -160,7 +160,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('div'); ?>
                             <?= Field::select($form, 'status_id')
     ->label($translator->translate('status'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value($form->getStatusId())
     ->prompt($translator->translate('none'))
     ->optionsData($optionsData['salesOrderStatus'])
@@ -187,7 +187,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 ->hideLabel(false)
                                 ->label($translator->translate('discount')
                                     . ' ' . $s->getSetting('currency_symbol'))
-                                ->addInputAttributes(['class' => 'form-control'])
+                                ->addInputAttributes(['class' => 'form-control form-control-lg',])
                                 ->value($s->formatAmount(
                                     ($form->getDiscountAmount() ?? 0.00)))
                                 ->placeholder($translator->translate('discount'));
@@ -215,7 +215,7 @@ foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
                                  <textarea id="terms_and_conditions_file" class="form-control form-control-lg" rows="20" cols="20"><?= $terms_and_conditions_file; ?></textarea>
                             </div>
                             <div class="row">
-                                <div class="col-xs-12 col-sm-2">  
+                                <div class="col-xs-12 col-sm-2">
                                     <label for="inv_number" class="control-label"><?= $translator->translate('salesorder.invoice.number'); ?></label>
                                     <input type="text" name="inv_number" id="inv_number" class="form-control form-control-lg" required disabled value="<?= $invNumber ?: $translator->translate('not.set'); ?>">
                                 </div>
@@ -223,11 +223,11 @@ foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
                         <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= $button::backSave(); ?>    
+                <?= $button::backSave(); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
-    
+
 <?= Html::closeTag('div'); ?>
 
 <?= Html::closeTag('form'); ?>

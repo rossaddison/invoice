@@ -54,6 +54,14 @@ trait SettingsTabBootstrap5
                 => $this->sR->getSetting('bootstrap5_layout_main_navbar_font'),
             'settings[bootstrap5_layout_main_navbar_font_size]'
                 => $this->sR->getSetting('bootstrap5_layout_main_navbar_font_size'),
+            'settings[bootstrap5_sidebar_background]'
+                => $this->sR->getSetting('bootstrap5_sidebar_background'),
+            'settings[bootstrap5_sidebar_guest_background]'
+                => $this->sR->getSetting('bootstrap5_sidebar_guest_background'),
+            'settings[bootstrap5_form_font_size]'
+                => $this->sR->getSetting('bootstrap5_form_font_size'),
+            'settings[bootstrap5_form_input_height]'
+                => $this->sR->getSetting('bootstrap5_form_input_height'),
         ];
     }
 
@@ -101,7 +109,7 @@ trait SettingsTabBootstrap5
                 'fontSizes' => $fontSizes,
             ],
         );
-        
+
         $navbarGuest = $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/views/bootstrap5/partial_navbar_guest',
             [
@@ -110,7 +118,7 @@ trait SettingsTabBootstrap5
                 'fontSizes' => $fontSizes,
             ],
         );
-        
+
         $navbarMain = $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/views/bootstrap5/partial_navbar_main',
             [
@@ -119,9 +127,23 @@ trait SettingsTabBootstrap5
                 'fontSizes' => $fontSizes,
             ],
         );
-        
+
         $cdn = $this->webViewRenderer->renderPartialAsString(
             '//invoice/setting/views/bootstrap5/partial_cdn_not_node_module',
+            [
+                'body' => $body,
+            ],
+        );
+
+        $sidebar = $this->webViewRenderer->renderPartialAsString(
+            '//invoice/setting/views/bootstrap5/partial_sidebar',
+            [
+                'body' => $body,
+            ],
+        );
+
+        $forms = $this->webViewRenderer->renderPartialAsString(
+            '//invoice/setting/views/bootstrap5/partial_forms',
             [
                 'body' => $body,
             ],
@@ -144,8 +166,12 @@ trait SettingsTabBootstrap5
             . $sep
             . $navbarInvoice
             . $navbarGuest
-            . $navbarMain    
-            . $cdn    
+            . $navbarMain
+            . $cdn
+            . $sep
+            . $sidebar
+            . $sep
+            . $forms
             . H::closeTag('div')   // row (inner)
             . H::closeTag('div')   // panel-body
             . H::closeTag('div')   // panel panel-default

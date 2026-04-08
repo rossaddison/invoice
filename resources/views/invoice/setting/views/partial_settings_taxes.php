@@ -19,9 +19,10 @@ $panel = ['class' => 'panel panel-default'];
 $panelHead = ['class' => 'panel-heading'];
 $panelBody = ['class' => 'panel-body'];
 $formGroup = ['class' => 'form-group'];
-$formControl = ['class' => 'form-control'];
+$formControl = ['class' => 'form-control form-control-lg',];
 $minSearch = ['data-minimum-results-for-search' => 'Infinity'];
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row) . "\n"; //1
  echo H::openTag('div', $colMd8) . "\n"; //2
 
@@ -42,12 +43,12 @@ echo H::openTag('div', $row) . "\n"; //1
          'default.invoice.tax.rate'
         ) . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[default_invoice_tax_rate]'] = 
+       $body['settings[default_invoice_tax_rate]'] =
        $s->getSetting('default_invoice_tax_rate');
        echo H::openTag('select', [
         'name' => 'settings[default_invoice_tax_rate]',
         'id' => 'settings[default_invoice_tax_rate]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]) . "\n";
         echo  new Option()
          ->value('')
@@ -81,12 +82,12 @@ echo H::openTag('div', $row) . "\n"; //1
          'default.item.tax.rate'
         ) . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[default_item_tax_rate]'] = 
+       $body['settings[default_item_tax_rate]'] =
        $s->getSetting('default_item_tax_rate');
        echo H::openTag('select', [
         'name' => 'settings[default_item_tax_rate]',
         'id' => 'settings[default_item_tax_rate]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]) . "\n";
         echo  new Option()
          ->value('')
@@ -123,9 +124,9 @@ echo H::openTag('div', $row) . "\n"; //1
          'default.invoice.tax.rate.placement'
         ) . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[default_include_item_tax]'] = 
+       $body['settings[default_include_item_tax]'] =
        $s->getSetting('default_include_item_tax');
-       echo H::openTag('select', array_merge($formControl, 
+       echo H::openTag('select', array_merge($formControl,
         $minSearch, [
         'name' => 'settings[default_include_item_tax]',
         'id' => 'settings[default_include_item_tax]'
@@ -159,24 +160,24 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::openTag('label', [
         'for' => 'settings[this_tax_year_from_date_year]'
        ]) . "\n";
-        echo $translator->translate('tax') . ' ' . 
-        $translator->translate('start') . ' ' . 
-        $translator->translate('date') . ' ' . 
+        echo $translator->translate('tax') . ' ' .
+        $translator->translate('start') . ' ' .
+        $translator->translate('date') . ' ' .
         $translator->translate('year') . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[this_tax_year_from_date_year]'] = 
+       $body['settings[this_tax_year_from_date_year]'] =
        $s->getSetting('this_tax_year_from_date_year');
        echo H::openTag('select', [
         'name' => 'settings[this_tax_year_from_date_year]',
         'id' => 'settings[this_tax_year_from_date_year]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]) . "\n";
         echo  new Option()
          ->value('')
          ->content($translator->translate('none'))
         . "\n";
         $years = [];
-        for ($y = 1980, $now = (int) date('Y') + 10; 
+        for ($y = 1980, $now = (int) date('Y') + 10;
          $y <= $now; ++$y) {
          $years[$y] = ['name' => $y, 'value' => $y];
          }
@@ -187,7 +188,7 @@ echo H::openTag('div', $row) . "\n"; //1
          $body['settings[this_tax_year_from_date_year]']
          == (string) $year['value']
         )
-         ->content((string) $year['value']) 
+         ->content((string) $year['value'])
         . "\n";
         }
        echo H::closeTag('select') . "\n";
@@ -196,18 +197,18 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::openTag('label', [
         'for' => 'settings[this_tax_year_from_date_month]'
        ]) . "\n";
-        echo $translator->translate('tax') . ' ' . 
-        $translator->translate('start') . ' ' . 
-        $translator->translate('date') . ' ' . 
+        echo $translator->translate('tax') . ' ' .
+        $translator->translate('start') . ' ' .
+        $translator->translate('date') . ' ' .
         $translator->translate('month') . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[this_tax_year_from_date_month]'] = 
+       $body['settings[this_tax_year_from_date_month]'] =
        $s->getSetting('this_tax_year_from_date_month');
        echo H::openTag('select', [
-        'name' => 
+        'name' =>
         'settings[this_tax_year_from_date_month]',
         'id' => 'settings[this_tax_year_from_date_month]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]) . "\n";
         echo  new Option()
          ->value('')
@@ -232,18 +233,18 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::openTag('label', [
         'for' => 'settings[this_tax_year_from_date_day]'
        ]) . "\n";
-        echo $translator->translate('tax') . ' ' . 
-        $translator->translate('start') . ' ' . 
-        $translator->translate('date') . ' ' . 
-        rtrim($translator->translate('days'), 's') 
+        echo $translator->translate('tax') . ' ' .
+        $translator->translate('start') . ' ' .
+        $translator->translate('date') . ' ' .
+        rtrim($translator->translate('days'), 's')
         . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[this_tax_year_from_date_day]'] = 
+       $body['settings[this_tax_year_from_date_day]'] =
        $s->getSetting('this_tax_year_from_date_day');
        echo H::openTag('select', [
         'name' => 'settings[this_tax_year_from_date_day]',
         'id' => 'settings[this_tax_year_from_date_day]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]) . "\n";
         echo  new Option()
          ->value('')

@@ -13,7 +13,7 @@ declare(strict_types=1);
  */
 
 ?>
-    
+
 <div id="modal-copy-inv-multiple"
      class="modal"
      tabindex="-1">
@@ -46,9 +46,9 @@ declare(strict_types=1);
                                    class="form-control form-control-lg"
                                    type="date"
                                    autocomplete="off">
-                       
+
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                  <button type="button"
@@ -59,7 +59,7 @@ declare(strict_types=1);
                  <button type="button"
                          class="modal_copy_inv_multiple_confirm btn btn-success"
                          id="modal_copy_inv_multiple_confirm">
-                     <i class="fa fa-check"></i>
+                     <i class="bi bi-check-lg"></i>
                      <?= $translator->translate('submit'); ?>
                  </button>
             </div>

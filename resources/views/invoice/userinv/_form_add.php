@@ -95,7 +95,7 @@ foreach ($uR->findAllPreloaded() as $user) {
             <?= $formFields->userInvTypeSelect($form, $typeOptions); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-            <?= Html::openTag('div', ['class' => 'p-2']); ?> 
+            <?= Html::openTag('div', ['class' => 'p-2']); ?>
                 <?= $formFields->userInvCheckboxField($form, 'active', 'active'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?><?= Html::closeTag('div'); ?>
@@ -111,13 +111,13 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
 }
 ?>
             <?= $formFields->userInvLanguageSelect($form, $languageOptions); ?>
-        <?= Html::closeTag('div'); ?>   
+        <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= $formFields->userInvTextField($form, 'name', 'name', true); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= $formFields->userInvTextField($form, 'company', 'company', false); ?>
-        <?= Html::closeTag('div'); ?>   
+        <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= $formFields->userInvTextField($form, 'address_1', 'street.address', false); ?>
         <?= Html::closeTag('div'); ?>
@@ -141,7 +141,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($translator->translate('phone'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('phone'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'phone',
     ])
     ->value(Html::encode($form->getPhone() ?? ''));
@@ -152,7 +152,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($translator->translate('fax'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('fax'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'fax',
     ])
     ->value(Html::encode($form->getFax() ?? ''));
@@ -163,7 +163,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($translator->translate('mobile'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('mobile'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'mobile',
     ])
     ->value(Html::encode($form->getMobile() ?? ''));
@@ -174,7 +174,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($translator->translate('email'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('email'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'email',
     ])
     ->disabled(true)
@@ -186,7 +186,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($translator->translate('web.address'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('web.address'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'web',
     ])
     ->value(Html::encode($form->getWeb() ?? ''));
@@ -197,7 +197,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($translator->translate('tax.code'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('tax.code'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'tax_code',
     ])
     ->value(Html::encode($form->getTaxCode() ?? ''));
@@ -208,7 +208,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($translator->translate('user.subscriber.number'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('user.subscriber.number'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'subscribernumber',
     ])
     ->value(Html::encode($form->getSubscribernumber() ?? ''));
@@ -219,7 +219,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($translator->translate('user.iban'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('user.iban'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'iban',
     ])
     ->value(Html::encode($form->getSubscribernumber() ?? ''));
@@ -230,7 +230,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($translator->translate('delivery.location.global.location.number'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('delivery.location.global.location.number'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'gln',
     ])
     ->value(Html::encode($form->getGln() ?? ''));
@@ -241,7 +241,7 @@ foreach (ArrayHelper::map($s->expandDirectoriesMatrix($aliases->get('@language')
     ->label($translator->translate('user.inv.list.limit'))
     ->addInputAttributes([
         'placeholder' => $translator->translate('user.inv.list.limit'),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'listLimit',
     ])
     ->value(Html::encode($form->getListLimit() ?? 10));

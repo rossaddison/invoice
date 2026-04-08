@@ -28,7 +28,7 @@ use Yiisoft\Html\Tag\Td;
 <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div class="card border border-dark shadow-2-strong rounded-3">                
+            <div class="card border border-dark shadow-2-strong rounded-3">
                 <div class="card-header bg-dark text-white">
                     <h5 class="fw-normal h3 text-center"><?= $translator->translate('two.factor.authentication'); ?></h5>
                 </div>
@@ -101,8 +101,8 @@ if (!empty($codes)) {
 $regenerateCodesUrl = $urlGenerator->generate('auth/regenerateCodes');
 echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
 ?>
-                </div>    
-                <div class="card-body p-2 text-center">    
+                </div>
+                <div class="card-body p-2 text-center">
                     <?=  new Form()
     ->post($urlGenerator->generate('auth/verifyLogin'))
     ->class('form-floating')
@@ -123,7 +123,7 @@ echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
     )
     ->error($error ?? '')
     ->required(true)
-    ->inputClass('form-control')
+    ->inputClass('form-control form-control-lg',)
     ->label($translator->translate('layout.password.otp.6.8'))
     ->autofocus();
 ?>

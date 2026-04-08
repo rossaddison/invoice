@@ -16,16 +16,11 @@ use Yiisoft\Yii\DataView\ValuePresenter\SimpleValuePresenter;
  */
 
 $this->setTitle('Profile');
-
-$title = Html::encode($this->getTitle());
 ?>
-
 <?= (string) DetailView::widget()
+    ->labelPrepend(Html::encode($this->getTitle()) . ' ')
     ->data($item)
-    ->containerAttributes(['class' => 'container'])
-    ->listAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
-    ->fieldAttributes(['class' => 'col-xl-5'])
-    ->fieldTag(new H2()->class('text-center')->content("<strong>$title</strong>")->encode(false)->render())
+    ->containerAttributes(['class' => 'container-fluid'])
     ->fields(
         new DataField(
             property: 'id',

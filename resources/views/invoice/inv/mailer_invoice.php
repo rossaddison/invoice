@@ -162,13 +162,13 @@ echo Html::script($js5)->type('module');
                         ->id('MailerInvForm')
                         ->open()
                     ?>
-                    
+
 <?=
     $alert;
     // The below panel is hidden but necessary for the emailtemplate.js to work
     // with the invoice dropdown
 ?>
-                    
+
                     <div class="panel panel-default" hidden>
 <?= Html::tag('Label', $translator->translate('type'),
         ['for' => 'email_template_type', 'class' => 'control-label']) ?>
@@ -225,7 +225,7 @@ echo Html::script($js5)->type('module');
         > 0 ? $autoTemplate['from_email'] :
         (Html::encode($userInv->getUser()?->getEmail()))])->hideLabel()
     ->addInputAttributes(['class' => 'email-template-from-email form-control'])
-    ->required(true); ?>                            
+    ->required(true); ?>
 
 <?= Html::tag('Label', $translator->translate('cc')); ?>
 <?= Field::text($form, 'cc')
@@ -270,11 +270,11 @@ echo Html::script($js5)->type('module');
     ->wrap('hard')
     ->hideLabel()
 ?>
-                    
+
                     <div class="html-tags btn-group btn-group-sm">
                         <span class="html-tag btn btn-default"
                               data-tag-type="text-paragraph">
-                            <i class="fa fa-paragraph"></i>
+                            <i class="bi bi-text-paragraph"></i>
                         </span>
                         <span class="html-tag btn btn-default"
                               data-tag-type="text-linebreak">
@@ -282,11 +282,11 @@ echo Html::script($js5)->type('module');
                         </span>
                         <span class="html-tag btn btn-default"
                               data-tag-type="text-bold">
-                            <i class="fa fa-bold"></i>
+                            <i class="bi bi-type-bold"></i>
                         </span>
                         <span class="html-tag btn btn-default"
                               data-tag-type="text-italic">
-                            <i class="fa fa-italic"></i>
+                            <i class="bi bi-type-italic"></i>
                         </span>
                     </div>
                     <div class="html-tags btn-group btn-group-sm">
@@ -302,7 +302,7 @@ echo Html::script($js5)->type('module');
                     <div class="html-tags btn-group btn-group-sm">
                         <span class="html-tag btn btn-default"
                               data-tag-type="text-code">
-                            <i class="fa fa-code"></i>
+                            <i class="bi bi-code-slash"></i>
                         </span>
                         <span class="html-tag btn btn-default"
                               data-tag-type="text-hr">
@@ -313,13 +313,13 @@ echo Html::script($js5)->type('module');
                             CSS
                         </span>
                     </div>
-                    
+
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <?= $translator->translate('preview'); ?>
                             <div id="email-template-preview-reload"
                                  class="pull-right cursor-pointer">
-                                <i class="fa fa-refresh"></i>
+                                <i class="bi bi-arrow-clockwise"></i>
                             </div>
                         </div>
                         <div class="panel-body">
@@ -329,16 +329,16 @@ echo Html::script($js5)->type('module');
                     </div>
                     <div>
                         <?php echo $templateTags ?>
-                    </div>                    
-                    
+                    </div>
+
                     <?= Field::file($form, 'attachFiles[]')
     ->containerClass('mb-3')
     ->multiple()
     ->hideLabel()
-?>                   
+?>
                     <div>
                     <div class="form-group">
-                        
+
                         <div class="input-group">
                         <?=
         Field::text($form, 'guest_url')
@@ -347,10 +347,10 @@ echo Html::script($js5)->type('module');
             'value' => $urlGenerator->generate(
                 'inv/urlKey',
                 ['url_key' => $invoice->getUrlKey(),'gateway' => ''],
-            ),'class' => 'form-control']);
+            ),'class' => 'form-control form-control-lg',]);
 echo Html::tag(
     'Div',
-    Html::tag('i', '', ['class' => 'fa fa-clipboard fa-fw']),
+    Html::tag('i', '', ['class' => 'bi bi-clipboard']),
     ['class' => 'input-group-text to-clipboard cursor-pointer',
         'data-clipboard-target' => '#invoice-guest-url','style' => 'height : 38px'],
 );
@@ -375,7 +375,7 @@ echo Html::tag(
     ],
 ]) ?>
                     <?=  new Form()->close(); ?>
-                </div>                
+                </div>
             </div>
         </div>
     </div>

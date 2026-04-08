@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1); 
+declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Form;
 /**
  * @var App\Invoice\Qa\QaForm $form
  * @var App\Invoice\Setting\SettingRepository $s
- * @var App\Widget\Button $button  
+ * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $csrf
@@ -17,13 +17,13 @@ use Yiisoft\Html\Tag\Form;
  * @var string $title
  * @psalm-var array<string, Stringable|null|scalar> $actionArguments
  * @psalm-var array<string,list<string>> $errors
- * @psalm-var array<array-key, array<array-key, string>|string> $qa         
+ * @psalm-var array<array-key, array<array-key, string>|string> $qa
  */
 
 echo Html::openTag('h1');
  echo Html::encode($title);
 echo Html::closeTag('h1');
-echo Html::openTag('div', ['class'=>'container-fluid py-3']); 
+echo Html::openTag('div', ['class'=>'container-fluid py-3']);
  echo Html::openTag('div',
         ['class'=>'row justify-content-center']); //1
   echo Html::openTag('div',['class'=>'col-12 col-lg-10 col-xl-10']); //2
@@ -52,43 +52,43 @@ echo Html::openTag('div', ['class'=>'container-fluid py-3']);
           echo Field::text($form,'question')
                ->label($translator->translate('faq.question'))
                ->addInputAttributes([
-                   'class' => 'form-control'
+                   'class' => 'form-control form-control-lg',
                ])
                ->value(Html::encode($form->getQuestion()))
-               ->disabled()   
+               ->disabled()
                ->placeholder($translator->translate('question'));
          echo Html::closeTag('div'); //9
          echo Html::openTag('div'); //9
           echo Field::text($form,'answer')
                ->label($translator->translate('faq.answer'))
                ->addInputAttributes([
-                   'class' => 'form-control'
+                   'class' => 'form-control form-control-lg',
                ])
                ->value(Html::encode($form->getAnswer()))
-               ->disabled()   
+               ->disabled()
                ->placeholder($translator->translate('faq.answer'));
          echo Html::closeTag('div'); //9
          echo Html::openTag('div'); //9
           echo Field::text($form,'sort_order')
                ->label($translator->translate('faq.sort.order'))
                ->addInputAttributes([
-                   'class' => 'form-control'
+                   'class' => 'form-control form-control-lg',
                ])
                ->value(Html::encode($form->getSortOrder()))
-               ->disabled()   
+               ->disabled()
                ->placeholder($translator->translate('faq.sort.order'));
          echo Html::closeTag('div'); //9
          echo Html::openTag('div'); //9
           echo Field::text($form,'active')
                ->label($translator->translate('faq.active'))
                ->addInputAttributes([
-                   'class' => 'form-control'
+                   'class' => 'form-control form-control-lg',
                ])
                ->value(Html::encode($form->getActive()))
-               ->disabled()  
+               ->disabled()
                ->placeholder($translator->translate('active'));
          echo Html::closeTag('div');  //9
-         echo Html::closeTag('form');//9 
+         echo Html::closeTag('form');//9
         echo Html::closeTag('div'); //8
        echo Html::closeTag('div'); //7
       echo Html::closeTag('div'); //6
@@ -96,5 +96,5 @@ echo Html::openTag('div', ['class'=>'container-fluid py-3']);
     echo Html::closeTag('div'); //4
    echo Html::closeTag('div'); //3
   echo Html::closeTag('div'); //2
-echo Html::closeTag('div');  //1 
+echo Html::closeTag('div');  //1
 ?>

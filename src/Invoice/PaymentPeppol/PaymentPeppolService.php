@@ -24,11 +24,11 @@ final readonly class PaymentPeppolService
         array $array
     ): void {
         $this->persist($model, $array);
-        isset($array['inv_id']) ? 
+        isset($array['inv_id']) ?
             $model->setInvId((int) $array['inv_id']) : '';
-        isset($array['id']) ? 
+        isset($array['id']) ?
             $model->setId((int) $array['id']) : '';
-        isset($array['provider']) ? 
+        isset($array['provider']) ?
             $model->setProvider((string) $array['provider']) : '';
 
         $timestamp = (new \DateTimeImmutable())

@@ -152,10 +152,10 @@ final class QuoteController extends BaseController
         private readonly LoggerInterface $logger,
         private readonly MailerInterface $mailer,
         private readonly soAS $so_amount_service,
-        private readonly soACS $soac_service,    
+        private readonly soACS $soac_service,
         private readonly soCS $so_custom_service,
         private readonly soIS $so_item_service,
-        private readonly soIACS $so_item_ac_service,    
+        private readonly soIACS $so_item_ac_service,
         private readonly soS $so_service,
         private readonly soTRS $so_tax_rate_service,
         private readonly QuoteAllowanceChargeService $qac_Service,
@@ -226,7 +226,7 @@ final class QuoteController extends BaseController
             $ucR,
             $form,
         );
-        
+
         // A quote can originate and be added from the following pages:
         // 1. Main Menu e.g /invoice
         // 2. Client Menu e.g. /invoice/client/view/25
@@ -303,7 +303,7 @@ final class QuoteController extends BaseController
                         $this->flashMessage('success',
                             $this->translator->translate(
                                 'record.successfully.created')
-                                . '➡️ '
+                                . 'âž¡ï¸ '
                                 . $client_fullname);
                         if ($origin == 'main' || $origin == 'quote') {
                             return $this->webService->getRedirectResponse(
@@ -378,7 +378,7 @@ final class QuoteController extends BaseController
         QIR $qiR,
         QR $qR,
         QTRR $qtrR,
-        SOR $soR,    
+        SOR $soR,
         TRR $trR,
         UR $uR,
         UCR $ucR,
@@ -394,7 +394,7 @@ final class QuoteController extends BaseController
                 $quote = $qR->repoUrlKeyGuestLoaded($url_key);
                 // default_invoice_group 1,
                 // default_quote_group 2,
-                // default_sales_order_group 3, default_ 
+                // default_sales_order_group 3, default_
                 $number = $gR->generateNumber(
                     (int) $this->sR->getSetting(
                         'default_sales_order_group'), true);
@@ -413,7 +413,7 @@ final class QuoteController extends BaseController
                             'number' => $number,
                             'discount_amount' =>
                                 (float) $quote->getDiscountAmount(),
-                            // The quote's url will be the same for the 
+                            // The quote's url will be the same for the
                             // po allowing for a trace
                             'url_key' => $quote->getUrlKey(),
                             'password' => $quote->getPassword() ?? '',
@@ -505,7 +505,7 @@ final class QuoteController extends BaseController
                                 'record.successfully.updated'),'url' =>
                                 'quote/view','id' => $quote_id],
                         ));
-                    }    
+                    }
                 }
             }
         }
@@ -1560,7 +1560,7 @@ final class QuoteController extends BaseController
             . '<br>',
             'client_address_2' => ($client->getClientAddress2() ?? '')
             . '<br>',
-            'client_townline' => ($client->getClientCity() ?? '') 
+            'client_townline' => ($client->getClientCity() ?? '')
                 . '<br>' . ($client->getClientState() ?? '') . '<br>'
                 . ($client->getClientZip() ?? '') . '<br>',
             'client_country' => $client->getClientCountry() ?? '',
@@ -1574,7 +1574,7 @@ final class QuoteController extends BaseController
                 . (string) Html::link($client->getClientEmail()),
             // Reset the a href id="after_client_change_url" link
             // to the new client url
-            'after_client_change_url' => 'client/view/' 
+            'after_client_change_url' => 'client/view/'
                 . (string) $body['client_id'],
             'after_client_change_name' => $client->getClientName(),
         ];
@@ -1801,7 +1801,7 @@ final class QuoteController extends BaseController
         IIAR $iiaR,
         InvItemAmountService $iiaS,
         PR $pR,
-        TASKR $taskR,    
+        TASKR $taskR,
         QAR $qaR,
         QCR $qcR,
         QIR $qiR,
@@ -1867,7 +1867,7 @@ final class QuoteController extends BaseController
                             $inv_id = $inv->getId();
                             if (null !== $inv_id) {
                                 // Transfer each quote_item to inv_item and the
-                                // corresponding quote_item_amount to 
+                                // corresponding quote_item_amount to
                                 // inv_item_amount for each item
                                 $this->quoteToInvoiceQuoteItems(
                                     $quote_id, $inv_id, $acqiR, $aciiR, $iiaR,
@@ -2284,7 +2284,7 @@ final class QuoteController extends BaseController
             $this->inv_amount_service->saveInvAmount($entity, $inv_amount);
         }
     }
-    
+
     private function quoteToInvoiceQuoteAllowanceCharges(string $quote_id,
         string $copy_id, ACQR $acqR, FormHydrator $formHydrator): void
     {
@@ -2370,7 +2370,7 @@ final class QuoteController extends BaseController
     public function quoteToQuoteConfirm(
         Request $request,
         FormHydrator $formHydrator,
-        ACQR $acqR,    
+        ACQR $acqR,
         ACQIR $acqiR,
         GR $gR,
         QIAS $qiaS,
@@ -2523,10 +2523,10 @@ final class QuoteController extends BaseController
                 $this->copyQuoteItemAllowanceCharges($origQuoteItemId,
                     $acqiR, $new_quote_id, $newQuoteItem);
             }
-            
+
         } // items as quote_item
     }
-    
+
     private function copyQuoteItemAllowanceCharges(string $origQuoteItemId,
         ACQIR $acqiR, string $new_quote_id, QuoteItem $newQuoteItem): void {
         // Note: QuoteAllowanceCharges are irrelevant here since they relate
@@ -2536,34 +2536,34 @@ final class QuoteController extends BaseController
         //
         // All AllowanceCharges belonging to the current quote item
         // have to be copied as well
-         
+
         $all = $acqiR->repoQuoteItemquery($origQuoteItemId);
         /**
          * @var QuoteItemAllowanceCharge $quoteItemAllowanceCharge
          */
         foreach ($all as $quoteItemAllowanceCharge) {
             $acqItem = new QuoteItemAllowanceCharge();
-            
+
             $acqItem->setQuote($newQuoteItem->getQuote());
             $acqItem->setQuoteItem($newQuoteItem);
             $acqItem->setAllowanceCharge($quoteItemAllowanceCharge->getAllowanceCharge());
-            
+
             // Also set FK IDs for consistency
             $acqItem->setQuoteId((int) $new_quote_id);
             $acqItem->setQuoteItemId((int) $newQuoteItem->getId());
             $acqItem->setAllowanceChargeId(
                 (int) $quoteItemAllowanceCharge->getAllowanceCharge()?->getId()
             );
-            
+
             // Set other properties
             $acqItem->setAmount((float) $quoteItemAllowanceCharge->getAmount());
             $acqItem->setVatOrTax((float) $quoteItemAllowanceCharge->getVatOrTax() ?: 0.00);
-            
+
             // Save directly via repository
             $acqiR->save($acqItem);
         }
     }
-    
+
     private function quoteToSoQuoteItems(string $quote_id, string $new_so_id,
         ACQIR $acqiR, ACSOIR $acsoiR, soIAR $soiaR, soIAS $soiaS, PR $pR,
         TASKR $taskR, QIR $qiR, TRR $trR, UNR $unR, FormHydrator $formHydrator):
@@ -2599,12 +2599,12 @@ final class QuoteController extends BaseController
                 // Save the SO item without calculating amounts yet
 $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         $pR, $taskR, $unR, $this->translator);
-                
+
                 // Copy allowances/charges from quote item to sales order item
                 $this->copyQuoteItemAllowanceChargesToSo(
                         $origQuoteItemId, $acqiR, $new_so_id,
                         $newSoItem, $acsoiR);
-                
+
                 // Now calculate amounts INCLUDING the allowances/charges
                 $tax_rate_percentage = $this->so_item_service->taxratePercentage(
                         (int) $so_item['tax_rate_id'], $trR);
@@ -2625,33 +2625,33 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
             }
         } // items as quote_item
     }
-    
+
     private function copyQuoteItemAllowanceChargesToSo(
         string $origQuoteItemId, ACQIR $acqiR, string $new_so_id,
             SoItem $newSalesOrderItem, ACSOIR $acsoiR): void {
-         
+
         $all = $acqiR->repoQuoteItemquery($origQuoteItemId);
         /**
          * @var QuoteItemAllowanceCharge $quoteItemAllowanceCharge
          */
         foreach ($all as $quoteItemAllowanceCharge) {
             $acsoItem = new SalesOrderItemAllowanceCharge();
-            
+
             $acsoItem->setSalesOrder($newSalesOrderItem->getSalesOrder());
             $acsoItem->setSalesOrderItem($newSalesOrderItem);
             $acsoItem->setAllowanceCharge(
                     $quoteItemAllowanceCharge->getAllowanceCharge());
-            
+
             $acsoItem->setSalesOrderId((int) $new_so_id);
             $acsoItem->setSalesOrderItemId((int) $newSalesOrderItem->getId());
             $acsoItem->setAllowanceChargeId(
                 (int) $quoteItemAllowanceCharge->getAllowanceCharge()?->getId()
             );
-            
+
             $acsoItem->setAmount((float) $quoteItemAllowanceCharge->getAmount());
             $acsoItem->setVatOrTax((float) $quoteItemAllowanceCharge->getVatOrTax()
                     ?: 0.00);
-            
+
             $acsoiR->save($acsoItem);
         }
     }
@@ -2680,7 +2680,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
             }
         }
     }
-    
+
     private function quoteToQuoteQuoteAllowanceCharges(string $quote_id,
         string $copy_id, ACQR $acqR, FormHydrator $formHydrator): void
     {
@@ -2706,7 +2706,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
             }
         }
     }
-    
+
     private function quoteToSoQuoteAllowanceCharges(string $quote_id,
         string $new_so_id, ACQR $acqR, FormHydrator $formHydrator): void
     {
@@ -3282,7 +3282,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         } //quote
         return $this->webService->getNotFoundResponse();
     }
-    
+
     /**
      * Purpose:
      * Prevent browser manipulation and ensure that views are only accessible
@@ -3311,7 +3311,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
         }
         return false;
     }
-    
+
     private function rbacAccountant() : bool {
         // has accountant role
         if (($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -3322,7 +3322,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
             return false;
         }
     }
-    
+
     private function rbacAdmin() : bool {
         // has observer role
         if ($this->userService->hasPermission(Permissions::VIEW_INV)
@@ -3474,15 +3474,15 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
     {
         $optionsDataStatus = [];
         $statuses = $qR->getStatuses($this->translator);
-        
-        /** 
+
+        /**
          * @var array<int, array<string, string>> $statuses
          */
         foreach (array_keys($statuses) as $statusId) {
             $label = $qR->getSpecificStatusArrayLabel((string) $statusId);
             $optionsDataStatus[$statusId] = $label;
         }
-        
+
         return $optionsDataStatus;
     }
 }

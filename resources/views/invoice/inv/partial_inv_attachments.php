@@ -37,11 +37,11 @@ if ($invEdit && $invView) {
                ])
                ->content(' ' . $translator->translate('attachments'));
 ?>
-        </b>    
+        </b>
     </div>
     <div class="panel-body clearfix">
         <div class="container">
-            <?php if ($invView && $invEdit) { ?> 
+            <?php if ($invView && $invEdit) { ?>
             <?= Html::openTag('div', ['class' => 'row']); ?>
                 <div>
                     <div>

@@ -60,7 +60,7 @@ $vat = $s->getSetting('enable_vat_registration');
 <div>
 <br>
 <br>
-</div> 
+</div>
 <input type="hidden"
        id="_csrf"
        name="_csrf"
@@ -83,15 +83,15 @@ $vat = $s->getSetting('enable_vat_registration');
                 <?= $translator->translate('options'); ?>
                 </button>
                 <ul class="dropdown-menu dropdown-menu">
-            
+
 <?php
             if ($invEdit) { ?>
                 <li>1
-                    
-                    <a href="<?= 
+
+                    <a href="<?=
 $urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]) ?>"
                        style="text-decoration:none">
-                       <i class="fa fa-edit fa-margin"></i>
+                       <i class="bi-pencil-square"></i>
                        <?= $translator->translate('edit'); ?>
                     </a>
                 </li>
@@ -101,7 +101,7 @@ $urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]) ?>"
                             ['include' => 1]); ?>"
                        target="_blank"
                        style="text-decoration:none">
-                       <i class="fa fa-file-pdf-o"></i>
+                       <i class="fa bi-file-pdf"></i>
                        <?= $translator->translate('download.pdf')
                             . ': '
                             . $translator->translate('custom.fields')
@@ -113,7 +113,7 @@ $urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]) ?>"
                             ['include' => 0]); ?>"
                        target="_blank"
                        style="text-decoration:none">
-                        <i class="fa fa-file-pdf-o"></i>
+                        <i class="fa bi-file-pdf"></i>
                         <?= $translator->translate('download.pdf')
                             . ': '
                             . $translator->translate('custom.fields')
@@ -125,25 +125,25 @@ $urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]) ?>"
 // if the status is draft do not show button
 // only show the button if the sales order has reached invoice generate stage ie 6
 if (null !== $so->getInvId() || (in_array($so->getStatusId(), [1,2,3,4,5]))) {
-            } else {?> 
-                    <?php if ($invEdit) { ?> 
+            } else {?>
+                    <?php if ($invEdit) { ?>
                 <li>
                             <a href="#so-to-invoice"
                                data-bs-toggle="modal"
                                style="text-decoration:none">
-                        <i class="fa fa-refresh fa-margin"></i>
+                        <i class="bi bi-arrow-clockwise"></i>
                         <?= $translator->translate('salesorder.to.invoice'); ?>
                     </a>
                 </li>
-                    <?php } ?>    
+                    <?php } ?>
                 <?php } ?>
             </ul>
-        </div>        
+        </div>
     </div>
 </div>
 
-<div id="content">    
-    <?= $alert; ?>  
+<div id="content">
+    <?= $alert; ?>
     <div id="salesorder_form">
         <div class="salesorder">
             <div class = 'row'>
@@ -224,7 +224,7 @@ Html::encode($so->getClient()?->getClientAddress1()) . '<br>' : ''; ?>
  <?php if (null !== $so->getNumber()) : ?> value="<?= $so->getNumber(); ?>"
 <?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
                                         <?php endif; ?>>
-                                </div>                                
+                                </div>
                                 <div has-feedback">
                                     <label for="salesorder_date_created">
 <?= $vat == '0' ? $translator->translate('date.issued') :
@@ -240,7 +240,7 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
         $so->getDateCreated()->format('Y-m-d') :
     (is_string($so->getDateCreated()) ? $so->getDateCreated() : '')); ?>"/>
                                         <span class="input-group-text">
-                                            <i class="fa fa-calendar fa-fw"></i>
+                                            <i class="bi bi-calendar"></i>
                                         </span>
                                     </div>
                                 </div>
@@ -275,9 +275,9 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
     <?php if ($customField->getLocation() !== 1) {
         continue;
     } ?>
-<?php  $cvH->printFieldForView($customField, $form, $salesOrderCustomValues); ?>                                   
+<?php  $cvH->printFieldForView($customField, $form, $salesOrderCustomValues); ?>
 <?php endforeach; ?>
-                                </div>    
+                                </div>
                             </div>
                             <div class="col-xs-12 col-md-6">
 
@@ -300,7 +300,7 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
  <?php if ($key == $so->getStatusId()) {
     $s->checkSelect(Html::encode($so->getStatusId() ?? ''), $key);
                                             } ?>>
-                                        <?= Html::encode($status['label']); ?> 
+                                        <?= Html::encode($status['label']); ?>
                                             </option>
                                         <?php } ?>
                                     </select>
@@ -326,7 +326,7 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
                                            id="salesorder_client_purchase_order_number"
                                            class="form-control form-control-lg"
                                            disabled
-                                           value="<?= 
+                                           value="<?=
                             Html::encode($so->getClientPoNumber() ?? ''); ?>">
                                 </div>
                                 <div>
@@ -337,16 +337,16 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
                                            id="salesorder_client_purchase_order_person"
                                            class="form-control form-control-lg"
                                            disabled
-                                           value="<?= 
+                                           value="<?=
                             Html::encode($so->getClientPoPerson() ?? ''); ?>">
                                 </div>
-                               
+
                                     <?php
                                    // 2 => Terms Agreement Required 8=> Rejected
                      if (in_array($so->getStatusId(), [2,8]) && !$invEdit) { ?>
                                         <div>
                                             <br>
-                                            <a href="<?= 
+                                            <a href="<?=
                          $urlGenerator->generate('salesorder/urlKey',
                                  ['key' => $so->getUrlKey()]); ?>"
                                                class="btn btn-success">
@@ -376,7 +376,7 @@ $so->getDateCreated() instanceof \DateTimeImmutable ?
        $partial_item_table;
     ?>
    </div>
-    
+
    <div class = 'row'>
             <div class="col-xs-12 col-md-6">
                 <div class="panel panel-default no-margin">

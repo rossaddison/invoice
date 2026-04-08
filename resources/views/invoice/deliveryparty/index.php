@@ -48,14 +48,14 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (DeliveryParty $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('deliveryparty/view', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('deliveryparty/view', ['id' => $model->getId()]), []);
         },
     ),
     new DataColumn(
         'id',
         header: $translator->translate('delivery.party.edit'),
         content: static function (DeliveryParty $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('deliveryparty/edit', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('deliveryparty/edit', ['id' => $model->getId()]), []);
         },
     ),
     new DataColumn(
@@ -64,7 +64,7 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',

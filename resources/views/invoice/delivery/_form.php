@@ -59,7 +59,7 @@ use Yiisoft\Html\Tag\Form;
             'name' => 'btn_send',
         ],
     ]) ?>
-    
+
             <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
                 <?= Field::errorSummary($form)
                     ->errors($errors)
@@ -68,7 +68,7 @@ use Yiisoft\Html\Tag\Form;
                     ->onlyCommonErrors()
             ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php
 Field::hidden($form, 'date_created')
 ->label($translator->translate('delivery.date.created')
@@ -85,7 +85,7 @@ Field::hidden($form, 'date_created')
 ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php
         Field::hidden($form, 'date_modified')
         ->label($translator->translate('delivery.date.modified')
@@ -102,7 +102,7 @@ Field::hidden($form, 'date_created')
         ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php
     echo Field::date($form, 'start_date')
     ->label($translator->translate('delivery.start.date')
@@ -113,7 +113,7 @@ Field::hidden($form, 'date_created')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php
     echo Field::date($form, 'actual_delivery_date')
     ->label($translator->translate('delivery.actual.delivery.date')
@@ -124,7 +124,7 @@ Field::hidden($form, 'date_created')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php
     echo Field::date($form, 'end_date')
     ->label($translator->translate('delivery.end.date')
@@ -135,7 +135,7 @@ Field::hidden($form, 'date_created')
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>    
+            <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php
     if ($del_count > 0) {
         $optionsDataDel = [];
@@ -153,7 +153,7 @@ Field::hidden($form, 'date_created')
         echo Field::select($form, 'delivery_location_id')
         ->label($translator->translate('delivery.location'))
         ->addInputAttributes([
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'id' => 'delivery_location_id',
         ])
         ->optionsData($optionsDataDel)
@@ -173,7 +173,7 @@ Field::hidden($form, 'date_created')
     }
 ?>
         <?= Html::closeTag('div'); ?>
-   
+
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

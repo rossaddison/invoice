@@ -12,18 +12,34 @@ use Yiisoft\Html\Tag\Option;
 * @var array $locales
 */
 
-echo H::openTag('div', ['class' => 'row']); //1
- echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']); //2
-  echo H::openTag('div', ['class' => 'panel panel-default']); //3
-   echo H::openTag('div', ['class' => 'panel-heading']); //4
+$row = ['class' => 'row'];
+$colMd6 = ['class' => 'col-xs-12 col-md-6'];
+$colMd8 = ['class' => 'col-xs-12 col-md-8 col-md-offset-2'];
+$panel = ['class' => 'panel panel-default'];
+$panelHead = ['class' => 'panel-heading'];
+$panelBody = ['class' => 'panel-body'];
+$formGroup = ['class' => 'form-group'];
+$kJsonFilename = 'settings[google_translate_json_filename]';
+$kLocale = 'settings[google_translate_locale]';
+$biLink = 'bi bi-link';
+$inputSmFc = 'input-sm form-control';
+$curlPemUrl = 'https://curl.haxx.se/ca/cacert.pem';
+$googleConsoleUrl = 'https://console.cloud.google.com/projectselector2/';
+$googleConsolePath = 'iam-admin/serviceaccounts?supportedpurview=project';
+$adjThe = ' Adjust the ';
+
+echo H::openTag('div', $row); //1
+ echo H::openTag('div', $colMd8); //2
+  echo H::openTag('div', $panel); //3
+   echo H::openTag('div', $panelHead); //4
     echo 'Google Translate';
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
-    echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
-      echo H::openTag('div', ['class' => 'form-group']); //7
+   echo H::openTag('div', $panelBody); //4
+    echo H::openTag('div', $row); //5
+     echo H::openTag('div', $colMd6); //6
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[google_translate_json_filename]'
+        'for' => $kJsonFilename
        ]);
         echo H::openTag('i', ['class' => 'bi bi-info-circle']);
         echo H::closeTag('i');
@@ -31,31 +47,31 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo 'Google Translate Json Filename ';
         echo '(eg. my_json_filename.json)';
        echo H::closeTag('label');
-       $body['settings[google_translate_json_filename]'] = 
+       $body[$kJsonFilename] =
        $s->getSetting('google_translate_json_filename');
        echo H::openTag('input', [
         'type' => 'text',
-        'class' => 'input-sm form-control',
-        'name' => 'settings[google_translate_json_filename]',
-        'id' => 'settings[google_translate_json_filename]',
-        'value' => $body['settings[google_translate_json_filename]']
+        'class' => $inputSmFc,
+        'name' => $kJsonFilename,
+        'id' => $kJsonFilename,
+        'value' => $body[$kJsonFilename]
        ]);
       echo H::closeTag('div'); //7
-      echo H::openTag('div', ['class' => 'form-group']); //7
+      echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' => 'settings[google_translate_locale]'
+        'for' => $kLocale
        ]);
         echo H::openTag('i', ['class' => 'bi bi-info-circle']);
         echo H::closeTag('i');
         echo ' ';
         echo 'Google Translate Locale';
        echo H::closeTag('label');
-       $body['settings[google_translate_locale]'] = 
+       $body[$kLocale] =
        $s->getSetting('google_translate_locale');
        echo H::openTag('select', [
-        'name' => 'settings[google_translate_locale]',
-        'id' => 'settings[google_translate_locale]',
-        'class' => 'form-control'
+        'name' => $kLocale,
+        'id' => $kLocale,
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('')
@@ -68,7 +84,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value($value)
          ->selected(
-          $body['settings[google_translate_locale]'] == $value
+          $body[$kLocale] == $value
          )
          ->content($value);
         }
@@ -77,7 +93,7 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
+   echo H::openTag('div', $panelBody); //4
     echo H::openTag('p');
      echo H::openTag('b');
       echo 'Objective:';
@@ -85,7 +101,7 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo ' Translate the template file at ';
      echo '\www\invoice\resources\messages\en\app.php into e.g. ';
      echo H::openTag('a', [
-      'href' => 
+      'href' =>
       'https://github.com/rossaddison/invoice/commit/' .
       '28188010c7965092f92484871712bf8347f0f5ed',
       'target' => '_blank'
@@ -112,7 +128,7 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::openTag('b');
       echo 'Step 2:';
      echo H::closeTag('b');
-     echo ' Adjust the ';
+     echo $adjThe;
      echo H::openTag('code');
       echo '\\resources\\views\\layout';
      echo H::closeTag('code');
@@ -122,7 +138,7 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::openTag('b');
       echo 'Step 3:';
      echo H::closeTag('b');
-     echo ' Adjust the ';
+     echo $adjThe;
      echo H::openTag('code');
       echo 'SettingsRepository locale_language_array()';
      echo H::closeTag('code');
@@ -136,7 +152,7 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::openTag('b');
       echo 'Step 4:';
      echo H::closeTag('b');
-     echo ' Adjust the ';
+     echo $adjThe;
      echo H::openTag('code');
       echo 'config\\web\\params.php';
      echo H::closeTag('code');
@@ -156,38 +172,38 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo ' Adjust the src/ViewInjection/LayoutViewInjection.php';
     echo H::closeTag('p');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
+   echo H::openTag('div', $panelBody); //4
     echo H::openTag('p');
-     echo H::openTag('i', ['class' => 'bi bi-link']);
+     echo H::openTag('i', ['class' => $biLink]);
      echo H::closeTag('i');
      echo ' ';
      echo H::openTag('a', [
-      'href' => 'https://curl.haxx.se/ca/cacert.pem',
+      'href' => $curlPemUrl,
       'target' => '_blank'
      ]);
-      echo 'https://curl.haxx.se/ca/cacert.pem';
+      echo $curlPemUrl;
      echo H::closeTag('a');
     echo H::closeTag('p');
     echo H::openTag('p');
-     echo H::openTag('i', ['class' => 'bi bi-link']);
+     echo H::openTag('i', ['class' => $biLink]);
      echo H::closeTag('i');
      echo H::openTag('a', [
-      'href' => 
-      'https://console.cloud.google.com/projectselector2/' .
-      'iam-admin/serviceaccounts?supportedpurview=project',
+      'href' =>
+      $googleConsoleUrl .
+      $googleConsolePath,
       'target' => '_blank'
      ]);
-      echo 'https://console.cloud.google.com/projectselector2/';
-      echo 'iam-admin/serviceaccounts?supportedpurview=project';
+      echo $googleConsoleUrl;
+      echo $googleConsolePath;
      echo H::closeTag('a');
     echo H::closeTag('p');
     echo H::openTag('p');
-     echo H::openTag('i', ['class' => 'bi bi-link']);
+     echo H::openTag('i', ['class' => $biLink]);
      echo H::closeTag('i');
      echo php_ini_loaded_file();
     echo H::closeTag('p');
    echo H::closeTag('div'); //4
-   echo H::openTag('div', ['class' => 'panel-body']); //4
+   echo H::openTag('div', $panelBody); //4
     echo H::openTag('p', ['class' => 'demoTitle']);
      echo '&nbsp; &nbsp;';
     echo H::closeTag('p');
@@ -219,7 +235,7 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::openTag('br');
      echo 'Download ';
      echo H::openTag('code');
-      echo 'https://curl.haxx.se/ca/cacert.pem';
+      echo $curlPemUrl;
      echo H::closeTag('code');
      echo ' into active ';
      echo H::openTag('code');
@@ -235,8 +251,8 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::openTag('br');
      echo 'Select your project that you created under ';
      echo H::openTag('code');
-      echo 'https://console.cloud.google.com/projectselector2/';
-      echo 'iam-admin/serviceaccounts?supportedpurview=project';
+      echo $googleConsoleUrl;
+      echo $googleConsolePath;
      echo H::closeTag('code');
     echo H::closeTag('p');
     echo H::openTag('p');

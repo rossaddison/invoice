@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\Option;
 
 $settingKey = 'settings[default_client_purchase_order_group]';
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']); //2
   echo H::openTag('div', ['class' => 'panel panel-default']); //3
@@ -23,7 +24,7 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::openTag('div', ['class' => 'row']); //5
      echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
-       echo H::openTag('label', [ 
+       echo H::openTag('label', [
         'for' => $settingKey
        ]);
         echo $translator->translate('salesorder.default.group');
@@ -33,7 +34,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => $settingKey,
         'id' => $settingKey,
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('')

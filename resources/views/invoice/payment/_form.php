@@ -56,7 +56,7 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($translator->translate('payment.form')) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -120,7 +120,7 @@ if ($openInvsCount > 0) {
         ->optionsData($optionsDataInvId)
         ->hint($translator->translate('hint.this.field.is.required'))
 ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'payment_date')
     ->label($translator->translate('date'))
@@ -135,7 +135,7 @@ if ($openInvsCount > 0) {
     ->addInputAttributes([
         'placeholder' => $translator->translate('note'),
         'value' => Html::encode($form->getNote() ?? ''),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'note',
     ])
     ->hint($translator->translate('hint.this.field.is.required'));
@@ -155,10 +155,10 @@ if ($openInvsCount > 0) {
 /**
  * @var App\Invoice\Entity\CustomField $customField
  */
-foreach ($customFields as $customField): ?>  
+foreach ($customFields as $customField): ?>
                         <?php $cvH->printFieldForForm($customField, $paymentCustomForm, $translator, $urlGenerator, $paymentCustomValues, $customValues); ?>
                 <?php endforeach; ?>
-            <?= Html::closeTag('div'); ?>    
+            <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>

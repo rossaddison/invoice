@@ -53,7 +53,7 @@ final class CompanyForm extends FormModel
     #[Url()]
     #[Length(min: 0, max: 255, skipOnEmpty: true)]
     private ?string $web = '';
-    
+
     #[Length(min: 0, max: 255, skipOnEmpty: true)]
     private ?string $seo_description = '';
 
@@ -167,7 +167,7 @@ final class CompanyForm extends FormModel
     {
         return $this->web;
     }
-    
+
     public function getSeoDescription(): ?string
     {
         return $this->seo_description;

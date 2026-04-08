@@ -45,7 +45,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::text($form, 'client_id')
     ->readonly(true)
     ->value(Html::encode($form->getClientId() ?? $client_id))
-?>    
+?>
     <?= Field::text($form, 'reference')
    ->label($translator->translate('contract.reference'))
    ->addInputAttributes([

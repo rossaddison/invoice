@@ -2,8 +2,13 @@
 
 declare(strict_types=1);
 
+/**
+ * @var int $fontSize
+ */
+
 ?>
 
+<div style="font-size: <?= $fontSize + 2 ?: 10; ?>px;">
 <p><b>How can I include https://github.com/rossaddison/yii-auth-client/blob/master/src/StateStorage/SessionStateStorage.php to improve the state management in the `callbackGithub` function?</b></p>
 
 <p>To include <code>SessionStateStorage</code> from the <code>yii-auth-client</code> repository and use it to improve the state management in the <code>callbackGithub</code> function, you should follow these steps:</p>
@@ -187,3 +192,4 @@ declare(strict_types=1);
 <li><strong>Used <code>SessionStateStorage</code></strong> to store and retrieve the OAuth2 state.</li>
 <li><strong>Updated the <code>callbackGithub</code> function</strong> to use <code>SessionStateStorage</code> for state management, ensuring the state is correctly validated to prevent CSRF attacks.</li>
 </ol>
+</div>

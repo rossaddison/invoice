@@ -15,6 +15,7 @@ use Yiisoft\Html\Tag\Option;
 * @var string $country
 */
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']); //2
   echo H::openTag('div', ['class' => 'panel panel-default']); //3
@@ -38,12 +39,12 @@ echo H::openTag('div', ['class' => 'row']); //1
         ['style' => 'text-decoration:none']
         );
        echo H::closeTag('label');
-       $body['settings[storecove_country]'] = 
+       $body['settings[storecove_country]'] =
        $s->getSetting('storecove_country');
        echo H::openTag('select', [
         'name' => 'settings[storecove_country]',
         'id' => 'settings[storecove_country]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         /**
         * @var string $cldr
@@ -53,18 +54,17 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value($cldr)
          ->selected(
-          $cldr == 
+          $cldr ==
           $body['settings[storecove_country]']
          )
+         ->encode(false)
          ->content(
-          H::encode(
-          $cldr . 
-          str_repeat("&nbsp;", 2) . 
-          str_repeat("-", 10) . 
-          str_repeat("&nbsp;", 2) . 
+          $cldr .
+          str_repeat("&nbsp;", 2) .
+          str_repeat("-", 10) .
+          str_repeat("&nbsp;", 2) .
           $country
-         )
-        );
+         );
         }
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
@@ -78,14 +78,14 @@ echo H::openTag('div', ['class' => 'row']); //1
          'storecove.legal.entity.id.for.json'
         );
        echo H::closeTag('label');
-       $body['settings[storecove_legal_entity_id]'] = 
+       $body['settings[storecove_legal_entity_id]'] =
        $s->getSetting('storecove_legal_entity_id');
        echo H::openTag('input', [
         'type' => 'text',
         'name' => 'settings[storecove_legal_entity_id]',
         'id' => 'storecove_legal_entity_id',
-        'class' => 'form-control',
-        'value' => 
+        'class' => 'form-control form-control-lg',
+        'value' =>
         $body['settings[storecove_legal_entity_id]']
        ]);
       echo H::closeTag('div'); //7
@@ -99,14 +99,14 @@ echo H::openTag('div', ['class' => 'row']); //1
          'storecove.sender.identifier'
         );
        echo H::closeTag('label');
-       $body['settings[storecove_sender_identifier]'] = 
+       $body['settings[storecove_sender_identifier]'] =
        $s->getSetting('storecove_sender_identifier');
        echo H::openTag('select', [
-        'name' => 
+        'name' =>
         'settings[storecove_sender_identifier]',
-        'id' => 
+        'id' =>
         'settings[storecove_sender_identifier]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         /**
         * @var string $key
@@ -118,14 +118,14 @@ echo H::openTag('div', ['class' => 'row']); //1
         /** @var string $countryVal */
         $countryVal = $value['Country'] ?? '';
         /** @var string $legal */
-        $legal = !empty($value['Legal']) ? 
-        $value['Legal'] : 
+        $legal = !empty($value['Legal']) ?
+        $value['Legal'] :
         $translator->translate(
          'storecove.not.available'
         );
         /** @var string $tax */
-        $tax = !empty($value['Tax']) ? 
-        $value['Tax'] : 
+        $tax = !empty($value['Tax']) ?
+        $value['Tax'] :
         $translator->translate(
          'storecove.not.available'
         );
@@ -147,18 +147,19 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value($key)
          ->selected(
-          $key == 
+          $key ==
           $body[
           'settings[storecove_sender' .
           '_identifier]'
          ]
         )
-         ->content(H::encode($content));
+         ->encode(false)
+         ->content($content);
         }
        echo H::closeTag('select');
        echo H::openTag('br');
        echo H::openTag('label', [
-        'for' => 
+        'for' =>
         'storecove_sender_identifier_basis'
        ]);
         echo $translator->translate(
@@ -170,45 +171,41 @@ echo H::openTag('div', ['class' => 'row']); //1
         'storecove_sender_identifier_basis'
        );
        echo H::openTag('select', [
-        'name' => 
+        'name' =>
         'settings[storecove_sender_identifier' .
         '_basis]',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'storecove_sender_identifier_basis',
-        'data-minimum-results-for-search' => 
+        'data-minimum-results-for-search' =>
         'Infinity'
        ]);
         echo  new Option()
          ->value('Legal')
          ->selected(
-          'Legal' == 
+          'Legal' ==
           $body[
           'settings[storecove_sender' .
           '_identifier_basis]'
          ]
         )
          ->content(
-          H::encode(
           $translator->translate(
           'storecove.legal'
          )
-        )
         );
         echo  new Option()
          ->value('Tax')
          ->selected(
-          'Tax' == 
+          'Tax' ==
           $body[
           'settings[storecove_sender' .
           '_identifier_basis]'
          ]
         )
          ->content(
-          H::encode(
           $translator->translate(
           'storecove.tax'
          )
-        )
         );
        echo H::closeTag('select');
       echo H::closeTag('div'); //7

@@ -4,13 +4,13 @@
 export function initTooltips(): void {
     const bootstrap = (window as any).bootstrap;
     if (typeof bootstrap === 'undefined' || !bootstrap.Tooltip) return;
-    
+
     const tooltipElements = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     tooltipElements.forEach((el) => {
-        try { 
-            new bootstrap.Tooltip(el); 
-        } catch (e) { 
-            // ignore init errors 
+        try {
+            new bootstrap.Tooltip(el);
+        } catch (e) {
+            // ignore init errors
         }
     });
 }
@@ -18,10 +18,10 @@ export function initTooltips(): void {
 export function initSimpleSelects(root?: Document | Element): void {
     const TomSelect = (window as any).TomSelect;
     if (typeof TomSelect === 'undefined') return;
-    
+
     const container = root || document;
     const selectElements = container.querySelectorAll('.simple-select') as NodeListOf<HTMLSelectElement>;
-    
+
     selectElements.forEach((el) => {
         if (!(el as any)._tomselect) {
             new TomSelect(el, {});
@@ -75,14 +75,14 @@ export function initPasswordMeter(): void {
         // Simple strength calculation (you can enhance this)
         const password = passwordInput.value;
         const strength = calculatePasswordStrength(password);
-        
+
         const meter2 = document.querySelector('.passmeter-2') as HTMLElement;
         const meter3 = document.querySelector('.passmeter-3') as HTMLElement;
-        
+
         if (meter2 && meter3) {
             meter2.style.display = 'none';
             meter3.style.display = 'none';
-            
+
             if (strength >= 4) {
                 meter2.style.display = 'block';
                 meter3.style.display = 'block';
@@ -109,7 +109,7 @@ export function initializeScripts(): void {
         initTooltips();
         initSimpleSelects();
         initPasswordMeter();
-        
+
         // Add event listeners for fullpage loader
         document.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;

@@ -50,7 +50,7 @@ use Yiisoft\Html\Tag\Button;
                                 <label for="filter_product_quote"><?= $translator->translate('product.name'); ?></label>
                                 <input type="text" class="form-control form-control-lg" name="filter_product_quote" id="filter_product_quote"
                                        placeholder="<?= $translator->translate('product.name'); ?>"
-                                       value="<?= $filter_product ?>">                
+                                       value="<?= $filter_product ?>">
                                 <button type="button" id="filter-button-quote" class="btn btn-info"><?= $translator->translate('search.product'); ?></button>
                                 <button type="button" id="product-reset-button-quote" class="btn btn-danger"><?= $translator->translate('reset'); ?></button>
                             </div>
@@ -58,18 +58,18 @@ use Yiisoft\Html\Tag\Button;
 
                         <br/>
 
-                        <div class="modal-header"> 
+                        <div class="modal-header">
                                 <!-- see src\Invoice\Asset\rebuild-1.13\js\modal-product-lookups.js line 64 -->
                                 <!-- Note: The above js will pass selected products to invoice/product/selection_quote function -->
                                 <button class="select-items-confirm-quote btn btn-success alignment:center" type="button" disabled>
-                                    <i class="fa fa-check"></i>
+                                    <i class="bi bi-check-lg"></i>
                                     <?= $translator->translate('submit'); ?>
-                                </button>            
+                                </button>
                         </div>
                         <div id="product-lookup-table">
                             <?php
                                echo $partial_product_table_modal
-?>     
+?>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -79,9 +79,9 @@ use Yiisoft\Html\Tag\Button;
                         ->content($translator->translate('close'))
                         ->addAttributes(['data-bs-dismiss' => 'modal'])
                         ->render();
-?>    
+?>
                     </div>
-                </form>    
+                </form>
             </div>
             <div id="default_item_tax_rate" value="<?= $default_item_tax_rate; ?>"></div>
         </div>

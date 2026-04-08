@@ -19,25 +19,25 @@ class SalesOrderAmount
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
-            
+
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $sales_order_id = null,
-            
+
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $item_subtotal = 0.00,
-            
+
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $item_tax_total = 0.00,
-            
+
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private float $packhandleship_total = 0.00,
-            
+
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private float $packhandleship_tax = 0.00,
-            
+
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $tax_total = 0.00,
-            
+
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $total = 0.00)
     {
@@ -92,7 +92,7 @@ class SalesOrderAmount
     {
         $this->item_tax_total = $item_tax_total;
     }
-    
+
     public function getPackhandleshipTotal(): float
     {
         return $this->packhandleship_total;

@@ -2,7 +2,15 @@
 
 declare(strict_types=1);
 
+use App\Invoice\Entity\Inv;
+use Yiisoft\Data\Cycle\Reader\EntityReader;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\I;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * Related logic: see App\Invoice\Client\ClientController view function
@@ -16,177 +24,234 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvRecurring\InvRecurringRepository $irR
  * @var App\Invoice\Setting\SettingRepository $s
+ * @var App\Widget\GridComponents $gridComponents
+ * @var App\Widget\PageSizeLimiter $pageSizeLimiter
+ * @var Yiisoft\Data\Cycle\Reader\EntityReader $invoices
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
+ * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
  * @var Yiisoft\Session\SessionInterface $session
  * @var Yiisoft\Translator\TranslatorInterface $translator
- * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
- * @var array $invoices
  * @var int $invoice_count
- * @var string $csrf
- * @psalm-var array<string, Stringable|null|scalar> $actionDeleteArguments
- * @psalm-var array<string, Stringable|null|scalar> $actionEmailArguments
- * @psalm-var array<string, Stringable|null|scalar> $actionPdfArguments
- * @psalm-var array<string, Stringable|null|scalar> $actionClientViewArguments
- * @psalm-var array<string, Stringable|null|scalar> $actionViewArguments
  */
-?>
 
-<div class="table-responsive">
-    <table class="table table-hover table-striped">
+$columns = [
+ new DataColumn(
+  header: $translator->translate('status'),
+  content: static function (Inv $model) use ($iR, $iaR, $irR, $translator): string {
+   $statusId = (string) $model->getStatusId();
+   $invoiceId = (int) $model->getId();
+   $inv_amount = $iaR->repoInvAmountCount($invoiceId) > 0 ?
+           $iaR->repoInvquery($invoiceId) : null;
+   $badge = Html::openTag('span', ['class' => 'badge text-bg-'
+       . $iR->getSpecificStatusArrayClass((int) $statusId)])
+    . Html::encode($iR->getSpecificStatusArrayLabel($statusId));
+   if (!empty($invoiceId)
+           && null !== $inv_amount
+           && $iaR->repoInvAmountCount($invoiceId) > 0
+           && $inv_amount->getSign() === -1) {
+    $badge .= chr(160)
+            . (string) Html::tag('i', '', ['class' => 'bi bi-receipt-cutoff',
+                'title' => $translator->translate('credit.invoice')]);
+   }
+   if ($model->getIsReadOnly()) {
+    $badge .= chr(160)
+            . (string) Html::tag('i', '', ['class' => 'bi bi-lock',
+                'title' => $translator->translate('read.only')]);
+   }
+   if ($irR->repoCount((string) $model->getId()) > 0) {
+    $badge .= chr(160) . (string) Html::tag('i', '', [
+        'class' => 'bi bi-arrow-repeat',
+        'title' => $translator->translate('recurring')]);
+   }
+   $badge .= Html::closeTag('span');
+   return $badge;
+  },
+  encodeContent: false,
+  withSorting: false,
+ ),
+ new DataColumn(
+  header: $translator->translate('invoice'),
+  content: static function (Inv $model)
+   use ($urlGenerator, $session, $translator): string {
+   $args = ['_language' => (string) ($session->get('_language') ?? ''),
+       'id' => $model->getId()];
+   return (string) Html::a(
+    Html::encode(null !== $model->getNumber()
+            ? $model->getNumber()
+            : (string) $model->getId()),
+    $urlGenerator->generate('inv/view', $args),
+    ['title' => $translator->translate('edit'), 'style' => 'text-decoration:none'],
+   );
+  },
+  encodeContent: false,
+  withSorting: false,
+ ),
+ new DataColumn(
+  header: $translator->translate('created'),
+  content: static fn (Inv $model): string =>
+   $model->getDateCreated()->format('Y-m-d'),
+  withSorting: false,
+ ),
+ new DataColumn(
+  header: $translator->translate('due.date'),
+  content: static function (Inv $model): string {
+   return (string) Html::tag(
+    'span',
+    $model->getDateDue()->format('Y-m-d'),
+    $model->isOverdue() ? ['class' => 'font-overdue'] : [],
+   );
+  },
+  encodeContent: false,
+  withSorting: false,
+ ),
+ new DataColumn(
+  header: $translator->translate('client.name'),
+  content: static function (Inv $model) use ($urlGenerator, $session,
+          $clientHelper, $translator): string {
+   $args = ['_language' => (string) ($session->get('_language') ?? ''),
+       'id' => $model->getClientId()];
+   return (string) Html::a(
+    Html::encode($clientHelper->formatClient($model->getClient())),
+    $urlGenerator->generate('client/view', $args),
+    ['title' => $translator->translate('view.client'),
+        'style' => 'text-decoration:none'],
+   );
+  },
+  encodeContent: false,
+  withSorting: false,
+ ),
+ new DataColumn(
+  header: $translator->translate('amount'),
+  content: static function (Inv $model) use ($iaR, $s): string {
+   $invoiceId = (int) $model->getId();
+   $inv_amount = $iaR->repoInvAmountCount($invoiceId) > 0 ?
+           $iaR->repoInvquery($invoiceId) : null;
+   $class = (null !== $inv_amount && $inv_amount->getSign() === -1)
+           ? 'amount text-danger' : 'amount';
+   return (string) Html::span(
+    $s->formatCurrency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00),
+    ['class' => $class, 'style' => 'float:right'],
+   );
+  },
+  encodeContent: false,
+  withSorting: false,
+ ),
+ new DataColumn(
+  header: $translator->translate('balance'),
+  content: static function (Inv $model) use ($iaR, $s): string {
+   $invoiceId = (int) $model->getId();
+   $inv_amount = $iaR->repoInvAmountCount($invoiceId) > 0 ?
+           $iaR->repoInvquery($invoiceId) : null;
+   return (string) Html::span(
+    $s->formatCurrency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00),
+    ['class' => 'amount', 'style' => 'float:right'],
+   );
+  },
+  encodeContent: false,
+  withSorting: false,
+ ),
+ new ActionColumn(
+  before: Html::openTag('div', ['class' => 'btn-group', 'role' => 'group']),
+  after: Html::closeTag('div'),
+  buttons: [
+   new ActionButton(
+    content: (new I())->addClass('bi bi-pencil-square'),
+    url: static function (Inv $model) use ($urlGenerator, $session): string {
+     if ($model->getIsReadOnly()) {
+      return '';
+     }
+     return $urlGenerator->generate('inv/view', ['_language' =>
+         (string) ($session->get('_language') ?? ''), 'id' => $model->getId()]);
+    },
+    attributes: static function (Inv $model) use ($translator): array {
+     if ($model->getIsReadOnly()) {
+      return ['class' => 'btn btn-secondary btn-sm disabled',
+          'style' => 'pointer-events:none', 'aria-disabled' => 'true'];
+     }
+     return ['data-bs-toggle' => 'tooltip',
+         'title' => $translator->translate('edit'),
+         'class' => 'btn btn-outline-warning btn-sm'];
+    },
+   ),
+   new ActionButton(
+    content: (new I())->addClass('bi bi-printer'),
+    url: static function (Inv $model) use ($urlGenerator): string {
+     return $urlGenerator->generate('inv/pdfDashboardExcludeCf',
+             ['id' => $model->getId()]);
+    },
+    attributes: ['data-bs-toggle' => 'tooltip',
+        'title' => $translator->translate('download.pdf'),
+        'class' => 'btn btn-outline-secondary btn-sm', 'target' => '_blank'],
+   ),
+   new ActionButton(
+    content: (new I())->addClass('bi bi-send'),
+    url: static function (Inv $model) use ($urlGenerator, $session): string {
+     return $urlGenerator->generate('inv/emailStage0', [
+         '_language' => (string) ($session->get('_language') ?? ''),
+         'id' => $model->getId()]);
+    },
+    attributes: ['data-bs-toggle' => 'tooltip',
+        'title' => $translator->translate('send.email'),
+        'class' => 'btn btn-outline-info btn-sm'],
+   ),
+   new ActionButton(
+    content: (new I())->addClass('bi bi-trash'),
+    url: static function (Inv $model) use ($urlGenerator, $session, $s): string {
+     $deletable = $model->getStatusId() === 1
+      || ($s->getSetting('enable_invoice_deletion') == 1
+             && $model->getIsReadOnly() !== true);
+     if (!$deletable) {
+      return '';
+     }
+     return $urlGenerator->generate('inv/delete',
+             ['_language' => (string) ($session->get('_language') ?? ''),
+                 'id' => $model->getId()]);
+    },
+    attributes: static function (Inv $model) use ($s, $translator): array {
+     $deletable = $model->getStatusId() === 1
+      || ($s->getSetting('enable_invoice_deletion') == 1
+             && $model->getIsReadOnly() !== true);
+     if (!$deletable) {
+      return [
+          'class' => 'btn btn-secondary btn-sm disabled',
+          'style' => 'pointer-events:none', 'aria-disabled' => 'true'];
+     }
+     return [
+      'data-bs-toggle' => 'tooltip',
+      'title' => $translator->translate('delete'),
+      'class' => 'btn btn-outline-danger btn-sm',
+      'onclick' => 'return confirm('
+         . (string) json_encode($translator->translate('delete.invoice.warning'))
+         . ');',
+     ];
+    },
+   ),
+  ],
+ ),
+];
 
-        <thead>
-        <tr>
-            <th><?= $translator->translate('status'); ?></th>
-            <th><?= $translator->translate('invoice'); ?></th>
-            <th><?= $translator->translate('created'); ?></th>
-            <th><?= $translator->translate('due.date'); ?></th>
-            <th><?= $translator->translate('client.name'); ?></th>
-            <th style="text-align: right;"><?= $translator->translate('amount'); ?></th>
-            <th style="text-align: right;"><?= $translator->translate('balance'); ?></th>
-            <th><?= $translator->translate('options'); ?></th>
-        </tr>
-        </thead>
+$paginator = (new OffsetPaginator($invoices))
+ ->withPageSize(max(1, (int) $s->getSetting('default_list_limit')))
+ ->withCurrentPage(1);
 
-        <tbody>
-        <?php
-        $invoice_idx = 1;
-$invoice_list_split = $invoice_count > 3 ? $invoice_count / 2 : 9999;
-/**
- * @var App\Invoice\Entity\Inv $invoice
- */
-foreach ($invoices as $invoice) {
-    // Disable read-only if not applicable
-    if ($s->getSetting('disable_read_only') === (string) 1) {
-        $invoice->setIsReadOnly(false);
-    }
-    // Convert the dropdown menu to a dropup if invoice is after the invoice split
-    $dropup = $invoice_idx > $invoice_list_split ? true : false;
-    $actionDeleteArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getId()];
-    $actionEmailArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getId()];
-    $actionPdfArguments = ['_language' => (string) $session->get('_language'), 'include' => true, 'inv_id' => $invoice->getId()];
-    $actionClientViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getClientId()];
-    $actionViewArguments = ['_language' => (string) $session->get('_language'), 'id' => $invoice->getId()];
-    $statusId = (string) $invoice->getStatusId();
-    ?>
-            <tr>
-                <td>
-                    <span class="label label-<?= $iR->getSpecificStatusArrayClass((int) $statusId); ?>">
-                        <?= $iR->getSpecificStatusArrayLabel($statusId); ?>
-                        <?php
-                    $invoiceId = (int) $invoice->getId();
-    if (!empty($invoiceId)) {
-        $invAmount = $iaR->repoInvquery($invoiceId);
-        if (null !== $invAmount) {
-            $count = $iaR->repoInvAmountCount($invoiceId);
-            if ($count > 0) {
-                if ($invAmount->getSign() === -1) { ?>
-                                            &nbsp;<i class="fa fa-credit-invoice" title="<?= $translator->translate('credit.invoice') ?>"></i>
-                                        <?php
-                }
-            }
-        }
-    }
-    ?>
-                        <?php if ($invoice->getIsReadOnly()) { ?>
-                            &nbsp;<i class="fa fa-read-only" title="<?= $translator->translate('read.only') ?>"></i>
-                        <?php } ?>
-                        <?php if ($irR->repoCount((string) $invoice->getId()) > 0) { ?>
-                            &nbsp;<i class="fa fa-refresh" title="<?= $translator->translate('recurring') ?>"></i>
-                        <?php } ?>
-                    </span>
-                </td>
+$gridSummary = $s->gridSummary(
+ $paginator,
+ $translator,
+ (int) $s->getSetting('default_list_limit'),
+ $translator->translate('invoices'),
+ '',
+);
 
-                <td>
-                    <a href="<?= $urlGenerator->generate('inv/view', $actionViewArguments); ?>"
-                       title="<?= $translator->translate('edit'); ?>" style="text-decoration:none">
-                        <?= (null !== ($invoice->getNumber()) ? $invoice->getNumber() : $invoice->getId()); ?>
-                    </a>
-                </td>
-
-                <td>
-                    <?= $invoice->getDateCreated()->format('Y-m-d'); ?>
-                </td>
-
-                <td>
-                    <span class="<?php if ($invoice->isOverdue()) { ?>font-overdue<?php } ?>">
-                        <?= $invoice->getDateDue()->format('Y-m-d'); ?>
-                    </span>
-                </td>
-
-                <td>
-                    <a href="<?= $urlGenerator->generate('client/view', $actionClientViewArguments); ?>"
-                       title="<?= $translator->translate('view.client'); ?>" style="text-decoration:none">
-                        <?= Html::encode($clientHelper->formatClient($invoice->getClient())); ?>
-                    </a>
-                </td>
-
-                <td class="amount 
-                <?php
-                    $inv_amount = $iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null;
-    if ((null !== $inv_amount) && ($inv_amount->getSign() === -1)) {
-        echo 'text-danger';
-    } ?>">  
-                    
-                    <?= null !== $inv_amount ? $s->formatCurrency($inv_amount->getTotal()) : 0.00; ?>
-                </td>
-
-                <td class="amount">
-                    <?= null != $inv_amount ? $s->formatCurrency($inv_amount->getBalance()) : 0.00; ?>
-                </td>
-
-                <td>
-                    <div class="options btn-group<?= $dropup ? ' dropup' : ''; ?>">
-                        <a class="btn btn-default btn-sm dropdown-toggle" data-bs-toggle="dropdown" href="#" style="text-decoration:none">
-                            <i class="fa fa-cog"></i> <?= $translator->translate('options'); ?>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <?php if ($invoice->getIsReadOnly() !== true) { ?>
-                                <li>
-                                    <a href="<?= $urlGenerator->generate('inv/view', $actionViewArguments); ?>" style="text-decoration:none">
-                                        <i class="fa fa-edit fa-margin"></i> <?= $translator->translate('edit'); ?>
-                                    </a>
-                                </li>
-                            <?php } ?>
-                            <li>
-                                <a href="<?= $urlGenerator->generate('inv/pdf', $actionPdfArguments); ?>"
-                                   target="_blank" style="text-decoration:none">
-                                    <i class="fa fa-print fa-margin"></i> <?= $translator->translate('download.pdf'); ?>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<?= $urlGenerator->generate('inv/emailStage0', $actionEmailArguments); ?>" style="text-decoration:none">
-                                    <i class="fa fa-send fa-margin"></i> <?= $translator->translate('send.email'); ?>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="invoice-add-payment"
-                                   data-invoice-id="<?= $invoice->getId(); ?>"
-                                   data-invoice-balance="<?=  null !== $inv_amount ? $inv_amount->getBalance() : 0.00; ?>"
-                                   data-invoice-payment-method="<?= $invoice->getPaymentMethod(); ?>">
-                                    <i class="fa fa-money fa-margin"></i>
-                                    <?= $translator->translate('enter.payment'); ?>
-                                </a>
-                            </li>
-                            <?php if (
-                                $invoice->getStatusId() === 1
-                                || ($s->getSetting('enable_invoice_deletion') == 1  && $invoice->getIsReadOnly() !== true)
-                            ) { ?>
-                                <li>
-                                    <form action="<?= $urlGenerator->generate('inv/delete', $actionDeleteArguments); ?>" method="POST">
-                                        <input type="hidden" id="_csrf" name="_csrf" value="<?= $csrf ?>">
-                                        <button type="submit" class="dropdown-button"
-                                                onclick="return confirm('<?= $translator->translate('delete.invoice.warning'); ?>');">
-                                            <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('delete'); ?>
-                                        </button>
-                                    </form>
-                                </li>
-                            <?php } ?>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-            <?php
-            $invoice_idx++;
-} ?>
-        </tbody>
-    </table>
-</div>
+echo GridView::widget()
+ ->bodyRowAttributes(['class' => 'align-middle'])
+ ->tableAttributes(['class' => 'table table-hover table-striped'])
+ ->columns(...$columns)
+ ->dataReader($paginator)
+ ->id('w-inv-table-' . $invoice_count)
+ ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
+ ->noResultsText($translator->translate('no.records'))
+ ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
+ ->summaryAttributes(['class' => 'mt-3 me-3 summary d-flex justify-content-between align-items-center'])
+ ->summaryTemplate('<div class="d-flex align-items-center">'
+  . $pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'inv')
+  . ' ' . $gridSummary . '</div>');

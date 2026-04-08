@@ -19,6 +19,7 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $projects
  * @psalm-var array<array-key, array<array-key, string>|string> $taxRates
  */
+$formControl = 'form-control form-control-lg';
 ?>
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
@@ -34,12 +35,12 @@ use Yiisoft\Html\Tag\Form;
     ->csrf($csrf)
     ->id('TaskForm')
     ->open()
-?> 
+?>
 <?= Html::openTag('div'); ?>
     <?= Field::text($form, 'name')
         ->label($translator->translate('name'))
         ->addInputAttributes([
-            'class' => 'form-control',
+            'class' => $formControl,
         ])
         ->value(Html::encode($form->getName()))
         ->placeholder($translator->translate('name'))
@@ -48,16 +49,16 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::text($form, 'description')
         ->label($translator->translate('description'))
         ->addInputAttributes([
-            'class' => 'form-control',
+            'class' => $formControl,
         ])
         ->value(Html::encode($form->getDescription()))
         ->placeholder($translator->translate('description'))
-        ->hint($translator->translate('hint.this.field.is.required')); ?>                    
+        ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::tag('br'); ?>
     <?= Field::select($form, 'project_id')
         ->label($translator->translate('project'))
         ->addInputAttributes([
-            'class' => 'form-control',
+            'class' => $formControl,
         ])
         ->optionsData($projects)
         ->value($form->getProjectId())
@@ -68,7 +69,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::select($form, 'tax_rate_id')
     ->label($translator->translate('tax.rate'))
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => $formControl,
     ])
     ->optionsData($taxRates)
     ->value($form->getTaxRateId())
@@ -79,42 +80,42 @@ use Yiisoft\Html\Tag\Form;
     <?= Field::text($form, 'price')
     ->label($translator->translate('price'))
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => $formControl,
     ])
     ->value($s->formatAmount(($form->getPrice() ?? 0.00)))
     ->placeholder($translator->translate('price'))
-    ->hint($translator->translate('hint.this.field.is.required')); ?>         
+    ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::tag('br'); ?>
     <?= Field::date($form, 'finish_date')
     ->label($translator->translate('task.finish.date'))
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => $formControl,
     ])
     ->value(Html::encode($form->getFinishDate() instanceof \DateTimeImmutable
                          ? $form->getFinishDate()->format('Y-m-d') : (is_string(
                              $form->getFinishDate(),
                          )
                          ? $form->getFinishDate() : '')))
-    ->hint($translator->translate('hint.this.field.is.required')); ?>         
+    ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::tag('br'); ?>
     <?php
         $optionsDataStatus = [];
 $statuses = [
     1 => [
         'label' => $translator->translate('not.started'),
-        'class' => 'draft',
+        'class' => 'secondary',
     ],
     2 => [
         'label' => $translator->translate('in.progress'),
-        'class' => 'viewed',
+        'class' => 'warning',
     ],
     3 => [
         'label' => $translator->translate('complete'),
-        'class' => 'sent',
+        'class' => 'success',
     ],
     4 => [
         'label' => $translator->translate('invoiced'),
-        'class' => 'paid',
+        'class' => 'primary',
     ],
 ];
 /**
@@ -132,14 +133,14 @@ foreach ($statuses as $key => $status) {
     <?= Field::select($form, 'status')
     ->label($translator->translate('status'))
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => $formControl,
         'id' => 'status',
     ])
     ->optionsData($optionsDataStatus)
     ->value($form->getStatus())
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-<?= Html::closeTag('div'); ?>     
+<?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>
 <?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>

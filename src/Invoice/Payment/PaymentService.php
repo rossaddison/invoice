@@ -26,7 +26,7 @@ final readonly class PaymentService
         array $array
     ): void {
         $this->persist($model, $array);
-        isset($array['payment_method_id']) ? 
+        isset($array['payment_method_id']) ?
             $model->setPaymentMethodId(
                 (int) $array['payment_method_id']) : '';
 
@@ -38,11 +38,11 @@ final readonly class PaymentService
         $model->setPaymentDate(
             $datetime::createFromFormat('Y-m-d', $payment_date));
 
-        isset($array['amount']) ? 
+        isset($array['amount']) ?
             $model->setAmount((float) $array['amount']) : '';
-        isset($array['note']) ? 
+        isset($array['note']) ?
             $model->setNote((string) $array['note']) : '';
-        isset($array['inv_id']) ? 
+        isset($array['inv_id']) ?
             $model->setInvId((int) $array['inv_id']) : '';
         $this->repository->save($model);
     }

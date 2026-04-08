@@ -276,7 +276,7 @@ final class PrometheusService
             $memoryLimitValue = ini_get('memory_limit');
             $memoryLimit = $memoryLimitValue !== false ? $this->parseBytes($memoryLimitValue) : PHP_INT_MAX;
             $memoryPercent = ($memoryUsage / $memoryLimit) * 100;
-            
+
             $health['checks']['memory'] = [
                 'status' => $memoryPercent > 80 ? 'warning' : 'ok',
                 'usage_bytes' => $memoryUsage,

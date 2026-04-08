@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 ?>
-
-<h6 align="center" id="taxpoint">Tax Point: (...views/invoice/info/taxpoint.php)</h6>
+<div style="font-size: calc(var(--inv-form-fs) + 2px);">
+<h1 align="center" id="taxpoint">Tax Point: (...views/invoice/info/taxpoint.php)</h1>
 <p align="center"><b align="center">25th June 2023</b></p>
 <p align="center">Aim: To Understand How to Establish a Tax Point for VAT Reporting purposes</p>
-<h2 align="center">How do I know what the tax point is?</h2>			<div class="wysiwyg">
+<h2 align="center">How do I know what the tax point is?</h2>
+<div class="wysiwyg">
 <p align="center"><a href="https://informi.co.uk/finance/what-tax-point-transaction-including-vat-1">Reference</a></p>
 <p align="center">The tax point will vary depending on the circumstances.</p>
 <table border="1" style="border-collapse:collapse;" align="center" cellpadding="1" cellspacing="1" style="width: 500px;">
@@ -42,4 +43,5 @@ declare(strict_types=1);
 </tr>
 </tbody>
 </table>
-
+</div>
+</div>

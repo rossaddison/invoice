@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Field::select($form, 'table')
         ->label($translator->translate('table'))
         ->addInputAttributes([
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'id' => 'table',
         ])
         ->value(Html::encode($form->getTable() ?? ''))
@@ -82,7 +82,7 @@ use Yiisoft\Html\Tag\Form;
         ->label($translator->translate('label'))
         ->addInputAttributes([
             'placeholder' => $translator->translate('label'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'id' => 'label',
         ])
         ->value(Html::encode($form->getLabel() ?? ''))
@@ -111,7 +111,7 @@ foreach ($types as $type) {
                     ->label($translator->translate('type'))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('type'),
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'type',
                     ])
                     ->value(Html::encode($form->getType() ?? ''))

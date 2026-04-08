@@ -42,7 +42,7 @@ use Yiisoft\Html\Tag\Form;
     ->csrf($csrf)
     ->id('DeliveryForm')
     ->open()
-?> 
+?>
     <?= Html::openTag('div', ['class' => 'headerbar']); ?>
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= Html::encode($title) ?>
@@ -73,15 +73,15 @@ use Yiisoft\Html\Tag\Form;
     ])
     ->value(!is_string($modifiedDate = $form->getDateModified()) ? $modifiedDate->format('Y-m-d') : '')
 ?>
-            
+
             <?=
     Field::date($form, 'start_date')
     ->label($translator->translate('delivery.start.date') . ' (' . $dateHelper->display() . ')')
     ->required(true)
     ->value(!is_string($startDate = $form->getStartDate()) ? $startDate->format('Y-m-d') : '')
     ->readonly(true);
-?>    
-           
+?>
+
             <?=
     Field::date($form, 'actual_delivery_date')
     ->label($translator->translate('delivery.actual.delivery.date') . ' (' . $dateHelper->display() . ')')
@@ -97,14 +97,14 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Field::hidden($form, 'id')
     ->addInputAttributes([
-        'form-control',
+        'form-control form-control-lg',
         'id' => 'id',
     ])
     ->value(Html::encode($form->getId()))
 ?>
             <?= Field::hidden($form, 'inv_id')
     ->addInputAttributes([
-        'form-control',
+        'form-control form-control-lg',
         'id' => 'inv_id',
     ])
     ->value(Html::encode($form->getInvId()))
@@ -123,7 +123,7 @@ use Yiisoft\Html\Tag\Form;
         echo Field::select($form, 'delivery_location_id')
         ->label($translator->translate('delivery.location'))
         ->addInputAttributes([
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'id' => 'delivery_location_id',
         ])
         ->optionsData($optionsDataDel)

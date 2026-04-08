@@ -39,7 +39,7 @@ use Yiisoft\Html\Html;
         echo $productProperty->getValue();
         echo Html::closeTag('td');
     }
-?>  
+?>
 </tr>
 </tbody>
 </table>

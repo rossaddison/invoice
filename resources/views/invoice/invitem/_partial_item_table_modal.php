@@ -18,7 +18,7 @@ use Yiisoft\Html\Html;
         <tr>
             <th>&nbsp;</th>
             <th><?= $translator->translate('item'); ?></th>
-            <th><?= $translator->translate('product.sku'); ?></th>            
+            <th><?= $translator->translate('product.sku'); ?></th>
             <th><?= $translator->translate('product.name'); ?></th>
             <th><?= $translator->translate('product.description'); ?></th>
             <th class="text-right"><?= $translator->translate('product.price'); ?></th>

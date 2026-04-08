@@ -10,9 +10,9 @@ import { FlashMessageControlsComponent } from './flash-message-controls/flash-me
   template: `
     <!-- Flash Message Controls (always present) -->
     <app-flash-message-controls></app-flash-message-controls>
-    
+
     <div class="container-fluid">
-      <app-family-commalist 
+      <app-family-commalist
         [initialValue]="initialValue"
         (valueChange)="onValueChange($event)">
       </app-family-commalist>
@@ -48,11 +48,11 @@ export class AppComponent implements OnInit, OnDestroy {
     // Update the original textarea
     if (this.targetTextarea) {
       this.targetTextarea.value = newValue;
-      
+
       // Trigger change event for form validation
       const changeEvent = new Event('change', { bubbles: true });
       this.targetTextarea.dispatchEvent(changeEvent);
-      
+
       // Trigger input event for real-time updates
       const inputEvent = new Event('input', { bubbles: true });
       this.targetTextarea.dispatchEvent(inputEvent);

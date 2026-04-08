@@ -35,7 +35,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -57,7 +57,7 @@ echo Field::select($form, 'client_id')
 ->label($translator->translate('client'))
 ->addInputAttributes([
     'id' => 'client_id',
-    'class' => 'form-control',
+    'class' => 'form-control form-control-lg',
     'readonly' => 'readonly',
     'disabled' => 'disabled',
 ])
@@ -77,7 +77,7 @@ echo Field::select($form, 'client_id')
     ->addInputAttributes([
         'placeholder' => $translator->translate('note'),
         'value' => Html::encode($form->getNote() ?? ''),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'note',
         'readonly' => 'readonly',
         'disabled' => 'disabled',

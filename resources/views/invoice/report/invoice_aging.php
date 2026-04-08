@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use App\Invoice\Asset\ReportAsset;
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
 
 /**
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -20,18 +20,21 @@ $this->beginPage();
 <!DOCTYPE html>
 <html lang="<?= $translator->translate('cldr'); ?>">
 <head>
-    <title><?= Html::encode($translator->translate('aging')); ?></title>
+    <title><?= H::encode($translator->translate('aging')); ?></title>
 </head>
 <body>
-<?php $this->beginBody() ?>
-<h3 class="report_title"><?= Html::encode($translator->translate('aging')); ?></h3>
+<?php $this->beginBody();
+      $style1px = 'width:15%;text-align:right;border-bottom: 1px solid black;';
+      $style0px = 'width:15%;text-align:right;border-bottom: 0px solid black;';
+?>
+<h3 class="report_title"><?= H::encode($translator->translate('aging')); ?></h3>
 <table>
     <tr>
-        <th><?= Html::encode($translator->translate('client')); ?></th>
-        <th class="amount"><?= Html::encode($translator->translate('aging.1.15')); ?></th>
-        <th class="amount"><?= Html::encode($translator->translate('aging.16.30')); ?></th>
-        <th class="amount"><?= Html::encode($translator->translate('aging.above.30')); ?></th>
-        <th class="amount"><?= Html::encode($translator->translate('total')); ?></th>
+        <th><?= H::encode($translator->translate('client')); ?></th>
+        <th class="amount"><?= H::encode($translator->translate('aging.1.15')); ?></th>
+        <th class="amount"><?= H::encode($translator->translate('aging.16.30')); ?></th>
+        <th class="amount"><?= H::encode($translator->translate('aging.above.30')); ?></th>
+        <th class="amount"><?= H::encode($translator->translate('total')); ?></th>
     </tr>
     <?php
         /**
@@ -43,31 +46,31 @@ $this->beginPage();
          */
         foreach ($results as $result) { ?>
     <tr>
-        <td><?= Html::encode($result['client']); ?></td>
-        <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
+        <td><?= H::encode($result['client']); ?></td>
+        <td style="<?= $style1px ?>">
             <?= $result['range_1'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($numberHelper->formatCurrency($result['range_1'])); ?>
+            <?= H::encode($numberHelper->formatCurrency($result['range_1'])); ?>
         </td>
-        <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
+        <td style="<?= $style1px ?>">
             <?= $result['range_2'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($numberHelper->formatCurrency($result['range_2'])); ?>
+            <?= H::encode($numberHelper->formatCurrency($result['range_2'])); ?>
         </td>
-        <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
+        <td style="<?= $style1px ?>">
             <?= $result['range_3'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($numberHelper->formatCurrency($result['range_3'])); ?>
+            <?= H::encode($numberHelper->formatCurrency($result['range_3'])); ?>
         </td>
-        <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
+        <td style="<?= $style1px ?>">
             <?= $result['total_balance'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($numberHelper->formatCurrency($result['total_balance'])); ?>
+            <?= H::encode($numberHelper->formatCurrency($result['total_balance'])); ?>
         </td>
     </tr>
     <?php } ?>
     <tr>
         <td></td>
-        <td style="width:15%;text-align:right;border-bottom: 0px solid black;"></td>
-        <td style="width:15%;text-align:right;border-bottom: 0px solid black;"></td>
-        <td style="width:15%;text-align:right;border-bottom: 0px solid black;"></td>
-        <td style="width:15%;text-align:right;border-bottom: 0px solid black;"></td>
+        <td style="<?= $style0px ?>"></td>
+        <td style="<?= $style0px ?>"></td>
+        <td style="<?= $style0px ?>"></td>
+        <td style="<?= $style0px ?>"></td>
     </tr>
     <?php
         /**
@@ -77,22 +80,28 @@ $this->beginPage();
          */
         foreach ($dueInvoices as $dueInvoice) { ?>
     <tr>
-        <td><?= Html::encode($dueInvoice['invoice_number']); ?></td>
-        <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
+        <td><?= H::encode($dueInvoice['invoice_number']); ?></td>
+        <td style="<?= $style1px ?>">
             <?= $dueInvoice['invoice_balance'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($dueInvoice['range_index'] == 1 ? $numberHelper->formatCurrency($dueInvoice['invoice_balance']) : ''); ?>
+            <?= H::encode($dueInvoice['range_index'] == 1 ?
+                    $numberHelper->formatCurrency(
+                        $dueInvoice['invoice_balance']) : ''); ?>
         </td>
-        <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
+        <td style="<?= $style1px ?>">
             <?= $dueInvoice['invoice_balance'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($dueInvoice['range_index'] == 2 ? $numberHelper->formatCurrency($dueInvoice['invoice_balance']) : ''); ?>
+            <?= H::encode($dueInvoice['range_index'] == 2 ?
+                    $numberHelper->formatCurrency(
+                        $dueInvoice['invoice_balance']) : ''); ?>
         </td>
-        <td style="width:15%;text-align:right;border-bottom: 1px solid black;">
+        <td style="<?= $style1px ?>">
             <?= $dueInvoice['invoice_balance'] > 0 ? '<strong>' : ''; ?>
-            <?= Html::encode($dueInvoice['range_index'] == 3 ? $numberHelper->formatCurrency($dueInvoice['invoice_balance']) : ''); ?>
+            <?= H::encode($dueInvoice['range_index'] == 3 ?
+                    $numberHelper->formatCurrency(
+                        $dueInvoice['invoice_balance']) : ''); ?>
         </td>
-        <td style="width:15%;text-align:right;border-bottom: 1px solid black;"></td>
+        <td style="<?= $style1px ?>"></td>
     </tr>
-    <?php } ?>    
+    <?php } ?>
 </table>
 <?php $this->endBody(); ?>
 </body>

@@ -87,20 +87,20 @@ use Yiisoft\VarDumper\VarDumper;
                                         ->onlyCommonErrors()
                                     ?>
                                 <?= Html::closeTag('div'); ?>
-                                
+
                                 <?= Field::hidden($form, 'client_id')
                                     ->value($form->getClientId() ?? $client_id)
                                 ?>
-                                
+
                                 <?= Field::hidden($form, 'id')
                                     ->value($form->getId() ?? '')
                                 ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::email($form, 'endpointid')
                     ->label($translator->translate('client.peppol.endpointid'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'endpointid',
                         'placeholder' => $translator->translate(
                                 'client.peppol.endpointid'),
@@ -114,14 +114,14 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'endpointid_schemeid')
                     ->label($translator->translate(
                             'client.peppol.endpointid.schemeid')
                             . $translator->translate('peppol.optional'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'endpointid_schemeid',
                     ])
                     ->value($form->getEndpointidSchemeid() !== ''
@@ -142,13 +142,13 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'identificationid')
                     ->label($translator->translate(
                             'client.peppol.identificationid'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'identificationid',
                         'maxlength' => 100,
                     ])
@@ -160,14 +160,14 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'identificationid_schemeid')
                     ->label($translator->translate(
                             'client.peppol.identificationid.schemeid')
                             . $translator->translate('peppol.optional'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'identificationid_schemeid',
                         'maxlength' => 4,
                     ])
@@ -180,13 +180,13 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'taxschemecompanyid')
                     ->label($translator->translate(
                             'client.peppol.taxschemecompanyid'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'taxschemecompanyid',
                         'maxlength' => 100,
                     ])
@@ -198,12 +198,12 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'taxschemeid')
                     ->label($translator->translate('client.peppol.taxschemeid'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'taxschemeid',
                     ])
                     ->value($form->getTaxschemeid() !== ''
@@ -236,13 +236,13 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'legal_entity_registration_name')
                     ->label($translator->translate(
                             'client.peppol.legal.entity.registration.name'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'legal_entity_registration_name',
                         'maxlength' => 100,
                     ])
@@ -254,13 +254,13 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'legal_entity_companyid')
                     ->label($translator->translate(
                                         'client.peppol.legal.entity.companyid'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'legal_entity_companyid',
                     ])
                     ->value($form->getLegalEntityCompanyid() !== ''
@@ -289,14 +289,14 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::select($form, 'legal_entity_companyid_schemeid')
                     ->label($translator->translate(
                             'client.peppol.legal.entity.companyid.schemeid')
                             . $translator->translate('peppol.optional'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'legal_entity_companyid_schemeid',
                     ])
                     ->value($form->getLegalEntityCompanyidSchemeid() !== '' &&
@@ -325,13 +325,13 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'legal_entity_company_legal_form')
                     ->label($translator->translate(
                             'client.peppol.legal.entity.company.legal.form'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'legal_entity_company_legal_form',
                         'maxlength' => 50,
                     ])
@@ -344,13 +344,13 @@ use Yiisoft\VarDumper\VarDumper;
                                                 'hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'financial_institution_branchid')
                     ->label($translator->translate(
                                 'client.peppol.financial.institution.branchid'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'financial_institution_branchid',
                         'maxlength' => 20,
                     ])
@@ -363,13 +363,13 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'accounting_cost')
                     ->label($translator->translate(
                                                 'client.peppol.accounting.cost'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'accounting_cost',
                         'maxlength' => 30,
                     ])
@@ -381,7 +381,7 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'buyer_reference')
                     ->label($translator->translate(
@@ -389,7 +389,7 @@ use Yiisoft\VarDumper\VarDumper;
                             . ' ' . $translator->translate(
                                     'client.peppol.buyer.reference.example'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'buyer_reference',
                         'maxlength' => 20,
                     ])
@@ -401,7 +401,7 @@ use Yiisoft\VarDumper\VarDumper;
                     ->hint($translator->translate('hint.this.field.is.required'))
                   ?>
                 <?= Html::closeTag('div'); ?>
-                
+
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::text($form, 'supplier_assigned_accountid')
                     ->label($translator->translate(
@@ -409,7 +409,7 @@ use Yiisoft\VarDumper\VarDumper;
                             . ' ' . $translator->translate(
                                     'client.peppol.buyer.reference.example'))
                     ->addInputAttributes([
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'id' => 'supplier_assigned_accountid',
                         'maxlength' => 20,
                     ])
@@ -426,7 +426,7 @@ use Yiisoft\VarDumper\VarDumper;
                 <?= Html::closeTag('div'); ?>
         <?= $button::backSave(); ?>
     <?= Html::closeTag('div'); ?>
-    
+
 <?= Html::closeTag('div'); ?>
 
 <?= Html::closeTag('form'); ?>

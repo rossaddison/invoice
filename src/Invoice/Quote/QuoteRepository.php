@@ -95,7 +95,7 @@ final class QuoteRepository extends Select\Repository
                       ->where(['delivery_location_id' => $delivery_location_id]);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @param int $user_id
      * @param int $client_id
@@ -283,37 +283,37 @@ final class QuoteRepository extends Select\Repository
         return [
             '0' => [
                 'label' => $translator->translate('all'),
-                'class' => 'all',
+                'class' => 'secondary',
                 'href' => 0,
             ],
             '1' => [
                 'label' => $translator->translate('draft'),
-                'class' => 'draft',
+                'class' => 'secondary',
                 'href' => 1,
             ],
             '2' => [
                 'label' => $translator->translate('sent'),
-                'class' => 'sent',
+                'class' => 'primary',
                 'href' => 2,
             ],
             '3' => [
                 'label' => $translator->translate('viewed'),
-                'class' => 'viewed',
+                'class' => 'warning',
                 'href' => 3,
             ],
             '4' => [
                 'label' => $translator->translate('approved'),
-                'class' => 'approved',
+                'class' => 'success',
                 'href' => 4,
             ],
             '5' => [
                 'label' => $translator->translate('rejected'),
-                'class' => 'rejected',
+                'class' => 'danger',
                 'href' => 5,
             ],
             '6' => [
                 'label' => $translator->translate('canceled'),
-                'class' => 'canceled',
+                'class' => 'secondary',
                 'href' => 6,
             ],
         ];

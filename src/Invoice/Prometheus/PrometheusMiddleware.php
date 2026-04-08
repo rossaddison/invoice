@@ -15,8 +15,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Prometheus Metrics Middleware for Yii3 Invoice Application
- * 
- * Automatically collects HTTP request metrics for monitoring with Prometheus, Grafana, 
+ *
+ * Automatically collects HTTP request metrics for monitoring with Prometheus, Grafana,
  * node_exporter, and windows_exporter integration.
  */
 final class PrometheusMiddleware implements MiddlewareInterface
@@ -40,31 +40,31 @@ final class PrometheusMiddleware implements MiddlewareInterface
         $method = $request->getMethod();
         $uri = $request->getUri();
         $path = $this->normalizePath($uri->getPath());
-        
+
         // Track requests in progress
         $this->httpRequestsInProgressGauge->inc();
-        
+
         // Set application health (1 = healthy)
         $this->applicationHealthGauge->set(1);
-        
+
         try {
             // Process the request
             $response = $handler->handle($request);
             $statusCode = (string) $response->getStatusCode();
-            
+
             // Record successful request metrics
             $this->recordRequestMetrics($method, $path, $statusCode, $start);
-            
+
             return $response;
-            
+
         } catch (\Throwable $e) {
             // Record error metrics
             $statusCode = '500';
             $this->recordRequestMetrics($method, $path, $statusCode, $start);
-            
+
             // Set application health to unhealthy
             $this->applicationHealthGauge->set(0);
-            
+
             throw $e;
         } finally {
             // Decrement in-progress requests
@@ -108,7 +108,7 @@ final class PrometheusMiddleware implements MiddlewareInterface
 
         // Business-specific metrics for invoice application
         $this->initializeBusinessMetrics();
-        
+
         // System metrics that complement node_exporter and windows_exporter
         $this->initializeSystemMetrics();
     }
@@ -221,18 +221,18 @@ final class PrometheusMiddleware implements MiddlewareInterface
     {
         $duration = microtime(true) - $start;
         $controller = $this->extractControllerFromPath($path);
-        
+
         $labels = [$method, $path, $statusCode, $controller];
-        
+
         // Record request count
         $this->httpRequestsCounter->inc($labels);
-        
+
         // Record request duration
         $this->httpRequestDurationHistogram->observe($duration, $labels);
-        
+
         // Update system metrics
         $this->updateSystemMetrics();
-        
+
         // Update business metrics based on the request
         $this->updateBusinessMetrics($path, $statusCode);
     }
@@ -277,7 +277,7 @@ final class PrometheusMiddleware implements MiddlewareInterface
     private function updateBusinessMetrics(string $path, string $statusCode): void
     {
         $success = in_array($statusCode, ['200', '201', '202']) ? 'success' : 'error';
-        
+
         // Track invoice operations
         if (str_contains($path, '/invoice/')) {
             $invoiceOpsCounter = $this->registry->getOrRegisterCounter(
@@ -286,12 +286,12 @@ final class PrometheusMiddleware implements MiddlewareInterface
                 'Total invoice operations',
                 ['operation', 'status']
             );
-            
+
             $operation = $this->extractOperationFromPath($path);
             $invoiceOpsCounter->inc([$operation, $success]);
         }
-        
-        // Track product operations  
+
+        // Track product operations
         if (str_contains($path, '/product/')) {
             $productOpsCounter = $this->registry->getOrRegisterCounter(
                 'yii3_invoice_business',
@@ -299,11 +299,11 @@ final class PrometheusMiddleware implements MiddlewareInterface
                 'Total product operations',
                 ['operation', 'status']
             );
-            
+
             $operation = $this->extractOperationFromPath($path);
             $productOpsCounter->inc([$operation, $success]);
         }
-        
+
         // Track family product generation (your custom feature)
         if (str_contains($path, '/family/generate-products')) {
             $familyProductsCounter = $this->registry->getOrRegisterCounter(
@@ -319,23 +319,23 @@ final class PrometheusMiddleware implements MiddlewareInterface
 
     private function normalizePath(string $path): string
     {
-        
+
         // Remove numeric IDs and normalize paths for better grouping
         $normalizedPath = preg_replace('/\/\d+/', '/{id}', $path);
         if ($normalizedPath === null) {
             $normalizedPath = $path;
         }
-        
+
         // Handle common patterns in your invoice application
         $result = preg_replace('/\/product\/\{id\}\/view/', '/product/{id}/view', $normalizedPath);
         $normalizedPath = $result !== null ? $result : $normalizedPath;
-        
+
         $result = preg_replace('/\/invoice\/\{id\}\/edit/', '/invoice/{id}/edit', $normalizedPath);
         $normalizedPath = $result !== null ? $result : $normalizedPath;
-        
+
         $result = preg_replace('/\/family\/\{id\}/', '/family/{id}', $normalizedPath);
         $normalizedPath = $result !== null ? $result : $normalizedPath;
-        
+
         return $normalizedPath !== '' ? $normalizedPath : '/';
     }
 
@@ -343,32 +343,32 @@ final class PrometheusMiddleware implements MiddlewareInterface
     {
         // Extract controller name from path
         $segments = explode('/', trim($path, '/'));
-        
+
         if (count($segments) >= 2) {
             return $segments[0] . '/' . $segments[1];
         }
-        
+
         if (count($segments) >= 1 && $segments[0] !== '') {
             return $segments[0];
         }
-        
+
         return 'unknown';
     }
 
     private function extractOperationFromPath(string $path): string
     {
         $segments = explode('/', trim($path, '/'));
-        
+
         // Get the last segment as operation (e.g., /invoice/inv/create -> create)
         if (count($segments) >= 3) {
             return $segments[2];
         }
-        
+
         // Default operations
         if (count($segments) >= 2) {
             return $segments[1];
         }
-        
+
         return 'view';
     }
 }

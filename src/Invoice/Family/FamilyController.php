@@ -280,7 +280,7 @@ final class FamilyController extends BaseController
         fR $familyRepository,
         fcR $fcR,
         cfR $cfR,
-        cvR $cvR,    
+        cvR $cvR,
         cpR $cpR,
         csR $csR,
         FormHydrator $formHydrator
@@ -313,7 +313,7 @@ final class FamilyController extends BaseController
                     $parameters['body'] = $body;
                     if (!$returned_form->isValid()) {
                         $parameters['form'] = $returned_form;
-                        $parameters['errors'] = 
+                        $parameters['errors'] =
                             $returned_form->getValidationResult()
                                           ->getErrorMessagesIndexedByProperty();
                         return $this->webViewRenderer->render('_form', $parameters);
@@ -332,7 +332,7 @@ final class FamilyController extends BaseController
         }
         return $this->webService->getRedirectResponse('family/index');
     }
-    
+
     /**
      * @param array $body
      * @param FamilyForm $form
@@ -357,7 +357,7 @@ final class FamilyController extends BaseController
         }
         return $form;
     }
-    
+
     /**
      * @param string $family_id
      * @param fcR $fcR
@@ -378,7 +378,7 @@ final class FamilyController extends BaseController
         }
         return $custom_field_form_values;
     }
-    
+
     /**
      * @param string $id
      * @param FamilyRepository $familyRepository
@@ -423,7 +423,7 @@ final class FamilyController extends BaseController
                 'customValues' => $cvR->fixCfValueToCf($cfR->repoTablequery('family_custom')),
                 'cpR' => $cpR,
                 'actionName' => 'family/view',
-                'actionArguments' => ['id' => $familyId = $family->getFamilyId()],                
+                'actionArguments' => ['id' => $familyId = $family->getFamilyId()],
                 'familyCustomValues' => $this->familyCustomValues((string) $familyId, $fcR),
                 'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
                 'categorySecondaries' => $csR->optionsDataCategorySecondaries(),

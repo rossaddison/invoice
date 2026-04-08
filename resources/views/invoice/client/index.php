@@ -44,7 +44,8 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $allVisible =  new A()
-        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip', 'title' => $translator->translate('hide.or.unhide.columns')])
+        ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'tooltip',
+            'title' => $translator->translate('hide.or.unhide.columns')])
         ->addClass('btn btn-warning me-1 ajax-loader')
         ->content('↔️')
         ->href($urlGenerator->generate('setting/visible', ['origin' => 'client']))
@@ -62,7 +63,8 @@ $columns = [
         'client_active',
         header: $translator->translate('active'),
         content: static function (Client $model) use ($button, $translator): Span {
-            return $model->getClientActive() ? $button::activeLabel($translator) : $button::inactiveLabel($translator);
+            return $model->getClientActive() ? $button::activeLabel($translator)
+                    : $button::inactiveLabel($translator);
         },
         encodeContent: false,
     ),
@@ -80,8 +82,10 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('client.has.user.account'),
-        content: static function (Client $model) use ($canEdit, $ucR, $button, $translator, $urlGenerator): Span {
-            return ($ucR->repoUserqueryCount((string) $model->getClientId()) !== 0  && $canEdit)
+        content: static function (Client $model) use ($canEdit, $ucR, $button,
+                $translator, $urlGenerator): Span {
+            return ($ucR->repoUserqueryCount((string) $model->getClientId()) !== 0
+                    && $canEdit)
                    ? $button::activeLabel($translator)
                    : $button::inactiveWithAddUserAccount($urlGenerator, $translator);
         },
@@ -91,14 +95,20 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('client/view', ['id' => $model->getClientId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi bi-eye']),
+                $urlGenerator->generate('client/view', [
+                    'id' => $model->getClientId()]),
+                        ['class' => 'btn btn-outline-info btn-sm']);
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('client/edit', ['id' => $model->getClientId(), 'origin' => 'edit']), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil-square']),
+                $urlGenerator->generate('client/edit',
+                    ['id' => $model->getClientId(), 'origin' => 'edit']),
+                        ['class' => 'btn btn-outline-warning btn-sm']);
         },
         encodeContent: false,
     ),
@@ -108,11 +118,14 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi bi-trash']),
                     [
                         'type' => 'submit',
-                        'class' => 'dropdown-button',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        'class' => 'btn btn-outline-danger btn-sm',
+                        'onclick' => "return confirm("
+                            . "'"
+                            . $translator->translate('delete.record.warning')
+                            . "');",
                     ],
                 ),
                 $urlGenerator->generate('client/delete', ['id' => $model->getClientId()]),
@@ -123,7 +136,8 @@ $columns = [
     ),
     new DataColumn(
         'invs',
-        content: static function (Client $model) use ($iR, $iaR, $urlGenerator, $gridComponents): string {
+        content: static function (Client $model) use ($iR, $iaR,
+            $urlGenerator, $gridComponents): string {
             if (null !== ($clientId = $model->getClientId())) {
                 $invoices = $iR->findAllWithClient($clientId);
                 // Initialize a new empty ArrayCollection without the need to create a new entity
@@ -132,9 +146,13 @@ $columns = [
                  * @var App\Invoice\Entity\Inv $invoice
                  */
                 foreach ($invoices as $invoice) {
-                    $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
-                    if (null !== $invoice_amount && null !== $invoice_amount->getBalance() && $invoice_amount->getBalance() > 0) {
-                        // Load into the ArrayCollection the invoices that make up this balance
+                    $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId())
+                            > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
+                    if (null !== $invoice_amount
+                            && null !== $invoice_amount->getBalance()
+                            && $invoice_amount->getBalance() > 0) {
+                        // Load into the ArrayCollection the invoices that make
+                        //  up this balance
                         $model->addInv($invoice);
                     }
                 }
@@ -206,7 +224,8 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
                     ->content(Html::encode($model->getClientName()))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClientId()]))
+                    ->href($urlGenerator->generate('client/view', [
+                        'id' => $model->getClientId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -224,7 +243,8 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
                     ->content(Html::encode($model->getClientSurname() ?? ''))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClientId()]))
+                    ->href($urlGenerator->generate('client/view', [
+                        'id' => $model->getClientId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -261,10 +281,14 @@ $columns = [
     ),
     new DataColumn(
         'client_id',
-        header: $translator->translate('balance') . ' (' . $s->getSetting('currency_symbol') . ')',
+        header: $translator->translate('balance')
+            . ' ('
+            . $s->getSetting('currency_symbol')
+            . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
             if (null !== ($clientId = $model->getClientId())) {
-                return Html::encode($s->formatCurrency($iR->withTotalBalance($clientId, $iaR)));
+                return Html::encode(
+                    $s->formatCurrency($iR->withTotalBalance($clientId, $iaR)));
             } else {
                 return '';
             }
@@ -287,7 +311,7 @@ $columns = [
                     ->addAttributes(
                             [
                                 'data-bs-toggle' => 'tooltip',
-                                'title' => $heading, 
+                                'title' => $heading,
                             ]),
                     $equal ? $addUrl : $editUrl, [
                         'style' => 'text-decoration:none']);
@@ -304,7 +328,8 @@ $gridSummary = $s->gridSummary(
     '',
 );
 
-// Add left-aligned wrapper when additional columns are visible to accommodate more columns
+// Add left-aligned wrapper when additional columns are visible to
+//  accommodate more columns
 $tableOrTableResponsive = $visible ? 'table-responsive' : 'table';
 
 $toolbarString
@@ -318,22 +343,26 @@ $toolbarString
             $allVisible
             . $gridComponents->toolbarReset($urlGenerator)
             .  new A()
-            ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 2]))
+            ->href($urlGenerator->generate('client/index',
+                    ['page' => 1, 'active' => 2]))
             ->addClass('btn ' . ($active == 2 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('all'))
             ->render()
             .  new A()
-            ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 1]))
+            ->href($urlGenerator->generate('client/index',
+                    ['page' => 1, 'active' => 1]))
             ->addClass('btn ' . ($active == 1 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('active'))
             ->render()
             .  new A()
-            ->href($urlGenerator->generate('client/index', ['page' => 1, 'active' => 0]))
+            ->href($urlGenerator->generate('client/index',
+                    ['page' => 1, 'active' => 0]))
             ->addClass('btn ' . ($active == 0 ? 'btn-primary' : 'btn-info'))
             ->content($translator->translate('inactive'))
             ->render()
             .  new A()
-            ->href($urlGenerator->generate('client/add', ['origin' => 'add']))
+            ->href($urlGenerator->generate('client/add',
+                    ['origin' => 'add']))
             ->addClass('btn btn-info')
             ->content('➕')
             ->render(),
@@ -347,7 +376,9 @@ if ($visible) {
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => $tableOrTableResponsive . ' table-striped text-center h-75','id' => 'table-client'])
+->tableAttributes(['class' => $tableOrTableResponsive
+        . ' table-striped text-center h-75',
+        'id' => 'table-client'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->urlCreator($urlCreator)
@@ -365,7 +396,8 @@ echo GridView::widget()
 ->id('w34-grid')
 ->paginationWidget($gridComponents->offsetPaginationWidget($paginator))
 ->summaryAttributes(['class' => 'mt-3 me-3 summary text-end'])
-->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator, $urlGenerator, 'client') . ' ' . $gridSummary)
+->summaryTemplate($pageSizeLimiter::buttons($currentRoute, $s, $translator,
+    $urlGenerator, 'client') . ' ' . $gridSummary)
 ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
 ->noResultsText($translator->translate('no.records'))
 ->toolbar($toolbarString);

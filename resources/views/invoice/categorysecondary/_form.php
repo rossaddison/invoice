@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\Form;
                                        <?= Html::closeTag('h5'); ?>
                                        <?= Html::openTag('div'); ?>
                                              <?= Field::select($form, 'category_primary_id')
-                                                ->addInputAttributes(['class' => 'form-control'])
+                                                ->addInputAttributes(['class' => 'form-control form-control-lg',])
                                                 ->value($form->getCategoryPrimaryId())
                                                 ->prompt($translator->translate('none'))
                                                 ->optionsData($category_primarys); ?>
@@ -57,7 +57,7 @@ use Yiisoft\Html\Tag\Form;
                                             <?= Field::text($form, 'name')
                                                 ->label($translator->translate('name'))
                                                 ->addInputAttributes([
-                                                    'class' => 'form-control',
+                                                    'class' => 'form-control form-control-lg',
                                                 ])
                                                ->value(Html::encode($form->getname()))
                                                ->placeholder($translator->translate('name')); ?>
@@ -65,7 +65,7 @@ use Yiisoft\Html\Tag\Form;
                                     <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
-                        <?= Html::closeTag('div'); ?>    
+                        <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('form'); ?>
                  <?= Html::closeTag('div'); ?>
              <?= Html::closeTag('div'); ?>

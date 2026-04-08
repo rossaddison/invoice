@@ -24,15 +24,15 @@ final readonly class ProfileService
         array $array
     ): void {
         $this->persist($model, $array);
-        isset($array['company_id']) ? 
+        isset($array['company_id']) ?
             $model->setCompanyId(
                 (int) $array['company_id']) : '';
         $model->setCurrent($array['current'] === '1' ? 1 : 0);
-        isset($array['mobile']) ? 
+        isset($array['mobile']) ?
             $model->setMobile((string) $array['mobile']) : '';
-        isset($array['email']) ? 
+        isset($array['email']) ?
             $model->setEmail((string) $array['email']) : '';
-        isset($array['description']) ? 
+        isset($array['description']) ?
             $model->setDescription(
                 (string) $array['description']) : '';
 

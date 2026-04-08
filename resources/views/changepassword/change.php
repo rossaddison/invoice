@@ -59,7 +59,8 @@ $this->setTitle($translator->translate('password.change'));
                     <?= Field::submitButton()
     ->buttonId('change-button')
     ->name('change-button')
-    ->content($translator->translate('layout.submit'))
+    ->addButtonAttributes(['class' => 'btn btn-success bi bi-floppy w-100'])
+    ->content(' ' . $translator->translate('layout.submit'))
 ?>
                     <?=  new Form()->close() ?>
                 </div>

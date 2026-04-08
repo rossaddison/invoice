@@ -553,17 +553,17 @@ final class ProductController extends BaseController
         $ff = $queryparams[$this->ffc] ?? '';
         /** @var string $rt */
         $rt = $queryparams[$this->rtc] ?? '';
-        
+
         // Determine which products to fetch
         $useAllProducts = $rt || ($ff == '' && $fp == '');
         $products = $useAllProducts ?
                 $pR->findAllPreloadedWithPrice() :
             $pR->repoProductwithfamilyquery($fp, $ff);
-        
+
         // Debug logging (remove in production)
         error_log("Product lookup - fp: '$fp', ff: '$ff', rt: '$rt',"
                 . " useAllProducts: " . ($useAllProducts ? 'true' : 'false'));
-        
+
         $parameters = [
             'families' => $fR->findAllPreloaded(),
             'filter_product' => $fp,
@@ -697,7 +697,7 @@ final class ProductController extends BaseController
         uR $uR,
         qiaR $qiaR,
         qiaS $qiaS,
-        acqR $acqR,    
+        acqR $acqR,
     ): Response {
         $select_items = $request->getQueryParams();
         /** @var array $select_items['product_ids'] */

@@ -29,7 +29,7 @@ final readonly class QuoteToolbar
             $buttons[] = $this->createLinkButton(
                 'view-invoice',
                 $this->urlGenerator->generate('inv/view', ['id' => $quote->getInvId()]),
-                'fa-file-text',
+                'bi-file-text',
                 'btn-outline-success',
                 $this->translator->translate('view') . ' ' . $this->translator->translate('invoice'),
             );
@@ -40,7 +40,7 @@ final readonly class QuoteToolbar
             $buttons[] = $this->createLinkButton(
                 'edit-quote',
                 $this->urlGenerator->generate('quote/edit', ['id' => $quoteId]),
-                'fa-edit',
+                'bi-pencil-square',
                 'btn-outline-primary',
                 $this->translator->translate('edit'),
             );
@@ -51,7 +51,7 @@ final readonly class QuoteToolbar
             $buttons[] = $this->createModalButton(
                 'add-quote-tax',
                 '#add-quote-tax',
-                'fa-plus',
+                'bi-plus-circle',
                 'btn-outline-secondary',
                 $this->translator->translate('add.quote.tax'),
             );
@@ -61,7 +61,7 @@ final readonly class QuoteToolbar
         $buttons[] = $this->createModalButton(
             'quote-to-pdf',
             '#quote-to-pdf',
-            'fa-print',
+            'bi-printer',
             'btn-outline-info',
             $this->translator->translate('download.pdf'),
         );
@@ -72,7 +72,7 @@ final readonly class QuoteToolbar
                 $buttons[] = $this->createLinkButton(
                     'send-email',
                     $this->urlGenerator->generate('quote/emailStage0', ['id' => $quoteId]),
-                    'fa-send',
+                    'bi-send',
                     'btn-outline-success',
                     $this->translator->translate('send.email'),
                 );
@@ -86,7 +86,7 @@ final readonly class QuoteToolbar
                 $buttons[] = $this->createModalButton(
                     'quote-to-so',
                     '#quote-to-so',
-                    'fa-refresh',
+                    'bi-arrow-repeat',
                     'btn-outline-warning',
                     $this->translator->translate('quote.to.so'),
                 );
@@ -94,7 +94,7 @@ final readonly class QuoteToolbar
                 // Quote not approved - show disabled button with indicator
                 $buttons[] = $this->createDisabledButton(
                     'quote-to-so-disabled',
-                    'fa-refresh',
+                    'bi-arrow-repeat',
                     'btn-outline-secondary',
                     $this->translator->translate('quote.to.so') . ' (' . $this->translator->translate('approval.required') . ')',
                     $this->translator->translate('quote.must.be.approved.first'),
@@ -110,7 +110,7 @@ final readonly class QuoteToolbar
                     'type' => 'modal',
                     'id' => 'quote-to-invoice',
                     'href' => '#quote-to-invoice',
-                    'icon' => 'fa-refresh',
+                    'icon' => 'bi-arrow-repeat',
                     'class' => '',
                     'title' => $this->translator->translate('quote.to.invoice'),
                     'style' => 'background-color: #ffffff !important; border: 2px solid #b19cd9 !important; color: #b19cd9 !important; font-weight: 500;'
@@ -119,19 +119,19 @@ final readonly class QuoteToolbar
                 // Quote not approved - show disabled button with indicator
                 $buttons[] = $this->createDisabledButton(
                     'quote-to-invoice-disabled',
-                    'fa-refresh',
+                    'bi-arrow-repeat',
                     'btn-outline-secondary',
                     $this->translator->translate('quote.to.invoice') . ' (' . $this->translator->translate('approval.required') . ')',
                     $this->translator->translate('quote.must.be.approved.first'),
                 );
             }
         }
-        
+
         if ($quoteEdit) {
             $buttons[] = $this->createModalButton(
                 'allowance-charge',
                 '#add-quote-allowance-charge',
-                'fa-plus',
+                'bi-plus-circle',
                 'btn-outline-secondary',
                 $this->translator->translate('allowance.or.charge.quote.add'),
             );
@@ -142,7 +142,7 @@ final readonly class QuoteToolbar
             $buttons[] = $this->createModalButton(
                 'quote-to-quote',
                 '#quote-to-quote',
-                'fa-copy',
+                'bi-copy',
                 'btn-outline-secondary',
                 $this->translator->translate('copy.quote'),
             );
@@ -153,7 +153,7 @@ final readonly class QuoteToolbar
             $buttons[] = $this->createModalButton(
                 'delete-quote',
                 '#delete-quote',
-                'fa-trash',
+                'bi-trash',
                 'btn-outline-danger',
                 $this->translator->translate('delete.quote'),
             );
@@ -164,7 +164,7 @@ final readonly class QuoteToolbar
             $buttons[] = $this->createModalButton(
                 'delete-items',
                 '#delete-items',
-                'fa-trash',
+                'bi-trash',
                 'btn-outline-danger',
                 $this->translator->translate('delete') . ' ' . $this->translator->translate('item'),
             );
@@ -227,7 +227,7 @@ final readonly class QuoteToolbar
     private function renderButton(array $button): string
     {
         $baseClasses = 'btn ' . (string) $button['class'];
-        $iconHtml = Html::openTag('i', ['class' => 'fa ' . (string) $button['icon']]) . Html::closeTag('i');
+        $iconHtml = Html::openTag('i', ['class' => 'bi ' . (string) $button['icon']]) . Html::closeTag('i');
 
         if ((string) $button['type'] === 'link') {
             return  new A()
@@ -256,7 +256,7 @@ final readonly class QuoteToolbar
             $styleAttr = isset($button['style'])
                 ? 'text-decoration: none; ' . (string) $button['style']
                 : 'text-decoration: none';
-            
+
             return  new A()
                 ->href((string) $button['href'])
                 ->addClass($baseClasses)

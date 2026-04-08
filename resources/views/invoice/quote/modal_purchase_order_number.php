@@ -30,22 +30,22 @@ declare(strict_types=1);
                         <label for="quote_with_purchase_order_number"><?= $translator->translate('quote.with.purchase.order.number') ?></label>
                         <input type="text" name="quote_with_purchase_order_number" id="quote_with_purchase_order_number" class="form-control form-control-lg"
                                value="" autocomplete="off">
-                    </div> 
+                    </div>
                     <div>
                         <label for="quote_with_purchase_order_person"><?= $translator->translate('quote.with.purchase.order.person') ?></label>
                         <input type="text" name="quote_with_purchase_order_person" id="quote_with_purchase_order_person" class="form-control form-control-lg"
                                value="" autocomplete="off">
-                    </div>   
-                </form>    
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="quote_with_purchase_order_number_confirm btn btn-success" id="quote_with_purchase_order_number_confirm" type="button">
-                        <i class="fa fa-check"></i>
+                        <i class="bi bi-check-lg"></i>
                         <?= $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

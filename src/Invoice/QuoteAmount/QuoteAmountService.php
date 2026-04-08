@@ -91,7 +91,7 @@ final readonly class QuoteAmountService
         array $array
     ): void {
         $this->persist($array, $model);
-        
+
         /**
          * @var int $array['quote_id']
          * @var float $array['item_subtotal']
@@ -112,7 +112,7 @@ final readonly class QuoteAmountService
         $model->setTotal($array['total']);
         $this->repository->save($model);
     }
-    
+
     /**
      * Update the Quote Amounts when a quote item allowance or
      * charge is added to a quote item. Also update the Quote

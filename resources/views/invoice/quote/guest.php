@@ -116,7 +116,7 @@ $columns = [
             if (null !== $model->getStatusId()) {
                 $span = $qR->getSpecificStatusArrayLabel((string) $model->getStatusId());
                 $class = $qR->getSpecificStatusArrayClass((string) $model->getStatusId());
-                return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'label ' . $class]);
+                return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'badge text-bg-' . $class]);
             }
             return '';
         },

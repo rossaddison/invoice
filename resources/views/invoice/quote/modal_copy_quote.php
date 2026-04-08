@@ -40,14 +40,14 @@ use Yiisoft\Html\Html;
                                         <?= Html::encode($client->getClientName()); ?>
                                     </option>
                                 <?php } ?>
-                        </select>          
+                        </select>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('cancel'); ?></button>
                 <button type="button" class="quote_to_quote_confirm btn btn-success" id="quote_to_quote_confirm">
-                    <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
+                    <i class="bi bi-check-lg"></i> <?= $translator->translate('submit'); ?>
                 </button>
             </div>
         </div>

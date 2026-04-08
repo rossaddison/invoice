@@ -30,7 +30,7 @@ use Yiisoft\Html\Tag\Form;
     ->open()
 ?>
 
-<?= Field::text($form, 'client_id')->readonly(true);?>    
+<?= Field::text($form, 'client_id')->readonly(true);?>
 <?= Field::text($form, 'reference')->readonly(true);?>
 <?= Field::text($form, 'name')->readonly(true);?>
 <?= Field::text($form, 'period_start')

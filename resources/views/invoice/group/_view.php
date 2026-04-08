@@ -36,12 +36,12 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'tabbable tabs-below']); ?>
 
     <?= Html::openTag('div', ['class' => 'tab-content']); ?>
-        
+
         <?= Html::openTag('div'); ?>
             <?= Field::text($form, 'name')
                 ->label($translator->translate('name'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                     'readonly' => 'readonly',
                     'disabled' => 'disabled',
                 ])
@@ -64,7 +64,7 @@ use Yiisoft\Html\Tag\Form;
             <?= Field::text($form, 'left_pad')
                 ->label($translator->translate('left.pad'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                     'readonly' => 'readonly',
                     'disabled' => 'disabled',
                 ])
@@ -75,15 +75,15 @@ use Yiisoft\Html\Tag\Form;
             <?= Field::text($form, 'next_id')
                 ->label($translator->translate('next.id'))
                 ->addInputAttributes([
-                    'class' => 'form-control',
+                    'class' => 'form-control form-control-lg',
                     'readonly' => 'readonly',
                     'disabled' => 'disabled',
                 ])
                 ->value(Html::encode($form->getNextId()) ?: '1')
                 ->placeholder('1')
-                ->hint($translator->translate('hint.this.field.is.required')); ?>    
+                ->hint($translator->translate('hint.this.field.is.required')); ?>
             <?= Html::tag('br'); ?>
-            <?= Html::closeTag('div'); ?>         
+            <?= Html::closeTag('div'); ?>
             <?= $button::back(); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

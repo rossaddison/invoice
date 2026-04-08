@@ -1,4 +1,4 @@
-﻿import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
+import { parsedata, getJson, ApiResponse, RequestParams } from './utils.js';
 
 // Secure navigation helper to prevent Open Redirect vulnerabilities
 function secureReload(): void {
@@ -397,7 +397,7 @@ export class QuoteHandler {
             const data = parsedata(response);
 
             if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-            
+
             // Redirect to the created invoice if successful
             if (data.success && data.redirect_url) {
                 window.location.href = data.redirect_url;
@@ -408,7 +408,7 @@ export class QuoteHandler {
                 // Fallback to reload if no redirect URL is provided
                 secureReload();
             }
-            
+
             if (data.flash_message) alert(data.flash_message);
         } catch (error) {
             console.error('quote_to_invoice_confirm error', error);
@@ -443,7 +443,7 @@ export class QuoteHandler {
             const data = parsedata(response);
 
             if (btn) btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-            
+
             // Redirect to the created sales order if successful
             if (data.success && data.redirect_url) {
                 window.location.href = data.redirect_url;
@@ -451,7 +451,7 @@ export class QuoteHandler {
                 // Fallback to reload if no redirect URL is provided
                 secureReload();
             }
-            
+
             if (data.flash_message) alert(data.flash_message);
         } catch (error) {
             console.error('quote_to_so_confirm error', error);

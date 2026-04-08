@@ -56,7 +56,7 @@ final class SalesOrderItemForm extends FormModel
         $this->price = $salesOrderItem->getPrice();
         $this->discount_amount = $salesOrderItem->getDiscountAmount();
         $this->order = $salesOrderItem->getOrder();
-        $this->product_unit = $salesOrderItem->getProductUnit();  
+        $this->product_unit = $salesOrderItem->getProductUnit();
         $this->tax_rate_id = $salesOrderItem->getTaxRateId();
         $this->product_id = $salesOrderItem->getProductId();
         $this->task_id = $salesOrderItem->getTaskId();
@@ -93,7 +93,7 @@ final class SalesOrderItemForm extends FormModel
     {
         return $this->product_id;
     }
-    
+
     public function getTaskId(): ?string
     {
         return $this->task_id;

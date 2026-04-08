@@ -19,6 +19,7 @@ class InvoiceNodeModulesAsset extends AssetBundle
     /** @psalm-suppress NonInvariantDocblockPropertyType */
     public array $css = [
         'invoice/css/style.css',
+        'invoice/css/overrides.css',
         'yii3i/yii3i.css',
 
         // Automatic asterisk * for required form fields
@@ -30,7 +31,7 @@ class InvoiceNodeModulesAsset extends AssetBundle
         // QuoteToolbar Widget styles
         'rebuild/css/quote-toolbar.css',
     ];
-    
+
     public bool $cdn = false;
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */
@@ -45,7 +46,7 @@ class InvoiceNodeModulesAsset extends AssetBundle
         'rebuild/js/emailtemplate.js',
         'rebuild/js/mailer_ajax_email_addresses.js',
     ];
-    
+
     public array $depends = [
         NodeModulesBootstrapLightboxAsset::class,
         NodeModulesClipBoardAsset::class,

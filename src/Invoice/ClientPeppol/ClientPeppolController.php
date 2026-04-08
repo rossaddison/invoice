@@ -75,7 +75,7 @@ final class ClientPeppolController extends BaseController
                 'form' => $form,
                 'pep' => $this->pep(),
                 'setting' => $this->sR->getSetting('enable_client_peppol_defaults'),
-                'defaults' => 
+                'defaults' =>
                     $this->sR->getSetting('enable_client_peppol_defaults')
                         == '1' ? true : false,
                 'client_id' => $client_id,

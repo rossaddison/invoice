@@ -47,7 +47,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div'); ?>
         <?= Field::select($form, 'category_primary_id')
             ->addInputAttributes([
-                'class' => 'form-control',
+                'class' => 'form-control form-control-lg',
                 'disabled' => 'disabled',
             ])
             ->value($form->getCategoryPrimaryId())
@@ -59,7 +59,7 @@ use Yiisoft\Html\Tag\Form;
         <?= Field::text($form, 'name')
     ->label($translator->translate('name'))
     ->addInputAttributes([
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
     ])
     ->value(Html::encode($form->getName()))
     ->readonly(true)

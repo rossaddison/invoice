@@ -55,11 +55,11 @@ echo  new Form()
                     ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
-            <?= Html::closeTag('div'); ?>    
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::select($form, 'client_id')
     ->label($translator->translate('user.account.clients'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($form->getClientId()))
     ->prompt($translator->translate('none'))
     ->optionsData($clients)
@@ -68,11 +68,11 @@ echo  new Form()
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-            <?= Html::closeTag('div'); ?>            
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::select($form, 'group_id')
     ->label($translator->translate('quote.group'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value($defaultGroupId ?: 0)
     ->prompt($translator->translate('none'))
     ->optionsData($groups)
@@ -80,11 +80,11 @@ echo  new Form()
     ->required(true)
     ->hint($translator->translate('hint.this.field.is.required'));
 ?>
-            <?= Html::closeTag('div'); ?>                                       
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::password($form, 'password')
     ->label($translator->translate('password'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($form->getPassword()))
     ->placeholder($translator->translate('password'))
     ->tabIndex(3)
@@ -99,7 +99,7 @@ echo  new Form()
             <?= Html::openTag('div'); ?>
                 <?= Field::textarea($form, 'notes')
     ->label($translator->translate('note'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($form->getNotes()))
     ->placeholder($translator->translate('note'))
     ->hint($translator->translate('hint.this.field.is.not.required'));
@@ -109,18 +109,18 @@ echo  new Form()
                 <?= Field::text($form, 'url_key')
     ->disabled(true)
     ->label($translator->translate('upload.url.key'))
-    ->addInputAttributes(['class' => 'form-control'])
+    ->addInputAttributes(['class' => 'form-control form-control-lg',])
     ->value(Html::encode($urlKey));
 ?>
-            <?= Html::closeTag('div'); ?>                                    
+            <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-                
+
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 
-<?= Html::closeTag('form'); ?> 
+<?= Html::closeTag('form'); ?>

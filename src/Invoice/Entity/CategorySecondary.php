@@ -59,7 +59,7 @@ class CategorySecondary
     {
         return $this->category_primary;
     }
-    
+
     public function setCategoryPrimary(?CategoryPrimary $categoryPrimary): void
     {
         $this->category_primary = $categoryPrimary;

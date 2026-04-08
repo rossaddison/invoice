@@ -26,7 +26,7 @@ use Yiisoft\Html\Tag\Form;
     ->id('DeliveryPartyForm')
     ->open() ?>
 
-    <?= Html::openTag('div', ['id' => 'headerbar']); ?>    
+    <?= Html::openTag('div', ['id' => 'headerbar']); ?>
         <?= Html::openTag('h1', ['class' => 'headerbar-title']); ?>
             <?= Html::encode($title); ?>
         <?= Html::closeTag('h1'); ?>
@@ -37,12 +37,12 @@ use Yiisoft\Html\Tag\Form;
             ->header($translator->translate('error.summary'))
             ->onlyProperties(...['party_name'])
             ->onlyCommonErrors();
-?>    
+?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
         <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
             <?= Field::text($form, 'party_name')
         ->addInputAttributes([
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
         ])
         ->label($translator->translate('delivery.party.name'))
         ->value(Html::encode($form->getPartyName() ?? ''));

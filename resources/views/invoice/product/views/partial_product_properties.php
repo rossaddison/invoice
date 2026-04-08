@@ -34,10 +34,10 @@ $productPropertyArguments = ['product_id' => $product->getProductId(), '_languag
             'productproperty/add',
             $productPropertyArguments,
         ),
-        ['class' => 'btn btn-primary fa fa-plus'],
+        ['class' => 'btn btn-primary bi bi-plus-lg'],
     ); ?>
 </div>
 <br>
 <div class="table-responsive btn btn-info">
      <?= $productpropertys; ?>
-</div>    
+</div>

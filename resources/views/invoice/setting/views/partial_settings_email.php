@@ -10,6 +10,7 @@ use Yiisoft\Html\Tag\Option;
 * @var array $body
 */
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
   'class' => 'col-xs-12 col-md-8 col-md-offset-2'
@@ -32,7 +33,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('select', [
         'name' => 'settings[email_pdf_attachment]',
         'id' => 'settings[email_pdf_attachment]',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
         echo  new Option()
@@ -55,7 +56,7 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::openTag('select', [
      'name' => 'settings[email_send_method]',
      'id' => 'email_send_method',
-     'class' => 'form-control'
+     'class' => 'form-control form-control-lg',
     ]);
      echo  new Option()
       ->value('')

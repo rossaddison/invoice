@@ -13,7 +13,7 @@ class NodeModulesBootstrapIconsAsset extends AssetBundle
     public ?string $baseUrl = '@assetsUrl';
 
     public ?string $sourcePath = '@npm/bootstrap-icons/font';
-    
+
     public bool $cdn = false;
 
     /** @psalm-suppress NonInvariantDocblockPropertyType */

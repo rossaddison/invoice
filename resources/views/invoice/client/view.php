@@ -61,27 +61,27 @@ use Yiisoft\Html\Tag\A;
 
     <div class="headerbar-item pull-right">
         <div class="btn-group btn-group-sm">
-                <a href="#modal-add-quote" data-bs-toggle="modal" class="btn btn-success" style="text-decoration:none">
-                    <i class="fa fa-file-text"></i><?= $translator->translate('create.quote'); ?>
+                <a href="#modal-add-quote" data-bs-toggle="modal" class="btn btn-outline-success" style="text-decoration:none">
+                    <i class="bi bi-file-earmark-text"></i><?= $translator->translate('create.quote'); ?>
                 </a>
-                <a href="#modal-add-inv" data-bs-toggle="modal" class="btn btn-success"  style="text-decoration:none">
-                   <i class="fa fa-file-text"></i><?= $translator->translate('create.invoice'); ?>
+                <a href="#modal-add-inv" data-bs-toggle="modal" class="btn btn-outline-success"  style="text-decoration:none">
+                   <i class="bi bi-file-earmark-text"></i><?= $translator->translate('create.invoice'); ?>
                 </a>
                 <?php if ($cpR->repoClientCount($clientId = (string) $client->getClientId()) === 0 && strlen($clientId) > 0) { ?>
-                <a href="<?= $urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $client->getClientId()]); ?>" 
-                   class="btn btn-info" style="text-decoration:none">
-                     <i class="fa fa-plus"></i> <?= $translator->translate('client.peppol.add'); ?>
+                <a href="<?= $urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $client->getClientId()]); ?>"
+                   class="btn btn-outline-info" style="text-decoration:none">
+                     <i class="bi bi-plus"></i> <?= $translator->translate('client.peppol.add'); ?>
                 </a>
                 <?php } ?>
                 <?php if ($cpR->repoClientCount($clientId = (string) $client->getClientId()) > 0 && strlen($clientId) > 0) { ?>
-                <a href="<?= $urlGenerator->generate('clientpeppol/edit', ['client_id' => $client->getClientId()]); ?>" 
-                   class="btn btn-warning" style="text-decoration:none">
-                     <i class="fa fa-edit"></i> <?= $translator->translate('client.peppol.edit'); ?>
+                <a href="<?= $urlGenerator->generate('clientpeppol/edit', ['client_id' => $client->getClientId()]); ?>"
+                   class="btn btn-outline-warning" style="text-decoration:none">
+                     <i class="bi bi-pencil-square"></i> <?= $translator->translate('client.peppol.edit'); ?>
                 </a>
                 <?php } ?>
                 <a href="<?= null !== ($clientIdEdit = $client->getClientId()) ? $urlGenerator->generate('client/edit', ['id' => $clientIdEdit, 'origin' => 'edit']) : ''; ?>"
-                   class="btn btn-danger" style="text-decoration:none">
-                    <i class="fa fa-edit"></i><?= $translator->translate('edit'); ?>
+                   class="btn btn-outline-warning" style="text-decoration:none">
+                    <i class="bi bi-pencil-square"></i><?= $translator->translate('edit'); ?>
                 </a>
                 <a href="<?= null !== ($clientIdPostalAdd = $client->getClientId())
                             ? $urlGenerator->generate(
@@ -101,21 +101,21 @@ use Yiisoft\Html\Tag\A;
 
                                     'action' => 'add'],
                             ) : ''; ?>"
-                   class="btn btn-primary" style="text-decoration:none">
-                    <i class="fa fa-plus"></i><?= $translator->translate('client.postaladdress.add'); ?>
+                   class="btn btn-outline-primary" style="text-decoration:none">
+                    <i class="bi bi-plus"></i><?= $translator->translate('client.postaladdress.add'); ?>
                 </a>
                 <a href="<?= null !== ($clientIdDelAdd = $client->getClientId()) ? $urlGenerator->generate(
                     'del/add',
                     ['client_id' => $clientIdDelAdd],
                     ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view'],
                 ) : ''; ?>"
-                   class="btn btn-success" style="text-decoration:none">
-                   <i class="fa fa-plus fa-margin"></i><?= $translator->translate('delivery.location.add'); ?>
+                   class="btn btn-outline-success" style="text-decoration:none">
+                   <i class="bi bi-plus"></i><?= $translator->translate('delivery.location.add'); ?>
                 </a>
-                <a class="btn btn-danger"
+                <a class="btn btn-outline-danger"
                    href="<?= $urlGenerator->generate('client/delete', ['id' => $client->getClientId()]); ?>"
                    onclick="return confirm('<?= $translator->translate('delete.client.warning'); ?>');" style="text-decoration:none">
-                   <i class="fa fa-trash-o fa-margin"></i> <?= $translator->translate('delete'); ?>
+                   <i class="bi bi-trash"></i> <?= $translator->translate('delete'); ?>
                 </a>
         </div>
     </div>
@@ -125,14 +125,14 @@ use Yiisoft\Html\Tag\A;
 <ul id="submenu" class="nav nav-tabs nav-tabs-noborder">
     <!== https://getbootstrap.com/docs/5.0/components/navs-tabs/#using-data-attributes -->
     <li class="nav-item" role="presentation"><button class="nav-link active" id="client-details-tab" data-bs-toggle="tab" data-bs-target="#clientDetails"  style="text-decoration:none"><?= $translator->translate('details'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-tab" data-bs-toggle="tab" data-bs-target="#clientQuotes" style="text-decoration:none;background-color: lightgreen"><?= $translator->translate('quotes'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link bg-success bg-opacity-25" id="client-quotes-tab" data-bs-toggle="tab" data-bs-target="#clientQuotes"  style="text-decoration:none"><?= $translator->translate('quotes'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-draft-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesDraft" style="text-decoration:none"><?= $translator->translate('draft'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-sent-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesSent" style="text-decoration:none"><?= $translator->translate('sent'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-viewed-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesViewed" style="text-decoration:none"><?= $translator->translate('viewed'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-approved-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesApproved" style="text-decoration:none"><?= $translator->translate('approved'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-cancelled-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesCancelled" style="text-decoration:none"><?= $translator->translate('canceled'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-rejected-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesRejected" style="text-decoration:none"><?= $translator->translate('rejected'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-tab" data-bs-toggle="tab" data-bs-target="#clientInvoices" style="text-decoration:none;background-color: lightpink"><?= $translator->translate('invoices'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link bg-danger bg-opacity-25" id="client-invoices-tab" data-bs-toggle="tab" data-bs-target="#clientInvoices" style="text-decoration:none"><?= $translator->translate('invoices'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-draft-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesDraft" style="text-decoration:none"><?= $translator->translate('draft'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-sent-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesSent" style="text-decoration:none"><?= $translator->translate('sent'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-viewed-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesViewed" style="text-decoration:none"><?= $translator->translate('viewed'); ?></button></li>
@@ -146,7 +146,7 @@ use Yiisoft\Html\Tag\A;
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-officer-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesOfficer" style="text-decoration:none"><?= $translator->translate('enforcement'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-credit-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesCredit" style="text-decoration:none"><?= $translator->translate('credit.invoice.for.invoice'); ?></button></li>
     <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-written-off-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesWrittenOff" style="text-decoration:none"><?= $translator->translate('loss'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-payments-tab" data-bs-toggle="tab" data-bs-target="#clientPayments" style="text-decoration:none;background-color: lightblue"><?= $translator->translate('payments'); ?></button></li>
+    <li class="nav-item" role="presentation"><button class="nav-link bg-info bg-opacity-25" id="client-payments-tab" data-bs-toggle="tab" data-bs-target="#clientPayments" style="text-decoration:none"><?= $translator->translate('payments'); ?></button></li>
 </ul>
 
 <div id="content" class="tabbable tabs-below no-padding">
@@ -164,7 +164,7 @@ use Yiisoft\Html\Tag\A;
                         <?= $partial_client_address; ?>
                     </p>
                     <p>
-                        <table class="table table-bordered no-margin">                        
+                        <table class="table table-bordered no-margin">
                         <?php
                             $i = 1;
 /**
@@ -182,7 +182,7 @@ foreach ($custom_fields as $custom_field) : ?>
                                 <th id="<?= 'cf-col' . $i; ?>"><?= Html::encode($column); ?></th>
                                 <td id="<?= 'cf-val' . $i; ?>"><?= Html::encode($value); ?></td>
                             </tr>
-                        </table>    
+                        </table>
                         <?php
                              $i = $i + 1;
 endforeach; ?>
@@ -229,7 +229,7 @@ endforeach; ?>
             </div>
 
             <hr>
-            
+
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <div class="panel panel-default no-margin">
@@ -239,8 +239,8 @@ endforeach; ?>
                             </div>
                     </div>
                 </div>
-            </div>  
-            
+            </div>
+
             <hr>
 
             <div class="row">
@@ -355,10 +355,10 @@ endforeach; ?>
                             </div>
 
                             <div class="panel-body table-content">
-                                <table class="table no-margin">                                     
+                                <table class="table no-margin">
                                     <tr>
                                         <th><?= $translator->translate('birthdate'); ?></th>
-                                        
+
                                         <td><?=
                                               !is_string($clientBirthdate = $client->getClientBirthdate())
                                                && null !== $clientBirthdate
@@ -379,7 +379,7 @@ endforeach; ?>
                                                     continue;
                                                 } ?>
                                                 <?php $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues); ?>
-                                         <?php endforeach; ?>   
+                                         <?php endforeach; ?>
                                 </table>
                             </div>
                         </div>
@@ -412,11 +412,11 @@ endforeach; ?>
                                         } ?>
                                         <tr>
                                             <th id="client-cf-" . <?= $i; ?>></th>
-                                            <td>    
+                                            <td>
                                             <?php
                                             $clientCustomForm = new ClientCustomForm(new ClientCustom());
                     $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues);?>
-                                            </td>    
+                                            </td>
                                         </tr>
                                     <?php
                                         $i = $i + 1;
@@ -461,87 +461,87 @@ endforeach; ?>
         <div id="clientQuotes" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-tab">
             <?php echo $quote_table; ?>
         </div>
-        
+
         <div id="clientQuotesDraft" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-draft-tab">
             <?php echo $quote_draft_table; ?>
         </div>
-        
+
         <div id="clientQuotesSent" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-sent-tab">
             <?php echo $quote_sent_table; ?>
         </div>
-        
+
         <div id="clientQuotesViewed" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-viewed-tab">
             <?php echo $quote_viewed_table; ?>
         </div>
-        
+
         <div id="clientQuotesApproved" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-approved-tab">
             <?php echo $quote_approved_table; ?>
         </div>
-        
+
         <div id="clientQuotesCancelled" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-cancelled-tab">
             <?php echo $quote_cancelled_table; ?>
         </div>
-        
+
         <div id="clientQuotesRejected" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-rejected-tab">
             <?php echo $quote_rejected_table; ?>
         </div>
-        
+
         <div id="clientInvoices" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-tab">
             <?php echo $invoice_table; ?>
         </div>
-        
+
         <div id="clientInvoicesDraft" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-draft-tab">
             <?php echo $invoice_draft_table; ?>
         </div>
-        
+
         <div id="clientInvoicesSent" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-sent-tab">
             <?php echo $invoice_sent_table; ?>
         </div>
-        
+
         <div id="clientInvoicesViewed" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-viewed-tab">
             <?php echo $invoice_viewed_table; ?>
         </div>
-        
+
         <div id="clientInvoicesPaid" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-paid-tab">
             <?php echo $invoice_paid_table; ?>
         </div>
-        
+
         <div id="clientInvoicesOverdue" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-overdue-tab">
             <?php echo $invoice_overdue_table; ?>
         </div>
-        
+
         <div id="clientInvoicesUnpaid" class="tab-pane table-content role="tabpanel" aria-labelledby="client-invoices-unpaid-tab"">
             <?php echo $invoice_unpaid_table; ?>
         </div>
-        
+
         <div id="clientInvoicesReminderSent" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-reminder-sent-tab">
             <?php echo $invoice_reminder_sent_table; ?>
         </div>
-        
+
         <div id="clientInvoicesSevenDay" class="tab-pane table-content role="tabpanel" aria-labelledby="client-invoices-seven-day-tab"">
             <?php echo $invoice_seven_day_table; ?>
         </div>
-        
+
         <div id="clientInvoicesLegalClaim" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-legal-claim-tab">
             <?php echo $invoice_legal_claim_table; ?>
         </div>
-        
+
         <div id="clientInvoicesJudgement" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-judgement-tab">
             <?php echo $invoice_judgement_table; ?>
         </div>
-        
+
         <div id="clientInvoicesOfficer" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-officer-tab">
             <?php echo $invoice_officer_table; ?>
         </div>
-        
+
         <div id="clientInvoicesCredit" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-credit-tab">
             <?php echo $invoice_credit_table; ?>
         </div>
-        
+
         <div id="clientInvoicesWrittenOff" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-written-off-tab">
             <?php echo $invoice_written_off_table; ?>
         </div>
-        
+
         <div id="clientPayments" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-payments-tab">
             <?php echo $payment_table; ?>
         </div>

@@ -64,7 +64,7 @@
 
     </style>
 </head>
-<body>       
+<body>
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
 <form method="POST" class="form-inline" action="<?= $urlGenerator->generate($url); ?>">

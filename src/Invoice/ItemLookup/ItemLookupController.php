@@ -169,7 +169,7 @@ final class ItemLookupController extends BaseController
         }
         return $this->webService->getNotFoundResponse();
     }
-   
+
     /**
      * @param CurrentRoute $currentRoute
      * @param ItemLookupRepository $itemlookupRepository

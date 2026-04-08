@@ -25,7 +25,7 @@ $this->beginPage();
     <title><?= Html::encode($translator->translate('payment.history')); ?></title>
 </head>
 <body>
-<?php $this->beginBody(); ?> 
+<?php $this->beginBody(); ?>
 <h3 class="report_title">
     <?= Html::encode($translator->translate('payment.history')); ?><br>
     <small><?= $from_date . ' - ' . $to_date; ?></small>

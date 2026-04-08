@@ -51,7 +51,7 @@ echo H::openTag('div', [
         echo H::openTag('select', [
             'name' => 'filter_family_inv',
             'id' => 'filter_family_inv',
-            'class' => 'form-control'
+            'class' => 'form-control form-control-lg',
         ]);
          echo H::openTag('option', ['value' => '0']);
           echo H::encode($translator->translate('any.family'));
@@ -77,7 +77,7 @@ echo H::openTag('div', [
         echo H::closeTag('label');
         echo H::openTag('input', [
             'type' => 'text',
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'name' => 'filter_product_inv',
             'id' => 'filter_product_inv',
             'placeholder' => $translator->translate('product.name'),
@@ -100,7 +100,7 @@ echo H::openTag('div', [
        echo H::closeTag('div'); //7
       echo H::closeTag('div'); //6
       echo H::openTag('br');
-      echo H::openTag('div', ['class' => 'modal-header']); 
+      echo H::openTag('div', ['class' => 'modal-header']);
 // see src\Invoice\Asset\rebuild-1.13\js\modal-product-lookups.js line 64
 // Note: The above js will pass selected products to invoice/product/selection_inv function
        echo H::openTag('button', [
@@ -108,7 +108,7 @@ echo H::openTag('div', [
            'type' => 'button',
            'disabled' => true
        ]);
-        echo H::openTag('i', ['class' => 'fa fa-check']);
+        echo H::openTag('i', ['class' => 'bi bi-check-lg']);
         echo H::closeTag('i');
         echo H::encode($translator->translate('submit'));
        echo H::closeTag('button');

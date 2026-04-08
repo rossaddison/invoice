@@ -144,7 +144,7 @@ final class EmailTemplateRepository extends Select\Repository
     }
 
     /**
-     * 
+     *
      * @param string $pdf_or_public
      * @return array
      */

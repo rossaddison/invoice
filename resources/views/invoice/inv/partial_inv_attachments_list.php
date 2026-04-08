@@ -37,7 +37,7 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-download fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi bi-download']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
@@ -57,7 +57,7 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi bi-pencil']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
@@ -77,7 +77,7 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',

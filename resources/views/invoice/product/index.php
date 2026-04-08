@@ -158,7 +158,7 @@ $columns = [
         header: $translator->translate('product.property.add'),
         content: static function (Product $model) use ($urlGenerator): A {
             return Html::a(
-                Html::tag('i', '', ['class' => 'fa fa-plus fa-margin dropdown-button text-decoration-none']),
+                Html::tag('i', '', ['class' => 'bi-plus dropdown-button text-decoration-none']),
                 $urlGenerator->generate('productproperty/add', ['product_id' => $model->getProductId()]),
                 [],
             );
@@ -236,7 +236,7 @@ $tableOrTableResponsive = $visible ? 'table-responsive' : 'table';
 $toolbarString
     =  new Form()->post($urlGenerator->generate('product/index'))->csrf($csrf)->open()
     .  new Div()->addClass('float-start')->content(
-        '<h4 class="me-3 d-inline-block">' . $translator->translate('products') . '</h4>' 
+        '<h4 class="me-3 d-inline-block">' . $translator->translate('products') . '</h4>'
         . '<div class="btn-group me-2" role="group">'
         . $allVisible
         . $toolbarReset

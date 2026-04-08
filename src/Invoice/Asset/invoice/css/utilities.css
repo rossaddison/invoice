@@ -2,7 +2,7 @@
 |   =========================================================
 |   Utility Classes - Yii3i Reorganized CSS
 |   =========================================================
-|   
+|
 |   This file contains utility classes for:
 |   - Spacing (margins, padding)
 |   - Display utilities
@@ -12,10 +12,10 @@
 |   - Position utilities
 |   - Cursor utilities
 |   - Border utilities
-|   
+|
 |   Original source: src/Invoice/Asset/invoice/css/style.css (utility sections)
 |   Also includes styles from src/Invoice/Asset/invoiceDark/sass/_custom_styles.scss
-|   
+|
 |   TODO: Complete extraction of utility classes from style.css
 */
 
@@ -178,15 +178,15 @@
   .hidden-xs {
     display: none !important;
   }
-  
+
   .visible-xs {
     display: block !important;
   }
-  
+
   .visible-xs-inline {
     display: inline !important;
   }
-  
+
   .visible-xs-inline-block {
     display: inline-block !important;
   }
@@ -196,15 +196,15 @@
   .hidden-sm {
     display: none !important;
   }
-  
+
   .visible-sm {
     display: block !important;
   }
-  
+
   .visible-sm-inline {
     display: inline !important;
   }
-  
+
   .visible-sm-inline-block {
     display: inline-block !important;
   }
@@ -214,15 +214,15 @@
   .hidden-md {
     display: none !important;
   }
-  
+
   .visible-md {
     display: block !important;
   }
-  
+
   .visible-md-inline {
     display: inline !important;
   }
-  
+
   .visible-md-inline-block {
     display: inline-block !important;
   }
@@ -232,15 +232,15 @@
   .hidden-lg {
     display: none !important;
   }
-  
+
   .visible-lg {
     display: block !important;
   }
-  
+
   .visible-lg-inline {
     display: inline !important;
   }
-  
+
   .visible-lg-inline-block {
     display: inline-block !important;
   }
@@ -653,9 +653,9 @@
   margin-left: var(--spacing-md);
 }
 
-.discount-field .input-sm, 
-.discount-field .input-group-sm > .form-control, 
-.discount-field .input-group-sm > .input-group-addon, 
+.discount-field .input-sm,
+.discount-field .input-group-sm > .form-control,
+.discount-field .input-group-sm > .input-group-addon,
 .discount-field .input-group-sm > .input-group-btn > .btn {
   height: auto;
   padding: var(--spacing-xs) var(--spacing-sm);

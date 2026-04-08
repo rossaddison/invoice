@@ -26,7 +26,7 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 final readonly class InvItemService
 {
     public function __construct(
-        private ACIIR $aciiR,    
+        private ACIIR $aciiR,
         private InvItemRepository $repository,
         private IR $iR,
         private TRR $trR,
@@ -122,20 +122,20 @@ final readonly class InvItemService
 
             $productDescription = $product->getProductDescription();
             if (null !== $productDescription) {
-                isset($array['description']) ? 
+                isset($array['description']) ?
                     $model->setDescription(
-                        (string) $array['description']) : 
+                        (string) $array['description']) :
                     $model->setDescription($productDescription);
             }
         }
 
-        isset($array['note']) ? 
+        isset($array['note']) ?
             $model->setNote((string) $array['note']) : '';
-        isset($array['quantity']) ? 
+        isset($array['quantity']) ?
             $model->setQuantity((float) $array['quantity']) : '';
-        isset($array['price']) ? 
+        isset($array['price']) ?
             $model->setPrice((float) $array['price']) : '';
-        isset($array['discount_amount']) ? 
+        isset($array['discount_amount']) ?
             $model->setDiscountAmount(
                 (float) $array['discount_amount']) : '';
         isset($array['order']) ? $model->setOrder((int) $array['order']) : '';
@@ -160,17 +160,17 @@ final readonly class InvItemService
             // Peppol Allowances / charges can only be added
             // on an existing product => zero for allowances
             // or charges
-            if (isset($array['quantity'], 
-                      $array['price'], 
-                      $array['discount_amount']) 
+            if (isset($array['quantity'],
+                      $array['price'],
+                      $array['discount_amount'])
                 && null !== $tax_rate_percentage) {
                 $this->saveInvItemAmount(
-                    (int) $model->getId(), 
-                    (float) $array['quantity'], 
-                    (float) $array['price'], 
-                    (float) $array['discount_amount'], 
-                    $tax_rate_percentage, 
-                    $iias, 
+                    (int) $model->getId(),
+                    (float) $array['quantity'],
+                    (float) $array['price'],
+                    (float) $array['discount_amount'],
+                    $tax_rate_percentage,
+                    $iias,
                     $iiar);
             }
         }
@@ -238,7 +238,7 @@ final readonly class InvItemService
             $aciiR->save($iiac);
         }
     }
-    
+
     /**
      * Related logic: see QuoteController function quoteToInvoiceQuoteItems
      * @param string $copyInvId
@@ -454,7 +454,7 @@ final readonly class InvItemService
         }
         return (int) $tax_rate_id;
     }
-    
+
     /**
      * Used in salesorder/so_to_invoice_so_items subfunction in
      * salesorder/so_to_invoice
@@ -474,7 +474,7 @@ final readonly class InvItemService
     {
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');
-        $model->setTaxRateId((int) $tax_rate_id); 
+        $model->setTaxRateId((int) $tax_rate_id);
         $product_id = (int) ($array['product_id'] ?? null);
         $task_id = (int) ($array['task_id'] ?? null);
         $model->setInvId((int) $inv_id);
@@ -495,8 +495,8 @@ final readonly class InvItemService
             $description = ((isset($array['description']))
                                    ? (string) $array['description']
                                    : $product->getProductDescription());
-            null !== $description ? 
-                $model->setDescription($description) : 
+            null !== $description ?
+                $model->setDescription($description) :
                 $model->setDescription($translator->translate('not.available')) ;
         }
         $task = $taskR->repoTaskquery((string) $array['task_id']);
@@ -589,7 +589,7 @@ final readonly class InvItemService
         $ipInvAc = $sub_total + $all_charges - $all_allowances;
         if ($tax_rate_percentage >= 0.00) {
             $tax_total =
-                // Cash Settlement discounts must be removed before tax worked    
+                // Cash Settlement discounts must be removed before tax worked
                 ($ipInvAc - $discount_total) * ($tax_rate_percentage / 100.00);
         } else {
             $tax_total = 0.00;

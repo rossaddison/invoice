@@ -98,17 +98,18 @@ echo H::openTag('div', ['class' => 'table-responsive']);
             echo H::openTag('td');
              echo H::openTag('div', ['class' => 'options btn-group']);
               echo H::openTag('a', [
-                  'class' => 'btn btn-default btn-sm dropdown-toggle',
+                  'class' => 'btn btn-secondary btn-sm dropdown-toggle',
                   'data-bs-toggle' => 'dropdown',
                   'href' => '#'
               ]);
-               echo H::openTag('i', ['class' => 'fa fa-cog']);
+               echo H::openTag('i', ['class' => 'bi bi-gear']);
                echo H::closeTag('i');
                echo ' ' . $translator->translate('options');
               echo H::closeTag('a');
               echo H::openTag('ul', ['class' => 'dropdown-menu']);
                echo H::openTag('li');
                 echo H::openTag('a', [
+                    'class' => 'dropdown-item',
                     'href' => $urlGenerator->generate('client/view',
                             ['id' => $payment->getInv()?->getClientId()]),
                     'title' => $translator->translate('view.client')
@@ -117,16 +118,18 @@ echo H::openTag('div', ['class' => 'table-responsive']);
                          $payment->getInv()?->getClient()));
                 echo H::closeTag('a');
                 echo H::openTag('a', [
+                    'class' => 'dropdown-item',
                     'href' => $urlGenerator->generate('payment/edit',
                             ['id' => $payment->getId()])
                 ]);
-                 echo H::openTag('i', ['class' => 'fa fa-edit fa-margin']);
+                 echo H::openTag('i', ['class' => 'bi bi-pencil-square']);
                  echo H::closeTag('i');
                  echo $translator->translate('edit');
                 echo H::closeTag('a');
                echo H::closeTag('li');
                echo H::openTag('li');
                 echo H::openTag('form', [
+                    'style' => 'display:contents',
                     'action' => $urlGenerator->generate('payment/delete',
                             ['id' => $payment->getId()]),
                     'method' => 'POST'
@@ -140,11 +143,11 @@ echo H::openTag('div', ['class' => 'table-responsive']);
                  echo H::closeTag('input');
                  echo H::openTag('button', [
                      'type' => 'submit',
-                     'class' => 'dropdown-button',
+                     'class' => 'dropdown-item border-0 bg-transparent w-100 text-start',
                      'onclick' => "return confirm('"
                      . $translator->translate('delete.record.warning') . "');"
                  ]);
-                  echo H::openTag('i', ['class' => 'fa fa-trash-o fa-margin']);
+                  echo H::openTag('i', ['class' => 'bi bi-trash']);
                   echo H::closeTag('i');
                   echo ' ' . $translator->translate('delete');
                  echo H::closeTag('button');

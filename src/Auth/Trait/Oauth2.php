@@ -75,14 +75,14 @@ trait Oauth2
         $developerSandboxHmrc =
             $authChoice->getClient('developersandboxhmrc');
         /** @psalm-var \App\Auth\Client\DeveloperSandboxHmrc $developerSandboxHmrc */
-        
+
         if ($this->sR->getEnv() == 'dev') {
             $developerSandboxHmrc->setEnvironment('dev');
         } else {
             $developerSandboxHmrc->setEnvironment('prod');
         }
     }
-    
+
     // IdentityProviderList
     private function idpList(string $codeChallenge): array
     {

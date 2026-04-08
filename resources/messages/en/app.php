@@ -71,7 +71,7 @@ return [
   'allowance.or.charge.inv' => 'Invoice Allowance'
     . ' or Charge',
   'allowance.or.charge.quote' => 'Quote Allowance'
-    . ' or Charge',  
+    . ' or Charge',
   'allowance.or.charge.inv.add' => 'Add Invoice Allowance'
     . ' or Charge',
   'allowance.or.charge.quote.add' => 'Add Quote Allowance'
@@ -96,6 +96,7 @@ return [
   'allowance.or.charge.shipping.handling.packaging.tax' =>
     'Tax on Shipping/Handling/Packaging',
   'already.paid' => 'This invoice was already paid.',
+  'amount' => 'Amount',
   'amount.payment' => 'Payment Amount to be paid in full',
   'amount.inv.item' => 'Invoice Item Amount',
   'amount.quote.item' => 'Quote Item Amount',
@@ -106,7 +107,7 @@ return [
   'amounts' => 'Invoice Amounts',
   'any.family' => 'Any family',
   'app.cdn.not.node.module' => 'Use AppCdnAsset'
-    . ' (Not AppNodeModulesAsset)',    
+    . ' (Not AppNodeModulesAsset)',
   'apply.after.item.tax' => 'Apply After Item Tax',
   'apply.before.item.tax' => 'Apply Before Item Tax',
   'approve' => 'Approve',
@@ -161,7 +162,15 @@ return [
   'bootstrap5.layout.main.navbar.font' =>
     'Layout Main Navbar Font',
   'bootstrap5.layout.main.navbar.font.size' =>
-    'Layout Main Navbar Font Size',  
+    'Layout Main Navbar Font Size',
+  'bootstrap5.form.font.size' =>
+    'Form Font Size (px)',
+  'bootstrap5.form.input.height' =>
+    'Form Input Height (px)',
+  'bootstrap5.sidebar.background' =>
+    'Sidebar Background Colour',
+  'bootstrap5.sidebar.guest.background' =>
+    'Guest Sidebar Background Colour',
   'bootstrap5.offcanvas.enable' =>
     'Enable Offcanvas',
   'bootstrap5.offcanvas.placement' =>
@@ -792,9 +801,9 @@ return [
   'faq.php.info.licence' => 'License',
   'faq.php.info.modules' => 'Modules',
   'faq.php.info.variables' => 'Variables',
-  'faq.question' => 'Question',  
+  'faq.question' => 'Question',
   'faq.shared.hosting' => 'How do I host yii3i on shared hosting?',
-  'faq.sort.order' => 'Sort Order',  
+  'faq.sort.order' => 'Sort Order',
   'faq.taxpoint' => 'How to determine what the Tax Point is?',
   'faq.wsl.to.alpine' => 'How do I update an alpine hosted site using'
     . ' Windows 11\'s wsl (Windows Subsystem for Linux)',
@@ -824,7 +833,7 @@ return [
   'from.email.address' => 'From Email Addresses: Choose a default',
   'from.include.in.dropdown' => 'Include this email in the dropdown list',
   'from.name' => 'From Name',
-  'front.page' => 'Front Page',  
+  'front.page' => 'Front Page',
   'gateway.online.payment' =>
     'Online Payment',
   'gender' => 'Gender',
@@ -1046,7 +1055,7 @@ return [
   'invalid.amount' => 'Invalid Amount',
   'invalid.subscriber.number' => 'Invalid Subscriber Number',
   'inv.cdn.not.node.module' => 'Use InvoiceCdnAsset'
-    . ' (Not InvoiceNodeModulesAsset)',  
+    . ' (Not InvoiceNodeModulesAsset)',
   'invoice' => 'Invoice',
   'invoice.to.html' => 'Invoice to Html',
   'invoice.created.from.quote' => 'Invoice created from quote',
@@ -1667,7 +1676,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'One of To Currency today converts to this of From Currency',
   'peppol.debug.with.emojis' => 'Debug e-invoices with emojis',
   'peppol.debug.with.internal.validator' => 'Debug e-invoices with'
-    . ' Internal Validator',  
+    . ' Internal Validator',
   'peppol.doc.currency.toggle' => 'Peppol Toggle Doc Currency',
   'peppol.document.reference.null' => 'inv-number-null-inv-id',
   'peppol.document.currency' => 'Peppol Document Currency - toggle on View',
@@ -1706,7 +1715,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'peppol.label.switch.off' => 'Peppol Defaults Enabled',
   'peppol.label.switch.on' => 'Peppol Defaults Disabled',
   'peppol.mandatory' => ' (Mandatory)',
-  'peppol.optional' => ' (Optional)',    
+  'peppol.optional' => ' (Optional)',
   'peppol.stand.in.code' =>
     'Description code -'
     . ' indicating what basis will be used'
@@ -1745,7 +1754,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'Only pdf files are currently'
     . ' being sent with Peppol Invoices',
   'peppol.unit' => 'Unit Classification using Peppol',
-  'peppol.unknown.document.type' => 'Unknown Document Type',  
+  'peppol.unknown.document.type' => 'Unknown Document Type',
   'peppol.validator.Invoice.cac.AdditionalDocumentReference.cbc.DocumentDescription' =>
     'Source: src/Invoice/Ubl/Invoice:'
     . ' Missing document description - Ecosio:'
@@ -1781,6 +1790,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'Slower Write Only Mode - '
     . 'refer to config/common/params.php'
     . ' search \'mode\' ',
+  'demographics' => 'Demographics',
   'period' => 'Period',
   'permission' => 'You do not have the required permission.',
   'personal.information' => 'Personal Information',
@@ -2029,7 +2039,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'quote.item.cannot.delete' => 'Cannot delete quote item',
   'quote.label.switch.off' => 'VAT Quote',
   'quote.label.switch.on' => 'NON VAT Quote',
-  'quote.not.copied.to.invoice' => 
+  'quote.not.copied.to.invoice' =>
     'Invoice NOT created from Quote!'
     . ' Duplicate Invoice. '
     . 'Copy your Quote'
@@ -2118,7 +2128,7 @@ prior to importing and no existing documents e.g. Invoices.',
     'Only invoices with a status of sent can be made recurring',
   'recurring.tooltip.next' =>
     'The next date is set by means of the index.',
-  'region' => 'Region',  
+  'region' => 'Region',
   'reject' => 'Reject',
   'reject.this.quote' => 'Reject This Quote',
   'rejected' => 'Rejected',
@@ -2244,6 +2254,7 @@ prior to importing and no existing documents e.g. Invoices.',
   'send' => 'Send',
   'send.email' => 'Send Email',
   'sent' => 'Sent',
+  'select.all' => 'Select All',
   'set.new.password' => 'Set a new password',
   'set.to.read.only' => 'Set the Invoice to read-only on',
   'setting' => 'Setting',
@@ -2784,21 +2795,21 @@ prior to importing and no existing documents e.g. Invoices.',
   'yes' => 'Yes',
   'zip' => 'Post Code',
   'zip.code' => 'Post Code',
-  
+
   // Quote approval workflow translations
   'approval.required' => 'Approval Required',
   'quote.approval.required' => 'Quote approval required',
   'quote.must.be.approved.first' =>
     'Quote must be approved before conversion',
-  
+
   // === ENHANCED TRANSLATION KEYS ===
   // === VALIDATION MESSAGES ===
   'validation.invoice.number.required' => 'Invoice number is required',
-  'validation.invoice.date.invalid' => 'Please provide a valid invoice date', 
+  'validation.invoice.date.invalid' => 'Please provide a valid invoice date',
   'validation.client.email.format' => 'Client email must be a valid email address',
   'validation.amount.positive' => 'Amount must be greater than zero',
   'validation.currency.supported' => 'Currency {currency} is not supported',
-  
+
   // === BUSINESS LOGIC ERRORS ===
   'business.error.invoice.already_paid' =>
     'Invoice #{invoice_number} is already marked as paid',
@@ -2809,14 +2820,14 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' credit limit of {limit}',
   'business.error.payment.gateway_failed' => 'Payment processing failed:'
     . ' {error_message}',
-  
+
   // === SUCCESS MESSAGES ===
   'success.create.invoice' => 'Invoice #{invoice_number} created successfully',
   'success.update.client' => 'Client {client_name} updated successfully',
   'success.send.invoice' => 'Invoice #{invoice_number} sent to {client_email}',
   'success.payment.received' => 'Payment of {amount} received for invoice'
     . ' #{invoice_number}',
-  
+
   // === EMAIL TEMPLATES ===
   'email.invoice.created.subject' => 'New Invoice #{invoice_number} from'
     . ' {company_name}',
@@ -2824,7 +2835,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' #{invoice_number}',
   'email.invoice.overdue.subject' => 'OVERDUE: Invoice #{invoice_number}'
     . ' - Immediate Attention Required',
-  
+
   'email.invoice.created.body' => '
         <h2>Dear {client_name},</h2>
         <p>We have created a new invoice for you:</p>
@@ -2839,29 +2850,29 @@ prior to importing and no existing documents e.g. Invoices.',
         <p>Payment Terms: {payment_terms}</p>
         <p>Best regards,<br>{company_name}</p>
     ',
-  
+
   // === DASHBOARD MESSAGES ===
   'dashboard.overview.title' => 'Financial Overview',
   'dashboard.total_revenue' => 'Total Revenue This Month',
   'dashboard.outstanding_invoices' => 'Outstanding Invoices',
   'dashboard.overdue_amount' => 'Overdue Amount',
   'dashboard.recent_payments' => 'Recent Payments',
-  
+
   // === INVOICE STATUS ===
   'status.invoice.draft' => 'Draft',
-  'status.invoice.sent' => 'Sent', 
+  'status.invoice.sent' => 'Sent',
   'status.invoice.viewed' => 'Viewed',
   'status.invoice.partial' => 'Partially Paid',
   'status.invoice.paid' => 'Paid',
   'status.invoice.overdue' => 'Overdue',
   'status.invoice.cancelled' => 'Cancelled',
-  
+
   // === PAYMENT TERMS ===
   'payment.terms.immediate' => 'Payment due immediately',
   'payment.terms.net15' => 'Payment due within 15 days',
   'payment.terms.net30' => 'Payment due within 30 days',
   'payment.terms.net60' => 'Payment due within 60 days',
-  
+
   // === CURRENCY & NUMBERS ===
   'currency.symbol.USD' => '$',
   'currency.symbol.EUR' => '€',
@@ -2869,18 +2880,18 @@ prior to importing and no existing documents e.g. Invoices.',
   'currency.name.USD' => 'US Dollars',
   'currency.name.EUR' => 'Euros',
   'currency.name.GBP' => 'British Pounds',
-  
+
   // === TAX MESSAGES ===
   'tax.vat.rate' => 'VAT Rate: {rate}%',
   'tax.total.amount' => 'Total Tax: {amount}',
   'tax.exempt.notice' => 'This transaction is tax-exempt',
-  
+
   // === REPORT LABELS ===
   'report.aging.title' => 'Accounts Receivable Aging Report',
-  'report.revenue.title' => 'Revenue Analysis Report', 
+  'report.revenue.title' => 'Revenue Analysis Report',
   'report.client.statement' => 'Client Account Statement',
   'report.period.from_to' => 'Period: {from_date} to {to_date}',
-  
+
   // === API RESPONSES ===
   'api.error.unauthorized' => 'Authentication required to access this resource',
   'api.error.forbidden' => 'You do not have permission to access this resource',
@@ -2889,11 +2900,11 @@ prior to importing and no existing documents e.g. Invoices.',
   'api.success.created' => '{resource} created successfully',
   'api.success.updated' => '{resource} updated successfully',
   'api.success.deleted' => '{resource} deleted successfully',
-  
+
   // === INVOICE ORIGIN TRACKING ===
   'invoice.origin' => 'Origin',
   'invoice.created.from.quote' => 'Created from Quote',
-  
+
   // === PROMETHEUS MONITORING ===
   'monitoring.health.database' => 'Database Connection',
   'monitoring.health.cache' => 'Cache System',

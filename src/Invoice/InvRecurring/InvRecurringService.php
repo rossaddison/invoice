@@ -32,7 +32,7 @@ final readonly class InvRecurringService
         $this->persist($model, $array);
         $model->setInvId((int) $array['inv_id']);
 
-        isset($array['frequency']) ? 
+        isset($array['frequency']) ?
             $model->setFrequency(
                 (string) $array['frequency']) : '';
 
@@ -45,12 +45,12 @@ final readonly class InvRecurringService
             // The start has been adjusted
             // A new next = start + frequency
             $invNext = $model->getNext();
-            if (null !== $invNext 
-                && !is_string($invNext) 
+            if (null !== $invNext
+                && !is_string($invNext)
                 && isset($array['start'])) {
                 $nextDate = $dateHelper
                     ->incrementDateStringToDateTime(
-                        (string) $array['start'], 
+                        (string) $array['start'],
                         (string) $array['frequency']);
                 $model->setNext($nextDate);
                 $model->setStart(
@@ -63,7 +63,7 @@ final readonly class InvRecurringService
             if (null == $invNext && isset($array['start'])) {
                 $nextDate = $dateHelper
                     ->incrementDateStringToDateTime(
-                        (string) $array['start'], 
+                        (string) $array['start'],
                         (string) $array['frequency']);
                 $model->setNext($nextDate);
                 $model->setStart(
@@ -73,7 +73,7 @@ final readonly class InvRecurringService
             /**
              * @var string|null $array['end']
              */
-            $end = isset($array['end']) ? 
+            $end = isset($array['end']) ?
                 new \DateTime($array['end']) : null;
             $end ? $model->setEnd($end) : '';
 

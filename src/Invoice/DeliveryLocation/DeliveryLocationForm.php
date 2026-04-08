@@ -12,12 +12,12 @@ use DateTimeImmutable;
 
 final class DeliveryLocationForm extends FormModel
 {
-    
+
     private readonly DateTimeImmutable $date_created;
     private readonly DateTimeImmutable $date_modified;
 
     private ?int $id = null;
-    
+
     #[Required]
     private ?string $client_id = '';
 
@@ -72,11 +72,11 @@ final class DeliveryLocationForm extends FormModel
         // the key of the array is saved
         $this->electronic_address_scheme = $del->getElectronicAddressScheme();
     }
-    
+
     public function getId(): ?int
     {
         return $this->id;
-    }    
+    }
 
     public function getDateCreated(): DateTimeImmutable
     {

@@ -38,15 +38,15 @@ use Yiisoft\Html\Tag\Form;
     ->csrf($csrf)
     ->id('GeneratorForm')
     ->open()
-?> 
+?>
 <?= $button::backSave() ?>
 <?= Html::openTag('div', ['class' => 'container']); ?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
+        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                     <?= Html::openTag('h5'); ?><?= $translator->translate('generator.table'); ?><?= Html::closeTag('h5'); ?>
-            <?= Html::closeTag('div'); ?>  
-            <?= Html::openTag('div'); ?>  
+            <?= Html::closeTag('div'); ?>
+            <?= Html::openTag('div'); ?>
                 <?php
                     $optionsDataTable = [];
 /**
@@ -86,12 +86,12 @@ echo Field::select($form, 'pre_entity_table')
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
+        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('h5'); ?>
                     <?= $translator->translate('generator.controller.and.repository'); ?>
                 <?= Html::closeTag('h5'); ?>
-            <?= Html::closeTag('div'); ?>  
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::text($form, 'route_prefix')
 ->label($translator->translate('generator.route.prefix'))
@@ -143,9 +143,9 @@ echo Field::select($form, 'pre_entity_table')
     ->inputClass('form-check-input')
     ->ariaDescribedBy($translator->translate('generator.flash.include'))
 ?>
-            <?= Html::closeTag('div'); ?>           
+            <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
-        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?> 
+        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
             <?= Html::openTag('div', ['class' => 'card-header']); ?>
                 <?= Html::openTag('h5'); ?><?= $translator->translate('generator.controller.path.layout'); ?><?= Html::closeTag('h5'); ?>
             <?= Html::closeTag('div'); ?>
@@ -174,7 +174,7 @@ echo Field::select($form, 'pre_entity_table')
     ->ariaDescribedBy($translator->translate('generator.created.at.include'))
 ?>
             <?= Html::closeTag('div'); ?>
-            
+
             <?= Html::openTag('div', ['class' => 'col mb-3']); ?>
                 <?= Field::checkbox($form, 'modified_include')
     ->inputLabelAttributes(['class' => 'form-check-label'])

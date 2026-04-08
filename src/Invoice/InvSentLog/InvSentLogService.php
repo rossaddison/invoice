@@ -23,7 +23,7 @@ final readonly class InvSentLogService
         array $array
     ): void {
         $this->persist($model, $array);
-        isset($array['inv_id']) ? 
+        isset($array['inv_id']) ?
             $model->setInvId((int) $array['inv_id']) : '';
 
         $datetime_created = new DateTimeImmutable('now');
@@ -33,8 +33,8 @@ final readonly class InvSentLogService
         $date_sent = $array['date_sent'] ?? '';
         $model->setDateSent(
             $datetime_created::createFromFormat(
-                'Y-m-d', 
-                $date_sent) ?: 
+                'Y-m-d',
+                $date_sent) ?:
             new DateTimeImmutable('1901/01/01'));
         $this->repository->save($model);
     }

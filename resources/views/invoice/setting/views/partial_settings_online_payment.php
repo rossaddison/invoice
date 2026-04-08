@@ -24,6 +24,12 @@ $checkbox = ['class' => 'checkbox'];
 $pullRight = ['class' => 'pull-right'];
 $noMargin = ['class' => 'checkbox no-margin'];
 $panelBodySmall = ['class' => 'panel-body small'];
+$pfxGateway = 'settings[gateway_';
+$sfxEnabled = '_enabled]';
+$sfxRegion = '_region]';
+$sfxCurrency = '_currency]';
+$sfxLocale = '_locale]';
+$sfxPaymentMethod = '_payment_method]';
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
   echo H::openTag('div', $panel); //3
@@ -33,7 +39,7 @@ echo H::openTag('div', $row); //1
    echo H::openTag('div', $panelBody); //4
     echo H::openTag('div', $formGroup); //5
      echo H::openTag('div', $checkbox); //6
-      $body['settings[enable_online_payments]'] = 
+      $body['settings[enable_online_payments]'] =
       $s->getSetting('enable_online_payments');
       echo H::openTag('label');
        echo H::openTag('input', [
@@ -63,7 +69,7 @@ echo H::openTag('div', $row); //1
      echo H::closeTag('label');
      echo H::openTag('select', [
       'id' => 'online-payment-select',
-      'class' => 'form-control'
+      'class' => 'form-control form-control-lg',
      ]);
       echo  new Option()
        ->value('')
@@ -91,11 +97,11 @@ echo H::openTag('div', $row); //1
   * @var string $driver
   * @var array $fields
   */
-  foreach ($gateway_drivers as $driver => $fields) :
+  foreach ($gateway_drivers as $driver => $fields) {
   $d = strtolower($driver);
-  $gatewayClass = 'gateway-settings panel panel-default ' . 
-  ($s->getSetting('gateway_' . $d . '_enabled') 
-   ? 'active-gateway' 
+  $gatewayClass = 'gateway-settings panel panel-default ' .
+  ($s->getSetting('gateway_' . $d . '_enabled')
+   ? 'active-gateway'
    : 'hidden');
    echo H::openTag('div', [ //4
    'id' => 'gateway-settings-' . $d,
@@ -107,21 +113,21 @@ echo H::openTag('div', $row); //1
     echo H::openTag('div', $pullRight); //5
      echo H::openTag('div', $noMargin); //6
       echo H::openTag('label');
-       $body['settings[gateway_' . $d . '_enabled]'] = 
+       $body[$pfxGateway . $d . $sfxEnabled] =
        $s->getSetting('gateway_' . $d . '_enabled');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[gateway_' . $d . '_enabled]',
+        'name' => $pfxGateway . $d . $sfxEnabled,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[gateway_' . $d . '_enabled]',
+        'name' => $pfxGateway . $d . $sfxEnabled,
         'value' => '1',
-        'id' => 'settings[gateway_' . $d . '_enabled]',
-        'checked' => ($body['settings[gateway_' . 
-        $d . '_enabled]'] == '1') 
-        ? 'checked' 
+        'id' => $pfxGateway . $d . $sfxEnabled,
+        'checked' => ($body[$pfxGateway .
+        $d . $sfxEnabled] == '1')
+        ? 'checked'
         : null
        ]);
        echo $translator->translate('enabled');
@@ -140,51 +146,50 @@ echo H::openTag('div', $row); //1
     * @var string $setting['type']
     */
     foreach ($fields as $key => $setting) {
-    $body['settings[gateway_' . $d . '_' . $key . ']'] = 
+    $body[$pfxGateway . $d . '_' . $key . ']'] =
     $s->getSetting('gateway_' . $d . '_' . $key);
 
-    if ($setting['type'] == 'checkbox') :
-
+    if ($setting['type'] == 'checkbox') {
     echo H::openTag('div', $checkbox); //5
-     echo H::openTag('label');                                    
+     echo H::openTag('label');
       echo H::openTag('input', [
        'type' => 'hidden',
-       'name' => 'settings[gateway_' . $d . '_' . 
+       'name' => $pfxGateway . $d . '_' .
        $key . ']',
        'value' => '0'
       ]);
       echo H::openTag('input', [
        'type' => 'checkbox',
-       'name' => 'settings[gateway_' . $d . '_' . 
+       'name' => $pfxGateway . $d . '_' .
        $key . ']',
        'value' => '1',
-       'checked' => ($body['settings[gateway_' . 
-       $d . '_' . $key . ']'] == '1') 
-       ? 'checked' 
+       'checked' => ($body[$pfxGateway .
+       $d . '_' . $key . ']'] == '1')
+       ? 'checked'
        : null
       ]);
       echo $setting['label'];
      echo H::closeTag('label');
     echo H::closeTag('div'); //5
 
-    else : 
+    } else {
     if ($setting['type'] == 'password') {
-    $inputValue = (string) (strlen((string) 
-     $body['settings[gateway_' . $d . '_' . 
+    $inputValue = (string) (strlen((string)
+     $body[$pfxGateway . $d . '_' .
      $key . ']']) > 0
-     ? $s->decode((string) 
-     $body['settings[gateway_' . $d . '_' . 
+     ? $s->decode((string)
+     $body[$pfxGateway . $d . '_' .
      $key . ']'])
      : '');
      } else {
-     $inputValue = (string) 
-     $body['settings[gateway_' . $d . '_' . 
+     $inputValue = (string)
+     $body[$pfxGateway . $d . '_' .
      $key . ']'];
      }
 
      echo H::openTag('div', $formGroup); //6
      echo H::openTag('label', [
-     'for' => 'settings[gateway_' . $d . '_' . 
+     'for' => $pfxGateway . $d . '_' .
      $key . ']'
     ]);
       echo $translator->translate(
@@ -193,24 +198,24 @@ echo H::openTag('div', $row); //1
      echo H::closeTag('label');
      echo H::openTag('input', [
       'type' => $setting['type'],
-      'class' => 'form-control',
-      'name' => 'settings[gateway_' . $d . '_' . 
+      'class' => 'form-control form-control-lg',
+      'name' => $pfxGateway . $d . '_' .
       $key . ']',
-      'id' => 'settings[gateway_' . $d . '_' . 
+      'id' => $pfxGateway . $d . '_' .
       $key . ']',
       'value' => $inputValue
      ]);
-     if ($setting['type'] == 'password') :
+     if ($setting['type'] == 'password') {
      echo H::openTag('input', [
       'type' => 'hidden',
       'value' => '1',
-      'name' => 'settings[gateway_' . $d . '_' . 
+      'name' => $pfxGateway . $d . '_' .
       $key . '_field_is_password]'
      ]);
-     endif;
+     }
     echo H::closeTag('div'); //5
 
-    endif;
+    }
     }
 
     echo H::openTag('hr');
@@ -219,16 +224,16 @@ echo H::openTag('div', $row); //1
     if ($d == 'amazon_pay') {
     echo H::openTag('div', $formGroup); //5
      echo H::openTag('label', [
-      'for' => 'settings[gateway_' . $d . '_region]'
+      'for' => $pfxGateway . $d . $sfxRegion
      ]);
       echo $translator->translate('online.payment.region');
      echo H::closeTag('label');
-     $body['settings[gateway_' . $d . '_region]'] = 
+     $body[$pfxGateway . $d . $sfxRegion] =
      $s->getSetting('gateway_' . $d . '_region');
      echo H::openTag('select', [
-      'name' => 'settings[gateway_' . $d . '_region]',
-      'id' => 'settings[gateway_' . $d . '_region]',
-      'class' => 'form-control'
+      'name' => $pfxGateway . $d . $sfxRegion,
+      'id' => $pfxGateway . $d . $sfxRegion,
+      'class' => 'form-control form-control-lg',
      ]);
       /**
       * @var string $val
@@ -236,8 +241,8 @@ echo H::openTag('div', $row); //1
       foreach (array_keys($gateway_regions) as $val) {
       echo  new Option()
        ->value($val)
-       ->selected($body['settings[gateway_' . 
-        $d . '_region]'] == $val)
+       ->selected($body[$pfxGateway .
+        $d . $sfxRegion] == $val)
         ->content($val);
         }
         echo H::closeTag('select');
@@ -246,16 +251,16 @@ echo H::openTag('div', $row); //1
 
         echo H::openTag('div', $formGroup); //9
         echo H::openTag('label', [
-        'for' => 'settings[gateway_' . $d . '_currency]'
+        'for' => $pfxGateway . $d . $sfxCurrency
        ]);
       echo $translator->translate('currency');
      echo H::closeTag('label');
-     $body['settings[gateway_' . $d . '_currency]'] = 
+     $body[$pfxGateway . $d . $sfxCurrency] =
      $s->getSetting('gateway_' . $d . '_currency');
      echo H::openTag('select', [
-      'name' => 'settings[gateway_' . $d . '_currency]',
-      'id' => 'settings[gateway_' . $d . '_currency]',
-      'class' => 'form-control'
+      'name' => $pfxGateway . $d . $sfxCurrency,
+      'id' => $pfxGateway . $d . $sfxCurrency,
+      'class' => 'form-control form-control-lg',
      ]);
       /**
       * @var string $val
@@ -263,8 +268,8 @@ echo H::openTag('div', $row); //1
       foreach (array_keys($gateway_currency_codes) as $val) {
       echo  new Option()
        ->value($val)
-       ->selected($body['settings[gateway_' . 
-        $d . '_currency]'] == $val)
+       ->selected($body[$pfxGateway .
+        $d . $sfxCurrency] == $val)
         ->content($val);
         }
         echo H::closeTag('select');
@@ -273,19 +278,19 @@ echo H::openTag('div', $row); //1
         if ($d == 'mollie') {
         echo H::openTag('div', $formGroup); //9
         echo H::openTag('label', [
-        'for' => 'settings[gateway_' . $d . '_locale]'
+        'for' => $pfxGateway . $d . $sfxLocale
        ]);
       echo $translator->translate(
        'payment.gateway.default.locale'
       );
      echo H::closeTag('label');
-     $body['settings[gateway_' . $d . '_locale]'] = 
+     $body[$pfxGateway . $d . $sfxLocale] =
      $s->getSetting('gateway_' . $d . '_locale');
      $locales = $s->mollieSupportedLocaleArray();
      echo H::openTag('select', [
-      'name' => 'settings[gateway_' . $d . '_locale]',
-      'id' => 'settings[gateway_' . $d . '_locale]',
-      'class' => 'form-control'
+      'name' => $pfxGateway . $d . $sfxLocale,
+      'id' => $pfxGateway . $d . $sfxLocale,
+      'class' => 'form-control form-control-lg',
      ]);
       /**
       * @var string $value
@@ -303,26 +308,26 @@ echo H::openTag('div', $row); //1
 
         echo H::openTag('div', $formGroup); //9
         echo H::openTag('label', [
-        'for' => 'settings[gateway_' . $d . '_payment_method]'
+        'for' => $pfxGateway . $d . $sfxPaymentMethod
        ]);
       echo $translator->translate('online.payment.method');
      echo H::closeTag('label');
-     $body['settings[gateway_' . $d . '_payment_method]'] = 
+     $body[$pfxGateway . $d . $sfxPaymentMethod] =
      $s->getSetting('gateway_' . $d . '_payment_method');
      echo H::openTag('select', [
-      'name' => 'settings[gateway_' . $d . '_payment_method]',
-      'id' => 'settings[gateway_' . $d . '_payment_method]',
-      'class' => 'form-control'
+      'name' => $pfxGateway . $d . $sfxPaymentMethod,
+      'id' => $pfxGateway . $d . $sfxPaymentMethod,
+      'class' => 'form-control form-control-lg',
      ]);
       /**
-      * @var App\Invoice\Entity\PaymentMethod 
+      * @var App\Invoice\Entity\PaymentMethod
       *      $payment_method
       */
       foreach ($payment_methods as $payment_method) {
       echo  new Option()
        ->value($payment_method->getId())
-       ->selected($body['settings[gateway_' . 
-        $d . '_payment_method]'] == 
+       ->selected($body[$pfxGateway .
+        $d . $sfxPaymentMethod] ==
         $payment_method->getId())
         ->content($payment_method->getName() ?? '');
         }
@@ -332,7 +337,7 @@ echo H::openTag('div', $row); //1
         echo H::closeTag('div'); //9
 
         echo H::closeTag('div'); //9
-        endforeach;
+        }
 
         echo H::closeTag('div'); //9
         echo H::closeTag('div'); //9

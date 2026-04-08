@@ -14,11 +14,11 @@ class FamilyCommalistPicker {
     constructor(containerId: string, textareaId: string) {
         this.container = document.getElementById(containerId)!;
         this.textarea = document.getElementById(textareaId) as HTMLTextAreaElement;
-        
+
         if (!this.container || !this.textarea) {
             throw new Error('Required elements not found');
         }
-        
+
         this.parseInitialValue();
         this.render();
         this.attachEventListeners();
@@ -30,7 +30,7 @@ class FamilyCommalistPicker {
                 .split(',')
                 .map(n => parseInt(n.trim()))
                 .filter(n => !isNaN(n) && n >= 1 && n <= 200);
-            
+
             this.selectedNumbers = new Set(existingNumbers);
         }
     }
@@ -48,7 +48,7 @@ class FamilyCommalistPicker {
             <div class="family-commalist-picker">
                 <div class="picker-header mb-3">
                     <h5 class="mb-2">
-                        <i class="bi bi-list-ol"></i> 
+                        <i class="bi bi-list-ol"></i>
                         Select Numbers (1-200)
                     </h5>
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
@@ -58,7 +58,7 @@ class FamilyCommalistPicker {
                             </span>
                             <span class="text-muted small">${pageInfo}</span>
                         </div>
-                        
+
                         <div class="btn-group btn-group-sm" role="group">
                             <button type="button" class="btn btn-outline-success" onclick="picker.selectPage()" title="Select all numbers on current page">
                                 <i class="bi bi-check-square"></i> Page
@@ -90,7 +90,7 @@ class FamilyCommalistPicker {
                 <div class="numbers-grid mb-3">
                     <div class="number-buttons">
                         ${paginatedNumbers.map(num => `
-                            <button type="button" 
+                            <button type="button"
                                     class="btn number-btn ${this.selectedNumbers.has(num) ? 'btn-success' : 'btn-outline-secondary'}"
                                     onclick="picker.toggleNumber(${num})"
                                     title="Toggle number ${num}">
@@ -105,17 +105,17 @@ class FamilyCommalistPicker {
                     <button type="button" class="btn btn-outline-primary btn-sm" onclick="picker.prevPage()" ${this.currentPage === 1 ? 'disabled' : ''}>
                         <i class="bi bi-chevron-left"></i> Previous
                     </button>
-                    
+
                     <div class="page-buttons">
                         ${[1, 2, 3, 4].map(page => `
-                            <button type="button" 
+                            <button type="button"
                                     class="btn btn-sm me-1 ${page === this.currentPage ? 'btn-primary' : 'btn-outline-primary'}"
                                     onclick="picker.goToPage(${page})">
                                 ${page}
                             </button>
                         `).join('')}
                     </div>
-                    
+
                     <button type="button" class="btn btn-outline-primary btn-sm" onclick="picker.nextPage()" ${this.currentPage === this.totalPages ? 'disabled' : ''}>
                         Next <i class="bi bi-chevron-right"></i>
                     </button>
@@ -213,7 +213,7 @@ class FamilyCommalistPicker {
         const sortedNumbers = Array.from(this.selectedNumbers).sort((a, b) => a - b);
         const commalistValue = sortedNumbers.join(', ');
         this.textarea.value = commalistValue;
-        
+
         // Trigger events for form validation
         this.textarea.dispatchEvent(new Event('change', { bubbles: true }));
         this.textarea.dispatchEvent(new Event('input', { bubbles: true }));
@@ -247,27 +247,27 @@ export function initializeCommalistPicker() {
 function toggleCommalistPicker() {
     const container = document.getElementById('commalist-picker-container');
     const button = document.getElementById('toggle-picker-btn');
-    
+
     if (!container || !button) return;
-    
+
     if (container.style.display === 'none') {
         // Show picker
         container.style.display = 'block';
         button.innerHTML = '<i class="bi bi-grid-3x3-gap-fill"></i> Hide Number Picker';
-        
+
         // Initialize picker if not already done
         if (!picker) {
             // Create picker container
             const pickerDiv = document.createElement('div');
             pickerDiv.id = 'number-picker';
-            
+
             const infoAlert = container.querySelector('.alert');
             if (infoAlert && infoAlert.nextSibling) {
                 container.insertBefore(pickerDiv, infoAlert.nextSibling);
             } else {
                 container.appendChild(pickerDiv);
             }
-            
+
             picker = new FamilyCommalistPicker('number-picker', 'family_commalist');
             window.picker = picker;
         }

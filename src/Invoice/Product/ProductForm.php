@@ -69,7 +69,7 @@ final class ProductForm extends FormModel
     public ?string $unit_id = '';
 
     public ?string $unit_peppol_id = '';
-    
+
     public function __construct(Product $product)
     {
         $this->product_sku = $product->getProductSku();

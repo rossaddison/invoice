@@ -15,7 +15,7 @@ use Yiisoft\Html\Html;
  */
 
 ?>
-    
+
 <div id="inv-to-inv" class="modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -40,15 +40,15 @@ use Yiisoft\Html\Html;
                                         <?= Html::encode($client->getClientName()); ?>
                                     </option>
                                 <?php } ?>
-                        </select>          
+                        </select>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('cancel'); ?></button>
                 <!-- inv.js inv_to_inv_confirm, InvController function invToInvConfirm -->
                 <button type="button" class="inv_to_inv_confirm btn btn-success" id="inv_to_inv_confirm">
-                    <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
+                    <i class="bi bi-check-lg"></i> <?= $translator->translate('submit'); ?>
                 </button>
             </div>
         </div>

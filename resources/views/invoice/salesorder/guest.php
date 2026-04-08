@@ -167,7 +167,7 @@ $columns = [
                 $class = $soR->getSpecificStatusArrayClass(
                         (int) $model->getStatusId());
                 return Html::tag('span', $span, ['id' => '#so-to-invoice',
-                    'class' => 'label ' . $class]);
+                    'class' => 'badge text-bg-' . $class]);
             }
             return Html::tag('span');
         },
@@ -223,7 +223,7 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (SalesOrder $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']),
                 $urlGenerator->generate(
                         'salesorder/view', ['id' => $model->getId()]), []);
         },

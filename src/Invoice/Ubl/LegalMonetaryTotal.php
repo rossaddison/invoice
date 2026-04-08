@@ -8,7 +8,7 @@ use Sabre\Xml\Writer;
 use Sabre\Xml\XmlSerializable;
 use App\Invoice\Setting\SettingRepository;
 
-/** Related logic: 
+/** Related logic:
  * https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
  *                                                      cac-LegalMonetaryTotal/
  */

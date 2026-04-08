@@ -35,7 +35,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
       <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
         <?= Html::openTag('div', ['class' => 'card-header']); ?>
-          <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+          <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
             <?= Html::encode($title) ?>
           <?= Html::closeTag('h1'); ?>
           <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -70,7 +70,7 @@ use Yiisoft\Html\Tag\Form;
   ->label($translator->translate('family.name'))
   ->addInputAttributes([
       'placeholder' => $translator->translate('family.name'),
-      'class' => 'form-control',
+      'class' => 'form-control form-control-lg',
       'id' => 'family-name',
   ])
   ->value($form->getFamilyName())

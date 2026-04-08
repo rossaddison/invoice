@@ -2741,4 +2741,44 @@ final class SettingRepository extends Select\Repository
         /** @var mixed $encrypted */
         return Cryptor::Encrypt($data, $key);
     }
+
+    /**
+     * @return array<string, string> locale code =>
+     *  ISO 3166-1 alpha-2 country code (lowercase)
+     */
+    public function getLocaleFlags(): array
+    {
+        return [
+            'af-ZA' => 'za',
+            'ar-BH' => 'bh',
+            'az'    => 'az',
+            'be-BY' => 'by',
+            'bs'    => 'ba',
+            'zh-CN' => 'cn',
+            'zh-TW' => 'tw',
+            'en'    => 'gb',
+            'fil'   => 'ph',
+            'fr'    => 'fr',
+            'gd-GB' => 'gb-sct',
+            'ha-NG' => 'ng',
+            'he-IL' => 'il',
+            'nl'    => 'nl',
+            'de'    => 'de',
+            'id'    => 'id',
+            'ig-NG' => 'ng',
+            'it'    => 'it',
+            'ja'    => 'jp',
+            'pl'    => 'pl',
+            'pt-BR' => 'br',
+            'ru'    => 'ru',
+            'sk'    => 'sk',
+            'sl'    => 'si',
+            'es'    => 'es',
+            'uk'    => 'ua',
+            'uz'    => 'uz',
+            'vi'    => 'vn',
+            'yo-NG' => 'ng',
+            'zu-ZA' => 'za',
+        ];
+    }
 }

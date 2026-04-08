@@ -55,7 +55,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'placeholder' => $translator->translate('setting.key'),
         'value' => Html::encode($form->getSettingKey() ?? ''),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'setting_key',
     ])
     ->required(true)
@@ -66,7 +66,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'placeholder' => $translator->translate('setting.value'),
         'value' => Html::encode($form->getSettingValue() ?? ''),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'setting_value',
     ])
     ->required(true)

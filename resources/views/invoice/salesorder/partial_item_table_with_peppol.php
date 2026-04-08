@@ -42,7 +42,7 @@ $vat = $s->getSetting('enable_vat_registration');
                 <th></th>
             </tr>
             </thead>
-            
+
             <?php
             //**********************************************************************************************
             // New
@@ -51,7 +51,7 @@ $vat = $s->getSetting('enable_vat_registration');
 
             <tbody id="new_row" style="display: none;">
             <tr>
-                <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;"><i class="fa fa-arrows"></i></td>
+                <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;"><i class="bi bi-arrows-move"></i></td>
                 <td class="td-text">
                     <input type="hidden" name="quote_id" maxlength="7" size="7" value="<?php echo $so->getId(); ?>">
                     <input type="hidden" name="item_id" maxlength="7" size="7" value="">
@@ -108,7 +108,7 @@ $vat = $s->getSetting('enable_vat_registration');
                     <form method="POST" class="form-inline">
                             <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                             <button type="submit" class="btn_delete_item btn-xl btn-primary" onclick="return confirm('<?= $translator->translate('delete.record.warning'); ?>');">
-                                <i class="fa fa-trash"></i>
+                                <i class="fa bi-trash"></i>
                             </button>
                     </form>
                 </td>
@@ -136,7 +136,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <?php } ?>
                             </select>
                     </div>
-                </td>                
+                </td>
                 <td class="td-amount td-vert-middle">
                     <span><?= $translator->translate('subtotal'); ?></span><br/>
                     <span name="subtotal" class="amount"></span>
@@ -155,7 +155,7 @@ $vat = $s->getSetting('enable_vat_registration');
                 </td>
             </tr>
             </tbody>
-            
+
             <?php
                 //*************************************************************************************
                 // Current
@@ -169,8 +169,8 @@ foreach ($soItems as $item) { ?>
                 <tbody class="item">
                 <tr>
                     <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;">
-                        <i class="fa fa-arrows"></i>
-                        <h5><bold><?= " " . (string) $count; ?></bold></h5>                       
+                        <i class="bi bi-arrows-move"></i>
+                        <h5><bold><?= " " . (string) $count; ?></bold></h5>
                     </td>
                     <td class="td-text">
                         <div class="input-group">
@@ -179,10 +179,10 @@ foreach ($soItems as $item) { ?>
                             <input type="text" disabled="true" maxlength="1" size="1" name="item_product_id" value="<?= $item->getProductId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->product_id">
                             <input type="text" disabled="true" placeholder="Peppol" maxlength="8" size="8" name="item_peppol_po_itemid" value="<?= $item->getPeppolPoItemid(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->peppol_po_itemid This value is editable if the client or customer is going to pay by Peppol. They have to supply their corresponding Purchase Order Item Id here. https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/cbc-ID/">
                             <input type="text" disabled="true" placeholder="Peppol" maxlength="8" size="8" name="item_peppol_po_lineid" value="<?= $item->getPeppolPoLineid(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->peppol_po_lineid This value is editable if the client or customer is going to pay by Peppol. They have to supply their corresponding Purchase Order Line Number here. https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/">
-                        </div>    
+                        </div>
                         <div class="input-group">
                             <span class="input-group-text"><?= $translator->translate('item'); ?></span>
-                            <select name="item_name" class="form-control form-control-lg" disabled>                                
+                            <select name="item_name" class="form-control form-control-lg" disabled>
                                 <?php
                     /**
                      * @var App\Invoice\Entity\Product $product
@@ -218,7 +218,7 @@ foreach ($soItems as $item) { ?>
                                    data-bs-toggle = "tooltip" data-placement="bottom"
                                    title="<?= $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'); ?>">
                         </div>
-                    </td>                    
+                    </td>
                     <td>
                         <div class="input-group">
                             <span class="input-group-text"><?= $vat === '0' ? $translator->translate('tax.rate') : $translator->translate('vat.rate') ?></span>
@@ -245,8 +245,8 @@ foreach ($soItems as $item) { ?>
                         </div>
                     </td>
                     <td class="td-icon text-right td-vert-middle">
-                    <?php if ($invEdit || $invView) { ?>    
-                        <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]) ?>" class="btn btn-md btn-link"><i class="fa fa-pencil"></i></a>
+                    <?php if ($invEdit || $invView) { ?>
+                        <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]) ?>" class="btn btn-md btn-link"><i class="bi bi-pencil"></i></a>
                     </td>
                     <?php } ?>
                 </tr>
@@ -264,7 +264,7 @@ foreach ($soItems as $item) { ?>
                         </div>
                     </td>
                     <td class="td-amount td-vert-middle">
-                        <span><?= $translator->translate('subtotal'); ?></span><br/>                        
+                        <span><?= $translator->translate('subtotal'); ?></span><br/>
                         <span name="subtotal" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->subtotal">
                             <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->getId())?->getSubtotal() ?? 0.00); ?>
                         </span>
@@ -286,18 +286,18 @@ foreach ($soItems as $item) { ?>
                         <span name="item_total" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->total">
                             <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->getId())?->getTotal() ?? 0.00); ?>
                         </span>
-                    </td>                   
+                    </td>
                 </tr>
                 </tbody>
             <?php $count = $count + 1;
-} ?> 
+} ?>
         </table>
     </div>
      <br>
-     
+
     <div class='row'>
         <div class="col-xs-12 col-md-4" quote_tax_rates="<?php $soTaxRates; ?>">
-           
+
         </div>
         <div class="col-xs-12 visible-xs visible-sm"><br></div>
 
@@ -310,18 +310,18 @@ foreach ($soItems as $item) { ?>
                 <tr>
                     <td>
                     <span><?= $vat === '1' ? $translator->translate('vat.break.down') : $translator->translate('item.tax'); ?>
-                    </span>    
+                    </span>
                     </td>
                     <td class="amount" data-bs-toggle = "tooltip" id="amount_item_tax_total" title="quote_amount->item_tax_total"><?php echo $numberHelper->formatCurrency($so_amount->getItemTaxTotal() ?? 0.00); ?></td>
                 </tr>
                 <?php if ($vat === '0') { ?>
                 <tr>
                     <td>
-                        <?php if ($invEdit) { ?>    
-                            <a href="#add-quote-tax" data-bs-toggle="modal" class="btn-xs"><i class="fa fa-plus-circle"></i></a>
+                        <?php if ($invEdit) { ?>
+                            <a href="#add-quote-tax" data-bs-toggle="modal" class="btn-xs"><i class="bi bi-plus-circle"></i></a>
                         <?php } ?>
                         <span>$translator->translate('quote.tax.rate'); ?></span>
-                    </td>                    
+                    </td>
                 </tr>
                 <?php } ?>
                 <?php if (($so->getDiscountAmount() ?? 0.00) != 0.00) { ?>
@@ -339,7 +339,7 @@ foreach ($soItems as $item) { ?>
                             </div>
                         </div>
                     </td>
-                </tr>                
+                </tr>
                 <?php } ?>
                 <tr>
                     <td><b><?= $translator->translate('total'); ?></b></td>

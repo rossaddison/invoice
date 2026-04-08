@@ -23,13 +23,13 @@ export class TaskHandler {
     private bindEventListeners(): void {
         // Delegated event handling for clicks
         document.addEventListener('click', this.handleClick.bind(this), true);
-        
+
         // Delegated change handling for checkboxes
         document.addEventListener('change', this.handleChange.bind(this), true);
-        
+
         // Handle Enter key for search
         document.addEventListener('keydown', this.handleKeydown.bind(this), true);
-        
+
         // Handle modal events to reinitialize components
         document.addEventListener('shown.bs.modal', this.handleModalShown.bind(this), true);
     }
@@ -61,7 +61,7 @@ export class TaskHandler {
 
     private handleChange(event: Event): void {
         const target = event.target as HTMLElement;
-        
+
         if (target.matches("input[name='task_ids[]']")) {
             const container = target.closest('#tasks_table') || document;
             this.updateSelectTaskButtonState(container);
@@ -91,11 +91,11 @@ export class TaskHandler {
      */
     private handleModalShown(event: Event): void {
         const target = event.target as HTMLElement;
-        
+
         // Check if this is a task modal
         if (target.id === 'modal-choose-tasks' || target.id === 'modal-choose-tasks-inv') {
             console.log('Task modal shown, reinitializing components...');
-            
+
             // Reinitialize components for the new modal content
             this.hideSelectedTasks();
             this.updateSelectTaskButtonState(document);
@@ -107,7 +107,7 @@ export class TaskHandler {
      */
     private hideSelectedTasks(): void {
         const selectedTasks: number[] = [];
-        
+
         document.querySelectorAll('.item-task-id').forEach((el: Element) => {
             const input = el as HTMLInputElement;
             const currentVal = input.value || '';
@@ -123,10 +123,10 @@ export class TaskHandler {
         document.querySelectorAll('.modal-task-id').forEach((el: Element) => {
             const idAttr = el.id || '';
             const idNum = parseInt(idAttr.replace('task-id-', ''), 10);
-            
+
             if (!Number.isNaN(idNum) && selectedTasks.includes(idNum)) {
                 // Hide the row containing this modal-task-id
-                const row = el.closest('tr') || 
+                const row = el.closest('tr') ||
                            (el.parentElement && el.parentElement.parentElement);
                 if (row) {
                     (row as HTMLElement).style.display = 'none';
@@ -150,7 +150,7 @@ export class TaskHandler {
     private rowClickToggle(event: Event): void {
         const row = (event.target as HTMLElement).closest('#tasks_table tr, .task-row, .task');
         if (!row) return;
-        
+
         const target = event.target as HTMLInputElement;
         if (target.type !== 'checkbox') {
             const checkbox = row.querySelector('input[type="checkbox"]') as HTMLInputElement;
@@ -170,29 +170,29 @@ export class TaskHandler {
         const checkboxes = ctx.querySelectorAll("input[name='task_ids[]']");
         const checkedBoxes = ctx.querySelectorAll("input[name='task_ids[]']:checked");
         const anyChecked = checkedBoxes.length > 0;
-        
-        console.log(`🔍 Task button state update: ${checkboxes.length} total checkboxes, ${checkedBoxes.length} checked, anyChecked: ${anyChecked}`);
-        
+
+        console.log(`ðŸ” Task button state update: ${checkboxes.length} total checkboxes, ${checkedBoxes.length} checked, anyChecked: ${anyChecked}`);
+
         // Multiple strategies to find the submit button
         let buttons: NodeListOf<Element>;
-        
+
         // Strategy 1: Look in the same context as checkboxes
         buttons = ctx.querySelectorAll('.select-items-confirm-task, .select-items-confirm-task-inv, .select-items-confirm-task-quote');
-        
+
         // Strategy 2: Fall back to document-wide search
         if (buttons.length === 0) {
             buttons = document.querySelectorAll('.select-items-confirm-task, .select-items-confirm-task-inv, .select-items-confirm-task-quote');
         }
-        
+
         // Strategy 3: Try finding by ID as fallback
         if (buttons.length === 0) {
             const buttonById = document.getElementById('task-modal-submit') || document.getElementById('task-modal-submit-quote');
             if (buttonById) {
                 buttons = [buttonById] as any;
-                console.log('🔍 Found button by ID fallback');
+                console.log('ðŸ” Found button by ID fallback');
             }
         }
-        
+
         // Strategy 4: Search in any open modal
         if (buttons.length === 0) {
             const modals = document.querySelectorAll('.modal');
@@ -200,25 +200,25 @@ export class TaskHandler {
                 const modalButtons = modal.querySelectorAll('.select-items-confirm-task, .select-items-confirm-task-inv, .select-items-confirm-task-quote, #task-modal-submit, #task-modal-submit-quote');
                 if (modalButtons.length > 0) {
                     buttons = modalButtons;
-                    console.log('🔍 Found button in modal fallback');
+                    console.log('ðŸ” Found button in modal fallback');
                 }
             });
         }
-        
-        console.log(`🔍 Found ${buttons.length} task submit buttons`);
-        
+
+        console.log(`ðŸ” Found ${buttons.length} task submit buttons`);
+
         buttons.forEach((btn: Element) => {
             const button = btn as HTMLButtonElement;
             if (anyChecked) {
                 button.removeAttribute('disabled');
                 button.removeAttribute('aria-disabled');
                 button.disabled = false;
-                console.log('✅ Task submit button enabled');
+                console.log('âœ… Task submit button enabled');
             } else {
                 button.setAttribute('disabled', 'true');
                 button.setAttribute('aria-disabled', 'true');
                 button.disabled = true;
-                console.log('❌ Task submit button disabled');
+                console.log('âŒ Task submit button disabled');
             }
         });
     }
@@ -229,7 +229,7 @@ export class TaskHandler {
     private async handleSelectItemsConfirmTask(btn: HTMLElement): Promise<void> {
         const absoluteUrl = new URL(location.href);
         const entityId = absoluteUrl.pathname.split('/').at(-1) || '';
-        
+
         // Detect if we're on a quote or invoice page
         const isQuotePage = absoluteUrl.pathname.includes('/quote/');
         const isInvoicePage = absoluteUrl.pathname.includes('/inv/');
@@ -254,7 +254,7 @@ export class TaskHandler {
         sortedTaskIds.forEach((id: number) => {
             params.append('task_ids[]', id.toString());
         });
-        
+
         // Use appropriate parameter name and endpoint
         if (isQuotePage) {
             params.append('quote_id', entityId);
@@ -288,16 +288,16 @@ export class TaskHandler {
             this.processTasks(tasks);
 
             btn.innerHTML = '<h2 class="text-center"><i class="fa fa-check"></i></h2>';
-            
+
             // Reload as original code does to sync state
             location.reload();
         } catch (error) {
             console.error('selection_inv failed', error);
             btn.innerHTML = originalHtml;
             (btn as HTMLButtonElement).disabled = false;
-            
-            const userError = new Error('An error occurred while adding tasks to invoice. See console for details.', { 
-                cause: error 
+
+            const userError = new Error('An error occurred while adding tasks to invoice. See console for details.', {
+                cause: error
             });
             alert(userError.message);
         }
@@ -314,13 +314,13 @@ export class TaskHandler {
             Object.entries(tasks).map(([key, task]) => ({ key, ...task })),
             (task) => task.tax_rate_id || 'default'
         );
-        
+
         console.log('Tasks grouped by tax rate:', Object.keys(tasksByTaxRate));
 
         // ES2024: Process tasks in reverse order for better form population strategy
         Object.entries(tasks).toReversed().forEach(([key, task]) => {
             const currentTaxRateId = task.tax_rate_id;
-            
+
             if (!currentTaxRateId) {
                 const defaultTaxEl = document.getElementById('default_item_tax_rate') as HTMLInputElement ||
                                    document.querySelector('#default_item_tax_rate') as HTMLInputElement;
@@ -362,7 +362,7 @@ export class TaskHandler {
 
         // ES2024: Use Promise.withResolvers for better async control
         const { promise, resolve, reject } = Promise.withResolvers<void>();
-        
+
         const timeoutId = setTimeout(() => {
             reject(new Error('Task lookup timeout', {
                 cause: 'Server did not respond within expected timeframe'
@@ -376,20 +376,20 @@ export class TaskHandler {
             });
 
             const html = await response.text();
-            
+
             // Secure HTML insertion using DOMParser to prevent XSS
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
             const fragment = document.createDocumentFragment();
-            
+
             // ES2024: Process DOM children in reverse order for better performance
             Array.from(doc.body.children).toReversed().forEach(child => {
                 fragment.insertBefore(child, fragment.firstChild);
             });
-            
+
             tasksTable.innerHTML = '';
             tasksTable.appendChild(fragment);
-            
+
             this.updateSelectTaskButtonState(tasksTable);
             clearTimeout(timeoutId);
             resolve();

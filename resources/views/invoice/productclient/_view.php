@@ -235,14 +235,14 @@ use Yiisoft\Html\Tag\A;
                     'productclient/edit', ['id' => $productClient->getId()]))
                 ->render()
             ?>
-            
+
             <?=  new A()
                 ->addAttributes(['class' => 'btn btn-secondary me-2'])
                 ->content($translator->translate('back.to.list'))
                 ->href($urlGenerator->generate('productclient/index'))
                 ->render()
             ?>
-            
+
             <?=  new A()
                 ->addAttributes(['class' => 'btn btn-info me-2'])
                 ->content($translator->translate('view.product'))
@@ -250,7 +250,7 @@ use Yiisoft\Html\Tag\A;
                     'product/view', ['id' => $product->getProductId()]))
                 ->render()
             ?>
-            
+
             <?=  new A()
                 ->addAttributes(['class' => 'btn btn-info'])
                 ->content($translator->translate('view.client'))

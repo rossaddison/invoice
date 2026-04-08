@@ -23,11 +23,11 @@ $this->setTitle('JavaScript Analysis - FAQ');
             <div class="card">
                 <div class="card-header">
                     <h1 class="card-title">
-                        <i class="fa fa-code"></i> JavaScript Analysis
+                        <i class="bi bi-code-slash"></i> JavaScript Analysis
                     </h1>
                 </div>
                 <div class="card-body">
-                    
+
                     <!-- Navigation -->
                     <div class="row mb-4">
                         <div class="col-12">
@@ -46,21 +46,21 @@ $this->setTitle('JavaScript Analysis - FAQ');
                     <!-- Overview Section -->
                     <section id="overview" class="mb-5">
                         <h2 class="text-primary mb-3">
-                            <i class="fa fa-eye"></i> Migration Overview
+                            <i class="bi bi-eye"></i> Migration Overview
                         </h2>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="card bg-light mb-3">
                                     <div class="card-header bg-danger text-white">
-                                        <h5><i class="fa fa-arrow-left"></i> Before (Legacy)</h5>
+                                        <h5><i class="bi bi-arrow-left"></i> Before (Legacy)</h5>
                                     </div>
                                     <div class="card-body">
                                         <ul class="list-unstyled">
-                                            <li><i class="fa fa-times text-danger"></i> jQuery-dependent JavaScript files</li>
-                                            <li><i class="fa fa-times text-danger"></i> Multiple separate .js files</li>
-                                            <li><i class="fa fa-times text-danger"></i> No type checking</li>
-                                            <li><i class="fa fa-times text-danger"></i> Legacy browser patterns</li>
-                                            <li><i class="fa fa-times text-danger"></i> Inconsistent error handling</li>
+                                            <li><i class="bi bi-x-lg text-danger"></i> jQuery-dependent JavaScript files</li>
+                                            <li><i class="bi bi-x-lg text-danger"></i> Multiple separate .js files</li>
+                                            <li><i class="bi bi-x-lg text-danger"></i> No type checking</li>
+                                            <li><i class="bi bi-x-lg text-danger"></i> Legacy browser patterns</li>
+                                            <li><i class="bi bi-x-lg text-danger"></i> Inconsistent error handling</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -68,15 +68,15 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-6">
                                 <div class="card bg-light mb-3">
                                     <div class="card-header bg-success text-white">
-                                        <h5><i class="fa fa-arrow-right"></i> After (Modern)</h5>
+                                        <h5><i class="bi bi-arrow-right"></i> After (Modern)</h5>
                                     </div>
                                     <div class="card-body">
                                         <ul class="list-unstyled">
-                                            <li><i class="fa fa-check text-success"></i> TypeScript with strict typing</li>
-                                            <li><i class="fa fa-check text-success"></i> Single bundled output (~40KB)</li>
-                                            <li><i class="fa fa-check text-success"></i> ES2020+ modern features</li>
-                                            <li><i class="fa fa-check text-success"></i> No external dependencies</li>
-                                            <li><i class="fa fa-check text-success"></i> Comprehensive error handling</li>
+                                            <li><i class="bi bi-check-lg text-success"></i> TypeScript with strict typing</li>
+                                            <li><i class="bi bi-check-lg text-success"></i> Single bundled output (~40KB)</li>
+                                            <li><i class="bi bi-check-lg text-success"></i> ES2020+ modern features</li>
+                                            <li><i class="bi bi-check-lg text-success"></i> No external dependencies</li>
+                                            <li><i class="bi bi-check-lg text-success"></i> Comprehensive error handling</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -87,14 +87,14 @@ $this->setTitle('JavaScript Analysis - FAQ');
                     <!-- Architecture Section -->
                     <section id="architecture" class="mb-5">
                         <h2 class="text-primary mb-3">
-                            <i class="fa fa-sitemap"></i> Current Architecture
+                            <i class="bi bi-diagram-3"></i> Current Architecture
                         </h2>
-                        
+
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="card mb-3">
                                     <div class="card-header bg-info text-white">
-                                        <h5><i class="fa fa-cogs"></i> Build System</h5>
+                                        <h5><i class="bi bi-gears"></i> Build System</h5>
                                     </div>
                                     <div class="card-body">
                                         <p><strong>Tool:</strong> esbuild</p>
@@ -108,7 +108,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-4">
                                 <div class="card mb-3">
                                     <div class="card-header bg-warning text-dark">
-                                        <h5><i class="fa fa-file-code-o"></i> Bundle Output</h5>
+                                        <h5><i class="bi bi-file-code"></i> Bundle Output</h5>
                                     </div>
                                     <div class="card-body">
                                         <p><strong>File:</strong> <code>invoice-typescript-iife.js</code></p>
@@ -121,7 +121,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-4">
                                 <div class="card mb-3">
                                     <div class="card-header bg-secondary text-white">
-                                        <h5><i class="fa fa-puzzle-piece"></i> Module System</h5>
+                                        <h5><i class="bi bi-puzzle"></i> Module System</h5>
                                     </div>
                                     <div class="card-body">
                                         <p><strong>Source:</strong> ES6 modules</p>
@@ -137,9 +137,9 @@ $this->setTitle('JavaScript Analysis - FAQ');
                     <!-- Core Files Section -->
                     <section id="files" class="mb-5">
                         <h2 class="text-primary mb-3">
-                            <i class="fa fa-files-o"></i> Core TypeScript Files Analysis
+                            <i class="bi bi-files"></i> Core TypeScript Files Analysis
                         </h2>
-                        
+
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
                                 <thead class="table-dark">
@@ -219,14 +219,14 @@ $this->setTitle('JavaScript Analysis - FAQ');
                     <!-- Functionality Section -->
                     <section id="functionality" class="mb-5">
                         <h2 class="text-primary mb-3">
-                            <i class="fa fa-wrench"></i> Key Functionality Breakdown
+                            <i class="bi bi-wrench"></i> Key Functionality Breakdown
                         </h2>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="card mb-3">
                                     <div class="card-header bg-primary text-white">
-                                        <h5><i class="fa fa-exchange"></i> AJAX Operations</h5>
+                                        <h5><i class="bi bi-arrow-left-right"></i> AJAX Operations</h5>
                                     </div>
                                     <div class="card-body">
                                         <ul>
@@ -242,7 +242,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-6">
                                 <div class="card mb-3">
                                     <div class="card-header bg-success text-white">
-                                        <h5><i class="fa fa-window-maximize"></i> Modal Management</h5>
+                                        <h5><i class="bi bi-window-fullscreen"></i> Modal Management</h5>
                                     </div>
                                     <div class="card-body">
                                         <ul>
@@ -261,7 +261,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-6">
                                 <div class="card mb-3">
                                     <div class="card-header bg-info text-white">
-                                        <h5><i class="fa fa-file-pdf-o"></i> PDF Operations</h5>
+                                        <h5><i class="fa bi-file-pdf"></i> PDF Operations</h5>
                                     </div>
                                     <div class="card-body">
                                         <ul>
@@ -277,7 +277,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-6">
                                 <div class="card mb-3">
                                     <div class="card-header bg-warning text-dark">
-                                        <h5><i class="fa fa-database"></i> CRUD Operations</h5>
+                                        <h5><i class="bi bi-database"></i> CRUD Operations</h5>
                                     </div>
                                     <div class="card-body">
                                         <ul>
@@ -296,14 +296,13 @@ $this->setTitle('JavaScript Analysis - FAQ');
                     <!-- Dependencies Section -->
                     <section id="dependencies" class="mb-5">
                         <h2 class="text-primary mb-3">
-                            <i class="fa fa-link"></i> Dependencies and Integrations
+                            <i class="bi bi-link-45deg"></i> Dependencies and Integrations
                         </h2>
-                        
+
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="card text-center mb-3">
                                     <div class="card-body">
-                                        <i class="fa fa-bootstrap fa-3x text-primary mb-2"></i>
                                         <h5>Bootstrap 5</h5>
                                         <p class="small">Modal system, UI components, responsive grid</p>
                                     </div>
@@ -312,7 +311,6 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-3">
                                 <div class="card text-center mb-3">
                                     <div class="card-body">
-                                        <i class="fa fa-font-awesome fa-3x text-success mb-2"></i>
                                         <h5>Font Awesome</h5>
                                         <p class="small">Icons throughout the interface, visual indicators</p>
                                     </div>
@@ -321,7 +319,6 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-3">
                                 <div class="card text-center mb-3">
                                     <div class="card-body">
-                                        <i class="fa fa-html5 fa-3x text-warning mb-2"></i>
                                         <h5>Browser APIs</h5>
                                         <p class="small">Fetch, FormData, DOM manipulation, modern JavaScript</p>
                                     </div>
@@ -330,7 +327,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-3">
                                 <div class="card text-center mb-3">
                                     <div class="card-body">
-                                        <i class="fa fa-check-circle fa-3x text-info mb-2"></i>
+                                        <i class="bi bi-check-circle-fill text-info mb-2"></i>
                                         <h5>Self-Contained</h5>
                                         <p class="small">No external libraries, framework-independent core</p>
                                     </div>
@@ -342,14 +339,14 @@ $this->setTitle('JavaScript Analysis - FAQ');
                     <!-- Development Section -->
                     <section id="development" class="mb-5">
                         <h2 class="text-primary mb-3">
-                            <i class="fa fa-cog"></i> Development Workflow
+                            <i class="bi bi-gear"></i> Development Workflow
                         </h2>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="card mb-3">
                                     <div class="card-header bg-dark text-white">
-                                        <h5><i class="fa fa-terminal"></i> NPM Scripts</h5>
+                                        <h5><i class="bi bi-terminal"></i> NPM Scripts</h5>
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
@@ -382,14 +379,14 @@ $this->setTitle('JavaScript Analysis - FAQ');
                             <div class="col-md-6">
                                 <div class="card mb-3">
                                     <div class="card-header bg-primary text-white">
-                                        <h5><i class="fa fa-shield"></i> TypeScript Benefits</h5>
+                                        <h5><i class="bi bi-shield"></i> TypeScript Benefits</h5>
                                     </div>
                                     <div class="card-body">
                                         <ul class="list-unstyled">
-                                            <li><i class="fa fa-check text-success"></i> <strong>Strict typing:</strong> Compile-time error detection</li>
-                                            <li><i class="fa fa-check text-success"></i> <strong>IntelliSense:</strong> Better IDE support</li>
-                                            <li><i class="fa fa-check text-success"></i> <strong>Refactoring:</strong> Safe code changes</li>
-                                            <li><i class="fa fa-check text-success"></i> <strong>Documentation:</strong> Self-documenting interfaces</li>
+                                            <li><i class="bi bi-check-lg text-success"></i> <strong>Strict typing:</strong> Compile-time error detection</li>
+                                            <li><i class="bi bi-check-lg text-success"></i> <strong>IntelliSense:</strong> Better IDE support</li>
+                                            <li><i class="bi bi-check-lg text-success"></i> <strong>Refactoring:</strong> Safe code changes</li>
+                                            <li><i class="bi bi-check-lg text-success"></i> <strong>Documentation:</strong> Self-documenting interfaces</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -398,12 +395,12 @@ $this->setTitle('JavaScript Analysis - FAQ');
 
                         <div class="card mb-3">
                             <div class="card-header bg-success text-white">
-                                <h5><i class="fa fa-code"></i> Code Organization Patterns</h5>
+                                <h5><i class="bi bi-code-slash"></i> Code Organization Patterns</h5>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <h6><i class="fa fa-object-group"></i> Class-Based Architecture</h6>
+                                        <h6><i class="bi bi-bounding-box"></i> Class-Based Architecture</h6>
                                         <ul class="small">
                                             <li>Handler classes per domain</li>
                                             <li>Event delegation patterns</li>
@@ -411,7 +408,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                                         </ul>
                                     </div>
                                     <div class="col-md-4">
-                                        <h6><i class="fa fa-exclamation-triangle"></i> Error Handling</h6>
+                                        <h6><i class="bi bi-exclamation-triangle"></i> Error Handling</h6>
                                         <ul class="small">
                                             <li>Try-catch blocks</li>
                                             <li>User-friendly messages</li>
@@ -419,7 +416,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                                         </ul>
                                     </div>
                                     <div class="col-md-4">
-                                        <h6><i class="fa fa-puzzle-piece"></i> Modular Design</h6>
+                                        <h6><i class="bi bi-puzzle"></i> Modular Design</h6>
                                         <ul class="small">
                                             <li>Separate concerns</li>
                                             <li>Reusable utilities</li>
@@ -434,18 +431,18 @@ $this->setTitle('JavaScript Analysis - FAQ');
                     <!-- Selector Analysis Section -->
                     <section id="selectors" class="mb-5">
                         <h2 class="text-primary mb-3">
-                            <i class="fa fa-search"></i> Class and ID Selector Analysis
+                            <i class="bi bi-search"></i> Class and ID Selector Analysis
                         </h2>
-                        
+
                         <div class="alert alert-info" role="alert">
-                            <h5><i class="fa fa-info-circle"></i> Migration Comparison</h5>
+                            <h5><i class="bi bi-info-circle"></i> Migration Comparison</h5>
                             <p>This section compares the selector usage between the legacy individual JavaScript files and the current TypeScript implementation.</p>
                         </div>
 
                         <!-- Invoice Selectors -->
                         <div class="card mb-4">
                             <div class="card-header bg-primary text-white">
-                                <h4><i class="fa fa-file-text"></i> Invoice Module Selectors</h4>
+                                <h4><i class="bi bi-file-text"></i> Invoice Module Selectors</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -510,7 +507,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                         <!-- Client Selectors -->
                         <div class="card mb-4">
                             <div class="card-header bg-success text-white">
-                                <h4><i class="fa fa-users"></i> Client Module Selectors</h4>
+                                <h4><i class="bi bi-people"></i> Client Module Selectors</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -581,7 +578,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                         <!-- Quote Selectors -->
                         <div class="card mb-4">
                             <div class="card-header bg-info text-white">
-                                <h4><i class="fa fa-file-text-o"></i> Quote Module Selectors</h4>
+                                <h4><i class="bi bi-file-text"></i> Quote Module Selectors</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -622,7 +619,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                         <!-- Global/Utility Selectors -->
                         <div class="card mb-4">
                             <div class="card-header bg-warning text-dark">
-                                <h4><i class="fa fa-cogs"></i> Global & Utility Selectors</h4>
+                                <h4><i class="bi bi-gears"></i> Global & Utility Selectors</h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -669,12 +666,12 @@ $this->setTitle('JavaScript Analysis - FAQ');
                         <!-- Migration Patterns -->
                         <div class="card mb-4">
                             <div class="card-header bg-secondary text-white">
-                                <h4><i class="fa fa-exchange"></i> Selector Migration Patterns</h4>
+                                <h4><i class="bi bi-arrow-left-right"></i> Selector Migration Patterns</h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <h5 class="text-danger"><i class="fa fa-arrow-left"></i> Legacy Patterns</h5>
+                                        <h5 class="text-danger"><i class="bi bi-arrow-left"></i> Legacy Patterns</h5>
                                         <ul>
                                             <li><code>$(document).on('click', '#selector', function() {})</code></li>
                                             <li><code>$('#selector').val()</code></li>
@@ -684,7 +681,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                                         </ul>
                                     </div>
                                     <div class="col-md-6">
-                                        <h5 class="text-success"><i class="fa fa-arrow-right"></i> Modern Patterns</h5>
+                                        <h5 class="text-success"><i class="bi bi-arrow-right"></i> Modern Patterns</h5>
                                         <ul>
                                             <li><code>document.addEventListener('click', handler, true)</code></li>
                                             <li><code>document.getElementById('selector').value</code></li>
@@ -699,7 +696,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
 
                         <!-- Consolidation Benefits -->
                         <div class="alert alert-success" role="alert">
-                            <h5><i class="fa fa-check-circle"></i> Selector Consolidation Benefits</h5>
+                            <h5><i class="bi bi-check-circle"></i> Selector Consolidation Benefits</h5>
                             <ul class="mb-0">
                                 <li><strong>Event Delegation:</strong> Single event listeners handle multiple selectors efficiently</li>
                                 <li><strong>Type Safety:</strong> TypeScript ensures selector usage consistency</li>
@@ -713,8 +710,8 @@ $this->setTitle('JavaScript Analysis - FAQ');
                     <!-- Summary Section -->
                     <section id="summary" class="mb-4">
                         <div class="alert alert-success" role="alert">
-                            <h4 class="alert-heading"><i class="fa fa-check-circle"></i> Migration Success Summary</h4>
-                            <p>The JavaScript codebase has been successfully modernized from legacy jQuery-dependent files to a type-safe, 
+                            <h4 class="alert-heading"><i class="bi bi-check-circle"></i> Migration Success Summary</h4>
+                            <p>The JavaScript codebase has been successfully modernized from legacy jQuery-dependent files to a type-safe,
                             maintainable TypeScript architecture. This provides:</p>
                             <hr>
                             <ul class="mb-0">
@@ -729,7 +726,7 @@ $this->setTitle('JavaScript Analysis - FAQ');
                     <!-- Back to FAQ -->
                     <div class="text-center">
                         <a href="<?= $urlGenerator->generate('invoice/faq', ['topic' => 'index']); ?>" class="btn btn-secondary">
-                            <i class="fa fa-arrow-left"></i> Back to FAQ Index
+                            <i class="bi bi-arrow-left"></i> Back to FAQ Index
                         </a>
                     </div>
 
@@ -750,18 +747,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 targetElement.scrollIntoView({ behavior: 'smooth' });
-                
+
                 // Update active nav item
                 document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
                 this.classList.add('active');
             }
         });
     });
-    
+
     // Update active nav on scroll
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
-    
+
     window.addEventListener('scroll', function() {
         let currentSection = '';
         sections.forEach(section => {
@@ -770,7 +767,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentSection = '#' + section.getAttribute('id');
             }
         });
-        
+
         navLinks.forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === currentSection) {
@@ -814,7 +811,7 @@ section {
     .nav-pills {
         flex-direction: column !important;
     }
-    
+
     .nav-pills .nav-link {
         margin: 0.25rem 0;
     }

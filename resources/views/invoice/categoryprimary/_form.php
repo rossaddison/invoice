@@ -44,15 +44,15 @@ use Yiisoft\Html\Tag\Form;
                                             <?= Field::text($form, 'name')
                                                 ->label($translator->translate('name'))
                                                 ->addInputAttributes([
-                                                    'class' => 'form-control',
+                                                    'class' => 'form-control form-control-lg',
                                                 ])
                                                 ->value(Html::encode($form->getname()))
                                                 ->placeholder($translator->translate('name')); ?>
                                         <?= Html::closeTag('div'); ?>
-                                   <?= Html::closeTag('div'); ?>     
+                                   <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
-                        <?= Html::closeTag('div'); ?>    
+                        <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('form'); ?>
                <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

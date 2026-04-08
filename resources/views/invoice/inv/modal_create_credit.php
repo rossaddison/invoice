@@ -80,15 +80,15 @@ echo $credit_date; ?>">
                     <div class="alert alert-danger no-margin">
                         <?= $translator->translate('create.credit.invoice.alert'); ?>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="create-credit-confirm btn btn-success" id="create-credit-confirm" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('confirm'); ?>
+                        <i class="bi bi-check-lg"></i> <?= $translator->translate('confirm'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss"modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

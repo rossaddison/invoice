@@ -14,7 +14,7 @@ declare(strict_types=1);
  */
 
 ?>
- 
+
 <?php if ($customFields): ?>
     <div>
         <div class="mb-3 form-group">

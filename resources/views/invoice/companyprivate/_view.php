@@ -50,7 +50,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'company_public_name')
                         ->readonly(true); ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'tax_code')
@@ -62,7 +62,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'gln')
-                        ->addInputAttributes(['class' => 'form-control'])
+                        ->addInputAttributes(['class' => 'form-control form-control-lg',])
                         ->label($translator->translate('gln'))
                         ->readonly(true)
                         ->value(Html::encode($form->getGln() ??  '')); ?>
@@ -84,8 +84,8 @@ use Yiisoft\Html\Tag\Form;
                                ->height($form->getLogoHeight())
                                ->width($form->getLogoWidth()); ?>
                         <?= Html::closeTag('div'); ?>
-                    <?= Html::closeTag('div'); ?>  
-                <?= Html::Tag('br'); ?> 
+                    <?= Html::closeTag('div'); ?>
+                <?= Html::Tag('br'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Field::text($form, 'logo_width')
                         ->readonly(true); ?>
@@ -99,11 +99,11 @@ use Yiisoft\Html\Tag\Form;
                         ->readonly(true); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>               
+                    <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= Field::date($form, 'start_date')
                             ->addInputAttributes(
                                 [
-                                    'class' => 'form-control',
+                                    'class' => 'form-control form-control-lg',
                                     'placeholder' => ' (' . $dateHelper->display() . ')',
                                     'readonly' => 'readonly',
                                     'disabled' => 'disabled',
@@ -113,14 +113,14 @@ use Yiisoft\Html\Tag\Form;
                                                 ? $startdate->format('Y-m-d')
                                                 : (new \DateTimeImmutable('now'))->format('Y-m-d')));
 ?>
-                    <?= Html::closeTag('div'); ?>                                
+                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>               
+                    <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= Field::date($form, 'end_date')
     ->addInputAttributes(
         [
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'placeholder' => ' (' . $dateHelper->display() . ')',
             'readonly' => 'readonly',
             'disabled' => 'disabled',
@@ -130,10 +130,10 @@ use Yiisoft\Html\Tag\Form;
                         ? $enddate->format('Y-m-d')
                         : (new \DateTimeImmutable('now'))->format('Y-m-d')));
 ?>
-                    <?= Html::closeTag('div'); ?>                                
+                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
 <?=  new Form()->close() ?>

@@ -20,7 +20,7 @@ class TaxSubTotal
     public function __construct(
         private readonly array $taxSubtotal,
         public SettingRepository $s)
-    {        
+    {
     }
 
     public function loadValuesFromArray(): void

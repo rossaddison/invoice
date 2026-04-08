@@ -301,7 +301,7 @@ final class DeliveryLocationController extends BaseController
         }
         return $this->webService->getRedirectResponse('del/index');
     }
-    
+
     private function rbacObserver(string $clientId, UCR $ucR, UIR $uiR): bool {
         $userClient = $ucR->repoUserquery($clientId);
         if (null!==$userClient) {
@@ -313,7 +313,7 @@ final class DeliveryLocationController extends BaseController
         }
         return false;
     }
-    
+
     private function rbacAdmin() : bool {
         // has observer role
         if ($this->userService->hasPermission(Permissions::VIEW_INV)

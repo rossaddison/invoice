@@ -44,7 +44,7 @@ echo H::openTag('div');
   echo H::openTag('thead');
    echo H::openTag('tr');
     echo H::openTag('i', [
-        'class' => 'fa fa-info-circle',
+        'class' => 'bi bi-info-circle',
         'data-bs-toggle' => 'tooltip',
         'title' => $s->isDebugMode(7)
     ]);
@@ -67,7 +67,7 @@ echo H::openTag('div');
     echo H::closeTag('th');
    echo H::closeTag('tr');
   echo H::closeTag('thead');
-  
+
 //*********
 // Current
 // ********
@@ -129,7 +129,7 @@ foreach ($invItems as $item) {
         echo H::closeTag('span');
         echo H::openTag('select', [
             'name' => 'item_name',
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'disabled' => true
         ]);
         if (null !== $item->getProductId()) {
@@ -236,7 +236,7 @@ foreach ($invItems as $item) {
         echo H::closeTag('input');
        echo H::closeTag('div');
       echo H::closeTag('td');
-      
+
       echo H::openTag('td');
        echo H::openTag('div', ['class' => 'input-group']);
         echo H::openTag('span', ['class' => 'input-group-text']);
@@ -249,7 +249,7 @@ foreach ($invItems as $item) {
         echo H::openTag('select', [
             'disabled' => true,
             'name' => 'item_tax_rate_id',
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'data-bs-toggle' => 'tooltip',
             'title' => 'inv_item->tax_rate_id'
         ]);
@@ -282,7 +282,7 @@ foreach ($invItems as $item) {
       echo H::openTag('td', ['class' => 'td-vert-middle btn-group']);
        if ($showButtons === true && $userCanEdit === true
            && $draft === true
-// Do not show the buttons if the invoice is linked to a sales order    
+// Do not show the buttons if the invoice is linked to a sales order
            && strlen($inv->getSoId()) == 0) {
            if ($piR->repoCount((int) $item->getProductId()) > 0) {
                echo H::openTag('span', [
@@ -299,7 +299,7 @@ foreach ($invItems as $item) {
                     'href' => '#view-product-' . (string) $item->getId(),
                     'style' => 'text-decoration:none'
                 ]);
-                 echo H::openTag('i', ['class' => 'fa fa-eye']);
+                 echo H::openTag('i', ['class' => 'bi bi-eye']);
                  echo H::closeTag('i');
                 echo H::closeTag('a');
                echo H::closeTag('span');
@@ -380,7 +380,7 @@ foreach ($invItems as $item) {
                 echo H::openTag('i', [
                     'class' => ($aciiR->repoInvItemCount(
                         (string) $item->getId()) > 0 ?
-                            'fa fa-list' : 'fa fa-plus')
+                            'bi bi-list' : 'bi bi-plus-lg')
                 ]);
                 echo H::closeTag('i');
                echo H::closeTag('a');
@@ -434,7 +434,7 @@ foreach ($invItems as $item) {
         echo H::openTag('textarea', [
             'disabled' => true,
             'name' => 'item_note',
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'rows' => '1'
         ]);
          echo H::encode($item->getNote());
@@ -455,7 +455,7 @@ foreach ($invItems as $item) {
         echo H::openTag('textarea', [
             'disabled' => true,
             'name' => 'item_description',
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
             'rows' => '1'
         ]);
          echo H::encode($item->getDescription());
@@ -522,7 +522,7 @@ foreach ($invItems as $item) {
  * invoices
  * @var App\Invoice\Entity\InvItemAllowanceCharge $invItemAllowanceCharge
  */
-        foreach ($aciiR->repoInvItemquery((string) $item->getId()) 
+        foreach ($aciiR->repoInvItemquery((string) $item->getId())
             as $invItemAllowanceCharge) {
             $isCharge =
                 ($invItemAllowanceCharge->getAllowanceCharge()?->getIdentifier() == 1 ?
@@ -706,7 +706,7 @@ foreach ($invItems as $item) {
      echo H::openTag('tbody');
       echo H::openTag('tr');
        echo H::openTag('i', [
-           'class' => 'fa fa-info-circle',
+           'class' => 'bi bi-info-circle',
            'data-bs-toggle' => 'tooltip',
            'title' => $s->isDebugMode(7)
        ]);

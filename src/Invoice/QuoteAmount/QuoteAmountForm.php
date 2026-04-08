@@ -31,7 +31,7 @@ final class QuoteAmountForm extends FormModel
     {
         return $this->item_tax_total;
     }
-    
+
     public function getPackhandleshipTotal(): ?float
     {
         return $this->packhandleship_total;
@@ -72,7 +72,7 @@ final class QuoteAmountForm extends FormModel
     {
         return [
             'item_subtotal' => [new Required()],
-            'item_tax_total' => [new Required()],            
+            'item_tax_total' => [new Required()],
             'packhandleship_total' => [new Required()],
             'packhandleship_tax' => [new Required()],
             'tax_total' => [new Required()],

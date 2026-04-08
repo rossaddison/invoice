@@ -65,8 +65,8 @@ use App\Invoice\Helpers\StoreCove\Exceptions\{
     ContactFirstNameNotFoundException,
     ContactLastNameNotFoundException,
     ContactTelephoneNotFoundException,
-};    
-// Peppol/Exceptions 
+};
+// Peppol/Exceptions
 use App\Invoice\Helpers\Peppol\Exception\{
     PeppolBuyerReferenceNotFoundException,
     PeppolBuyerPostalAddressNotFoundException,
@@ -1631,7 +1631,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                     'eIdentifiers' => [
                         0 => [
                     /**
-                     * Related logic: 
+                     * Related logic:
                      * https://www.storecove.com/docs/#_sender_identifiers_list
                      */
                             'scheme' => $routing_scheme_identifier,
@@ -1800,7 +1800,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                     . ' "city": "Test City", "zip": "Zippy",'
                     . ' "country": "' . $country_code_identifier . '"}';
             curl_setopt($site, CURLOPT_POSTFIELDS, $data);
-            curl_close($site);
             return curl_exec($site);
         }
         return false;

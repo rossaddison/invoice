@@ -195,26 +195,26 @@ final class TaskController extends BaseController
     /**
      * @return string[][]
      *
-     * @psalm-return array{1: array{label: string, class: 'draft'}, 2: array{label: string, class: 'viewed'}, 3: array{label: string, class: 'sent'}, 4: array{label: string, class: 'paid'}}
+     * @psalm-return array{1: array{label: string, class: 'secondary'}, 2: array{label: string, class: 'warning'}, 3: array{label: string, class: 'success'}, 4: array{label: string, class: 'primary'}}
      */
     public function getStatuses(TranslatorInterface $translator): array
     {
         return [
             1 => [
                 'label' => $translator->translate('not.started'),
-                'class' => 'draft',
+                'class' => 'secondary',
             ],
             2 => [
                 'label' => $translator->translate('in.progress'),
-                'class' => 'viewed',
+                'class' => 'warning',
             ],
             3 => [
                 'label' => $translator->translate('complete'),
-                'class' => 'sent',
+                'class' => 'success',
             ],
             4 => [
                 'label' => $translator->translate('invoiced'),
-                'class' => 'paid',
+                'class' => 'primary',
             ],
         ];
     }

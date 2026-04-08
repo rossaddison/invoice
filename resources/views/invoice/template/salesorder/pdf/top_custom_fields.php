@@ -21,6 +21,6 @@ declare(strict_types=1);
         continue;
     } ?>
     <?php echo '<td>'; ?>
-    <?php  $cvH->printFieldForPdf($translator, $salesorder_custom_values, $custom_field, $cvR); ?>                                   
+    <?php  $cvH->printFieldForPdf($translator, $salesorder_custom_values, $custom_field, $cvR); ?>
     <?php echo '</td>'; ?>
 <?php endforeach;

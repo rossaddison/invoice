@@ -16,18 +16,18 @@ use Yiisoft\Html\Tag\P;
 
 <?= Html::openTag('section', ['id' => 'Team', 'class' => 'py-5 py-xl-8']); ?>
     <?= Html::openTag('div', ['class' => 'container mb-5 mb-md-6 mb-xl-10']); ?>
-        <?= Html::openTag('div', ['class' => 'row justify-content-md-center']); ?> 
+        <?= Html::openTag('div', ['class' => 'row justify-content-md-center']); ?>
             <?= Html::openTag('div', ['class' => 'col-12 col-md-10 col-lg-9 col-xl-8 col-xxl-7 text-center']); ?>
                 <?= Html::openTag('h2', ['class' => 'display-3 fw-bolder mb-4']);?>
                     <?=
                        (string) $team['we']; ?>
                 <?= Html::closeTag('h2'); ?>
             <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>                    
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::openTag('div', ['class' => 'container overflow-hidden']); ?>
-    <?= Html::openTag('div', ['class' => 'row gy-4 gy-lg-0 gx-xxl-5']); ?> 
+    <?= Html::openTag('div', ['class' => 'row gy-4 gy-lg-0 gx-xxl-5']); ?>
         <?= Html::openTag('div', ['class' => 'col-12 col-md-6 col-lg-3']); ?>
             <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm overflow-hidden']); ?>
                 <?= Html::openTag('div', ['class' => 'card-body p-0']); ?>
@@ -36,8 +36,8 @@ use Yiisoft\Html\Tag\P;
                             'class' => 'img-fluid rounded',
                             'loading' => 'lazy',
                             'src' => '/img/soletrader/team/team-img-1.jpg',
-                            'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>    
-                        <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>     
+                            'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>
+                        <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>
                             <?=  new H4()
                                 ->addClass('mb-1')
                                 ->content('Aye Bee')
@@ -45,18 +45,18 @@ use Yiisoft\Html\Tag\P;
                             <?=  new P()
                                 ->addClass('text-secondary mb-0')
                                 ->content((string) $team['coordinator'])
-                                ->render(); ?>     
+                                ->render(); ?>
                         <?= Html::closeTag('figcaption'); ?>
                     <?= Html::closeTag('figure'); ?>
-                <?= Html::closeTag('div'); ?>                    
+                <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'col-12 col-md-6 col-lg-3']); ?>
             <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm overflow-hidden']); ?>
                 <?= Html::openTag('div', ['class' => 'card-body p-0']); ?>
                     <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
-                        <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/team/team-img-1.jpg', 'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>    
-                        <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>     
+                        <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/team/team-img-1.jpg', 'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>
+                        <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>
                             <?=  new H4()
                                 ->addClass('mb-1')
                                 ->content('Cee Dee')
@@ -66,7 +66,7 @@ use Yiisoft\Html\Tag\P;
                                 ->content((string) $team['assistant'])
                                 ->render(); ?>
                         <?= Html::closeTag('figcaption'); ?>
-                    <?= Html::closeTag('figure'); ?>        
+                    <?= Html::closeTag('figure'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
@@ -74,8 +74,8 @@ use Yiisoft\Html\Tag\P;
             <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm overflow-hidden']); ?>
                 <?= Html::openTag('div', ['class' => 'card-body p-0']); ?>
                     <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
-                        <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/team/team-img-1.jpg', 'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>    
-                        <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>     
+                        <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/team/team-img-1.jpg', 'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>
+                        <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>
                             <?=  new H4()
                                 ->addClass('mb-1')
                                 ->content('Eee Eff')
@@ -85,7 +85,7 @@ use Yiisoft\Html\Tag\P;
                                 ->content((string) $team['assistant'])
                                 ->render(); ?>
                         <?= Html::closeTag('figcaption'); ?>
-                    <?= Html::closeTag('figure'); ?>        
+                    <?= Html::closeTag('figure'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
@@ -93,8 +93,8 @@ use Yiisoft\Html\Tag\P;
             <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm overflow-hidden']); ?>
                 <?= Html::openTag('div', ['class' => 'card-body p-0']); ?>
                     <?= Html::openTag('figure', ['class' => 'm-0 p-0']); ?>
-                        <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/team/team-img-1.jpg', 'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>    
-                        <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>     
+                        <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/team/team-img-1.jpg', 'alt' => '/img/soletrader/team/team-img-1.jpg']); ?>
+                        <?= Html::openTag('figcaption', ['class' => 'm-0 p-4']); ?>
                             <?=  new H4()
                                 ->addClass('mb-1')
                                 ->content('Jee Aich')
@@ -104,7 +104,7 @@ use Yiisoft\Html\Tag\P;
                                 ->content((string) $team['assistant'])
                                 ->render(); ?>
                         <?= Html::closeTag('figcaption'); ?>
-                    <?= Html::closeTag('figure'); ?>        
+                    <?= Html::closeTag('figure'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

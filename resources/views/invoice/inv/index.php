@@ -722,7 +722,7 @@ $columns = [
                                                                         string {
             $statusId = $model->getStatusId();
             if ($statusId === null) {
-                return '<span class="label label-default">N/A</span>';
+                return '<span class="badge text-bg-default">N/A</span>';
             }
             $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
@@ -738,9 +738,9 @@ $columns = [
             }
             
             return '<span data-bs-toggle="tooltip" title="'
-            . Html::encode($label) . '" class="label label-'
+            . Html::encode($label) . '" class="badge text-bg-'
             . $iR->getSpecificStatusArrayClass($statusId) . '">'
-            . $emoji . '</span>';
+            . $emoji . Html::encode($label) . '</span>';
         },
         filter: DropdownFilter::widget()
             ->addAttributes([
@@ -1124,7 +1124,7 @@ $columns = [
         header: '🚚',
         content: static function (Inv $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', [
-                'class' => 'fa fa-plus fa-margin']), $urlGenerator->generate(
+                'class' => 'bi-plus']), $urlGenerator->generate(
                 'del/add',
                 [
 /**

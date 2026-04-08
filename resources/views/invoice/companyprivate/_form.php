@@ -53,7 +53,7 @@ use Yiisoft\Html\Tag\Form;
                         ->header($translator->translate('error.summary'))
                         ->onlyCommonErrors()
 ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?php
     $optionsDataCompany = [];
@@ -80,7 +80,7 @@ foreach ($companies as $company) {
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= $formFields->companyPrivateTextField($form, 'gln', 'gln'); ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?> 
+                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= Html::openTag('label'); ?>
                         <?= Html::encode($form->getLogoFilename()); ?>
                     <?= Html::closeTag('label'); ?>
@@ -96,17 +96,17 @@ foreach ($companies as $company) {
                     <?= $formFields->companyPrivateTextField($form, 'logo_margin', 'company.private.logo.margin'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>               
+                    <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= $formFields->companyPrivateDateField($form, 'start_date', ' (' . $dateHelper->display() . ')'); ?>
-                    <?= Html::closeTag('div'); ?>                                
+                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= Html::openTag('div', ['class' => 'input-group']); ?>               
+                    <?= Html::openTag('div', ['class' => 'input-group']); ?>
                         <?= $formFields->companyPrivateDateField($form, 'end_date', ' (' . $dateHelper->display() . ')'); ?>
-                    <?= Html::closeTag('div'); ?>                                
+                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>    
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= $button::backSave(); ?>
 <?=  new Form()->close() ?>

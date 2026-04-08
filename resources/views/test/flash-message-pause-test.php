@@ -51,13 +51,13 @@ $flash->add('danger', 'Critical error message!', true);
 <body>
     <div class="test-container">
         <h1 class="mb-4">Flash Message Pause Functionality Test</h1>
-        
+
         <div class="instructions">
             <h3>Instructions</h3>
             <ul>
                 <li><strong>Individual Timer Control:</strong> Click on the countdown timer badge on each flash message to pause/resume that specific message</li>
                 <li><strong>Global Controls:</strong> Use the Angular controls in the top-right corner to pause/resume/close all messages at once</li>
-                <li><strong>Visual Indicators:</strong> 
+                <li><strong>Visual Indicators:</strong>
                     <ul>
                         <li>⏸️ icon = message is running</li>
                         <li>▶️ icon = message is paused</li>
@@ -82,13 +82,13 @@ $flash->add('danger', 'Critical error message!', true);
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Flash Message Controls (Standalone) -->
     <script src="/invoice/public/assets/flash-message-controls.js"></script>
-    
+
     <!-- Angular App (if built) - Disabled for now due to build errors -->
     <!-- <script type="module" src="/invoice/angular/dist/main.js"></script> -->
-    
+
     <script>
         // Test functions to add more flash messages
         function addTestMessage() {
@@ -98,11 +98,11 @@ $flash->add('danger', 'Critical error message!', true);
                 'Short message.',
                 'A much longer test message that contains multiple sentences and should demonstrate how the adaptive timing works with content of varying lengths, making sure users have enough time to read everything.'
             ];
-            
+
             const types = ['info', 'success', 'warning', 'danger'];
             const randomMessage = messages[Math.floor(Math.random() * messages.length)];
             const randomType = types[Math.floor(Math.random() * types.length)];
-            
+
             // Create a new flash message element
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert alert-${randomType} alert-dismissible fade show flash-message-fade`;
@@ -111,21 +111,21 @@ $flash->add('danger', 'Critical error message!', true);
                 ${randomMessage}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             `;
-            
+
             // Add to the page
             const container = document.querySelector('.test-container');
             const instructions = container.querySelector('.instructions');
             container.insertBefore(alertDiv, instructions.nextSibling);
-            
+
             // Reinitialize timer
             if (window.flashMessageTimer) {
                 setTimeout(() => window.flashMessageTimer.init(), 100);
             }
         }
-        
+
         function addLongMessage() {
             const longMessage = `This is an exceptionally long test message that is designed to demonstrate the adaptive timing feature of the flash message system. The timer automatically calculates how long this message should remain visible based on the number of words it contains, using an average reading speed to ensure users have adequate time to read and comprehend the entire message. This particular message contains many words and should therefore remain visible for a longer duration than shorter messages, proving that the content-aware timing system is working correctly. You should notice that this message's timer starts with a higher number than the shorter messages.`;
-            
+
             const alertDiv = document.createElement('div');
             alertDiv.className = 'alert alert-primary alert-dismissible fade show flash-message-fade';
             alertDiv.setAttribute('role', 'alert');
@@ -133,11 +133,11 @@ $flash->add('danger', 'Critical error message!', true);
                 ${longMessage}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             `;
-            
+
             const container = document.querySelector('.test-container');
             const instructions = container.querySelector('.instructions');
             container.insertBefore(alertDiv, instructions.nextSibling);
-            
+
             if (window.flashMessageTimer) {
                 setTimeout(() => window.flashMessageTimer.init(), 100);
             }
@@ -146,7 +146,7 @@ $flash->add('danger', 'Critical error message!', true);
         // Debug information
         console.log('Flash Message Pause Test Page Loaded');
         console.log('Available Angular components:', window.ng ? 'Angular loaded' : 'Angular not loaded');
-        
+
         // Monitor flash timer initialization
         setTimeout(() => {
             console.log('Flash Timer Instance:', window.flashMessageTimer ? 'Available' : 'Not available');

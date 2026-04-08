@@ -20,7 +20,7 @@ use Yiisoft\Html\Html;
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $items
- * @var bool $show_custom_fields 
+ * @var bool $show_custom_fields
  * show both top_custom_fields and view_custom_fields
  * @var bool $show_item_discounts
  * @var string $cldr
@@ -39,15 +39,15 @@ $vat = $s->getSetting('enable_vat_registration');
 <?php
     /** Set the locale when the view is being rendered partially i.e. no layout */
     $translator->setLocale($cldr);
-?>    
+?>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1"> 
-</head>    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
 <header class="clearfix">
-    <?= $company_logo_and_address; ?>    
+    <?= $company_logo_and_address; ?>
     <div id="client">
         <div>
             <b><?= Html::encode($inv->getClient()?->getClientName()); ?></b>
@@ -110,7 +110,7 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
             <tr>
                 <td>
                     <?php echo $translator->translate('date.issued') . ':'; ?>
-                </td>                     
+                </td>
                 <td>
     <?php echo Html::encode(!is_string($dateCreated = $inv->getDateCreated())
                                     ? $dateCreated->format('Y-m-d') : ''); ?>
@@ -137,9 +137,9 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
                                         ? $dateDueNext->format('Y-m-d') : ''); ?>
                 </td>
             </tr>
-            <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>    
+            <tr><?= $show_custom_fields ? $top_custom_fields : ''; ?></tr>
         </table>
-    </div>    
+    </div>
     <h3 class="invoice-title">
         <b><?= $vat === '0' ? Html::encode(
                 $translator->translate('invoice')
@@ -237,7 +237,7 @@ $invItemAllowanceCharge->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent
                     ?>
                         </td>
                         <td class="text-right">
-                            
+
                         </td>
                         <td class="text-right">
                         </td>
@@ -288,7 +288,7 @@ $invItemAllowanceCharge->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent
                         </td>
                         <td class="text-right">
                             <b>
-                           
+
                             </b>
                         </td>
                     </tr>
@@ -311,12 +311,12 @@ $invItemAllowanceCharge->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent
                     . "-" . Html::encode($translator->translate('discount'))
                     . ") x " . Html::encode($translator->translate('qty')); ?>
             </td>
-            <?php } else { ?>            
+            <?php } else { ?>
             <td <?php echo($show_item_discounts ? 'colspan="7"' : 'colspan="6"'); ?>
                     class="text-right"><?= Html::encode(
                         $translator->translate('subtotal'),
-                    ); ?></td> 
-            <?php } ?> 
+                    ); ?></td>
+            <?php } ?>
             <td class="text-right"></td>
             <td class="text-right">
                 <b><?php echo Html::encode($s->formatCurrency(
@@ -387,7 +387,7 @@ $invItemAllowanceCharge->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent
             </tr>
         <?php }
         } ?>
-            
+
         <?php if ($vat == '0') { ?>
         <?php
 /**
@@ -454,7 +454,7 @@ echo $total != 0 ? number_format(100 * ($tax / $total), 2) : '0.00';
 <?php echo Html::encode($s->formatCurrency(
                                       $inv_amount->getPackHandleShipTax())); ?>
             </td>
-        </tr>    
+        </tr>
         <tr>
             <td
 <?php echo $show_item_discounts ? 'colspan="7"' : 'colspan="6"'; ?>

@@ -19,15 +19,15 @@ use Yiisoft\Html\Tag\Button;
 
 <?= Html::openTag('section', ['id' => 'About', 'class' => 'py-5 py-xl-8']); ?>
     <?= Html::openTag('div', ['class' => 'container']); ?>
-        <?= Html::openTag('div', ['class' => 'row gy-5 gy-lg-0 align-items-lg-center']); ?> 
+        <?= Html::openTag('div', ['class' => 'row gy-5 gy-lg-0 align-items-lg-center']); ?>
             <?= Html::openTag('div', ['class' => 'col-12 col-lg-6']); ?>
-                <?php if ($s->getSetting('debug_mode') == '1') { ?>  
-                    <?= Html::openTag('i', ['class' => 'bi bi-info-circle', 'data-bs-toggle' => 'tooltip', 'title' => 'invoice/public/img/soletrader/about/about.png']); ?>   
+                <?php if ($s->getSetting('debug_mode') == '1') { ?>
+                    <?= Html::openTag('i', ['class' => 'bi bi-info-circle', 'data-bs-toggle' => 'tooltip', 'title' => 'invoice/public/img/soletrader/about/about.png']); ?>
                     <?= Html::closeTag('i'); ?>
                 <?php } ?>
-                <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/about/about.png', 'alt' => '/img/soletrader/about/about.png']); ?>    
+                <?= Html::tag('img', '', ['class' => 'img-fluid rounded', 'loading' => 'lazy', 'src' => '/img/soletrader/about/about.png', 'alt' => '/img/soletrader/about/about.png']); ?>
             <?= Html::closeTag('div'); ?>
-                  
+
             <?= Html::openTag('div', ['class' => 'col-12 col-lg-6']); ?>
                 <?= Html::openTag('div', ['class' => 'row justify-content-xl-end']); ?>
                     <?= Html::openTag('div', ['class' => 'col-12 col-xl-11']); ?>
@@ -39,9 +39,9 @@ use Yiisoft\Html\Tag\Button;
                         <?=  new P()
                             ->addClass('fs-4 mb-5')
                             ->content((string) $about['choose'])
-                            ->render(); ?>    
+                            ->render(); ?>
                         <?= Html::openTag('div', ['class' => 'accordion accordion-flush', 'id' => 'accordionExample']); ?>
-                            <?= Html::openTag('div', ['class' => 'accordion-item']); ?>   
+                            <?= Html::openTag('div', ['class' => 'accordion-item']); ?>
                                 <?= Html::openTag('h2', ['class' => 'accordion-header', 'id' => 'headingOne']); ?>
                                     <?=  new Button()
                                         ->addAttributes(
@@ -58,7 +58,7 @@ use Yiisoft\Html\Tag\Button;
                                         ->content((string) $about['competitive'])
                                         ->render(); ?>
                                 <?= Html::closeTag('h2'); ?>
-                                <?= Html::openTag('div', ['id' => 'collapseOne', 'class' => 'accordion-collapse collapse show', 'aria-labelledby' => 'headingOne', 'data-bs-parent' => '#accordionExample']); ?>    
+                                <?= Html::openTag('div', ['id' => 'collapseOne', 'class' => 'accordion-collapse collapse show', 'aria-labelledby' => 'headingOne', 'data-bs-parent' => '#accordionExample']); ?>
                                     <?= Html::openTag('div', ['class' => 'accordion-body']); ?>
                                         <?=
 // Without sacrificing quality
@@ -83,7 +83,7 @@ use Yiisoft\Html\Tag\Button;
                                         ->content((string) $about['contemporary'])
                                         ->render(); ?>
                                 <?= Html::closeTag('h2'); ?>
-                                <?= Html::openTag('div', ['id' => 'collapseTwo', 'class' => 'accordion-collapse collapse', 'aria-labelledby' => 'headingTwo', 'data-bs-parent' => '#accordionExample']); ?>    
+                                <?= Html::openTag('div', ['id' => 'collapseTwo', 'class' => 'accordion-collapse collapse', 'aria-labelledby' => 'headingTwo', 'data-bs-parent' => '#accordionExample']); ?>
                                     <?= Html::openTag('div', ['class' => 'accordion-body']); ?>
                                         <?= (string) $about['trained']; ?>
                                     <?= Html::closeTag('div'); ?>
@@ -106,41 +106,41 @@ use Yiisoft\Html\Tag\Button;
                                         ->content((string) $about['willing'])
                                         ->render(); ?>
                                 <?= Html::closeTag('h2'); ?>
-                                <?= Html::openTag('div', ['id' => 'collapseThree', 'class' => 'accordion-collapse collapse', 'aria-labelledby' => 'headingThree', 'data-bs-parent' => '#accordionExample']); ?>    
+                                <?= Html::openTag('div', ['id' => 'collapseThree', 'class' => 'accordion-collapse collapse', 'aria-labelledby' => 'headingThree', 'data-bs-parent' => '#accordionExample']); ?>
                                     <?= Html::openTag('div', ['class' => 'accordion-body']); ?>
                                         <?= (string) $about['dissatisfaction']; ?>. <?= (string) $about['simply']; ?>
                                     <?= Html::closeTag('div'); ?>
                                 <?= Html::closeTag('div'); ?>
                             <?= Html::closeTag('div'); ?>
-                        <?= Html::closeTag('div'); ?>                    
+                        <?= Html::closeTag('div'); ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>                                
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'container pt-5 pt-xl-8']); ?>
-        <?= Html::openTag('div', ['class' => 'row gy-4']); ?>    
-            <?= Html::openTag('div', ['class' => 'col-12 col-sm-6 col-xl-3']); ?>    
+        <?= Html::openTag('div', ['class' => 'row gy-4']); ?>
+            <?= Html::openTag('div', ['class' => 'col-12 col-sm-6 col-xl-3']); ?>
                 <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm']); ?>
                     <?= Html::openTag('div', ['class' => 'card-body text-center p-4 p-xxl-5']); ?>
-                        <?= Html::openTag('div', ['class' => 'btn btn-primary pe-none mb-2 text-primary border-0']); ?>                
+                        <?= Html::openTag('div', ['class' => 'btn btn-primary pe-none mb-2 text-primary border-0']); ?>
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
                               <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
                               <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z" />
                             </svg>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('h3', ['class' => 'h1 mb-2']); ?>
-                            <?= Html::encode('100+'); ?>           
+                            <?= Html::encode('100+'); ?>
                         <?= Html::closeTag('h3'); ?>
                         <?=  new P()
                             ->addClass('fs-5 mb-0')
 // Happy Customers
                             ->content((string) $about['happy'])
-                            ->render(); ?>    
+                            ->render(); ?>
                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
-        
+
             <?= Html::openTag('div', ['class' => 'col-12 col-sm-6 col-xl-3']); ?>
                 <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm']); ?>
                     <?= Html::openTag('div', ['class' => 'card-body text-center p-4 p-xxl-5']); ?>
@@ -151,8 +151,8 @@ use Yiisoft\Html\Tag\Button;
                             </svg>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('h3', ['class' => 'h1 mb-2']); ?>
-                                <?= Html::encode('100+'); ?>           
-                        <?= Html::closeTag('h3'); ?>                    
+                                <?= Html::encode('100+'); ?>
+                        <?= Html::closeTag('h3'); ?>
                         <?=  new P()
                                 ->addClass('fs-5 mb-0 text-secondary')
 // Issues Solved
@@ -171,16 +171,16 @@ use Yiisoft\Html\Tag\Button;
                              </svg>
                         <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('h3', ['class' => 'h1 mb-2']); ?>
-                            <?= Html::encode('100+'); ?>           
+                            <?= Html::encode('100+'); ?>
                         <?= Html::closeTag('h3'); ?>
                         <?=  new P()
                             ->addClass('fs-5 mb-0 text-secondary')
 // Finished Projects
                             ->content((string) $about['finished'])
                             ->render(); ?>
-                    <?= Html::closeTag('div'); ?>                    
+                    <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
-            <?= Html::closeTag('div'); ?>                       
+            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'col-12 col-sm-6 col-xl-3']); ?>
                 <?= Html::openTag('div', ['class' => 'card border-0 border-bottom border-primary shadow-sm']); ?>
                     <?= Html::openTag('div', ['class' => 'card-body text-center p-4 p-xxl-5']); ?>
@@ -189,19 +189,19 @@ use Yiisoft\Html\Tag\Button;
                                 <path d="M7 8a3.5 3.5 0 0 1 3.5 3.555.5.5 0 0 0 .625.492A1.503 1.503 0 0 1 13 13.5a1.5 1.5 0 0 1-1.5 1.5H3a2 2 0 1 1 .1-3.998.5.5 0 0 0 .509-.375A3.502 3.502 0 0 1 7 8zm4.473 3a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5h-.027z" />
                                 <path d="M11.286 1.778a.5.5 0 0 0-.565-.755 4.595 4.595 0 0 0-3.18 5.003 5.46 5.46 0 0 1 1.055.209A3.603 3.603 0 0 1 9.83 2.617a4.593 4.593 0 0 0 4.31 5.744 3.576 3.576 0 0 1-2.241.634c.162.317.295.652.394 1a4.59 4.59 0 0 0 3.624-2.04.5.5 0 0 0-.565-.755 3.593 3.593 0 0 1-4.065-5.422z" />
                             </svg>
-                        <?= Html::closeTag('div'); ?>                   
+                        <?= Html::closeTag('div'); ?>
                         <?= Html::openTag('h3', ['class' => 'h1 mb-2']); ?>
-                            <?= Html::encode('100+'); ?>           
+                            <?= Html::encode('100+'); ?>
                         <?= Html::closeTag('h3'); ?>
                         <?=  new P()
                             ->addClass('fs-5 mb-0 text-secondary')
 // Return Customers
                             ->content((string) $about['return'])
                             ->render(); ?>
-                     <?= Html::closeTag('div'); ?>                    
+                     <?= Html::closeTag('div'); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>                            
+        <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('footer'); ?>
         <?= Html::tag('br'); ?>
@@ -209,7 +209,7 @@ use Yiisoft\Html\Tag\Button;
                 ->href('https://bootstrapbrain.com/template/free-bootstrap-5-multipurpose-one-page-template-wave/#pricing')
 // Acknowledgement to Bootstrap Brain
                 ->content('Acknowledgement to Bootstrap Brain')
-                ->render(); ?> 
+                ->render(); ?>
     <?= Html::closeTag('footer'); ?>
 <?= Html::closeTag('section'); ?>
 

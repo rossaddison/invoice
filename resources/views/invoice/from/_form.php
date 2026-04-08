@@ -33,7 +33,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -53,7 +53,7 @@ use Yiisoft\Html\Tag\Form;
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
     ->ariaDescribedBy($translator->translate('from.include.in.dropdown'))
-?>       
+?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
@@ -61,7 +61,7 @@ use Yiisoft\Html\Tag\Form;
     ->inputLabelAttributes(['class' => 'form-check-label'])
     ->inputClass('form-check-input')
     ->ariaDescribedBy($translator->translate('from.default.in.dropdown'))
-?>     
+?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::email($form, 'email')
@@ -69,7 +69,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'placeholder' => $translator->translate('email'),
         'value' => Html::encode($form->getEmail() ?? ''),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'email',
     ])
     ->hint($translator->translate('hint.this.field.is.required'));

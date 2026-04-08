@@ -50,15 +50,15 @@ use Yiisoft\Html\Html;
                             <?php } ?>
                         </select>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <button class="so_to_invoice_confirm btn btn-success" id="so_to_invoice_confirm" type="button">
-                        <i class="fa fa-check"></i> <?= $translator->translate('submit'); ?>
+                        <i class="bi bi-check-lg"></i> <?= $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

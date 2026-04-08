@@ -34,14 +34,14 @@ if ($errors) {
         <div class="card-body">
             <form method="POST" action="<?= $urlGenerator->generate($actionName, $actionArguments); ?>">
                 <?= Html::hiddenInput('_csrf', $csrf); ?>
-                
+
                 <div class="mb-3">
                     <label for="peppol_po_itemid" class="form-label">
                         <?= $translator->translate('peppol'); ?> PO Item ID
                     </label>
                     <?= Html::textInput('peppol_po_itemid', Html::encode($body['peppol_po_itemid'] ?? ''), [
                         'id' => 'peppol_po_itemid',
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'maxlength' => 8,
                         'placeholder' => 'Max 8 characters'
                     ]); ?>
@@ -56,7 +56,7 @@ if ($errors) {
                     </label>
                     <?= Html::textInput('peppol_po_lineid', Html::encode($body['peppol_po_lineid'] ?? ''), [
                         'id' => 'peppol_po_lineid',
-                        'class' => 'form-control',
+                        'class' => 'form-control form-control-lg',
                         'maxlength' => 8,
                         'placeholder' => 'Max 8 characters'
                     ]); ?>

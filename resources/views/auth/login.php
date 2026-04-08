@@ -35,7 +35,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
      echo H::closeTag('h1');
     echo H::closeTag('div');
     echo H::openTag('div', ['class' => (string) $class[7]]);
-    
+
     /**
      * Note: The links are authRouted.
      * because these are absolute links that go to Identity Providers e.g.
@@ -62,7 +62,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
                 $provider
         );
         }
-    }; 
+    };
 
     $btn = new Button($currentRoute, $translator, $urlGenerator);
     $tfaEnabled = 'two.factor.authentication.enabled';
@@ -71,8 +71,8 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
             && null !== $openBankChoice) {
                 echo '<br><br>';
                 $btn->openbanking($openBankingAuthUrl ?: '', $openBankChoice);
-    } 
-    
+    }
+
     echo H::closeTag('div');
     if (($s->getSetting('enable_tfa') == '1')) {
       echo H::openTag('div', [

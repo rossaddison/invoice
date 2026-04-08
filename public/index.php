@@ -32,6 +32,10 @@ if (PHP_SAPI === 'cli-server') {
 chdir(dirname(__DIR__));
 require_once dirname(__DIR__) . '/autoload.php';
 
+// Suppress E_DEPRECATED from vendor libraries (e.g. curl_close in payment SDKs)
+// that cannot be patched directly. Remove once upstream packages are updated.
+error_reporting(E_ALL & ~E_DEPRECATED);
+
 // Run HTTP application runner
 $runner = new HttpApplicationRunner(
     rootPath: dirname(__DIR__),

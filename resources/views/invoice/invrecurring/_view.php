@@ -34,12 +34,12 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($title) ?>
 <?= Html::closeTag('h1'); ?>
-<?= Html::openTag('div', ['id' => 'headerbar']); ?>    
+<?= Html::openTag('div', ['id' => 'headerbar']); ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
-        <?= Html::openTag('div', ['class' => 'row']); ?>            
+        <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('p'); ?>
                     <?= $translator->translate('recurring.original.invoice.date') . '(' . $dateHelper->display() . ')'; ?>
@@ -49,7 +49,7 @@ use Yiisoft\Html\Tag\Form;
                     <?= Field::hidden($form, 'inv_id')
                         ->hideLabel();
 ?>
-                <?= Html::closeTag('div'); ?>       
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?php
     $optionsDataFrequency = [];
@@ -60,7 +60,7 @@ use Yiisoft\Html\Tag\Form;
 foreach ($numberHelper->recurFrequencies() as $key => $value) {
     $optionsDataFrequency[$key] = $translator->translate($value);
 }
-?> 
+?>
                     <?=
     /**
      * Purpose: Changing this frequency will calculate the start date from the current (above) immutable invoice date
@@ -80,7 +80,7 @@ foreach ($numberHelper->recurFrequencies() as $key => $value) {
         ->label($translator->translate('start') . " (" . $dateHelper->display() . ") ")
         ->value(!is_string($start = $form->getStart()) ? $start?->format('Y-m-d') : '');
 ?>
-                <?= Html::closeTag('div'); ?>                
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'next')
     ->label($translator->translate('next') . " (" . $dateHelper->display() . ") ")
@@ -91,7 +91,7 @@ foreach ($numberHelper->recurFrequencies() as $key => $value) {
     ])
     ->readonly(true);
 ?>
-                <?= Html::closeTag('div'); ?>                
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'end')
         ->label($translator->translate('end') . " (" . $dateHelper->display() . ") ")

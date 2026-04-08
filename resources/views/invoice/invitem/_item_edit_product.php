@@ -48,14 +48,14 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
             ])
             ->content(' ' . $translator->translate('product'));
 ?>
-    <?= Html::closeTag('div'); ?>    
+    <?= Html::closeTag('div'); ?>
     <?=  new Form()
 ->post($urlGenerator->generate($actionName, $actionArguments))
 ->enctypeMultipartFormData()
 ->csrf($csrf)
 ->id('InvItemForm')
 ->open() ?>
-        
+
         <?= Html::openTag('div',
                 ['class' => 'table-striped table-responsive']); ?>
             <?= Html::openTag('table',
@@ -67,7 +67,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('td',
                                 ['rowspan' => '2', 'class' => 'td-icon']); ?>
                             <?=  new I()
-                                ->addClass('fa fa-arrows cursor-move'); ?>
+                                ->addClass('bi bi-grip-vertical cursor-move'); ?>
                                 <?php if ($isRecurring) : ?>
                                     <?= Html::tag('br'); ?>
                                         <?=  new I()
@@ -75,7 +75,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                             'title' => $translator->translate(
                                                     'recurring'),
                                             'class' =>
-        'js-item-recurrence-toggler cursor-pointer fa fa-calendar-o text-muted',
+        'js-item-recurrence-toggler cursor-pointer bi bi-calendar text-muted',
                                         ]);
                                     ?>
                                     <?= Html::openTag('input',
@@ -195,7 +195,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                             'tax.rate') :
                                             $translator->translate('vat.rate'))
                                     ->addInputAttributes(
-                                        ['class' => 'form-control'])
+                                        ['class' => 'form-control form-control-lg',])
                                     ->optionsData($optionsDataTaxRate)
                                     ->value(Html::encode($form->getTaxRateId()))
                                     ->hint($translator->translate(
@@ -213,7 +213,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 'class' => 'btn btn-info',
                                 'data-toggle' => 'tooltip',
                                 'title' => 'invitem/addProduct']); ?>
-                                <?=  new I()->addClass('fa fa-plus'); ?>
+                                <?=  new I()->addClass('bi bi-plus-lg'); ?>
                                 <?= $translator->translate('save'); ?>
                             <?= Html::closeTag('button'); ?>
                         <?= Html::closeTag('td'); ?>
@@ -264,7 +264,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     ->label(
                                          $translator->translate('product.unit'))
                                     ->addInputAttributes(
-                                            ['class' => 'form-control'])
+                                            ['class' => 'form-control form-control-lg',])
                                     ->optionsData($optionsDataProductUnit)
                                     ->value(Html::encode(
                                         $form->getProductUnitId() ?? ''))
@@ -294,7 +294,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('td',
                                 ['class' => 'td-amount td-vert-middle']); ?>
                         <?= Html::closeTag('td'); ?>
-                    <?= Html::closeTag('tr'); ?>        
+                    <?= Html::closeTag('tr'); ?>
                 <?= Html::closeTag('tbody'); ?>
             <?= Html::closeTag('table'); ?>
         <?= Html::closeTag('div'); ?>
@@ -304,7 +304,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         ['hidden' => 'hidden',
                             'class' =>
             'btn_inv_item_add_row btn btn-primary btn-md active bi bi-plus'])
-                    ->content($translator->translate('add.new.row')); ?>           
+                    ->content($translator->translate('add.new.row')); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?=  new Form()->close(); ?>

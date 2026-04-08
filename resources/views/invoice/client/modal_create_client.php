@@ -13,10 +13,10 @@ use Yiisoft\Html\Html;
 ?>
 <div id="create-client" class="modal modal-lg" role="dialog" aria-labelledby="modal_create_client" aria-hidden="true">
     <form class="modal-content">
-      <div class="modal-body">  
+      <div class="modal-body">
         <div class="modal-header">
-            <button type="button" class="close" data-bs-dismiss"modal"><i class="fa fa-times-circle"></i></button>
-        </div>        
+            <button type="button" class="close" data-bs-dismiss"modal"><i class="bi bi-x-circle"></i></button>
+        </div>
         <div class="modal-header">
             <h5 class="col-12 modal-title text-center"><?php echo $translator->translate('add.client'); ?></h5>
             <br>
@@ -36,11 +36,11 @@ use Yiisoft\Html\Html;
         <div class="modal-header">
             <div class="btn-group">
                 <button class="client_create_confirm btn btn-success" id="client_create_confirm" type="button">
-                    <i class="fa fa-check"></i>
+                    <i class="bi bi-check-lg"></i>
                     <?= $translator->translate('submit'); ?>
                 </button>
             </div>
         </div>
-      </div>    
+      </div>
     </form>
 </div>

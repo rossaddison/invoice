@@ -49,7 +49,7 @@ final readonly class NumberHelper
     public function __construct(private SRepo $s)
     {
     }
-    
+
     /**
      * @param mixed|null $amount
      */
@@ -122,7 +122,7 @@ final readonly class NumberHelper
     {
         $quote_allowance_charge_amount_total = 0.00;
         $quote_allowance_charge_tax_total = 0.00;
-        
+
         // Get all items that belong to a specific quote by accessing $qiR
         // Sum all these item's amounts
         // -------------------------
@@ -130,8 +130,8 @@ final readonly class NumberHelper
         // -------------------------
         $quote_item_amounts = $this->quoteCalculateTotalsofItemTotals(
             $quote_id, $qiR, $qiaR);
-        
-        // individual quote_item_amount['subtotal'] already includes 
+
+        // individual quote_item_amount['subtotal'] already includes
         // charges and allowances
         $quote_item_subtotal_discount_inclusive =
             (float) $quote_item_amounts['subtotal']
@@ -149,7 +149,7 @@ final readonly class NumberHelper
             // No Quote Taxes are allowed under the VAT regime.
             $quote_tax_rate_total = 0.00;
         }
-        
+
         $quote_allowance_charges = $acqR->repoACQquery($quote_id);
         /** @var QuoteAllowanceCharge $quote_allowance_charge */
         foreach ($quote_allowance_charges as $quote_allowance_charge) {
@@ -167,7 +167,7 @@ final readonly class NumberHelper
                     (float) $quote_allowance_charge->getVatOrTax();
             }
         }
-        
+
         //--------------------------------------------------
         // Before Early Cash Settlement Discount and Charge
         // -------------------------------------------------
@@ -176,7 +176,7 @@ final readonly class NumberHelper
             + $quote_tax_rate_total
             + $quote_allowance_charge_amount_total
             + $quote_allowance_charge_tax_total;
-        
+
         //------------------------------------------------
         // Final Grand Total after Applying Cash Discount
         // -----------------------------------------------
@@ -239,7 +239,7 @@ final readonly class NumberHelper
             $qaR->save($quote_amount);
         }
     }
-    
+
     /**
      * @param $salesorder_id
      */
@@ -250,7 +250,7 @@ final readonly class NumberHelper
     {
         $salesorder_allowance_charge_amount_total = 0.00;
         $salesorder_allowance_charge_tax_total = 0.00;
-        
+
         // Get all items that belong to a specific salesorder by accessing $soiR
         // Sum all these item's amounts
         // -------------------------
@@ -258,7 +258,7 @@ final readonly class NumberHelper
         // -------------------------
         $salesorder_item_amounts = $this->salesorderCalculateTotalsofItemTotals(
             $salesorder_id, $soiR, $soiaR);
-        
+
         // individual salesorder_item_amount['subtotal'] already includes
         // charges and allowances
         $salesorder_item_subtotal_discount_inclusive =
@@ -277,7 +277,7 @@ final readonly class NumberHelper
             // No SalesOrder Taxes are allowed under the VAT regime.
             $salesorder_tax_rate_total = 0.00;
         }
-        
+
         $salesorder_allowance_charges = $acsoR->repoACSOquery($salesorder_id);
         /** @var SalesOrderAllowanceCharge $salesorder_allowance_charge */
         foreach ($salesorder_allowance_charges as $salesorder_allowance_charge) {
@@ -295,7 +295,7 @@ final readonly class NumberHelper
                     (float) $salesorder_allowance_charge->getVatOrTax();
             }
         }
-        
+
         //--------------------------------------------------
         // Before Early Cash Settlement Discount and Charge
         // -------------------------------------------------
@@ -304,7 +304,7 @@ final readonly class NumberHelper
             + $salesorder_tax_rate_total
             + $salesorder_allowance_charge_amount_total
             + $salesorder_allowance_charge_tax_total;
-        
+
         //------------------------------------------------
         // Final Grand Total after Applying Cash Discount
         // -----------------------------------------------
@@ -486,7 +486,7 @@ final readonly class NumberHelper
             }
         }
         if (($count === 0) && ($count_inv_amount === 0)) {
-            // Create an Invoice  Amount Record for this invoice if it does not 
+            // Create an Invoice  Amount Record for this invoice if it does not
             // exist even if there are no items
             $inv_amount = new InvAmount();
             $inv_amount->setInvId((int) $inv_id);
@@ -569,7 +569,7 @@ final readonly class NumberHelper
         }
         return $totals;
     }
-    
+
     /**
      * @param $quote_id
      *
@@ -655,7 +655,7 @@ final readonly class NumberHelper
             if (($sR->getSetting('read_only_toggle') === (string) 4)
                     && null !== $invoice) {
 // Force the user to set the status to read-only manually i.e. view..edit  if
-// it is a deliberate zero invoice i.e. `paid` and `total` equaling zero .... 
+// it is a deliberate zero invoice i.e. `paid` and `total` equaling zero ....
 // here by only setting to read only if `paid` and `total` are greater than zero.
             if ($balance == 0.00
                     && ($invoice->getInvAmount()->getPaid() > 0.00)
@@ -739,11 +739,11 @@ final readonly class NumberHelper
 // Subtract Quote Table's discount amount from Quote Amount Table's quote_total
 // Discount and Percent are mutually exclusive ie. if you use the one you
 // exclude the other. Discount amount is the user inputed amount on the quote
-// representing a cash discount. Discount percent is the user inputed 
+// representing a cash discount. Discount percent is the user inputed
 // percentage on the quote representing a cash percentage
         return $total - $discount_amount;
     }
-    
+
     /**
      * @param string $salesorder_id
      * @param float $salesorder_total
@@ -837,7 +837,7 @@ final readonly class NumberHelper
         }
         return $total_quote_tax_rate_amount;
     }
-    
+
     /**
      * Related logic: see SalesOrderController function defaultTaxSalesorder
      * @param string $salesorder_id
@@ -914,7 +914,7 @@ final readonly class NumberHelper
                             + ($inv_amount->getItemTaxTotal() ?: 0.00))
                             * ($inv_tax_rate->getTaxRate()?->getTaxRatePercent()
                                     ?? 0.00) / 100.00)
-// The invoice tax rate should not include the applied item tax so get the 
+// The invoice tax rate should not include the applied item tax so get the
 // general tax rate from Tax Rate table
                             : (($inv_amount->getItemSubtotal() ?: 0.00)
                             * (($inv_tax_rate->getTaxRate()?->getTaxRatePercent()

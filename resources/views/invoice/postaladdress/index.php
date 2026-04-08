@@ -87,7 +87,7 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (PostalAddress $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']),
                 $urlGenerator->generate('postaladdress/view',
                     ['id' => $model->getId()]), []);
         },
@@ -95,7 +95,7 @@ $columns = [
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (PostalAddress $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']),
                 $urlGenerator->generate('postaladdress/edit',
                     ['id' => $model->getId()]), []);
         },
@@ -107,7 +107,7 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',

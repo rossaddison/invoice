@@ -21,7 +21,7 @@ echo H::openTag('div', ['class' => 'border border-1 border-warning']); //1
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_alert_message_font]',
     'id' => 'settings[bootstrap5_alert_message_font]',
-    'class' => 'form-control',
+    'class' => 'form-control form-control-lg',
    ]);
     echo  new Option()->value('0')->content('Arial');
    /**
@@ -44,7 +44,7 @@ echo H::openTag('div', ['class' => 'border border-1 border-warning']); //1
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_alert_message_font_size]',
     'id' => 'settings[bootstrap5_alert_message_font_size]',
-    'class' => 'form-control',
+    'class' => 'form-control form-control-lg',
    ]);
     echo  new Option()->value('0')->content('10');
    /**
@@ -67,7 +67,7 @@ echo H::openTag('div', ['class' => 'border border-1 border-warning']); //1
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_alert_close_button_font_size]',
     'id' => 'settings[bootstrap5_alert_close_button_font_size]',
-    'class' => 'form-control',
+    'class' => 'form-control form-control-lg',
    ]);
     echo  new Option()->value('0')->content('10');
    /**

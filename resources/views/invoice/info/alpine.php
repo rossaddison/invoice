@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 ?>
 
-<div style='font-size: 18px;'>
+<div style="font-size: calc(var(--inv-form-fs) + 2px);">
 <p><b>How can I setup this repository onto Linux Alpine, Apache2, mySql/mariadb and php?</b><p>
 <p>To set up the rossaddison/invoice repository on Linux Alpine using Apache2, MySQL/MariaDB, and PHP, follow these steps:</p>
 

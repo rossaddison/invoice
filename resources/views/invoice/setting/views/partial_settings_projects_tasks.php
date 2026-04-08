@@ -11,6 +11,7 @@ use Yiisoft\Html\Tag\Option;
 * @var array $body
 */
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
   'class' => 'col-xs-12 col-md-8 col-md-offset-2'
@@ -30,7 +31,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        $s->getSetting('projects_enabled');
        echo H::openTag('select', [
         'name' => 'settings[projects_enabled]',
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'settings[projects_enabled]'
        ]);
         $options = [
@@ -46,7 +47,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->selected(
           $value == ($body['settings[projects_enabled]'] ?? '0')
          )
-         ->content(H::encode($label));
+         ->content($label);
         }
        echo H::closeTag('select');
       echo H::closeTag('div'); //7

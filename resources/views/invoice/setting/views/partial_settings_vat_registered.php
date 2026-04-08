@@ -19,6 +19,7 @@ $panelBody = ['class' => 'panel-body'];
 $formGroup = ['class' => 'form-group'];
 $checkbox = ['class' => 'checkbox'];
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
   echo H::openTag('div', $panel); //3

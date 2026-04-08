@@ -21,7 +21,7 @@ class Qa
        #[Column(type: 'integer(2)', nullable: true, default: 0)]
        private ?int $sort_order = null,
        #[Column(type: 'tinyInteger(1)', nullable: false, default: 0)]
-       private ?int $active = 0,     
+       private ?int $active = 0,
     ){}
 
     public function getId(): ?int

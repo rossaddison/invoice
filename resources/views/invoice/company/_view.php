@@ -27,17 +27,17 @@ echo new Form()
     ->enctypeMultipartFormData()
     ->csrf($csrf)
     ->id('CompanyForm')
-    ->open(); 
+    ->open();
 
  echo Html::openTag('div', ['class' => 'headerbar']); //1
- echo $button::back();  
+ echo $button::back();
   echo Html::openTag('div', ['id' => 'content']); //2
    echo Html::openTag('div', ['class' => 'row']);//3
-   echo Html::closeTag('div'); //3   
+   echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
     echo Field::hidden($form, 'id')
          ->addInputAttributes([
-              'class' => 'form-control',
+              'class' => 'form-control form-control-lg',
          ])
          ->hideLabel()
          ->value(Html::encode($form->getId() ??  ''));
@@ -48,13 +48,13 @@ echo new Form()
          ->inputClass('form-check-input')
          ->ariaDescribedBy($translator->translate('active'))
          ->disabled(true);
-   echo Html::closeTag('div'); //3    
+   echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
     echo Field::text($form, 'name')
          ->label($translator->translate('name'))
          ->addInputAttributes([
             'placeholder' => $translator->translate('name'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
          ])
          ->required(true)
          ->value(Html::encode($form->getName() ?? ''))
@@ -65,7 +65,7 @@ echo new Form()
          ->label($translator->translate('email'))
          ->addInputAttributes([
             'placeholder' => $translator->translate('email'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
          ])
          ->required(true)
          ->value(Html::encode($form->getEmail() ?? ''))
@@ -76,7 +76,7 @@ echo new Form()
          ->label($translator->translate('web'))
          ->addInputAttributes([
             'placeholder' => $translator->translate('web'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
          ])
          ->value(Html::encode($form->getWeb() ?? ''))
          ->disabled(true);
@@ -86,7 +86,7 @@ echo new Form()
          ->label($translator->translate('street.address'))
          ->addInputAttributes([
             'placeholder' => $translator->translate('street.address'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
          ])
          ->value(Html::encode($form->getAddress1() ?? ''))
          ->disabled(true);
@@ -96,7 +96,7 @@ echo new Form()
          ->label($translator->translate('street.address.2'))
          ->addInputAttributes([
             'placeholder' => $translator->translate('street.address.2'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
          ])
          ->value(Html::encode($form->getAddress2() ?? ''))
          ->disabled(true);
@@ -106,7 +106,7 @@ echo new Form()
          ->label($translator->translate('city'))
          ->addInputAttributes([
             'placeholder' => $translator->translate('city'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
          ])
          ->value(Html::encode($form->getCity() ?? ''))
          ->disabled(true);
@@ -116,7 +116,7 @@ echo new Form()
          ->label($translator->translate('state'))
          ->addInputAttributes([
             'placeholder' => $translator->translate('state'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
          ])
          ->value(Html::encode($form->getState() ?? ''))
          ->disabled(true);
@@ -126,7 +126,7 @@ echo new Form()
          ->label($translator->translate('zip'))
          ->addInputAttributes([
             'placeholder' => $translator->translate('zip'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
          ])
          ->value(Html::encode($form->getZip() ?? ''))
          ->disabled(true);
@@ -136,7 +136,7 @@ echo new Form()
          ->label($translator->translate('country'))
          ->addInputAttributes([
            'placeholder' => $translator->translate('country'),
-           'class' => 'form-control',
+           'class' => 'form-control form-control-lg',
          ])
          ->value(Html::encode($form->getCountry() ?? ''))
          ->disabled(true);
@@ -146,7 +146,7 @@ echo new Form()
          ->label($translator->translate('phone'))
          ->addInputAttributes([
             'placeholder' => $translator->translate('phone'),
-            'class' => 'form-control',
+            'class' => 'form-control form-control-lg',
          ])
          ->value(Html::encode($form->getPhone() ?? ''))
          ->disabled(true);
@@ -156,7 +156,7 @@ echo new Form()
          ->label($translator->translate('fax'))
          ->addInputAttributes([
             'placeholder' => $translator->translate('fax'),
-             'class' => 'form-control',
+             'class' => 'form-control form-control-lg',
          ])
          ->value(Html::encode($form->getFax() ?? ''))
          ->disabled(true);

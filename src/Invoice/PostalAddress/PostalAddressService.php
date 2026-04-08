@@ -21,29 +21,29 @@ final readonly class PostalAddressService
         PostalAddress $model,
         array $array
     ): void {
-        isset($array['id']) ? 
+        isset($array['id']) ?
             $model->setId((int) $array['id']) : '';
-        isset($array['client_id']) ? 
+        isset($array['client_id']) ?
             $model->setClientId((int) $array['client_id']) : '';
-        isset($array['street_name']) ? 
+        isset($array['street_name']) ?
             $model->setStreetName(
                 (string) $array['street_name']) : '';
-        isset($array['additional_street_name']) ? 
+        isset($array['additional_street_name']) ?
             $model->setAdditionalStreetName(
                 (string) $array['additional_street_name']) : '';
-        isset($array['building_number']) ? 
+        isset($array['building_number']) ?
             $model->setBuildingNumber(
                 (string) $array['building_number']) : '';
-        isset($array['city_name']) ? 
+        isset($array['city_name']) ?
             $model->setCityName(
                 (string) $array['city_name']) : '';
-        isset($array['postalzone']) ? 
+        isset($array['postalzone']) ?
             $model->setPostalzone(
                 (string) $array['postalzone']) : '';
-        isset($array['countrysubentity']) ? 
+        isset($array['countrysubentity']) ?
             $model->setCountrysubentity(
                 (string) $array['countrysubentity']) : '';
-        isset($array['country']) ? 
+        isset($array['country']) ?
             $model->setCountry((string) $array['country']) : '';
         $this->repository->save($model);
     }

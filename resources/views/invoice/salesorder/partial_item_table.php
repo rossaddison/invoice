@@ -43,10 +43,10 @@ $subtotalTooltip = 'sales_order_amount->item_subtotal ='
         <table id="item_table"
                class="items table table-responsive table-bordered no-margin">
             <thead>
-            <tr><i class="fa fa-info-circle"
+            <tr><i class="bi bi-info-circle"
                    data-bs-toggle="tooltip"
-                   title="<?= $s->isDebugMode(20); ?>"></i></tr>    
-            <tr>               
+                   title="<?= $s->isDebugMode(20); ?>"></i></tr>
+            <tr>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -56,7 +56,7 @@ $subtotalTooltip = 'sales_order_amount->item_subtotal ='
                 <th></th>
             </tr>
             </thead>
-            
+
 <?php
 //*********
 // Current
@@ -72,7 +72,7 @@ foreach ($soItems as $item) {
     $taskRef = '';
     if ($productId > 0) {
         $productRef =  new A()
-           ->href($urlGenerator->generate('product/view', 
+           ->href($urlGenerator->generate('product/view',
                 [
                     '_language' => (string) $session->get('_language'),
                     'id' => $productId,
@@ -97,17 +97,17 @@ foreach ($soItems as $item) {
                 <tr>
                     <td class="td-text" style="background-color: lightgreen">
                         <b>
-                            <div class="input-group">                                
+                            <div class="input-group">
 <?php echo $count . '-' . $item->getSalesOrderId() . '-' . $item->getId() . '-'
     . ($productId > 0 ? $productRef : '') . ($taskId > 0 ? $taskRef : ''); ?>
-                                
+
                             </div>
                             <div class="input-group">
 <!--  This value is editable on our quote if the client or customer is going
       to pay by Peppol. They have to supply their corresponding Purchase Order
-      Item Id here. 
+      Item Id here.
       https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
-              cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/cbc-ID/" -->                                
+              cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/cbc-ID/" -->
                                 <input type="text"
                                        disabled="true"
                                        placeholder="Item Id"
@@ -121,7 +121,7 @@ foreach ($soItems as $item) {
 <!-- This value is editable on our quote if the client or customer is going to
      pay by Peppol. They have to supply their corresponding Purchase Order Line
      Number here. https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
-     cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/" -->                                
+     cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/" -->
                                 <input type="text"
                                        disabled="true"
                                        placeholder="Line Id"
@@ -145,7 +145,7 @@ foreach ($soItems as $item) {
                             <select name="item_name"
                                     class="form-control form-control-lg"
                                     disabled>
-                            <?php if ($item->getProductId() > 0) { ?>    
+                            <?php if ($item->getProductId() > 0) { ?>
                                 <option value="0">
                                     <?= $translator->translate('none'); ?>
                                 </option>
@@ -162,7 +162,7 @@ foreach ($soItems as $item) {
                                     </option>
                                 <?php } ?>
                             <?php } ?>
-                            <?php if ($item->getTaskId() > 0) { ?>    
+                            <?php if ($item->getTaskId() > 0) { ?>
                                 <option value="0">
                                 <?= $translator->translate('none'); ?></option>
                                 <?php
@@ -176,10 +176,10 @@ foreach ($soItems as $item) {
                                         <?php echo $task->getName(); ?>
                                     </option>
                                 <?php } ?>
-                            <?php } ?>        
+                            <?php } ?>
                             </select>
                         </div>
-                    </td>  
+                    </td>
                     <td class="td-amount td-quantity">
                         <div class="input-group">
                             <span class="input-group-text">
@@ -239,7 +239,7 @@ foreach ($soItems as $item) {
             $translator->translate('per.item'); ?>">
                         </div>
                     </td>
-                    
+
                     <td>
                         <div class="input-group">
                             <span class="input-group-text">
@@ -280,7 +280,7 @@ foreach ($soItems as $item) {
                         </div>
                     </td>
 <?php // Buttons for line item start here?>
-                    <td class="td-vert-middle btn-group">                  
+                    <td class="td-vert-middle btn-group">
                         <?php if ($invEdit === true) { ?>
 <?php if ($piR->repoCount((int) $item->getProductId()) > 0) { ?>
                             <span data-bs-toggle="tooltip"
@@ -289,12 +289,13 @@ foreach ($soItems as $item) {
             (($item->getProductId() > 0) ?
                 ($item->getProduct()?->getProductName() ?? '') :
                     ($item->getTask()?->getName() ?? '')); ?>">
-                                <a class="btn btn-info fa fa-eye"
+                                <a class="btn btn-info"
                                    data-bs-toggle="modal"
                                    href="#view-product-<?= $item->getId(); ?>"
                                    style="text-decoration:none">
+                                    <i class="bi bi-eye"></i>
                                 </a>
-                            </span> 
+                            </span>
                             <div id="view-product-<?= $item->getId(); ?>"
                                  class="modal modal-lg" tabindex="-1">
                                 <div class="modal-dialog">
@@ -319,14 +320,14 @@ foreach ($soItems as $item) {
      * @var App\Invoice\Entity\ProductImage $productImage
      */
     foreach ($productImages as $productImage) { ?>
-        <?php if (!empty($productImage->getFileNameOriginal())) { ?> 
+        <?php if (!empty($productImage->getFileNameOriginal())) { ?>
                                                     <a data-bs-toggle="modal"
                                                        class="col-sm-4">
                                                     <img src="
                 <?= '/products/' . $productImage->getFileNameOriginal(); ?>"
                                                             class="img-fluid">
                                                     </a>
-        <?php } ?> 
+        <?php } ?>
     <?php } ?>
                                                 </div>
                                             </form>
@@ -337,7 +338,7 @@ foreach ($soItems as $item) {
                                                     data-bs-dismiss="modal">
                                     <?= $translator->translate('cancel'); ?>
                                             </button>
-                                        </div>  
+                                        </div>
                                     </div>
                                 </div>
                              </div>
@@ -355,8 +356,8 @@ foreach ($soItems as $item) {
                 </tr>
 <?php // Buttons for line item end here?>
                 <tr>
-                    <td></td>   
-                    <td>    
+                    <td></td>
+                    <td>
                         <div class="input-group">
                             <span class="input-group-text"
                                   data-bs-toggle = "tooltip"
@@ -434,7 +435,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                                 <b>
         <?= $acsoi->getAllowanceCharge()?->getIdentifier() == '1'
                 ? $translator->translate('allowance.or.charge.charge')
-                : '(' . $translator->translate('allowance.or.charge.allowance') 
+                : '(' . $translator->translate('allowance.or.charge.allowance')
                     . ')'; ?>
                                 </b>
                             </td>
@@ -462,12 +463,12 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                     <?= ($isCharge ? '' : '(') . $numberHelper->formatCurrency(
                         $acsoi->getVatOrTax()) . ($isCharge ? '' : ')'); ?>
                                 </b>
-                            </td>   
+                            </td>
                             <td class="td-amount"></td>
                         </tr>
                     <?php } ?>
-                <?php } ?> 
-                <tr> 
+                <?php } ?>
+                <tr>
                     <td class="td-amount"></td>
                     <td class="td-amount"></td>
                     <td class="td-amount"></td>
@@ -544,7 +545,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
 /**************************/
 /* Sales order items end here */
 /**************************/
-?> 
+?>
         </table>
     </div>
      <br>
@@ -552,7 +553,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
         /***********************/
         /*   Totals start here */
         /***********************/
-?> 
+?>
     <?= Html::openTag('div', ['class' => 'row']); ?>
         <div class="col-xs-12 col-md-4"
              sales_order_tax_rates="<?php $soTaxRates; ?>">
@@ -563,7 +564,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
         <div class="col-xs-12 col-md-6 col-md-offset-2 col-lg-4 col-lg-offset-4">
             <table class="table table-bordered text-right">
                 <tr>
-                    <i class="fa fa-info-circle"
+                    <i class="bi bi-info-circle"
                        data-bs-toggle="tooltip"
                        title="<?= $s->isDebugMode(20); ?>">
                     </i>
@@ -642,7 +643,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                     <td>
                         <b>
                             <?= $translator->translate('tax'); ?>
-                        </b>    
+                        </b>
                     </td>
                     <td>
                     <?php if ($soTaxRates) {
@@ -679,7 +680,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
 <?= $numberHelper->formatCurrency($soTaxRate->getSalesOrderTaxRateAmount()); ?>
                                     </span>
                                     <br>
-                            </div>        
+                            </div>
                             <?php }
                             } else {
                                 echo $numberHelper->formatCurrency('0');
@@ -718,4 +719,3 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
             </table>
         </div>
     <hr>
-    

@@ -59,7 +59,7 @@ final readonly class ButtonsToolbarFull
                 'fa-file-text-o',
                 'btn-info',
                 $this->translator->translate('view')
-                    . ' ' 
+                    . ' '
                     . $this->translator->translate('quote'),
             );
         }
@@ -81,7 +81,7 @@ final readonly class ButtonsToolbarFull
         $primaryButtons[] = $this->createModalButton(
             'pdf',
             '#inv-to-pdf',
-            'fa-file-pdf-o',
+            'bi-file-pdf',
             'btn-success',
             $pdfTitle,
         );
@@ -182,7 +182,7 @@ final readonly class ButtonsToolbarFull
             $buttons[] = $this->createModalButton(
                 'add-tax',
                 '#add-inv-tax',
-                'fa-plus',
+                'bi-plus',
                 'btn-outline-secondary',
                 $this->translator->translate('add.invoice.tax'),
             );
@@ -194,7 +194,7 @@ final readonly class ButtonsToolbarFull
             $buttons[] = $this->createModalButton(
                 'allowance-charge',
                 '#add-inv-allowance-charge',
-                'fa-plus',
+                'bi-plus',
                 'btn-outline-secondary',
                 $this->translator->translate('allowance.or.charge.inv.add'),
             );
@@ -235,10 +235,10 @@ final readonly class ButtonsToolbarFull
                     // QUERYPARAMETERS
                     // ['active' => $this->translator->translate(
                     //    'peppol.electronic.invoicing'),
-                    // HASH   
-                    //'settings[peppol_document_currency]']);     
+                    // HASH
+                    //'settings[peppol_document_currency]']);
                     ''),
-                'fa-plus',
+                'bi-plus',
                 'btn-outline-info',
                 $this->translator->translate('delivery.location.add'),
             );
@@ -322,7 +322,7 @@ final readonly class ButtonsToolbarFull
             $buttons[] = $this->createModalButton(
                 'delete-invoice',
                 '#delete-inv',
-                'fa-trash',
+                'bi-trash',
                 'btn-outline-danger',
                 $this->translator->translate('delete'),
             );
@@ -330,7 +330,7 @@ final readonly class ButtonsToolbarFull
             $buttons[] = $this->createModalButton(
                 'delete-items',
                 '#delete-items',
-                'fa-trash',
+                'bi-trash',
                 'btn-outline-danger',
                 $this->translator->translate('delete')
                     . ' '

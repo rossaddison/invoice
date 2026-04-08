@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\I;
 * @var array $body
 */
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
   'class' => 'col-xs-12 col-md-8 col-md-offset-2'
@@ -25,6 +26,17 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::closeTag('label');
    echo H::closeTag('div'); //4
    echo H::openTag('div', ['class' => 'panel-body']); //4
+    echo H::openTag('div', ['class' => 'checkbox border-bottom mb-2 pb-2']); //select-all
+     echo H::openTag('label', ['class' => 'fw-bold text-secondary']);
+      echo H::openTag('input', [
+       'type' => 'checkbox',
+       'id' => 'front-page-select-all',
+       'onchange' => "document.querySelectorAll('#front-page-checkboxes input[type=checkbox]').forEach(function(cb){ cb.checked = this.checked; cb.dispatchEvent(new Event('change')); }.bind(this))",
+      ]);
+      echo ' ' . $translator->translate('select.all');
+     echo H::closeTag('label');
+    echo H::closeTag('div'); //select-all
+    echo H::openTag('div', ['id' => 'front-page-checkboxes']); //checkboxes wrapper
     echo H::openTag('div', ['class' => 'form-group']); //5
      echo H::openTag('div', ['class' => 'checkbox']); //6
       $body['settings[no_front_about_page]'] =
@@ -247,6 +259,7 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
     echo H::closeTag('div'); //5
+    echo H::closeTag('div'); //checkboxes wrapper
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //3
  echo H::closeTag('div'); //2

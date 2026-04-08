@@ -90,10 +90,10 @@ class Invoice implements XmlSerializable
     }
 
     /**
-     * The validate function that is called during xml writing to validate the 
+     * The validate function that is called during xml writing to validate the
      * data of the object.
      *
-     * @throws InvalidArgumentException An error with information about 
+     * @throws InvalidArgumentException An error with information about
      * required data that is missing to write the XML
      */
     public function validate(): void
@@ -218,12 +218,12 @@ class Invoice implements XmlSerializable
                     $this->taxPointDate->format('Y-m-d'),
             ]);
         }
-        
+
         $writer->write([
             Schema::CBC
                 . 'DocumentCurrencyCode' =>
             $this->sR->getSetting('peppol_debug_with_emojis') == '1' ?
-                '💲' . $this->getDocumentCurrencyCode() .  '💲':
+                'ðŸ’²' . $this->getDocumentCurrencyCode() .  'ðŸ’²':
                     $this->getDocumentCurrencyCode()
         ]);
 
@@ -233,7 +233,7 @@ class Invoice implements XmlSerializable
         src/Invoice/Helpers/Peppol/EcosioTestFiles/invoice_a0Vc8Tz6INV107_peppol
  * Element/context: /:Invoice[1]
  * XPath test: not(cbc:AccountingCostCode)
- * Error message: 
+ * Error message:
             [UBL-CR-010]-A UBL invoice should not include the AccountingCostCode
 */
 //if ($this->accountingCostCode !== null) {

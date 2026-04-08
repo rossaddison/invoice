@@ -28,16 +28,16 @@ class InvoiceAmountMagnifier {
   private attachMagnifiersToAmounts() {
     // Target amount elements in invoice table
     const amountSelectors = [
-      '.label.label-success', // Total amounts (positive)
-      '.label.label-warning', // Zero amounts  
-      '.label.label-danger'   // Paid amounts (incomplete)
+      '.badge.text-bg-success', // Total amounts (positive)
+      '.badge.text-bg-warning', // Zero amounts
+      '.badge.text-bg-danger'   // Paid amounts (incomplete)
     ];
 
     amountSelectors.forEach(selector => {
       const elements = document.querySelectorAll(selector);
       elements.forEach((element: Element) => {
         const htmlElement = element as HTMLElement;
-        
+
         if (this.isAmountElement(htmlElement) && !htmlElement.dataset.magnifierInitialized) {
           this.addMagnificationBehavior(htmlElement);
           htmlElement.dataset.magnifierInitialized = 'true';
@@ -57,14 +57,14 @@ class InvoiceAmountMagnifier {
     // Determine colors based on label type
     let borderColor = '#007bff';
     let bgColor = 'rgba(255, 255, 255, 0.95)';
-    
-    if (element.classList.contains('label-success')) {
+
+    if (element.classList.contains('text-bg-success')) {
       borderColor = '#28a745';
       bgColor = '#d4edda';
-    } else if (element.classList.contains('label-warning')) {
+    } else if (element.classList.contains('text-bg-warning')) {
       borderColor = '#ffc107';
       bgColor = '#fff3cd';
-    } else if (element.classList.contains('label-danger')) {
+    } else if (element.classList.contains('text-bg-danger')) {
       borderColor = '#dc3545';
       bgColor = '#f8d7da';
     }
@@ -99,7 +99,7 @@ class InvoiceAmountMagnifier {
       }
     });
 
-    // Mouse leave event  
+    // Mouse leave event
     element.addEventListener('mouseleave', () => {
       if (isHovered) {
         isHovered = false;
@@ -123,7 +123,7 @@ class InvoiceAmountMagnifier {
   private applyMagnification(element: HTMLElement, originalStyles: any, borderColor: string, bgColor: string) {
     const currentFontSize = Number.parseFloat(originalStyles.fontSize);
     const newFontSize = currentFontSize * this.magnificationFactor;
-    
+
     element.style.fontSize = `${newFontSize}px`;
     element.style.fontWeight = 'bold';
     element.style.backgroundColor = bgColor;

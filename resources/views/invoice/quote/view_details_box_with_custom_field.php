@@ -36,7 +36,7 @@ use Yiisoft\Html\Html;
                class="form-control form-control-lg"
                value="<?= Html::encode($quote->getDateCreated()->format('Y-m-d')); ?>"/>
         <span class="input-group-text">
-            <i class="fa fa-calendar fa-fw"></i>
+            <i class="bi bi-calendar"></i>
         </span>
     </div>
 </div>
@@ -49,7 +49,7 @@ use Yiisoft\Html\Html;
                class="form-control form-control-lg"
                value="<?= Html::encode($quote->getDateExpires()->format('Y-m-d')); ?>">
         <span class="input-group-text">
-            <i class="fa fa-calendar fa-fw"></i>
+            <i class="bi bi-calendar"></i>
         </span>
     </div>
 </div>
@@ -62,7 +62,7 @@ use Yiisoft\Html\Html;
         <?php if ($customField->getLocation() !== 1) {
             continue;
         } ?>
-        <?php  $cvH->printFieldForView($customField, $quoteForm, $quoteCustomValues); ?>                                   
+        <?php  $cvH->printFieldForView($customField, $quoteForm, $quoteCustomValues); ?>
     <?php endforeach; ?>
-</div>    
+</div>
 </div>

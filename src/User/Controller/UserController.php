@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\User\Controller;
 
 use App\User\UserRepository;
+use App\Invoice\Setting\SettingRepository as SR;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -20,6 +21,7 @@ final class UserController
 {
     public function __construct(
         private WebViewRenderer $webViewRenderer,
+        private readonly SR $sR,
     ) {
         $this->webViewRenderer = $webViewRenderer->withControllerName('user');
     }
@@ -29,30 +31,26 @@ final class UserController
         #[Body]
         ?array $body,
         #[Query('sort')]
-        ?string $sortOrder = null,
+        ?string $querySort = null,
         #[RouteArgument('page')]
-        int $page = 1,
-        #[RouteArgument('pagesize')]
-        ?int $pageSize = null,
+        string $page = '1',
+        #[Query('page')]
+        ?string $queryPage = null,
     ): Response {
-        $order = null !== $sortOrder ? OrderHelper::stringToArray($sortOrder) : [];
-        $sort = Sort::only(['id', 'login'])->withOrder($order);
         /**
-         * @var \Yiisoft\Data\Cycle\Reader\EntityReader $dataReader
+         * @var \Yiisoft\Data\Cycle\Reader\EntityReader $users
          */
-        $dataReader = $userRepository->findAllPreloaded();
-
-        if ($pageSize === null) {
-            $pageSize = (int) ($body['pageSize'] ?? OffsetPaginator::DEFAULT_PAGE_SIZE);
-        }
-
-        $offsetPaginator = (new OffsetPaginator($dataReader));
-        $paginator = $offsetPaginator
-                      ->withPageSize($pageSize > 0 ? $pageSize : 1)
-                      ->withSort($sort)
-                      ->withToken(PageToken::next((string) $page));
-
-        return $this->webViewRenderer->render('index', ['paginator' => $paginator]);
+        $users = $userRepository->findAllPreloaded();
+        $page = $queryPage ?? $page;
+        
+        return $this->webViewRenderer->render('index', [
+            'defaultPageSizeOffsetPaginator' =>
+                    $this->sR->getSetting('default_list_limit') ?
+                        (int) $this->sR->getSetting('default_list_limit') : 1,
+            'page' => (int) $page > 0 ? (int) $page : 1,
+            'sortString' => $querySort ?? '-id',
+            'users' => $users,
+        ]);
     }
 
     public function profile(

@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
-?> 
+?>
 
 <div id="headerbar">
     <h1 class="headerbar-title"><?= $translator->translate('archive'); ?></h1>

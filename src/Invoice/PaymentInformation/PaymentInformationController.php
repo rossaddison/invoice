@@ -252,7 +252,7 @@ final class PaymentInformationController
                             $locale = 'en_GB';
                             $redirectUri = urlencode(
                                 $this->urlGenerator->generate(
-                                    'paymentinformation/tink_complete',
+                                    'paymentinformation/tinkCcomplete',
                                     ['url_key' => $url_key,
                                      'payment_request_id' => $paymentRequestId]));
                             $viewData['authUrl'] =
@@ -343,6 +343,7 @@ final class PaymentInformationController
                     ],
                 ),
             ];
+            $this->updateInvoicePaymentMethod($invoice_url_key);
         } else {
             $view_data = [
                 'render' => $this->webViewRenderer->renderPartialAsString(
@@ -427,6 +428,9 @@ final class PaymentInformationController
                 ],
             ),
         ];
+        if (null!==$urlKey) {
+           $this->updateInvoicePaymentMethod($urlKey);
+        }
         return $this->webViewRenderer->render('payment_completion_page', $view_data);
     }
 
@@ -450,6 +454,9 @@ final class PaymentInformationController
                 ],
             ),
         ];
+        if (null!==$urlKey) {
+           $this->updateInvoicePaymentMethod($urlKey);
+        }
         return $this->webViewRenderer->render('payment_completion_page', $view_data);
     }
 
@@ -714,7 +721,7 @@ final class PaymentInformationController
                     ['client' => $cR->repoClientquery($invoice->getClientId())],
                 ),
             'payment_method' => $payment_method_for_this_invoice,
-            'return_url'     => ['paymentinformation/amazon_complete',
+            'return_url'     => ['paymentinformation/amazonComplete',
                                                         ['url_key' => $url_key]],
             'title'          => 'Amazon Pay is enabled',
             'total'          => $total,
@@ -806,8 +813,7 @@ final class PaymentInformationController
                             $balance, $paymentMethodNonce);
 
             if ($transactionResult['success']) {
-                $payment_method = 4;
-                $invoice->setPaymentMethod($payment_method);
+                $invoice->setPaymentMethod(4);
                 $invoice->setStatusId(4);
 
                 /** @var InvAmount $invoice_amount_record */
@@ -826,7 +832,7 @@ final class PaymentInformationController
                             $this->translator->translate('number.no'),
                         (string) $invoice_id,
                         $balance ?: 0.00,
-                        $payment_method,
+                        4,
                         $invoice->getNumber() ??
                             $this->translator->translate('number.no'),
                         'Braintree',
@@ -856,7 +862,7 @@ final class PaymentInformationController
                 ]),
             ];
             $this->iR->save($invoice);
-
+             
             return $this->webViewRenderer->render('payment_completion_page',
                     $view_data);
         } // request->getMethod Braintree
@@ -1028,41 +1034,24 @@ final class PaymentInformationController
         string $urlKey,
         string $locale,
     ): MolliePayment|Response {
-        /*
-         * @var string $yii_invoice['id']
-         */
         try {
-/**
- * Visa Card Number: 4543 4740 0224 9996.
- *
- * @see https://docs.mollie.com/overview/testing#testing-card-payments
- * @see https://docs.mollie.com/overview/testing#testing-different-types-of-cards
- * @see https://github.com/mollie/mollie-api-php
- */
             $amount = (float) $yii_invoice['balance'];
 
             return $mollieClient->payments->create([
                 'amount' => [
                     'currency' => strtoupper((string) $yii_invoice['currency']),
-                    // 2 decimal places required
-                    'value' => ($amount > 0) ? number_format($amount, 2) : 0.00,
+                    'value' => number_format($amount > 0 ? $amount : 0.0, 2, '.', ''),
                 ],
-                // Mollie locale array derived eg. en_GB
                 'locale'      => $locale,
                 'method'      => $paymentMethod,
                 'description' => $yii_invoice['description'],
-// When the customer clicks on the pay Now button in payment_information_mollie_pci.php
-// with url from $payment->getCheckOutUrl() they will be redirected to e.g.
-// https://www.mollie.com/checkout/credit-card/embedded/x2ieJoYgPQ
-                'redirectUrl' =>
-                    $this->urlGenerator->generateAbsolute(
-                            'paymentinformation/mollie_complete',
-                            ['url_key' => $urlKey,
-                                '_language' =>
-                                    (string) $this->session->get('_language')]),
-                // 'webhookUrl' => 'optional'
-                // 'cancelUrl' => 'optional',
-                // 'restrictPaymentMethodsToCountry' => 'optional'
+                'redirectUrl' => $this->urlGenerator->generateAbsolute(
+                    'paymentinformation/mollieComplete',
+                    [
+                        'url_key'   => $urlKey,
+                        '_language' => (string) $this->session->get('_language'),
+                    ]
+                ),
                 'metadata' => [
                     'invoice_id'          => $yii_invoice['id'],
                     'invoice_customer_id' => $yii_invoice['customer_id'],
@@ -1072,24 +1061,18 @@ final class PaymentInformationController
                     'order_id'            => time(),
                 ],
             ]);
-// return to MollieForm and build url for paynow button i.e.
-// $payment->getCheckOutUrl() which will direct the customer to Mollie's
-// payment site => pci Compliant ... no credit card details touch our site.
-// Once the customer makes payment on the Mollie website they will be redirected
-// to the redirectUrl above
-        } catch (MollieException) {
-/*
- * Previously: echo "API call failed here in function
- * paymentinformation/mollieApiClientCreatePayment ". htmlspecialchars($e->getMessage());
- * Related logic: see https://cwe.mitre.org/data/definitions/200.html
- * An exception object flows to the echo statement and is leaked to the attacker.
- * This may disclose important information about the application to an attacker.
- * Courtesy of Snyk
- */
-        }
 
-        return $this->webService->getNotFoundResponse();
-    }
+       } catch (MollieException $e) {
+            // Log safely — no raw exception message exposed to the user (see CWE-200)
+            $this->logger->error('Mollie payment creation failed', [
+                'invoice_id' => $yii_invoice['id'] ?? 'unknown',
+                'message'    => $e->getMessage(),
+                'code'       => $e->getCode(),
+            ]);
+ 
+            throw $e; // Re-throw so the caller can handle it appropriately
+        }
+   }
 
     public function mollieComplete(CurrentRoute $currentRoute):
         \Psr\Http\Message\ResponseInterface
@@ -1192,7 +1175,6 @@ final class PaymentInformationController
                                 ],
                             ),
                         ];
-
                         return $this->webViewRenderer->render(
                                 'payment_completion_page', $view_data);
                     } // null!==$balance
@@ -1316,7 +1298,7 @@ final class PaymentInformationController
                     $this->stripePaymentService->handleCompletion(
                                         $invoice, $redirect_status_from_stripe);
             $invoice->setStatusId((int) $result['status_id']);
-            $invoice->setPaymentMethod((int) $result['payment_method']);
+            $invoice->setPaymentMethod(4);
             $this->iR->save($invoice);
             /** @var int $invoice->getId() */
             $invoice_amount_record = $this->iaR->repoInvquery((int) $invoice->getId());
@@ -1584,5 +1566,12 @@ final class PaymentInformationController
             return strtolower($matches[1]);
         }
         return null;
+    }
+    
+    private function updateInvoicePaymentMethod(string $urlKey): void {
+        if (null !== ($invoice = $this->iR->repoUrlKeyGuestLoaded($urlKey))) {
+            $invoice->setPaymentMethod(4);
+            $this->iR->save($invoice);
+        }     
     }
 }

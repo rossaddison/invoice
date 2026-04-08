@@ -70,16 +70,16 @@ declare(strict_types=1);
                             </select>
                         </div>
                     </div>
-                </form>    
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
                     <!-- see src/Invoice/Asset/rebuild-1.13/js/inv.js $(document).on('click', '#inv_tax_submit', function -->
                     <button class="inv_tax_submit btn btn-success" id="inv_tax_submit" type="button">
-                        <i class="fa fa-check"></i><?= $translator->translate('submit'); ?>
+                        <i class="bi bi-check-lg"></i><?= $translator->translate('submit'); ?>
                     </button>
                     <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="fa fa-times"></i> <?= $translator->translate('cancel'); ?>
+                        <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
                     </button>
                 </div>
             </div>

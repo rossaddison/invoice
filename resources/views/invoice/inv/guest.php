@@ -112,7 +112,7 @@ $columns = [
             $paidFormatted = Html::encode(
                 number_format($paid > 0.00 ? $paid : 0.00, $decimalPlaces)
             );
-            $labelClass = $isPaid ? 'label label-success' : 'label label-danger';
+            $labelClass = $isPaid ? 'text-success' : 'text-danger';
             $html = '<span class="' . $labelClass . '">' . $paidFormatted . '</span>';
             if (!$isPaid && !empty($enabledGateways)) {
                 $dropdownId = 'pay-drop-' . Html::encode((string) $model->getId());
@@ -232,7 +232,7 @@ $columns = [
                                                                         string {
             $statusId = $model->getStatusId();
             if ($statusId === null) {
-                return '<span class="label label-default">N/A</span>';
+                return '<span class="badge text-bg-default">N/A</span>';
             }
             $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
@@ -248,7 +248,7 @@ $columns = [
             }
             
             return '<span data-bs-toggle="tooltip" title="'
-            . Html::encode($label) . '" class="label label-'
+            . Html::encode($label) . '" class="badge text-bg-'
             . $iR->getSpecificStatusArrayClass($statusId) . '">'
             . $emoji . ' ' . $label .  '</span>';
         },
@@ -336,7 +336,7 @@ $columns = [
             return Html::tag('label')
                     ->attributes([
                         'class' => $model->getDateDue() > $now ?
-                            'label label-success' : 'label label-warning'])
+                            'badge text-bg-success' : 'badge text-bg-warning'])
                     ->content(!is_string($dateDue = $model->getDateDue()) ?
                             $dateDue->format('Y-m-d') : '');
         },
@@ -353,7 +353,7 @@ $columns = [
             return
                  new Label()
                     ->attributes(['class' => $invAmountTotal > 0.00 ?
-                            'label label-success' : 'label label-warning'])
+                            'text-success' : 'text-danger'])
                     ->content(Html::encode(null !== $invAmountTotal
                             ? number_format($invAmountTotal, $decimalPlaces)
                             : number_format(0, $decimalPlaces)));
@@ -377,7 +377,7 @@ $columns = [
             $invAmountBalance = $model->getInvAmount()->getBalance();
             return   new Label()
                     ->attributes(['class' => $invAmountBalance > 0.00 ?
-                            'label label-success' : 'label label-warning'])
+                            'text-danger' : 'text-success'])
                     ->content(Html::encode(null !== $invAmountBalance
                             ? number_format($invAmountBalance > 0.00 ?
                                     $invAmountBalance : 0.00, $decimalPlaces)
@@ -488,9 +488,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         attachMagnifiersToAmounts() {
             const amountSelectors = [
-                '.label.label-success',
-                '.label.label-warning',
-                '.label.label-danger'
+                '.badge.text-bg-success',
+                '.badge.text-bg-warning',
+                '.badge.text-bg-danger'
             ];
 
             amountSelectors.forEach(selector => {
@@ -515,13 +515,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let borderColor = '#007bff';
             let bgColor = 'rgba(255, 255, 255, 0.95)';
             
-            if (element.classList.contains('label-success')) {
+            if (element.classList.contains('text-bg-success')) {
                 borderColor = '#28a745';
                 bgColor = '#d4edda';
-            } else if (element.classList.contains('label-warning')) {
+            } else if (element.classList.contains('text-bg-warning')) {
                 borderColor = '#ffc107';
                 bgColor = '#fff3cd';
-            } else if (element.classList.contains('label-danger')) {
+            } else if (element.classList.contains('text-bg-danger')) {
                 borderColor = '#dc3545';
                 bgColor = '#f8d7da';
             }

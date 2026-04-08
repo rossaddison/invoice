@@ -24,7 +24,7 @@ class SalesOrderItem
 
     #[BelongsTo(target: Product::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Product $product = null;
-    
+
     #[BelongsTo(target: Task::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Task $task = null;
 
@@ -53,7 +53,7 @@ class SalesOrderItem
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $sales_order_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
-        private ?int $quote_item_id = null,    
+        private ?int $quote_item_id = null,
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $tax_rate_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
@@ -88,12 +88,12 @@ class SalesOrderItem
     {
         $this->product = $product;
     }
-    
+
     public function getTask(): ?Task
     {
         return $this->task;
     }
-    
+
     public function setTask(?Task $task): void
     {
         $this->task = $task;
@@ -128,7 +128,7 @@ class SalesOrderItem
     {
         $this->sales_order_id = $sales_order_id;
     }
-    
+
     public function getQuoteItemId(): string
     {
         return (string) $this->quote_item_id;
@@ -178,12 +178,12 @@ class SalesOrderItem
     {
         $this->product_id = $product_id;
     }
-    
+
     public function getTaskId(): string
     {
         return (string) $this->task_id;
     }
-    
+
     public function setTaskId(int $task_id): void
     {
         $this->task_id = $task_id;
@@ -249,17 +249,17 @@ class SalesOrderItem
     {
         $this->discount_amount = $discount_amount;
     }
-    
+
     public function getOrder(): ?int
     {
         return $this->order;
     }
-    
+
     public function setOrder(?int $order): void
     {
         $this->order = $order;
     }
-    
+
     public function getProductUnit(): ?string
     {
         return $this->product_unit;

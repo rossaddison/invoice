@@ -155,51 +155,46 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (DeliveryLocation $model) use ($urlGenerator): string {
-            return Html::a(
-                Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
-                $urlGenerator->generate('del/view', ['id' => $model->getId()]),
-                [
-                ],
-            )->render();
+            return (new A())
+                ->addClass('btn btn-outline-info btn-sm')
+                ->encode(false)
+                ->content((new I())->addClass('bi bi-eye')->render())
+                ->href($urlGenerator->generate('del/view', ['id' => $model->getId()]))
+                ->render();
         },
-        encodeContent: false,        
+        encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (DeliveryLocation $model) use ($urlGenerator): string {
-            return Html::a(
-                Html::tag('i', '', ['class' => 'fa fa-pencil fa-margin']),
-                $urlGenerator->generate(
+            return (new A())
+                ->addClass('btn btn-outline-warning btn-sm')
+                ->encode(false)
+                ->content((new I())->addClass('bi bi-pencil-square')->render())
+                ->href($urlGenerator->generate(
                     'del/edit',
                     ['id' => $model->getId()],
                     ['origin' => 'del', 'origin_id' => '', 'action' => 'index'],
-                ),
-                [],
-            )->render();
+                ))
+                ->render();
         },
-        encodeContent: false,        
+        encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('delete'),
         content: static function (DeliveryLocation $model) use ($translator, $urlGenerator): string {
-            return Html::a(
-                Html::tag(
-                    'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
-                    [
-                        'type' => 'submit',
-                        'class' => 'dropdown-button',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
-                    ],
-                ),
-                $urlGenerator->generate('del/delete', ['id' => $model->getId()]),
-                [],
-            )->render();
+            return (new A())
+                ->addClass('btn btn-outline-danger btn-sm')
+                ->encode(false)
+                ->content((new I())->addClass('bi bi-trash')->render())
+                ->href($urlGenerator->generate('del/delete', ['id' => $model->getId()]))
+                ->addAttributes(['onclick' => "return confirm('" . $translator->translate('delete.record.warning') . "');"])
+                ->render();
         },
-        encodeContent: false, 
-    ),           
+        encodeContent: false,
+    ),
 ];
-        
+
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 $defaultPageSizeOffsetPaginator = (int) $s->getSetting('default_list_limit');

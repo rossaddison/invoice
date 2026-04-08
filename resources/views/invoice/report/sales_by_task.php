@@ -52,4 +52,4 @@ $assetManager->register(ReportAsset::class);
 <?php $this->endBody() ?>
 </body>
 </html>
-<?php $this->endPage(true); ?> 
+<?php $this->endPage(true); ?>

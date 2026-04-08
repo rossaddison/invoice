@@ -224,7 +224,7 @@ class CompanyPrivate
     {
         $this->end_date = $end_date;
     }
-    
+
     public function isNewRecord(): bool
     {
         return $this->getId() === null;

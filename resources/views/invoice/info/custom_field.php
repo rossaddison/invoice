@@ -14,16 +14,16 @@ ultimate pdf.</p>
 will appear under the address section on the client form. Not the address section on the quote.</p>
 
 <h6 id="add-to-template">
-Adding Custom Fields to an Email Template:</h6> 
+Adding Custom Fields to an Email Template:</h6>
 <p>
 Home...Setting...Email Template...Choose Invoice or Quote.
-To put the custom field on an invoice, drag the added custom field onto the invoice template. 
+To put the custom field on an invoice, drag the added custom field onto the invoice template.
 </p>
 
 <h6>How Custom_field table relates to other tables</h6>
 <p>
 <code>quote_custom</code> table has a unique id and two other ids. One points to Custom Field and the other points to the quote.
-<code>quote_custom</code> stores the actual value of the field and can be variable in nature depending on 
+<code>quote_custom</code> stores the actual value of the field and can be variable in nature depending on
 whether the <code>custom_field</code> it is linked to is BOOLEAN, TEXT, MULTIPLE-CHOICE etc.
 </p>
 <p>
@@ -34,16 +34,16 @@ whether the <code>custom_field</code> it is linked to is BOOLEAN, TEXT, MULTIPLE
 </p>
 <p>
 <code>custom_field</code> table stores the field build parameters and under which section  the field will appear on a form.
-The custom field, for example, can appear under one of five different locations on the Client form. It will normally 
+The custom field, for example, can appear under one of five different locations on the Client form. It will normally
 be filled in the custom field section but if not selected will appear in the other section chosen. This is determined by the location integer.
 </p>
 <p>
-<code>custom_value</code> table extends the Custom Field Table for Field Types that require a dropdown or alternative values eg. boolean, 
+<code>custom_value</code> table extends the Custom Field Table for Field Types that require a dropdown or alternative values eg. boolean,
 and multiple choice.
 </p>
 <p>
-The <code>*_custom</code> tables hold all the custom_field's values that belong to the * table eg. the client_custom table holds all values of the custom_field designed 
-for the client form. 
+The <code>*_custom</code> tables hold all the custom_field's values that belong to the * table eg. the client_custom table holds all values of the custom_field designed
+for the client form.
 </p>
 <p>
     <b>Custom Field positions:</b> see CustomFieldController positions function<br>

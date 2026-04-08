@@ -9,7 +9,7 @@ use App\Invoice\Entity\SalesOrderItemAllowanceCharge;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository as SOAR;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
-use 
+use
 App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository
     as ACSOIR;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SOIAR;

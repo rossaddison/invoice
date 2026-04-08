@@ -17,7 +17,7 @@ use Yiisoft\Html\Tag\A;
  * @var string $url_key
  */
 
-?> 
+?>
 
 <!doctype html>
 <html lang="en">
@@ -75,7 +75,7 @@ use Yiisoft\Html\Tag\A;
 
     </style>
 </head>
-<body>  
+<body>
 <h1><?php echo $heading; ?></h1>
 <?php echo $message; ?>
 <form method="POST"
@@ -87,7 +87,7 @@ use Yiisoft\Html\Tag\A;
               value="<?= $csrf ?>">
        <button type="submit"
                class="btn btn-lg btn-link">
-               <i class="fa fa-arrow-left"></i>
+               <i class="bi bi-arrow-left"></i>
        </button>
        <?php if ($s->getSetting('gateway_'
                . lcfirst($gateway)

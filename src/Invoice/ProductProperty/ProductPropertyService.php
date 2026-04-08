@@ -24,12 +24,12 @@ final readonly class ProductPropertyService
         array $array
     ): void {
         $this->persist($model, $array);
-        isset($array['product_id']) ? 
+        isset($array['product_id']) ?
             $model->setProductId(
                 (int) $array['product_id']) : '';
-        isset($array['name']) ? 
+        isset($array['name']) ?
             $model->setName((string) $array['name']) : '';
-        isset($array['value']) ? 
+        isset($array['value']) ?
             $model->setValue((string) $array['value']) : '';
         $this->repository->save($model);
     }

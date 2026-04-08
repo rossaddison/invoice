@@ -11,6 +11,7 @@ use Yiisoft\Html\Tag\Option;
 * @var array $body
 */
 
+echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']); //2
   echo H::openTag('div', ['class' => 'panel panel-default']); //3
@@ -28,12 +29,12 @@ echo H::openTag('div', ['class' => 'row']); //1
        ]);
         echo $translator->translate('mpdf.ltr');
        echo H::closeTag('label');
-       $body['settings[mpdf_ltr]'] = 
+       $body['settings[mpdf_ltr]'] =
        $s->getSetting('mpdf_ltr');
        echo H::openTag('select', [
         'name' => 'settings[mpdf_ltr]',
         'id' => 'settings[mpdf_ltr]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -51,12 +52,12 @@ echo H::openTag('div', ['class' => 'row']); //1
        ]);
         echo $translator->translate('mpdf.cjk');
        echo H::closeTag('label');
-       $body['settings[mpdf_cjk]'] = 
+       $body['settings[mpdf_cjk]'] =
        $s->getSetting('mpdf_cjk');
        echo H::openTag('select', [
         'name' => 'settings[mpdf_cjk]',
         'id' => 'settings[mpdf_cjk]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -74,12 +75,12 @@ echo H::openTag('div', ['class' => 'row']); //1
        ]);
         echo $translator->translate('mpdf.auto.script.to.lang');
        echo H::closeTag('label');
-       $body['settings[mpdf_auto_script_to_lang]'] = 
+       $body['settings[mpdf_auto_script_to_lang]'] =
        $s->getSetting('mpdf_auto_script_to_lang');
        echo H::openTag('select', [
         'name' => 'settings[mpdf_auto_script_to_lang]',
         'id' => 'settings[mpdf_auto_script_to_lang]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -101,12 +102,12 @@ echo H::openTag('div', ['class' => 'row']); //1
        ]);
         echo $translator->translate('mpdf.auto.vietnamese');
        echo H::closeTag('label');
-       $body['settings[mpdf_auto_vietnamese]'] = 
+       $body['settings[mpdf_auto_vietnamese]'] =
        $s->getSetting('mpdf_auto_vietnamese');
        echo H::openTag('select', [
         'name' => 'settings[mpdf_auto_vietnamese]',
         'id' => 'settings[mpdf_auto_vietnamese]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -130,12 +131,12 @@ echo H::openTag('div', ['class' => 'row']); //1
          'mpdf.allow.charset.conversion'
         );
        echo H::closeTag('label');
-       $body['settings[mpdf_allow_charset_conversion]'] = 
+       $body['settings[mpdf_allow_charset_conversion]'] =
        $s->getSetting('mpdf_allow_charset_conversion');
        echo H::openTag('select', [
         'name' => 'settings[mpdf_allow_charset_conversion]',
         'id' => 'settings[mpdf_allow_charset_conversion]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -157,12 +158,12 @@ echo H::openTag('div', ['class' => 'row']); //1
        ]);
         echo $translator->translate('mpdf.auto.arabic');
        echo H::closeTag('label');
-       $body['settings[mpdf_auto_arabic]'] = 
+       $body['settings[mpdf_auto_arabic]'] =
        $s->getSetting('mpdf_auto_arabic');
        echo H::openTag('select', [
         'name' => 'settings[mpdf_auto_arabic]',
         'id' => 'settings[mpdf_auto_arabic]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -180,12 +181,12 @@ echo H::openTag('div', ['class' => 'row']); //1
        ]);
         echo $translator->translate('mpdf.auto.language.to.font');
        echo H::closeTag('label');
-       $body['settings[mpdf_auto_language_to_font]'] = 
+       $body['settings[mpdf_auto_language_to_font]'] =
        $s->getSetting('mpdf_auto_language_to_font');
        echo H::openTag('select', [
         'name' => 'settings[mpdf_auto_language_to_font]',
         'id' => 'settings[mpdf_auto_language_to_font]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
@@ -207,12 +208,12 @@ echo H::openTag('div', ['class' => 'row']); //1
        ]);
         echo $translator->translate('mpdf.show.image.errors');
        echo H::closeTag('label');
-       $body['settings[mpdf_show_image_errors]'] = 
+       $body['settings[mpdf_show_image_errors]'] =
        $s->getSetting('mpdf_show_image_errors');
        echo H::openTag('select', [
         'name' => 'settings[mpdf_show_image_errors]',
         'id' => 'settings[mpdf_show_image_errors]',
-        'class' => 'form-control'
+        'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')

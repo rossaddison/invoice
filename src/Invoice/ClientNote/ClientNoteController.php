@@ -171,7 +171,7 @@ final class ClientNoteController extends BaseController
         ClientNoteRepository $clientnoteRepository,
         ClientRepository $clientRepository,
         UCR $ucR,
-        UIR $uiR    
+        UIR $uiR
     ): Response {
         $clientNote = $this->clientnote($currentRoute, $clientnoteRepository);
         if ($clientNote) {
@@ -190,7 +190,7 @@ final class ClientNoteController extends BaseController
         }
         return $this->webService->getRedirectResponse('clientnote/index');
     }
-    
+
     private function rbacObserver(
                                     string $clientId, UCR $ucR, UIR $uiR): bool {
         $userClient = $ucR->repoUserquery($clientId);
@@ -203,7 +203,7 @@ final class ClientNoteController extends BaseController
         }
         return false;
     }
-    
+
     /**
      * @param CurrentRoute $currentRoute
      * @param ClientNoteRepository $clientnoteRepository

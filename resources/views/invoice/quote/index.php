@@ -364,14 +364,14 @@ $columns = [
         content: static function (Quote $model) use ($qR): string {
             $statusId = $model->getStatusId();
             if ($statusId === null) {
-                return '<span class="label label-default">N/A</span>';
+                return '<span class="badge text-bg-secondary">N/A</span>';
             }
             $label = $qR->getSpecificStatusArrayLabel((string) $statusId);
             $class = $qR->getSpecificStatusArrayClass((string) $statusId);
-            
+
             return '<span data-bs-toggle="tooltip" title="'
-            . Html::encode($label) . '" class="label ' . $class . '">'
-                    . Html::encode($label) . '</span>';
+                . Html::encode($label) . '" class="badge text-bg-' . $class . '">'
+                . Html::encode($label) . '</span>';
         },
         filter: DropdownFilter::widget()
             ->addAttributes([
@@ -394,10 +394,15 @@ $columns = [
                 $statusId = $so->getStatusId();
                 if (null !== $number && ($statusId > 0)) {
                     return   new A()
-                        ->addAttributes(['style' => 'text-decoration:none',
-                        'class' => 'label ' . $soR->getSpecificStatusArrayClass($statusId)])
-                        ->content($number . ' ' . $soR->getSpecificStatusArrayLabel((string) $statusId))
-                        ->href($urlGenerator->generate('salesorder/view', ['id' => $so_id]));
+                        ->addAttributes([
+                            'style' => 'text-decoration:none',
+                            'class' => 'badge text-bg-'
+                            . $soR->getSpecificStatusArrayClass($statusId)])
+                        ->content($number
+                                . ' '
+                                . $soR->getSpecificStatusArrayLabel((string) $statusId))
+                        ->href($urlGenerator->generate('salesorder/view',
+                            ['id' => $so_id]));
                 }
                 if ($model->getSoId() === '0' && $model->getStatusId() === 7) {
                     if ($statusId > 0) {

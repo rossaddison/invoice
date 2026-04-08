@@ -36,13 +36,13 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
- * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
- * @var string $csrf 
- * @psalm-var positive-int $page 
+ * @var string $csrf
+ * @psalm-var positive-int $page
  */
- 
+
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset =  new A()
@@ -55,7 +55,7 @@ $toolbarReset =  new A()
        ->render();
 
 echo new Div();
-    
+
 $columns = [
     new DataColumn(
         'id',
@@ -110,12 +110,12 @@ $columns = [
         ),
     ]),
 ];
-    
+
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 $sort = Sort::only(['id'])
         ->withOrderString($sortString);
-        
+
 $toolbarString =
     new Form()
         ->post($urlGenerator->generate(
@@ -128,14 +128,14 @@ $toolbarString =
         )
         ->addStyle('text-decoration:none')
         ->content('➕')
-        ->render() .           
+        ->render() .
     new Div()
         ->addClass('float-end m-3')
         ->content($toolbarReset)
         ->encode(false)
         ->render() .
     new Form()->close();
-         
+
 $sortedAndPagedPaginator =
     (new OffsetPaginator($<?= $generator->getSmallSingularName(); ?>s))
     ->withPageSize($defaultPageSizeOffsetPaginator > 0 ?
@@ -143,7 +143,7 @@ $sortedAndPagedPaginator =
     ->withCurrentPage($page)
     ->withSort($sort)
     ->withToken(PageToken::next((string) $page));
-         
+
 $gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
@@ -160,7 +160,7 @@ echo GridView::widget()
   ->columns(...$columns)
   ->dataReader($sortedAndPagedPaginator)
   ->urlCreator($urlCreator)
-  ->headerRowAttributes(['class' => 'card-header bg-info text-black'])      
+  ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
   ->header($header)
   ->multiSort(true)
   ->id('w<?= $random; ?>-grid')

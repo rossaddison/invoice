@@ -35,7 +35,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
-<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>    
+<?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
     <?= Html::encode($translator->translate('payment.form')) ?>
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
@@ -79,7 +79,7 @@ echo Field::select($form, 'payment_method_id')
         ])
         ->value(Html::encode($form->getInv()?->getNumber() ?? $translator->translate('number.no')))
 ?>
-                <?= Html::closeTag('div'); ?>    
+                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'payment_date')
     ->label($translator->translate('date'))
@@ -96,7 +96,7 @@ echo Field::select($form, 'payment_method_id')
     ->addInputAttributes([
         'placeholder' => $translator->translate('note'),
         'value' => Html::encode($form->getNote() ?? ''),
-        'class' => 'form-control',
+        'class' => 'form-control form-control-lg',
         'id' => 'note',
         'readonly' => 'readonly',
         'disabled' => 'disabled',
@@ -117,11 +117,11 @@ echo Field::select($form, 'payment_method_id')
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= $viewCustomFields; ?>
-            <?= Html::closeTag('div'); ?>    
+            <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?=  new Form()->close() ?>   
+<?=  new Form()->close() ?>

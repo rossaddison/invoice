@@ -123,13 +123,13 @@ class FlashMessageTimer {
     calculateDuration(text) {
         // Remove HTML tags and get clean text
         const cleanText = text.replace(/<[^>]*>/g, '');
-        
+
         // Count words (split by whitespace and filter empty strings)
         const wordCount = cleanText.trim().split(/\s+/).filter(word => word.length > 0).length;
-        
+
         // Calculate reading time: base time + (words / reading speed) * 1000ms
         const readingTime = this.baseDuration + (wordCount / this.wordsPerSecond) * 1000;
-        
+
         // Ensure duration is within min/max bounds
         return Math.max(this.minDuration, Math.min(this.maxDuration, readingTime));
     }
@@ -138,11 +138,11 @@ class FlashMessageTimer {
         // Initialize timers for all flash messages
         const alerts = document.querySelectorAll('.alert.flash-message-fade');
         console.log('Found alerts:', alerts.length); // Debug log
-        
+
         alerts.forEach((alert, index) => {
             // Skip if timer already exists
             if (this.timers.has(alert)) return;
-            
+
             this.createTimer(alert, index);
         });
     }
@@ -151,9 +151,9 @@ class FlashMessageTimer {
         // Calculate content-based duration
         const messageText = alert.textContent || alert.innerText || '';
         const duration = this.calculateDuration(messageText);
-        
+
         console.log(`Message: "${messageText.substring(0, 50)}..." - Duration: ${duration}ms`); // Debug log
-        
+
         // Create countdown container
         const container = document.createElement('div');
         container.className = 'flash-message-container';
@@ -183,17 +183,17 @@ class FlashMessageTimer {
             if (this.paused.get(alert)) {
                 return; // Skip update when paused
             }
-            
+
             const elapsed = Date.now() - startTime - pausedTime;
             remaining = Math.max(0, duration - elapsed);
-            
+
             const seconds = Math.ceil(remaining / 1000);
             const progress = ((duration - remaining) / duration) * 100;
-            
+
             const progressElement = timerElement.querySelector('.countdown-progress');
             const textElement = timerElement.querySelector('.countdown-text');
             const pauseButtonElement = timerElement.querySelector('.pause-button');
-            
+
             if (progressElement && textElement && pauseButtonElement) {
                 progressElement.style.setProperty('--progress', progress + '%');
                 textElement.textContent = seconds;
@@ -215,7 +215,7 @@ class FlashMessageTimer {
         // Update immediately and then set interval
         updateTimer();
         const intervalId = setInterval(updateTimer, this.interval);
-        
+
         // Store timer reference with additional data
         this.timers.set(alert, {
             intervalId: intervalId,
@@ -242,7 +242,7 @@ class FlashMessageTimer {
     togglePause(alert, timerElement) {
         const isPaused = this.paused.get(alert);
         const timerData = this.timers.get(alert);
-        
+
         if (!timerData) return;
 
         if (isPaused) {
@@ -273,7 +273,7 @@ class FlashMessageTimer {
 
     hideAlert(alert, container) {
         alert.classList.add('hiding');
-        
+
         setTimeout(() => {
             if (container && container.parentNode) {
                 container.parentNode.removeChild(container);
@@ -286,18 +286,18 @@ class FlashMessageTimer {
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing flash timer'); // Debug log
-    
+
     const flashTimer = new FlashMessageTimer();
-    
+
     // Expose globally for Angular integration
     window.flashMessageTimer = flashTimer;
     window.flashMessageTimerInstance = flashTimer;
-    
+
     // Small delay to ensure all elements are rendered
     setTimeout(() => {
         flashTimer.init();
     }, 100);
-    
+
     // Re-initialize for dynamically added messages
     const observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     observer.observe(document.body, { childList: true, subtree: true });
 });
 </script>
@@ -337,7 +337,7 @@ foreach ($flashMessages as $key => $value) {
                 'dark' => $dark,
                 'default' => $info,
             };
-            
+
             $alert = Alert::widget()
                      ->addCssStyle([
                          'font-size' => $alertMessageFontSize . 'px',

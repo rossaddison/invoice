@@ -48,7 +48,7 @@ use Yiisoft\Html\Tag\Meta;
  * @var Yiisoft\View\WebView $this
  * @var bool $appCdnNotNodeModule
  * @var bool $invCdnNotNodeModule
- * @var bool $bootstrap5CdnNotNodeModule 
+ * @var bool $bootstrap5CdnNotNodeModule
  * @var bool $bootstrap5OffcanvasEnable
  * @var bool $isGuest
  * @var bool $buildDatabase
@@ -56,6 +56,8 @@ use Yiisoft\Html\Tag\Meta;
  * @var string $bootstrap5OffcanvasPlacement
  * @var string $bootstrap5LayoutInvoiceNavbarFont
  * @var string $bootstrap5LayoutInvoiceNavbarFontSize
+ * @var int $bootstrap5FormInputHeight
+ * @var int $bootstrap5FormFontSize
  * @var string $brandLabel
  * @var string $csrf
  * @var string $companyLogoHeight
@@ -68,6 +70,8 @@ use Yiisoft\Html\Tag\Meta;
  * @var string $scrutinizerRepository
  * @var string $splitterLanguage
  * @var string $splitterRegion
+ * @var string $currentLocaleFlag
+ * @var array<string,string> $localeFlags
  * @var DropdownItem $afZA
  * @var DropdownItem $arBH
  * @var DropdownItem $az
@@ -105,7 +109,7 @@ use Yiisoft\Html\Tag\Meta;
  *
  */
 
-// Settings ... View ... General 
+// Settings ... View ... General
 $assetManager->register($appCdnNotNodeModule ? AppCdnAsset::class
                                              : AppNodeModulesAsset::class);
 $assetManager->register($invCdnNotNodeModule ? InvCdn::class : InvNm::class);
@@ -140,16 +144,20 @@ echo Html::openTag('html',
  echo Html::openTag('head'); //1
  echo Meta::documentEncoding('utf-8');
  echo Meta::data('viewport', 'width=device-width, initial-scale=1');
-  echo new Style()->content('#nprogress .bar {
-             height: 2px !important; /* ~2mm */
-             background: #2196f3 !important;
-         }')->render();
+  echo new Style()->content(
+    ':root {'
+    . ' --inv-nav-fs: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;'
+    . ' --inv-nav-ff: ' . $bootstrap5LayoutInvoiceNavbarFont . ';'
+    . ' --inv-input-height: ' . $bootstrap5FormInputHeight . 'px;'
+    . ' --inv-form-fs: ' . $bootstrap5FormFontSize . 'px;'
+    . ' }'
+  )->render();
  echo Html::openTag('title'); //1
   echo $s->getSetting('custom_title') ?: 'Yii-Invoice';
  echo Html::closeTag('title'); //1
  $this->head();
 echo Html::closeTag('head');
-echo Html::openTag('body'); 
+echo Html::openTag('body');
  echo Html::tag('noscript',
   Html::tag('div', $t->translate('please.enable.js'),
    ['class' => 'alert alert-danger no-margin']),
@@ -195,16 +203,18 @@ echo  new Form()
 ->post($urlGenerator->generate('auth/logout'))
 ->csrf($csrf)
 ->open()
-. (string) Button::submit(
-    $t->translate('menu.logout',
-        ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))]),
-)
+. Button::submit(
+    (new I())->addClass('bi bi-box-arrow-right me-1')->render()
+    . Html::encode($t->translate('menu.logout',
+        ['login' => Html::encode(preg_replace('/\d+/', '', $userLogin))])),
+)->encode(false)
+->addClass('btn btn-outline-danger')
 ->addStyle('font-size: '
                 . $bootstrap5LayoutInvoiceNavbarFontSize
                 . 'px; padding: '
                 . ((int) $bootstrap5LayoutInvoiceNavbarFontSize * 0.15)
                 . 'px '
-                . ((int) $bootstrap5LayoutInvoiceNavbarFontSize * 0.4) . 'px;')  
+                . ((int) $bootstrap5LayoutInvoiceNavbarFontSize * 0.4) . 'px;')
 .  new Form()->close();
 
 $ifaq = 'invoice/faq';
@@ -235,10 +245,10 @@ if ((null !== $currentPath) && !$isGuest) {
             ->addCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-            ])    
+            ])
             ->items(
                 // Vat exists? Show red or green background
-                DropdownItem::text($t->translate('vat'), $itemFontArray + 
+                DropdownItem::text($t->translate('vat'), $itemFontArray +
                     ['style' => $vat ? 'color: black; background-color: #ffcccb' :
                         'color: black; background-color: #90EE90']),
                 // Debug Mode
@@ -259,7 +269,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 'color: cornflowerblue;',
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-            ])    
+            ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($t->translate('faq'))
             ->togglerSize(ButtonSize::LARGE)
@@ -303,9 +313,7 @@ if ((null !== $currentPath) && !$isGuest) {
             ),
             // E-Invoicing
             Dropdown::widget()
-            ->attributes([
-                'style' => 'background-color: #ffcccb',
-            ])
+            ->attributes(['class' => 'inv-warn'])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent( new Img()
                          ->width((int) $bootstrap5LayoutInvoiceNavbarFontSize * 2)
@@ -380,8 +388,11 @@ if ((null !== $currentPath) && !$isGuest) {
             ),
             // Generator
             Dropdown::widget()
-            ->attributes([
-                'style' => 'background-color: #ffcccb',
+            ->attributes(['class' => 'inv-warn'])
+            ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#ffc107',
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($t->translate('generator'))
@@ -417,19 +428,19 @@ if ((null !== $currentPath) && !$isGuest) {
                     false,
                     itemAttributes: $itemFontArray,
                 ),
-                // Using the saved locale dropdown setting under Settings 
+                // Using the saved locale dropdown setting under Settings
                 // ... Views ... Google Translate, translate one of the three
                 // files located in
                 // ..resources/views/generator/templates_protected
                 // Your Json file must be located in src/Invoice/
                 // google_translate_unique folder
-                // Get your downloaded Json file from 
+                // Get your downloaded Json file from
                 DropdownItem::link(
                     $t->translate('generator.google.translate.app'),
                     $urlGenerator->generate('generator/googleTranslateLang',
                         ['type' => 'app']),
                     false,
-                    itemAttributes: $itemFontArray + 
+                    itemAttributes: $itemFontArray +
                     ['data-bs-toggle' => 'tooltip',
                         'title' => $s->where('google_translate_json_filename'),
                             'hidden' => !$debugMode],
@@ -439,7 +450,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     $urlGenerator->generate('generator/googleTranslateLang',
                         ['type' => 'diff']),
                     false,
-                    itemAttributes: $itemFontArray + 
+                    itemAttributes: $itemFontArray +
                     ['data-bs-toggle' => 'tooltip',
                         'title' => 'src\Invoice\Language\English\diff_lang.php',
                             'hidden' => !$debugMode],
@@ -448,7 +459,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     $t->translate('generator.google.translate.info'),
                     $urlGenerator->generate('generator/googleTranslateInfo'),
                     false,
-                    itemAttributes: $itemFontArray + 
+                    itemAttributes: $itemFontArray +
                     ['data-bs-toggle' => 'tooltip',
                         'title' => 'Translate resources/views/invoice/info/en/'
                         . 'invoice.php',
@@ -458,7 +469,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     $t->translate('test.reset.setting'),
                     $urlGenerator->generate('invoice/settingReset'),
                     false,
-                    itemAttributes: $itemFontArray + 
+                    itemAttributes: $itemFontArray +
                     ['data-bs-toggle' => 'tooltip',
                         'title' => $t->translate('test.reset.setting.tooltip'),
                             'hidden' => !$debugMode],
@@ -467,7 +478,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     $t->translate('test.reset'),
                     $urlGenerator->generate('invoice/testDataReset'),
                     false,
-                    itemAttributes: $itemFontArray + 
+                    itemAttributes: $itemFontArray +
                     ['data-bs-toggle' => 'tooltip',
                         'title' => $t->translate('test.reset.tooltip'),
                             'hidden' => !$debugMode],
@@ -476,7 +487,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     $t->translate('test.remove'),
                     $urlGenerator->generate('invoice/testDataRemove'),
                     false,
-                    itemAttributes: $itemFontArray + 
+                    itemAttributes: $itemFontArray +
                     ['data-bs-toggle' => 'tooltip',
                         'title' => $t->translate('test.remove.tooltip'),
                             'hidden' => !$debugMode],
@@ -485,14 +496,18 @@ if ((null !== $currentPath) && !$isGuest) {
             // Performance
             Dropdown::widget()
             ->addAttributes([
-                'style' => $read_write ? 'background-color: #ffcccb'
-                                       : 'background-color: #90EE90',
+                'class' => $read_write ? 'inv-warn' : 'inv-ok',
                 'data-bs-toggle' => 'tooltip',
                 'title' => $read_write ? $t->translate(
                                                 'performance.label.switch.on')
                                        : $t->translate(
                                                'performance.label.switch.off'),
                 'hidden' => !$debugMode,
+            ])
+            ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#20c997',
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($t->translate('performance'))
@@ -540,7 +555,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     . (((string) ini_get('opcache.enable')  == 1 ?
                     '✅' : '❌')), itemAttributes: $itemFontArray),
                 DropdownItem::text(
-                    'php.ini (line 1794): opcache.enable_cli (pref 1) = ' 
+                    'php.ini (line 1794): opcache.enable_cli (pref 1) = '
                     . ((string) ini_get('opcache.enable_cli') ?: 'unknown')
                     . (((string) ini_get('opcache.enable_cli') == 1 ?
                     '✅' : '❌')), itemAttributes: $itemFontArray),
@@ -552,22 +567,22 @@ if ((null !== $currentPath) && !$isGuest) {
                             == 128 ?
                     '✅' : '❌')), itemAttributes: $itemFontArray +
                     ['data-bs-toggle' => 'tooltip',
-                            'title' => 
+                            'title' =>
                     'e.g. change manually in '
                     . 'C:\wamp64\bin\php\php8.1.13\phpForApache.ini'
                     . ' and restart all services.']),
                 DropdownItem::text(
                     'php.ini (line 1800): opcache.interned_strings_buffer'
-                    . ' (pref 64 for frameworks) = ' 
+                    . ' (pref 64 for frameworks) = '
                     . ((string) ini_get('opcache.interned_strings_buffer')
-                            ?: 'unknown') 
+                            ?: 'unknown')
                     . (((string) ini_get('opcache.interned_strings_buffer')
                             == 64 ? '✅' : '❌')),
                     itemAttributes: $itemFontArray),
                 DropdownItem::text(
                     'php.ini (line 1804): opcache.max_accelerated_files'
                     . ' (pref 10000) = '
-                    . ((string) ini_get('opcache.max_accelerated_files') 
+                    . ((string) ini_get('opcache.max_accelerated_files')
                     ?: 'unknown')
                     . (((string) ini_get('opcache.max_accelerated_files')
                             == 10000 ? '✅' : '❌')),
@@ -633,13 +648,18 @@ if ((null !== $currentPath) && !$isGuest) {
                 // Prometheus Monitoring Section
                 DropdownItem::text($subMenu->generate('Prometheus Monitoring',
                     $urlGenerator, $subMenuPrometheus,
-                    $bootstrap5LayoutInvoiceNavbarFont,    
+                    $bootstrap5LayoutInvoiceNavbarFont,
                     $bootstrap5LayoutInvoiceNavbarFontSize)),
             ),
             // Platform
             Dropdown::widget()
             ->addAttributes([
                 'hidden' => !$debugMode,
+            ])
+            ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+                'color' => '#adb5bd',
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent($t->translate('platform'))
@@ -668,7 +688,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     'https://php.net/supported-versions',
                     itemAttributes: $itemFontArray),
                 DropdownItem::link($t->translate('Psalm\'s Daniil Gentilli\'s Blog'),
-                    'https://https://blog.daniil.it/',
+                    'https://blog.daniil.it/',
                     itemAttributes: $itemFontArray),
                 DropdownItem::link($t->translate('platform.update'),
                     'https://wampserver.aviatechno.net/',
@@ -688,7 +708,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     . ' Superceding Typescript 5.95',
                     'https://github.com/microsoft/typescript-go',
                     itemAttributes: $itemFontArray),
-                DropdownItem::link('SonarLint4NetbeansPlugin', 
+                DropdownItem::link('SonarLint4NetbeansPlugin',
                     'https://plugins.netbeans.apache.org/catalogue/?id=21',
                     itemAttributes: $itemFontArray),
                 DropdownItem::link('Eclipse IDE for Php',
@@ -736,15 +756,12 @@ if ((null !== $currentPath) && !$isGuest) {
                     itemAttributes: $itemFontArray),
                 DropdownItem::link('StoreCove Whitepapers',
                     'https://www.storecove.com/us/en/whitepapers',
-                    itemAttributes: $itemFontArray),   
+                    itemAttributes: $itemFontArray),
                 DropdownItem::link('Jsonld  Playground for flattening Jsonld files',
                     'https://json-ld.org/playground/',
                     itemAttributes: $itemFontArray),
                 DropdownItem::link('Converting flattened file to php array',
                     'https://wtools.io/convert-json-to-php-array',
-                    itemAttributes: $itemFontArray),
-                DropdownItem::link('Jsonld  Playground for flattening Jsonld files',
-                    'https://json-ld.org/playground/',
                     itemAttributes: $itemFontArray),
                 DropdownItem::link('Using ngrok and Wampserver VirtualHosts',
                     'https://ngrok.com/docs/using-ngrok-with/virtualHosts/',
@@ -762,8 +779,12 @@ if ((null !== $currentPath) && !$isGuest) {
             // Php Watch
             Dropdown::widget()
             ->addAttributes([
-                'style' => 'font-size: 1rem;',
+                'class' => 'inv-php-menu',
                 'hidden' => !$debugMode,
+            ])
+            ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent('🐘')
@@ -785,8 +806,12 @@ if ((null !== $currentPath) && !$isGuest) {
             // Emojipedia.org
             Dropdown::widget()
             ->addAttributes([
-                'style' => 'font-size: 2rem; color: cornflowerblue;',
+                'class' => 'inv-emoji-menu',
                 'hidden' => !$debugMode,
+            ])
+            ->addTogglerCssStyle([
+                'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+                'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
             ])
             ->togglerVariant(ButtonVariant::INFO)
             ->togglerContent('😀')
@@ -800,7 +825,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link('➕', 
                     'https://emojipedia.org/plus', $debugMode,
                     false, itemAttributes: $itemFontArray +
-                    ['style' => 'background-color: #ffcccb']),    
+                    ['style' => 'background-color: #ffcccb']),
                 DropdownItem::link('❌', 
                     'https://emojipedia.org/cross-mark', $debugMode,
                     false, itemAttributes: $itemFontArray +
@@ -809,7 +834,7 @@ if ((null !== $currentPath) && !$isGuest) {
                     'https://emojipedia.org/'
                     . 'circled-information-source', $debugMode,
                     false, itemAttributes: $itemFontArray +
-                    ['style' => 'background-color: #ffcccb']),    
+                    ['style' => 'background-color: #ffcccb']),
                 DropdownItem::link('⬅', 
                     'https://emojipedia.org/left-arrow', $debugMode,
                     false, itemAttributes: $itemFontArray +
@@ -841,34 +866,30 @@ if ((null !== $currentPath) && !$isGuest) {
                 DropdownItem::link('⚙️', 
                     'https://emojipedia.org/gear', $debugMode,
                     false, itemAttributes: $itemFontArray +
-                    ['style' => 'background-color: #ffcccb']),    
+                    ['style' => 'background-color: #ffcccb']),
             ),
         );
     }
 
     echo Nav::widget()
-    ->class('navbar')
-    ->addAttributes([
-        'style' => 'font-size: '
-        . $bootstrap5LayoutInvoiceNavbarFontSize
-        . 'px;'
-        . ' background-color: #e3f2fd'])
+    ->class('navbar inv-nav')
     ->items(
         // Translate
         Dropdown::widget()
         ->addClass('navbar')
         ->addAttributes([
-            'style' => 'color: cornflowerblue;',
+            'class' => 'inv-cornflower',
             'data-bs-toggle' => 'tooltip',
             'title' => $t->translate('language'),
             'url' => '#',
         ])
-        ->addCssStyle([
+        ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-        ])       
+                'color' => '#0dcaf0',
+        ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent( new I()->class('bi bi-translate'))
+        ->togglerContent($currentLocaleFlag . ' ' . new I()->class('bi bi-translate'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
 // Related logic: config/web/params, src/ViewInjection/LayoutViewInjection
@@ -876,7 +897,7 @@ if ((null !== $currentPath) && !$isGuest) {
             $fil, $fr, $gdGB, $haNG, $heIL, $igNG, $nl, $de,
             $id, $it, $ja, $pl, $ptBR,
             $ru, $sk, $sl, $es, $uk, $uz, $vi, $yoNG, $zuZA
-        ),      
+        ),
         NavLink::to(
             //label
              new I()->class('bi bi-speedometer'),
@@ -897,35 +918,36 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Settings
         Dropdown::widget()
-        ->addClass('navbar')    
+        ->addClass('navbar')
         ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-        ])    
-        ->togglerVariant(ButtonVariant::INFO)
+            'color' => '#adb5bd',
+        ])
+        ->togglerVariant(ButtonVariant::SECONDARY)
         ->togglerContent( new I()->addClass('bi bi-gear'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($t->translate('view'),
+            DropdownItem::link($t->translate('debug') . ': ' . $t->translate('view'),
                 $urlGenerator->generate('setting/debugIndex'),
                     false, !$debugMode,
-                        ['style' => 'background-color: #ffcccb',
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
                          'hidden' => !$debugMode]),
             DropdownItem::link($t->translate('setting.add'),
                 $urlGenerator->generate('setting/add'),
                     false, !$debugMode,
-                        ['style' => 'background-color: #ffcccb',
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
                          'hidden' => !$debugMode]),
             DropdownItem::link($t->translate('caution.delete.invoices'),
                 $urlGenerator->generate('inv/flush'),
                     false, !$debugMode,
-                        ['style' => 'background-color: #ffcccb; ',
+                        $itemFontArray + ['style' => 'background-color: #ffcccb; font-size: ' . $bootstrap5LayoutInvoiceNavbarFontSize . 'px;',
                          'hidden' => !$debugMode]),
             DropdownItem::link($t->translate('view'),
                 $urlGenerator->generate('setting/tabIndex'),
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate((
-                ($s->getSetting('install_test_data') == '1') 
+                ($s->getSetting('install_test_data') == '1')
                 && ($s->getSetting('use_test_data') == '1'))
                 ? 'install.test.data' : 'install.test.data.goto.tab.index'),
                     (($s->getSetting('install_test_data') == '1'
@@ -988,7 +1010,12 @@ if ((null !== $currentPath) && !$isGuest) {
             'style' => 'font-size: 1rem; color: cornflowerblue;',
             'url' => '#',
         ])
-        ->togglerVariant(ButtonVariant::INFO)
+        ->addTogglerCssStyle([
+            'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
+            'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
+            'color' => '#ffa500',
+        ])
+        ->togglerVariant(ButtonVariant::WARNING)
         ->togglerContent($t->translate('peppol.abbreviation'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -1006,17 +1033,18 @@ if ((null !== $currentPath) && !$isGuest) {
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('peppol.store.cove.1.1.4'),
                 $urlGenerator->generate('invoice/storeCoveSendTestJsonInvoice'),
-                itemAttributes: $itemFontArray    
+                itemAttributes: $itemFontArray
             ),
         ),
         // Client
         Dropdown::widget()
         ->addClass('navbar')
-        ->addCssStyle([
+        ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-        ])   
-        ->togglerVariant(ButtonVariant::INFO)
+            'color' => '#198754',
+        ])
+        ->togglerVariant(ButtonVariant::SUCCESS)
         ->togglerContent( new I()->addClass('bi bi-people'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -1038,16 +1066,14 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Quote
         Dropdown::widget()
-        ->addClass('navbar')
-        ->addAttributes([
-            'style' => 'color: cornflowerblue;',
-        ])
-        ->addCssStyle([
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-        ])       
+            'color' => '#0dcaf0',
+        ])
         ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($t->translate('quote'))
+        ->togglerContent(new I()->addClass('bi bi-chat-square-text') . ' ' . $t->translate('quote'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('create.quote'),
@@ -1059,34 +1085,30 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // SalesOrder
         Dropdown::widget()
-        ->addClass('navbar')
-        ->addAttributes([
-            'style' => 'color: cornflowerblue;',
-        ])
-        ->addCssStyle([
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-        ])       
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($t->translate('salesorder'))
+            'color' => '#0d6efd',
+        ])
+        ->togglerVariant(ButtonVariant::PRIMARY)
+        ->togglerContent(new I()->addClass('bi bi-bag') . ' ' . $t->translate('salesorder'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
-            DropdownItem::link($t->translate('view'), 
+            DropdownItem::link($t->translate('view'),
                 $urlGenerator->generate('salesorder/index'),
                 itemAttributes: $itemFontArray),
         ),
         // Invoice
         Dropdown::widget()
-        ->addClass('navbar')
-        ->addAttributes([
-            'style' => 'color: cornflowerblue;',
-        ])
-        ->addCssStyle([
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-        ])       
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($t->translate('invoice'))
+            'color' => '#dc3545',
+        ])
+        ->togglerVariant(ButtonVariant::DANGER)
+        ->togglerContent(new I()->addClass('bi bi-file-text') . ' ' . $t->translate('invoice'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('create.invoice'),
@@ -1095,21 +1117,19 @@ if ((null !== $currentPath) && !$isGuest) {
             DropdownItem::link($t->translate('view'),
                 $urlGenerator->generate('inv/index'),
                 itemAttributes: $itemFontArray),
-            DropdownItem::link($t->translate('recurring'), 
+            DropdownItem::link($t->translate('recurring'),
                 $urlGenerator->generate('invrecurring/index'),
                 itemAttributes: $itemFontArray),
         ),
         // Payment
         Dropdown::widget()
-        ->addClass('navbar')
-        ->addAttributes([
-            'style' => 'color: cornflowerblue;',
-        ])
-        ->addCssStyle([
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-        ])       
-        ->togglerVariant(ButtonVariant::INFO)
+                'color' => '#20c997',
+        ])
+        ->togglerVariant(ButtonVariant::SUCCESS)
         ->togglerContent( new I()->addClass('bi bi-coin'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
@@ -1125,16 +1145,14 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Product
         Dropdown::widget()
-        ->addClass('navbar')
-        ->addAttributes([
-            'style' => 'color: cornflowerblue;',
-        ])
-        ->addCssStyle([
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-        ])       
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($t->translate('product'))
+                'color' => '#fd7e14',
+        ])
+        ->togglerVariant(ButtonVariant::WARNING)
+        ->togglerContent(new I()->addClass('bi bi-box-seam') . ' ' . $t->translate('product'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('add.product'),
@@ -1157,7 +1175,7 @@ if ((null !== $currentPath) && !$isGuest) {
                 itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('faq'),
                 $urlGenerator->generate('qa/index'),
-                itemAttributes: $itemFontArray),    
+                itemAttributes: $itemFontArray),
             DropdownItem::link($t->translate('unit'),
                 $urlGenerator->generate('unit/index'),
                 itemAttributes: $itemFontArray),
@@ -1166,16 +1184,14 @@ if ((null !== $currentPath) && !$isGuest) {
                 itemAttributes: $itemFontArray),
         ),
         Dropdown::widget()
-        ->addClass('navbar')
-        ->addAttributes([
-            'style' => 'color: cornflowerblue;',
-        ])
-        ->addCssStyle([
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-            ])       
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($t->translate('tasks'))
+                'color' => '#6f42c1',
+            ])
+        ->togglerVariant(ButtonVariant::SECONDARY)
+        ->togglerContent(new I()->addClass('bi bi-check2-square'). ' ' . $t->translate('tasks'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('add.task'),
@@ -1187,16 +1203,14 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Projects
         Dropdown::widget()
-        ->addClass('navbar')
-        ->addAttributes([
-            'style' => 'color: cornflowerblue;',
-        ])
-        ->addCssStyle([
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-            ])       
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($t->translate('projects'))
+                'color' => '#6610f2',
+            ])
+        ->togglerVariant(ButtonVariant::PRIMARY)
+        ->togglerContent(new I()->addClass('bi bi-kanban'). ' ' . $t->translate('projects'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('create.project'),
@@ -1208,16 +1222,14 @@ if ((null !== $currentPath) && !$isGuest) {
         ),
         // Reports
         Dropdown::widget()
-        ->addClass('navbar')
-        ->addAttributes([
-            'style' => 'color: cornflowerblue;',
-        ])
-        ->addCssStyle([
+        ->addClass('navbar inv-cornflower')
+        ->addTogglerCssStyle([
                 'font-size' => $bootstrap5LayoutInvoiceNavbarFontSize . 'px',
                 'font-family' => $bootstrap5LayoutInvoiceNavbarFont,
-        ])       
-        ->togglerVariant(ButtonVariant::INFO)
-        ->togglerContent($t->translate('reports'))
+                'color' => '#343a40',
+        ])
+        ->togglerVariant(ButtonVariant::DARK)
+        ->togglerContent(new I()->addClass('bi bi-bar-chart-line') . ' ' . $t->translate('reports'))
         ->togglerSize(ButtonSize::LARGE)
         ->items(
             DropdownItem::link($t->translate('sales.by.client'),
@@ -1248,7 +1260,7 @@ if ((null !== $currentPath) && !$isGuest) {
 } //null!== currentPath && !isGuest
 echo NavBar::end();
 echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
-echo Html::openTag('div', ['id' => 'main-area']); 
+echo Html::openTag('div', ['id' => 'main-area']);
  // Display the sidebar if enabled
  if ($s->getSetting('disable_sidebar') !== (string) 1) {
   include dirname(__DIR__) . '/invoice/layout/sidebar.php';
@@ -1261,13 +1273,16 @@ echo Html::openTag('div', ['id' => 'main-area']);
   'style' => 'display: none',
  ]); //1
   echo Html::openTag('div', ['class' => 'loader-content']); //2
-   echo new I()
-    ->addAttributes(['id' => 'loader-icon'])
-    ->addClass('fa fa-cog fa-spin')
-    ->render();
+   echo Html::openTag('div', [
+    'id' => 'loader-icon',
+    'class' => 'spinner-border text-primary',
+    'role' => 'status',
+   ]);
+    echo Html::tag('span', 'Loading...', ['class' => 'visually-hidden']);
+   echo Html::closeTag('div');
   echo Html::closeTag('div'); //2
  echo Html::closeTag('div'); //1
-echo Html::closeTag('div'); 
+echo Html::closeTag('div');
 echo Html::openTag('footer', ['class' => 'container py-4']);
  echo PerformanceMetrics::widget();
 echo Html::closeTag('footer');

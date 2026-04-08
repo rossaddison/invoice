@@ -46,7 +46,7 @@ use App\Widget\LabelSwitch;
 
 <?php
     // draft => show the url
-    if ($quote->getStatusId() == 1) 
+    if ($quote->getStatusId() == 1)
     { ?>
     <div class="quote-properties">
         <label for="quote_guest_url" hidden><?php echo $translator->translate('guest.url'); ?></label>
@@ -54,7 +54,7 @@ use App\Widget\LabelSwitch;
             <input type="text" id="quote_guest_url" disabled class="form-control form-control-lg" value="<?= $quote->getUrlKey(); ?>">
             <span class="input-group-text to-clipboard cursor-pointer"
                   data-clipboard-target="#quote_guest_url">
-                <i class="fa fa-clipboard fa-fw"></i>
+                <i class="bi bi-clipboard"></i>
             </span>
         </div>
     </div>
@@ -62,15 +62,15 @@ use App\Widget\LabelSwitch;
 <?php
     // sent 2 or viewed 3 or rejected 5 AND no sales order => approve before transferring to sales order
     // if there was a sales order associated with it, we would not be able to approve it since it has been approved already
-    if (($quote->getStatusId() === 2 || 
-         $quote->getStatusId() === 3 || 
-         $quote->getStatusId() === 5)  && 
-         !$invEdit && ($quote->getSoId() === '0' || empty($quote->getSoId()))) 
+    if (($quote->getStatusId() === 2 ||
+         $quote->getStatusId() === 3 ||
+         $quote->getStatusId() === 5)  &&
+         !$invEdit && ($quote->getSoId() === '0' || empty($quote->getSoId())))
     { ?>
     <div>
         <br>
-        <a href="<?= $urlGenerator->generate('quote/urlKey', ['url_key' => $quote->getUrlKey()]); ?>" class="btn btn-success">  
-            <?= $translator->translate('approve.this.quote') ; ?></i>    
+        <a href="<?= $urlGenerator->generate('quote/urlKey', ['url_key' => $quote->getUrlKey()]); ?>" class="btn btn-success">
+            <?= $translator->translate('approve.this.quote') ; ?></i>
         </a>
     </div>
 <?php } ?>
@@ -78,22 +78,22 @@ use App\Widget\LabelSwitch;
     // sent 2 or viewed 3 or approved 4 AND user not permission to edit AND no sales order => can be rejected by user
     // if there was a sales order associated with it we would not be able to reject it
     if (($quote->getStatusId() === 2 ||
-         $quote->getStatusId() === 3 || 
+         $quote->getStatusId() === 3 ||
          $quote->getStatusId() === 4)  &&
-         !$invEdit && ($quote->getSoId() === '0' || empty($quote->getSoId()))) 
+         !$invEdit && ($quote->getSoId() === '0' || empty($quote->getSoId())))
     { ?>
     <div>
         <br>
-        <a href="<?= $urlGenerator->generate('quote/urlKey', ['url_key' => $quote->getUrlKey()]); ?>" class="btn btn-danger">  
-            <?= $translator->translate('reject.this.quote') ; ?></i>    
+        <a href="<?= $urlGenerator->generate('quote/urlKey', ['url_key' => $quote->getUrlKey()]); ?>" class="btn btn-danger">
+            <?= $translator->translate('reject.this.quote') ; ?></i>
         </a>
     </div>
 <?php } ?>
 <input type="text" id="dropzone_client_id" readonly  hidden class="form-control form-control-lg" value="<?= $quote->getClient()?->getClientId(); ?>">
-<?php 
+<?php
     // the quote has already been approved because it has a sales order number associated with it => it can only be viewed
-    if ($quote->getSoId()) 
-    { ?>  
+    if ($quote->getSoId())
+    { ?>
     <div has-feedback">
         <label for="salesorder_to_url"><?= $translator->translate('salesorder'); ?></label>
         <div class="input-group">

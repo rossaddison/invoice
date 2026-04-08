@@ -34,7 +34,7 @@ foreach ($orm_schema->getColumns() as $column) {
 ?>
 
 final class <?= $generator->getCamelcaseCapitalName();?>Form extends FormModel
-{    
+{
     <?php
     echo "\n";
 foreach ($orm_schema->getColumns() as $column) {
@@ -79,7 +79,7 @@ foreach ($orm_schema->getColumns() as $column) {
 }
 ?>
 
-    public function __construct(<?= $generator->getCamelcaseCapitalName();?> $<?= $generator->getSmallSingularName();?>) 
+    public function __construct(<?= $generator->getCamelcaseCapitalName();?> $<?= $generator->getSmallSingularName();?>)
     {
     <?php
     echo "\n";
@@ -96,7 +96,7 @@ foreach ($orm_schema->getColumns() as $column) {
 echo rtrim($bo, ",\n") . "\n";
 ?>
     }
-    
+
     <?php
 /**
  * @var Cycle\Database\Schema\AbstractColumn $column

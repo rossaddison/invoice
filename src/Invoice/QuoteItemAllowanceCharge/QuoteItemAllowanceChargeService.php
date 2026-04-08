@@ -70,7 +70,7 @@ final readonly class QuoteItemAllowanceChargeService
         float $vat_or_tax
     ): void {
         $this->persist($array, $model);
-        
+
         isset($array['quote_id']) ?
             $model->setQuoteId((int) $array['quote_id']) : '';
         isset($array['quote_item_id']) ?
@@ -81,7 +81,7 @@ final readonly class QuoteItemAllowanceChargeService
             $model->setAllowanceChargeId(
                 (int) $array['allowance_charge_id']
             ) : '';
-        isset($array['amount']) ? 
+        isset($array['amount']) ?
             $model->setAmount((int) $array['amount']) : '';
         $model->setVatOrTax($vat_or_tax);
         $this->repository->save($model);
@@ -92,8 +92,8 @@ final readonly class QuoteItemAllowanceChargeService
         QIAR $qiaR,
         ACQIR $acqiR
     ): void {
-        // before deleting the allowance/charge, record its 
-        // related quote_item_id so that we can update the 
+        // before deleting the allowance/charge, record its
+        // related quote_item_id so that we can update the
         // quote_item_amount record
         $quote_item_id = $model->getQuoteItemId();
         // delete the allowance / charge
@@ -101,7 +101,7 @@ final readonly class QuoteItemAllowanceChargeService
         $quote_item_amount = $qiaR->repoQuoteItemAmountquery(
             $quote_item_id
         );
-        // rebuild the accumulative totals for the 
+        // rebuild the accumulative totals for the
         // quote_item_amount
         if (null !== $quote_item_amount) {
             $all_charges = 0.00;
@@ -112,31 +112,31 @@ final readonly class QuoteItemAllowanceChargeService
             /** @var QuoteItemAllowanceCharge $acqi */
             foreach ($acqis as $acqi) {
                 // charge add
-                if ($acqi->getAllowanceCharge()?->getIdentifier() 
+                if ($acqi->getAllowanceCharge()?->getIdentifier()
                     == '1') {
                     $all_charges += (float) $acqi->getAmount();
-                    $all_charges_vat_or_tax += 
+                    $all_charges_vat_or_tax +=
                         (float) $acqi->getVatOrTax();
                 } else {
                     // allowance subtract
                     $all_allowances += (float) $acqi->getAmount();
-                    $all_allowances_vat_or_tax += 
+                    $all_allowances_vat_or_tax +=
                         (float) $acqi->getVatOrTax();
                 }
             }
-            // Record the rebuilt accumulative charges and 
+            // Record the rebuilt accumulative charges and
             // allowances totals in the QuoteItemAmount Entity
             $quote_item_amount->setCharge($all_charges);
             $quote_item_amount->setAllowance($all_allowances);
-            $all_vat_or_tax = $all_charges_vat_or_tax - 
+            $all_vat_or_tax = $all_charges_vat_or_tax -
                 $all_allowances_vat_or_tax;
-            $current_item_quantity = 
+            $current_item_quantity =
                 $quote_item_amount->getQuoteItem()?->getQuantity()
                 ?? 0.00;
-            $current_item_price = 
+            $current_item_price =
                 $quote_item_amount->getQuoteItem()?->getPrice()
                 ?? 0.00;
-            $discount_per_item = 
+            $discount_per_item =
                 $quote_item_amount->getQuoteItem()?->getDiscountAmount()
                 ?? 0.00;
             $quantity_price = $current_item_quantity *
@@ -146,9 +146,9 @@ final readonly class QuoteItemAllowanceChargeService
             $tax_percent =
                 $quote_item_amount->getQuoteItem()
                 ?->getTaxRate()?->getTaxRatePercent();
-            $qpIncAc = $quantity_price + $all_charges - 
+            $qpIncAc = $quantity_price + $all_charges -
                 $all_allowances;
-            $current_tax_total = ($qpIncAc - 
+            $current_tax_total = ($qpIncAc -
                 $current_discount_item_total)
                 * ($tax_percent ?? 0.00) / 100.00;
             $new_tax_total = $current_tax_total + $all_vat_or_tax;
@@ -158,7 +158,7 @@ final readonly class QuoteItemAllowanceChargeService
                 $current_discount_item_total
             );
             $quote_item_amount->setTaxTotal($new_tax_total);
-            $overall_total = $qpIncAc - 
+            $overall_total = $qpIncAc -
                 $current_discount_item_total + $new_tax_total;
             $quote_item_amount->setTotal($overall_total);
             $qiaR->save($quote_item_amount);

@@ -224,7 +224,7 @@ $columns = [
         header: $translator->translate('view'),
         content: static function (SalesOrder $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '',
-                    ['class' => 'fa fa-eye fa-margin']),
+                    ['class' => 'bi-eye']),
                     $urlGenerator->generate('salesorder/view',
                             ['id' => $model->getId()]), []);
         },
@@ -239,16 +239,16 @@ $columns = [
                 $span = $soR->getSpecificStatusArrayLabel((string) $statusId);
                 $class = $soR->getSpecificStatusArrayClass($statusId);
                 $spanTag = Html::tag('span', $span, ['id' => '#so-to-invoice',
-                    'class' => 'label ' . $class]);
+                    'class' => 'badge text-bg-' . $class]);
                 if (7 !== $statusId) {
                     return $spanTag;
                 } else {
                     return Html::tag('a', $spanTag, [
                         'href' => $urlGenerator->generate(
-                                'salesorder/so_to_invoice',
-                                ['id' => $model->getId()]), 
+                                'salesorder/soToInvoice',
+                                ['id' => $model->getId()]),
                         'style' => 'text-decoration:none']);
-                }   
+                }
             }
             return Html::tag('span');
         },
@@ -388,23 +388,23 @@ if ($enableGrouping) {
 
 $toolbarString =  new Form()->post($urlGenerator->generate(
                                     'salesorder/index'))->csrf($csrf)->open()
-    .  new Div()->addClass('float-start')->content(
+    .  new Div()->addClass('d-flex align-items-center flex-wrap gap-2')->content(
         Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
         . $allVisible
         . $toolbarReset
         . Html::closeTag('div')
         . $statusBar
         .  new Div()
-            ->addClass('btn-group ms-3')
+            ->addClass('d-flex align-items-center gap-1')
             ->addAttributes(['role' => 'group'])
             ->content(
                  new Label()
                     ->addClass(
-                       'btn btn-outline-secondary active bi bi-collection me-1')
+                       'btn btn-sm btn-outline-secondary active bi bi-collection me-1')
                     ->content(' ' . $translator->translate('group.by') . ':')
                 .
                  new Select()
-                    ->addClass('form-select')
+                    ->addClass('form-select form-select-sm')
                     ->addAttributes([
                         'style' => 'max-width: 150px;',
                         'onchange' => 'window.location.href=\''
@@ -423,7 +423,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate(
             )
             ->encode(false)
             ->render()
-        . ($enableGrouping ? 
+        . ($enableGrouping ?
              new Div()
                 ->addClass('btn-group ms-2')
                 ->addAttributes(['role' => 'group'])
@@ -472,15 +472,15 @@ if ($enableGrouping) {
         // Ensure the salesorder is of the expected type
         assert($salesorder instanceof SalesOrder);
         $currentGroupValue = $getGroupValue($salesorder);
-        
+
         if ($previousGroupValue !== $currentGroupValue) {
             $previousGroupValue = $currentGroupValue;
             $groupData = $groupTotals[$currentGroupValue];
             $currencySymbol = $s->getSetting('currency_symbol');
-            
+
             // Get column count
             $columnCount = 9;
-            
+
             return \Yiisoft\Html\Html::tr()
                 ->addClass(
                 'group-header bg-secondary text-white fw-bold group-collapsible')
@@ -515,7 +515,7 @@ if ($enableGrouping) {
                         ->encode(false)
                 );
         }
-        
+
         return null;
     });
 }
@@ -535,14 +535,14 @@ echo $gridView
 
 ?>
 
-<?php if ($enableGrouping): 
+<?php if ($enableGrouping):
     $groupingScript = <<<JS
 // Toggle individual group rows
 function toggleGroupRows(headerRow) {
     const icon = headerRow.querySelector('.group-toggle-icon');
     let nextRow = headerRow.nextElementSibling;
     let isCollapsed = icon.classList.contains('bi-chevron-right');
-    
+
     // Toggle icon
     if (isCollapsed) {
         icon.classList.remove('bi-chevron-right');
@@ -551,7 +551,7 @@ function toggleGroupRows(headerRow) {
         icon.classList.remove('bi-chevron-down');
         icon.classList.add('bi-chevron-right');
     }
-    
+
     // Toggle rows until next group header or end of table
     while (nextRow && !nextRow.classList.contains('group-header')) {
         if (isCollapsed) {
@@ -569,7 +569,7 @@ function toggleAllGroups(expand) {
     groupHeaders.forEach(header => {
         const icon = header.querySelector('.group-toggle-icon');
         let nextRow = header.nextElementSibling;
-        
+
         // Set icon state
         if (expand) {
             icon.classList.remove('bi-chevron-right');
@@ -578,7 +578,7 @@ function toggleAllGroups(expand) {
             icon.classList.remove('bi-chevron-down');
             icon.classList.add('bi-chevron-right');
         }
-        
+
         // Toggle rows
         while (nextRow && !nextRow.classList.contains('group-header')) {
             nextRow.style.display = expand ? '' : 'none';

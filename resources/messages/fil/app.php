@@ -1759,7 +1759,7 @@ return [
 'yes' => 'Oo',
 'zip' => 'Post Code',
 'zip.code' => 'Post Code',
-    
+
 'allowance.or.charge.allowance.tax' => 'Buwis sa allowance',
 'allowance.or.charge.charge.tax' => 'Buwis sa bayad',
 'allowance.or.charge.inv.add' => 'Magdagdag ng Invoice Allowance o Singilin',

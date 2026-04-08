@@ -61,13 +61,13 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (ProductImage $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('productimage/view', ['id' => $model->getId()]), [])->render();
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('productimage/view', ['id' => $model->getId()]), [])->render();
         },
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (ProductImage $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('productimage/edit', ['id' => $model->getId()]), [])->render();
+            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('productimage/edit', ['id' => $model->getId()]), [])->render();
         },
     ),
     new DataColumn(
@@ -76,7 +76,7 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',

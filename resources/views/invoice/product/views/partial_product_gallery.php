@@ -26,7 +26,7 @@ if ($invEdit && $invView) {
   </div>
   <div class="panel-body clearfix">
     <div class="container">
-        <?php if ($invView && $invEdit) { ?> 
+        <?php if ($invView && $invEdit) { ?>
         <div class='row'>
             <?php
                /**
@@ -36,7 +36,7 @@ if ($invEdit && $invView) {
                 <a data-bs-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
                     <img src="<?= '/products/' . $productImage->getFileNameOriginal(); ?>"   class="img-fluid">
                 </a>
-             <?php } ?> 
+             <?php } ?>
         </div>
         <?php } ?>
     </div>

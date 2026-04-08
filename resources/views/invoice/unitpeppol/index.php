@@ -72,14 +72,14 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (UnitPeppol $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']), $urlGenerator->generate('unitpeppol/view', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('unitpeppol/view', ['id' => $model->getId()]), []);
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (UnitPeppol $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'fa fa-edit fa-margin']), $urlGenerator->generate('unitpeppol/edit', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('unitpeppol/edit', ['id' => $model->getId()]), []);
         },
         encodeContent: false,
     ),
@@ -89,7 +89,7 @@ $columns = [
             return Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',

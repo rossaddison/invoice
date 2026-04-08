@@ -21,7 +21,7 @@ echo H::openTag('div', ['class' => 'border border-line-1 border-danger']); //1
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_layout_invoice_navbar_font]',
     'id' => 'settings[bootstrap5_layout_invoice_navbar_font]',
-    'class' => 'form-control',
+    'class' => 'form-control form-control-lg',
    ]);
     echo  new Option()->value('0')->content('Arial');
    /**
@@ -44,7 +44,7 @@ echo H::openTag('div', ['class' => 'border border-line-1 border-danger']); //1
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_layout_invoice_navbar_font_size]',
     'id' => 'settings[bootstrap5_layout_invoice_navbar_font_size]',
-    'class' => 'form-control',
+    'class' => 'form-control form-control-lg',
    ]);
     echo  new Option()->value('0')->content('10');
    /**

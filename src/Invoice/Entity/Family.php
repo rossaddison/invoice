@@ -41,7 +41,7 @@ class Family
     {
         $this->family_name = $family_name;
     }
-    
+
     public function getFamilyCommalist(): ?string
     {
         return $this->family_commalist;
@@ -51,7 +51,7 @@ class Family
     {
         $this->family_commalist = $family_commalist;
     }
-    
+
     public function getFamilyProductprefix(): ?string
     {
         return $this->family_productprefix;

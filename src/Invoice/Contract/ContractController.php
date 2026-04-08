@@ -245,7 +245,7 @@ final class ContractController extends BaseController
         }
         return $this->webService->getRedirectResponse('contract/index');
     }
-    
+
     private function rbacObserver(
                                     string $clientId, UCR $ucR, UIR $uiR): bool {
         $userClient = $ucR->repoUserquery($clientId);

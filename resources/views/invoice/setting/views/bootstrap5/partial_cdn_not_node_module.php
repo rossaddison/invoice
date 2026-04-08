@@ -6,7 +6,7 @@ use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Option;
 
 /**
- * @var App\Invoice\Setting\SettingRepository $s 
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $body
  */
@@ -19,12 +19,12 @@ echo H::openTag('div', ['class' => 'border border-1 border-info']); //1
    ]);
     echo $translator->translate('bootstrap5.cdn.not.node.module');
    echo H::closeTag('label');
-   $body['settings[bootstrap5_cdn_not_node_module]'] = 
+   $body['settings[bootstrap5_cdn_not_node_module]'] =
    $s->getSetting('bootstrap5_cdn_not_node_module');
    echo H::openTag('select', [
     'name' => 'settings[bootstrap5_cdn_not_node_module]',
     'id' => 'settings[bootstrap5_cdn_not_node_module]',
-    'class' => 'form-control'
+    'class' => 'form-control form-control-lg',
    ]);
     echo  new Option()
      ->value('0')

@@ -155,7 +155,7 @@ echo Html::script($js3)->type('module');
                         ->csrf($csrf)
                         ->id('MailerQuoteForm')
                         ->open()
-?> 
+?>
                     <?=
     $alert;
 // The below panel is hidden but necessary for the emailtemplate.js to work with the quote dropdown
@@ -171,7 +171,7 @@ echo Html::script($js3)->type('module');
                                             ->id('email_template_type_invoice'),
                             ),
                             ['class' => 'radio'],
-                        ); ?>                                            
+                        ); ?>
                         <?= Html::tag(
                             'Div',
                             Html::tag(
@@ -188,50 +188,50 @@ echo Html::script($js3)->type('module');
                     <?= Html::tag('Label', $translator->translate('to.email')) ?>
                     <?= Field::email($form, 'to_email')->addInputAttributes(['value' => Html::encode($quote->getClient()?->getClientEmail())])
                                                            ->hideLabel()
-                                                           ->required(true); ?> 
-                    
-                    <?= Html::tag('Label', $translator->translate('email.template')) ?>                        
+                                                           ->required(true); ?>
+
+                    <?= Html::tag('Label', $translator->translate('email.template')) ?>
                     <?= Field::select($form, 'email_template')->optionsData($dropdownTitlesOfEmailTemplates, true, [], [])
                                                                   ->disabled(empty($dropdownTitlesOfEmailTemplates) ? true : false)
                                                                   ->hideLabel() ?>
-                    
+
                     <?= Html::tag('Label', $translator->translate('from.name')) ?>
                     <?= Field::text($form, 'from_name')->addInputAttributes(['class' => 'email-template-from-name form-control'])
                                                            ->addInputAttributes(['value' => $autoTemplate['from_name'] ?? '' ?: Html::encode($userInv->getName())])
                                                            ->hideLabel()
                                                            ->required(true); ?>
-                    
+
                     <?= (string) Html::tag('Label', $translator->translate('from.email')) . str_repeat("&nbsp;", 2) . ($autoTemplate['from_email'] ? $translator->translate('email.source.email.template') : $translator->translate('email.source.user.account')) ?>
                     <?= Field::email($form, 'from_email')->addInputAttributes(['value' => $autoTemplate['from_email'] ?? '' ?: Html::encode($userInv->getUser()?->getEmail())])->hideLabel()
                                                              ->addInputAttributes(['class' => 'email-template-from-email form-control'])
-                                                             ->required(true); ?>                            
-                    
+                                                             ->required(true); ?>
+
                     <?= Html::tag('Label', $translator->translate('cc')) ?>
                     <?= Field::text($form, 'cc')->addInputAttributes(['class' => 'email-template-cc form-control'])
                                                     ->addInputAttributes(['value' => $autoTemplate['cc'] ?? '' ])
                                                     ->hideLabel()?>
-                    
+
                     <?= Html::tag('Label', $translator->translate('bcc')) ?>
                     <?= Field::email($form, 'bcc')->addInputAttributes(['class' => 'email-template-bcc form-control'])
                                                       ->addInputAttributes(['value' => $autoTemplate['bcc'] ?? '' ])
                                                       ->hideLabel()?>
-                                        
+
                     <?= Html::tag('Label', $translator->translate('subject')) ?>
                     <?= Field::text($form, 'subject')->addInputAttributes(['id' => 'mailerquoteform-subject'])
                                                          ->addInputAttributes(['class' => 'email-template-subject form-control'])
                                                          ->addInputAttributes(['value' => $autoTemplate['subject'] ?? '' ?: $translator->translate('quote') . '#' . ($quote->getNumber() ?? '#')])
                                                          ->hideLabel()
                                                          ->required(true); ?>
-                    
+
                     <?= Html::tag('Label', $translator->translate('pdf.template')) ?>
                     <?= Field::select($form, 'pdf_template')->optionsData($pdfTemplates, true, [], [])
                                                                 ->disabled(empty($pdfTemplates) ? true : false)
                                                                 ->addInputAttributes(['class' => 'email-template-pdf-template form-control'])
                                                                 ->addInputAttributes(['value' => $settingStatusPdfTemplate ?: ucfirst('invoice')])
                                                                 ->hideLabel()?>
-                    
+
                     <?= Html::tag('Label', $translator->translate('body')) ?>
-                    
+
                     <?= Field::textarea($form, 'body')->addInputAttributes(['id' => 'mailerquoteform-body'])
                                                       ->addInputAttributes(['class' => 'email-template-body form-control taggable'])
                                                       ->addInputAttributes(['style' => 'height: 300px'])
@@ -240,19 +240,19 @@ echo Html::script($js3)->type('module');
                                                       ->wrap('hard')
                                                       ->hideLabel()
 ?>
-                    
+
                     <div class="html-tags btn-group btn-group-sm">
                         <span class="html-tag btn btn-default" data-tag-type="text-paragraph">
-                            <i class="fa fa-paragraph"></i>
+                            <i class="bi bi-text-paragraph"></i>
                         </span>
                         <span class="html-tag btn btn-default" data-tag-type="text-linebreak">
                             &lt;br&gt;
                         </span>
                         <span class="html-tag btn btn-default" data-tag-type="text-bold">
-                            <i class="fa fa-bold"></i>
+                            <i class="bi bi-type-bold"></i>
                         </span>
                         <span class="html-tag btn btn-default" data-tag-type="text-italic">
-                            <i class="fa fa-italic"></i>
+                            <i class="bi bi-type-italic"></i>
                         </span>
                     </div>
                     <div class="html-tags btn-group btn-group-sm">
@@ -263,7 +263,7 @@ echo Html::script($js3)->type('module');
                     </div>
                     <div class="html-tags btn-group btn-group-sm">
                         <span class="html-tag btn btn-default" data-tag-type="text-code">
-                            <i class="fa fa-code"></i>
+                            <i class="bi bi-code-slash"></i>
                         </span>
                         <span class="html-tag btn btn-default" data-tag-type="text-hr">
                             &lt;hr/&gt;
@@ -272,28 +272,28 @@ echo Html::script($js3)->type('module');
                             CSS
                         </span>
                     </div>
-                    
+
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <?= $translator->translate('preview'); ?>
                             <div id="email-template-preview-reload" class="pull-right cursor-pointer">
-                                <i class="fa fa-refresh"></i>
+                                <i class="bi bi-arrow-clockwise"></i>
                             </div>
                         </div>
                         <div class="panel-body">
                             <iframe id="email-template-preview"></iframe>
                         </div>
                     </div>
-                    
+
                     <div>
                         <?php echo $templateTags ?>
-                    </div>                    
-                    
+                    </div>
+
                     <?= Field::file($form, 'attachFiles[]')
     ->containerClass('mb-3')
     ->multiple()
     ->hideLabel()
-?>                   
+?>
                     <div>
                     <div class="form-group"><?= Html::tag('Label', $translator->translate('guest.url'), ['for' => 'quote-guest-url']); ?></label>
                         <div class="input-group">
@@ -303,11 +303,11 @@ echo Html::script($js3)->type('module');
                                           'value' => $urlGenerator->generate(
                                               'quote/urlKey',
                                               ['url_key' => $quote->getUrlKey()],
-                                          ),'class' => 'form-control']);
+                                          ),'class' => 'form-control form-control-lg',]);
 
 echo Html::tag(
     'Div',
-    Html::tag('i', '', ['class' => 'fa fa-clipboard fa-fw']),
+    Html::tag('i', '', ['class' => 'bi bi-clipboard']),
     ['class' => 'input-group-text to-clipboard cursor-pointer',
         'data-clipboard-target' => '#quote-guest-url','style' => 'height : 38px'],
 );
@@ -331,8 +331,8 @@ echo Html::tag(
         'name' => 'btn_send',
     ],
 ]) ?>
-                    <?=  new Form()->close(); ?>                    
-                </div>                
+                    <?=  new Form()->close(); ?>
+                </div>
             </div>
         </div>
     </div>

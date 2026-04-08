@@ -23,18 +23,18 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
- * @var Yiisoft\Router\CurrentRoute $currentRoute 
+ * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $qas
  * @var Yiisoft\Data\Paginator\OffsetPaginator $sortedAndPagedPaginator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
- * @var Yiisoft\Translator\TranslatorInterface $translator 
+ * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var int $defaultPageSizeOffsetPaginator
  * @var string $alert
- * @var string $csrf 
+ * @var string $csrf
  * @var string $sortString
- * @psalm-var positive-int $page 
+ * @psalm-var positive-int $page
  */
- 
+
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
 $toolbarReset =
@@ -47,7 +47,7 @@ $toolbarReset =
         ->render();
 
 echo new Div();
-    
+
     $columns = [
         new DataColumn(
             'id',
@@ -104,7 +104,7 @@ echo new Div();
                     return $urlGenerator->generate('qa/delete', ['id' => $model->getId()]);
                 },
                 attributes: [
-                    'title' => $translator->translate('delete'), 
+                    'title' => $translator->translate('delete'),
                     'onclick' => "return confirm("
                         . "'"
                         . $translator->translate('delete.record.warning')
@@ -113,12 +113,12 @@ echo new Div();
             ),
         ]),
     ];
-    
+
 $urlCreator = new UrlCreator($urlGenerator);
 $urlCreator->__invoke([], OrderHelper::stringToArray($sortString));
 $sort = Sort::only(['id'])
         ->withOrderString($sortString);
-        
+
 $toolbarString =
     new Form()
         ->post($urlGenerator->generate('qa/index'))
@@ -128,7 +128,7 @@ $toolbarString =
         ->href($urlGenerator->generate('qa/add'))
         ->addStyle('text-decoration:none')
         ->content('➕')
-        ->render() .    
+        ->render() .
     new Div()
         ->addClass('float-end m-3')
         ->content($toolbarReset)
@@ -136,14 +136,14 @@ $toolbarString =
         ->render() .
     new Form()
         ->close();
-         
+
 $sortedAndPagedPaginator = new OffsetPaginator($qas)
     ->withPageSize($defaultPageSizeOffsetPaginator > 0 ?
             $defaultPageSizeOffsetPaginator : 1)
     ->withCurrentPage($page)
     ->withSort($sort)
-    ->withToken(PageToken::next((string) $page));         
-         
+    ->withToken(PageToken::next((string) $page));
+
 $gridSummary = $s->gridSummary(
     $sortedAndPagedPaginator,
     $translator,
@@ -159,7 +159,7 @@ $gridSummary = $s->gridSummary(
       ->columns(...$columns)
       ->dataReader($sortedAndPagedPaginator)
       ->urlCreator($urlCreator)
-      ->headerRowAttributes(['class' => 'card-header bg-info text-black'])      
+      ->headerRowAttributes(['class' => 'card-header bg-info text-black'])
       ->header($translator->translate('faq'))
       ->multiSort(true)
       ->id('w1774234746-grid')
@@ -171,4 +171,4 @@ $gridSummary = $s->gridSummary(
       ->noResultsCellAttributes(['class' => 'card-header bg-warning text-black'])
       ->noResultsText($translator->translate('no.records'))
       ->toolbar($toolbarString);
-?>      
+?>

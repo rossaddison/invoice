@@ -27,7 +27,7 @@ final readonly class CategorySecondaryService
             $model->setName((string) $array['name']) : '';
         $this->repository->save($model);
     }
-    
+
     private function persist(CS $model, array $array): void
     {
         $cp = 'category_primary_id';

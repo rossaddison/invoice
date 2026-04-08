@@ -36,7 +36,7 @@ use Yiisoft\Html\Tag\Form;
     ->csrf($csrf)
     ->id('TaskForm')
     ->open()
-?> 
+?>
 <?= Html::openTag('div'); ?>
     <?= Field::text($form, 'name')
         ->label($translator->translate('name'))
@@ -58,7 +58,7 @@ use Yiisoft\Html\Tag\Form;
     ])
     ->value(Html::encode($form->getDescription()))
     ->placeholder($translator->translate('description'))
-?>                    
+?>
     <?= Html::tag('br'); ?>
     <?= Field::select($form, 'project_id')
     ->label($translator->translate('project'))
@@ -90,7 +90,7 @@ use Yiisoft\Html\Tag\Form;
     ])
     ->value($s->formatAmount(($form->getPrice() ?? 0.00)))
     ->placeholder($translator->translate('price'))
-    ->hint($translator->translate('hint.this.field.is.required')); ?>         
+    ->hint($translator->translate('hint.this.field.is.required')); ?>
     <?= Html::tag('br'); ?>
     <?=
     Field::date($form, 'finish_date')
@@ -104,26 +104,26 @@ use Yiisoft\Html\Tag\Form;
                              $form->getFinishDate(),
                          )
                          ? $form->getFinishDate() : '')))
-?>    
+?>
     <?= Html::tag('br'); ?>
     <?php
     $optionsDataStatus = [];
 $statuses = [
     1 => [
         'label' => $translator->translate('not.started'),
-        'class' => 'draft',
+        'class' => 'secondary',
     ],
     2 => [
         'label' => $translator->translate('in.progress'),
-        'class' => 'viewed',
+        'class' => 'warning',
     ],
     3 => [
         'label' => $translator->translate('complete'),
-        'class' => 'sent',
+        'class' => 'success',
     ],
     4 => [
         'label' => $translator->translate('invoiced'),
-        'class' => 'paid',
+        'class' => 'primary',
     ],
 ];
 /**
@@ -147,7 +147,7 @@ foreach ($statuses as $key => $status) {
     ->optionsData($optionsDataStatus)
     ->value($form->getStatus())
 ?>
-<?= Html::closeTag('div'); ?>     
+<?= Html::closeTag('div'); ?>
 <?= $button::back(); ?>
 <?=  new Form()->close(); ?>
 <?= Html::closeTag('div'); ?>

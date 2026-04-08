@@ -28,28 +28,35 @@ $divHeight = (string) 250;
                     This is a development website using the Yii3 Framework.
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
-                    Currently I am assisting with the development of OAuth 2.0 Clients and the repository in question is available at ➡ 
+                    Currently I am assisting with the development of OAuth 2
+                    .0 Clients and the repository in question is available at ➡ 
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
-                <?=  new A()->content('https://github.com/rossaddison/yii-auth-client')->href('https://github.com/rossaddison/yii-auth-client')->render(); ?>    
+                <?=  new A()->content(
+                        'https://github.com/rossaddison/yii-auth-client')->href(
+                            'https://github.com/rossaddison/yii-auth-client')
+                                ->render(); ?>
                 <?= Html::closeTag('p'); ?>
         <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'col-sm-4']); ?>
                 <?= Html::openTag('h3'); ?>
-                    Invoicing System Development 
+                    Invoicing System Development
                 <?= Html::closeTag('h3'); ?>
                 <?= Html::openTag('p'); ?>
-                    Currently I am developing a php based invoicing system using the Yii3 Framework and the opensource code is available at ➡️ 
+                    Currently I am developing a php based invoicing system using
+                        the Yii3 Framework and the opensource code is available at ➡️ 
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
-                <?=  new A()->content('https://github.com/rossaddison/invoice')->href('https://github.com/rossaddison/invoice')->render(); ?>
+                <?=  new A()->content(
+                    'https://github.com/rossaddison/invoice')->href(
+                        'https://github.com/rossaddison/invoice')->render(); ?>
                 <?= Html::closeTag('p'); ?>
                 <?= Html::openTag('p'); ?>
                     This site will be used to demo quote and invoice creation at a future date.
                 <?= Html::closeTag('p'); ?>
-        <?= Html::closeTag('div'); ?> 
+        <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
-<?= Html::openTag('div'); ?>                        
+<?= Html::openTag('div'); ?>
 
 <?= Html::openTag('header'); ?>
     <?= ($s->getSetting('debug_mode') == '1')
@@ -63,7 +70,9 @@ $divHeight = (string) 250;
 <?= Carousel::widget()
     ->items(
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+            content: '<div class="bg-dark" style="height: '
+                        . $divHeight
+                        . 'px; text-align: center"><br>'
                         .  new Img()
                         ->src('/img/step1.jpg')
                         ->size($w, $h)
@@ -75,7 +84,9 @@ $divHeight = (string) 250;
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+            content: '<div class="bg-dark" style="height: '
+                        . $divHeight
+                        . 'px; text-align: center"><br>'
                         .  new Img()
                         ->src('/img/step2.jpg')
                         ->size($w, $h)
@@ -86,7 +97,9 @@ $divHeight = (string) 250;
             captionAttributes: ['class' => ['d-none', 'd-md-block']],
         ),
         CarouselItem::to(
-            content: '<div class="bg-dark" style="height: ' . $divHeight . 'px; text-align: center"><br>'
+            content: '<div class="bg-dark" style="height: '
+                        . $divHeight
+                        . 'px; text-align: center"><br>'
                         .  new Img()
                         ->src('/img/step3.jpg')
                         ->size($w, $h)
@@ -98,7 +111,5 @@ $divHeight = (string) 250;
         ),
     )
     ->render();
-    ?>    
+    ?>
 <?php } ?>
-
-

@@ -13,9 +13,9 @@ import { FlashMessageService } from '../services/flash-message.service';
           <span class="flash-count">{{ activeCount }} flash message{{ activeCount !== 1 ? 's' : '' }}</span>
           <span class="flash-paused" *ngIf="pausedCount > 0">({{ pausedCount }} paused)</span>
         </div>
-        
+
         <div class="flash-buttons">
-          <button 
+          <button
             type="button"
             class="btn btn-sm"
             [class.btn-warning]="areAnyPaused"
@@ -25,8 +25,8 @@ import { FlashMessageService } from '../services/flash-message.service';
             <i [class]="areAllPaused ? 'fa fa-play' : 'fa fa-pause'"></i>
             {{ areAllPaused ? 'Resume' : 'Pause' }} All
           </button>
-          
-          <button 
+
+          <button
             type="button"
             class="btn btn-sm btn-danger ms-1"
             (click)="closeAll()"
@@ -127,7 +127,7 @@ import { FlashMessageService } from '../services/flash-message.service';
         width: calc(100% - 20px);
         max-width: none;
       }
-      
+
       .flash-controls-container {
         justify-content: space-between;
       }
@@ -146,7 +146,7 @@ export class FlashMessageControlsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.flashMessageService.init();
-    
+
     // Start monitoring flash messages
     this.updateInterval = globalThis.window.setInterval(() => {
       this.updateStatus();

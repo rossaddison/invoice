@@ -40,5 +40,5 @@ use Yiisoft\Html\Tag\I;
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?> 
+<?= Html::closeTag('div'); ?>
 

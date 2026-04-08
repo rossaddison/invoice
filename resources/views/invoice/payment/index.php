@@ -118,7 +118,7 @@ $columns = [
         visible: $canView,
         content: static function (Payment $model) use ($urlGenerator): A {
             return Html::a(
-                Html::tag('i', '', ['class' => 'fa fa-eye fa-margin']),
+                Html::tag('i', '', ['class' => 'bi-eye']),
                 $urlGenerator->generate(
                     'payment/view',
                     ['id' => $model->getId()],
@@ -138,7 +138,7 @@ $columns = [
                        Html::tag(
                            'i',
                            '',
-                           ['class' => 'fa fa-edit fa-margin'],
+                           ['class' => 'bi-pencil-square'],
                        ),
                        $urlGenerator->generate(
                            'payment/edit',
@@ -156,7 +156,7 @@ $columns = [
             return $model->getInv()?->getIsReadOnly() === false && $s->getSetting('disable_read_only') === (string) 0 ? Html::a(
                 Html::tag(
                     'button',
-                    Html::tag('i', '', ['class' => 'fa fa-trash fa-margin']),
+                    Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',

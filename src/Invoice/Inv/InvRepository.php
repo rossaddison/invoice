@@ -135,7 +135,7 @@ final class InvRepository extends Select\Repository
         }
         return $this->findAllPreloaded();
     }
-    
+
     public function filterGuestClient(string $fullName): EntityReader
     {
         $nameParts = explode(' ', $fullName);
@@ -228,7 +228,7 @@ final class InvRepository extends Select\Repository
                       ->where(['delivery_location_id' => $delivery_location_id]);
         return $this->prepareDataReader($query);
     }
-    
+
     /**
      * @param int $user_id
      * @param int $client_id
@@ -560,13 +560,13 @@ final class InvRepository extends Select\Repository
         return [
             '0' => [
                 'label' => $translator->translate('all'),
-                'class' => 'default',
+                'class' => 'secondary',
                 'href' => 0,
                 'emoji' => '🌎 ',
             ],
             '1' => [
                 'label' => $translator->translate('draft'),
-                'class' => 'default',
+                'class' => 'secondary',
                 'href' => 1,
                 'emoji' => '🗋 ',
             ],
@@ -632,7 +632,7 @@ final class InvRepository extends Select\Repository
             ],
             '12' => [
                 'label' => $translator->translate('credit.invoice.for.invoice'),
-                'class' => 'default',
+                'class' => 'secondary',
                 'href' => 12,
                 'emoji' => '🛑️ ',
             ],

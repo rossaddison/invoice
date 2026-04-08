@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Auth\Asset\AuthAegisTotpKeypadAsset;
 
-use App\Asset\AppCdnAsset as AppCdn; 
+use App\Asset\AppCdnAsset as AppCdn;
 use App\Asset\AppNodeModulesAsset as AppNm;
 use App\Widget\PerformanceMetrics;
 use Yiisoft\Html\Html;
@@ -46,8 +46,8 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  *              'layout' => '@views/layout/templates/soletrader/main.php'
  *          ],
  * @var App\User\User|null $user
- * @var bool $appCdnNotNodeModule 
- * @var bool $invCdnNotNodeModule 
+ * @var bool $appCdnNotNodeModule
+ * @var bool $invCdnNotNodeModule
  * @var bool $bootstrap5CdnNotNodeModule
  * @var bool $debugMode
  * @var bool $noFrontPageAbout
@@ -65,7 +65,7 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var bool $stopSigningUp
  * @var string $bootstrap5LayoutMainNavbarFont
  * @var string $bootstrap5LayoutMainNavbarFontSize
- * @var string $companySeoDescription 
+ * @var string $companySeoDescription
  * @var string $content
  * @var string $companyFaceBook
  * @var string $companyLinkedIn
@@ -80,6 +80,8 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var string $brandLabel
  * @var string $logoPath
  * @var string $title
+ * @var string $currentLocaleFlag
+ * @var array<string,string> $localeFlags
  * @var DropdownItem $afZA
  * @var DropdownItem $arBH
  * @var DropdownItem $az
@@ -112,7 +114,7 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  * @var DropdownItem $zuZA
  */
 $assetManager->register($bootstrap5CdnNotNodeModule ? BsCdn::class : BsNm::class);
-$assetManager->register($appCdnNotNodeModule ? AppCdn::class : AppNm::class); 
+$assetManager->register($appCdnNotNodeModule ? AppCdn::class : AppNm::class);
 $assetManager->register(AuthAegisTotpKeypadAsset::class);
 $assetManager->register(AuthChoiceAsset::class);
 
@@ -132,11 +134,11 @@ $this->beginPage();
 $this->setTitle($title);
 ?>
 <!DOCTYPE html>
-<?php 
+<?php
 echo new TagHtml()
     ->addAttributes(['class' => 'h-100'])
-    ->lang($currentRoute->getArgument('_language') ?? 'en'); 
- echo Html::openTag('head'); //1 
+    ->lang($currentRoute->getArgument('_language') ?? 'en');
+ echo Html::openTag('head'); //1
   echo Meta::documentEncoding('utf-8');
   echo Meta::data('robots', 'INDEX,FOLLOW');
   echo Meta::data('viewport', 'width=device-width, initial-scale=1');
@@ -155,15 +157,16 @@ echo new TagHtml()
         ['class' =>
         'cover-container-fluid d-flex w-100 h-100 mx-auto flex-column']); //1
   echo Html::openTag('header', ['class' => 'mb-auto']); //2
-    $this->beginBody();         
+    $this->beginBody();
    echo NavBar::widget()
-        ->addClass('navbar navbar-light bg-light navbar-expand-sm text-white')
+        ->addClass('navbar navbar-light navbar-expand-sm')
         ->addCssStyle([
-            'color' => 'red',
+            'background' => 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+            'color' => 'white',
             'font-size' => $bootstrap5LayoutMainNavbarFontSize,
             'font-family' => $bootstrap5LayoutMainNavbarFont,
             'font-weight' => 'bold',
-        ]) 
+        ])
         ->addAttributes([])
         ->brandImage($logoPath)
         ->brandImageAttributes(['margin' => $companyLogoMargin ?: '10',
@@ -171,13 +174,14 @@ echo new TagHtml()
                 ($bootstrap5LayoutMainNavbarFontSize ?: '100'),
             'height' => $companyLogoHeight ?:
                 ($bootstrap5LayoutMainNavbarFontSize ?: '50')])
-        ->brandText(str_repeat('&nbsp;', 7) . $brandLabel)
+        ->brandText($brandLabel)
         ->brandAttributes([
             'style' => 'font-size: '
                 . $bootstrap5LayoutMainNavbarFontSize
                 . 'px; font-family: '
-                . $bootstrap5LayoutMainNavbarFont,
-        ])   
+                . $bootstrap5LayoutMainNavbarFont
+                . '; padding-left: 12px; color: #fff;',
+        ])
         ->brandUrl($urlGenerator->generate('site/index'))
         ->container(false)
         ->containerAttributes([])
@@ -196,9 +200,9 @@ echo new TagHtml()
          ->addTogglerCssStyle([
             'font-size' => $bootstrap5LayoutMainNavbarFontSize . 'px',
             'font-family' => $bootstrap5LayoutMainNavbarFont,
-         ])   
+         ])
          ->togglerVariant(ButtonVariant::LIGHT)
-         ->togglerContent('')
+         ->togglerContent($currentLocaleFlag)
          ->togglerSize(ButtonSize::SMALL)
          ->items(
              $afZA, $arBH, $az,
@@ -213,7 +217,7 @@ echo new TagHtml()
       ->addCssStyle([
         'font-size' => $bootstrap5LayoutMainNavbarFontSize . 'px',
         'font-family' => $bootstrap5LayoutMainNavbarFont,
-      ])     
+      ])
       ->items(
        NavLink::to(
             new Label()
@@ -255,7 +259,7 @@ echo new TagHtml()
         NavLink::to(
              new Label()
             ->attributes([
-                'class' => 'bi bi-patch-check',
+                'class' => 'bi bi-patch-check text-success',
             ])
             ->content(str_repeat(' ', 1)
                 . $t->translate('menu.accreditations')),
@@ -269,7 +273,7 @@ echo new TagHtml()
         ),
         NavLink::to(
              new Label()
-            ->attributes(['class' => 'bi bi-images'])
+            ->attributes(['class' => 'bi bi-images text-warning'])
             ->content(str_repeat(' ', 1) . $t->translate('menu.gallery')),
             $urlGenerator->generate('site/gallery'),
             $isGuest && !$noFrontPageGallery,
@@ -281,7 +285,7 @@ echo new TagHtml()
         ),
         NavLink::to(
              new Label()
-            ->attributes(['class' => 'bi bi-people-fill'])
+            ->attributes(['class' => 'bi bi-people-fill text-info'])
             ->content(str_repeat(' ', 1) . $t->translate('menu.team')),
             $urlGenerator->generate('site/team'),
             $isGuest && !$noFrontPageTeam,
@@ -305,7 +309,7 @@ echo new TagHtml()
         ),
         NavLink::to(
              new Label()
-            ->attributes(['class' => 'bi bi-file-ruled'])
+            ->attributes(['class' => 'bi bi-file-ruled text-secondary'])
             ->content(str_repeat(' ', 1)
                 . $t->translate('menu.testimonial')),
             $urlGenerator->generate('site/testimonial'),
@@ -318,7 +322,7 @@ echo new TagHtml()
         ),
         NavLink::to(
              new Label()
-            ->attributes(['class' => 'bi bi-file-text'])
+            ->attributes(['class' => 'bi bi-file-text text-light'])
             ->content(str_repeat(' ', 1)
                 . $t->translate('menu.privacy.policy')),
             $urlGenerator->generate('site/privacypolicy'),
@@ -331,7 +335,7 @@ echo new TagHtml()
         ),
         NavLink::to(
              new Label()
-            ->attributes(['class' => 'bi bi-file-text-fill'])
+            ->attributes(['class' => 'bi bi-file-text-fill text-light'])
             ->content(str_repeat(' ', 1)
                 . $t->translate('menu.terms.of.service')),
             $urlGenerator->generate('site/termsofservice'),
@@ -371,7 +375,7 @@ echo new TagHtml()
         NavLink::to(
              new Label()
             ->attributes([
-                'class' => 'bi bi-person-plus-fill',
+                'class' => 'bi bi-person-plus-fill text-warning',
                 'data-bs-toggle' => 'tooltip',
                 'title' => str_repeat(' ', 1)
                     . $t->translate('setup.create.user'),
@@ -398,32 +402,37 @@ echo new TagHtml()
                     ->open()
                     . '<div class="mb-1">'
                     . Button::submit(
-                        $t->translate('logout',
+                        (new I())->addClass('bi bi-box-arrow-right me-1')->render()
+                        . Html::encode($t->translate('logout',
                             ['login' =>
                                 Html::encode(null !== $user ?
-                                    $user->getLogin() : '')]),
+                                    $user->getLogin() : '')])),
                     )
+                    ->encode(false)
+                    ->addClass('btn btn-outline-danger')
                     ->addStyle('font-size: '
                     . $bootstrap5LayoutMainNavbarFontSize
                     . 'px; padding: '
                     . ((int) $bootstrap5LayoutMainNavbarFontSize * 0.15)
                     . 'px '
-                    . ((int) $bootstrap5LayoutMainNavbarFontSize * 0.4) . 'px;')  
+                    . ((int) $bootstrap5LayoutMainNavbarFontSize * 0.4) . 'px;')
                     . '</div>'
                     .  new Form()->close(),
             encodeLabel: false,
         ),
     )
-    ->styles(NavStyle::NAVBAR) : ''; 
+    ->styles(NavStyle::NAVBAR) : '';
    echo NavBar::end();
   echo Html::closeTag('header'); //2
-  echo Html::openTag('main', ['class' => 'container py-3']); //2 
+  echo Html::openTag('main', ['class' => 'container py-3']); //2
    /**
     * Related logic: see ./resources/views/site/index.php
     */
    echo $content;
   echo Html::closeTag('main'); //2
-  echo Html::openTag('footer', ['class' => 'mt-auto bg-dark py-3']); //2
+  echo Html::openTag('footer', ['class' => 'mt-auto py-3',
+      'style' => 'background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%,'
+      . ' #0f3460 100%);']); //2
    echo Html::openTag('div', ['class' =>
             'd-flex flex-fill align-items-center container-fluid']); //3
     echo Html::openTag('div', ['class' => 'd-flex flex-fill float-start']); //4
@@ -434,10 +443,10 @@ echo new TagHtml()
           ->content($brandLabel . ' - ' . date('Y') . ' -' )
           ->render();
       echo Html::openTag('div', ['class' => 'ms-2 text-white']); //5
-       echo PerformanceMetrics::widget(); 
+       echo PerformanceMetrics::widget();
       echo Html::closeTag('div'); //5
     echo Html::closeTag('div'); //4
-    echo Html::openTag('div', ['class' => 'float-end']); //4 
+    echo Html::openTag('div', ['class' => 'float-end']); //4
      $txtDecorNonePx1 = 'text-decoration-none px-1';
      echo new A()
           ->href($companyWeb)
@@ -474,11 +483,25 @@ echo new TagHtml()
           ->addClass($txtDecorNonePx1)
           ->addAttributes(['target' => '_blank', 'rel' => 'noopener'])
           ->content(new I()->addClass('bi bi-linkedin text-white'))
-          ->render();    
+          ->render();
     echo Html::closeTag('div'); //4
    echo Html::closeTag('div'); //3
   echo Html::closeTag('footer'); //2
+  echo Html::tag('style', '
+   .navbar { box-shadow: 0 2px 10px rgba(0,0,0,0.4); }
+   .navbar .nav-link { color: rgba(255,255,255,0.8) !important; transition: color 0.15s; }
+   .navbar .nav-link:hover { color: #fff !important; }
+   .navbar .nav-link.active { color: #fff !important; }
+   footer a { transition: opacity 0.2s; }
+   footer a:hover { opacity: 1 !important; }
+   footer a:hover .bi-github   { color: #f0f6fc; }
+   footer a:hover .bi-slack    { color: #e01e5a; }
+   footer a:hover .bi-facebook { color: #1877f2; }
+   footer a:hover .bi-twitter  { color: #1da1f2; }
+   footer a:hover .bi-whatsapp { color: #25d366; }
+   footer a:hover .bi-linkedin { color: #0a66c2; }
+  ');
   $this->endBody();
  echo Html::closeTag('body'); //1
-echo Html::closeTag('html'); 
+echo Html::closeTag('html');
 $this->endPage(true);

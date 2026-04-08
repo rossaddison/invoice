@@ -16,7 +16,7 @@ use Yiisoft\Html\Html;
 
 <div class="peppol-validation-errors">
     <h2>PEPPOL Validation Errors</h2>
-    
+
     <?php if (empty($errors)): ?>
         <div class="alert alert-success">
             <strong>✓ Valid!</strong> No validation errors found.
@@ -34,7 +34,7 @@ use Yiisoft\Html\Html;
 <?php echo Html::th('Error message', ['style' => 'width: 80px;']);
       echo Html::th('Line', ['style' => 'width: 80px;']);
       echo Html::th('XPath Location', ['style' => 'width: 15%;']);
-      echo Html::th('Peppol', ['style' => 'width: 15%;']); 
+      echo Html::th('Peppol', ['style' => 'width: 15%;']);
       echo Html::closeTag('tr'); ?>
 <?php echo Html::closeTag('thead'); ?>
 <?php

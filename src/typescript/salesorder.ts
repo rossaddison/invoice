@@ -1,4 +1,4 @@
-﻿import { parsedata, getJson, ApiResponse } from './utils.js';
+import { parsedata, getJson, ApiResponse } from './utils.js';
 
 // Secure HTML insertion helper to prevent XSS vulnerabilities
 function secureInsertHTML(element: Element, html: string): void {
@@ -58,21 +58,21 @@ export class SalesOrderHandler {
         const target = event.target as HTMLElement;
 
         // PDF Export with custom fields
-        if (target.matches('#salesorder_to_pdf_confirm_with_custom_fields') || 
+        if (target.matches('#salesorder_to_pdf_confirm_with_custom_fields') ||
             target.closest('#salesorder_to_pdf_confirm_with_custom_fields')) {
             this.handlePdfExport(true);
             return;
         }
 
         // PDF Export without custom fields
-        if (target.matches('#salesorder_to_pdf_confirm_without_custom_fields') || 
+        if (target.matches('#salesorder_to_pdf_confirm_without_custom_fields') ||
             target.closest('#salesorder_to_pdf_confirm_without_custom_fields')) {
             this.handlePdfExport(false);
             return;
         }
 
         // SO to Invoice conversion
-        if (target.matches('#so_to_invoice_confirm') || 
+        if (target.matches('#so_to_invoice_confirm') ||
             target.closest('#so_to_invoice_confirm')) {
             this.handleSoToInvoiceConversion();
             return;
