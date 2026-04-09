@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6c0f11c32dd0e12329e5ed0a5b424745",
+    "content-hash": "8e8befe9199656a085cd23f0daf9c625",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -3176,12 +3176,12 @@
             "version": "v7.0.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/firebase/php-jwt.git",
+                "url": "https://github.com/googleapis/php-jwt.git",
                 "reference": "47ad26bab5e7c70ae8a6f08ed25ff83631121380"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/47ad26bab5e7c70ae8a6f08ed25ff83631121380",
+                "url": "https://api.github.com/repos/googleapis/php-jwt/zipball/47ad26bab5e7c70ae8a6f08ed25ff83631121380",
                 "reference": "47ad26bab5e7c70ae8a6f08ed25ff83631121380",
                 "shasum": ""
             },
@@ -3230,8 +3230,8 @@
                 "php"
             ],
             "support": {
-                "issues": "https://github.com/firebase/php-jwt/issues",
-                "source": "https://github.com/firebase/php-jwt/tree/v7.0.5"
+                "issues": "https://github.com/googleapis/php-jwt/issues",
+                "source": "https://github.com/googleapis/php-jwt/tree/v7.0.5"
             },
             "time": "2026-04-01T20:38:03+00:00"
         },
@@ -3366,16 +3366,16 @@
         },
         {
             "name": "google/cloud-translate",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-translate.git",
-                "reference": "057b6a0d1bdca3397f8a2a76d09601cb148af6a1"
+                "reference": "8cb7082aab6dfaa454cc1c656a0002d54b3bce7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/057b6a0d1bdca3397f8a2a76d09601cb148af6a1",
-                "reference": "057b6a0d1bdca3397f8a2a76d09601cb148af6a1",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-translate/zipball/8cb7082aab6dfaa454cc1c656a0002d54b3bce7a",
+                "reference": "8cb7082aab6dfaa454cc1c656a0002d54b3bce7a",
                 "shasum": ""
             },
             "require": {
@@ -3416,9 +3416,9 @@
             ],
             "description": "Cloud Translation Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.2.0"
+                "source": "https://github.com/googleapis/google-cloud-php-translate/tree/v2.3.0"
             },
-            "time": "2026-03-17T23:07:39+00:00"
+            "time": "2026-04-09T21:01:46+00:00"
         },
         {
             "name": "google/common-protos",
@@ -25274,5 +25274,5 @@
         "ext-zend-opcache": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
