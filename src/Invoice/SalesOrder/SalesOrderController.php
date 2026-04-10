@@ -280,7 +280,9 @@ final class SalesOrderController extends BaseController
                      *  @var string $so_label
                      */
                     $so_label = $so_statuses[$status_id]['label'];
-                    $this->flashMessage('success', $this->translator->translate(                                                            'record.successfully.updated'));
+                    $this->flashMessage('success', $so_label
+                            . ' '
+                            . $this->translator->translate(                                                                                      'record.successfully.updated'));
                     return $this->webService->getRedirectResponse(
                                 'salesorder/view', ['id' => $so_id]);
                 }
