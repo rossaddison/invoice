@@ -14,24 +14,24 @@ final class Lang
      *
      * @var	array
      */
-    public $_language = [];
+    public $uLanguage = [];
 
     /**
      * List of loaded language files
      *
      * @var	array
      */
-    public $_is_loaded = [];
+    public $isLoaded = [];
 
-    public Logger $_logger;
+    public Logger $logger;
 
     /**
      * final class constructor
      */
     public function __construct()
     {
-        $this->_logger = new Logger();
-        $this->_logger->info('Language final class Initialized');
+        $this->logger = new Logger();
+        $this->logger->info('Language final class Initialized');
     }
 
     // --------------------------------------------------------------------
@@ -86,7 +86,7 @@ final class Lang
         }
 
         if ($found !== true) {
-            $this->_logger->info('Unable to load the requested language file: language/' . $idiom . '/' . $langfile);
+            $this->logger->info('Unable to load the requested language file: language/' . $idiom . '/' . $langfile);
             $lang = '';
         }
 
@@ -98,10 +98,10 @@ final class Lang
             return;
         }
 
-        $this->_is_loaded[$langfile] = $idiom;
-        $this->_language = array_merge($this->_language, $lang);
+        $this->isLoaded[$langfile] = $idiom;
+        $this->uLanguage = array_merge($this->uLanguage, $lang);
 
-        $this->_logger->info('Language file loaded: language/' . $idiom . '/' . $langfile);
+        $this->logger->info('Language file loaded: language/' . $idiom . '/' . $langfile);
         return true;
     }
 
@@ -119,11 +119,11 @@ final class Lang
     public function line($line, $log_errors = true)
     {
         /** @var false|mixed|string $value */
-        $value = $this->_language[$line] ?? false;
+        $value = $this->uLanguage[$line] ?? false;
 
         // Because killer robots like unicorns!
         if ($value === false && $log_errors === true) {
-            $this->_logger->info('Could not find the language line "' . $line . '"');
+            $this->logger->info('Could not find the language line "' . $line . '"');
         }
 
         return $value;

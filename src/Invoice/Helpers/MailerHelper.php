@@ -53,7 +53,7 @@ class MailerHelper
     ) {
         $this->pdfhelper = new PdfHelper($this->s, $this->session, $this->translator);
         $this->templatehelper = new TemplateHelper($this->s, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
-        $this->invoicehelper = new InvoiceHelper($this->s, $this->session);
+        $this->invoicehelper = new InvoiceHelper($this->s, $this->session, $this->translator);
         $this->logger = $logger;
         $this->mailer = $mailer;
         $this->flash = new Flash($this->session);

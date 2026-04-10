@@ -99,19 +99,10 @@ final class SalesOrderItemController extends BaseController
                             $this->salesorderitemService->savePeppolPoItemid(
                                                                     $so_item, $body);
                             $this->salesorderitemService->savePeppolPoLineid(
-                                                                    $so_item, $body);
-                            return $this->factory->createResponse(
-                                        $this->webViewRenderer->renderPartialAsString(
-                                '//invoice/setting/salesorder_successful',
-                                [
-                                    'heading' => $this->translator->translate(
-                                                                        'successful'),
-                                    'message' => $this->translator->translate(
-                                                        'record.successfully.updated'),
-                                    'url' => 'salesorder/view',
-                                    'id' => $so_item->getSalesOrderId(),
-                                ],
-                            ));
+                                                                    $so_item, $body);                            
+                            $this->flashMessage('success', $this->translator->translate(                                                            'record.successfully.updated'));
+                            return $this->webService->getRedirectResponse(
+                                'salesorder/view', ['id' => $so_id]);
                         } // is_array
                     }
                     $parameters['errors'] =

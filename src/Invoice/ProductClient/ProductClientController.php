@@ -248,7 +248,7 @@ final class ProductClientController extends BaseController
             ];
 
             // Use the client service to save with SettingRepository
-            $clientId = $this->clientService->saveClient($client, $clientData, $this->sR);
+            $clientId = $this->clientService->saveClient($client, $clientData);
 
             if ($clientId !== null) {
                 // The service returns the ID, and the client object should now have it

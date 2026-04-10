@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
+use Yiisoft\Html\Tag\Input;
+use Yiisoft\Html\Tag\Option;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Helpers\CountryHelper;
-use App\Invoice\Helpers\DateHelper;
-use App\Invoice\Helpers\NumberHelper;
 
 /**
  * @var App\Invoice\Group\GroupRepository $gR
@@ -41,369 +41,389 @@ use App\Invoice\Helpers\NumberHelper;
  * @var string $title
  * @var bool $invEdit
  * @var bool $invView
- * */
+ */
 
 $this->setTitle($translator->translate('salesorder'));
 
-$vat = $s->getSetting('enable_vat_registration');
-?>
-<div class="panel panel-default">
-<div class="panel-heading">
-    <?= Html::encode($this->getTitle()); ?>
-</div>
-    <?php
-        $clienthelper = new ClientHelper($s);
-        $countryhelper = new CountryHelper();
-        echo $modal_salesorder_to_pdf;
-        echo $modal_so_to_invoice;
-    ?>
-<div>
-<br>
-<br>
-</div>
-<input type="hidden"
-       id="_csrf"
-       name="_csrf"
-       value="<?= $csrf ?>">
-<div id="headerbar">
-    <h1 class="headerbar-title">
-    <?php
-        echo $translator->translate('salesorder');
-        $soNumber = $so->getNumber();
-        echo null !== $soNumber ? '#' . $soNumber : $so->getId();
-    ?>
-    </h1>
-    <br>
-        <div class="headerbar-item pull-left btn-group">
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                <?= $translator->translate('options'); ?>
-                </button>
-                <ul class="dropdown-menu dropdown-menu">
+$vat           = $s->getSetting('enable_vat_registration');
+$clienthelper  = new ClientHelper($s);
+$countryhelper = new CountryHelper();
 
-<?php
-            if ($invEdit) { ?>
-                <li>1
+echo $modal_salesorder_to_pdf;
+echo $modal_so_to_invoice;
 
-                    <a href="<?=
-$urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]) ?>"
-                       style="text-decoration:none">
-                       <i class="bi-pencil-square"></i>
-                       <?= $translator->translate('edit'); ?>
-                    </a>
-                </li>
-                <?php } ?>
-                <li>
-                    <a href="<?= $urlGenerator->generate('salesorder/pdf',
-                            ['include' => 1]); ?>"
-                       target="_blank"
-                       style="text-decoration:none">
-                       <i class="fa bi-file-pdf"></i>
-                       <?= $translator->translate('download.pdf')
-                            . ': '
-                            . $translator->translate('custom.fields')
-                            . '✅'; ?>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?= $urlGenerator->generate('salesorder/pdf',
-                            ['include' => 0]); ?>"
-                       target="_blank"
-                       style="text-decoration:none">
-                        <i class="fa bi-file-pdf"></i>
-                        <?= $translator->translate('download.pdf')
-                            . ': '
-                            . $translator->translate('custom.fields')
-                            . '❌'; ?>
-                    </a>
-                </li>
-<?php
-// if there is a sales order number do not show button
-// if the status is draft do not show button
-// only show the button if the sales order has reached invoice generate stage ie 6
-if (null !== $so->getInvId() || (in_array($so->getStatusId(), [1,2,3,4,5]))) {
-            } else {?>
-                    <?php if ($invEdit) { ?>
-                <li>
-                            <a href="#so-to-invoice"
-                               data-bs-toggle="modal"
-                               style="text-decoration:none">
-                        <i class="bi bi-arrow-clockwise"></i>
-                        <?= $translator->translate('salesorder.to.invoice'); ?>
-                    </a>
-                </li>
-                    <?php } ?>
-                <?php } ?>
-            </ul>
-        </div>
-    </div>
-</div>
+echo H::openTag('div', ['class' => 'panel panel-default']); //0
+ echo H::openTag('div', ['class' => 'panel-heading']); //1
+  echo H::encode($this->getTitle());
+ echo H::closeTag('div'); //1
+ echo H::tag('br', '');
+ echo H::tag('br', '');
+ echo H::tag('input', '', [
+  'type' => 'hidden',
+  'id' => '_csrf',
+  'name' => '_csrf',
+  'value' => $csrf,
+ ]);
+ echo H::openTag('div', ['id' => 'headerbar']); //1
+  echo H::openTag('h1', ['class' => 'headerbar-title']); //2
+   echo $translator->translate('salesorder');
+   $soNumber = $so->getNumber();
+   echo null !== $soNumber ? ' #' . $soNumber : $so->getId();
+  echo H::closeTag('h1'); //2
+  echo H::tag('br', '');
+  echo H::openTag('div', ['class' => 'headerbar-item pull-left btn-group']); //2
+   echo H::openTag('div', ['class' => 'dropdown']); //3
+    echo H::openTag('button', [
+     'class' => 'btn btn-primary dropdown-toggle',
+     'type' => 'button',
+     'data-bs-toggle' => 'dropdown',
+     'aria-expanded' => 'false',
+    ]); //4
+     echo $translator->translate('options');
+    echo H::closeTag('button'); //4
+    echo H::openTag('ul', ['class' => 'dropdown-menu dropdown-menu']); //4
+     if ($invEdit) {
+      echo H::openTag('li'); //5
+       echo H::openTag('a', [
+        'href' => $urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]),
+        'style' => 'text-decoration:none',
+       ]); //6
+        echo H::openTag('i', ['class' => 'bi-pencil-square']); //7
+        echo H::closeTag('i'); //7
+        echo ' ' . $translator->translate('edit');
+       echo H::closeTag('a'); //6
+      echo H::closeTag('li'); //5
+     }
+     echo H::openTag('li'); //5
+      echo H::openTag('a', [
+       'href' => $urlGenerator->generate('salesorder/pdf', ['include' => 1]),
+       'target' => '_blank',
+       'style' => 'text-decoration:none',
+      ]); //6
+       echo H::openTag('i', ['class' => 'fa bi-file-pdf']); //7
+       echo H::closeTag('i'); //7
+       echo ' ' . H::encode(
+        $translator->translate('download.pdf') . ': '
+        . $translator->translate('custom.fields') . '✅'
+       );
+      echo H::closeTag('a'); //6
+     echo H::closeTag('li'); //5
+     echo H::openTag('li'); //5
+      echo H::openTag('a', [
+       'href' => $urlGenerator->generate('salesorder/pdf', ['include' => 0]),
+       'target' => '_blank',
+       'style' => 'text-decoration:none',
+      ]); //6
+       echo H::openTag('i', ['class' => 'fa bi-file-pdf']); //7
+       echo H::closeTag('i'); //7
+       echo ' ' . H::encode(
+        $translator->translate('download.pdf') . ': '
+        . $translator->translate('custom.fields') . '❌'
+       );
+      echo H::closeTag('a'); //6
+     echo H::closeTag('li'); //5
+     // only show SO→Invoice button if status is 6 (invoice generate stage) and no invoice yet
+     if (null === $so->getInvId() && !in_array($so->getStatusId(), [1,2,3,4,5])) {
+      if ($invEdit) {
+       echo H::openTag('li'); //5
+        echo H::openTag('a', [
+         'href' => '#so-to-invoice',
+         'data-bs-toggle' => 'modal',
+         'style' => 'text-decoration:none',
+        ]); //6
+         echo H::openTag('i', ['class' => 'bi bi-arrow-clockwise']); //7
+         echo H::closeTag('i'); //7
+         echo ' ' . $translator->translate('salesorder.to.invoice');
+        echo H::closeTag('a'); //6
+       echo H::closeTag('li'); //5
+      }
+     }
+    echo H::closeTag('ul'); //4
+   echo H::closeTag('div'); //3
+  echo H::closeTag('div'); //2
+ echo H::closeTag('div'); //1
 
-<div id="content">
-    <?= $alert; ?>
-    <div id="salesorder_form">
-        <div class="salesorder">
-            <div class = 'row'>
-                <div class="col-xs-12 col-sm-6 col-md-5">
-                    <h3>
-                        <a href="<?= $urlGenerator->generate('client/view',
-                                ['id' => $so->getClient()?->getClientId()]); ?>">
-            <?= Html::encode($clienthelper->formatClient($so->getClient())); ?>
-                        </a>
-                    </h3>
-                    <br>
-                    <div id="pre_save_client_id"
-                         value="<?php echo $so->getClient()?->getClientId(); ?>"
-                         hidden></div>
-                    <div class="client-address">
-                        <span class="client-address-street-line-1">
-<?php echo null !== ($so->getClient()?->getClientAddress1()) ?
-Html::encode($so->getClient()?->getClientAddress1()) . '<br>' : ''; ?>
-                        </span>
-                        <span class="client-address-street-line-2">
-<?php echo null !== $so->getClient()?->getClientAddress2() ?
-        Html::encode($so->getClient()?->getClientAddress2()) . '<br>' : ''; ?>
-                        </span>
-                        <span class="client-address-town-line">
-<?php echo null !== $so->getClient()?->getClientCity() ?
-        Html::encode($so->getClient()?->getClientCity()) . '<br>' : ''; ?>
-<?php echo null !== $so->getClient()?->getClientState() ?
-        Html::encode($so->getClient()?->getClientState()) . '<br>' : ''; ?>
-<?php echo null !== $so->getClient()?->getClientZip() ?
-        Html::encode($so->getClient()?->getClientZip()) : ''; ?>
-                        </span>
-                        <span class="client-address-country-line">
-<?php $soCountry = $so->getClient()?->getClientCountry();
-    echo null !== $soCountry ?
-    '<br>' . $countryhelper->getCountryName($translator->translate('cldr'),
-    $soCountry) :
-                            ''; ?>
-                        </span>
-                    </div>
-                    <hr>
-                    <?php if (null !== $so->getClient()?->getClientPhone()): ?>
-                        <div class="client-phone">
-                        <?= $translator->translate('phone'); ?>:&nbsp;
-                        <?= Html::encode($so->getClient()?->getClientPhone()); ?>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (null !== $so->getClient()?->getClientMobile()): ?>
-                        <div class="client-mobile">
-                        <?= $translator->translate('mobile'); ?>:&nbsp;
-                        <?= Html::encode($so->getClient()?->getClientMobile()); ?>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (null !== $so->getClient()?->getClientEmail()): ?>
-                        <div class='client-email'>
-                        <?= $translator->translate('email'); ?>:&nbsp;
-                        <?= Html::encode($so->getClient()?->getClientEmail()); ?>
-                        </div>
-                    <?php endif; ?>
-                    <br>
-                </div>
+ echo H::openTag('div', ['id' => 'content']); //1
+  echo $alert;
+  echo H::openTag('div', ['id' => 'salesorder_form']); //2
+   echo H::openTag('div', ['class' => 'salesorder']); //3
+    echo H::openTag('div', ['class' => 'row']); //4
+     echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-5']); //5
+      echo H::openTag('h3'); //6
+       echo H::openTag('a', ['href' => $urlGenerator->generate('client/view',
+        ['id' => $so->getClient()?->getClientId()])]); //7
+        echo H::encode($clienthelper->formatClient($so->getClient()));
+       echo H::closeTag('a'); //7
+      echo H::closeTag('h3'); //6
+      echo H::tag('br', '');
+      echo H::openTag('div', [
+       'id' => 'pre_save_client_id',
+       'value' => $so->getClient()?->getClientId(),
+       'hidden' => true,
+      ]); //6
+      echo H::closeTag('div'); //6
+      echo H::openTag('div', ['class' => 'client-address']); //6
+       echo H::openTag('span', ['class' => 'client-address-street-line-1']); //7
+        if (null !== $so->getClient()?->getClientAddress1()) {
+         echo H::encode($so->getClient()?->getClientAddress1()) . H::tag('br', '');
+        }
+       echo H::closeTag('span'); //7
+       echo H::openTag('span', ['class' => 'client-address-street-line-2']); //7
+        if (null !== $so->getClient()?->getClientAddress2()) {
+         echo H::encode($so->getClient()?->getClientAddress2()) . H::tag('br', '');
+        }
+       echo H::closeTag('span'); //7
+       echo H::openTag('span', ['class' => 'client-address-town-line']); //7
+        if (null !== $so->getClient()?->getClientCity()) {
+         echo H::encode($so->getClient()?->getClientCity()) . H::tag('br', '');
+        }
+        if (null !== $so->getClient()?->getClientState()) {
+         echo H::encode($so->getClient()?->getClientState()) . H::tag('br', '');
+        }
+        if (null !== $so->getClient()?->getClientZip()) {
+         echo H::encode($so->getClient()?->getClientZip());
+        }
+       echo H::closeTag('span'); //7
+       echo H::openTag('span', ['class' => 'client-address-country-line']); //7
+        $soCountry = $so->getClient()?->getClientCountry();
+        if (null !== $soCountry) {
+         echo H::tag('br', '')
+          . $countryhelper->getCountryName($translator->translate('cldr'), $soCountry);
+        }
+       echo H::closeTag('span'); //7
+      echo H::closeTag('div'); //6
+      echo H::tag('hr', '');
+      if (null !== $so->getClient()?->getClientPhone()) {
+       echo H::openTag('div', ['class' => 'client-phone']); //6
+        echo H::encode($translator->translate('phone')) . ":\u{00A0}"
+         . H::encode($so->getClient()?->getClientPhone());
+       echo H::closeTag('div'); //6
+      }
+      if (null !== $so->getClient()?->getClientMobile()) {
+       echo H::openTag('div', ['class' => 'client-mobile']); //6
+        echo H::encode($translator->translate('mobile')) . ":\u{00A0}"
+         . H::encode($so->getClient()?->getClientMobile());
+       echo H::closeTag('div'); //6
+      }
+      if (null !== $so->getClient()?->getClientEmail()) {
+       echo H::openTag('div', ['class' => 'client-email']); //6
+        echo H::encode($translator->translate('email')) . ":\u{00A0}"
+         . H::encode($so->getClient()?->getClientEmail());
+       echo H::closeTag('div'); //6
+      }
+      echo H::tag('br', '');
+     echo H::closeTag('div'); //5
 
-                <div class="col-xs-12 visible-xs"><br></div>
+     echo H::openTag('div', ['class' => 'col-xs-12 visible-xs']); //5
+      echo H::tag('br', '');
+     echo H::closeTag('div'); //5
 
-                <div class="col-xs-12 col-sm-6 col-md-7">
-                    <div class="details-box">
-                        <div class = 'row'>
+     echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-7']); //5
+      echo H::openTag('div', ['class' => 'details-box']); //6
+       echo H::openTag('div', ['class' => 'row']); //7
+        echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //8
+         echo H::openTag('div'); //9
+          echo H::openTag('label', ['for' => 'salesorder_number']); //10
+           echo $translator->translate('salesorder') . ' #';
+          echo H::closeTag('label'); //10
+          echo H::tag('input', '', [
+           'type' => 'text',
+           'id' => 'salesorder_number',
+           'class' => 'form-control form-control-lg',
+           'readonly' => true,
+           'value' => null !== $so->getNumber() ? $so->getNumber() : null,
+           'placeholder' => null === $so->getNumber() ? $translator->translate('not.set') : null,
+          ]);
+         echo H::closeTag('div'); //9
+         echo H::openTag('div'); //9
+          echo H::openTag('label', ['for' => 'salesorder_date_created']); //10
+           echo $vat == '0'
+            ? $translator->translate('date.issued')
+            : $translator->translate('salesorder.date.created');
+          echo H::closeTag('label'); //10
+          echo H::openTag('div', ['class' => 'input-group']); //10
+           echo H::tag('input', '', [
+            'name' => 'salesorder_date_created',
+            'id' => 'salesorder_date_created',
+            'disabled' => true,
+            'class' => 'form-control form-control-lg',
+            'value' => H::encode(
+             $so->getDateCreated() instanceof \DateTimeImmutable
+              ? $so->getDateCreated()->format('Y-m-d')
+              : (is_string($so->getDateCreated()) ? $so->getDateCreated() : '')
+            ),
+           ]);
+           echo H::openTag('span', ['class' => 'input-group-text']); //11
+            echo H::openTag('i', ['class' => 'bi bi-calendar']); //12
+            echo H::closeTag('i'); //12
+           echo H::closeTag('span'); //11
+          echo H::closeTag('div'); //10
+         echo H::closeTag('div'); //9
+         if ($quoteNumber) {
+          echo H::openTag('div'); //9
+           echo H::openTag('label', ['for' => 'salesorder_to_quote']); //10
+            echo $translator->translate('salesorder.quote');
+           echo H::closeTag('label'); //10
+           echo H::openTag('div', ['class' => 'input-group']); //10
+            echo H::a(
+             $quoteNumber,
+             $urlGenerator->generate('quote/view', ['id' => $so->getQuoteId()]),
+             ['class' => 'btn btn-info']
+            );
+           echo H::closeTag('div'); //10
+          echo H::closeTag('div'); //9
+         }
+         if ($invNumber) {
+          echo H::openTag('div'); //9
+           echo H::openTag('label', ['for' => 'salesorder_to_url']); //10
+            echo $translator->translate('salesorder.invoice');
+           echo H::closeTag('label'); //10
+           echo H::openTag('div', ['class' => 'input-group']); //10
+            echo H::a(
+             $invNumber,
+             $urlGenerator->generate('inv/view', ['id' => $so->getInvId()]),
+             ['class' => 'btn btn-success']
+            );
+           echo H::closeTag('div'); //10
+          echo H::closeTag('div'); //9
+         }
+         echo H::openTag('div'); //9
+          /**
+           * @var App\Invoice\Entity\CustomField $customField
+           */
+          foreach ($customFields as $customField) {
+           if ($customField->getLocation() !== 1) {
+            continue;
+           }
+           $cvH->printFieldForView($customField, $form, $salesOrderCustomValues);
+          }
+         echo H::closeTag('div'); //9
+        echo H::closeTag('div'); //8
 
-                            <div class="col-xs-12 col-md-6">
+        echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //8
+         echo H::openTag('div'); //9
+          echo H::openTag('label', ['for' => 'status_id']); //10
+           echo $translator->translate('status');
+          echo H::closeTag('label'); //10
+          echo H::openTag('select', [
+           'name' => 'status_id',
+           'id' => 'status_id',
+           'disabled' => true,
+           'class' => 'form-control form-control-lg',
+          ]); //10
+           /**
+            * @var string $key
+            * @var array $status
+            * @var string $status['label']
+            */
+           foreach ($soStatuses as $key => $status) {
+            echo new Option()
+             ->value($key)
+             ->selected($key == $so->getStatusId())
+             ->content(H::encode($status['label']));
+           }
+          echo H::closeTag('select'); //10
+         echo H::closeTag('div'); //9
+         echo H::openTag('div'); //9
+          echo H::openTag('label', ['for' => 'salesorder_password', 'hidden' => true]); //10
+           echo $translator->translate('salesorder.password');
+          echo H::closeTag('label'); //10
+          echo H::tag('input', '', [
+           'type' => 'text',
+           'id' => 'salesorder_password',
+           'class' => 'form-control form-control-lg',
+           'disabled' => true,
+           'value' => H::encode($so->getPassword() ?? ''),
+           'hidden' => true,
+          ]);
+         echo H::closeTag('div'); //9
+         echo H::openTag('div'); //9
+          echo H::openTag('label', ['for' => 'salesorder_client_purchase_order_number']); //10
+           echo $translator->translate('salesorder.clients.purchase.order.number');
+          echo H::closeTag('label'); //10
+          echo H::tag('input', '', [
+           'type' => 'text',
+           'id' => 'salesorder_client_purchase_order_number',
+           'class' => 'form-control form-control-lg',
+           'disabled' => true,
+           'value' => H::encode($so->getClientPoNumber() ?? ''),
+          ]);
+         echo H::closeTag('div'); //9
+         echo H::openTag('div'); //9
+          echo H::openTag('label', ['for' => 'salesorder_client_purchase_order_person']); //10
+           echo $translator->translate('salesorder.clients.purchase.order.person');
+          echo H::closeTag('label'); //10
+          echo H::tag('input', '', [
+           'type' => 'text',
+           'id' => 'salesorder_client_purchase_order_person',
+           'class' => 'form-control form-control-lg',
+           'disabled' => true,
+           'value' => H::encode($so->getClientPoPerson() ?? ''),
+          ]);
+         echo H::closeTag('div'); //9
+         // 2 => Terms Agreement Required, 8 => Rejected
+         if (in_array($so->getStatusId(), [2, 8]) && !$invEdit) {
+          echo H::openTag('div'); //9
+           echo H::tag('br', '');
+           echo H::a(
+            H::encode(
+             $translator->translate('salesorder.agree.to.terms')
+             . '/' . $translator->translate('salesorder.reject')
+            ),
+            $urlGenerator->generate('salesorder/urlKey', ['key' => $so->getUrlKey()]),
+            ['class' => 'btn btn-success']
+           );
+          echo H::closeTag('div'); //9
+         }
+         echo H::tag('input', '', [
+          'type' => 'text',
+          'id' => 'dropzone_client_id',
+          'readonly' => true,
+          'hidden' => true,
+          'class' => 'form-control form-control-lg',
+          'value' => $so->getClient()?->getClientId(),
+         ]);
+        echo H::closeTag('div'); //8
+       echo H::closeTag('div'); //7
+      echo H::closeTag('div'); //6
+     echo H::closeTag('div'); //5
+    echo H::closeTag('div'); //4
+   echo H::closeTag('div'); //3
+  echo H::closeTag('div'); //2
 
-                                <div>
-                                    <label for="salesorder_number">
-                                    <?= $translator->translate('salesorder'); ?> #
-                                    </label>
-                                    <input type="text"
-                                           id="salesorder_number"
-                                           class="form-control form-control-lg"
-                                           readonly
- <?php if (null !== $so->getNumber()) : ?> value="<?= $so->getNumber(); ?>"
-<?php else : ?> placeholder="<?= $translator->translate('not.set'); ?>"
-                                        <?php endif; ?>>
-                                </div>
-                                <div has-feedback">
-                                    <label for="salesorder_date_created">
-<?= $vat == '0' ? $translator->translate('date.issued') :
-                           $translator->translate('salesorder.date.created'); ?>
-                                    </label>
-                                    <div class="input-group">
-                                        <input name="salesorder_date_created"
-                                               id="salesorder_date_created"
-                                               disabled
-                                               class="form-control form-control-lg"
-                                               value="<?=Html::encode(
-$so->getDateCreated() instanceof \DateTimeImmutable ?
-        $so->getDateCreated()->format('Y-m-d') :
-    (is_string($so->getDateCreated()) ? $so->getDateCreated() : '')); ?>"/>
-                                        <span class="input-group-text">
-                                            <i class="bi bi-calendar"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                                <?php if ($quoteNumber) { ?>
-                                <div has-feedback">
-                                    <label for="salesorder_to_quote">
-                             <?= $translator->translate('salesorder.quote'); ?>
-                                    </label>
-                                    <div class="input-group">
-<?= Html::a($quoteNumber, $urlGenerator->generate('quote/view',
-        ['id' => $so->getQuoteId()]), ['class' => 'btn btn-info']); ?>
-                                    </div>
-                                </div>
-                                <?php } ?>
-                                <?php if ($invNumber) { ?>
-                                <div has-feedback">
-                                    <label for="salesorder_to_url">
-                            <?= $translator->translate('salesorder.invoice'); ?>
-                                    </label>
-                                    <div class="input-group">
-<?= Html::a($invNumber, $urlGenerator->generate('inv/view',
-        ['id' => $so->getInvId()]), ['class' => 'btn btn-success']); ?>
-                                    </div>
-                                </div>
-                                <?php } ?>
-                                <div>
-<?php
-    /**
-     * @var App\Invoice\Entity\CustomField $customField
-     */
-    foreach ($customFields as $customField): ?>
-    <?php if ($customField->getLocation() !== 1) {
-        continue;
-    } ?>
-<?php  $cvH->printFieldForView($customField, $form, $salesOrderCustomValues); ?>
-<?php endforeach; ?>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6">
+  echo H::openTag('div', ['id' => 'partial_item_table_parameters', 'disabled' => true]); //2
+   echo $partial_item_table;
+  echo H::closeTag('div'); //2
 
-                                <div>
-                                    <label for="status_id">
-                                        <?= $translator->translate('status'); ?>
-                                    </label>
-                                    <select name="status_id"
-                                            id="status_id"
-                                            disabled
-                                            class="form-control form-control-lg">
-<?php
-    /**
-     * @var string $key
-     * @var array $status
-     * @var string $status['label']
-     */
-    foreach ($soStatuses as $key => $status) { ?>
-                                            <option value="<?php echo $key; ?>"
- <?php if ($key == $so->getStatusId()) {
-    $s->checkSelect(Html::encode($so->getStatusId() ?? ''), $key);
-                                            } ?>>
-                                        <?= Html::encode($status['label']); ?>
-                                            </option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="salesorder_password"
-                                           hidden>
-                           <?= $translator->translate('salesorder.password'); ?>
-                                    </label>
-                                    <input type="text"
-                                           id="salesorder_password"
-                                           class="form-control form-control-lg"
-                                           disabled
-                                           value="<?=
-                                    Html::encode($so->getPassword() ?? ''); ?>"
-                                           hidden>
-                                </div>
-                                <div>
-                                    <label for="salesorder_client_purchase_order_number">
-      <?= $translator->translate('salesorder.clients.purchase.order.number'); ?>
-                                    </label>
-                                    <input type="text"
-                                           id="salesorder_client_purchase_order_number"
-                                           class="form-control form-control-lg"
-                                           disabled
-                                           value="<?=
-                            Html::encode($so->getClientPoNumber() ?? ''); ?>">
-                                </div>
-                                <div>
-                                    <label for="salesorder_client_purchase_order_person">
-      <?= $translator->translate('salesorder.clients.purchase.order.person'); ?>
-                                    </label>
-                                    <input type="text"
-                                           id="salesorder_client_purchase_order_person"
-                                           class="form-control form-control-lg"
-                                           disabled
-                                           value="<?=
-                            Html::encode($so->getClientPoPerson() ?? ''); ?>">
-                                </div>
-
-                                    <?php
-                                   // 2 => Terms Agreement Required 8=> Rejected
-                     if (in_array($so->getStatusId(), [2,8]) && !$invEdit) { ?>
-                                        <div>
-                                            <br>
-                                            <a href="<?=
-                         $urlGenerator->generate('salesorder/urlKey',
-                                 ['key' => $so->getUrlKey()]); ?>"
-                                               class="btn btn-success">
-<?= $translator->translate('salesorder.agree.to.terms')
-    . '/' . $translator->translate('salesorder.reject'); ?>
-                                            </a>
-                                        </div>
-                                    <?php } ?>
-                                <input type="text"
-                                       id="dropzone_client_id"
-                                       readonly
-                                       hidden
-                                       class="form-control form-control-lg"
-                                       value="<?=
-                                        $so->getClient()?->getClientId(); ?>">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-   <div id="partial_item_table_parameters"
-        so_items="<?php $soItems; ?>"
-        disabled>
-    <?=
-       $partial_item_table;
-    ?>
-   </div>
-
-   <div class = 'row'>
-            <div class="col-xs-12 col-md-6">
-                <div class="panel panel-default no-margin">
-                    <div class="panel-heading">
-                        <?= $translator->translate('notes'); ?>
-                    </div>
-                    <div class="panel-body">
-                        <textarea name="notes"
-                                  id="notes"
-                                  rows="3"
-                                  disabled
-                                  class="input-sm form-control">
-                                    <?= Html::encode($so->getNotes() ?? ''); ?>
-                        </textarea>
-                    </div>
-                </div>
-                <br>
-                <div class="col-xs-12 visible-xs visible-sm"><br></div>
-            </div>
-            <div id="view_partial_inv_delivery_location"
-                 class="col-xs-12 col-md-6">
-                 <?= $partial_quote_delivery_location; ?>
-            </div>
-            <div id="view_custom_fields"
-                 class="col-xs-12 col-md-6">
-                 <?php echo $view_custom_fields; ?>
-            </div>
-    </div>
-</div>
-</div>
+  echo H::openTag('div', ['class' => 'row']); //2
+   echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //3
+    echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //4
+     echo H::openTag('div', ['class' => 'panel-heading']); //5
+      echo $translator->translate('notes');
+     echo H::closeTag('div'); //5
+     echo H::openTag('div', ['class' => 'panel-body']); //5
+      echo H::openTag('textarea', [
+       'name' => 'notes',
+       'id' => 'notes',
+       'rows' => '3',
+       'disabled' => true,
+       'class' => 'input-sm form-control',
+      ]); //6
+       echo H::encode($so->getNotes() ?? '');
+      echo H::closeTag('textarea'); //6
+     echo H::closeTag('div'); //5
+    echo H::closeTag('div'); //4
+    echo H::tag('br', '');
+    echo H::openTag('div', ['class' => 'col-xs-12 visible-xs visible-sm']); //4
+     echo H::tag('br', '');
+    echo H::closeTag('div'); //4
+   echo H::closeTag('div'); //3
+   echo H::openTag('div', ['id' => 'view_partial_inv_delivery_location', 'class' => 'col-xs-12 col-md-6']); //3
+    echo $partial_quote_delivery_location;
+   echo H::closeTag('div'); //3
+   echo H::openTag('div', ['id' => 'view_custom_fields', 'class' => 'col-xs-12 col-md-6']); //3
+    echo $view_custom_fields;
+   echo H::closeTag('div'); //3
+  echo H::closeTag('div'); //2
+ echo H::closeTag('div'); //1
+echo H::closeTag('div'); //0

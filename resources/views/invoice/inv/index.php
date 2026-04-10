@@ -169,8 +169,8 @@ echo Breadcrumbs::widget()
          url: $urlGenerator->generate('invrecurring/index'),
      ),
      BreadcrumbLink::to(
-         label: $translator->translate('set.to.read.only') 
-             . ' ' 
+         label: $translator->translate('set.to.read.only')
+             . ' '
              . $iR->getSpecificStatusArrayEmoji(
                 (int) $s->getSetting('read_only_toggle')),
          url: $urlGenerator->generate(
@@ -379,8 +379,7 @@ $columns = [
             use ($translator): string {
             $inv = $context->data;
             if (($inv instanceof Inv) && (null !== ($id = $inv->getId()))) {
-                return  new Input()
-                       ->type('checkbox')
+                return  $input
                        ->addAttributes([
                            'id' => $id,
                            'name' => 'checkbox[]',
@@ -637,7 +636,7 @@ $columns = [
                         'style' => 'text-decoration:none'])
                     ->content(($model->getNumber() ?? '#')
                             . ' 🔍'
-                            // List the first item on the invoice as a reminder                            
+                            // List the first item on the invoice as a reminder
                             . $model->getFirstItemFamilyProductName())
                     ->href($urlGenerator->generate('inv/view',
                                                     ['id' => $model->getId()]));
@@ -755,7 +754,7 @@ $columns = [
         withSorting: false,
         visible: $visible,
     ),
-    // Make a client active / inactive via client/edit            
+    // Make a client active / inactive via client/edit
     new DataColumn(
         header:  new Label()->content('🔛️')->addAttributes(
             [
@@ -763,12 +762,12 @@ $columns = [
                 'title' => $translator->translate('active')
             ])->render(),
         encodeHeader: false,
-        property: 'id',    
+        property: 'id',
         content: static function (Inv $model) use ($urlGenerator): A {
             return  new A()
                 ->addAttributes([
-                    'style' => 'text-decoration:none',                            
-                ])    
+                    'style' => 'text-decoration:none',
+                ])
                 ->href($urlGenerator->generate('client/edit',
                     ['id' => $model->getClient()?->getClientId(),
                         'origin' => 'inv']))
@@ -783,7 +782,7 @@ $columns = [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('credit.invoice.for.invoice')
             ])->render(),
-        encodeHeader: false,    
+        encodeHeader: false,
         property: 'filterCreditInvNumber',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
             $visible = $iR->repoInvUnLoadedquery(
@@ -1261,7 +1260,7 @@ $toolbarString
     .  new Div()->addClass('float-start')->content(
          new H4()
             ->addClass('me-3 d-inline-block')
-            ->content($translator->translate('invoice')) 
+            ->content($translator->translate('invoice'))
         . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
         . $allVisible
         . $toolbarReset
@@ -1304,7 +1303,7 @@ $toolbarString
             )
             ->encode(false)
             ->render()
-        . ($enableGrouping ? 
+        . ($enableGrouping ?
              new Div()
                 ->addClass('btn-group ms-2')
                 ->addAttributes(['role' => 'group'])

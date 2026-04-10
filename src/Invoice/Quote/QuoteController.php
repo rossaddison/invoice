@@ -137,8 +137,8 @@ final class QuoteController extends BaseController
 {
     protected string $controllerName = 'invoice/quote';
 
-    private readonly NumberHelper $number_helper;
-    private readonly PdfHelper $pdf_helper;
+    private readonly NumberHelper $numberHelper;
+    private readonly PdfHelper $pdfHelper;
 
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
@@ -178,8 +178,8 @@ final class QuoteController extends BaseController
     ) {
         parent::__construct($webService, $userService, $translator,
             $webViewRenderer, $session, $sR, $flash);
-        $this->number_helper = new NumberHelper($sR);
-        $this->pdf_helper = new PdfHelper($sR, $session, $translator);
+        $this->numberHelper = new NumberHelper($sR);
+        $this->pdfHelper = new PdfHelper($sR, $session, $translator);
     }
 
     private function activeUser(string $client_id, UR $uR, UCR $ucR,
@@ -372,7 +372,6 @@ final class QuoteController extends BaseController
         PR $pR,
         TASKR $taskR,
         QAR $qaR,
-        soAR $soaR,
         QCR $qcR,
         soIAR $soiaR,
         QIR $qiR,
@@ -450,7 +449,7 @@ final class QuoteController extends BaseController
                                     $this->quoteToSoQuoteCustom($quote_id,
                                         $new_so_id, $qcR, $cfR, $formHydrator);
                                     $this->quoteToSoQuoteAmount($quote_id,
-                                        $new_so_id, $qaR, $soaR, $soR);
+                                        $new_so_id, $qaR, $soR);
                                     $this->quoteToSoQuoteAllowanceCharges($quote_id,
                                 $new_so_id, $acqR, $formHydrator);
                                     // Set the quote's sales order id so that
@@ -1085,7 +1084,7 @@ final class QuoteController extends BaseController
             if ($quote_entity) {
                 $stream = false;
                 $pdf_template_target_path =
-                    $this->pdf_helper->generateQuotePdf(
+                    $this->pdfHelper->generateQuotePdf(
                         $quote_id, $quote_entity->getUserId(), $stream, true,
                             $quote_amount, $quote_custom_values, $cR, $cvR,
                                 $cfR, $dlR, $qiR, $qiaR, $acqiR, $qR, $qtrR,
@@ -1888,7 +1887,7 @@ final class QuoteController extends BaseController
                                 // Update the quote amounts after conversion
                                 $this->quote_amount_service->updateQuoteAmount(
                                     (int) $quote_id, $qaR, $qiaR, $qtrR,
-                                    $this->number_helper);
+                                    $this->numberHelper);
                                 $parameters = [
                                     'success' => 1,
                                     'flash_message' =>
@@ -1928,7 +1927,6 @@ final class QuoteController extends BaseController
         PR $pR,
         TASKR $taskR,
         QAR $qaR,
-        soAR $soaR,
         QCR $qcR,
         soIAR $soiaR,
         QIR $qiR,
@@ -2011,7 +2009,7 @@ final class QuoteController extends BaseController
                             $this->quoteToSoQuoteCustom($quote_id,
                                 $new_so_id, $qcR, $cfR, $formHydrator);
                             $this->quoteToSoQuoteAmount($quote_id,
-                                $new_so_id, $qaR, $soaR, $soR);
+                                $new_so_id, $qaR, $soR);
                             $this->quoteToSoQuoteAllowanceCharges($quote_id,
                                 $new_so_id, $acqR, $formHydrator);
                             // Set the quote's sales order id so that it
@@ -2339,7 +2337,7 @@ final class QuoteController extends BaseController
     }
 
     private function quoteToSoQuoteAmount(string $quote_id,
-        string $copy_id, QAR $qaR, soAR $soaR, SOR $soR): void
+        string $copy_id, QAR $qaR, SOR $soR): void
     {
         $basis_quote = $qaR->repoQuotequery($quote_id);
         $newSo = $soR->repoSalesOrderUnLoadedquery($copy_id);
@@ -2973,7 +2971,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
                 $quoteAllowanceCharge, (int) $quote_id);
             if (null !== $quote_id) {
                 $this->session->set('quote_id', $quote_id);
-                $this->number_helper->calculateQuote(
+                $this->numberHelper->calculateQuote(
                     (string) $this->session->get('quote_id'), $acqR, $qiR,
                         $qiaR, $qtrR, $qaR, $qR);
                 $quote_tax_rates = (($qtrR->repoCount(
@@ -3013,7 +3011,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
                         'quoteToolbar' => $this->quoteToolbar->renderWithStatus(
                             $quote, $quoteEdit, $vat, $quoteAmountTotal),
                         'dateHelper' => new DateHelper($this->sR),
-                        'numberHelper' => $this->number_helper,
+                        'numberHelper' => $this->numberHelper,
                         'view_product_task_tabs' =>
                             $this->webViewRenderer->renderPartialAsString(
                                 '//invoice/quote/view_product_task_tabs', [
@@ -3143,7 +3141,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
                             $this->webViewRenderer->renderPartialAsString(
                             '//invoice/product/modal_product_lookups_quote',
                             [
-                                'numberHelper' => $this->number_helper,
+                                'numberHelper' => $this->numberHelper,
                                 'translator' => $this->translator,
                                 'csrf' => '',
                                 'families' => $fR->findAllPreloaded(),
@@ -3159,7 +3157,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
                                 '//invoice/product/_partial_product_table_modal',
                                 [
                                     'products' => $pR->findAllPreloadedwithPrice(),
-                                    'numberHelper' => $this->number_helper,
+                                    'numberHelper' => $this->numberHelper,
                                     'translator' => $this->translator,
                                 ]),
                             ],
@@ -3185,7 +3183,7 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
                             [
                                 'taxRates' => $trR->findAllPreloaded(),
                                 's' => $this->sR,
-                                'numberHelper' => $this->number_helper,
+                                'numberHelper' => $this->numberHelper,
                                 'translator' => $this->translator,
                             ],
                         ),
@@ -3314,23 +3312,15 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
 
     private function rbacAccountant() : bool {
         // has accountant role
-        if (($this->userService->hasPermission(Permissions::VIEW_INV)
+        return (($this->userService->hasPermission(Permissions::VIEW_INV)
             && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
-            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT)))) {
-            return true;
-        } else {
-            return false;
-        }
+            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT))));
     }
 
     private function rbacAdmin() : bool {
         // has observer role
-        if ($this->userService->hasPermission(Permissions::VIEW_INV)
-            && ($this->userService->hasPermission(Permissions::EDIT_INV))) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && ($this->userService->hasPermission(Permissions::EDIT_INV)));
     }
 
     private function editOptionsData(

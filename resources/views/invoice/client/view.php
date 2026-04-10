@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 use App\Invoice\ClientCustom\ClientCustomForm;
 use App\Invoice\Entity\ClientCustom;
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Input;
 
 /**
  * @var App\Invoice\ClientPeppol\ClientPeppolRepository $cpR
@@ -52,521 +53,483 @@ use Yiisoft\Html\Tag\A;
  * @var string $partial_notes
  * @var string $title
  */
-?>
 
-<h1><?= Html::encode($title)?></h1>
+$clientId = (string) $client->getClientId();
 
-<div id="headerbar">
-    <h1 class="headerbar-title"><?= Html::encode($clientHelper->formatClient($client)); ?></h1>
+echo H::tag('h1', H::encode($title));
 
-    <div class="headerbar-item pull-right">
-        <div class="btn-group btn-group-sm">
-                <a href="#modal-add-quote" data-bs-toggle="modal" class="btn btn-outline-success" style="text-decoration:none">
-                    <i class="bi bi-file-earmark-text"></i><?= $translator->translate('create.quote'); ?>
-                </a>
-                <a href="#modal-add-inv" data-bs-toggle="modal" class="btn btn-outline-success"  style="text-decoration:none">
-                   <i class="bi bi-file-earmark-text"></i><?= $translator->translate('create.invoice'); ?>
-                </a>
-                <?php if ($cpR->repoClientCount($clientId = (string) $client->getClientId()) === 0 && strlen($clientId) > 0) { ?>
-                <a href="<?= $urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $client->getClientId()]); ?>"
-                   class="btn btn-outline-info" style="text-decoration:none">
-                     <i class="bi bi-plus"></i> <?= $translator->translate('client.peppol.add'); ?>
-                </a>
-                <?php } ?>
-                <?php if ($cpR->repoClientCount($clientId = (string) $client->getClientId()) > 0 && strlen($clientId) > 0) { ?>
-                <a href="<?= $urlGenerator->generate('clientpeppol/edit', ['client_id' => $client->getClientId()]); ?>"
-                   class="btn btn-outline-warning" style="text-decoration:none">
-                     <i class="bi bi-pencil-square"></i> <?= $translator->translate('client.peppol.edit'); ?>
-                </a>
-                <?php } ?>
-                <a href="<?= null !== ($clientIdEdit = $client->getClientId()) ? $urlGenerator->generate('client/edit', ['id' => $clientIdEdit, 'origin' => 'edit']) : ''; ?>"
-                   class="btn btn-outline-warning" style="text-decoration:none">
-                    <i class="bi bi-pencil-square"></i><?= $translator->translate('edit'); ?>
-                </a>
-                <a href="<?= null !== ($clientIdPostalAdd = $client->getClientId())
-                            ? $urlGenerator->generate(
-                                'postaladdress/add',
-                                // Argument parameters
-                                ['client_id' => $clientIdPostalAdd],
-                                // Query parameters used to generate return url
-                                [
-                                    /**
-                                     * Related logic: see Yiisoft\Router\UrlGeneratorInterface function generate $queryParameters
-                                     * Purpose: Use origin and origin_id to generate return url to client view after user has
-                                     * created the new postal address for the client
-                                     * e.g  {origin}/view, ['client_id' => {origin_id}],
-                                     */
-                                    'origin' => 'client',
-                                    'origin_id' => $clientIdPostalAdd,
+echo H::openTag('div', ['id' => 'headerbar']); //0
+ echo H::tag('h1', H::encode($clientHelper->formatClient($client)), ['class' => 'headerbar-title']);
+ echo H::openTag('div', ['class' => 'headerbar-item pull-right']); //1
+  echo H::openTag('div', ['class' => 'btn-group btn-group-sm']); //2
+   echo (new A())
+    ->content(H::tag('i', '', ['class' => 'bi bi-file-earmark-text']) . $translator->translate('create.quote'))
+    ->href('#modal-add-quote')
+    ->encode(false)
+    ->addAttributes(['class' => 'btn btn-outline-success', 'data-bs-toggle' => 'modal', 'style' => 'text-decoration:none'])
+    ->render();
+   echo (new A())
+    ->content(H::tag('i', '', ['class' => 'bi bi-file-earmark-text']) . $translator->translate('create.invoice'))
+    ->href('#modal-add-inv')
+    ->encode(false)
+    ->addAttributes(['class' => 'btn btn-outline-success', 'data-bs-toggle' => 'modal', 'style' => 'text-decoration:none'])
+    ->render();
+   if ($cpR->repoClientCount($clientId) === 0 && strlen($clientId) > 0) {
+    echo (new A())
+     ->content(H::tag('i', '', ['class' => 'bi bi-plus']) . ' ' . $translator->translate('client.peppol.add'))
+     ->href($urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $client->getClientId()]))
+     ->encode(false)
+     ->addAttributes(['class' => 'btn btn-outline-info', 'style' => 'text-decoration:none'])
+     ->render();
+   }
+   if ($cpR->repoClientCount($clientId) > 0 && strlen($clientId) > 0) {
+    echo (new A())
+     ->content(H::tag('i', '', ['class' => 'bi bi-pencil-square']) . ' ' . $translator->translate('client.peppol.edit'))
+     ->href($urlGenerator->generate('clientpeppol/edit', ['client_id' => $client->getClientId()]))
+     ->encode(false)
+     ->addAttributes(['class' => 'btn btn-outline-warning', 'style' => 'text-decoration:none'])
+     ->render();
+   }
+   $clientIdEdit = $client->getClientId();
+   echo (new A())
+    ->content(H::tag('i', '', ['class' => 'bi bi-pencil-square']) . $translator->translate('edit'))
+    ->href(null !== $clientIdEdit ? $urlGenerator->generate('client/edit', ['id' => $clientIdEdit, 'origin' => 'edit']) : '')
+    ->encode(false)
+    ->addAttributes(['class' => 'btn btn-outline-warning', 'style' => 'text-decoration:none'])
+    ->render();
+   $clientIdPostalAdd = $client->getClientId();
+   echo (new A())
+    ->content(H::tag('i', '', ['class' => 'bi bi-plus']) . $translator->translate('client.postaladdress.add'))
+    ->href(
+     null !== $clientIdPostalAdd
+      ? $urlGenerator->generate(
+       'postaladdress/add',
+       ['client_id' => $clientIdPostalAdd],
+       [
+        /**
+         * Related logic: see Yiisoft\Router\UrlGeneratorInterface function generate $queryParameters
+         * Purpose: Use origin and origin_id to generate return url to client view after user has
+         * created the new postal address for the client
+         * e.g  {origin}/view, ['client_id' => {origin_id}],
+         */
+        'origin' => 'client',
+        'origin_id' => $clientIdPostalAdd,
+        'action' => 'add',
+       ]
+      ) : ''
+    )
+    ->encode(false)
+    ->addAttributes(['class' => 'btn btn-outline-primary', 'style' => 'text-decoration:none'])
+    ->render();
+   $clientIdDelAdd = $client->getClientId();
+   echo (new A())
+    ->content(H::tag('i', '', ['class' => 'bi bi-plus']) . $translator->translate('delivery.location.add'))
+    ->href(
+     null !== $clientIdDelAdd
+      ? $urlGenerator->generate(
+       'del/add',
+       ['client_id' => $clientIdDelAdd],
+       ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view']
+      ) : ''
+    )
+    ->encode(false)
+    ->addAttributes(['class' => 'btn btn-outline-success', 'style' => 'text-decoration:none'])
+    ->render();
+   echo (new A())
+    ->content(H::tag('i', '', ['class' => 'bi bi-trash']) . ' ' . $translator->translate('delete'))
+    ->href($urlGenerator->generate('client/delete', ['id' => $client->getClientId()]))
+    ->encode(false)
+    ->addAttributes([
+     'class' => 'btn btn-outline-danger',
+     'onclick' => 'return confirm(' . H::encode("'" . $translator->translate('delete.client.warning') . "'") . ')',
+     'style' => 'text-decoration:none',
+    ])
+    ->render();
+  echo H::closeTag('div'); //2
+ echo H::closeTag('div'); //1
+echo H::closeTag('div'); //0
 
-                                    'action' => 'add'],
-                            ) : ''; ?>"
-                   class="btn btn-outline-primary" style="text-decoration:none">
-                    <i class="bi bi-plus"></i><?= $translator->translate('client.postaladdress.add'); ?>
-                </a>
-                <a href="<?= null !== ($clientIdDelAdd = $client->getClientId()) ? $urlGenerator->generate(
-                    'del/add',
-                    ['client_id' => $clientIdDelAdd],
-                    ['origin' => 'client', 'origin_id' => $clientIdDelAdd, 'action' => 'view'],
-                ) : ''; ?>"
-                   class="btn btn-outline-success" style="text-decoration:none">
-                   <i class="bi bi-plus"></i><?= $translator->translate('delivery.location.add'); ?>
-                </a>
-                <a class="btn btn-outline-danger"
-                   href="<?= $urlGenerator->generate('client/delete', ['id' => $client->getClientId()]); ?>"
-                   onclick="return confirm('<?= $translator->translate('delete.client.warning'); ?>');" style="text-decoration:none">
-                   <i class="bi bi-trash"></i> <?= $translator->translate('delete'); ?>
-                </a>
-        </div>
-    </div>
-
-</div>
-
-<ul id="submenu" class="nav nav-tabs nav-tabs-noborder">
-    <!== https://getbootstrap.com/docs/5.0/components/navs-tabs/#using-data-attributes -->
-    <li class="nav-item" role="presentation"><button class="nav-link active" id="client-details-tab" data-bs-toggle="tab" data-bs-target="#clientDetails"  style="text-decoration:none"><?= $translator->translate('details'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link bg-success bg-opacity-25" id="client-quotes-tab" data-bs-toggle="tab" data-bs-target="#clientQuotes"  style="text-decoration:none"><?= $translator->translate('quotes'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-draft-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesDraft" style="text-decoration:none"><?= $translator->translate('draft'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-sent-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesSent" style="text-decoration:none"><?= $translator->translate('sent'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-viewed-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesViewed" style="text-decoration:none"><?= $translator->translate('viewed'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-approved-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesApproved" style="text-decoration:none"><?= $translator->translate('approved'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-cancelled-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesCancelled" style="text-decoration:none"><?= $translator->translate('canceled'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-quotes-rejected-tab" data-bs-toggle="tab" data-bs-target="#clientQuotesRejected" style="text-decoration:none"><?= $translator->translate('rejected'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link bg-danger bg-opacity-25" id="client-invoices-tab" data-bs-toggle="tab" data-bs-target="#clientInvoices" style="text-decoration:none"><?= $translator->translate('invoices'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-draft-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesDraft" style="text-decoration:none"><?= $translator->translate('draft'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-sent-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesSent" style="text-decoration:none"><?= $translator->translate('sent'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-viewed-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesViewed" style="text-decoration:none"><?= $translator->translate('viewed'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-paid-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesPaid" style="text-decoration:none"><?= $translator->translate('paid'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-overdue-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesOverdue" style="text-decoration:none"><?= $translator->translate('overdue'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-unpaid-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesUnpaid" style="text-decoration:none"><?= $translator->translate('unpaid'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-reminder-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesReminderSent" style="text-decoration:none"><?= $translator->translate('reminder'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-seven-day-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesSevenDay" style="text-decoration:none"><?= $translator->translate('letter'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-legal-claim-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesLegalClaim" style="text-decoration:none"><?= $translator->translate('claim'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-judgement-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesJudgement" style="text-decoration:none"><?= $translator->translate('judgement'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-officer-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesOfficer" style="text-decoration:none"><?= $translator->translate('enforcement'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-credit-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesCredit" style="text-decoration:none"><?= $translator->translate('credit.invoice.for.invoice'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link" id="client-invoices-written-off-tab" data-bs-toggle="tab" data-bs-target="#clientInvoicesWrittenOff" style="text-decoration:none"><?= $translator->translate('loss'); ?></button></li>
-    <li class="nav-item" role="presentation"><button class="nav-link bg-info bg-opacity-25" id="client-payments-tab" data-bs-toggle="tab" data-bs-target="#clientPayments" style="text-decoration:none"><?= $translator->translate('payments'); ?></button></li>
-</ul>
-
-<div id="content" class="tabbable tabs-below no-padding">
-    <div class="tab-content no-padding">
-
-        <div id="clientDetails" class="tab-pane tab-rich-content active">
-
-            <?= $s->getSetting('disable_flash_messages') == '0' ? $alert : ''; ?>
-
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6">
-
-                    <h3><?= Html::encode($clientHelper->formatClient($client)); ?></h3>
-                    <p>
-                        <?= $partial_client_address; ?>
-                    </p>
-                    <p>
-                        <table class="table table-bordered no-margin">
-                        <?php
-                            $i = 1;
+// Nav tabs
+echo H::openTag('ul', ['id' => 'submenu', 'class' => 'nav nav-tabs nav-tabs-noborder']); //0
+$tabs = [
+ ['id' => 'client-details-tab',           'target' => '#clientDetails',              'extra' => ' active',                   'label' => 'details'],
+ ['id' => 'client-quotes-tab',            'target' => '#clientQuotes',               'extra' => ' bg-success bg-opacity-25', 'label' => 'quotes'],
+ ['id' => 'client-quotes-draft-tab',      'target' => '#clientQuotesDraft',          'extra' => '',                          'label' => 'draft'],
+ ['id' => 'client-quotes-sent-tab',       'target' => '#clientQuotesSent',           'extra' => '',                          'label' => 'sent'],
+ ['id' => 'client-quotes-viewed-tab',     'target' => '#clientQuotesViewed',         'extra' => '',                          'label' => 'viewed'],
+ ['id' => 'client-quotes-approved-tab',   'target' => '#clientQuotesApproved',       'extra' => '',                          'label' => 'approved'],
+ ['id' => 'client-quotes-cancelled-tab',  'target' => '#clientQuotesCancelled',      'extra' => '',                          'label' => 'canceled'],
+ ['id' => 'client-quotes-rejected-tab',   'target' => '#clientQuotesRejected',       'extra' => '',                          'label' => 'rejected'],
+ ['id' => 'client-invoices-tab',          'target' => '#clientInvoices',             'extra' => ' bg-danger bg-opacity-25',  'label' => 'invoices'],
+ ['id' => 'client-invoices-draft-tab',    'target' => '#clientInvoicesDraft',        'extra' => '',                          'label' => 'draft'],
+ ['id' => 'client-invoices-sent-tab',     'target' => '#clientInvoicesSent',         'extra' => '',                          'label' => 'sent'],
+ ['id' => 'client-invoices-viewed-tab',   'target' => '#clientInvoicesViewed',       'extra' => '',                          'label' => 'viewed'],
+ ['id' => 'client-invoices-paid-tab',     'target' => '#clientInvoicesPaid',         'extra' => '',                          'label' => 'paid'],
+ ['id' => 'client-invoices-overdue-tab',  'target' => '#clientInvoicesOverdue',      'extra' => '',                          'label' => 'overdue'],
+ ['id' => 'client-invoices-unpaid-tab',   'target' => '#clientInvoicesUnpaid',       'extra' => '',                          'label' => 'unpaid'],
+ ['id' => 'client-invoices-reminder-tab', 'target' => '#clientInvoicesReminderSent', 'extra' => '',                          'label' => 'reminder'],
+ ['id' => 'client-invoices-seven-day-tab','target' => '#clientInvoicesSevenDay',     'extra' => '',                          'label' => 'letter'],
+ ['id' => 'client-invoices-legal-claim-tab','target' => '#clientInvoicesLegalClaim', 'extra' => '',                          'label' => 'claim'],
+ ['id' => 'client-invoices-judgement-tab','target' => '#clientInvoicesJudgement',    'extra' => '',                          'label' => 'judgement'],
+ ['id' => 'client-invoices-officer-tab',  'target' => '#clientInvoicesOfficer',      'extra' => '',                          'label' => 'enforcement'],
+ ['id' => 'client-invoices-credit-tab',   'target' => '#clientInvoicesCredit',       'extra' => '',                          'label' => 'credit.invoice.for.invoice'],
+ ['id' => 'client-invoices-written-off-tab','target' => '#clientInvoicesWrittenOff', 'extra' => '',                          'label' => 'loss'],
+ ['id' => 'client-payments-tab',          'target' => '#clientPayments',             'extra' => ' bg-info bg-opacity-25',    'label' => 'payments'],
+];
 /**
- * @var App\Invoice\Entity\CustomField $custom_field
+ * @var array{id:string,target:string,extra:string,label:string} $tab
  */
-foreach ($custom_fields as $custom_field) : ?>
-                            <?php if ($custom_field->getLocation() != 1) {
-                                continue;
-                            } ?>
-                            <tr>
-                                <?php
-                                    $column = $custom_field->getLabel();
-    $value = $cvH->formValue($clientCustomValues, $custom_field->getId())
-    ?>
-                                <th id="<?= 'cf-col' . $i; ?>"><?= Html::encode($column); ?></th>
-                                <td id="<?= 'cf-val' . $i; ?>"><?= Html::encode($value); ?></td>
-                            </tr>
-                        </table>
-                        <?php
-                             $i = $i + 1;
-endforeach; ?>
-                    </p>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-6">
+foreach ($tabs as $tab) {
+ echo H::openTag('li', ['class' => 'nav-item', 'role' => 'presentation']); //1
+  echo H::tag('button', $translator->translate($tab['label']), [
+   'class' => 'nav-link' . $tab['extra'],
+   'id' => $tab['id'],
+   'data-bs-toggle' => 'tab',
+   'data-bs-target' => $tab['target'],
+   'style' => 'text-decoration:none',
+  ]);
+ echo H::closeTag('li'); //1
+}
+echo H::closeTag('ul'); //0
 
-                    <table class="table table-bordered no-margin">
-                        <tr>
-                            <th id="language">
-                                <?= $translator->translate('language'); ?>
-                            </th>
-                            <td class="td-amount">
-                                <?= ucfirst($client->getClientLanguage() ?? ''); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th id="total-billed">
-                                <?= $translator->translate('total.billed'); ?>
-                            </th>
-                            <td class="td-amount">
-                                <?= null !== ($clientIdTotal = $client->getClientId()) ? $s->formatCurrency($iR->withTotal($clientIdTotal, $iaR)) : ''; ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th id="total-paid">
-                                <?= $translator->translate('total.paid'); ?>
-                            </th>
-                            <td class="td-amount">
-                                <?= null !== ($clientIdPaid = $client->getClientId()) ? $s->formatCurrency($iR->withTotalPaid($clientIdPaid, $iaR)) : ''; ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th id="total-balance">
-                                <?= $translator->translate('total.balance'); ?>
-                            </th>
-                            <td class="td-amount">
-                                <?= null !== ($clientIdBalance = $client->getClientId()) ? $s->formatCurrency($iR->withTotalBalance($clientIdBalance, $iaR)) : ''; ?>
-                            </td>
-                        </tr>
-                    </table>
+// Tab content
+echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-padding']); //0
+ echo H::openTag('div', ['class' => 'tab-content no-padding']); //1
 
-                </div>
-            </div>
-
-            <hr>
-
-            <div class="row">
-                <div class="col-xs-12 col-md-6">
-                    <div class="panel panel-default no-margin">
-                        <div class="panel-heading"><?= $translator->translate('delivery.location.client'); ?></div>
-                            <div class="panel-body table-content">
-                                <?php echo $delivery_locations; ?>
-                            </div>
-                    </div>
-                </div>
-            </div>
-
-            <hr>
-
-            <div class="row">
-                <div class="col-xs-12 col-md-6">
-                    <div class="panel panel-default no-margin">
-                        <div class="panel-heading"><?= $translator->translate('contact.information'); ?></div>
-                        <div class="panel-body table-content">
-                            <table class="table no-margin">
-                                <?php if ($client->getClientEmail()) : ?>
-                                    <tr>
-                                        <th><?= $translator->translate('email'); ?></th>
-                                        <td><?= Html::mailto($client->getClientEmail()); ?></td>
-                                    </tr>
-                                <?php endif; ?>
-                                <?php if (strlen(($client->getClientPhone() ?? '')) > 0) : ?>
-                                    <tr>
-                                        <th><?= $translator->translate('phone'); ?></th>
-                                        <td><?= Html::encode($client->getClientPhone()); ?></td>
-                                    </tr>
-                                <?php endif; ?>
-                                <?php if (strlen(($client->getClientMobile() ?? '')) > 0) : ?>
-                                    <tr>
-                                        <th><?= $translator->translate('mobile'); ?></th>
-                                        <td><?= Html::encode($client->getClientMobile()); ?></td>
-                                    </tr>
-                                <?php endif; ?>
-                                <?php if (strlen(($client->getClientFax() ?? '')) > 0) : ?>
-                                    <tr>
-                                        <th><?= $translator->translate('fax'); ?></th>
-                                        <td><?= Html::encode($client->getClientFax()); ?></td>
-                                    </tr>
-                                <?php endif; ?>
-                                <?php if (strlen(($client->getClientWeb() ?? '')) > 0) : ?>
-                                    <tr>
-                                        <th><?= $translator->translate('web'); ?></th>
-                                        <td><?=  new A()->content($client->getClientWeb() ?? 'https://no_web_page.com')->href($client->getClientWeb() ?? 'https://no_web_page.com')->addAttributes(['target' => '_blank'])->render(); ?></td>
-                                    </tr>
-                                <?php endif; ?>
-                                <?php
+  // Details tab
+  echo H::openTag('div', ['id' => 'clientDetails', 'class' => 'tab-pane tab-rich-content active']); //2
+   echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
+   echo H::openTag('div', ['class' => 'row']); //3
+    echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-6']); //4
+     echo H::tag('h3', H::encode($clientHelper->formatClient($client)));
+     echo H::openTag('p'); //5
+      echo $partial_client_address;
+     echo H::closeTag('p'); //5
+     echo H::openTag('p'); //5
+      echo H::openTag('table', ['class' => 'table table-bordered no-margin']); //6
+       $i = 1;
        /**
         * @var App\Invoice\Entity\CustomField $custom_field
         */
-       foreach ($custom_fields as $custom_field) : ?>
-                                    <?php if ($custom_field->getLocation() != 2) {
-                                        continue;
-                                    } ?>
-                                    <tr>
-                                        <?php
-                                            $column = $custom_field->getLabel();
-           $value = $cvH->formValue($clientCustomValues, $custom_field->getId())
-           ?>
-                                        <th><?= Html::encode($column); ?></th>
-                                        <td><?= Html::encode($value); ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </table>
-                        </div>
-                    </div>
+       foreach ($custom_fields as $custom_field) {
+        if ($custom_field->getLocation() != 1) {
+         continue;
+        }
+        $column = $custom_field->getLabel();
+        $value  = $cvH->formValue($clientCustomValues, $custom_field->getId());
+        echo H::openTag('tr'); //7
+         echo H::tag('th', H::encode($column), ['id' => 'cf-col' . $i]);
+         echo H::tag('td', H::encode($value), ['id' => 'cf-val' . $i]);
+        echo H::closeTag('tr'); //7
+        $i++;
+       }
+      echo H::closeTag('table'); //6
+     echo H::closeTag('p'); //5
+    echo H::closeTag('div'); //4
+    echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-6']); //4
+     echo H::openTag('table', ['class' => 'table table-bordered no-margin']); //5
+      echo H::openTag('tr'); //6
+       echo H::tag('th', $translator->translate('language'), ['id' => 'language']);
+       echo H::tag('td', ucfirst($client->getClientLanguage() ?? ''), ['class' => 'td-amount']);
+      echo H::closeTag('tr'); //6
+      echo H::openTag('tr'); //6
+       echo H::tag('th', $translator->translate('total.billed'), ['id' => 'total-billed']);
+       $clientIdTotal = $client->getClientId();
+       echo H::tag('td',
+        null !== $clientIdTotal ? $s->formatCurrency($iR->withTotal($clientIdTotal, $iaR)) : '',
+        ['class' => 'td-amount']
+       );
+      echo H::closeTag('tr'); //6
+      echo H::openTag('tr'); //6
+       echo H::tag('th', $translator->translate('total.paid'), ['id' => 'total-paid']);
+       $clientIdPaid = $client->getClientId();
+       echo H::tag('td',
+        null !== $clientIdPaid ? $s->formatCurrency($iR->withTotalPaid($clientIdPaid, $iaR)) : '',
+        ['class' => 'td-amount']
+       );
+      echo H::closeTag('tr'); //6
+      echo H::openTag('tr'); //6
+       echo H::tag('th', $translator->translate('total.balance'), ['id' => 'total-balance']);
+       $clientIdBalance = $client->getClientId();
+       echo H::tag('td',
+        null !== $clientIdBalance ? $s->formatCurrency($iR->withTotalBalance($clientIdBalance, $iaR)) : '',
+        ['class' => 'td-amount']
+       );
+      echo H::closeTag('tr'); //6
+     echo H::closeTag('table'); //5
+    echo H::closeTag('div'); //4
+   echo H::closeTag('div'); //3
 
-                </div>
-                <div class="col-xs-12 col-md-6">
-                    <div class="panel panel-default no-margin">
+   echo H::tag('hr', '');
 
-                        <div class="panel-heading"><?= $translator->translate('tax.information'); ?></div>
-                        <div class="panel-body table-content">
-                            <table class="table no-margin">
-                                <?php if ($client->getClientVatId()) : ?>
-                                    <tr>
-                                        <th><?= $translator->translate('vat.id'); ?></th>
-                                        <td><?= Html::encode($client->getClientVatId()); ?></td>
-                                    </tr>
-                                <?php endif; ?>
-                                <?php if (strlen(($clientTaxCode = $client->getClientTaxCode() ?? '')) > 0) : ?>
-                                    <tr>
-                                        <th><?= $translator->translate('tax.code'); ?></th>
-                                        <td><?= Html::encode($clientTaxCode); ?></td>
-                                    </tr>
-                                <?php endif; ?>
+   echo H::openTag('div', ['class' => 'row']); //3
+    echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
+     echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //5
+      echo H::tag('div', $translator->translate('delivery.location.client'), ['class' => 'panel-heading']);
+      echo H::openTag('div', ['class' => 'panel-body table-content']); //6
+       echo $delivery_locations;
+      echo H::closeTag('div'); //6
+     echo H::closeTag('div'); //5
+    echo H::closeTag('div'); //4
+   echo H::closeTag('div'); //3
 
-                                <?php
-                                    /**
-                                     * @var App\Invoice\Entity\CustomField $custom_field
-                                     */
-                                    foreach ($custom_fields as $custom_field) : ?>
-                                    <?php if ($custom_field->getLocation() != 4) {
-                                        continue;
-                                    } ?>
-                                    <tr>
-                                        <?php
-                                            $column = $custom_field->getLabel();
-                                        $value = $cvH->formValue($clientCustomValues, $custom_field->getId())
-                                        ?>
-                                        <th><?= Html::encode($column); ?></th>
-                                        <td><?= Html::encode($value); ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+   echo H::tag('hr', '');
 
-            <?php if ($client->getClientSurname() !== ""): ?>
-                <hr>
+   echo H::openTag('div', ['class' => 'row']); //3
+    echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
+     echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //5
+      echo H::tag('div', $translator->translate('contact.information'), ['class' => 'panel-heading']);
+      echo H::openTag('div', ['class' => 'panel-body table-content']); //6
+       echo H::openTag('table', ['class' => 'table no-margin']); //7
+        if ($client->getClientEmail()) {
+         echo H::openTag('tr'); //8
+          echo H::tag('th', $translator->translate('email'));
+          echo H::tag('td', H::mailto($client->getClientEmail()));
+         echo H::closeTag('tr'); //8
+        }
+        if (strlen($client->getClientPhone() ?? '') > 0) {
+         echo H::openTag('tr'); //8
+          echo H::tag('th', $translator->translate('phone'));
+          echo H::tag('td', H::encode($client->getClientPhone()));
+         echo H::closeTag('tr'); //8
+        }
+        if (strlen($client->getClientMobile() ?? '') > 0) {
+         echo H::openTag('tr'); //8
+          echo H::tag('th', $translator->translate('mobile'));
+          echo H::tag('td', H::encode($client->getClientMobile()));
+         echo H::closeTag('tr'); //8
+        }
+        if (strlen($client->getClientFax() ?? '') > 0) {
+         echo H::openTag('tr'); //8
+          echo H::tag('th', $translator->translate('fax'));
+          echo H::tag('td', H::encode($client->getClientFax()));
+         echo H::closeTag('tr'); //8
+        }
+        if (strlen($client->getClientWeb() ?? '') > 0) {
+         $clientWeb = $client->getClientWeb() ?? 'https://no_web_page.com';
+         echo H::openTag('tr'); //8
+          echo H::tag('th', $translator->translate('web'));
+          echo H::tag('td',
+           new A()->content($clientWeb)->href($clientWeb)->addAttributes(['target' => '_blank'])->render()
+          );
+         echo H::closeTag('tr'); //8
+        }
+        /**
+         * @var App\Invoice\Entity\CustomField $custom_field
+         */
+        foreach ($custom_fields as $custom_field) {
+         if ($custom_field->getLocation() != 2) {
+          continue;
+         }
+         $column = $custom_field->getLabel();
+         $value  = $cvH->formValue($clientCustomValues, $custom_field->getId());
+         echo H::openTag('tr'); //8
+          echo H::tag('th', H::encode($column));
+          echo H::tag('td', H::encode($value));
+         echo H::closeTag('tr'); //8
+        }
+       echo H::closeTag('table'); //7
+      echo H::closeTag('div'); //6
+     echo H::closeTag('div'); //5
+    echo H::closeTag('div'); //4
 
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
+    echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
+     echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //5
+      echo H::tag('div', $translator->translate('tax.information'), ['class' => 'panel-heading']);
+      echo H::openTag('div', ['class' => 'panel-body table-content']); //6
+       echo H::openTag('table', ['class' => 'table no-margin']); //7
+        if ($client->getClientVatId()) {
+         echo H::openTag('tr'); //8
+          echo H::tag('th', $translator->translate('vat.id'));
+          echo H::tag('td', H::encode($client->getClientVatId()));
+         echo H::closeTag('tr'); //8
+        }
+        $clientTaxCode = $client->getClientTaxCode() ?? '';
+        if (strlen($clientTaxCode) > 0) {
+         echo H::openTag('tr'); //8
+          echo H::tag('th', $translator->translate('tax.code'));
+          echo H::tag('td', H::encode($clientTaxCode));
+         echo H::closeTag('tr'); //8
+        }
+        /**
+         * @var App\Invoice\Entity\CustomField $custom_field
+         */
+        foreach ($custom_fields as $custom_field) {
+         if ($custom_field->getLocation() != 4) {
+          continue;
+         }
+         $column = $custom_field->getLabel();
+         $value  = $cvH->formValue($clientCustomValues, $custom_field->getId());
+         echo H::openTag('tr'); //8
+          echo H::tag('th', H::encode($column));
+          echo H::tag('td', H::encode($value));
+         echo H::closeTag('tr'); //8
+        }
+       echo H::closeTag('table'); //7
+      echo H::closeTag('div'); //6
+     echo H::closeTag('div'); //5
+    echo H::closeTag('div'); //4
+   echo H::closeTag('div'); //3
 
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <?= $translator->translate('personal.information'); ?>
-                            </div>
+   if ($client->getClientSurname() !== '') {
+    echo H::tag('hr', '');
+    echo H::openTag('div', ['class' => 'row']); //3
+     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
+      echo H::openTag('div', ['class' => 'panel panel-default']); //5
+       echo H::tag('div', $translator->translate('personal.information'), ['class' => 'panel-heading']);
+       echo H::openTag('div', ['class' => 'panel-body table-content']); //6
+        echo H::openTag('table', ['class' => 'table no-margin']); //7
+         echo H::openTag('tr'); //8
+          echo H::tag('th', $translator->translate('birthdate'));
+          $clientBirthdate = $client->getClientBirthdate();
+          echo H::tag('td',
+           !is_string($clientBirthdate) && null !== $clientBirthdate
+            ? $clientBirthdate->format('Y-m-d') : ''
+          );
+         echo H::closeTag('tr'); //8
+         echo H::openTag('tr'); //8
+          echo H::tag('th', $translator->translate('gender'));
+          $clientGender = $client->getClientGender();
+          echo H::tag('td',
+           null !== $clientGender ? $clientHelper->formatGender($clientGender, $translator) : ''
+          );
+         echo H::closeTag('tr'); //8
+         /**
+          * @var App\Invoice\Entity\CustomField $custom_field
+          */
+         foreach ($custom_fields as $custom_field) {
+          if ($custom_field->getLocation() !== 3) {
+           continue;
+          }
+          $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues);
+         }
+        echo H::closeTag('table'); //7
+       echo H::closeTag('div'); //6
+      echo H::closeTag('div'); //5
+     echo H::closeTag('div'); //4
+    echo H::closeTag('div'); //3
+   }
 
-                            <div class="panel-body table-content">
-                                <table class="table no-margin">
-                                    <tr>
-                                        <th><?= $translator->translate('birthdate'); ?></th>
+   if ($custom_fields) {
+    echo H::tag('hr', '');
+    echo H::openTag('div', ['class' => 'row']); //3
+     echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
+      echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //5
+       echo H::tag('div', $translator->translate('custom.fields'), ['class' => 'panel-heading']);
+       echo H::openTag('div', ['class' => 'panel-body table-content']); //6
+        echo H::openTag('table', ['class' => 'table no-margin']); //7
+         $i = 1;
+         /**
+          * @var App\Invoice\Entity\CustomField $custom_field
+          */
+         foreach ($custom_fields as $custom_field) {
+          if ($custom_field->getLocation() !== 0) {
+           continue;
+          }
+          echo H::openTag('tr'); //8
+           echo H::tag('th', '', ['id' => 'client-cf-' . $i]);
+           echo H::openTag('td'); //9
+            $clientCustomForm = new ClientCustomForm(new ClientCustom());
+            $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues);
+           echo H::closeTag('td'); //9
+          echo H::closeTag('tr'); //8
+          $i++;
+         }
+        echo H::closeTag('table'); //7
+       echo H::closeTag('div'); //6
+      echo H::closeTag('div'); //5
+     echo H::closeTag('div'); //4
+    echo H::closeTag('div'); //3
+   }
 
-                                        <td><?=
-                                              !is_string($clientBirthdate = $client->getClientBirthdate())
-                                               && null !== $clientBirthdate
-                                                         ? $clientBirthdate->format('Y-m-d') : '';
-                ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th><?= $translator->translate('gender'); ?></th>
-                                        <td><?= null !== ($clientGender = $client->getClientGender())
-                    ? $clientHelper->formatGender($clientGender, $translator) : ''; ?></td>
-                                    </tr>
-                                    <?php
-                                            /**
-                                             * @var App\Invoice\Entity\CustomField $custom_field
-                                             */
-                                            foreach ($custom_fields as $custom_field): ?>
-                                                <?php if ($custom_field->getLocation() !== 3) {
-                                                    continue;
-                                                } ?>
-                                                <?php $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues); ?>
-                                         <?php endforeach; ?>
-                                </table>
-                            </div>
-                        </div>
+   echo H::tag('hr', '');
 
-                    </div>
-                </div>
-            <?php endif; ?>
+   echo H::openTag('div', ['class' => 'row']); //3
+    echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //4
+     echo H::openTag('div', ['class' => 'panel panel-default no-margin']); //5
+      echo H::tag('div', $translator->translate('notes'), ['class' => 'panel-heading']);
+      echo H::openTag('div', ['class' => 'panel-body']); //6
+       echo H::openTag('div', ['id' => 'notes_list']); //7
+        echo $partial_notes;
+       echo H::closeTag('div'); //7
+       echo new Input()->type('hidden')->name('client_id')->id('client_id')->value((string) $client->getClientId());
+       echo H::openTag('div', ['class' => 'input-group']); //7
+        echo H::openTag('textarea', [
+         'id' => 'client_note',
+         'class' => 'form-control form-control-lg',
+         'rows' => '2',
+         'style' => 'resize:none',
+        ]); //8
+        echo H::closeTag('textarea'); //8
+        echo H::tag('span', $translator->translate('add.note'), [
+         'id' => 'save_client_note_new',
+         'class' => 'input-text-addon btn btn-info',
+        ]);
+       echo H::closeTag('div'); //7
+      echo H::closeTag('div'); //6
+     echo H::closeTag('div'); //5
+    echo H::closeTag('div'); //4
+   echo H::closeTag('div'); //3
+  echo H::closeTag('div'); //2 clientDetails
 
-            <?php
-            if ($custom_fields) : ?>
-                <hr>
+  // Tab panes — quotes
+  $tabPanes = [
+   ['id' => 'clientQuotes',              'role' => 'client-quotes-tab',              'content' => $quote_table],
+   ['id' => 'clientQuotesDraft',         'role' => 'client-quotes-draft-tab',        'content' => $quote_draft_table],
+   ['id' => 'clientQuotesSent',          'role' => 'client-quotes-sent-tab',         'content' => $quote_sent_table],
+   ['id' => 'clientQuotesViewed',        'role' => 'client-quotes-viewed-tab',       'content' => $quote_viewed_table],
+   ['id' => 'clientQuotesApproved',      'role' => 'client-quotes-approved-tab',     'content' => $quote_approved_table],
+   ['id' => 'clientQuotesCancelled',     'role' => 'client-quotes-cancelled-tab',    'content' => $quote_cancelled_table],
+   ['id' => 'clientQuotesRejected',      'role' => 'client-quotes-rejected-tab',     'content' => $quote_rejected_table],
+   ['id' => 'clientInvoices',            'role' => 'client-invoices-tab',            'content' => $invoice_table],
+   ['id' => 'clientInvoicesDraft',       'role' => 'client-invoices-draft-tab',      'content' => $invoice_draft_table],
+   ['id' => 'clientInvoicesSent',        'role' => 'client-invoices-sent-tab',       'content' => $invoice_sent_table],
+   ['id' => 'clientInvoicesViewed',      'role' => 'client-invoices-viewed-tab',     'content' => $invoice_viewed_table],
+   ['id' => 'clientInvoicesPaid',        'role' => 'client-invoices-paid-tab',       'content' => $invoice_paid_table],
+   ['id' => 'clientInvoicesOverdue',     'role' => 'client-invoices-overdue-tab',    'content' => $invoice_overdue_table],
+   ['id' => 'clientInvoicesUnpaid',      'role' => 'client-invoices-unpaid-tab',     'content' => $invoice_unpaid_table],
+   ['id' => 'clientInvoicesReminderSent','role' => 'client-invoices-reminder-tab',   'content' => $invoice_reminder_sent_table],
+   ['id' => 'clientInvoicesSevenDay',    'role' => 'client-invoices-seven-day-tab',  'content' => $invoice_seven_day_table],
+   ['id' => 'clientInvoicesLegalClaim',  'role' => 'client-invoices-legal-claim-tab','content' => $invoice_legal_claim_table],
+   ['id' => 'clientInvoicesJudgement',   'role' => 'client-invoices-judgement-tab',  'content' => $invoice_judgement_table],
+   ['id' => 'clientInvoicesOfficer',     'role' => 'client-invoices-officer-tab',    'content' => $invoice_officer_table],
+   ['id' => 'clientInvoicesCredit',      'role' => 'client-invoices-credit-tab',     'content' => $invoice_credit_table],
+   ['id' => 'clientInvoicesWrittenOff',  'role' => 'client-invoices-written-off-tab','content' => $invoice_written_off_table],
+   ['id' => 'clientPayments',            'role' => 'client-payments-tab',            'content' => $payment_table],
+  ];
+  /**
+   * @var array{id:string,role:string,content:string} $pane
+   */
+  foreach ($tabPanes as $pane) {
+   echo H::openTag('div', [
+    'id' => $pane['id'],
+    'class' => 'tab-pane table-content',
+    'role' => 'tabpanel',
+    'aria-labelledby' => $pane['role'],
+   ]); //2
+    echo $pane['content'];
+   echo H::closeTag('div'); //2
+  }
 
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="panel panel-default no-margin">
+ echo H::closeTag('div'); //1
+echo H::closeTag('div'); //0
 
-                            <div class="panel-heading">
-                                <?= $translator->translate('custom.fields'); ?>
-                            </div>
-                            <div class="panel-body table-content">
-                                <table class="table no-margin">
-                                    <?php
-                                       $i = 1;
-                /**
-                  * @var App\Invoice\Entity\CustomField $custom_field
-                  */
-                foreach ($custom_fields as $custom_field) : ?>
-                                        <?php if ($custom_field->getLocation() !== 0) {
-                                            continue;
-                                        } ?>
-                                        <tr>
-                                            <th id="client-cf-" . <?= $i; ?>></th>
-                                            <td>
-                                            <?php
-                                            $clientCustomForm = new ClientCustomForm(new ClientCustom());
-                    $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues);?>
-                                            </td>
-                                        </tr>
-                                    <?php
-                                        $i = $i + 1;
-                endforeach; ?>
-                                </table>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-            <hr>
-
-            <div class="row">
-                <div class="col-xs-12 col-md-6">
-
-                    <div class="panel panel-default no-margin">
-                        <div class="panel-heading">
-                            <?= $translator->translate('notes'); ?>
-                        </div>
-                        <div class="panel-body">
-                            <div id="notes_list">
-                                <?php echo $partial_notes; ?>
-                            </div>
-                            <input type="hidden" name="client_id" id="client_id"
-                                   value="<?= $client->getClientId(); ?>">
-                            <div class="input-group">
-                                <textarea id="client_note" class="form-control form-control-lg" rows="2" style="resize:none"></textarea>
-                                <span id="save_client_note_new" class="input-text-addon btn btn-info">
-                                    <?= $translator->translate('add.note'); ?>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-
-        <div id="clientQuotes" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-tab">
-            <?php echo $quote_table; ?>
-        </div>
-
-        <div id="clientQuotesDraft" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-draft-tab">
-            <?php echo $quote_draft_table; ?>
-        </div>
-
-        <div id="clientQuotesSent" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-sent-tab">
-            <?php echo $quote_sent_table; ?>
-        </div>
-
-        <div id="clientQuotesViewed" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-viewed-tab">
-            <?php echo $quote_viewed_table; ?>
-        </div>
-
-        <div id="clientQuotesApproved" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-approved-tab">
-            <?php echo $quote_approved_table; ?>
-        </div>
-
-        <div id="clientQuotesCancelled" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-cancelled-tab">
-            <?php echo $quote_cancelled_table; ?>
-        </div>
-
-        <div id="clientQuotesRejected" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-quotes-rejected-tab">
-            <?php echo $quote_rejected_table; ?>
-        </div>
-
-        <div id="clientInvoices" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-tab">
-            <?php echo $invoice_table; ?>
-        </div>
-
-        <div id="clientInvoicesDraft" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-draft-tab">
-            <?php echo $invoice_draft_table; ?>
-        </div>
-
-        <div id="clientInvoicesSent" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-sent-tab">
-            <?php echo $invoice_sent_table; ?>
-        </div>
-
-        <div id="clientInvoicesViewed" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-viewed-tab">
-            <?php echo $invoice_viewed_table; ?>
-        </div>
-
-        <div id="clientInvoicesPaid" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-paid-tab">
-            <?php echo $invoice_paid_table; ?>
-        </div>
-
-        <div id="clientInvoicesOverdue" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-overdue-tab">
-            <?php echo $invoice_overdue_table; ?>
-        </div>
-
-        <div id="clientInvoicesUnpaid" class="tab-pane table-content role="tabpanel" aria-labelledby="client-invoices-unpaid-tab"">
-            <?php echo $invoice_unpaid_table; ?>
-        </div>
-
-        <div id="clientInvoicesReminderSent" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-reminder-sent-tab">
-            <?php echo $invoice_reminder_sent_table; ?>
-        </div>
-
-        <div id="clientInvoicesSevenDay" class="tab-pane table-content role="tabpanel" aria-labelledby="client-invoices-seven-day-tab"">
-            <?php echo $invoice_seven_day_table; ?>
-        </div>
-
-        <div id="clientInvoicesLegalClaim" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-legal-claim-tab">
-            <?php echo $invoice_legal_claim_table; ?>
-        </div>
-
-        <div id="clientInvoicesJudgement" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-judgement-tab">
-            <?php echo $invoice_judgement_table; ?>
-        </div>
-
-        <div id="clientInvoicesOfficer" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-officer-tab">
-            <?php echo $invoice_officer_table; ?>
-        </div>
-
-        <div id="clientInvoicesCredit" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-credit-tab">
-            <?php echo $invoice_credit_table; ?>
-        </div>
-
-        <div id="clientInvoicesWrittenOff" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-invoices-written-off-tab">
-            <?php echo $invoice_written_off_table; ?>
-        </div>
-
-        <div id="clientPayments" class="tab-pane table-content" role="tabpanel" aria-labelledby="client-payments-tab">
-            <?php echo $payment_table; ?>
-        </div>
-    </div>
-
-</div>
-
-<?php
-    /**
-     * Note: The quote modal is used in 3 places
-     * Note: {origin} is set in QuoteController/index function ...
-     *      'action' => ['quote/add', ['origin' => 'quote']],
-     * Note: {origin} is set in resources/views/layout/invoice.php  ...
-     *      $urlGenerator->generate('quote/add',['origin' => 'main'])],
-     * Note: {origin} is set in ClientController/index function ...
-     *      'action' => ['quote/add', ['origin' => $client_id]],
-     * Related logic: see config/common/routes quote/add/{origin}
-     * Related logic: see ClientController/view function 'client_modal_layout_quote' => [ .... ]
-     * Related logic: see views\invoice\quote\modal_layout.php
-     * Related logic: see views\invoice\quote\modal_add_quote_form.php contained in above file.
-     * Note: 'action' is equivalent to $urlGenerator->generate('quote/add', [], ['origin' => $client->getClientId() or 'quote' or 'main'])
-     * Note: If origin is a client number, quote/add/{origin} route will return to url client/view/{origin}
-     * Note: If origin is 'quote', quote/add/{origin} route will return to url quote/index
-     * Note: If origin is 'main', quote/add/{origin} route will return to url invoice/
-     */
-    echo $client_modal_layout_quote;
+/**
+ * Note: The quote modal is used in 3 places
+ * Note: {origin} is set in QuoteController/index function ...
+ *      'action' => ['quote/add', ['origin' => 'quote']],
+ * Note: {origin} is set in resources/views/layout/invoice.php  ...
+ *      $urlGenerator->generate('quote/add',['origin' => 'main'])],
+ * Note: {origin} is set in ClientController/index function ...
+ *      'action' => ['quote/add', ['origin' => $client_id]],
+ * Related logic: see config/common/routes quote/add/{origin}
+ * Related logic: see ClientController/view function 'client_modal_layout_quote' => [ .... ]
+ * Related logic: see views\invoice\quote\modal_layout.php
+ * Related logic: see views\invoice\quote\modal_add_quote_form.php contained in above file.
+ * Note: 'action' is equivalent to $urlGenerator->generate('quote/add', [], ['origin' => $client->getClientId() or 'quote' or 'main'])
+ * Note: If origin is a client number, quote/add/{origin} route will return to url client/view/{origin}
+ * Note: If origin is 'quote', quote/add/{origin} route will return to url quote/index
+ * Note: If origin is 'main', quote/add/{origin} route will return to url invoice/
+ */
+echo $client_modal_layout_quote;
 echo $client_modal_layout_inv;
-?>

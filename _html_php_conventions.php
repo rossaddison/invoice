@@ -199,7 +199,14 @@ echo H::openTag('div', $colMd6); //0
          ->name($name)
          ->id($id)
          ->label($label)
-         ->checked(($body['settings[some_flag]'] == '1') ?: false); //3   
+         ->checked($body['settings[some_flag]'] === '1'); //3
    echo H::closeTag('div'); //2
  echo H::closeTag('div'); //1
 echo H::closeTag('div'); //0
+
+// ==================================================================
+// PATTER 8 - Bold
+// ==================================================================
+echo H::openTag('b'); //0
+ echo 'This is a statement';
+echo H::closeTag('b'); //0

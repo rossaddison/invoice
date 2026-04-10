@@ -24,15 +24,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Yiisoft\{Assets\AssetManager,  
+use Yiisoft\{Assets\AssetManager,
     DataResponse\ResponseFactory\DataResponseFactoryInterface, Factory\Factory,
     FormModel\FormHydrator, Html\Html, Html\Tag\A, Html\Tag\Style, Http\Method,
-    Json\Json, Rbac\Manager as Manager, Router\FastRoute\UrlGenerator, 
+    Json\Json, Rbac\Manager as Manager, Router\FastRoute\UrlGenerator,
     Security\Random, Security\TokenMask, Session\Flash\Flash,
     Session\SessionInterface, Translator\TranslatorInterface,
     User\Login\Cookie\CookieLogin, User\Login\Cookie\CookieLoginIdentityInterface,
     View\WebView, Yii\View\Renderer\WebViewRenderer,
-    Yii\AuthClient\StateStorage\StateStorageInterface, 
+    Yii\AuthClient\StateStorage\StateStorageInterface,
     Yii\AuthClient\Widget\AuthChoice, Yii\RateLimiter\CounterInterface};
 
 final class AuthController
@@ -46,7 +46,7 @@ final class AuthController
 
     use OpenBankingProviders;
 
-    public const string 
+    public const string
             DEVELOPER_SANDBOX_HMRC_ACCESS_TOKEN = 'developersandboxhmrc-access';
     public const string FACEBOOK_ACCESS_TOKEN = 'facebook-access';
     public const string GITHUB_ACCESS_TOKEN = 'github-access';
@@ -246,7 +246,7 @@ final class AuthController
                             $this->tfaIsEnabledBlockBaseController();
                             $enabled = $user->is2FAEnabled();
                             // setup if not enabled already
-                            if ($enabled == false) {
+                            if (!$enabled) {
                                 $this->session->set('pending_2fa_user_id', $userId);
                                 // show the setup form so that the user can register
                                 return $this->webService->getRedirectResponse(
@@ -280,7 +280,7 @@ final class AuthController
                             }
 // Regenerate session ID on successful login
                             $this->session->regenerateId();
-		            $this->session->set('tfa_verified', true);		
+		            $this->session->set('tfa_verified', true);
                             if ($identity instanceof CookieLoginIdentityInterface
                                     && $loginForm->getPropertyValue('rememberMe')) {
                                 return $cookieLogin->addCookie($identity,
@@ -348,7 +348,7 @@ final class AuthController
                 }
             });
             JS;
-    }    
+    }
 
     /**
      * Step 1: Download Aegis 2FA app
@@ -546,7 +546,7 @@ final class AuthController
                 $codes = $this->generateBackupRecoveryCodes($user);
                 $this->session->set('backup_recovery_codes', $codes);
             }
-            if ($this->session->get('regenerate_codes') == true) {
+            if ($this->session->get('regenerate_codes')) {
                 $this->removeBackupRecoveryCodes($user);
                 $codes = $this->generateBackupRecoveryCodes($user);
                 $this->session->set('backup_recovery_codes', $codes);
@@ -744,7 +744,7 @@ final class AuthController
         } catch (\Exception $e) {
             // Log exception details for debugging
             $this->logger->log(LogLevel::ALERT,
-            "Exception validating OAuth2 state for provider: {$idP}. Error: " 
+            "Exception validating OAuth2 state for provider: {$idP}. Error: "
                 . $e->getMessage());
             exit(1);
         }
@@ -825,7 +825,7 @@ final class AuthController
                     if (null !== $user) {
                         if ($this->sR->getSetting('enable_tfa') == '1') {
                             $enabled = $user->is2FAEnabled();
-                            if ($enabled == true) {
+                            if ($enabled) {
                                 $user->set2FAEnabled(false);
                                 // Securely clear TOTP secret
                                 $totpSecret = $user->getTotpSecret();
@@ -841,7 +841,7 @@ final class AuthController
             }
             $this->session->remove('verified_2fa_user_id');
         }
-         // prevent session fixation 
+         // prevent session fixation
         $this->session->regenerateId();
         // Current — only clears data, keeps session alive
         $this->session->clear();

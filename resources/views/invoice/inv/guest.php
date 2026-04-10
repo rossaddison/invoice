@@ -165,8 +165,8 @@ $columns = [
                 'class' => 'dropdown-menu',
                 'aria-labelledby' => 'dropdownMenuButton'
             ])
-            . Html::openTag('div', 
-                ['class' => 'btn-group', 'role' => 'group']),    
+            . Html::openTag('div',
+                ['class' => 'btn-group', 'role' => 'group']),
         buttons: [
             new ActionButton(
                 url: static function (Inv $inv) use ($urlGenerator): string {
@@ -199,7 +199,7 @@ $columns = [
         ],
         after: Html::closeTag('div')
                . Html::closeTag('div')
-               . Html::closeTag('div'),                
+               . Html::closeTag('div'),
     ),
     new DataColumn(
         'id',
@@ -210,7 +210,7 @@ $columns = [
     ),
     new DataColumn(
         property: 'filterStatus',
-        header: '<span data-bs-toggle="tooltip" data-bs-html="true" title="' . 
+        header: '<span data-bs-toggle="tooltip" data-bs-html="true" title="' .
                 Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 '
                         . $translator->translate('draft')
                         . '<br/>📨 ' . $translator->translate('sent')
@@ -272,7 +272,7 @@ $columns = [
                 'data-bs-toggle' => 'tooltip',
                 'title' => $translator->translate('credit.invoice.for.invoice')
             ])->render(),
-        encodeHeader: false,    
+        encodeHeader: false,
         property: 'filterCreditInvNumber',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
             $visible = $iR->repoInvUnLoadedquery(
@@ -413,7 +413,7 @@ $toolbarString =  new Form()->post(
                  new H4()
                     ->addClass('me-3 d-inline-block')
                     ->content($translator->translate('invoice')
-                ) 
+                )
             .   $toolbarReset
             .   Button::ascDesc(
                 $urlGenerator, 'client_id', 'warning',

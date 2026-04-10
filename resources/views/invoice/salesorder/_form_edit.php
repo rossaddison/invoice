@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
+use Yiisoft\Html\Tag\Input;
+use Yiisoft\Html\Tag\Option;
 use Yiisoft\Html\Tag\Form;
 
 /**
@@ -37,203 +39,199 @@ use Yiisoft\Html\Tag\Form;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['group']
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsData['salesOrderStatus']
  */
-$vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 
-?>
-<?= Html::openTag('div', ['class' => 'container py-5 h-100']); ?>
-<?= Html::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); ?>
-<?= Html::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
-<?= Html::openTag('div', ['class' => 'card-header']); ?>
-    <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?><?= $title; ?><?= Html::closeTag('h1'); ?>
-        <?=  new Form()->post($urlGenerator->generate($actionName, $actionArguments))
-                       ->enctypeMultipartFormData()
-                       ->csrf($csrf)
-                       ->id('SalesOrderForm')
-                       ->open()?>
-                <?= Html::openTag('div', ['class' => 'container']); ?>
-                    <?= Html::openTag('div', ['class' => 'row']); ?>
-                        <?= Html::openTag('div', ['class' => 'col card mb-3']); ?>
-                            <?= Html::openTag('div', ['class' => 'card-header']); ?>
-                                <?= Html::openTag('div'); ?>
-                                    <?= Field::errorSummary($form)
-                                        ->errors($errors)
-                                        ->header($translator->translate('error.summary'))
-                                        ->onlyCommonErrors()
-?>
-                                <?= Html::closeTag('div'); ?>
-                                <?= Html::openTag('div'); ?>
-                                	<?= Field::hidden($form, 'quote_id'); ?>
-                                <?= Html::closeTag('div'); ?>
-                                <?= Html::openTag('div'); ?>
-                                     <?= Field::hidden($form, 'number')
-                                        ->hideLabel(false)
-                                        ->label($translator->translate('salesorder'))
-                                        ->addInputAttributes([
-                                            'class' => 'form-control form-control-lg',
-                                            'readonly' => 'readonly',
-                                        ])
-                                        ->value(Html::encode($form->getNumber()))
-                                   ?>
-                                <?= Html::closeTag('div'); ?>
-                                <?= Html::openTag('div'); ?>
-                                    <?= Field::select($form, 'client_id')
-                                        ->label($translator->translate('user.account.clients'))
-                                        ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                                        ->value($form->getClientId())
-                                        ->prompt($translator->translate('none'))
-                                        ->optionsData($optionsData['client'])
-                                        ->hint($translator->translate('hint.this.field.is.required'));
-                                     ?>
-                                <?= Html::closeTag('div'); ?>
-                                <?= Html::openTag('div'); ?>
-                                    <?= Field::select($form, 'group_id')
-    ->label($translator->translate('salesorder.default.group'))
-    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value($form->getGroupId() ?? $defaultGroupId)
-    ->prompt($translator->translate('none'))
-    ->optionsData($optionsData['group'])
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
-                                <?= Html::closeTag('div'); ?>
+$vat = $s->getSetting('enable_vat_registration') === '1';
 
-                            <?php
-                            // If there is no delivery location for this client, create the delivery location now for later use by invoice construction
-                            // and to avoid undeliverable locations
-                            if ($delCount == 0) {
-                                echo Html::a(
-                                    $translator->translate('delivery.location.add'),
-                                    $urlGenerator->generate('del/add', $actionArgumentsDelAdd, ['class' => 'btn btn-danger btn-lg mt-3']),
-                                );
-                            } else { ?>
-                               <div class="form-group">
-                                            <label for="delivery_location_id"><?= $translator->translate('delivery.location'); ?>: </label>
-                                            <select name="delivery_location_id" id="delivery_location_id"
-                                                    class="form-control form-control-lg" disabled>
-                                                <?php
-                                                    /**
-                                                     * @var App\Invoice\Entity\DeliveryLocation $del
-                                                     */
-                                                        foreach ($dels as $del) { ?>
-    <option value="<?php echo $del->getId(); ?>"
-        <?php $s->checkSelect(Html::encode($del->getId() ?? $del->getId()),
-                $del->getId()); ?>>
-        <?php $delAddress1 =  $del->getAddress1();
-        $delAddress2 = $del->getAddress2();
-        $delCity = $del->getCity();
-        $delZip = $del->getZip();
-        echo (null !== $delAddress1 ? $delAddress1 : '') . ', '
-             . (null !== $delAddress2 ? $delAddress2 : '') . ', '
-             . (null !== $delCity ? $delCity : '') . ', '
-             . (null !== $delZip ? $delZip : ''); ?>
-                                                    </option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                        <?php } ?>
-                        <?= Html::openTag('br'); ?>
-                        <?= Html::openTag('br'); ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::date($form, 'date_created')
-                                ->label($translator->translate('date.issued'))
-                                ->value(
-                                    Html::encode($form->getDateCreated() instanceof \DateTimeImmutable
-                                    ? $form->getDateCreated()->format('Y-m-d') : (is_string(
-                                        $form->getDateCreated(),
-                                    )
-                                    ? $form->getDateCreated() : '')),
-                                )
-                                ->hint($translator->translate('hint.this.field.is.required'));
-?>
-                        <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::password($form, 'password')
-    ->label($translator->translate('password'))
-    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value(Html::encode($form->getPassword()))
-    ->placeholder($translator->translate('password'))
-    ->hint($translator->translate('hint.this.field.is.not.required'));
-?>
-                        <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::select($form, 'status_id')
-    ->label($translator->translate('status'))
-    ->addInputAttributes(['class' => 'form-control form-control-lg',])
-    ->value($form->getStatusId())
-    ->prompt($translator->translate('none'))
-    ->optionsData($optionsData['salesOrderStatus'])
-    ->hint($translator->translate('hint.this.field.is.not.required'));
-?>
-                        <?= Html::closeTag('div'); ?>
-                        <?= Html::openTag('div'); ?>
-                        <?php // If the quote is in draft status; do not show the url_key
-                            if ($form->getStatusId() == 1) { ?>
-                               <?= Field::hidden($form, 'url_key')
-                                   ->hideLabel(true);
-                                ?>
-                        <?php } ?>
-                        <?php if ($form->getStatusId() > 1) { ?>
-                            <?= Field::text($form, 'url_key')
-                                ->hideLabel(false)
-                                ->label($translator->translate('guest.url'));
-                            ?>
-                        <?php } ?>
-                        <?= Html::closeTag('div'); ?>
-                    <?php   if ($vat === false) { ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::text($form, 'discount_amount')
-                                ->hideLabel(false)
-                                ->label($translator->translate('discount')
-                                    . ' ' . $s->getSetting('currency_symbol'))
-                                ->addInputAttributes(['class' => 'form-control form-control-lg',])
-                                ->value($s->formatAmount(
-                                    ($form->getDiscountAmount() ?? 0.00)))
-                                ->placeholder($translator->translate('discount'));
-                        ?>
-                        <?= Html::closeTag('div'); ?>
-                    <?php } ?>
-                        <?= Html::openTag('div'); ?>
-                            <?= Field::hidden($form, 'inv_id')
-                            ->hideLabel(); ?>
-                        <?= Html::closeTag('div'); ?>
-                    <?php
-/**
- * @var App\Invoice\Entity\CustomField $customField
- */
-foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
-    $custom_values = $cvR->fixCfValueToCf(
-            $cfR->repoTablequery('salesorder_custom'));
-    $cvH->printFieldForForm($customField, $salesOrderCustomForm, $translator,
-            $urlGenerator, $so_custom_values, $custom_values);
-}
-?>
-                        <?= Html::openTag('div'); ?>
-                            <div class="row">
-                                 <label for="terms_and_conditions_file" class="control-label"><?= $translator->translate('term') ?></label>
-                                 <textarea id="terms_and_conditions_file" class="form-control form-control-lg" rows="20" cols="20"><?= $terms_and_conditions_file; ?></textarea>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-2">
-                                    <label for="inv_number" class="control-label"><?= $translator->translate('salesorder.invoice.number'); ?></label>
-                                    <input type="text" name="inv_number" id="inv_number" class="form-control form-control-lg" required disabled value="<?= $invNumber ?: $translator->translate('not.set'); ?>">
-                                </div>
-                            </div>
-                        <?= Html::closeTag('div'); ?>
-                    <?= Html::closeTag('div'); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= $button::backSave(); ?>
-            <?= Html::closeTag('div'); ?>
-        <?= Html::closeTag('div'); ?>
-    <?= Html::closeTag('div'); ?>
-
-<?= Html::closeTag('div'); ?>
-
-<?= Html::closeTag('form'); ?>
-
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
-<?= Html::closeTag('div'); ?>
+echo H::openTag('div', ['class' => 'container py-5 h-100']); //0
+echo H::openTag('div', ['class' => 'row d-flex justify-content-center align-items-center h-100']); //1
+echo H::openTag('div', ['class' => 'col-12 col-md-8 col-lg-6 col-xl-8']); //2
+echo H::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); //3
+echo H::openTag('div', ['class' => 'card-header']); //4
+ echo H::tag('h1', $title, ['class' => 'fw-normal h3 text-center']);
+ echo new Form()->post($urlGenerator->generate($actionName, $actionArguments))
+                ->enctypeMultipartFormData()
+                ->csrf($csrf)
+                ->id('SalesOrderForm')
+                ->open();
+  echo H::openTag('div', ['class' => 'container']); //5
+   echo H::openTag('div', ['class' => 'row']); //6
+    echo H::openTag('div', ['class' => 'col card mb-3']); //7
+     echo H::openTag('div', ['class' => 'card-header']); //8
+      echo H::openTag('div'); //9
+       echo Field::errorSummary($form)
+        ->errors($errors)
+        ->header($translator->translate('error.summary'))
+        ->onlyCommonErrors();
+      echo H::closeTag('div'); //9
+      echo H::openTag('div'); //9
+       echo Field::hidden($form, 'quote_id');
+      echo H::closeTag('div'); //9
+      echo H::openTag('div'); //9
+       echo Field::hidden($form, 'number')
+        ->hideLabel(false)
+        ->label($translator->translate('salesorder'))
+        ->addInputAttributes([
+         'class' => 'form-control form-control-lg',
+         'readonly' => 'readonly',
+        ])
+        ->value(H::encode($form->getNumber()));
+      echo H::closeTag('div'); //9
+      echo H::openTag('div'); //9
+       echo Field::select($form, 'client_id')
+        ->label($translator->translate('user.account.clients'))
+        ->addInputAttributes(['class' => 'form-control form-control-lg'])
+        ->value($form->getClientId())
+        ->prompt($translator->translate('none'))
+        ->optionsData($optionsData['client'])
+        ->hint($translator->translate('hint.this.field.is.required'));
+      echo H::closeTag('div'); //9
+      echo H::openTag('div'); //9
+       echo Field::select($form, 'group_id')
+        ->label($translator->translate('salesorder.default.group'))
+        ->addInputAttributes(['class' => 'form-control form-control-lg'])
+        ->value($form->getGroupId() ?? $defaultGroupId)
+        ->prompt($translator->translate('none'))
+        ->optionsData($optionsData['group'])
+        ->hint($translator->translate('hint.this.field.is.required'));
+      echo H::closeTag('div'); //9
+      // If there is no delivery location for this client, create one now
+      if ($delCount == 0) {
+       echo H::a(
+        $translator->translate('delivery.location.add'),
+        $urlGenerator->generate('del/add', $actionArgumentsDelAdd),
+        ['class' => 'btn btn-danger btn-lg mt-3']
+       );
+      } else {
+       echo H::openTag('div', ['class' => 'form-group']); //9
+        echo H::openTag('label', ['for' => 'delivery_location_id']); //10
+         echo $translator->translate('delivery.location') . ': ';
+        echo H::closeTag('label'); //10
+        echo H::openTag('select', [
+         'name' => 'delivery_location_id',
+         'id' => 'delivery_location_id',
+         'class' => 'form-control form-control-lg',
+         'disabled' => true,
+        ]); //10
+         /**
+          * @var App\Invoice\Entity\DeliveryLocation $del
+          */
+         foreach ($dels as $del) {
+          $delAddress1 = $del->getAddress1();
+          $delAddress2 = $del->getAddress2();
+          $delCity     = $del->getCity();
+          $delZip      = $del->getZip();
+          echo new Option()
+           ->value((string) $del->getId())
+           ->selected(true)
+           ->content(
+            (null !== $delAddress1 ? $delAddress1 : '') . ', '
+            . (null !== $delAddress2 ? $delAddress2 : '') . ', '
+            . (null !== $delCity ? $delCity : '') . ', '
+            . (null !== $delZip ? $delZip : '')
+           );
+         }
+        echo H::closeTag('select'); //10
+       echo H::closeTag('div'); //9
+      }
+      echo H::tag('br', '');
+      echo H::tag('br', '');
+      echo H::openTag('div'); //9
+       echo Field::date($form, 'date_created')
+        ->label($translator->translate('date.issued'))
+        ->value(
+         H::encode($form->getDateCreated() instanceof \DateTimeImmutable
+          ? $form->getDateCreated()->format('Y-m-d')
+          : (is_string($form->getDateCreated()) ? $form->getDateCreated() : ''))
+        )
+        ->hint($translator->translate('hint.this.field.is.required'));
+      echo H::closeTag('div'); //9
+      echo H::openTag('div'); //9
+       echo Field::password($form, 'password')
+        ->label($translator->translate('password'))
+        ->addInputAttributes(['class' => 'form-control form-control-lg'])
+        ->value(H::encode($form->getPassword()))
+        ->placeholder($translator->translate('password'))
+        ->hint($translator->translate('hint.this.field.is.not.required'));
+      echo H::closeTag('div'); //9
+      echo H::openTag('div'); //9
+       echo Field::select($form, 'status_id')
+        ->label($translator->translate('status'))
+        ->addInputAttributes(['class' => 'form-control form-control-lg'])
+        ->value($form->getStatusId())
+        ->prompt($translator->translate('none'))
+        ->optionsData($optionsData['salesOrderStatus'])
+        ->hint($translator->translate('hint.this.field.is.not.required'));
+      echo H::closeTag('div'); //9
+      echo H::openTag('div'); //9
+       if ($form->getStatusId() == 1) {
+        echo Field::hidden($form, 'url_key')->hideLabel(true);
+       }
+       if ($form->getStatusId() > 1) {
+        echo Field::text($form, 'url_key')
+         ->hideLabel(false)
+         ->label($translator->translate('guest.url'));
+       }
+      echo H::closeTag('div'); //9
+      if (!$vat) {
+       echo H::openTag('div'); //9
+        echo Field::text($form, 'discount_amount')
+         ->hideLabel(false)
+         ->label($translator->translate('discount') . ' ' . $s->getSetting('currency_symbol'))
+         ->addInputAttributes(['class' => 'form-control form-control-lg'])
+         ->value($s->formatAmount(($form->getDiscountAmount() ?? 0.00)))
+         ->placeholder($translator->translate('discount'));
+       echo H::closeTag('div'); //9
+      }
+      echo H::openTag('div'); //9
+       echo Field::hidden($form, 'inv_id')->hideLabel();
+      echo H::closeTag('div'); //9
+      /**
+       * @var App\Invoice\Entity\CustomField $customField
+       */
+      foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
+       $custom_values = $cvR->fixCfValueToCf($cfR->repoTablequery('salesorder_custom'));
+       $cvH->printFieldForForm($customField, $salesOrderCustomForm, $translator,
+        $urlGenerator, $so_custom_values, $custom_values);
+      }
+      echo H::openTag('div'); //9
+       echo H::openTag('div', ['class' => 'row']); //10
+        echo H::openTag('label', ['for' => 'terms_and_conditions_file', 'class' => 'control-label']); //11
+         echo $translator->translate('term');
+        echo H::closeTag('label'); //11
+        echo H::openTag('textarea', [
+         'id' => 'terms_and_conditions_file',
+         'class' => 'form-control form-control-lg',
+         'rows' => '20',
+         'cols' => '20',
+        ]); //11
+         echo $terms_and_conditions_file;
+        echo H::closeTag('textarea'); //11
+       echo H::closeTag('div'); //10
+       echo H::openTag('div', ['class' => 'row']); //10
+        echo H::openTag('div', ['class' => 'col-xs-12 col-sm-2']); //11
+         echo H::openTag('label', ['for' => 'inv_number', 'class' => 'control-label']); //12
+          echo $translator->translate('salesorder.invoice.number');
+         echo H::closeTag('label'); //12
+         echo H::tag('input', '', [
+          'type' => 'text',
+          'name' => 'inv_number',
+          'id' => 'inv_number',
+          'class' => 'form-control form-control-lg',
+          'required' => true,
+          'disabled' => true,
+          'value' => $invNumber ?: $translator->translate('not.set'),
+         ]);
+        echo H::closeTag('div'); //11
+       echo H::closeTag('div'); //10
+      echo H::closeTag('div'); //9
+     echo H::closeTag('div'); //8
+    echo H::closeTag('div'); //7
+   echo H::closeTag('div'); //6
+   echo $button::backSave();
+  echo H::closeTag('div'); //5
+ echo H::closeTag('form');
+echo H::closeTag('div'); //4
+echo H::closeTag('div'); //3
+echo H::closeTag('div'); //2
+echo H::closeTag('div'); //1
+echo H::closeTag('div'); //0

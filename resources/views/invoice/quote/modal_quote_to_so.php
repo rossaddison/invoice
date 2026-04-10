@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html as H;
+use Yiisoft\Html\Tag\Input;
+use Yiisoft\Html\Tag\Option;
 
 /**
  * Related logic: see id="quote-to-so" triggered by <a href="#quote-to-so" data-bs-toggle="modal"  style="text-decoration:none">
@@ -13,62 +15,116 @@ use Yiisoft\Html\Html;
  * @var array $groups
  * @var string $csrf
  */
-?>
 
-<div id="quote-to-so" class="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-           <div class="modal-header">
-               <h5 class="modal-title"><?= $translator->translate('quote.to.so'); ?></h5>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="client_id" id="client_id" value="<?= $quote->getClientId(); ?>">
-                    <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUserId(); ?>">
-                    <div class="form-group">
-                        <label for="po_number"><?= $translator->translate('quote.with.purchase.order.number') ?></label>
-                        <input type="text" name="po_number" id="po_number" class="form-control form-control-lg" value="">
-                    </div>
-                    <div class="form-group">
-                        <label for="po_person"><?= $translator->translate('quote.with.purchase.order.person') ?></label>
-                        <input type="text" name="po_person" id="po_person" class="form-control form-control-lg" value="">
-                    </div>
-                    <div class="form-group">
-                        <label for="password"><?= $translator->translate('quote.to.so.password'); ?></label>
-                        <input type="text" name="password" id="password" class="form-control form-control-lg"
-                               value="<?= $s->getSetting('so_pre_password') == '' ? '' : $s->getSetting('so_pre_password') ?>"
-                               autocomplete="off">
-                    </div>
-                    <div class="form-group">
-                        <label for="so_group_id">
-                            <?= $translator->translate('salesorder.default.group'); ?>
-                        </label>
-                        <select name="so_group_id" id="so_group_id" class="form-control form-control-lg">
-                            <?php
-                                /**
-                                 * @var App\Invoice\Entity\Group $group
-                                 */
-                                foreach ($groups as $group) { ?>
-                                <option value="<?php echo $group->getId(); ?>"
-                                    <?php $s->checkSelect($s->getSetting('default_sales_order_group'), $group->getId()); ?>>
-                                    <?= Html::encode($group->getName()); ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <div class="btn-group">
-                    <button class="quote_to_so_confirm btn btn-success" id="quote_to_so_confirm" type="button">
-                        <i class="bi bi-check-lg"></i> <?= $translator->translate('submit'); ?>
-                    </button>
-                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal">
-                        <i class="bi bi-x-lg"></i> <?= $translator->translate('cancel'); ?>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+$formGroup = ['class' => 'form-group'];
+
+echo H::openTag('div', ['id' => 'quote-to-so', 'class' => 'modal', 'tabindex' => '-1']); //0
+ echo H::openTag('div', ['class' => 'modal-dialog']); //1
+  echo H::openTag('div', ['class' => 'modal-content']); //2
+   echo H::openTag('div', ['class' => 'modal-header']); //3
+    echo H::tag('h5', $translator->translate('quote.to.so'), ['class' => 'modal-title']);
+    echo H::tag('button', '', [
+     'type' => 'button',
+     'class' => 'btn-close',
+     'data-bs-dismiss' => 'modal',
+     'aria-label' => 'Close',
+    ]);
+   echo H::closeTag('div'); //3
+   echo H::openTag('div', ['class' => 'modal-body']); //3
+    echo H::openTag('form'); //4
+     echo new Input()
+          ->type('hidden')
+          ->name('_csrf')
+          ->value($csrf);
+     echo new Input()
+          ->type('hidden')
+          ->name('client_id')
+          ->id('client_id')
+          ->value($quote->getClientId());
+     echo new Input()
+          ->type('hidden')
+          ->name('user_id')
+          ->id('user_id')
+          ->value($quote->getUserId());
+     echo H::openTag('div', $formGroup); //5
+      echo H::openTag('label', ['for' => 'po_number']); //6
+       echo $translator->translate('quote.with.purchase.order.number');
+      echo H::closeTag('label'); //6
+      echo new Input()
+       ->type('text')
+       ->name('po_number')
+       ->id('po_number')
+       ->class('form-control form-control-lg')
+       ->value('');
+     echo H::closeTag('div'); //5
+     echo H::openTag('div', $formGroup); //5
+      echo H::openTag('label', ['for' => 'po_person']); //6
+       echo $translator->translate('quote.with.purchase.order.person');
+      echo H::closeTag('label'); //6
+      echo new Input()
+       ->type('text')
+       ->name('po_person')
+       ->id('po_person')
+       ->class('form-control form-control-lg')
+       ->value('');
+     echo H::closeTag('div'); //5
+     echo H::openTag('div', $formGroup); //5
+      echo H::openTag('label', ['for' => 'password']); //6
+       echo $translator->translate('quote.to.so.password');
+      echo H::closeTag('label'); //6
+      $prePassword = $s->getSetting('so_pre_password');
+      echo new Input()
+       ->type('text')
+       ->name('password')
+       ->id('password')
+       ->class('form-control form-control-lg')
+       ->value($prePassword !== '' ? H::encode($prePassword) : '')
+       ->addAttributes(['autocomplete' => 'off']);
+     echo H::closeTag('div'); //5
+     echo H::openTag('div', $formGroup); //5
+      echo H::openTag('label', ['for' => 'so_group_id']); //6
+       echo $translator->translate('salesorder.default.group');
+      echo H::closeTag('label'); //6
+      echo H::openTag('select', [
+       'name' => 'so_group_id',
+       'id' => 'so_group_id',
+       'class' => 'form-control form-control-lg',
+      ]); //6
+       /**
+        * @var App\Invoice\Entity\Group $group
+        */
+       foreach ($groups as $group) {
+        echo new Option()
+         ->value($group->getId())
+         ->selected($s->getSetting('default_sales_order_group') === $group->getId())
+         ->content(H::encode($group->getName()));
+       }
+      echo H::closeTag('select'); //6
+     echo H::closeTag('div'); //5
+    echo H::closeTag('form'); //4
+   echo H::closeTag('div'); //3
+   echo H::openTag('div', ['class' => 'modal-footer']); //3
+    echo H::openTag('div', ['class' => 'btn-group']); //4
+     echo H::openTag('button', [
+      'class' => 'quote_to_so_confirm btn btn-success',
+      'id' => 'quote_to_so_confirm',
+      'type' => 'button',
+     ]); //5
+      echo H::openTag('i', ['class' => 'bi bi-check-lg']); //6
+      echo H::closeTag('i'); //6
+      echo ' ' . $translator->translate('submit');
+     echo H::closeTag('button'); //5
+     echo H::openTag('button', [
+      'class' => 'btn btn-danger',
+      'type' => 'button',
+      'data-bs-dismiss' => 'modal',
+     ]); //5
+      echo H::openTag('i', ['class' => 'bi bi-x-lg']); //6
+      echo H::closeTag('i'); //6
+      echo ' ' . $translator->translate('cancel');
+     echo H::closeTag('button'); //5
+    echo H::closeTag('div'); //4
+   echo H::closeTag('div'); //3
+  echo H::closeTag('div'); //2
+ echo H::closeTag('div'); //1
+echo H::closeTag('div'); //0

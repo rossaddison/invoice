@@ -264,7 +264,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $fl = static fn(string $locale, string $label): NoEncode
         /**
          * @psalm-suppress PossiblyNullArrayOffset $flags
-         */ 
+         */
             => NoEncode::string($flagImg($flags[$locale] ?? 'un') . $label);
         $currentLocaleCode = ($localeSplitter->region() !== null
                 && $localeSplitter->region() !== ''

@@ -12,6 +12,7 @@ use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Security\Random;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class ZugFerdHelper
 {
@@ -20,7 +21,9 @@ final readonly class ZugFerdHelper
      * @param IIAR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(private SRepo $s, private IIAR $iiaR, private InvAmount $inv_amount)
+    public function __construct(private SRepo $s, private IIAR $iiaR,
+            private InvAmount $inv_amount,
+            private readonly Translator $translator)
     {
     }
 
@@ -61,7 +64,7 @@ final readonly class ZugFerdHelper
                                 . ($invoice->getNumber() ?? '_search_null_invoice_id_') . '_zugferd.xml';
         // Generate inv items from Entity Inv->getItems() HasMany function
         // Generate inv item amounts from $iiaR
-        $z = new ZugferdXml($this->s, $invoice, $iiaR, $inv_amount);
+        $z = new ZugferdXml($this->s, $invoice, $iiaR, $inv_amount, $this->translator);
         $f = fopen($path, 'wb');
         if (!$f) {
             throw new \Exception(sprintf('Unable to create output file %s', $path));

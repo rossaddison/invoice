@@ -396,8 +396,8 @@ use Yiisoft\Html\Html;
                                     <span class="badge text-bg-<?=
                                 $iR->getSpecificStatusArrayClass($statusId); ?>">
                         <?= $iR->getSpecificStatusArrayLabel((string) $statusId);
-    if (null !== $iaR->repoCreditInvoicequery((string) $invoice->getId())) { 
-        $translator->translate('credit.invoice'); } 
+    if (null !== $iaR->repoCreditInvoicequery((string) $invoice->getId())) {
+        $translator->translate('credit.invoice'); }
     if ($invoice->getIsReadOnly()) { $translator->translate('read.only'); } ?>
                <?php if (($irR->repoCount((string) $invoice->getId()) > 0)) { ?>
                                         &nbsp;

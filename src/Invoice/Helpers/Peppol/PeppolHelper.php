@@ -61,9 +61,44 @@ use DateTime;
 
 class PeppolHelper
 {
-    private readonly DateHelper $datehelper;
-    private string $documentCurrency; 
+    public const string SETTING_PEPPOL_DOCUMENT_CURRENCY = 'peppol_document_currency';
+    public const string TAX_CATEGORY_VAT = 'VAT';
+    public const string DATE_FORMAT_YMD = 'Y-m-d';
 
+    // UBL element name constants (used 5+ times as array keys/values)
+    public const string UBL_SCHEME_ID = 'schemeID';
+    public const string UBL_ENDPOINT_ID = 'EndPointID';
+    public const string UBL_PAYEE_FINANCIAL_ACCOUNT = 'PayeeFinancialAccount';
+    public const string UBL_PARTY_TAX_SCHEME = 'PartyTaxScheme';
+    public const string UBL_PARTY_LEGAL_ENTITY = 'PartyLegalEntity';
+    public const string UBL_COMPANY_ID = 'CompanyID';
+    public const string UBL_PARTY_IDENTIFICATION = 'PartyIdentification';
+    public const string UBL_CURRENCY_ID = 'currencyID';
+    public const string UBL_FINANCIAL_INSTITUTION_BRANCH = 'FinancialInstitutionBranch';
+    public const string UBL_STREET_NAME = 'StreetName';
+    public const string UBL_ADDITIONAL_STREET_NAME = 'AdditionalStreetName';
+    public const string UBL_ADDRESS_LINE = 'AddressLine';
+    public const string UBL_CITY_NAME = 'CityName';
+    public const string UBL_POSTAL_ZONE = 'PostalZone';
+    public const string UBL_COUNTRY_SUBENTITY = 'CountrySubentity';
+    public const string UBL_IDENTIFICATION_CODE = 'IdentificationCode';
+    public const string UBL_TAX_SCHEME = 'TaxScheme';
+    public const string UBL_REGISTRATION_NAME = 'RegistrationName';
+    public const string UBL_TELEPHONE = 'Telephone';
+    public const string UBL_ELECTRONIC_MAIL = 'ElectronicMail';
+    public const string UBL_LIST_ID = 'ListId';
+
+    // ISO 6523 ICD description prefix constants (used 6+ times in getIso6523Icd())
+    public const string ICD_FORMS_THE = 'The ICD code forms the ';
+    public const string ICD_WILL_ALSO = 'The ICD code will also ';
+    public const string ICD_PURPOSE_TO_PROVIDE = 'Intended Purpose/App. Area: To provide ';
+    public const string ICD_PURPOSE_IDENTIFICATION = 'Intended Purpose/App. Area: Identification ';
+    public const string ICD_EDIRA_COMPLIANT = '(EDIRA compliant)';
+    public const string ICD_INVOICE_ISSUE_DATE = 'Invoice Issue Date/Time ie. Date Created/Issued';
+
+    private readonly DateHelper $datehelper;
+    private string $documentCurrency;
+    
     public function __construct(
         public SRepo $s,
         private readonly DelRepo $delRepo,
@@ -78,7 +113,7 @@ class PeppolHelper
     ) {
         $this->datehelper = new DateHelper($this->s);
         $this->documentCurrency =
-            $this->s->getSetting('peppol_document_currency');
+            $this->s->getSetting(self::SETTING_PEPPOL_DOCUMENT_CURRENCY);
     }
     
     /** @psalm-suppress UnusedReturnValue */
@@ -208,9 +243,9 @@ class PeppolHelper
                 $client_purchase_order_id = $so->getClientPoNumber();
             }
 // Buyer Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#buyerref
-            $BuyerReference = '';
+            $buyerReference = '';
             if ($so && null !== $so->getClientPoPerson()) {
-                $BuyerReference = $so->getClientPoPerson();
+                $buyerReference = $so->getClientPoPerson();
             }
             $config_company_details = $this->s->getConfigCompanyDetails();
 /**
@@ -273,7 +308,7 @@ class PeppolHelper
             // return the $paymentId (ie. a payment reference id)
             $paymentId =
                     'peppol' . ($invoice->getNumber() ?? 'Number unavailable')
-                    .  new DateTime()->format('Y-m-d');
+                    .  new DateTime()->format(self::DATE_FORMAT_YMD);
             $payment_terms = $invoice->getTerms();
 // Related logic:
 // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-TaxTotal/
@@ -305,7 +340,7 @@ class PeppolHelper
             $buyer_fallback_reference = $this->BuyerReference($invoice, $cpR);
 // if no client purchase order person is provided use the
 // $buyer_fallback_reference
-            $buyerReference = ($BuyerReference ?? $buyer_fallback_reference);
+            $buyerReference = ($buyerReference ?? $buyer_fallback_reference);
 // No reference can be made therefore throw an exception
             if (empty($buyerReference)) {
                 throw new BuyerRefNf();
@@ -460,7 +495,7 @@ class PeppolHelper
 // $inv_attachment->getId() => upload repository id
 // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
 //      cac-AdditionalDocumentReference/cac-Attachment/cac-ExternalReference/
-                $attachments[$inv_attachment->getId()] 
+                $attachments[$inv_attachment->getId()]
                   = new Attachment(
                       // 'filePath' used to generate file_contents
                       $target_path_with_filename,
@@ -508,28 +543,28 @@ class PeppolHelper
         /**
          * @var string $contact['Name']
          */
-        $Name = $contact['Name'] ?? '';
+        $name = $contact['Name'] ?? '';
         /**
          * @var string $contact['FirstName']
          */
-        $FirstName = $contact['FirstName'] ?? '';
+        $firstName = $contact['FirstName'] ?? '';
         /**
          * @var string $contact['LastName']
          */
-        $LastName = $contact['LastName'] ?? '';
+        $lastName = $contact['LastName'] ?? '';
         /**
          * @var string $contact['Telephone']
          */
-        $Telephone = $contact['Telephone'] ?? '';
+        $telephone = $contact['Telephone'] ?? '';
         /**
          * @var string $contact['ElectronicMail']
          */
-        $ElectronicMail = $contact['ElectronicMail'] ?? '';
+        $electronicMail = $contact['ElectronicMail'] ?? '';
         return new Contact(
-            $Name,
-            $FirstName,
-            $LastName,
-            $Telephone,
+            $name,
+            $firstName,
+            $lastName,
+            $telephone,
             /**
              * Customer's telefax must not be included => null
              * Warning
@@ -541,7 +576,7 @@ class PeppolHelper
              *  AccountingCustomerParty Party Contact Telefax
              */
             null,
-            $ElectronicMail,
+            $electronicMail,
         );
     }
 
@@ -779,7 +814,7 @@ class PeppolHelper
      * @throws DelLocIdNf
      * @return string
      */
-    public function DescriptionCode(Inv $invoice, DelRepo $delRepo): string
+    public function descriptionCode(Inv $invoice, DelRepo $delRepo): string
     {
         if ($this->s->getSetting('include_delivery_period') == '1'
                             && !empty($this->s->getSetting('stand_in_code'))) {
@@ -806,7 +841,7 @@ class PeppolHelper
      * @param ACIR $aciR
      * @return array
      */
-    public function DocumentLevelAllowanceCharges(Inv $invoice, ACIR $aciR): array
+    public function documentLevelAllowanceCharges(Inv $invoice, ACIR $aciR): array
     {
         $invoice_id = $invoice->getId();
         if (null !== $invoice_id) {
@@ -839,7 +874,7 @@ class PeppolHelper
                             'doc_cc_tax_amount' => $ac->getVatOrTax(),
                             // document currency code
                             // views/invoice/setting/views/partial_settings_peppol
-                            'doc_cc' => $this->s->getSetting('peppol_document_currency'),
+                            'doc_cc' => $this->documentCurrency,
                             // supplier tax currency code tax amount
                             'supp_tax_cc_tax_amount' =>
                                 $this->s->currencyConverter($ac->getVatOrTax()),
@@ -851,7 +886,7 @@ class PeppolHelper
                         'taxCategory' => [
                             'taxScheme' => [
                                 // Mandatory default 'VAT'
-                                'value' => 'VAT',
+                                'value' => self::TAX_CATEGORY_VAT,
                             ],
                         ],
                     ];
@@ -997,7 +1032,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * @throws ClientsAccCostNf
      * @return string
      */
-    private function AccountingCost(Inv $invoice, cpR $cpR): string
+    private function accountingCost(Inv $invoice, cpR $cpR): string
     {
         $client = $invoice->getClient();
         if (null !== $client) {
@@ -1022,7 +1057,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * @param DelRepo $delRepo
      * @return DateTime|null
      */
-    public function ActualDeliveryDate(Inv $invoice, DelRepo $delRepo): ?DateTime
+    public function actualDeliveryDate(Inv $invoice, DelRepo $delRepo): ?DateTime
     {
         $invoice_id = $invoice->getId();
         if (null !== $invoice_id) {
@@ -1151,7 +1186,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                             'value' => $convert_sub_total,
                             'attributes' => [
                                 'currencyID' =>
-                                        $this->s->getSetting('peppol_document_currency')
+                                        $this->documentCurrency
                             ]
                         ],
                         [
@@ -1283,7 +1318,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                             'value' => [
                                                 [
                                                     'name' => "{$b}ID",
-                                                    'value' => 'VAT'
+                                                    'value' => self::TAX_CATEGORY_VAT
                                                 ],
                                             ],
                                         ],
@@ -1315,8 +1350,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                             $this->s->currencyConverter($price),
                                     'attributes' => [
                                         'currencyID' =>
-                                        $this->s->getSetting(
-                                                    'peppol_document_currency')
+                                        $this->documentCurrency
                                     ]
                                 ],
                                 [
@@ -1345,7 +1379,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                         $this->s->currencyConverter($discount),
                                             'attributes' => [
                                                 'currencyID' =>
-            $this->s->getSetting('peppol_document_currency')
+            $this->documentCurrency
                                             ]
                                         ],
 // Item gross price
@@ -1356,7 +1390,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                                             'value' =>
             $this->s->currencyConverter($price), 'attributes' => [
                                             'currencyID' =>
-            $this->s->getSetting('peppol_document_currency')]
+            $this->documentCurrency]
                                         ],
                                     ],
                                 ],
@@ -1410,7 +1444,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                         'value' => $this->s->currencyConverter($acii->getAmount()),
                         'attributes' => [
                             'currencyID' =>
-                                $this->s->getSetting('peppol_document_currency')
+                                $this->documentCurrency
                         ]
                     ],
                     [
@@ -1420,7 +1454,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             ?? 0.00),
                         'attributes' => [
                             'currencyID' =>
-                                $this->s->getSetting('peppol_document_currency')
+                                $this->documentCurrency
                         ]
                     ],
                 ],
@@ -1471,7 +1505,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * @param cpR $cpR
      * @return string
      */
-    private function BuyerReference(Inv $invoice, cpR $cpR): string
+    private function buyerReference(Inv $invoice, cpR $cpR): string
     {
         $client = $invoice->getClient();
         if (null !== $client) {
@@ -1492,7 +1526,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * @param ContractRepo $contractRepo
      * @return string|null
      */
-    public function ContractDocumentReference(Inv $invoice,
+    public function contractDocumentReference(Inv $invoice,
                                             ContractRepo $contractRepo): ?string
     {
         $contract_id = $invoice->getContractId();
@@ -1508,7 +1542,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * @param DelRepo $delRepo
      * @return Party|null
      */
-    public function DeliveryParty(Inv $invoice, DelRepo $delRepo,
+    public function deliveryParty(Inv $invoice, DelRepo $delRepo,
                                              DelPartyRepo $delpartyRepo): ?Party
     {
         $invoice_id = $invoice->getId();
@@ -1532,7 +1566,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * Subjective to $s->getSetting('peppol_document_currency')
      * @return string
      */
-    public function DocumentCurrencyCode(): string
+    public function documentCurrencyCode(): string
     {
         $config = $this->s->getConfigPeppol();
         /** @var string $config['DocumentCurrencyCode'] */
@@ -1561,7 +1595,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * @throws SOINe
      * @return string|null
      */
-    private function PeppolPoItemid(InvItem $item, SOIR $soiR): ?string
+    private function peppolPoItemid(InvItem $item, SOIR $soiR): ?string
     {
         $sales_order_item_id = $item->getSoItemId();
         if ($sales_order_item_id) {
@@ -1588,7 +1622,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * @throws SOINe
      * @return string|null
      */
-    private function PeppolPoLineid(InvItem $item, SOIR $soiR): ?string
+    private function peppolPoLineid(InvItem $item, SOIR $soiR): ?string
     {
         $sales_order_item_id = $item->getSoItemId();
         if ($sales_order_item_id) {
@@ -1613,7 +1647,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * @param cpR $cpR
      * @return string
      */
-    private function SupplierAssignedAccountId(Inv $invoice, cpR $cpR): string
+    private function supplierAssignedAccountId(Inv $invoice, cpR $cpR): string
     {
         $client = $invoice->getClient();
         if (null !== $client) {
@@ -1634,7 +1668,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
     /**
      * @return Contact
      */
-    public function SupplierContact(): Contact
+    public function supplierContact(): Contact
     {
         $config = $this->s->getConfigPeppol();
         /**
@@ -1664,7 +1698,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
     /**
      * @return string
      */
-    public function SupplierEndpointID(): string
+    public function supplierEndpointID(): string
     {
         $config = $this->s->getConfigPeppol();
         /**
@@ -1677,7 +1711,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
     /**
      * @return string
      */
-    public function SupplierEndPointIDSchemeID(): string
+    public function supplierEndPointIDSchemeID(): string
     {
         $config = $this->s->getConfigPeppol();
         /**
@@ -1690,7 +1724,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
     /**
      * @return PartyLegalEntity
      */
-    public function SupplierPartyLegalEntity(): PartyLegalEntity
+    public function supplierPartyLegalEntity(): PartyLegalEntity
     {
         $config = $this->s->getConfigPeppol();
         /**
@@ -1713,14 +1747,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      */
     private function noTaxPointDate(Inv $invoice): bool
     {
-        $date = $invoice->getDateTaxPoint()->format('Y-m-d');
+        $date = $invoice->getDateTaxPoint()->format(self::DATE_FORMAT_YMD);
         return $date === '1901/01/01';
     }
 
     /**
      * @return PartyTaxScheme
      */
-    public function SupplierPartyTaxScheme(): PartyTaxScheme
+    public function supplierPartyTaxScheme(): PartyTaxScheme
     {
         $config = $this->s->getConfigPeppol();
         /**
@@ -1749,7 +1783,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
     /**
      * @return Address
      */
-    public function SupplierPostalAddress(): Address
+    public function supplierPostalAddress(): Address
     {
         $config = $this->s->getConfigPeppol();
         $address = 'SupplierPartyIdentificationPostalAddress';
@@ -1791,7 +1825,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * @param float $supp_tax_cc_tax_amount
      * @return array
      */
-    private function TaxAmounts(float $supp_tax_cc_tax_amount): array
+    private function taxAmounts(float $supp_tax_cc_tax_amount): array
     {
         // doc_cc_tax_amount will be compared with supp_tax_cc_amount
         // so make sure same type ie. float
@@ -1896,7 +1930,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                  *  @var string $sub_array['DocumentCurrency']
                  */
                 $sub_array['DocumentCurrency'] =
-                            $this->s->getSetting('peppol_document_currency');
+                            $this->documentCurrency;
                 $array[$id] = $sub_array;
             } // null!==$id
         }
@@ -2017,7 +2051,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
      * @param Inv $invoice
      * @return string
      */
-    public function UploadsTempPeppolXmlFileNamePathWithExt(Inv $invoice): string
+    public function uploadsTempPeppolXmlFileNamePathWithExt(Inv $invoice): string
     {
         return dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'Uploads'
           . DIRECTORY_SEPARATOR . 'Temp'
@@ -2506,12 +2540,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         // 'ISO 6523 ICD list',
         // 'Identifier' => 'ICD',
         //  'Agency' => 'The International Organization for Standardization (ISO)',
+        $notes = 'Notes on use of code: ';
         return [
             0 => [
                 'Id' => '0002',
                 'Name' => 'System Information et Repertoire des Entreprise et '
                 . 'des Etablissements: SIRENE',
-                'Description' => 'Notes on Use of Code: The Sirene number is '
+                'Description' => $notes . 'The Sirene number is '
                 . 'used in France mainly for the official registration in the'
                 . ' Trade Register and as the only number used between '
                 . 'authorities and organizations, and between authorities '
@@ -2523,7 +2558,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0003',
                 'Name' => 'Codification Numerique des Etablissments Financiers '
                 . 'En Belgique',
-                'Description' => 'Notes on Use of Code: Many financial '
+                'Description' => $notes . 'Many financial '
                 . ' institutions have more than one code number, e.g. to '
                 . 'indicate each branch individually. The codes can be '
                 . 'reallocated over the time (mostly in the case where a '
@@ -2535,7 +2570,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             2 => [
                 'Id' => '0004',
                 'Name' => 'NBS/OSI NETWORK',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the OSI network addressing and naming '
                 . 'tree as depicted in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: National Bureau of Standards, USA.',
@@ -2543,7 +2578,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             3 => [
                 'Id' => '0005',
                 'Name' => 'USA FED GOV OSI NETWORK',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the OSI network addressing and naming '
                 . 'tree as depicted in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: National Bureau of Standards, USA.',
@@ -2551,7 +2586,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             4 => [
                 'Id' => '0006',
                 'Name' => 'USA DOD OSI NETWORK',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the OSI network addressing and naming '
                 . 'tree as depicted in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: Defense Communication Agency, USA.',
@@ -2559,7 +2594,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             5 => [
                 'Id' => '0007',
                 'Name' => 'Organisationsnummer',
-                'Description' => 'Notes on Use of Code: The third digit in the '
+                'Description' => $notes . 'The third digit in the '
                 . 'organisation number is never lower than 2 in order to
                       avoid it being confused with personal numbers. Issuing '
                 . 'agency: The National Tax Board, SWEDEN.',
@@ -2580,7 +2615,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0010',
                 'Name' => 'Organizational Identifiers for Structured Names '
                 . 'under ISO 9541 Part 2',
-                'Description' => 'Notes on Use of Code: The organizational '
+                'Description' => $notes . 'The organizational '
                 . 'codes established under this coding systems constitute '
                 . 'the registered organizational identifiers recognised '
                 . 'under ISO 9541-2. That standard effectively establishes '
@@ -2597,7 +2632,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Name' => 'International Code Designator for the Identification '
                 . 'of OSI-based, Amateur Radio
                       Organizations, Network Objects and Application Services.',
-                'Description' => 'Notes on Use of Code: Specific object and '
+                'Description' => $notes . 'Specific object and '
                 . 'attribute naming conventions are currently being defined. '
                 . 'Issuing agency: The Radio Amateur '
                 . 'Telecommunications Society, USA.',
@@ -2611,14 +2646,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             11 => [
                 'Id' => '0013',
                 'Name' => 'VSA FTP CODE (FTP = File Transfer Protocol)',
-                'Description' => 'Notes on Use of Code: The code serves the '
+                'Description' => $notes . 'The code serves the '
                 . 'addressing between the communicating partners. '
                 . 'Issuing agency: Verband der Automobilindustrie e.V., GERMANY.',
             ],
             12 => [
                 'Id' => '0014',
                 'Name' => 'NIST/OSI Implememts\' Workshop',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the Workshop naming and addressing tree. '
                 . 'Issuing agency: United States Department of Commerce, '
                 . 'National Institute of Standards and Technology, '
@@ -2632,7 +2667,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             14 => [
                 'Id' => '0016',
                 'Name' => 'EWOS Object Identifiers',
-                'Description' => 'Notes on Use of Code: a) In the SIO the '
+                'Description' => $notes . 'a) In the SIO the '
                 . 'Organization Name will normally be omitted, b) '
                 . 'The code is primarily intended for the registration of '
                 . 'Objects Identifiers according to ISO 8824: '
@@ -2645,7 +2680,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             15 => [
                 'Id' => '0017',
                 'Name' => 'COMMON LANGUAGE',
-                'Description' => 'Notes on Use of Code: Codes for named '
+                'Description' => $notes . 'Codes for named '
                 . 'populated places, geographic places, geopolitical places, '
                 . 'outlaying areas, and other related entities of the state '
                 . 'of the United States, provinces and territories of Canada, '
@@ -2658,7 +2693,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             16 => [
                 'Id' => '0018',
                 'Name' => 'SNA/OSI Network',
-                'Description' => 'Notes on Use of Code: The ICD code will also '
+                'Description' => $notes . 'The ICD code will also '
                 . 'form the initial part of the OSI Network addressing and '
                 . 'naming tree as depicted in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: International Business Machines Corporation, '
@@ -2677,7 +2712,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             18 => [
                 'Id' => '0020',
                 'Name' => 'European Laboratory for Particle Physics: CERN',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the OSI network addressing and '
                 . 'naming tree as depicted in Addendum 2 of ISO 8348. '
                 . 'Issuing agency: European Laboratory for Particle Physics, '
@@ -2687,7 +2722,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0021',
                 'Name' => 'SOCIETY FOR WORLDWIDE INTERBANK FINANCIAL, '
                 . 'TELECOMMUNICATION S.W.I.F.T.',
-                'Description' => 'Notes on Use of Code: To be used for '
+                'Description' => $notes . 'To be used for '
                 . 'assignment of object identifiers (ISO 8824/8825) '
                 . 'Issuing agency: SOCIETY FOR WORLDWIDE INTERBANK FINANCIAL, '
                 . 'TELECOMMUNICATION S.W.I.F.T. BELGIUM.',
@@ -2695,7 +2730,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             20 => [
                 'Id' => '0022',
                 'Name' => 'OSF Distributed Computing Object Identification',
-                'Description' => 'Notes on Use of Code: OSF provides public '
+                'Description' => $notes . 'OSF provides public '
                 . 'domain software in OS, ISO networking and management. '
                 . 'The initial use of the coding system are for identifying '
                 . 'the following objects in OSF\'s distributed computing '
@@ -2709,7 +2744,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             21 => [
                 'Id' => '0023',
                 'Name' => 'Nordic University and Research Network: NORDUnet',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the OSI network addressing and tree '
                 . 'as depicted in Addendum 2 of ISO 8348. '
                 . 'Issuing agency: NORDUnet, c/o SICS, Sweden.',
@@ -2717,7 +2752,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             22 => [
                 'Id' => '0024',
                 'Name' => 'Digital Equipment Corporation: DEC',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the OSI network addressing as '
                 . 'described in ISO8348 Addendum 2. '
                 . 'Issuing agency: Digital Equipment (Europe) S.A.R.L. France.',
@@ -2725,7 +2760,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             23 => [
                 'Id' => '0025',
                 'Name' => 'OSI ASIA-OCEANIA WORKSHOP',
-                'Description' => 'Notes on Use of Code: The code is used as an '
+                'Description' => $notes . 'The code is used as an '
                 . 'element of object identifiers which need to be '
                 . 'assigned relating the ISPs '
                 . '(International Standardized Profiles) '
@@ -2735,7 +2770,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             24 => [
                 'Id' => '0026',
                 'Name' => 'NATO ISO 6523 ICDE coding scheme',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the OSI network addressing and '
                 . 'naming tree depicted in Addendum 2 of ISO 8348. '
                 . 'Issuing agency: North Atlantic Treaty Organisation (NATO), '
@@ -2744,7 +2779,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             25 => [
                 'Id' => '0027',
                 'Name' => 'Aeronautical Telecommunications Network (ATN)',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the ISO network addressing and naming tree '
                 . 'as depicted in Addendum No 2 to ISO 8348 '
                 . 'Issuing agency: International Civil Aviation Organization '
@@ -2766,7 +2801,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             28 => [
                 'Id' => '0030',
                 'Name' => 'AT&T/OSI Network',
-                'Description' => 'Notes on Use of Code: The ICD code will also '
+                'Description' => $notes . 'The ICD code will also '
                 . 'form the Initial Domain Part of the OSI network, '
                 . 'addressing and naming tree as specified in '
                 . 'Addendum 2 to ISO 8348. Issuing agency: AT&T, '
@@ -2775,13 +2810,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             29 => [
                 'Id' => '0031',
                 'Name' => 'EDI Partner Identification Code',
-                'Description' => 'Notes on Use of Code: To identify EDI '
+                'Description' => $notes . 'To identify EDI '
                 . 'partners. Issuing agency: Odette NL, The Netherlands.',
             ],
             30 => [
                 'Id' => '0032',
                 'Name' => 'Telecom Australia',
-                'Description' => 'Notes on Use of Code: The code is used as an '
+                'Description' => $notes . 'The code is used as an '
                 . 'element of Object Identifier when defining objects '
                 . 'within Telecom Australia. In addition the code shall be '
                 . 'used as an element of NSAP addressing. '
@@ -2791,14 +2826,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             31 => [
                 'Id' => '0033',
                 'Name' => 'S G W OSI Internetwork',
-                'Description' => 'Notes on Use of Code: Exclusive use '
+                'Description' => $notes . 'Exclusive use '
                 . 'by S G W. '
                 . 'Issuing agency: S G Warburg Group Management Ltd, UK.',
             ],
             32 => [
                 'Id' => '0034',
                 'Name' => 'Reuter Open Address Standard',
-                'Description' => 'Notes on Use of Code: To be used in the '
+                'Description' => $notes . 'To be used in the '
                 . 'formation of OSI Network Service Access Point '
                 . '(NSAP) addresses. '
                 . 'Issuing agency: Reuters Ltd, UK.',
@@ -2806,7 +2841,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             33 => [
                 'Id' => '0035',
                 'Name' => 'ISO 6523 - ICD',
-                'Description' => 'Notes on Use of Code: This code will be used '
+                'Description' => $notes . 'This code will be used '
                 . 'internationally by BP thus a non-geographic '
                 . 'code is requested. '
                 . 'Issuing agency: The British Petroleum Co Plc, UK.',
@@ -2814,7 +2849,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             34 => [
                 'Id' => '0036',
                 'Name' => 'TeleTrust Object Identifiers',
-                'Description' => 'Notes on Use of Code: a) In the SIO the '
+                'Description' => $notes . 'a) In the SIO the '
                 . 'Organization name will normally be omitted. '
                 . 'b) The code is primarily intended for the registration '
                 . 'of Object Identifiers for security related objects '
@@ -2826,7 +2861,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             35 => [
                 'Id' => '0037',
                 'Name' => 'LY-tunnus',
-                'Description' => 'Notes on Use of Code: It is possible to add '
+                'Description' => $notes . 'It is possible to add '
                 . '0-4 characters set to the code for more detailed use ofone '
                 . 'organization. Characters are digits or capital letter. '
                 . 'Issuing agency: National Board of Taxes, FINLAND.',
@@ -2834,7 +2869,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             36 => [
                 'Id' => '0038',
                 'Name' => 'The Australian GOSIP Network',
-                'Description' => 'Notes on Use of Code: As noted above it will '
+                'Description' => $notes . 'As noted above it will '
                 . 'be used as the initial identifier of an NSAP codingscheme. '
                 . 'Issuing agency: Standards Australia.',
             ],
@@ -2851,7 +2886,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             38 => [
                 'Id' => '0040',
                 'Name' => 'Unilever Group Companies',
-                'Description' => 'Notes on Use of Code: To be used in data '
+                'Description' => $notes . 'To be used in data '
                 . 'communications to form part of the Network Address as '
                 . 'defined in ISO 8348. The ISO 6523, ICD IDI format with '
                 . 'Binary syntax will be used. Issuing agency: '
@@ -2860,7 +2895,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             39 => [
                 'Id' => '0041',
                 'Name' => 'Citicorp Global Information Network',
-                'Description' => 'Notes on Use of Code: The ICD code will also '
+                'Description' => $notes . 'The ICD code will also '
                 . 'form the initial part of the Citicorp Network addressing '
                 . 'object identifier tree and naming tree as '
                 . 'depicted in Addendum 2 to ISO 8348. '
@@ -2869,7 +2904,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             40 => [
                 'Id' => '0042',
                 'Name' => 'DBP Telekom Object Identifiers',
-                'Description' => 'Notes on Use of Code: 1) The ICD is primarily '
+                'Description' => $notes . '1) The ICD is primarily '
                 . 'intended for the registration of Object Identifiers, '
                 . 'according to ISO 8824/8825 (ANS.1) to be used for the '
                 . 'identification resp. registration of: '
@@ -2887,7 +2922,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             41 => [
                 'Id' => '0043',
                 'Name' => 'HydroNETT',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the OSI network addressing as depicted'
                 . ' in ISO 8348/AD2. '
                 . 'Issuing agency: Norsk Hydro a.s., Norway.',
@@ -2895,7 +2930,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             42 => [
                 'Id' => '0044',
                 'Name' => 'Thai Industrial Standards Institute (TISI)',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of international addressing for Thailand. '
                 . 'Issuing agency: '
                 . 'Thai Industrial Standards Institute (TISI), THAILAND.',
@@ -2903,7 +2938,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             43 => [
                 'Id' => '0045',
                 'Name' => 'ICI Company Identification System',
-                'Description' => 'Notes on Use of Code: The ICD code will be '
+                'Description' => $notes . 'The ICD code will be '
                 . 'used to manage NSAP allocation for all ICI companies on a '
                 . 'worldwide basis. '
                 . 'The organisation code is used Worldwide by ICI application '
@@ -2914,7 +2949,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             44 => [
                 'Id' => '0046',
                 'Name' => 'FUNLOC',
-                'Description' => 'Notes on Use of Code: Current applications '
+                'Description' => $notes . 'Current applications '
                 . 'are Philips accounting and logistic systems; new application'
                 . ' is the identification of objects in the open network'
                 . ' environment according to ISO 8824 which starts with a'
@@ -2925,7 +2960,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             45 => [
                 'Id' => '0047',
                 'Name' => 'BULL ODI/DSA/UNIX Network',
-                'Description' => 'Notes on Use of Code: To be used in data '
+                'Description' => $notes . 'To be used in data '
                 . 'communications to form part of the network address. '
                 . 'The ISO 6523 ICD IDI format with binary syntax will be used. '
                 . 'Issuing agency: BULL S.A. FRANCE.',
@@ -2933,14 +2968,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             46 => [
                 'Id' => '0048',
                 'Name' => 'OSINZ',
-                'Description' => 'Notes on Use of Code: ISO 6523 ICD IDI format '
+                'Description' => $notes . 'ISO 6523 ICD IDI format '
                 . 'with binary syntax will be used. '
                 . 'Issuing agency: OSINZ, New Zealand.',
             ],
             47 => [
                 'Id' => '0049',
                 'Name' => 'Auckland Area Health',
-                'Description' => 'Notes on Use of Code: ISO 6523 ICD IDI format '
+                'Description' => $notes . 'ISO 6523 ICD IDI format '
                 . 'with binary syntax will be used '
                 . 'Issuing agency: Auckland Area Health Board, '
                 . 'Information Systems, '
@@ -2949,21 +2984,21 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             48 => [
                 'Id' => '0050',
                 'Name' => 'Firmenich',
-                'Description' => 'Notes on Use of Code: Interconnect the plants '
+                'Description' => $notes . 'Interconnect the plants '
                 . 'by an OSI network essentially over X.25 carrier. '
                 . 'Issuing agency: Firmenich S A, Switzerland.',
             ],
             49 => [
                 'Id' => '0051',
                 'Name' => 'AGFA-DIS',
-                'Description' => 'Notes on Use of Code: Medical Communication '
+                'Description' => $notes . 'Medical Communication '
                 . 'Issuing agency: AGFA N.V. BELGIUM.',
             ],
             50 => [
                 'Id' => '0052',
                 'Name' => 'Society of Motion Picture and Television Engineers '
                 . '(SMPTE)',
-                'Description' => 'Notes on Use of Code: The ICD code will also '
+                'Description' => $notes . 'The ICD code will also '
                 . 'be used to identify SMPTE constituent organizations '
                 . '(committees, working groups, task forces, etc./), and the '
                 . 'objects they, define. The ICD code will also form the '
@@ -2981,7 +3016,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             52 => [
                 'Id' => '0054',
                 'Name' => 'ISO6523 - ICDPCR',
-                'Description' => 'Notes on Use of Code: This code could be used '
+                'Description' => $notes . 'This code could be used '
                 . 'internationally by Pfizer thus a non-geographic '
                 . 'code is required. The code forms the initial part of the '
                 . 'OSI network addressing and naming tree depicted in '
@@ -2997,7 +3032,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             54 => [
                 'Id' => '0056',
                 'Name' => 'Nokia Object Identifiers (NOI)',
-                'Description' => 'Notes on Use of Code: a) In the SIO the '
+                'Description' => $notes . 'a) In the SIO the '
                 . 'organization name will normally be omitted, b) The code '
                 . 'is primarily intended for the registration of '
                 . 'Object Identifiers according to ISO/IEC 8824: Level 1:iso(1),'
@@ -3008,7 +3043,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             55 => [
                 'Id' => '0057',
                 'Name' => 'Saint Gobain',
-                'Description' => 'Notes on Use of Code: To be used for '
+                'Description' => $notes . 'To be used for '
                 . 'assignment of: N.E.T (ISO 8348/Add 2), '
                 . 'A.E.T (FTAM, X.400 Psaps, and so on), and object '
                 . 'identification (ISO 8824/8825) '
@@ -3017,7 +3052,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             56 => [
                 'Id' => '0058',
                 'Name' => 'Siemens Corporate Network',
-                'Description' => 'Notes on Use of Code: The ICD code will form '
+                'Description' => $notes . 'The ICD code will form '
                 . 'the initial part of the OSI Network addressing and '
                 . 'naming tree as depicted in Addendum 2 to ISO 8348 '
                 . '(Network layer addressing). These addresses will '
@@ -3033,7 +3068,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             58 => [
                 'Id' => '0060',
                 'Name' => 'Data Universal Numbering System (D-U-N-S Number)',
-                'Description' => 'Notes on Use of Code: The D-U-N-S Number '
+                'Description' => $notes . 'The D-U-N-S Number '
                 . 'originated to facilitate the compilation of financial '
                 . 'status reports on those involved in business '
                 . 'transactions but it is now widely used for '
@@ -3045,7 +3080,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             59 => [
                 'Id' => '0061',
                 'Name' => 'SOFFEX OSI',
-                'Description' => 'Notes on Use of Code: This code is to assist '
+                'Description' => $notes . 'This code is to assist '
                 . 'in uniquely identifying data network node addresses '
                 . 'in an international supporting network for '
                 . 'financial applications. This supporting network '
@@ -3057,7 +3092,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             60 => [
                 'Id' => '0062',
                 'Name' => 'KPN OVN',
-                'Description' => 'Notes on Use of Code: This code is used in '
+                'Description' => $notes . 'This code is used in '
                 . 'the VTOA network of KPN OVN. '
                 . 'Issuing agency: Koninklijke KPN, The Netherlands.',
             ],
@@ -3069,7 +3104,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             62 => [
                 'Id' => '0064',
                 'Name' => 'UTC: Uniforme Transport Code',
-                'Description' => 'Notes on Use of Code: The code identifies an '
+                'Description' => $notes . 'The code identifies an '
                 . 'individual transport or handling unit (e.g. pallet, parcel) '
                 . 'for reasons of tracing or tracing. '
                 . 'The unit may have an international destination. '
@@ -3078,7 +3113,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             63 => [
                 'Id' => '0065',
                 'Name' => 'SOLVAY OSI CODING',
-                'Description' => 'Notes on Use of Code: Whenever possible, '
+                'Description' => $notes . 'Whenever possible, '
                 . 'ISO 8348 addresses using this code will comply with '
                 . 'FIPS PUB 146, with an End System ID of exactly 4 octets, '
                 . 'so that the DSP can also conform to ECMA 117 where '
@@ -3090,7 +3125,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             64 => [
                 'Id' => '0066',
                 'Name' => 'Roche Corporate Network',
-                'Description' => 'Notes on Use of Code: Will be used '
+                'Description' => $notes . 'Will be used '
                 . 'internationaly by Roche thus a non-geographic '
                 . 'code is required. '
                 . 'Issuing agency: F. HOFFMANN - LA ROCHE AG, Switzerland.',
@@ -3098,14 +3133,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             65 => [
                 'Id' => '0067',
                 'Name' => 'ZellwegerOSINet',
-                'Description' => 'Notes on Use of Code: BAKOM - '
+                'Description' => $notes . 'BAKOM - '
                 . 'Switzerland. '
                 . 'Issuing agency: Zellweger Uster AG, Switzerland.',
             ],
             66 => [
                 'Id' => '0068',
                 'Name' => 'Intel Corporation OSI',
-                'Description' => 'Notes on Use of Code: The ICD code will be '
+                'Description' => $notes . 'The ICD code will be '
                 . 'used to form the Initial Domain Identifier (IDI) '
                 . 'portion of the Initial Domain Part (IDP) '
                 . 'as described in ISO 8348 Addendum 2 for OSI NSAP addressing. '
@@ -3114,7 +3149,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             67 => [
                 'Id' => '0069',
                 'Name' => 'SITA Object Identifier Tree',
-                'Description' => 'Notes on Use of Code: SITA intends to use its '
+                'Description' => $notes . 'SITA intends to use its '
                 . 'OID Tree to define its own Objects for use with '
                 . 'its OSI-based services (e.g. MHS & OSI Management). '
                 . 'Issuing agency: SITA, France.',
@@ -3122,7 +3157,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             68 => [
                 'Id' => '0070',
                 'Name' => 'DaimlerChrysler Corporate Network',
-                'Description' => 'Notes on Use of Code: The ICD code will form '
+                'Description' => $notes . 'The ICD code will form '
                 . 'the initial part of the OSI Network addressing and '
                 . 'naming free as depicted in Addendum 2 to ISO 8348 '
                 . '(Network Layer addressing). '
@@ -3133,7 +3168,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             69 => [
                 'Id' => '0071',
                 'Name' => 'LEGO /OSI NETWORK',
-                'Description' => 'Notes on Use of Code: The ICD code will also '
+                'Description' => $notes . 'The ICD code will also '
                 . 'form the Initial Domain Part of the OSI network addressing '
                 . 'and naming tree as specified in addendum 2 to ISO 8348. '
                 . 'Issuing agency: LEGO Systems Inc, USA.',
@@ -3141,7 +3176,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             70 => [
                 'Id' => '0072',
                 'Name' => 'NAVISTAR/OSI Network',
-                'Description' => 'Notes on Use of Code: The ICD code will also '
+                'Description' => $notes . 'The ICD code will also '
                 . 'form the Initial Domain Part of the OSI Network addressing '
                 . 'and naming tree as specified in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: International Truck & Engine Corp, USA.',
@@ -3149,7 +3184,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             71 => [
                 'Id' => '0073',
                 'Name' => 'ICD Formatted ATM address',
-                'Description' => 'Notes on Use of Code: Used as an ATM address '
+                'Description' => $notes . 'Used as an ATM address '
                 . 'prefix by, 1) Newbridge ATM terminal equipment: '
                 . 'a) when performing user - network address registration, '
                 . 'b) transparently initiating signalled ATM connections on '
@@ -3164,7 +3199,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             72 => [
                 'Id' => '0074',
                 'Name' => 'ARINC',
-                'Description' => 'Notes on Use of Code: ARINC will define its '
+                'Description' => $notes . 'ARINC will define its '
                 . 'own Objects for use with its OSI-based systems and services. '
                 . 'ARINC will also define Objects for use within the '
                 . 'Aeronautical industry. '
@@ -3173,7 +3208,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             73 => [
                 'Id' => '0075',
                 'Name' => 'Alcanet/Alcatel-Alsthom Corporate Network',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the OSI network addressing scheme as '
                 . 'depicted in Addendum 2 of ISO 8384. '
                 . 'Issuing agency: Alcatel Network Services Deutschland GmbH, '
@@ -3183,7 +3218,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0076',
                 'Name' => 'Sistema Italiano di Identificazione di ogetti '
                 . 'gestito da UNINFO',
-                'Description' => 'Notes on Use of Code: To be used for '
+                'Description' => $notes . 'To be used for '
                 . 'assignments of object identifiers according to '
                 . 'ISO 8824 and ISO 8825. '
                 . 'Issuing agency: UNINFO, ITALY.',
@@ -3192,7 +3227,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0077',
                 'Name' => 'Sistema Italiano di Indirizzamento di Reti OSI '
                 . 'Gestito da UNINFO',
-                'Description' => 'Notes on Use of Code: The ICD code forms the '
+                'Description' => $notes . 'The ICD code forms the '
                 . 'initial part of the OSI network Addressing and '
                 . 'naming tree depicted in Addendum 2 of ISO 8348. '
                 . 'Issuing agency: UNINFO, ITALY.',
@@ -3200,7 +3235,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             76 => [
                 'Id' => '0078',
                 'Name' => 'Mitel terminal or switching equipment',
-                'Description' => 'Notes on Use of Code: The ICD code will form '
+                'Description' => $notes . 'The ICD code will form '
                 . 'the initial part of the naming tree for: '
                 . '1 - Private Integrated Services '
                 . 'Network manufacturer-specific information as the '
@@ -3212,7 +3247,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             77 => [
                 'Id' => '0079',
                 'Name' => 'ATM Forum',
-                'Description' => 'Notes on Use of Code: The ICD code will also '
+                'Description' => $notes . 'The ICD code will also '
                 . 'form part of the Initial Domain Part of the OSI network '
                 . 'addressing as specified in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: The ATM Forum, USA.',
@@ -3220,7 +3255,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             78 => [
                 'Id' => '0080',
                 'Name' => 'UK National Health Service Scheme, (EDIRA compliant)',
-                'Description' => 'Notes on Use of Code: EDIRA recommendations '
+                'Description' => $notes . 'EDIRA recommendations '
                 . 'for coding in EDIFACT and other EDI systems. '
                 . 'Issuing agency: National Health Service, UK.',
             ],
@@ -3235,7 +3270,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Name' => 'Norwegian Telecommunications Authority\'s, NTA\'S, '
                 . 'EDI, identifier scheme (EDIRA
                       compliant)',
-                'Description' => 'Notes on Use of Code: For use in EDIFACT '
+                'Description' => $notes . 'For use in EDIFACT '
                 . 'messages in accordance with current national '
                 . 'recommendation on identification of EDI objects. '
                 . '(EDIRA compliant). '
@@ -3246,7 +3281,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0083',
                 'Name' => 'Advanced Telecommunications Modules Limited, '
                 . 'Corporate Network',
-                'Description' => 'Notes on Use of Code: The ICD code will also '
+                'Description' => $notes . 'The ICD code will also '
                 . 'form part of the Initial Domain Part of the OSI network
                       addressing as specified in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: ATM Ltd, ENGLAND.',
@@ -5238,7 +5273,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             105 => [
                 'Id' => 'SSE',
                 'Name' => 'Hazardous Materials ID DOT',
-                'Description' => 'A US Department of Transportation (DOT) 
+                'Description' => 'A US Department of Transportation (DOT)
                     code used toCustoms and Border
                   Protection (CBP) agency.',
             ],
@@ -5251,9 +5286,8 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             107 => [
                 'Id' => 'SSG',
                 'Name' => 'Air Force Regulation 71-4',
-                'Description' => 'A department of Defense/Air Force code 
-                    used to identifyBorder Protection (CBP)
-                  agency.',
+                'Description' => 'A department of Defense/Air Force code used to'
+                 . 'identifyBorder Protection (CBP) agency.',
             ],
             108 => [
                 'Id' => 'SSH',

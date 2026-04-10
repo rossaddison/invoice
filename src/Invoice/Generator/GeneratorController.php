@@ -52,9 +52,9 @@ class GeneratorController extends BaseController
     public const string INDEX = 'index.php';
     public const string INDEX_ADV_PAGINATOR = 'index_adv_paginator.php';
     public const string INDEX_ADV_PAGINATOR_WITH_FILTER = 'index_adv_paginator_with_filter.php';
-    public const string  _FORM = '_form.php';
-    public const string _VIEW = '_view.php';
-    public const string _ROUTE = '_route.php';
+    public const string WEBVIEW_FORM = '_form.php';
+    public const string WEBVIEW_VIEW = '_view.php';
+    public const string ROUTE = '_route.php';
 
     /**
      * Related logic: see Note: The working file app.php in ./resources/messages/en is too big for google to translate.
@@ -75,7 +75,7 @@ class GeneratorController extends BaseController
      */
 
     // e.g. a complete file that is now easy for Google to translate
-    public const string _APP = '_app.php';
+    public const string APP = '_app.php';
 
     // e.g. compare resources/messages/en.php with de.php with function rebuildLocale.
     // The missing keys in de.php are input into an array into an overwritable file
@@ -186,7 +186,7 @@ class GeneratorController extends BaseController
         $type = $currentRoute->getArgument('type');
         if (null !== $type) {
             $curlcertificate = \ini_get('curl.cainfo');
-            if ($curlcertificate == false) {
+            if ($curlcertificate === false || strlen($curlcertificate) === 0) {
                 throw new CaCertFileNotFoundException();
             }
             // $type == 'app' => rebuild complete array
@@ -218,7 +218,7 @@ class GeneratorController extends BaseController
                     // type eg. 'app' or 'diff' respectively
                     $lang->load($type, 'English');
                     /** @var array<array-key, string> $content */
-                    $content = $lang->_language;
+                    $content = $lang->uLanguage;
                     // Retrieve the selected new language according to locale in Settings View Google Translate
                     // eg. 'es' ie. Spanish
                     $targetLanguage = $this->sR->getSetting('google_translate_locale');
@@ -348,7 +348,7 @@ class GeneratorController extends BaseController
             }
 
             $htmlContent = file_get_contents($sourceFile);
-            if ($htmlContent == false) {
+            if ($htmlContent === false || strlen($htmlContent) === 0) {
                 $this->flashMessage('danger', 'Failed to read source file.');
                 return $this->webService->getRedirectResponse('setting/tabIndex', ['_language' => 'en'], ['active' => 'google-translate'], 'settings[google_translate_locale]');
             }
@@ -512,7 +512,7 @@ class GeneratorController extends BaseController
         $file = '';
         switch ($type) {
             case 'app':
-                $file = self::_APP;
+                $file = self::APP;
                 break;
                 /**
                  * Related logic: see ../resources/views/layout/invoice.php DropdownItem::link($translator->translate('generator.google.translate.latest.a'),
@@ -997,7 +997,7 @@ class GeneratorController extends BaseController
         DatabaseManager $dbal,
         View $view,
     ): Response {
-        $file = self::_FORM;
+        $file = self::WEBVIEW_FORM;
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
         $viewPath = $this->aliases->get('@invoice') . DIRECTORY_SEPARATOR . $g->getSmallSingularName();
@@ -1040,7 +1040,7 @@ class GeneratorController extends BaseController
         DatabaseManager $dbal,
         View $view,
     ): Response {
-        $file = self::_VIEW;
+        $file = self::WEBVIEW_VIEW;
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);
         $viewPath = $this->aliases->get('@invoice') . DIRECTORY_SEPARATOR . $g->getSmallSingularName();
@@ -1086,7 +1086,7 @@ class GeneratorController extends BaseController
         DatabaseManager $dbal,
         View $view,
     ): Response {
-        $file = self::_ROUTE;
+        $file = self::ROUTE;
         $path = $this->aliases->get('@generated');
         /** @var Gentor $g */
         $g = $this->generator($currentRoute, $gr);

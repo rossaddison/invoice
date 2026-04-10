@@ -95,42 +95,41 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi bi-eye']),
-                $urlGenerator->generate('client/view', [
-                    'id' => $model->getClientId()]),
-                        ['class' => 'btn btn-outline-info btn-sm']);
+            return (new A())
+                ->content(Html::tag('i', '', ['class' => 'bi bi-eye']))
+                ->href($urlGenerator->generate('client/view', ['id' => $model->getClientId()]))
+                ->encode(false)
+                ->addAttributes(['class' => 'btn btn-outline-info btn-sm']);
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (Client $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil-square']),
-                $urlGenerator->generate('client/edit',
-                    ['id' => $model->getClientId(), 'origin' => 'edit']),
-                        ['class' => 'btn btn-outline-warning btn-sm']);
+            return (new A())
+                ->content(Html::tag('i', '', ['class' => 'bi bi-pencil-square']))
+                ->href($urlGenerator->generate('client/edit', ['id' => $model->getClientId(), 'origin' => 'edit']))
+                ->encode(false)
+                ->addAttributes(['class' => 'btn btn-outline-warning btn-sm']);
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('delete'),
         content: static function (Client $model) use ($translator, $urlGenerator): A {
-            return Html::a(
-                Html::tag(
-                    'button',
-                    Html::tag('i', '', ['class' => 'bi bi-trash']),
-                    [
-                        'type' => 'submit',
-                        'class' => 'btn btn-outline-danger btn-sm',
-                        'onclick' => "return confirm("
-                            . "'"
-                            . $translator->translate('delete.record.warning')
-                            . "');",
-                    ],
-                ),
-                $urlGenerator->generate('client/delete', ['id' => $model->getClientId()]),
-                [],
-            );
+            return (new A())
+                ->content(
+                    Html::tag('button',
+                        Html::tag('i', '', ['class' => 'bi bi-trash']),
+                        [
+                            'type' => 'submit',
+                            'class' => 'btn btn-outline-danger btn-sm',
+                            'onclick' => "return confirm('" . $translator->translate('delete.record.warning') . "');",
+                        ],
+                    )->encode(false)
+                )
+                ->href($urlGenerator->generate('client/delete', ['id' => $model->getClientId()]))
+                ->encode(false);
         },
         encodeContent: false,
     ),

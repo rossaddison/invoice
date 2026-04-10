@@ -17,11 +17,10 @@ final readonly class ClientService
     /**
      * @param Client $model
      * @param array $body
-     * @param SettingRepository $s
      * @return int|null
      * @psalm-suppress UnusedParam
      */
-    public function saveClient(Client $model, array $body, SettingRepository $s): ?int
+    public function saveClient(Client $model, array $body): ?int
     {
         isset($body['client_title']) ? $model->setClientTitle((string) $body['client_title']) : '';
         isset($body['client_name']) ? $model->setClientName((string) $body['client_name']) : '';

@@ -48,25 +48,10 @@ final class InvoiceController extends BaseController
     // New property for controller name
     protected string $controllerName = 'invoice';
 
-    public function __construct(
-        WebControllerService $webService,
-        UserService $userService,
-        TranslatorInterface $translator,
-        WebViewRenderer $webViewRenderer,
-        SessionInterface $session,
-        SettingRepository $sR,
-        Flash $flash,
-    ) {
-        parent::__construct($webService, $userService, $translator,
-                $webViewRenderer, $session, $sR, $flash);
-    }
-
     /**
-     * @param SessionInterface $session
      * @param SettingRepository $sR
      */
-    private function installDefaultSettingsOnFirstRun(
-                        SessionInterface $session, SettingRepository $sR): void
+    private function installDefaultSettingsOnFirstRun(SettingRepository $sR): void
     {
         $default_settings = [
 /**
@@ -309,7 +294,7 @@ final class InvoiceController extends BaseController
         $api_key_here = $this->sR->decode($this->sR->getSetting(
                                                 'gateway_storecove_apiKey'));
         $site = curl_init();
-        if ($site != false) {
+        if ($site) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
@@ -360,7 +345,7 @@ final class InvoiceController extends BaseController
         $api_key_here = $this->sR->decode($this->sR->getSetting(
             'gateway_storecove_apiKey'));
         $site = curl_init();
-        if ($site != false) {
+        if ($site) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
@@ -417,7 +402,7 @@ final class InvoiceController extends BaseController
             'status' => '',
         ];
         $site = curl_init();
-        if ($site != false) {
+        if ($site) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
@@ -465,7 +450,7 @@ final class InvoiceController extends BaseController
             'status' => '',
         ];
         $site = curl_init();
-        if ($site != false) {
+        if ($site) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
@@ -571,7 +556,7 @@ final class InvoiceController extends BaseController
             'status' => '',
         ];
         $site = curl_init();
-        if ($site != false) {
+        if ($site) {
             curl_setopt($site, CURLOPT_URL, $store_cove);
             curl_setopt($site, CURLOPT_POST, true);
             curl_setopt($site, CURLOPT_RETURNTRANSFER, true);
@@ -1005,8 +990,7 @@ final class InvoiceController extends BaseController
         // If you want to reinstall the default settings, remove the
         // default_settings_exist setting => its count will be zero
         $sR->repoCount('default_settings_exist') === 0 ?
-                $this->installDefaultSettingsOnFirstRun(
-                    $session, $sR) : '';
+                $this->installDefaultSettingsOnFirstRun($sR) : '';
         $this->installCheckForPreexistingTestData(
                                                 $sR, $fR, $uR, $pR, $trR, $cR);
         $session->set('_language', $currentRoute->getArgument('_language'));

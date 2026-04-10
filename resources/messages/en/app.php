@@ -68,18 +68,12 @@ return [
   'allowance.or.charge.edit.charge' => 'Edit',
   'allowance.or.charge.index' => 'Index of Allowance or'
     . ' Charges relative to line item',
-  'allowance.or.charge.inv' => 'Invoice Allowance'
-    . ' or Charge',
-  'allowance.or.charge.quote' => 'Quote Allowance'
-    . ' or Charge',
-  'allowance.or.charge.inv.add' => 'Add Invoice Allowance'
-    . ' or Charge',
-  'allowance.or.charge.quote.add' => 'Add Quote Allowance'
-    . ' or Charge',
-  'allowance.or.charge.item.invoice' => 'Invoice Item'
-    . ' Allowance or Charge',
-  'allowance.or.charge.item.quote' => 'Quote Item'
-    . ' Allowance or Charge',
+  'allowance.or.charge.inv' => 'Invoice Allowance or Charge',
+  'allowance.or.charge.quote' => 'Quote Allowance or Charge',
+  'allowance.or.charge.inv.add' => 'Add Invoice Allowance or Charge',
+  'allowance.or.charge.quote.add' => 'Add Quote Allowance or Charge',
+  'allowance.or.charge.item.invoice' => 'Invoice Item Allowance or Charge',
+  'allowance.or.charge.item.quote' => 'Quote Item Allowance or Charge',
   'allowance.or.charge.item.add' => 'Allowance/Charge'
     . ' Add',
   'allowance.or.charge.level' => 'Level (⬅ ️Overall,'
@@ -1192,14 +1186,10 @@ prior to importing and no existing documents e.g. Invoices.',
   'logo' => 'Invoice Logo',
   'logout' => 'Logout',
   'loss' => 'Written off',
-  'mark.invoices.sent.copy' => 'Mark invoices'
-    . ' as sent when copying an invoice',
-  'mark.invoices.sent.pdf' => 'Mark invoices'
-    . ' as sent when PDF is generated',
-  'mark.quotes.sent.pdf' => 'Mark quotes'
-    . ' as sent when PDF is generated',
-  'mark.sent.copy.on' => 'Mark invoices'
-    . ' as sent when copying an Invoice'
+  'mark.invoices.sent.copy' => 'Mark invoices as sent when copying an invoice',
+  'mark.invoices.sent.pdf' => 'Mark invoices as sent when PDF is generated',
+  'mark.quotes.sent.pdf' => 'Mark quotes as sent when PDF is generated',
+  'mark.sent.copy.on' => 'Mark invoices as sent when copying an Invoice'
     . ' is On. It should only be on during development',
   'mark.sent.off' => 'Mark invoices'
     . ' as sent on copying invoices '

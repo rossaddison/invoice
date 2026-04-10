@@ -594,14 +594,13 @@ final class ItemsCommand extends Command
         $this->addInvItems($count);
         $this->addInvItemAllowanceCharges();
         $this->addInvAllowanceCharges();
-        $invAmount = $this->addInvAmount($inv, $summaryTaxesExist, $includeItemTaxesInSummaryTaxSoApplyAfter);
+        $invAmount = $this->addInvAmount($summaryTaxesExist, $includeItemTaxesInSummaryTaxSoApplyAfter);
         $this->invAmount[0] = $invAmount;
         $this->inv[] = $inv;
         $this->invId = +1;
     }
 
     private function addInvAmount(
-        Inv $inv,
         bool $summaryTaxesExist = true,
         bool $includeItemTaxInSummaryTaxSoApplyAfter = true,
     ): InvAmount {
@@ -644,7 +643,6 @@ final class ItemsCommand extends Command
         // Call addInvTaxRates to populate invoice tax rates (returns void)
         if ($summaryTaxesExist) {
             $this->addInvTaxRates(
-                $inv,
                 $includeItemTaxInSummaryTaxSoApplyAfter ? $itemAfterDiscount : 0.00,
                 $includeItemTaxInSummaryTaxSoApplyAfter ? $itemTaxTotalWithAllowanceCharges : 0.00,
             );
@@ -654,7 +652,6 @@ final class ItemsCommand extends Command
 
     /* Create two Summary Table Invoice Tax Rates */
     private function addInvTaxRates(
-        Inv $inv,
         float $invAmountItemSubTotal,
         float $invAmountItemTaxTotal,
     ): void {
@@ -692,14 +689,14 @@ final class ItemsCommand extends Command
             $price = (float) $this->faker->numberBetween(1, 4);
             $invItem->setPrice($price);
             $invItem->setDiscountAmount(1);
-            $invItemAmount = $this->addInvItemAmount($invItem, $price, $quantity, $this->invItemId, $chosenTaxRateId);
+            $invItemAmount = $this->addInvItemAmount($price, $quantity, $this->invItemId, $chosenTaxRateId);
             $this->invItems[] = $invItem;
             $this->invItemAmounts[] = $invItemAmount;
             $this->invItemId = +1;
         }
     }
 
-    private function addInvItemAmount(InvItem $invItem, float $price, float $quantity, int $invItemId, int $chosenTaxRateId): InvItemAmount
+    private function addInvItemAmount(float $price, float $quantity, int $invItemId, int $chosenTaxRateId): InvItemAmount
     {
         $invItemAmount = new InvItemAmount();
         $invItemAmount->setInvItemId($invItemId);

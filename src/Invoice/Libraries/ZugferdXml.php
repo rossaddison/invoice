@@ -10,6 +10,7 @@ use App\Invoice\Entity\InvItem;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use Yiisoft\Html\Html;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 use Doctrine\Common\Collections\ArrayCollection;
 use DOMDocument;
 use DOMElement;
@@ -26,7 +27,12 @@ final class ZugferdXml
      * @param iiaR $iiaR
      * @param InvAmount $inv_amount
      */
-    public function __construct(public sR $sR, public Inv $invoice, public iiaR $iiaR, public InvAmount $inv_amount)
+    public function __construct(public sR $sR,
+        public Inv $invoice,
+        public iiaR $iiaR,
+        public InvAmount $inv_amount,
+        private readonly Translator $translator,
+    )
     {
         $this->items = $this->invoice->getItems();
         $this->currencyCode = $this->sR->getSetting('currency_code');
@@ -73,7 +79,7 @@ final class ZugferdXml
     {
         $node = $doc->createElement('rsm:HeaderExchangedDocument');
         $node->appendChild($doc->createElement('ram:ID', $this->invoice->getNumber() ?? ''));
-        $node->appendChild($doc->createElement('ram:Name', $this->sR->trans('invoice')));
+        $node->appendChild($doc->createElement('ram:Name', $this->translator->translate('invoice')));
         $node->appendChild($doc->createElement('ram:TypeCode', (string) 380));
 
         // IssueDateTime

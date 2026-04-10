@@ -86,7 +86,6 @@ if ($clients) {
         'id' => 'client_id',
         'class' => 'form-control form-control-lg',
         'autofocus' => 'autofocus',
-        'selected' => $s->checkSelect(Html::encode($body['client_id'] ?? ''), $client->getClientId()),
     ])
     ->optionsData($optionsDataClient);
 

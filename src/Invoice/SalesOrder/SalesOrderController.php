@@ -280,16 +280,9 @@ final class SalesOrderController extends BaseController
                      *  @var string $so_label
                      */
                     $so_label = $so_statuses[$status_id]['label'];
-                    return $this->factory->createResponse(
-                        $this->webViewRenderer->renderPartialAsString(
-                        '//invoice/setting/salesorder_successful',
-                        [
-                            'heading' => $so_label,
-                            'message' => $this->translator->translate(
-                                'record.successfully.updated'),
-                            'url' => 'salesorder/view','id' => $so_id,
-                        ],
-                    ));
+                    $this->flashMessage('success', $this->translator->translate(                                                            'record.successfully.updated'));
+                    return $this->webService->getRedirectResponse(
+                                'salesorder/view', ['id' => $so_id]);
                 }
             }
         }

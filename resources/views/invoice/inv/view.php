@@ -6,6 +6,7 @@ use App\Widget\Button;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 
 /**
@@ -46,7 +47,6 @@ use Yiisoft\Html\Tag\Option;
  * @var string $modal_choose_items
  * @var string $modal_choose_tasks
  * @var string $modal_copy_inv
- * @var string $modal_create_recurring
  * @var string $modal_create_credit
  * @var string $modal_delete_inv
  * @var string $modal_delete_items
@@ -220,7 +220,7 @@ if ($readOnly === false && $invEdit && $inv->getStatusId() === 1) {
      echo H::closeTag('div');
     echo H::closeTag('div');
 }
-echo H::openTag('input', [
+echo H::tag('input', '', [
     'type' => 'hidden',
     'id' => '_csrf',
     'name' => '_csrf',
@@ -328,7 +328,7 @@ if ($showButtons
           'aria-hidden' => 'true'
       ]);
       echo H::closeTag('i');
-// Options ...  Peppol Stream Toggle
+// Options ...  Peppol Doc Currency Toggle
       echo ' '
       . H::encode($translator->translate('peppol.doc.currency.toggle')
       . '➡️' . $s->getSetting('peppol_document_currency'));
@@ -493,8 +493,6 @@ if ((in_array($inv->getStatusId(), [1]))) {
     echo H::closeTag('li');
 }
 echo H::openTag('li');
-?>
-<?php
 // Options ... Download PDF
  echo H::openTag('a', [
      'href' => '#inv-to-pdf',
@@ -525,7 +523,7 @@ if ($s->getSetting('pdf_stream_inv') == '1') {
     ]);
      echo H::openTag('i', ['class' => 'bi bi-display']);
      echo H::closeTag('i');
-     echo ' ' . H::encode($translator->translate('pdf.modal') . ' âŒ');
+     echo ' ' . H::encode($translator->translate('pdf.modal') . ' ❌');
     echo H::closeTag('a');
 }
 
@@ -716,23 +714,23 @@ if ($inv->getStatusId() === 1
      echo '<hr>';
      if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
          echo H::openTag('div', ['class' => 'client-phone']);
-          echo $translator->translate('phone')
-                  . ':&nbsp;'
+          echo H::encode($translator->translate('phone'))
+                  . ":\u{00A0}"
                   . H::encode($inv->getClient()?->getClientPhone() ?? '');
          echo H::closeTag('div');
      }
      if ($inv->getClient()?->getClientMobile() ?? '') {
          echo H::openTag('div', ['class' => 'client-mobile']);
-          echo $translator->translate('mobile')
-                  . ':&nbsp;'
+          echo H::encode($translator->translate('mobile'))
+                  . ":\u{00A0}"
                   . H::encode($inv->getClient()?->getClientMobile());
          echo H::closeTag('div');
      }
      if (null !== $inv->getClient()?->getClientEmail()) {
          echo H::openTag('div', ['class' => 'client-email']);
-          echo $translator->translate('email')
-                  . ':&nbsp;'
-                  . ($inv->getClient()?->getClientEmail() ?? '');
+          echo H::encode($translator->translate('email'))
+                  . ":\u{00A0}"
+                  . H::encode($inv->getClient()?->getClientEmail() ?? '');
          echo H::closeTag('div');
      }
      echo '<br>';
@@ -754,7 +752,7 @@ if ($inv->getStatusId() === 1
            echo $translator->translate('invoice') . ' #';
           echo H::closeTag('b');
          echo H::closeTag('label');
-         echo H::openTag('input', [
+         echo H::tag('input', '', [
              'type' => 'text',
              'id' => 'inv_number',
              'class' => 'form-control form-control-lg',
@@ -764,7 +762,6 @@ if ($inv->getStatusId() === 1
              'placeholder' => (strlen($inv->getNumber() ?? '') > 0 ?
                 null : H::encode($translator->translate('not.set')))
          ]);
-         echo H::closeTag('input');
         echo H::closeTag('div');
         echo H::openTag('div', ['class' => 'invoice-properties has-feedback']);
          echo H::openTag('label', ['for' => 'date_created']);
@@ -773,13 +770,12 @@ if ($inv->getStatusId() === 1
           echo H::closeTag('b');
          echo H::closeTag('label');
          echo H::openTag('div', ['class' => 'input-group']);
-          echo H::openTag('input', [
+          echo H::tag('input', '', [
               'id' => 'date_created',
               'disabled' => true,
               'class' => 'form-control form-control-lg',
               'value' => $inv->getDateCreated()->format('Y-m-d')
           ]);
-          echo H::closeTag('input');
           echo H::openTag('span', ['class' => 'input-group-text']);
            echo H::openTag('i', ['class' => 'bi bi-calendar']);
            echo H::closeTag('i');
@@ -793,13 +789,12 @@ if ($inv->getStatusId() === 1
           echo H::closeTag('b');
          echo H::closeTag('label');
          echo H::openTag('div', ['class' => 'input-group']);
-          echo H::openTag('input', [
+          echo H::tag('input', '', [
               'id' => 'date_supplied',
               'disabled' => true,
               'class' => 'form-control form-control-lg',
               'value' => $inv->getDateSupplied()->format('Y-m-d')
           ]);
-          echo H::closeTag('input');
           echo H::openTag('span', ['class' => 'input-group-text']);
            echo H::openTag('i', ['class' => 'bi bi-calendar']);
            echo H::closeTag('i');
@@ -814,13 +809,12 @@ if ($vat === '1') {
       echo H::closeTag('b');
      echo H::closeTag('label');
      echo H::openTag('div', ['class' => 'input-group']);
-      echo H::openTag('input', [
+      echo H::tag('input', '', [
           'id' => 'date_tax_point',
           'disabled' => true,
           'class' => 'form-control form-control-lg',
           'value' => $inv->getDateTaxPoint()->format('Y-m-d')
       ]);
-      echo H::closeTag('input');
       echo H::openTag('span', ['class' => 'input-group-text']);
        echo H::openTag('i', ['class' => 'bi bi-calendar']);
        echo H::closeTag('i');
@@ -835,7 +829,7 @@ if ($vat === '1') {
           echo H::closeTag('b');
          echo H::closeTag('label');
          echo H::openTag('div', ['class' => 'input-group']);
-          echo H::openTag('input', [
+          echo H::tag('input', '', [
               'name' => 'inv_date_due',
               'id' => 'inv_date_due',
               'disabled' => true,
@@ -843,7 +837,6 @@ if ($vat === '1') {
               'value' => !is_string($dateDue = $inv->getDateDue()) ?
               $dateDue->format('Y-m-d') : ''
           ]);
-          echo H::closeTag('input');
           echo H::openTag('span', ['class' => 'input-group-text']);
            echo H::openTag('i', ['class' => 'bi bi-calendar']);
            echo H::closeTag('i');
@@ -851,18 +844,15 @@ if ($vat === '1') {
          echo H::closeTag('div');
         echo H::closeTag('div');
         echo H::openTag('div');
-?>
-<?php
-    /**
-     * @var App\Invoice\Entity\CustomField $custom_field
-     */
-    foreach ($custom_fields as $custom_field): ?>
-        <?php if ($custom_field->getLocation() !== 1) {
-            continue;
-        } ?>
-        <?php $cvH->printFieldForView($custom_field, $form, $inv_custom_values); ?>
- <?php endforeach; ?>
-<?php
+        /**
+         * @var App\Invoice\Entity\CustomField $custom_field
+         */
+        foreach ($custom_fields as $custom_field) {
+            if ($custom_field->getLocation() !== 1) {
+                continue;
+            }
+            $cvH->printFieldForView($custom_field, $form, $inv_custom_values);
+        }
         echo H::closeTag('div');
        echo H::closeTag('div');
        echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']);
@@ -903,18 +893,17 @@ if ($inv->getPaymentMethod() !== 0) {
         'class' => 'form-control form-control-lg',
         'disabled' => 'disabled'
     ]);
-     echo H::openTag('option', ['value' => '0']);
-      echo H::encode($translator->translate('select.payment.method'));
-     echo H::closeTag('option');
+     echo new Option()
+      ->value('0')
+      ->content(H::encode($translator->translate('select.payment.method')));
     /**
      * @var App\Invoice\Entity\PaymentMethod $payment_method
      */
     foreach ($payment_methods as $payment_method) {
-        $s->checkSelect((string) $inv->getPaymentMethod(),
-                $payment_method->getId());
-        echo H::openTag('option', ['value' => $payment_method->getId()]);
-         echo $payment_method->getName() ?? '';
-        echo H::closeTag('option');
+        echo new Option()
+         ->value($payment_method->getId())
+         ->selected((string) $inv->getPaymentMethod() === $payment_method->getId())
+         ->content($payment_method->getName() ?? '');
     }
     echo H::closeTag('select');
 } else {
@@ -924,9 +913,9 @@ if ($inv->getPaymentMethod() !== 0) {
         'class' => 'form-control form-control-lg',
         'disabled' => true
     ]);
-     echo H::openTag('option', ['value' => '0']);
-      echo H::encode($translator->translate('none'));
-     echo H::closeTag('option');
+     echo new Option()
+      ->value('0')
+      ->content(H::encode($translator->translate('none')));
     echo H::closeTag('select');
 }
         echo H::closeTag('div');
@@ -961,14 +950,13 @@ if (($inv->getStatusId() !== 1) && ($invEdit)) {
        echo H::encode($translator->translate('password'));
       echo H::closeTag('b');
      echo H::closeTag('label');
-     echo H::openTag('input', [
+     echo H::tag('input', '', [
          'type' => 'text',
          'id' => 'inv_password',
          'class' => 'form-control form-control-lg',
          'disabled' => true,
          'value' => H::encode($form->getPassword() ?? '')
      ]);
-     echo H::closeTag('input');
     echo H::closeTag('div');
     echo H::openTag('div', ['class' => 'invoice-properties']);
      echo H::openTag('div', ['class' => 'form-group']);
@@ -978,7 +966,7 @@ if (($inv->getStatusId() !== 1) && ($invEdit)) {
        echo H::closeTag('b');
       echo H::closeTag('label');
       echo H::openTag('div', ['class' => 'input-group']);
-       echo H::openTag('input', [
+       echo H::tag('input', '', [
            'type' => 'text',
            'id' => 'guest-url',
            'name' => 'guest-url',
@@ -986,7 +974,6 @@ if (($inv->getStatusId() !== 1) && ($invEdit)) {
            'class' => 'form-control form-control-lg',
            'value' => 'inv/url_key/' . $inv->getUrlKey()
        ]);
-       echo H::closeTag('input');
        echo H::openTag('span', [
            'class' => 'input-group-text to-clipboard cursor-pointer',
            'data-clipboard-target' => '#guest-url'
@@ -999,7 +986,7 @@ if (($inv->getStatusId() !== 1) && ($invEdit)) {
     echo H::closeTag('div');
 }
     echo H::openTag('div');
-     echo '<br>';
+     echo H::tag('br', '');
 // draft=>1 sent=>2 viewed=>3 paid=>4 overdue=>5
 $statusImages = [
     4 => ['/img/paid.png', 'paid'],
@@ -1016,11 +1003,10 @@ $statusImages = [
 $statusId = $inv->getStatusId();
 if ($statusId !== null && isset($statusImages[$statusId])) {
     $statusInfo = $statusImages[$statusId];
-    echo H::openTag('img', [
+    echo H::tag('img', '', [
         'src' => $statusInfo[0],
         'alt' => $translator->translate($statusInfo[1])
     ]);
-    echo H::closeTag('img');
 }
     echo H::closeTag('div');
 if (!empty($inv->getSoId())) {
@@ -1035,7 +1021,7 @@ if (!empty($inv->getSoId())) {
      );
     echo H::closeTag('div');
 }
-        echo H::openTag('input', [
+        echo H::tag('input', '', [
             'type' => 'text',
             'id' => 'dropzone_client_id',
             'readonly' => true,
@@ -1043,7 +1029,6 @@ if (!empty($inv->getSoId())) {
             'value' => $inv->getClient()?->getClientId(),
             'hidden' => true
         ]);
-        echo H::closeTag('input');
        echo H::closeTag('div');
       echo H::closeTag('div');
      echo H::closeTag('div');

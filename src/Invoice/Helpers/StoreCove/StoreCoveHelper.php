@@ -1039,31 +1039,31 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         /**
          * @var string $contact['Name']
          */
-        $Name = $contact['Name'] ?? '';
+        $name = $contact['Name'] ?? '';
         /**
          * @var string $contact['FirstName']
          */
-        $FirstName = $contact['FirstName'] ?? '';
+        $firstName = $contact['FirstName'] ?? '';
         /**
          * @var string $contact['LastName']
          */
-        $LastName = $contact['LastName'] ?? '';
+        $lastName = $contact['LastName'] ?? '';
         /**
          * @var string $contact['Telephone']
          */
-        $Telephone = $contact['Telephone'] ?? '';
+        $telephone = $contact['Telephone'] ?? '';
         /**
          * @var string $contact['ElectronicMail']
          */
-        $ElectronicMail = $contact['ElectronicMail'] ?? '';
+        $electronicMail = $contact['ElectronicMail'] ?? '';
         return new Contact(
-            $Name,
-            $FirstName,
-            $LastName,
-            $Telephone,
+            $name,
+            $firstName,
+            $lastName,
+            $telephone,
             // Telefax
             '',
-            $ElectronicMail,
+            $electronicMail,
         );
     }
 
@@ -1784,7 +1784,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
             $this->s->decode($this->s->getSetting('gateway_storecove_apiKey'));
         $country_code_identifier = $this->s->getSetting('storecove_country');
         $site = curl_init();
-        if ($site != false) {
+        if ($site) {
             curl_setopt($site,
                     CURLOPT_URL, 'https://api.storecove.com/api/v2/legal_entities');
             curl_setopt($site, CURLOPT_POST, true);

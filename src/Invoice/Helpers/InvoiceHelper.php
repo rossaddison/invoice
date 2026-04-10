@@ -7,11 +7,14 @@ namespace App\Invoice\Helpers;
 use App\Invoice\Setting\SettingRepository as SR;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Session\SessionInterface;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Session\Flash\Flash;
 
 class InvoiceHelper
 {
-    public function __construct(private readonly SR $s, private readonly SessionInterface $session)
+    public function __construct(private readonly SR $s,
+            private readonly SessionInterface $session,
+            private readonly TranslatorInterface $translator)
     {
     }
 
@@ -78,16 +81,16 @@ class InvoiceHelper
         }
 
         if (!$isEur && $amount > 99999999.95) {
-            $this->flash('danger', $this->s->trans('invalid_amount'));
+            $this->flash('danger', $this->translator->translate('invalid.amount'));
         } elseif ($isEur && $amount > 99999999.99) {
-            $this->flash('danger', $this->s->trans('invalid_amount'));
+            $this->flash('danger', $this->translator->translate('invalid.amount'));
         }
 
         $amountLine = sprintf('%010d', (float) $amount * 100.00);
         $checkSlAmount = $this->invoiceRecMod10($slipType . $amountLine);
 
         if (!preg_match("/\d{2}-\d{1,6}-\d{1}/", (string) $subNumb)) {
-            $this->flash('danger', $this->s->trans('Invalid subscriber number'));
+            $this->flash('danger', $this->translator->translate('invalid.subscriber.number'));
         }
 
         $subNumb_exploded = explode('-', (string) $subNumb);

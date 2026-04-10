@@ -265,9 +265,8 @@ $columns = [
             use ($translator): string {
             $quote = $context->data;
             if (($quote instanceof Quote) && (null !== ($id = $quote->getId()))) {
-                return  new Input()
-                       ->type('checkbox')
-                       ->addAttributes([
+                return  $input
+                        ->addAttributes([
                            'id' => $id,
                            'name' => 'checkbox[]',
                            'data-bs-toggle' => 'tooltip',
@@ -330,7 +329,7 @@ $columns = [
             },
             attributes: static function (Quote $model) use ($translator): array {
                 return ($model->getSoId() == 0) && ($model->getInvId() == 0)
-                ?  
+                ?
                 [
                     'onclick' => "return confirm("
                     . (string) json_encode($translator->translate('delete.record.warning'))
@@ -339,19 +338,19 @@ $columns = [
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('delete.quote.single'),
                     'class' => 'btn btn-outline-danger btn-sm',
-                ] 
+                ]
                 : [
                     'disabled' => true,
                     'data-bs-toggle' => 'tooltip',
                     'title' => $translator->translate('delete.quote.derived'),
                     'class' => 'btn btn-secondary btn-sm disabled',
-                ];        
+                ];
             },
         ),
     ]),
     new DataColumn(
         property: 'filterStatus',
-        header: '<span data-bs-toggle="tooltip" data-bs-html="false" title="' . 
+        header: '<span data-bs-toggle="tooltip" data-bs-html="false" title="' .
                 Html::encode('🌎 ' . $translator->translate('all') . '<br/>🗋 '
                 . $translator->translate('draft') . '<br/>📨 '
                 . $translator->translate('sent') . '<br/>👀 '
@@ -607,7 +606,7 @@ $toolbarString
     .  new Div()->addClass('float-start')->content(
          new H4()
             ->addClass('me-3 d-inline-block')
-            ->content($translator->translate('quote')) 
+            ->content($translator->translate('quote'))
         . Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
         . $allVisible
         . $toolbarReset
@@ -641,7 +640,7 @@ $toolbarString
             )
             ->encode(false)
             ->render()
-        . ($enableGrouping ? 
+        . ($enableGrouping ?
              new Div()
                 ->addClass('btn-group ms-2')
                 ->addAttributes(['role' => 'group'])

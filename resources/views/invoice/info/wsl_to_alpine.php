@@ -38,8 +38,8 @@ declare(strict_types=1);
          mysql -u root -p</b>
  <b>12 b. Advisable to make sure the phpMyAdmin endpoint is not visible and that
         phpMyAdmin is not used even with ipaddress restrictions and aliasing.</b>
- <b>23. Finding where phpmyadmin is installed: 
-        find / -name "index.php" -path "*/phpmyadmin/*" 2>/dev/null</b>          
+ <b>23. Finding where phpmyadmin is installed:
+        find / -name "index.php" -path "*/phpmyadmin/*" 2>/dev/null</b>
  <b>13. Listing Multiple Stashes:
          git stash list</b>
  <b>14. Getting out of the stash list whilst viewing it by pressing q:
@@ -88,12 +88,12 @@ declare(strict_types=1);
         conflict with wampserver:
         wsl --terminate Ubuntu/Alpine
  </b>
- <b>23. Update ssl.conf on apache2: 
+ <b>23. Update ssl.conf on apache2:
         sudo nano /etc/apache2/conf.d/ssl.conf
         
         Test and restart Apache2:
         httpd -t && rc-service apache2 restart
- </b>             
+ </b>
 </p>
 </pre>
 </div>

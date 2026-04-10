@@ -47,7 +47,7 @@
         "doctrine/collections": ">2.6.0",
         "doctrine/inflector": ">=2.2.0",
         "fakerphp/faker": "^1.24.1",
-        "google/cloud-translate": "^2.2.0",
+        "google/cloud-translate": "^2.3.0",
         "guzzlehttp/guzzle": ">=7.10.0",
         "guzzlehttp/psr7": ">=2.9.0",
         "httpsoft/http-message": "^1.1.6",
@@ -59,7 +59,7 @@
         "php-http/curl-client": "^2.4.0",
         "php-http/guzzle7-adapter": "^1.1",
         "phpbench/phpbench": ">=84",
-        "phpseclib/phpseclib": ">=3.0.50",
+        "phpseclib/phpseclib": ">=3.0.51",
         "php-standard-library/php-standard-library": ">=5.5",
         "phptg/bot-api": "^0.18.1",
         "promphp/prometheus_client_php": ">=2.15.0",
@@ -143,7 +143,7 @@
         "yiisoft/yii-runner-console": "^2.2.1",
         "yiisoft/yii-runner-http": "^3.2.1",
         "yiisoft/yii-view-renderer": "^7.4.1",
-        "zircote/swagger-php": ">=6.0.6"
+        "zircote/swagger-php": ">=6.1.0"
     },    
     "require-dev": {
         "codeception/c3": "^2.9",

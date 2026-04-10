@@ -817,53 +817,53 @@ if ((null !== $currentPath) && !$isGuest) {
             ->togglerContent('😀')
             ->togglerSize(ButtonSize::LARGE)
             ->items(
-                DropdownItem::link('✅', 
+                DropdownItem::link('✅',
                     'https://emojipedia.org/check-mark-button',
                     $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('➕', 
+                DropdownItem::link('➕',
                     'https://emojipedia.org/plus', $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('❌', 
+                DropdownItem::link('❌',
                     'https://emojipedia.org/cross-mark', $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('🛈', 
+                DropdownItem::link('🛈',
                     'https://emojipedia.org/'
                     . 'circled-information-source', $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('⬅', 
+                DropdownItem::link('⬅',
                     'https://emojipedia.org/left-arrow', $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('➡', 
+                DropdownItem::link('➡',
                     'https://emojipedia.org/right-arrow', $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('↔️', 
+                DropdownItem::link('↔️',
                     'https://emojipedia.org/left-right-arrow', $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('🖉', 
+                DropdownItem::link('🖉',
                     'https://emojipedia.org/lower-left-pencil', $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('🔘', 
+                DropdownItem::link('🔘',
                     'https://emojipedia.org/radio-button', $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('☑️', 
+                DropdownItem::link('☑️',
                     'https://emojipedia.org/check-box-with-check', $debugMode,
                     false, itemAttributes: $itemFontArray +
                         ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('🐘', 
+                DropdownItem::link('🐘',
                     'https://emojipedia.org/elephant', $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),
-                DropdownItem::link('⚙️', 
+                DropdownItem::link('⚙️',
                     'https://emojipedia.org/gear', $debugMode,
                     false, itemAttributes: $itemFontArray +
                     ['style' => 'background-color: #ffcccb']),

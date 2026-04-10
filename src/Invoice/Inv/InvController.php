@@ -108,9 +108,9 @@ final class InvController extends BaseController
 {
     protected string $controllerName = 'invoice/inv';
 
-    private readonly DateHelper $date_helper;
-    private readonly NumberHelper $number_helper;
-    private readonly PdfHelper $pdf_helper;
+    private readonly DateHelper $dateHelper;
+    private readonly NumberHelper $numberHelper;
+    private readonly PdfHelper $pdfHelper;
 
     public function __construct(
         private readonly DataResponseFactoryInterface $factory,
@@ -138,9 +138,9 @@ final class InvController extends BaseController
     ) {
         parent::__construct($webService, $userService, $translator, $webViewRenderer,
                 $session, $sR, $flash);
-        $this->date_helper = new DateHelper($sR);
-        $this->number_helper = new NumberHelper($sR);
-        $this->pdf_helper = new PdfHelper($sR, $session, $translator);
+        $this->dateHelper = new DateHelper($sR);
+        $this->numberHelper = new NumberHelper($sR);
+        $this->pdfHelper = new PdfHelper($sR, $session, $translator);
     }
 
     private function activeUser(string $client_id, UR $uR, UCR $ucR, UIR $uiR):
@@ -292,15 +292,15 @@ $temporary_file = $_FILES['InvAttachmentsForm']['tmp_name']['attachFile'];
 /** @var string $_FILES['InvAttachmentsForm']['name']['attachFile'] */
 $original_file_name = preg_replace(
     '/\s+/', '_', $_FILES['InvAttachmentsForm']['name']['attachFile']);
-                        if (($original_file_name != false)
+                        if (null!==($originalFileName = $original_file_name) && (strlen($originalFileName) > 0)
                             && (strlen($temporary_file) > 0)) {
                             $target_path_with_filename =
                                 $targetPath . '/' . $url_key . '_'
-                                    . $original_file_name;
+                                    . $originalFileName;
                             if ($this->attachmentMoveTo($temporary_file,
                                     $target_path_with_filename, $client_id,
                                         $url_key,
-                                    $original_file_name, $uPR)) {
+                                    $originalFileName, $uPR)) {
                                 return $this->attachmentSuccessfullyCreated($inv_id);
                             }
                             return $this->attachmentNoFileUploaded($inv_id);
@@ -948,7 +948,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
 
     private function editInputAttributesPaymentMethod(InvForm $form): array
     {
-        if ($form->getIsReadOnly() == true && $form->getStatusId() == 4) {
+        if ($form->getIsReadOnly() && $form->getStatusId() == 4) {
             $inputAttributesPaymentMethod = [
                 'class' => 'form-control form-control-lg',
                 'disabled' => 'disabled',
@@ -1006,9 +1006,9 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
             $endDate = $delivery->getEndDate();
             if (null != $delivery_id) {
                 $optionsDataDelivery[$delivery_id]
-                = $startDate->format($this->date_helper->style())
+                = $startDate->format($this->dateHelper->style())
                 . ' ----- '
-                . $endDate->format($this->date_helper->style())
+                . $endDate->format($this->dateHelper->style())
                 . ' ---- '
                 . $this->sR->getSetting('stand_in_code')
                 . ' ---- '
@@ -1483,7 +1483,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                 // true => invoice ie. not quote
                 // If $stream is false => pdfhelper->generate_inv_pdf =>
                 // mpdfhelper->pdf_Create => filename returned
-                $pdf_template_target_path = $this->pdf_helper->generateInvPdf(
+                $pdf_template_target_path = $this->pdfHelper->generateInvPdf(
                     $inv_id, $inv->getUserId(), $stream, true, $so, $inv_amount,
                         $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR,
                             $aciiR, $iiaR, $iR, $itrR, $uiR, $webViewRenderer);
@@ -1872,13 +1872,13 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
         $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ?
                 $iaR->repoInvquery((int) $inv_id) : null);
         if ($inv_amount) {
-            $custom = (($include === 1) ? true : false);
+            $custom = ($include === 1);
             $inv_custom_values = $this->invCustomValues($inv_id, $icR);
             $inv = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
                 $so = ($inv->getSoId() ? $soR->repoSalesOrderLoadedquery(
                     $inv->getSoId()) : null);
-                $html = $this->pdf_helper->generateInvHtml(
+                $html = $this->pdfHelper->generateInvHtml(
                     $inv_id,
                     $inv->getUserId(),
                     $custom,
@@ -2101,9 +2101,9 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                     $this->indexModalCopyInvMultiple(),
                 'sortString' => $querySort ?? '-id',
                 'viewRenderer' => $this->webViewRenderer,
-                'visible' => $visible == '0' ? false : true,
+                'visible' => $visible !== '0',
                 'visibleToggleInvSentLogColumn' =>
-                    $visibleToggleInvSentLogColumn == '0' ? false : true,
+                    $visibleToggleInvSentLogColumn !== '0',
                 'locale' => new \Yiisoft\I18n\Locale($_language),
             ];
             return $this->webViewRenderer->render('index', $parameters);
@@ -2152,7 +2152,7 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
             $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ?
                 $iaR->repoInvquery((int) $inv_id) : null);
             if ($inv_amount) {
-                $custom = (($include === 1) ? true : false);
+                $custom = ($include === 1);
                 $inv_custom_values = $this->invCustomValues($inv_id, $icR);
                 // session is passed to the pdfHelper and will be used for the
                 // locale ie. $session->get('_language') or the print_language
@@ -3130,7 +3130,7 @@ echo file_get_contents($temp_aliase, true);
                         $this->sR->getSetting('mark_invoices_sent_copy') ===
                             '1' ? 2 : 1,
                         'is_read_only' => $this->sR->getSetting(
-                            'mark_invoices_sent_copy') === '1' ? true : false,
+                            'mark_invoices_sent_copy') === '1',
                         'password' => '',
                         // date_supplied and date_tax_point will change as soon
                         // as goods are supplied and a supplied/service date
@@ -3406,7 +3406,7 @@ echo file_get_contents($temp_aliase, true);
 
     private function displayEditDeleteButtons(bool $read_only): bool
     {
-        if (($read_only === false)
+        if (!$read_only
                 && ($this->sR->getSetting('disable_read_only') === (string) 0)) {
             return true;
         }
@@ -3929,7 +3929,7 @@ echo file_get_contents($temp_aliase, true);
                 new InvAllowanceChargeForm($invAllowanceCharge, (int) $invoice);
             $read_only = $inv->getIsReadOnly();
             $this->session->set('inv_id', $inv->getId());
-            $this->number_helper->calculateInv(
+            $this->numberHelper->calculateInv(
                 (string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR,
                     $itrR, $iaR, $iR, $pymR);
             $inv_amount = (($iaR->repoInvAmountCount((int) $inv->getId()) > 0) ?
@@ -3938,8 +3938,8 @@ echo file_get_contents($temp_aliase, true);
             if ($inv_amount) {
                 $inv_custom_values = $this->invCustomValues(
                     (string) $this->session->get('inv_id'), $icR);
-                $is_recurring = ($irR->repoCount(
-                    (string) $this->session->get('inv_id')) > 0 ? true : false);
+                $is_recurring = $irR->repoCount(
+                    (string) $this->session->get('inv_id')) > 0;
                 $show_buttons = $this->displayEditDeleteButtons($read_only);
                 // Each file attachment is recorded in Upload table with
                 // invoice's url_key, and client_id
@@ -3969,7 +3969,7 @@ echo file_get_contents($temp_aliase, true);
                     'inv' => $inv,
                     // Determine if a 'viewInv' user has 'editInv' permission
                     'invEdit' => $this->userService->hasPermission(
-                            Permissions::EDIT_INV) ? true : false,
+                            Permissions::EDIT_INV),
                     'inv_custom_values' => $inv_custom_values,
                     'isRecurring' => $is_recurring,
                     'inv_statuses' => $iR->getStatuses($this->translator),
@@ -3978,10 +3978,9 @@ echo file_get_contents($temp_aliase, true);
                     // read-only view to go to the Pay now section. If a custom
                     // field exists for payments, use it on the payment form.
                     'paymentCfExist' =>
-                        $cfR->repoTableCountquery('payment_custom') > 0 ?
-                        true : false,
+                        $cfR->repoTableCountquery('payment_custom') > 0,
                     'paymentView' => $this->userService->hasPermission(
-                        Permissions::VIEW_PAYMENT) ? true : false,
+                        Permissions::VIEW_PAYMENT),
                     'payment_methods' => $pmR->findAllWithActive(1),
                     'payments' => $pymR->repoCount(
                         (string) $this->session->get('inv_id')) > 0 ?
@@ -4006,8 +4005,8 @@ echo file_get_contents($temp_aliase, true);
                         'form' => new InvItemForm(
                             new InvItem(), (int) $this->session->get('inv_id')),
                         'inv' => $iR->repoInvLoadedquery((string) $invoice),
-                        'isRecurring' => ($irR->repoCount(
-                            (string) $invoice) > 0) ? true : false,
+                        'isRecurring' => $irR->repoCount(
+                            (string) $invoice) > 0,
                         'inv_id' => $this->session->get('inv_id'),
                         'invItemAllowancesCharges' => $aciiR->repoACIquery(
                             (string) $this->session->get('inv_id')),
@@ -4067,8 +4066,8 @@ echo file_get_contents($temp_aliase, true);
                                 '//invoice/task/partial_task_table_modal', [
                                 'tasks' => $taskR->repoTaskStatusquery(3),
                                 'projectR' => $prjctR,
-                                'dateHelper' => $this->date_helper,
-                                'numberHelper' => $this->number_helper,
+                                'dateHelper' => $this->dateHelper,
+                                'numberHelper' => $this->numberHelper,
                             ]),
                             'default_item_tax_rate' =>
                             $this->sR->getSetting('default_item_tax_rate')
@@ -4380,7 +4379,7 @@ echo file_get_contents($temp_aliase, true);
     {
         $inv = $this->inv($id, $iR, false);
         if ($inv) {
-            $draft = ($inv->getStatusId() == '1' ? true : false);
+            $draft = $inv->getStatusId() == '1';
             $inv_tax_rates = (($itrR->repoCount(
                 (string) $this->session->get('inv_id')) > 0) ?
                     $itrR->repoInvquery((string) $this->session->get('inv_id'))
@@ -4407,7 +4406,7 @@ echo file_get_contents($temp_aliase, true);
                 // Only tasks with complete or status of 3 are made available for selection
                 'tasks' => $taskR->repoTaskStatusquery(3),
                 'userCanEdit' => $this->userService->hasPermission(
-                    Permissions::EDIT_INV) ? true : false,
+                    Permissions::EDIT_INV),
                 'invItems' => $iiR->repoInvquery(
                     (string) $this->session->get('inv_id')),
                 'invItemAmountR' => $iiaR,

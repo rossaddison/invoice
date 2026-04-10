@@ -187,7 +187,7 @@ class PdfHelper
                 }
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 $filename = $this->s->getSetting('quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string) random_int(0, 10));
                 return $mpdfhelper->pdfCreate($html, $filename, $stream, $quote->getPassword(), $this->s, null, null, false, false, [], $quote);
             }
@@ -311,7 +311,7 @@ class PdfHelper
                 }
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 $filename = $translator->translate('salesorder') . '_' . str_replace(['\\', '/'], '_', $so->getNumber() ?? (string) random_int(0, 10));
                 return $mpdfhelper->pdfCreate($html, $filename, $stream, $so->getPassword(), $this->s, null, null, false, false, [], $so);
             }
@@ -492,10 +492,10 @@ class PdfHelper
                 $html = $this->generateInvHtml($inv_id, $user_id, $custom, $so, $inv_amount, $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $inv, $itrR, $uiR, $webViewRenderer);
                 // Set the print language to null for future use
                 $this->session->set('print_language', '');
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 $include_zugferd = $this->s->getSetting('include_zugferd') === '0' ? false : true;
                 if ($include_zugferd && null !== $inv_amount) {
-                    $z = new ZugFerdHelper($this->s, $iiaR, $inv_amount);
+                    $z = new ZugFerdHelper($this->s, $iiaR, $inv_amount, $this->translator);
                     $associatedFiles = [
                         [
                             'name' => 'ZUGFeRD-invoice.xml',
@@ -508,7 +508,7 @@ class PdfHelper
                 } else {
                     $associatedFiles = [];
                 }
-                $filename = $this->s->trans('invoice') . '_' . str_replace(['\\', '/'], '_', $inv->getNumber() ?? (string) random_int(0, 10));
+                $filename = $this->translator->translate('invoice') . '_' . str_replace(['\\', '/'], '_', $inv->getNumber() ?? (string) random_int(0, 10));
                 //$isInvoice is assigned to true as it is an invoice
                 // If stream is true return the pdf as a string using mpdf otherwise save to local file and
                 // return the filename inclusive target_path to be used to attach to email attachments

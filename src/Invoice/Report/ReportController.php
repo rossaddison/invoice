@@ -78,7 +78,7 @@ class ReportController extends BaseController
                 'numberHelper' => new NumberHelper($this->sR),
                 'dueInvoices' => $this->invoiceAgingDueInvoices($iaR) ?: [],
             ];
-            $mpdfhelper = new MpdfHelper();
+            $mpdfhelper = new MpdfHelper($this->translator);
             // Forth parameter $password is empty because these reports are intended for management only
             // Sixth parameter $isInvoice is false because reports and not Invoices are being generated
             // Last parameter $quote_or_invoice is false because reports are being generated which are not meant for clients
@@ -261,7 +261,7 @@ class ReportController extends BaseController
                     'dateHelper' => $dateHelper,
                     'numberHelper' => new NumberHelper($this->sR),
                 ];
-                $mpdfHelper = new MpdfHelper();
+                $mpdfHelper = new MpdfHelper($this->translator);
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfHelper->pdfCreate(
                     $this->webViewRenderer->renderPartialAsString('//invoice/report/payment_history', $data),
@@ -362,7 +362,7 @@ class ReportController extends BaseController
                     'numberHelper' => new NumberHelper($this->sR),
                     'clientHelper' => new ClientHelper($this->sR),
                 ];
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdfCreate(
                     $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_client', $data),
@@ -486,7 +486,7 @@ class ReportController extends BaseController
                     'results' => $this->salesByProductReport($pR, $iR, $dateHelper->dateToMysql($from_date), $dateHelper->dateToMysql($to_date), $iiaR),
                     'numberHelper' => new NumberHelper($this->sR),
                 ];
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdfCreate(
                     $this->webViewRenderer->renderPartialAsString('///invoice/report/sales_by_product', $data),
@@ -599,7 +599,7 @@ class ReportController extends BaseController
                     'results' => $this->salesByTaskReport($taskR, $iR, $dateHelper->dateToMysql($from_date), $dateHelper->dateToMysql($to_date), $iiaR),
                     'numberHelper' => new NumberHelper($this->sR),
                 ];
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 /** @psalm-suppress MixedReturnStatement */
                 return $mpdfhelper->pdfCreate(
                     $this->webViewRenderer->renderPartialAsString('//invoice/report/sales_by_task', $data),
@@ -709,7 +709,7 @@ class ReportController extends BaseController
                     'n' => new NumberHelper($this->sR),
                     'clienthelper' => new ClientHelper($this->sR),
                 ];
-                $mpdfhelper = new MpdfHelper();
+                $mpdfhelper = new MpdfHelper($this->translator);
                 // Forth parameter $password is empty because these reports are intended for management only
                 // Sixth parameter $isInvoice is false because reports and not Invoices are being generated
                 // Last parameter $quote_or_invoice is false because reports are being generated which are not meant for clients

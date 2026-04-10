@@ -528,9 +528,9 @@ final class PaymentInformationController
                                     $invoice->getDateDue()->format('Y-m-d'))
                                                     < time() ? true : false);
                     if ($balance > 0 && $total > 0) {
-                        $payment_method_name = null !== $payment_method_for_this_invoice
+                        $payment_method_name = (null !== $payment_method_for_this_invoice)
                             ? ($payment_method_for_this_invoice->getName() ?? '')
-                            : '';                        
+                            : '';
                         return $this->pciCompliantGatewayInForms(
                             $d,
                             $request,
@@ -774,8 +774,7 @@ final class PaymentInformationController
         // Return the view
         $braintree_pci_view_data = [
             'alert'                  => $this->alert(),
-            'return_url'             => 
-            ['paymentinformation/braintree_complete', ['url_key' => $url_key]],
+            'return_url'             => ['paymentinformation/braintree_complete', ['url_key' => $url_key]],
             'balance'                => $balance,
             'body'                   => $request->getParsedBody() ?? [],
             'client_on_invoice'      => $cR->repoClientquery($invoice->getClientId()),
@@ -793,7 +792,7 @@ final class PaymentInformationController
                 ),
             'payment_method' => $payment_method_for_this_invoice,
             'total'          => $total,
-            'action'         => 
+            'action'         =>
             ['paymentinformation/form', [
                 'url_key' => $url_key,
                 'gateway' => 'Braintree']],
@@ -946,7 +945,7 @@ final class PaymentInformationController
         $mollieClient = new MollieClient();
         // Return the view
         if ('1' === $this->sR->getSetting('gateway_mollie_enabled')
-                && (false == $this->mollieSetTestOrLiveApiKey($mollieClient))) {
+                && (!$this->mollieSetTestOrLiveApiKey($mollieClient))) {
             $this->flashMessage('warning',
                     $this->translator->translate(
                             'payment.gateway.mollie.api.key.needs.to.be.setup'));
@@ -954,7 +953,7 @@ final class PaymentInformationController
             return $this->webService->getNotFoundResponse();
         }
         if ('1' === $this->sR->getSetting('gateway_mollie_enabled')
-                && (true == $this->mollieSetTestOrLiveApiKey($mollieClient))) {
+                && ($this->mollieSetTestOrLiveApiKey($mollieClient))) {
             $this->flashMessage('success',
                     $this->translator->translate(
                             'payment.gateway.mollie.api.key.has.been.setup'));
@@ -1163,7 +1162,7 @@ final class PaymentInformationController
                                 '//invoice/paymentinformation/payment_message',
                                 [
                                     'heading'     => $heading,
-                                    'message'     => 
+                                    'message'     =>
                                         $this->translator->translate('payment')
                                         . ':'
                                         . $this->translator->translate('complete')
@@ -1572,6 +1571,6 @@ final class PaymentInformationController
         if (null !== ($invoice = $this->iR->repoUrlKeyGuestLoaded($urlKey))) {
             $invoice->setPaymentMethod(4);
             $this->iR->save($invoice);
-        }     
+        }
     }
 }

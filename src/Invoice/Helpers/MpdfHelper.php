@@ -11,6 +11,7 @@ use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\Quote;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Files\FileHelper;
+use Yiisoft\Translator\TranslatorInterface as Translator;
 
 /**
  * \Mpdf\Output\Destination::INLINE, or "I"
@@ -153,6 +154,8 @@ class MpdfHelper
         'ignore_invalid_utf8' => true,
         'tabSpaces' => 4,
     ];
+    
+    public function __construct(private readonly Translator $translator){}
 
     /**
      * @param string $html
@@ -187,7 +190,7 @@ class MpdfHelper
         $aliases = $this->ensureUploadsFolderExists($sR);
         $archived_file = $aliases->get('@uploads') . $sR::getUploadsArchiveholderRelativeUrl() . '' . date('Y-m-d') . '_' . $filename . '.pdf';
         $title = $sR->getSetting('pdf_archive_inv') == '1' ? $archived_file : $filename . '.pdf';
-        $start_mpdf = $this->initializePdf($password, $sR, $title, $quote_or_invoice, $iiaR, $inv_amount, $aliases, $zugferd_invoice, $associated_files);
+        $start_mpdf = $this->initializePdf($password, $sR, $title, $quote_or_invoice, $iiaR, $inv_amount, $zugferd_invoice, $associated_files);
         $css = $this->getCssFile($aliases);
         $mpdf = $this->writeHtmlToPdf($css, $html, $start_mpdf);
         if ($isInvoice) {
@@ -276,12 +279,11 @@ class MpdfHelper
      * @param object|null $quote_or_invoice
      * @param IIAR|null $iiaR
      * @param InvAmount|null $inv_amount
-     * @param Aliases $aliases
      * @param bool $zugferd_invoice
      * @param array $associated_files
      * @return \Mpdf\Mpdf
      */
-    private function initializePdf(?string $password, SR $sR, string $title, ?object $quote_or_invoice, ?iiaR $iiaR, ?InvAmount $inv_amount, Aliases $aliases, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
+    private function initializePdf(?string $password, SR $sR, string $title, ?object $quote_or_invoice, ?iiaR $iiaR, ?InvAmount $inv_amount, bool $zugferd_invoice, array $associated_files = []): \Mpdf\Mpdf
     {
         $optionsArray = $this->options();
         $mpdf = new \Mpdf\Mpdf($optionsArray);
@@ -298,7 +300,7 @@ class MpdfHelper
 
         // Include zugferd if enabled
         if ($zugferd_invoice === true && null !== $inv_amount && null !== $iiaR) {
-            $z = new ZugFerdHelper($sR, $iiaR, $inv_amount);
+            $z = new ZugFerdHelper($sR, $iiaR, $inv_amount, $this->translator);
             //https://mpdf.github.io/reference/mpdf-variables/useadobecjk.html
             // A zugferd invoice must have fully embedded fonts => $mpdf->useAdobeCJK = false
             $mpdf->useAdobeCJK = false;
@@ -313,7 +315,7 @@ class MpdfHelper
             $mpdf->SetAssociatedFiles($associated_files);
         }
 
-        $content = $title . ': ' . date($sR->trans('date_format'));
+        $content = $title . ': ' . date($this->translator->translate('date_format'));
         $mpdf->SetHTMLHeader('<div style="text-align: right; font-size: 8px; font-weight: lighter;">' . $content . '</div>');
 
         // Set the footer if is invoice and if set in settings

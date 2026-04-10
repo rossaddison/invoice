@@ -50,7 +50,7 @@ final class SettingRepository extends Select\Repository
     private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/'
             . 'sn6nuzXKLrZVRMP3/Ak=';
     
-    private string $decrypt_key = self::DECRYPT_KEY;
+    private string $decryptKey = self::DECRYPT_KEY;
 
     /**
      * @param Select<TEntity> $select
@@ -218,10 +218,9 @@ final class SettingRepository extends Select\Repository
              * @psalm-suppress InvalidCast $from
              */
             $amt = number_format(((float)$from) ?: 0.00, 2, '.', '');
-            return $this->getSetting('peppol_debug_with_emojis') == '1' ? 
-            // display an arbitrary right arrow  sign for visibility and tracking        
-                '➡️' . $amt : $amt;
-        }    
+            return $this->getSetting('peppol_debug_with_emojis') == '1'
+             ? '➡️' . $amt : $amt;
+        }
     }
 
     /**
@@ -598,39 +597,7 @@ final class SettingRepository extends Select\Repository
         }
         return $directories;
     }
-
-    /**
-     * @param mixed $value1
-     * @param mixed $value2
-     * @param string $operator
-     * @param bool $checked
-     */
-    public function checkSelect(mixed $value1, mixed $value2,
-                        string $operator = '==', bool $checked = false): void
-    {
-        //$select = $checked ? 'checked="checked"' : 'selected="selected"';
-        $select = $checked ? 'checked' : 'selected';
-
-        // Instant-validate if $value1 is a bool value
-        if (is_bool($value1) && $value2 === null) {
-            echo $value1 ? $select : '';
-        }
-
-        $echo_selected = match ($operator) {
-            '==' => $value1 == $value2 ? true : false,
-            '!=' => $value1 != $value2 ? true : false,
-            // previously empty($value1) ? true : false. A strict comparison
-            //  avoids RiskyTruthy behaviour
-            'e' => (!isset($value1) || $value1 == false) ? true : false,
-            // previously empty($value1) ? true : false. A strict comparison
-            //  avoids RiskyTruthy behaviour
-            '!e' => (!isset($value1) || $value1 == false) ? true : false,
-            default => null !== $value1 ? true : false,
-        };
-
-        echo $echo_selected ? $select : '';
-    }
-
+    
     /**
      * @return string
      */
@@ -687,7 +654,7 @@ final class SettingRepository extends Select\Repository
 
     public function mailerEnabled(): bool
     {
-        return $this->configParams()['esmtp_enabled'] == true;
+        return $this->configParams()['esmtp_enabled'];
     }
 
     /**
@@ -739,11 +706,10 @@ final class SettingRepository extends Select\Repository
                     //  falls within the logo's start and end dates
                     if ($private->getStartDate()?->format('Y-m-d') 
                             < (new \DateTimeImmutable('now'))->format('Y-m-d')
-                    && ($private->getEndDate()?->format('Y-m-d') 
+                    && ($private->getEndDate()?->format('Y-m-d')
                             > (new \DateTimeImmutable('now'))->format('Y-m-d'))) {
                         $companyLogoFileNameWithSuffix =
                                 (string) $private->getLogoFilename();
-                        //  break;
                     }
                 }
             }
@@ -1073,18 +1039,7 @@ final class SettingRepository extends Select\Repository
         $folder_language = 'English';
         $lang = new Lang();
         $lang->load('gateway', $folder_language);
-        return $lang->_language;
-    }
-
-    /**
-     * @param string $words
-     * @return string
-     */
-    public function trans(string $words): string
-    {
-        // A few $s->trans uses still exist in e.g. MpdfHelper.
-        // These will be removed later
-        return $this->translator->translate('' . $words);
+        return $lang->uLanguage;
     }
 
     /**
@@ -1440,7 +1395,7 @@ final class SettingRepository extends Select\Repository
      * @param string $invoice_number
      * @return array
      */
-    public function getInvoiceArchivedFilesWithFilter(                                                string $invoice_number): array
+    public function getInvoiceArchivedFilesWithFilter(string $invoice_number): array
     {
         $aliases = $this->getInvoiceArchivedFolderAliases();
         $filehelper = new FileHelper();
@@ -1586,7 +1541,7 @@ final class SettingRepository extends Select\Repository
                     'type' => 'password',
                     'label' => 'Publishable Key',
                 ],
-                // server-side Related logic: 
+                // server-side Related logic:
                 // https://dashboard.stripe.com/test/dashboard
                 'secretKey' => [
                     'type' => 'password',
@@ -1647,7 +1602,7 @@ final class SettingRepository extends Select\Repository
                 . ' flagged inactive, are excluded from the Invoice index',
                 'where' => './resources/views/invoice/settings/views/'
                 . 'partial_settings_invoices.php and src/Invoice/'
-                . 'InvoiceController.php', 
+                . 'InvoiceController.php',
             ],
             'bcc_mails_to_admin' => [
                 'why' => 'A blind carbon copy email, unseen to the recipient'
@@ -2457,8 +2412,7 @@ final class SettingRepository extends Select\Repository
      */
     public function debugMode(bool $debugMode): void
     {
-        if ($debugMode == true) {
-            $count = $this->repoCount('debug_mode');
+        if ($debugMode) {            $count = $this->repoCount('debug_mode');
             if ($count == 1) {
                 $setting = $this->withKey('debug_mode');
                 if (null !== $setting) {
@@ -2472,7 +2426,7 @@ final class SettingRepository extends Select\Repository
                 $this->save($setting);
             }
         }
-        if ($debugMode == false) {
+        if (!$debugMode) {
             $count = $this->repoCount('debug_mode');
             if ($count == 1) {
                 $setting = $this->withKey('debug_mode');
@@ -2511,7 +2465,7 @@ final class SettingRepository extends Select\Repository
                 $this->save($setting);
             }
         }
-        if ($signupAutomaticallyAssignClient == false) {
+        if (!$signupAutomaticallyAssignClient) {
             $count = $this->repoCount('signup_automatically_assign_client');
             if ($count == 1) {
                 $setting = $this->withKey('signup_automatically_assign_client');
@@ -2704,10 +2658,10 @@ final class SettingRepository extends Select\Repository
             'lv_LV',
             'lt_LT',
         ];
-    } 
+    }
     
     /**
-     * Related logic: 
+     * Related logic:
      * resources/views/invoice/setting/views/partial_settings_online_payment
      * @param string $data
      * @return mixed $decrypted
@@ -2719,7 +2673,7 @@ final class SettingRepository extends Select\Repository
             return '';
         }
         
-        if (preg_match('/^base64:(.*)$/', $this->decrypt_key, $matches)) {
+        if (preg_match('/^base64:(.*)$/', $this->decryptKey, $matches)) {
             $key = base64_decode($matches[1]);
         }
         
@@ -2734,7 +2688,7 @@ final class SettingRepository extends Select\Repository
     public function encode(string $data): mixed
     {
         $key = '';
-        if (preg_match('/^base64:(.*)$/', $this->decrypt_key, $matches)) {
+        if (preg_match('/^base64:(.*)$/', $this->decryptKey, $matches)) {
             $key = base64_decode($matches[1]);
         }
         
