@@ -121,7 +121,7 @@ echo H::openTag('div', $row) . "\n"; //1
       echo H::openTag('div', $formGroup) . "\n"; //7
        $include = 'settings[default_include_item_tax]';
        echo H::openTag('label', [
-        'for' => $include 
+        'for' => $include
        ]) . "\n";
         echo $translator->translate(
          'default.invoice.tax.rate.placement'

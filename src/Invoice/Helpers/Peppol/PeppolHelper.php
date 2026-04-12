@@ -4610,29 +4610,29 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             220 => [
                 'Id' => '0226',
                 'Name' => 'FRCTC Particulier',
-                'Dself::ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE
-                . self::ICD_FINANCIERE_DE_L_ETATtizen sending invoices to the'
-                . self::ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE
-                . 'Issuing agency: AIFE (Agence pour lâ€™Informatique '
-                . 'FinanciÃ¨re de lâ€™Etat)',
+                'Description' => 'Intended Purpose/App. Area: To provide '
+                . 'identifiers for French citizen sending invoices to the'
+                . ' French Public Sector. '
+                . 'Issuing agency: AIFE (Agence pour l’Informatique '
+                . 'Financière de l’Etat)',
             ],
             221 => [
                 'Id' => '0227',
-                'Nself::ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE
-                . self::ICD_FINANCIERE_DE_L_ETATurpose/App. Area: NON - EU based '
-                . self::ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE
-                . 'Issuing agency: AIFE (Agence pour lâ€™Informatique '
-                . 'FinanciÃ¨re de lâ€™Etat)',
+                'Name' => 'NON - EU based company',
+                'Description' => 'Intended Purpose/App. Area: NON - EU based '
+                . 'company. '
+                . 'Issuing agency: AIFE (Agence pour l’Informatique '
+                . 'Financière de l’Etat)',
             ],
             222 => [
                 'Id' => '0228',
-                'Name' => 'RÃ©pertoire des Entreprises et des Etablissements '
+                'Name' => 'Répertoire des Entreprises et des Etablissements '
                 . '(RIDET)',
-                'Description' => self::ICD_PURPOSE_TO_PROVIDE
+                'Description' => 'Intended Purpose/App. Area: To provide '
                 . 'identifiers for organizations at national level in Nouvelle'
                 . ' Caledonie (French). '
                 . 'Issuing agency: AIFE '
-                . '(Agence pour lâ€™Informatique FinanciÃ¨re de lâ€™Etat)',
+                . '(Agence pour l’Informatique Financière de l’Etat)',
             ],
             223 => [
                 'Id' => '0229',

@@ -403,13 +403,11 @@ $columns = [
                         ->href($urlGenerator->generate('salesorder/view',
                             ['id' => $so_id]));
                 }
-                if ($model->getSoId() === '0' && $model->getStatusId() === 7) {
-                    if ($statusId > 0) {
-                        return  new A()
-                        ->addAttributes(['class' => 'btn btn-warning'])
-                               ->content($soR->getSpecificStatusArrayLabel((string) $statusId))
-                               ->href('');
-                    }
+                if ($model->getSoId() === '0' && $model->getStatusId() === 7 && $statusId > 0) {
+                    return  new A()
+                    ->addAttributes(['class' => 'btn btn-warning'])
+                           ->content($soR->getSpecificStatusArrayLabel((string) $statusId))
+                           ->href('');
                 }
             }
             return  new A();

@@ -34,7 +34,7 @@ final readonly class GridComponents
      */
     public function header(string $translatorString): string
     {
-        return   new Div()
+        return new Div()
                 ->addClass('row')
                 ->content(
                      new H5()
@@ -64,7 +64,7 @@ final readonly class GridComponents
     public function toolbarReset(UrlGenerator $generator): string
     {
         $route = $this->currentRoute->getName();
-        return   null !== $route ?  new A()
+        return null !== $route ? new A()
                 ->addAttributes(['type' => 'reset'])
                 ->addClass('btn btn-danger me-1 ajax-loader')
                 ->content( new I()->addClass('bi bi-bootstrap-reboot'))

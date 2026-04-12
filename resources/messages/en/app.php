@@ -11,6 +11,8 @@ declare(strict_types=1);
 //      does not have is output to the outputoverwrite folder.
 $picc = 'Peppol Item Classification Code';
 $referToConfigParamsArray = ' Refer to config params array.';
+$dotDotSettings = '..Settings';
+$dotDotGeneral = '..General';
 return [
   'account.information' => 'Account Information',
   'active' => 'Active',
@@ -1726,7 +1728,7 @@ prior to importing and no existing documents e.g. Invoices.',
     . '...Store Cove'
     . '...Api key',
   'peppol.store.cove.1.1.3' => 'Make your first API call'
-    . ' to get JSON response.',
+    . ' to get JSON response',
   'peppol.store.cove.1.1.4' => 'Send your first'
     . ' test Json invoice that you acquired'
     . ' from clicking on green button World=>DE',
@@ -2520,12 +2522,12 @@ prior to importing and no existing documents e.g. Invoices.',
   'test.data.use' => 'Use Test Data',
   'test.remove' => 'Remove Test Data',
   'test.remove.tooltip' => 'View'
-    . '..Settings'
-    . '..General'
+    . $dotDotSettings
+    . $dotDotGeneral
     . '..Install Test Data'
     . '..No and View'
-    . '..Settings'
-    . '..General'
+    . $dotDotSettings
+    . $dotDotGeneral
     . '..Use Test Data'
     . '..No',
   'test.reset' => 'Reset Test Data',
@@ -2536,12 +2538,12 @@ prior to importing and no existing documents e.g. Invoices.',
     . ' in InvoiceController/install.default.settings.on.first.run',
   'test.reset.tooltip' =>
     'View'
-    . '..Settings'
-    . '..General'
+    . $dotDotSettings
+    . $dotDotGeneral
     . '..Install Test Data'
     . '..Yes and View'
-    . '..Settings'
-    . '..General'
+    . $dotDotSettings
+    . $dotDotGeneral
     . '..Use Test Data'
     . '..Yes',
   'text' => 'Text',

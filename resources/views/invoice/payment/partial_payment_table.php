@@ -62,11 +62,11 @@ echo H::openTag('div', ['class' => 'table-responsive']);
        if ($payment->getInv()?->getClientId() === $client->getClientId()) {
            echo H::openTag('tr');
             echo H::openTag('td');
-             echo (!is_string($paymentDate = $payment->getPaymentDate()) ?
-                                        ($paymentDate->format('Y-m-d')) : '');
+             echo !is_string($paymentDate = $payment->getPaymentDate()) ?
+                                        ($paymentDate->format('Y-m-d')) : '';
             echo H::closeTag('td');
             echo H::openTag('td');
-             echo ($payment->getInv()?->getDateCreated())->format('Y-m-d');
+             echo $payment->getInv()?->getDateCreated()?->format('Y-m-d');
             echo H::closeTag('td');
             echo H::openTag('td');
              echo H::openTag('a', [

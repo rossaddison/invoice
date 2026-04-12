@@ -82,7 +82,7 @@ final class Lang
         $lang = [];
         if (($found = file_exists($basepath)) === true) {
             // $lang is a full array in $basepath
-            include_once($basepath);
+            include_once $basepath;
         }
 
         if ($found !== true) {

@@ -207,7 +207,7 @@ echo H::openTag('div', $row); //1
     echo H::openTag('div', $row); //5
      echo H::openTag('div', $colMd6); //6
       echo H::openTag('div', $formGroup); //7
-       $smsp = 'settings[mark_invoices_sent_pdf]'; 
+       $smsp = 'settings[mark_invoices_sent_pdf]';
        echo H::openTag('label', [
         'for' => $smsp
        ]);

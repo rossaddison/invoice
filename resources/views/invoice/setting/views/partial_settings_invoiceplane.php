@@ -19,6 +19,8 @@ use Yiisoft\Html\Tag\A;
 $kIpDbName = 'settings[invoiceplane_database_name]';
 $kIpDbUsername = 'settings[invoiceplane_database_username]';
 $kIpDbPassword = 'settings[invoiceplane_database_password]';
+$colXs8Md4 = 'col-xs-8 col-md-4';
+$formControlLg = 'form-control form-control-lg';
 
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
@@ -31,7 +33,7 @@ echo H::openTag('div', ['class' => 'row']); //1
    echo H::closeTag('div'); //4
    echo H::openTag('div', ['class' => 'panel-body']); //4
     echo H::openTag('div', ['class' => 'row']); //5
-     echo H::openTag('div', ['class' => 'col-xs-8 col-md-4']); //6
+     echo H::openTag('div', ['class' => $colXs8Md4]); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
        echo H::openTag('label', ['for' => $kIpDbName]);
         echo $translator->translate('invoiceplane.database.name');
@@ -42,12 +44,12 @@ echo H::openTag('div', ['class' => 'row']); //1
         'type' => 'text',
         'name' => $kIpDbName,
         'id' => $kIpDbName,
-        'class' => 'form-control form-control-lg',
+        'class' => $formControlLg,
         'value' => $body[$kIpDbName]
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-8 col-md-4']); //6
+     echo H::openTag('div', ['class' => $colXs8Md4]); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
        echo H::openTag('label', ['for' => $kIpDbUsername]);
         echo $translator->translate('invoiceplane.database.username');
@@ -58,12 +60,12 @@ echo H::openTag('div', ['class' => 'row']); //1
         'type' => 'text',
         'name' => $kIpDbUsername,
         'id' => $kIpDbUsername,
-        'class' => 'form-control form-control-lg',
+        'class' => $formControlLg,
         'value' => $body[$kIpDbUsername]
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
-     echo H::openTag('div', ['class' => 'col-xs-8 col-md-4']); //6
+     echo H::openTag('div', ['class' => $colXs8Md4]); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
        echo H::openTag('label', ['for' => $kIpDbPassword]);
         echo $translator->translate('invoiceplane.database.password');
@@ -74,7 +76,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         'type' => 'password',
         'name' => $kIpDbPassword,
         'id' => $kIpDbPassword,
-        'class' => 'form-control form-control-lg',
+        'class' => $formControlLg,
         'value' => $body[$kIpDbPassword]
        ]);
       echo H::closeTag('div'); //7

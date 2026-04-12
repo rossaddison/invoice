@@ -79,7 +79,7 @@ class User
 
     public function validatePassword(string $password): bool
     {
-        return  new PasswordHasher()->validate($password, $this->passwordHash);
+        return new PasswordHasher()->validate($password, $this->passwordHash);
     }
 
     public function setPassword(string $password): void
