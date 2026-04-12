@@ -16,6 +16,10 @@ use Yiisoft\Html\Tag\A;
 * @psalm-var array<string, Stringable|null|scalar> $actionImportArguments
 */
 
+$kIpDbName = 'settings[invoiceplane_database_name]';
+$kIpDbUsername = 'settings[invoiceplane_database_username]';
+$kIpDbPassword = 'settings[invoiceplane_database_password]';
+
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
@@ -29,55 +33,49 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::openTag('div', ['class' => 'row']); //5
      echo H::openTag('div', ['class' => 'col-xs-8 col-md-4']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
-       echo H::openTag('label', [
-        'for' => 'settings[invoiceplane_database_name]'
-       ]);
+       echo H::openTag('label', ['for' => $kIpDbName]);
         echo $translator->translate('invoiceplane.database.name');
        echo H::closeTag('label');
-       $body['settings[invoiceplane_database_name]'] =
+       $body[$kIpDbName] =
        $s->getSetting('invoiceplane_database_name');
        echo H::openTag('input', [
         'type' => 'text',
-        'name' => 'settings[invoiceplane_database_name]',
-        'id' => 'settings[invoiceplane_database_name]',
+        'name' => $kIpDbName,
+        'id' => $kIpDbName,
         'class' => 'form-control form-control-lg',
-        'value' => $body['settings[invoiceplane_database_name]']
+        'value' => $body[$kIpDbName]
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => 'col-xs-8 col-md-4']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
-       echo H::openTag('label', [
-        'for' => 'settings[invoiceplane_database_username]'
-       ]);
+       echo H::openTag('label', ['for' => $kIpDbUsername]);
         echo $translator->translate('invoiceplane.database.username');
        echo H::closeTag('label');
-       $body['settings[invoiceplane_database_username]'] =
+       $body[$kIpDbUsername] =
        $s->getSetting('invoiceplane_database_username');
        echo H::openTag('input', [
         'type' => 'text',
-        'name' => 'settings[invoiceplane_database_username]',
-        'id' => 'settings[invoiceplane_database_username]',
+        'name' => $kIpDbUsername,
+        'id' => $kIpDbUsername,
         'class' => 'form-control form-control-lg',
-        'value' => $body['settings[invoiceplane_database_username]']
+        'value' => $body[$kIpDbUsername]
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => 'col-xs-8 col-md-4']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
-       echo H::openTag('label', [
-        'for' => 'settings[invoiceplane_database_password]'
-       ]);
+       echo H::openTag('label', ['for' => $kIpDbPassword]);
         echo $translator->translate('invoiceplane.database.password');
        echo H::closeTag('label');
-       $body['settings[invoiceplane_database_password]'] =
+       $body[$kIpDbPassword] =
        $s->getSetting('invoiceplane_database_password');
        echo H::openTag('input', [
         'type' => 'password',
-        'name' => 'settings[invoiceplane_database_password]',
-        'id' => 'settings[invoiceplane_database_password]',
+        'name' => $kIpDbPassword,
+        'id' => $kIpDbPassword,
         'class' => 'form-control form-control-lg',
-        'value' => $body['settings[invoiceplane_database_password]']
+        'value' => $body[$kIpDbPassword]
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6

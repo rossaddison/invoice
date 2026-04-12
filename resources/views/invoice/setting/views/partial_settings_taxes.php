@@ -43,11 +43,12 @@ echo H::openTag('div', $row) . "\n"; //1
          'default.invoice.tax.rate'
         ) . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[default_invoice_tax_rate]'] =
+       $sditr = 'settings[default_invoice_tax_rate]';
+       $body[$sditr] =
        $s->getSetting('default_invoice_tax_rate');
        echo H::openTag('select', [
-        'name' => 'settings[default_invoice_tax_rate]',
-        'id' => 'settings[default_invoice_tax_rate]',
+        'name' => $sditr,
+        'id' => $sditr,
         'class' => 'form-control form-control-lg',
        ]) . "\n";
         echo  new Option()
@@ -66,7 +67,7 @@ echo H::openTag('div', $row) . "\n"; //1
         echo  new Option()
          ->value($taxRateId)
          ->selected(
-          $body['settings[default_invoice_tax_rate]']
+          $body[$sditr]
           == $taxRateId
          )
          ->content($content) . "\n";
@@ -75,18 +76,19 @@ echo H::openTag('div', $row) . "\n"; //1
       echo H::closeTag('div') . "\n"; //7
 
       echo H::openTag('div', $formGroup) . "\n"; //7
+       $sdtr = 'settings[default_item_tax_rate]';
        echo H::openTag('label', [
-        'for' => 'settings[default_item_tax_rate]'
+        'for' => $sdtr
        ]) . "\n";
         echo $translator->translate(
          'default.item.tax.rate'
         ) . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[default_item_tax_rate]'] =
+       $body[$sdtr] =
        $s->getSetting('default_item_tax_rate');
        echo H::openTag('select', [
-        'name' => 'settings[default_item_tax_rate]',
-        'id' => 'settings[default_item_tax_rate]',
+        'name' => $sdtr,
+        'id' => $sdtr,
         'class' => 'form-control form-control-lg',
        ]) . "\n";
         echo  new Option()
@@ -105,7 +107,7 @@ echo H::openTag('div', $row) . "\n"; //1
         echo  new Option()
          ->value($taxRateId)
          ->selected(
-          $body['settings[default_item_tax_rate]']
+          $body[$sdtr]
           == $taxRateId
          )
          ->content($content) . "\n";
@@ -117,19 +119,20 @@ echo H::openTag('div', $row) . "\n"; //1
      echo H::openTag('div', $colMd6) . "\n"; //6
 
       echo H::openTag('div', $formGroup) . "\n"; //7
+       $include = 'settings[default_include_item_tax]';
        echo H::openTag('label', [
-        'for' => 'settings[default_include_item_tax]'
+        'for' => $include 
        ]) . "\n";
         echo $translator->translate(
          'default.invoice.tax.rate.placement'
         ) . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[default_include_item_tax]'] =
+       $body[$include] =
        $s->getSetting('default_include_item_tax');
        echo H::openTag('select', array_merge($formControl,
         $minSearch, [
-        'name' => 'settings[default_include_item_tax]',
-        'id' => 'settings[default_include_item_tax]'
+        'name' => $include,
+        'id' => $include
        ]
         )) . "\n";
         echo  new Option()
@@ -139,7 +142,7 @@ echo H::openTag('div', $row) . "\n"; //1
         echo  new Option()
          ->value('0')
          ->selected(
-          $body['settings[default_include_item_tax]']
+          $body[$include]
           == '0'
          )
          ->content($translator->translate(
@@ -148,7 +151,7 @@ echo H::openTag('div', $row) . "\n"; //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[default_include_item_tax]']
+          $body[$include]
           == '1'
          )
          ->content($translator->translate(
@@ -157,19 +160,20 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::closeTag('select') . "\n";
       echo H::closeTag('div') . "\n"; //7
       echo H::openTag('div', $formGroup) . "\n"; //7
+       $tyf = 'settings[this_tax_year_from_date_year]';
        echo H::openTag('label', [
-        'for' => 'settings[this_tax_year_from_date_year]'
+        'for' => $tyf
        ]) . "\n";
         echo $translator->translate('tax') . ' ' .
         $translator->translate('start') . ' ' .
         $translator->translate('date') . ' ' .
         $translator->translate('year') . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[this_tax_year_from_date_year]'] =
+       $body[$tyf] =
        $s->getSetting('this_tax_year_from_date_year');
        echo H::openTag('select', [
-        'name' => 'settings[this_tax_year_from_date_year]',
-        'id' => 'settings[this_tax_year_from_date_year]',
+        'name' => $tyf,
+        'id' => $tyf,
         'class' => 'form-control form-control-lg',
        ]) . "\n";
         echo  new Option()
@@ -185,7 +189,7 @@ echo H::openTag('div', $row) . "\n"; //1
          echo  new Option()
          ->value($year['value'])
          ->selected(
-         $body['settings[this_tax_year_from_date_year]']
+         $body[$tyf]
          == (string) $year['value']
         )
          ->content((string) $year['value'])
@@ -194,20 +198,20 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::closeTag('select') . "\n";
       echo H::closeTag('div') . "\n"; //7
       echo H::openTag('div', $formGroup) . "\n"; //7
+       $tym = 'settings[this_tax_year_from_date_month]';
        echo H::openTag('label', [
-        'for' => 'settings[this_tax_year_from_date_month]'
+        'for' => $tym
        ]) . "\n";
         echo $translator->translate('tax') . ' ' .
         $translator->translate('start') . ' ' .
         $translator->translate('date') . ' ' .
         $translator->translate('month') . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[this_tax_year_from_date_month]'] =
+       $body[$tym] =
        $s->getSetting('this_tax_year_from_date_month');
        echo H::openTag('select', [
-        'name' =>
-        'settings[this_tax_year_from_date_month]',
-        'id' => 'settings[this_tax_year_from_date_month]',
+        'name' => $tym,
+        'id' => $tym,
         'class' => 'form-control form-control-lg',
        ]) . "\n";
         echo  new Option()
@@ -222,7 +226,7 @@ echo H::openTag('div', $row) . "\n"; //1
         echo  new Option()
          ->value($month)
          ->selected(
-          $body['settings[this_tax_year_from_date_month]']
+          $body[$tym]
           == $month
          )
          ->content($month) . "\n";
@@ -230,8 +234,9 @@ echo H::openTag('div', $row) . "\n"; //1
        echo H::closeTag('select') . "\n";
       echo H::closeTag('div') . "\n"; //7
       echo H::openTag('div', $formGroup) . "\n"; //7
+       $tyd = 'settings[this_tax_year_from_date_day]';
        echo H::openTag('label', [
-        'for' => 'settings[this_tax_year_from_date_day]'
+        'for' => $tyd
        ]) . "\n";
         echo $translator->translate('tax') . ' ' .
         $translator->translate('start') . ' ' .
@@ -239,11 +244,11 @@ echo H::openTag('div', $row) . "\n"; //1
         rtrim($translator->translate('days'), 's')
         . "\n";
        echo H::closeTag('label') . "\n";
-       $body['settings[this_tax_year_from_date_day]'] =
+       $body[$tyd] =
        $s->getSetting('this_tax_year_from_date_day');
        echo H::openTag('select', [
-        'name' => 'settings[this_tax_year_from_date_day]',
-        'id' => 'settings[this_tax_year_from_date_day]',
+        'name' => $tyd,
+        'id' => $tyd,
         'class' => 'form-control form-control-lg',
        ]) . "\n";
         echo  new Option()
@@ -261,7 +266,7 @@ echo H::openTag('div', $row) . "\n"; //1
         echo  new Option()
          ->value($day)
          ->selected(
-          $body['settings[this_tax_year_from_date_day]']
+          $body[$tyd]
           == $day
          )
          ->content($day) . "\n";

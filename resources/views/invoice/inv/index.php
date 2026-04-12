@@ -14,7 +14,6 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Select;
@@ -31,6 +30,15 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
+
+const BTN_SUCCESS = 'btn btn-success';
+const BTN_INFO = 'btn btn-info';
+const INV_ROUTE_INDEX = 'inv/index';
+const INV_ROUTE_EDIT = 'inv/edit';
+const INV_AMOUNT_FILTER_CLASS = 'native-reset inv-amount-filter';
+const INV_AMOUNT_FILTER_STYLE = 'text-align: right; display: block; width: 100%;';
+const LABEL_SUCCESS = 'label label-success';
+const LABEL_WARNING = 'label label-warning';
 
 /**
  * Related logic: see config/common/params.php
@@ -69,6 +77,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
  * @var string $modal_add_inv
  * @var string $modal_copy_inv_multiple
  * @var string $modal_create_recurring_multiple
+ * @var string $nativeResetInvFilter
  * @var string $sortString
  * @var string $status
  * @psalm-var positive-int $page
@@ -80,6 +89,8 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsYearMonthDropDownFilter
  * @psalm-var array<array-key, array<array-key, string>|string> $optionsStatusDropDownFilter
  */
+$nativeResetInvFilter = 'native-reset inv-filter';
+$settingTabIndex = 'setting/tabIndex';
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
@@ -88,7 +99,7 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('default.invoice.group'),
          url: $urlGenerator->generate(
-             'setting/tabIndex',
+             $settingTabIndex,
              [],
              ['active' => 'invoices'],
              'settings[default_invoice_group]',
@@ -103,7 +114,7 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('default.terms'),
          url: $urlGenerator->generate(
-             'setting/tabIndex',
+             $settingTabIndex,
              [],
              ['active' => 'invoices'],
              'settings[default_invoice_terms]',
@@ -119,7 +130,7 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('default.payment.method'),
          url: $urlGenerator->generate(
-             'setting/tabIndex',
+             $settingTabIndex,
              [],
              ['active' => 'invoices'],
              'settings[invoice_default_payment_method]',
@@ -135,7 +146,7 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('invoices.due.after'),
          url: $urlGenerator->generate(
-             'setting/tabIndex',
+             $settingTabIndex,
              [],
              ['active' => 'invoices'],
              'settings[invoices_due_after]',
@@ -151,7 +162,7 @@ echo Breadcrumbs::widget()
      BreadcrumbLink::to(
          label: $translator->translate('generate.invoice.number.for.draft'),
          url: $urlGenerator->generate(
-             'setting/tabIndex',
+             $settingTabIndex,
              [],
              ['active' => 'invoices'],
              'settings[generate_invoice_number_for_draft]',
@@ -174,7 +185,7 @@ echo Breadcrumbs::widget()
              . $iR->getSpecificStatusArrayEmoji(
                 (int) $s->getSetting('read_only_toggle')),
          url: $urlGenerator->generate(
-             'setting/tabIndex',
+             $settingTabIndex,
              [],
              ['active' => 'invoices'],
              'settings[read_only_toggle]',
@@ -193,7 +204,7 @@ $copyInvoiceMultiple =  new A()
             'type' => 'reset',
             'data-bs-toggle' => 'modal',
             'title' => Html::encode($translator->translate('copy.invoice'))])
-        ->addClass('btn btn-success')
+        ->addClass(BTN_SUCCESS)
         /**
          * Purpose: Trigger modal_copy_inv_multiple.php to pop up
          * Related logic: see id="modal-copy-inv-multiple" class="modal" on resources/views/invoice/inv/modal_copy_inv_multiple.php
@@ -217,7 +228,7 @@ $markAsSent =  new A()
             'type' => 'reset',
             'data-bs-toggle' => 'tooltip',
             'title' => Html::encode($translator->translate('sent'))])
-        ->addClass('btn btn-success')
+        ->addClass(BTN_SUCCESS)
         ->content('☑️' . $translator->translate('sent')
                 . $iR->getSpecificStatusArrayEmoji(2))
         // src/typescript/invoice.ts
@@ -239,7 +250,7 @@ $disabledMarkSentAsDraft =  new A()
             'disabled' => 'disabled',
             'style' => 'text-decoration:none',
         ])
-        ->addClass('btn btn-success')
+        ->addClass(BTN_SUCCESS)
         ->content('☑️' . $translator->translate('draft')
                 . $iR->getSpecificStatusArrayEmoji(1))
         ->id('btn-mark-sent-as-draft')
@@ -253,7 +264,7 @@ $enabledMarkSentAsDraft =  new A()
         ->addAttributes([
             'style' => 'text-decoration:none',
         ])
-        ->addClass('btn btn-success')
+        ->addClass(BTN_SUCCESS)
         ->content('☑️' . $translator->translate('draft')
                 . $iR->getSpecificStatusArrayEmoji(1))
         ->id('btn-mark-sent-as-draft')
@@ -265,7 +276,7 @@ $enabledMarkSentAsDraft =  new A()
  */
 $markAsRecurringMultiple =  new A()
         ->addAttributes(['type' => 'reset', 'data-bs-toggle' => 'modal'])
-        ->addClass('btn btn-info')
+        ->addClass(BTN_INFO)
         /**
          * Purpose: Trigger modal_create_recurring_modal.php to pop up
          * Related logic: see id="create-recurring-multiple" class="modal" on resources/views/invoice/inv/modal_create_recurring_multiple.php
@@ -278,7 +289,7 @@ $toolbarReset =  new A()
         ->addAttributes(['type' => 'reset'])
         ->addClass('btn btn-primary me-1 ajax-loader')
         ->content( new I()->addClass('bi bi-bootstrap-reboot'))
-        ->href($urlGenerator->generate($currentRoute->getName() ?? 'inv/index'))
+        ->href($urlGenerator->generate($currentRoute->getName() ?? INV_ROUTE_INDEX))
         ->id('btn-reset')
         ->render();
 
@@ -298,14 +309,14 @@ $toggleColumnInvSentLog =  new A()
             'type' => 'reset',
             'data-bs-toggle' => 'tooltip',
             'title' => $translator->translate('hide.or.unhide.columns')])
-        ->addClass('btn btn-info me-1 ajax-loader')
+        ->addClass(BTN_INFO . ' me-1 ajax-loader')
         ->content('↔️')
         ->href($urlGenerator->generate('setting/toggleinvsentlogcolumn'))
         ->id('btn-all-visible');
 
 $enabledAddInvoiceButton =  new A()
         ->addAttributes([
-            'class' => 'btn btn-info',
+            'class' => BTN_INFO,
             'data-bs-toggle' => 'modal',
             'style' => 'text-decoration:none',
         ])
@@ -316,7 +327,7 @@ $enabledAddInvoiceButton =  new A()
 
 $disabledAddInvoiceButton =  new A()
         ->addAttributes([
-            'class' => 'btn btn-info',
+            'class' => BTN_INFO,
             'data-bs-toggle' => 'tooltip',
             'title' => $translator->translate('add.client'),
             'disabled' => 'disabled',
@@ -457,7 +468,7 @@ $columns = [
                             /** protection is on */
                             '0' => [
                                 '1' => $urlGenerator->generate(
-                                    'inv/edit',
+                                    INV_ROUTE_EDIT,
                                     ['id' => $inv->getId()],
                                 ),
                             ],
@@ -465,7 +476,7 @@ $columns = [
                             '1' => [
                     /** Allow editing of draft, even though protection is off */
                                 '1' => $urlGenerator->generate(
-                                    'inv/edit',
+                                    INV_ROUTE_EDIT,
                                     ['id' => $inv->getId()],
                                 ),
                             ],
@@ -481,7 +492,7 @@ $columns = [
                             '1' => [
                     /** Allow the editing of invoice whilst protection is off */
                                 '2' => $urlGenerator->generate(
-                                    'inv/edit',
+                                    INV_ROUTE_EDIT,
                                     ['id' => $inv->getId()],
                                 ),
                             ],
@@ -551,8 +562,7 @@ $columns = [
                      * @var array $attributesMap[$iROString][$dRO]
                      * @var array $attributesMap[$iROString][$dRO][$status]
                      */
-                    $attributes = $attributesMap[$iROString][$dRO][$status] ?? [];
-                    return $attributes;
+                    return $attributesMap[$iROString][$dRO][$status] ?? [];
                 },
             ),
         ],
@@ -561,7 +571,7 @@ $columns = [
         header: '',
         before: Html::openTag('div', ['class' => 'dropdown'])
             . Html::openTag('button', [
-                'class' => 'btn btn-info dropdown-toggle',
+                'class' => BTN_INFO . ' dropdown-toggle',
                 'type' => 'button',
                 'id' => 'dropdownMenuButton',
                 'data-toggle' => 'dropdown',
@@ -646,7 +656,7 @@ $columns = [
                 ->addAttributes([
                     'id'         => 'filter-inv-number',
                     'name'       => 'number',
-                    'class'      => 'native-reset inv-filter',
+                    'class'      => $nativeResetInvFilter,
                     'aria-label' => 'Filter by invoice number',
                     'title'      => $translator->translate('number'),
                 ])
@@ -671,7 +681,7 @@ $columns = [
                 ->addAttributes([
                     'id'         => 'filter-family-name',
                     'name'       => 'number',
-                    'class'      => 'native-reset inv-filter',
+                    'class'      => $nativeResetInvFilter,
                     'aria-label' => 'Filter by family name',
                     'title'      => $translator->translate('family.name'),
                 ])
@@ -688,7 +698,7 @@ $columns = [
             ->addAttributes([
                 'id'         => 'filter-year-month',
                 'name'       => 'number',
-                'class'      => 'native-reset inv-filter',
+                'class'      => $nativeResetInvFilter,
                 'aria-label' => 'Filter by year-month',
                 'title'      => $translator->translate(
                     'datetime.immutable.date.created.mySql.format.year.month.filter'),
@@ -745,7 +755,7 @@ $columns = [
             ->addAttributes([
                 'id'         => 'filter-status',
                 'name'       => 'status',
-                'class'      => 'native-reset inv-filter',
+                'class'      => $nativeResetInvFilter,
                 'aria-label' => 'Filter by status',
                 'title'      => $translator->translate('status'),
             ])
@@ -801,7 +811,7 @@ $columns = [
         filter: DropdownFilter::widget()
                 ->addAttributes([
                     'id'         => 'filter-credit-inv-number',
-                    'class'      => 'native-reset inv-filter',
+                    'class'      => $nativeResetInvFilter,
                     'aria-label' => 'Filter by credit note parent invoice',
                     'title'      => $translator->translate(
                         'credit.invoice.for.invoice'),
@@ -851,19 +861,18 @@ $columns = [
             if (null !== $modelId) {
                 $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
                 if ($count > 0) {
-                    $linkToInvSentLogWithFilterInv =  new A()
+                    return (new A())
                     ->addAttributes([
                         'type' => 'reset',
                         'data-bs-toggle' => 'tooltip',
                         'title' => $translator->translate('email.logs')])
-                    ->addClass('btn btn-success me-1')
+                    ->addClass(BTN_SUCCESS . ' me-1')
                     ->content((string) $count)
                     ->href($urlGenerator->generate(
                             'invsentlog/index',
                             [],
                             ['filterInvNumber' => $model->getNumber()]))
                     ->id('btn-all-visible');
-                    return $linkToInvSentLogWithFilterInv;
                 }
             }
             return '0 📧';
@@ -896,7 +905,7 @@ $columns = [
                 }
                 return $gridComponents->gridMiniTableOfInvSentLogsForInv(
                     $model,
-                    $min_invsentlogs_per_row = 4,
+                    4,
                     $urlGenerator,
                 );
             }
@@ -919,7 +928,7 @@ $columns = [
                 ->addAttributes([
                     'id'         => 'filter-client',
                     'name'       => 'client_id',
-                    'class'      => 'native-reset inv-filter',
+                    'class'      => $nativeResetInvFilter,
                     'aria-label' => 'Filter by client',
                     'title'      => $translator->translate('client'),
                 ])
@@ -942,7 +951,7 @@ $columns = [
         filter: TextInputFilter::widget()
                 ->addAttributes([
                     'id'          => 'filter-address-1',
-                    'class'       => 'native-reset inv-filter',
+                    'class'       => $nativeResetInvFilter,
                     'aria-label'  => 'Filter by street address',
                     'title'       => $translator->translate('street.address'),
                     'placeholder' => $translator->translate('street.address'),
@@ -964,7 +973,7 @@ $columns = [
             ->addAttributes([
                 'id'         => 'filter-client-group',
                 'name'       => 'number',
-                'class'      => 'native-reset inv-filter',
+                'class'      => $nativeResetInvFilter,
                 'aria-label' => 'Filter by client group',
                 'title'      => $translator->translate('client.group'),
             ])
@@ -990,7 +999,7 @@ $columns = [
                     Html::encode($model->getDateModified()->format('Y-m-d')));
             } else {
                 return  new Label()
-                       ->attributes(['class' => 'label label-success'])
+                       ->attributes(['class' => LABEL_SUCCESS])
                        ->content(
                     Html::encode($model->getDateModified()->format('Y-m-d')));
             }
@@ -1007,7 +1016,7 @@ $columns = [
                     ->attributes(
                         [
                             'class' => $model->getDateDue() > $now
-                            ? 'label label-success' : 'label label-warning'])
+                            ? LABEL_SUCCESS : LABEL_WARNING])
                     ->content(Html::encode(
                             !is_string($dateDue = $model->getDateDue())
                             ? $dateDue->format('Y-m-d') : ''));
@@ -1026,7 +1035,7 @@ $columns = [
                  new Label()
                     ->attributes([
                         'class' => $invAmountTotal > 0.00
-                            ? 'label label-success' : 'label label-warning'])
+                            ? LABEL_SUCCESS : LABEL_WARNING])
                     ->content(Html::encode(null !== $invAmountTotal
                             ? number_format($invAmountTotal, $decimalPlaces)
                             : number_format(0, $decimalPlaces)));
@@ -1035,7 +1044,7 @@ $columns = [
         filter: TextInputFilter::widget()
                 ->addAttributes([
                     'id'         => 'filter-amount-total',
-                    'class'      => 'native-reset inv-amount-filter',
+                    'class'      => INV_AMOUNT_FILTER_CLASS,
                     'aria-label' => 'Filter by total amount',
                     'title'      => $translator->translate('total'),
                     'placeholder' => $translator->translate('total'),
@@ -1043,7 +1052,7 @@ $columns = [
         withSorting: false,
         footer:  new Span()
                 ->addClass('inv-footer-amount')
-                ->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])
+                ->addAttributes(['style' => INV_AMOUNT_FILTER_STYLE])
                 ->content(
                     Html::tag('small', $translator->translate('total') . ':', ['class' => 'inv-footer-label'])
                     . ' ' . $s->getSetting('currency_symbol')
@@ -1056,21 +1065,24 @@ $columns = [
                                     . '➡️' . $s->getSetting('currency_symbol'),
         content: static function (Inv $model) use ($decimalPlaces): Label {
             $invAmountPaid = $model->getInvAmount()->getPaid();
-            return  new Label()
+            if (null !== $invAmountPaid) {
+                $paidValue = $invAmountPaid > 0.00 ? $invAmountPaid : 0.00;
+            } else {
+                $paidValue = 0.00;
+            }
+
+            return new Label()
                     ->attributes([
                         'class' =>
         $model->getInvAmount()->getPaid() < $model->getInvAmount()->getTotal()
-                            ? 'label label-danger' : 'label label-success'])
-                    ->content(Html::encode(null !== $invAmountPaid
-                            ? number_format($invAmountPaid > 0.00 ?
-                                    $invAmountPaid : 0.00, $decimalPlaces)
-                            : number_format(0, $decimalPlaces)));
+                            ? 'label label-danger' : LABEL_SUCCESS])
+                    ->content(Html::encode(number_format($paidValue, $decimalPlaces)));
         },
         encodeContent: false,
         filter: TextInputFilter::widget()
                 ->addAttributes([
                     'id'          => 'filter-amount-paid',
-                    'class'       => 'native-reset inv-amount-filter',
+                    'class'       => INV_AMOUNT_FILTER_CLASS,
                     'aria-label'  => 'Filter by paid amount',
                     'title'       => $translator->translate('paid'),
                     'placeholder' => $translator->translate('paid'),
@@ -1078,7 +1090,7 @@ $columns = [
         withSorting: false,
         footer:  new Span()
                 ->addClass('inv-footer-amount')
-                ->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])
+                ->addAttributes(['style' => INV_AMOUNT_FILTER_STYLE])
                 ->content(
                     Html::tag('small', $translator->translate('paid') . ':', ['class' => 'inv-footer-label'])
                     . ' ' . $s->getSetting('currency_symbol')
@@ -1091,20 +1103,23 @@ $columns = [
                                     . '➡️' . $s->getSetting('currency_symbol'),
         content: static function (Inv $model) use ($decimalPlaces): Label {
             $invAmountBalance = $model->getInvAmount()->getBalance();
-            return   new Label()
+            if (null !== $invAmountBalance) {
+                $balanceValue = $invAmountBalance > 0.00 ? $invAmountBalance : 0.00;
+            } else {
+                $balanceValue = 0.00;
+            }
+
+            return new Label()
                     ->attributes([
                          'class' => $invAmountBalance > 0.00 ?
-                                'label label-success' : 'label label-warning'])
-                    ->content(Html::encode(null !== $invAmountBalance
-                            ? number_format($invAmountBalance > 0.00
-                                    ? $invAmountBalance : 0.00, $decimalPlaces)
-                            : number_format(0, $decimalPlaces)));
+                                LABEL_SUCCESS : LABEL_WARNING])
+                    ->content(Html::encode(number_format($balanceValue, $decimalPlaces)));
         },
         encodeContent: false,
         filter: TextInputFilter::widget()
                 ->addAttributes([
                     'id'          => 'filter-amount-balance',
-                    'class'       => 'native-reset inv-amount-filter',
+                    'class'       => INV_AMOUNT_FILTER_CLASS,
                     'aria-label'  => 'Filter by balance amount',
                     'title'       => $translator->translate('balance'),
                     'placeholder' => $translator->translate('balance'),
@@ -1112,7 +1127,7 @@ $columns = [
         withSorting: false,
         footer:  new Span()
                 ->addClass('inv-footer-amount')
-                ->addAttributes(['style' => 'text-align: right; display: block; width: 100%;'])
+                ->addAttributes(['style' => INV_AMOUNT_FILTER_STYLE])
                 ->content(
                     Html::tag('small', $translator->translate('balance') . ':', ['class' => 'inv-footer-label'])
                     . ' ' . $s->getSetting('currency_symbol')
@@ -1256,7 +1271,7 @@ $columns = [
 ];
 
 $toolbarString
-    =  new Form()->post($urlGenerator->generate('inv/index'))->csrf($csrf)->open()
+    =  new Form()->post($urlGenerator->generate(INV_ROUTE_INDEX))->csrf($csrf)->open()
     .  new Div()->addClass('float-start')->content(
          new H4()
             ->addClass('me-3 d-inline-block')
@@ -1287,7 +1302,7 @@ $toolbarString
                     ->addClass('form-select group-by-select')
                     ->addAttributes([
                         'style' => 'max-width: 150px;',
-                        'data-base-url' => $urlGenerator->generate('inv/index'),
+                        'data-base-url' => $urlGenerator->generate(INV_ROUTE_INDEX),
                     ])
                     ->optionsData([
                         'none' => $translator->translate('grouping.none'),

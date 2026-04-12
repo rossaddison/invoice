@@ -195,7 +195,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::hiddenInput('product_id', (string) $productId); ?>
 
 <!-- Form Actions -->
-<?= new Btn($currentRoute, $translator, $urlGenerator)->saveCancel(); ?>
+<?= new Btn($translator, $urlGenerator)->saveCancel(); ?>
 
 <?=  new Form()->close(); ?>
 

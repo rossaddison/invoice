@@ -51,7 +51,7 @@ echo H::openTag('div', ['class' => (string) $class[1]]);
             );
         }
     };
-    $btn = new Button($currentRoute, $translator, $urlGenerator);
+    $btn = new Button($translator, $urlGenerator);
     if ((strlen($openBankingAuthUrl ?: '') > 0)
             && !$noOpenBankingContinueButton) {
         echo '<br><br>';

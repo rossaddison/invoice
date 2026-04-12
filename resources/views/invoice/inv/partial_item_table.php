@@ -34,6 +34,8 @@ use Yiisoft\Html\Tag\A;
  * @var string $excluded
  */
 
+const FORM_CONTROL_LG_CLASS = 'form-control form-control-lg';
+
 $vat = $s->getSetting('enable_vat_registration');
 
 echo H::openTag('div');
@@ -122,14 +124,14 @@ foreach ($invItems as $item) {
        echo H::openTag('div', ['class' => 'input-group']);
         echo H::openTag('span', ['class' => 'input-group-text']);
          echo H::openTag('b');
-          echo (null !== $item->getProductId() ?
+         echo null !== $item->getProductId() ?
               $translator->translate('item') :
-              $translator->translate('tasks'));
+              $translator->translate('tasks');
          echo H::closeTag('b');
         echo H::closeTag('span');
         echo H::openTag('select', [
             'name' => 'item_name',
-            'class' => 'form-control form-control-lg',
+            'class' => FORM_CONTROL_LG_CLASS,
             'disabled' => true
         ]);
         if (null !== $item->getProductId()) {
@@ -176,13 +178,14 @@ foreach ($invItems as $item) {
           echo $translator->translate('quantity');
          echo H::closeTag('b');
         echo H::closeTag('span');
+        $smFormAmount = 'input-sm form-control amount';
         echo H::openTag('input', [
             'disabled' => true,
             'type' => 'text',
             'maxlength' => '4',
             'size' => '4',
             'name' => 'item_quantity',
-            'class' => 'input-sm form-control amount',
+            'class' => $smFormAmount,
             'data-bs-toggle' => 'tooltip',
             'title' => 'inv_item->quantity',
             'value' => $numberHelper->formatAmount($item->getQuantity())
@@ -204,7 +207,7 @@ foreach ($invItems as $item) {
             'maxlength' => '4',
             'size' => '4',
             'name' => 'item_price',
-            'class' => 'input-sm form-control amount',
+            'class' => $smFormAmount,
             'data-bs-toggle' => 'tooltip',
             'title' => 'inv_item->price',
             'value' => $numberHelper->formatAmount($item->getPrice())
@@ -226,7 +229,7 @@ foreach ($invItems as $item) {
             'maxlength' => '4',
             'size' => '4',
             'name' => 'item_discount_amount',
-            'class' => 'input-sm form-control amount',
+            'class' => $smFormAmount,
             'data-bs-toggle' => 'tooltip',
             'title' => $s->getSetting('currency_symbol') . ' ' .
                 $translator->translate('per.item'),
@@ -249,7 +252,7 @@ foreach ($invItems as $item) {
         echo H::openTag('select', [
             'disabled' => true,
             'name' => 'item_tax_rate_id',
-            'class' => 'form-control form-control-lg',
+            'class' => FORM_CONTROL_LG_CLASS,
             'data-bs-toggle' => 'tooltip',
             'title' => 'inv_item->tax_rate_id'
         ]);
@@ -434,7 +437,7 @@ foreach ($invItems as $item) {
         echo H::openTag('textarea', [
             'disabled' => true,
             'name' => 'item_note',
-            'class' => 'form-control form-control-lg',
+            'class' => FORM_CONTROL_LG_CLASS,
             'rows' => '1'
         ]);
          echo H::encode($item->getNote());
@@ -455,7 +458,7 @@ foreach ($invItems as $item) {
         echo H::openTag('textarea', [
             'disabled' => true,
             'name' => 'item_description',
-            'class' => 'form-control form-control-lg',
+            'class' => FORM_CONTROL_LG_CLASS,
             'rows' => '1'
         ]);
          echo H::encode($item->getDescription());
@@ -574,8 +577,9 @@ foreach ($invItems as $item) {
       echo H::closeTag('td');
       echo H::openTag('td', ['class' => 'td-amount']);
       echo H::closeTag('td');
+      $tdAmountVerticle = 'td-amount td-vert-middle';
       echo H::openTag('td', [
-          'class' => 'td-amount td-vert-middle',
+          'class' => $tdAmountVerticle,
           'style' => 'background-color: lightblue'
       ]);
        echo H::openTag('span');
@@ -599,7 +603,7 @@ foreach ($invItems as $item) {
             (string) $item->getId())?->getSubtotal());
        echo H::closeTag('span');
       echo H::closeTag('td');
-      echo H::openTag('td', ['class' => 'td-amount td-vert-middle']);
+      echo H::openTag('td', ['class' => $tdAmountVerticle]);
        echo H::openTag('span');
         echo H::openTag('b');
          echo '(' . ($vat === '0' ? $translator->translate('discount') :
@@ -620,7 +624,7 @@ foreach ($invItems as $item) {
        echo H::closeTag('span');
       echo H::closeTag('td');
       echo H::openTag('td', [
-          'class' => 'td-amount td-vert-middle',
+          'class' => $tdAmountVerticle,
           'style' => 'background-color: lightpink'
       ]);
        echo H::openTag('span');

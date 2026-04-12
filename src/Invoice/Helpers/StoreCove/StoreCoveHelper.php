@@ -87,20 +87,22 @@ use DateTimeImmutable;
 final readonly class StoreCoveHelper
 {
     private DateHelper $datehelper;
+    private string $from_currency;
+    private string $to_currency;
+    private string $from_to_manual_input;
+    private string $to_from_manual_input;
 
     public function __construct(
         private SRepo $s,
         private DelRepo $delRepo,
-        private IIAR $iiaR,
-        private InvAmount $inv_amount,
         private DL $delivery_location,
         private Translator $t,
-        private string $from_currency,
-        private string $to_currency,
-        private string $from_to_manual_input,
-        private string $to_from_manual_input,
     ) {
         $this->datehelper = new DateHelper($this->s);
+        $this->from_currency = $this->s->getSetting('currency_code_from');
+        $this->to_currency = $this->s->getSetting('currency_code_to');
+        $this->from_to_manual_input = $this->s->getSetting('currency_from_to');
+        $this->to_from_manual_input = $this->s->getSetting('currency_to_from');
     }
 
     /**
@@ -301,7 +303,6 @@ final readonly class StoreCoveHelper
                             $invoice, $input_date, $this->delRepo);
         $startDate = (string) $start_end_array['StartDate'];
         $endDate = (string) $start_end_array['EndDate'];
-        // TODO: Investigate why storecove does not use a description code here
         return $startDate . ' - ' . $endDate;
     }
 
@@ -1567,7 +1568,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                          * @var string $value[$identifier_basis]
                          */
                         $routing_scheme_identifier = $value[$identifier_basis];
-                        continue;
                     }
                 }
             }
@@ -1586,7 +1586,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
             $c_contact = $this->buildCustomerContact($acp);
             $c_del_loc_address = $this->buildDeliveryLocationAddress();
             $c_actual_del_datetime = $this->ActualDeliveryDate($invoice, $delRepo);
-            //$cdr_id = $this->ContractDocumentReference($invoice, $contractRepo);
             $c_del_party = $this->deliveryParty($invoice, $delRepo, $delPartyRepo);
             $payment_means_array = $this->buildPeppolPaymentMeansArray();
             /**
@@ -1604,11 +1603,6 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                        $invoice_period, $iiaR, $cpR, $soiR, $aciiR, $unpR, $ppR);
             $allowance_charges = $this->documentLevelAllowanceCharges($invoice,
                                                                           $aciR);
-            //$inv_amount = ($iaR->repoInvquery((int) $invoice_id));
-            //$supp_tax_cc_tax_amount = (null !== $inv_amount ?
-            // $inv_amount->getItemTaxTotal() : 0.00);
-            //$taxAmounts_item_subtotal = $this->TaxAmounts(
-            //$supp_tax_cc_tax_amount);
             $taxSubtotal = $this->buildTaxSubtotalArray($invoice, $iiaR, $trR);
             /**
              * @var float $taxSubtotal['TaxableAmounts']

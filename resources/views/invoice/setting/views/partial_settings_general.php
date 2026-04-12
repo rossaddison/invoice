@@ -35,6 +35,7 @@ $kUseTest = 'settings[use_test_data]';
 $kDefaultLanguage = 'settings[default_language]';
 $kTimeZone = 'settings[time_zone]';
 $kDefaultCountry = 'settings[default_country]';
+$kDefaultListLimit = 'settings[default_list_limit]';
 $kDisableFlash = 'settings[disable_flash_messages]';
 $kSignupAssignClient = 'settings[signup_automatically_assign_client]';
 $kSignupAgeMin = 'settings[signup_default_age_minimum_eighteen]';
@@ -45,8 +46,10 @@ $kTaxDecimal = 'settings[tax_rate_decimal_places]';
 $kNumberFormat = 'settings[number_format]';
 $kQuotePeriod = 'settings[quote_overview_period]';
 $kInvoicePeriod = 'settings[invoice_overview_period]';
+$kDisableQuickactions = 'settings[disable_quickactions]';
 $kDisableSidebar = 'settings[disable_sidebar]';
 $kCustomTitle = 'settings[custom_title]';
+$kMonospaceAmounts = 'settings[monospace_amounts]';
 $kOpenReports = 'settings[open_reports_in_new_tab]';
 $kBccMails = 'settings[bcc_mails_to_admin]';
 $kCronKey = 'settings[cron_key]';
@@ -306,17 +309,17 @@ echo H::openTag('div', $row); //1
        ]);
         echo $translator->translate('default.list.limit');
        echo H::closeTag('label');
-       $body['settings[default_list_limit]'] =
+       $body[$kDefaultListLimit] =
        $s->getSetting('default_list_limit');
        echo H::openTag('input', [
         'type' => 'number',
-        'name' => 'settings[default_list_limit]',
+        'name' => $kDefaultListLimit,
         'id' => 'default_list_limit',
         'class' => 'form-control form-control-lg',
         'minlength' => '1',
         'min' => '1',
         'required' => true,
-        'value' => $body['settings[default_list_limit]']
+        'value' => $body[$kDefaultListLimit]
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
@@ -366,9 +369,7 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body[
-          $kSignupAssignClient
-         ] == '1'
+          $body[$kSignupAssignClient] == '1'
         )
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
@@ -377,8 +378,7 @@ echo H::openTag('div', $row); //1
      echo H::openTag('div', $colMd6); //6
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('label', [
-        'for' =>
-        $kSignupAgeMin
+        'for' => $kSignupAgeMin
        ]);
         echo $translator->translate(
          'assign.client.on.signup.default.age.minimum.eighteen'
@@ -387,10 +387,8 @@ echo H::openTag('div', $row); //1
        $body[$kSignupAgeMin] =
        $s->getSetting('signup_default_age_minimum_eighteen');
        echo H::openTag('select', [
-        'name' =>
-        $kSignupAgeMin,
-        'id' =>
-        $kSignupAgeMin,
+        'name' => $kSignupAgeMin,
+        'id' => $kSignupAgeMin,
         'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
@@ -399,9 +397,7 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body[
-          $kSignupAgeMin
-         ] == '1'
+          $body[$kSignupAgeMin] == '1'
         )
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
@@ -454,25 +450,19 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('before')
          ->selected(
-          $body[
-          $kCurrencySymbolPlacement
-         ] == 'before'
+          $body[$kCurrencySymbolPlacement] == 'before'
         )
          ->content($translator->translate('before.amount'));
         echo  new Option()
          ->value('after')
          ->selected(
-          $body[
-          $kCurrencySymbolPlacement
-         ] == 'after'
+          $body[$kCurrencySymbolPlacement] == 'after'
         )
          ->content($translator->translate('after.amount'));
         echo  new Option()
          ->value('afterspace')
          ->selected(
-          $body[
-          $kCurrencySymbolPlacement
-         ] == 'afterspace'
+          $body[$kCurrencySymbolPlacement] == 'afterspace'
         )
          ->content(
           $translator->translate('after.amount.space')
@@ -616,49 +606,37 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('this-month')
          ->selected(
-          $body[
-          $kQuotePeriod
-         ] == 'this-month'
+          $body[$kQuotePeriod] == 'this-month'
         )
          ->content($translator->translate('this.month'));
         echo  new Option()
          ->value('last-month')
          ->selected(
-          $body[
-          $kQuotePeriod
-         ] == 'last-month'
+          $body[$kQuotePeriod] == 'last-month'
         )
          ->content($translator->translate('last.month'));
         echo  new Option()
          ->value('this-quarter')
          ->selected(
-          $body[
-          $kQuotePeriod
-         ] == 'this-quarter'
+          $body[$kQuotePeriod] == 'this-quarter'
         )
          ->content($translator->translate('this.quarter'));
         echo  new Option()
          ->value('last-quarter')
          ->selected(
-          $body[
-          $kQuotePeriod
-         ] == 'last-quarter'
+          $body[$kQuotePeriod] == 'last-quarter'
         )
          ->content($translator->translate('last.quarter'));
         echo  new Option()
          ->value('this-year')
          ->selected(
-          $body[
-          $kQuotePeriod
-         ] == 'this-year'
+          $body[$kQuotePeriod] == 'this-year'
         )
          ->content($translator->translate('this.year'));
         echo  new Option()
          ->value('last-year')
          ->selected(
-          $body[
-          $kQuotePeriod
-         ] == 'last-year'
+          $body[$kQuotePeriod] == 'last-year'
         )
          ->content($translator->translate('last.year'));
        echo H::closeTag('select');
@@ -685,49 +663,37 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('this-month')
          ->selected(
-          $body[
-          $kInvoicePeriod
-         ] == 'this-month'
+          $body[$kInvoicePeriod] == 'this-month'
         )
          ->content($translator->translate('this.month'));
         echo  new Option()
          ->value('last-month')
          ->selected(
-          $body[
-          $kInvoicePeriod
-         ] == 'last-month'
+          $body[$kInvoicePeriod] == 'last-month'
         )
          ->content($translator->translate('last.month'));
         echo  new Option()
          ->value('this-quarter')
          ->selected(
-          $body[
-          $kInvoicePeriod
-         ] == 'this-quarter'
+          $body[$kInvoicePeriod] == 'this-quarter'
         )
          ->content($translator->translate('this.quarter'));
         echo  new Option()
          ->value('last-quarter')
          ->selected(
-          $body[
-          $kInvoicePeriod
-         ] == 'last-quarter'
+          $body[$kInvoicePeriod] == 'last-quarter'
         )
          ->content($translator->translate('last.quarter'));
         echo  new Option()
          ->value('this-year')
          ->selected(
-          $body[
-          $kInvoicePeriod
-         ] == 'this-year'
+          $body[$kInvoicePeriod] == 'this-year'
         )
          ->content($translator->translate('this.year'));
         echo  new Option()
          ->value('last-year')
          ->selected(
-          $body[
-          $kInvoicePeriod
-         ] == 'last-year'
+          $body[$kInvoicePeriod] == 'last-year'
         )
          ->content($translator->translate('last.year'));
        echo H::closeTag('select');
@@ -742,10 +708,10 @@ echo H::openTag('div', $row); //1
        ]);
         echo $translator->translate('disable.quickactions');
        echo H::closeTag('label');
-       $body['settings[disable_quickactions]'] =
+       $body[$kDisableQuickactions] =
        $s->getSetting('disable_quickactions');
        echo H::openTag('select', [
-        'name' => 'settings[disable_quickactions]',
+        'name' => $kDisableQuickactions,
         'class' => 'form-control form-control-lg',
         'id' => 'disable_quickactions',
         'data-minimum-results-for-search' => 'Infinity'
@@ -756,7 +722,7 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[disable_quickactions]'] == '1'
+          $body[$kDisableQuickactions] == '1'
          )
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
@@ -826,10 +792,10 @@ echo H::openTag('div', $row); //1
          'monospaced.font.for.amounts'
         );
        echo H::closeTag('label');
-       $body['settings[monospace_amounts]'] =
+       $body[$kMonospaceAmounts] =
        $s->getSetting('monospace_amounts');
        echo H::openTag('select', [
-        'name' => 'settings[monospace_amounts]',
+        'name' => $kMonospaceAmounts,
         'class' => 'form-control form-control-lg',
         'id' => 'monospace_amounts'
        ]);
@@ -839,7 +805,7 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('1')
          ->selected(
-          $body['settings[monospace_amounts]'] == '1'
+          $body[$kMonospaceAmounts] == '1'
          )
          ->content($translator->translate('yes'));
        echo H::closeTag('select');

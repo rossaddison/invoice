@@ -151,18 +151,15 @@ final class QuoteController extends BaseController
         private readonly InvTaxRateService $inv_tax_rate_service,
         private readonly LoggerInterface $logger,
         private readonly MailerInterface $mailer,
-        private readonly soAS $so_amount_service,
         private readonly soACS $soac_service,
         private readonly soCS $so_custom_service,
         private readonly soIS $so_item_service,
-        private readonly soIACS $so_item_ac_service,
         private readonly soS $so_service,
         private readonly soTRS $so_tax_rate_service,
         private readonly QuoteAllowanceChargeService $qac_Service,
         private readonly QuoteAmountService $quote_amount_service,
         private readonly QuoteCustomService $quote_custom_service,
         private readonly QuoteItemService $quote_item_service,
-        private readonly QuoteItemAllowanceChargeService $quote_item_ac_service,
         private readonly QuoteService $quote_service,
         private readonly QuoteTaxRateService $quote_tax_rate_service,
         private readonly QuoteCustomFieldProcessor $quoteCustomFieldProcessor,
@@ -3312,9 +3309,9 @@ $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
 
     private function rbacAccountant() : bool {
         // has accountant role
-        return (($this->userService->hasPermission(Permissions::VIEW_INV)
+        return ($this->userService->hasPermission(Permissions::VIEW_INV)
             && ($this->userService->hasPermission(Permissions::VIEW_PAYMENT))
-            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT))));
+            && ($this->userService->hasPermission(Permissions::EDIT_PAYMENT)));
     }
 
     private function rbacAdmin() : bool {

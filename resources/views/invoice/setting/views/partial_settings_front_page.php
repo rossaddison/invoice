@@ -38,226 +38,216 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::closeTag('div'); //select-all
     echo H::openTag('div', ['id' => 'front-page-checkboxes']); //checkboxes wrapper
     echo H::openTag('div', ['class' => 'form-group']); //5
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_about_page]'] =
-      $s->getSetting('no_front_about_page');
+      $snfap = 'settings[no_front_about_page]';
+      $body[$snfap] = $s->getSetting('no_front_about_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_about_page]',
+        'name' => $snfap,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_about_page]',
+        'name' => $snfap,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_about_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snfap] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('menu.about');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_accreditations_page]'] =
-      $s->getSetting('no_front_accreditations_page');
+      $snfacp = 'settings[no_front_accreditations_page]';
+      $body[$snfacp] = $s->getSetting('no_front_accreditations_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_accreditations_page]',
+        'name' => $snfacp,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_accreditations_page]',
+        'name' => $snfacp,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_accreditations_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snfacp] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('menu.accreditations');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_contact_details_page]'] =
-      $s->getSetting('no_front_contact_details_page');
+      $snfcdp = 'settings[no_front_contact_details_page]';
+      $body[$snfcdp] = $s->getSetting('no_front_contact_details_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_contact_details_page]',
+        'name' => $snfcdp,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_contact_details_page]',
+        'name' => $snfcdp,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_contact_details_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snfcdp] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('menu.contact.details');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_contact_us_page]'] =
-      $s->getSetting('no_front_contact_us_page');
+      $snfcup = 'settings[no_front_contact_us_page]';
+      $body[$snfcup] = $s->getSetting('no_front_contact_us_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_contact_us_page]',
+        'name' => $snfcup,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_contact_us_page]',
+        'name' => $snfcup,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_contact_us_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snfcup] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('menu.contact.us');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_gallery_page]'] =
-      $s->getSetting('no_front_gallery_page');
+      $snfgp = 'settings[no_front_gallery_page]';
+      $body[$snfgp] = $s->getSetting('no_front_gallery_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_gallery_page]',
+        'name' => $snfgp,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_gallery_page]',
+        'name' => $snfgp,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_gallery_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snfgp] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('menu.gallery');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_pricing_page]'] =
-      $s->getSetting('no_front_pricing_page');
+      $snfpp = 'settings[no_front_pricing_page]';
+      $body[$snfpp] = $s->getSetting('no_front_pricing_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_pricing_page]',
+        'name' => $snfpp,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_pricing_page]',
+        'name' => $snfpp,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_pricing_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snfpp] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('menu.pricing');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_team_page]'] =
-      $s->getSetting('no_front_team_page');
+      $snftp = 'settings[no_front_team_page]';
+      $body[$snftp] = $s->getSetting('no_front_team_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_team_page]',
+        'name' => $snftp,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_team_page]',
+        'name' => $snftp,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_team_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snftp] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('menu.team');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_testimonial_page]'] =
-      $s->getSetting('no_front_testimonial_page');
+      $snftep = 'settings[no_front_testimonial_page]';
+      $body[$snftep] = $s->getSetting('no_front_testimonial_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_testimonial_page]',
+        'name' => $snftep,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_testimonial_page]',
+        'name' => $snftep,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_testimonial_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snftep] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('menu.testimonial');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_privacy_policy_page]'] =
-      $s->getSetting('no_front_privacy_policy_page');
+      $snfppp = 'settings[no_front_privacy_policy_page]';
+      $body[$snfppp] = $s->getSetting('no_front_privacy_policy_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_privacy_policy_page]',
+        'name' => $snfppp,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_privacy_policy_page]',
+        'name' => $snfppp,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_privacy_policy_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snfppp] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('menu.privacy.policy');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_terms_of_service_page]'] =
-      $s->getSetting('no_front_terms_of_service_page');
+      $snftosp = 'settings[no_front_terms_of_service_page]';
+      $body[$snftosp] = $s->getSetting('no_front_terms_of_service_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_terms_of_service_page]',
+        'name' => $snftosp,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_terms_of_service_page]',
+        'name' => $snftosp,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_terms_of_service_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snftosp] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('menu.terms.of.service');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_front_site_slider_page]'] =
-      $s->getSetting('no_front_site_slider_page');
+      $snfssp = 'settings[no_front_site_slider_page]';
+      $body[$snfssp] = $s->getSetting('no_front_site_slider_page');
       echo H::openTag('label');
        echo H::openTag('input', [
         'type' => 'hidden',
-        'name' => 'settings[no_front_site_slider_page]',
+        'name' => $snfssp,
         'value' => '0'
        ]);
        echo H::openTag('input', [
         'type' => 'checkbox',
-        'name' => 'settings[no_front_site_slider_page]',
+        'name' => $snfssp,
         'value' => '1',
-        'checked' =>
-        ($body['settings[no_front_site_slider_page]'] == 1) ?
-        'checked' : null
+        'checked' => ($body[$snfssp] == 1) ? 'checked' : null
        ]);
        echo $translator->translate('home');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
     echo H::closeTag('div'); //5
     echo H::closeTag('div'); //checkboxes wrapper
    echo H::closeTag('div'); //4

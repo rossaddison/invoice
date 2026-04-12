@@ -27,12 +27,13 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::openTag('label', ['for' => 'settings[projects_enabled]']);
         echo $translator->translate('enable.projects');
        echo H::closeTag('label');
-       $body['settings[projects_enabled]'] =
+       $pe = 'settings[projects_enabled]';
+       $body[$pe] =
        $s->getSetting('projects_enabled');
        echo H::openTag('select', [
-        'name' => 'settings[projects_enabled]',
+        'name' => $pe,
         'class' => 'form-control form-control-lg',
-        'id' => 'settings[projects_enabled]'
+        'id' => $pe
        ]);
         $options = [
          '0' => $translator->translate('no'),
@@ -45,7 +46,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         echo  new Option()
          ->value($value)
          ->selected(
-          $value == ($body['settings[projects_enabled]'] ?? '0')
+          $value == ($body[$pe] ?? '0')
          )
          ->content($label);
         }
@@ -54,16 +55,15 @@ echo H::openTag('div', ['class' => 'row']); //1
      echo H::closeTag('div'); //6
      echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
-       echo H::openTag('label', ['for' => 'settings[default_hourly_rate]']);
+       $dhr = 'settings[default_hourly_rate]';
+       echo H::openTag('label', ['for' => $dhr]);
         echo $translator->translate('default.hourly.rate');
        echo H::closeTag('label');
-       $body['settings[default_hourly_rate]'] =
-       $s->getSetting('default_hourly_rate');
-       $formatted_rate = $body['settings[default_hourly_rate]']
-       ? $s->formatAmount((float) $body['settings[default_hourly_rate]'])
-       : $body['settings[default_hourly_rate]'];
+       $body[$dhr] = $s->getSetting('default_hourly_rate');
+       $formatted_rate = $body[$dhr] ? $s->formatAmount((float) $body[$dhr])
+        : $body[$dhr];
        echo H::openTag('div', ['class' => 'input-group']); //8
-        echo H::input('text', 'settings[default_hourly_rate]',
+        echo H::input('text', $dhr,
          $formatted_rate, [
          'id' => 'settings[default_hourly_rate]',
          'class' => 'form-control amount'

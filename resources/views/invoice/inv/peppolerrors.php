@@ -60,7 +60,7 @@ use Yiisoft\Html\Html;
         echo  new A()->href($url)->content($rule)->render();
         echo Html::closeTag('td');
         echo Html::closeTag('tr');
-    };
+    }
     echo Html::closeTag('tbody');
     echo Html::closeTag('table');
 ?>

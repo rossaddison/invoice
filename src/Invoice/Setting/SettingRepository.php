@@ -45,7 +45,7 @@ use RuntimeException;
  */
 final class SettingRepository extends Select\Repository
 {
-    public array $settings = [];
+    public array $settingsArray = [];
     
     private const string DECRYPT_KEY = 'base64:3iqxXZEG5aR0NPvmE4qubcE/'
             . 'sn6nuzXKLrZVRMP3/Ak=';
@@ -513,8 +513,8 @@ final class SettingRepository extends Select\Repository
         $all_settings = $this->findAllPreloaded();
         /** @var Setting $setting */
         foreach ($all_settings as $setting) {
-            /** @var string $this->settings[$setting->getSettingKey()] */
-            $this->settings[$setting->getSettingKey()] =
+            /** @var string $this->settingsArray[$setting->getSettingKey()] */
+            $this->settingsArray[$setting->getSettingKey()] =
                     $setting->getSettingValue();
         }
     }
@@ -528,9 +528,9 @@ final class SettingRepository extends Select\Repository
         // Build settings array
         $this->loadSettings();
         $setting = '';
-        /** @var string $this->settings[$key] */
-        if (array_key_exists($key, $this->settings)) {
-            $setting = $this->settings[$key];
+        /** @var string $this->settingsArray[$key] */
+        if (array_key_exists($key, $this->settingsArray)) {
+            $setting = $this->settingsArray[$key];
         }
         return $setting;
     }
@@ -557,8 +557,8 @@ final class SettingRepository extends Select\Repository
     public function setting(string $key): string
     {
         $this->loadSettings();
-        /** @var string $this->settings[$key] */
-        return $this->settings[$key];
+        /** @var string $this->settingsArray[$key] */
+        return $this->settingsArray[$key];
     }
 
     /**
@@ -567,7 +567,7 @@ final class SettingRepository extends Select\Repository
      */
     public function setSetting(string $key, string $value): void
     {
-        $this->settings[$key] = $value;
+        $this->settingsArray[$key] = $value;
     }
 
     /**

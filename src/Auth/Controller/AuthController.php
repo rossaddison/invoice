@@ -75,7 +75,6 @@ final class AuthController
         private readonly LoggerInterface $logger,
         private readonly TranslatorInterface $translator,
         // trait variables
-        private readonly Flash $flash,
         private readonly CounterInterface $rateLimiter,
         private readonly ClientInterface $configWebDiAuthGuzzle,
         private readonly RequestFactoryInterface $requestFactory,

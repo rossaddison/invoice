@@ -42,11 +42,13 @@ $columns = [
     new DataColumn(
         'next',
         header: $translator->translate('status'),
-        content: static fn (InvRecurring $model)
-            =>  new Span()
-            ->addClass(null !== $model->getNext() ? 'btn btn-success' : 'btn btn-danger')
-            ->content(null !== $model->getNext() ? $translator->translate('active') : $translator->translate('inactive'))
-            ->render(),
+        content: static function (InvRecurring $model) use ($translator): string {
+            $active = null !== $model->getNext();
+            return (new Span())
+                ->addClass($active ? 'btn btn-success' : 'btn btn-danger')
+                ->content($translator->translate($active ? 'active' : 'inactive'))
+                ->render();
+        },
         encodeContent: false,
     ),
     new DataColumn(
@@ -90,7 +92,8 @@ $columns = [
         'next',
         header: $translator->translate('next.date'),
         content: static fn (InvRecurring $model)
-        => Html::encode(null !== $model->getNext() ? ((!is_string($recurringNext = $model->getNext()) && null !== $recurringNext) ? $recurringNext->format('Y-m-d') : '') : ''),
+        => Html::encode(!is_string($recurringNext = $model->getNext()) && null !== $recurringNext
+                     ? $recurringNext->format('Y-m-d') : ''),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -98,12 +101,13 @@ $columns = [
                 return null !== $model->getNext() ? '🛑' : '🏃';
             },
             url: static function (InvRecurring $model) use ($urlGenerator): string {
-                return null !== $model->getNext() ? $urlGenerator->generate('invrecurring/stop', ['id' => $model->getId()]) : $urlGenerator->generate('invrecurring/start', ['id' => $model->getId()]);
+                $active = null !== $model->getNext();
+                return $urlGenerator->generate($active ? 'invrecurring/stop' : 'invrecurring/start', ['id' => $model->getId()]);
             },
             attributes: function (InvRecurring $model) use ($translator): array {
                 return [
                     'data-bs-toggle' => 'tooltip',
-                    'title' => null !== $model->getNext() ? $translator->translate('stop') : $translator->translate('start'),
+                    'title' => $translator->translate(null !== $model->getNext() ? 'stop' : 'start'),
                 ];
             },
         ),

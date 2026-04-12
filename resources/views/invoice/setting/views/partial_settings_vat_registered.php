@@ -31,57 +31,60 @@ echo H::openTag('div', $row); //1
      echo H::openTag('div', $colMd6); //6
       echo H::openTag('div', $formGroup); //7
        echo H::openTag('div', $checkbox); //8
-        $body['settings[enable_vat_registration]'] =
+        $enableVat = 'settings[enable_vat_registration]';
+        $body[$enableVat] =
         $s->getSetting('enable_vat_registration');
         echo H::openTag('label');
          echo H::openTag('input', [
           'type' => 'hidden',
-          'name' => 'settings[enable_vat_registration]',
+          'name' => $enableVat,
           'value' => '0'
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
-          'name' => 'settings[enable_vat_registration]',
+          'name' => $enableVat,
           'value' => '1',
-          'checked' => ($body['settings[enable_vat_registration]'] == 1)
+          'checked' => ($body[$enableVat] == 1)
           ? 'checked' : null
          ]);
          echo $translator->translate('enable.vat');
         echo H::closeTag('label');
        echo H::closeTag('div'); //8
        echo H::openTag('div', $checkbox); //8
-        $body['settings[display_vat_enabled_message]'] =
+        $displayMsg = 'settings[display_vat_enabled_message]';
+        $body[$displayMsg] =
         $s->getSetting('display_vat_enabled_message');
         echo H::openTag('label');
          echo H::openTag('input', [
           'type' => 'hidden',
-          'name' => 'settings[display_vat_enabled_message]',
+          'name' => $displayMsg,
           'id' => 'dvem_hidden',
           'value' => '0'
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
-          'name' => 'settings[display_vat_enabled_message]',
+          'name' =>  $displayMsg,
           'id' => 'dvem_checkbox',
           'value' => '1',
-          'checked' => ($body['settings[display_vat_enabled_message]'] == 1)
+          'checked' => ($body[$displayMsg] == 1)
           ? 'checked' : null
          ]);
          echo $translator->translate('enable.vat.message');
         echo H::closeTag('label');
         echo H::openTag('br');
         echo H::openTag('br');
+        $vW = 'enable.vat.warning.line.';
         echo H::openTag('p');
-         echo $translator->translate('enable.vat.warning.line.1');
+         echo $translator->translate($vW . '1');
         echo H::closeTag('p');
         echo H::openTag('p');
-         echo $translator->translate('enable.vat.warning.line.2');
+         echo $translator->translate($vW . '2');
         echo H::closeTag('p');
         echo H::openTag('p');
-         echo $translator->translate('enable.vat.warning.line.3');
+         echo $translator->translate($vW . '3');
         echo H::closeTag('p');
         echo H::openTag('p');
-         echo $translator->translate('enable.vat.warning.line.4');
+         echo $translator->translate($vW . '4');
         echo H::closeTag('p');
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7

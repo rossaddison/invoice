@@ -1,18 +1,14 @@
 <?php
 declare(strict_types=1);
-
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Option;
-
 /**
 * @var App\Invoice\Group\GroupRepository $gR
 * @var App\Invoice\Setting\SettingRepository $s
 * @var Yiisoft\Translator\TranslatorInterface $translator
 * @var array $body
 */
-
 $settingKey = 'settings[default_client_purchase_order_group]';
-
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']); //2
@@ -43,9 +39,7 @@ echo H::openTag('div', ['class' => 'row']); //1
         * @var App\Invoice\Entity\Group $invoice_group
         */
         foreach ($gR->findAllPreloaded() as $invoice_group) {
-        $selected = $body[
-         'settings[default_client_purchase_order_group]'
-        ] == $invoice_group->getId();
+        $selected = $body[$settingKey] == $invoice_group->getId();
         echo  new Option()
          ->value($invoice_group->getId())
          ->selected($selected)

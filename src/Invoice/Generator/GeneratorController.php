@@ -86,7 +86,6 @@ class GeneratorController extends BaseController
         private Aliases $aliases,
         private DataResponseFactoryInterface $factory,
         private GeneratorService $generatorService,
-        private readonly UrlGenerator $urlGenerator,
         SessionInterface $session,
         sR $sR,
         TranslatorInterface $translator,

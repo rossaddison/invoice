@@ -24,6 +24,20 @@ use Yiisoft\Html\Tag\Option;
 * @var array $body
 */
 
+$kNoHmrc = 'settings[no_developer_sandbox_hmrc_continue_button]';
+$kNoGithub = 'settings[no_github_continue_button]';
+$kNoGoogle = 'settings[no_google_continue_button]';
+$kNoFacebook = 'settings[no_facebook_continue_button]';
+$kNoGovuk = 'settings[no_govuk_continue_button]';
+$kNoLinkedin = 'settings[no_linkedin_continue_button]';
+$kNoMicrosoft = 'settings[no_microsoftonline_continue_button]';
+$kNoOpenBanking = 'settings[no_openbanking_continue_button]';
+$kOpenBankingProvider = 'settings[open_banking_provider]';
+$kNoOpenIdConnect = 'settings[no_openidconnect_continue_button]';
+$kNoVkontakte = 'settings[no_vkontakte_continue_button]';
+$kNoX = 'settings[no_x_continue_button]';
+$kNoYandex = 'settings[no_yandex_continue_button]';
+
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', ['class' => 'col-xs-12 col-md-8 col-md-offset-2']); //2
@@ -32,26 +46,25 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::openTag('label');
      echo H::openTag('i', ['class' => 'bi bi-info-circle']);
      echo H::closeTag('i');
-     echo $translator->translate('oauth2') . ' ' . 'â›”';
+     echo $translator->translate('oauth2') . ' ' . '⛔';
     echo H::closeTag('label');
    echo H::closeTag('div'); //4
    echo H::openTag('div', ['class' => 'panel-body']); //4
     echo H::openTag('div', ['class' => 'form-group']); //5
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_developer_sandbox_hmrc_continue_button]'] =
-      $s->getSetting('no_developer_sandbox_hmrc_continue_button');
+      $body[$kNoHmrc] = $s->getSetting('no_developer_sandbox_hmrc_continue_button');
       echo H::openTag('label');
        echo H::tag('input', '', [
         'type' => 'hidden',
-        'name' => 'settings[no_developer_sandbox_hmrc_continue_button]',
+        'name' => $kNoHmrc,
         'value' => '0'
        ]);
        echo H::tag('input', '', [
         'type' => 'checkbox',
-        'name' => 'settings[no_developer_sandbox_hmrc_continue_button]',
+        'name' => $kNoHmrc,
         'value' => '1',
-        'checked' => $body['settings[no_developer_sandbox_hmrc_continue_button]']
-        == 1
+        'checked' => $body[$kNoHmrc] == 1
        ]);
        echo H::tag('img', '', [
         'src' => '/img/govuk-opengraph-image.png',
@@ -62,74 +75,74 @@ echo H::openTag('div', ['class' => 'row']); //1
        . $translator->translate('gov.developer.sandbox.uk');
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_github_continue_button]'] =
-      $s->getSetting('no_github_continue_button');
+      $body[$kNoGithub] = $s->getSetting('no_github_continue_button');
       echo H::openTag('label');
        echo H::tag('input', '', [
         'type' => 'hidden',
-        'name' => 'settings[no_github_continue_button]',
+        'name' => $kNoGithub,
         'value' => '0'
        ]);
        echo H::tag('input', '', [
         'type' => 'checkbox',
-        'name' => 'settings[no_github_continue_button]',
+        'name' => $kNoGithub,
         'value' => '1',
-        'checked' => $body['settings[no_github_continue_button]'] == 1
+        'checked' => $body[$kNoGithub] == 1
        ]);
        echo  new I()->addClass('bi bi-github')->render() . ' Github';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_google_continue_button]'] =
-      $s->getSetting('no_google_continue_button');
+      $body[$kNoGoogle] = $s->getSetting('no_google_continue_button');
       echo H::openTag('label');
        echo H::tag('input', '', [
         'type' => 'hidden',
-        'name' => 'settings[no_google_continue_button]',
+        'name' => $kNoGoogle,
         'value' => '0'
        ]);
        echo H::tag('input', '', [
         'type' => 'checkbox',
-        'name' => 'settings[no_google_continue_button]',
+        'name' => $kNoGoogle,
         'value' => '1',
-        'checked' => $body['settings[no_google_continue_button]'] == 1
+        'checked' => $body[$kNoGoogle] == 1
        ]);
        echo  new I()->addClass('bi bi-google')->render() . ' Google';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_facebook_continue_button]'] =
-      $s->getSetting('no_facebook_continue_button');
+      $body[$kNoFacebook] = $s->getSetting('no_facebook_continue_button');
       echo H::openTag('label');
        echo H::tag('input', '', [
         'type' => 'hidden',
-        'name' => 'settings[no_facebook_continue_button]',
+        'name' => $kNoFacebook,
         'value' => '0'
        ]);
        echo H::tag('input', '', [
         'type' => 'checkbox',
-        'name' => 'settings[no_facebook_continue_button]',
+        'name' => $kNoFacebook,
         'value' => '1',
-        'checked' => $body['settings[no_facebook_continue_button]'] == 1
+        'checked' => $body[$kNoFacebook] == 1
        ]);
        echo  new I()->addClass('bi bi-facebook')->render() . ' Facebook';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_govuk_continue_button]'] =
-      $s->getSetting('no_govuk_continue_button');
+      $body[$kNoGovuk] = $s->getSetting('no_govuk_continue_button');
       echo H::openTag('label');
        echo H::tag('input', '', [
         'type' => 'hidden',
-        'name' => 'settings[no_govuk_continue_button]',
+        'name' => $kNoGovuk,
         'value' => '0'
        ]);
        echo H::tag('input', '', [
         'type' => 'checkbox',
-        'name' => 'settings[no_govuk_continue_button]',
+        'name' => $kNoGovuk,
         'value' => '1',
-        'checked' => $body['settings[no_govuk_continue_button]'] == 1
+        'checked' => $body[$kNoGovuk] == 1
        ]);
        echo H::tag('img', '', [
         'src' => '/img/govuk-opengraph-image.png',
@@ -139,58 +152,58 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo ' Gov Uk';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_linkedin_continue_button]'] =
-      $s->getSetting('no_linkedin_continue_button');
+      $body[$kNoLinkedin] = $s->getSetting('no_linkedin_continue_button');
       echo H::openTag('label');
        echo H::tag('input', '', [
         'type' => 'hidden',
-        'name' => 'settings[no_linkedin_continue_button]',
+        'name' => $kNoLinkedin,
         'value' => '0'
        ]);
        echo H::tag('input', '', [
         'type' => 'checkbox',
-        'name' => 'settings[no_linkedin_continue_button]',
+        'name' => $kNoLinkedin,
         'value' => '1',
-        'checked' => $body['settings[no_linkedin_continue_button]'] == 1
+        'checked' => $body[$kNoLinkedin] == 1
        ]);
        echo  new I()->addClass('bi bi-linkedin')->render() . ' LinkedIn';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_microsoftonline_continue_button]'] =
-      $s->getSetting('no_microsoftonline_continue_button');
+      $body[$kNoMicrosoft] = $s->getSetting('no_microsoftonline_continue_button');
       echo H::openTag('label');
        echo H::tag('input', '', [
         'type' => 'hidden',
-        'name' => 'settings[no_microsoftonline_continue_button]',
+        'name' => $kNoMicrosoft,
         'value' => '0'
        ]);
        echo H::tag('input', '', [
         'type' => 'checkbox',
-        'name' => 'settings[no_microsoftonline_continue_button]',
+        'name' => $kNoMicrosoft,
         'value' => '1',
-        'checked' => $body['settings[no_microsoftonline_continue_button]'] == 1
+        'checked' => $body[$kNoMicrosoft] == 1
        ]);
        echo  new I()->addClass('bi bi-microsoft')->render()
        . ' Microsoft Online';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div'); //6
       echo H::openTag('div', ['class' => 'checkbox']); //7
-       $body['settings[no_openbanking_continue_button]'] =
-       $s->getSetting('no_openbanking_continue_button');
+       $body[$kNoOpenBanking] = $s->getSetting('no_openbanking_continue_button');
        echo H::openTag('label');
         echo H::tag('input', '', [
          'type' => 'hidden',
-         'name' => 'settings[no_openbanking_continue_button]',
+         'name' => $kNoOpenBanking,
          'value' => '0'
         ]);
         echo H::tag('input', '', [
          'type' => 'checkbox',
-         'name' => 'settings[no_openbanking_continue_button]',
+         'name' => $kNoOpenBanking,
          'value' => '1',
-         'checked' => $body['settings[no_openbanking_continue_button]'] == 1
+         'checked' => $body[$kNoOpenBanking] == 1
         ]);
         echo H::openTag('svg', [
          'xmlns' => 'http://www.w3.org/2000/svg',
@@ -239,11 +252,10 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('label');
       echo H::closeTag('div'); //7
       echo H::openTag('div'); //7
-       $body['settings[open_banking_provider]'] =
-       $s->getSetting('open_banking_provider');
+       $body[$kOpenBankingProvider] = $s->getSetting('open_banking_provider');
        echo H::openTag('select', [
-        'name' => 'settings[open_banking_provider]',
-        'id' => 'settings[open_banking_provider]',
+        'name' => $kOpenBankingProvider,
+        'id' => $kOpenBankingProvider,
         'class' => 'form-control form-control-lg',
        ]);
         /**
@@ -253,45 +265,44 @@ echo H::openTag('div', ['class' => 'row']); //1
         foreach ($openBankingProviders as $value) {
         echo  new Option()
          ->value($value)
-         ->selected($value
-          == $body['settings[open_banking_provider]'])
-          ->content(ucfirst($value));
-          }
-          echo H::closeTag('select');
-          echo H::closeTag('div'); //11
-          echo H::closeTag('div'); //11
-          echo H::openTag('div', ['class' => 'checkbox']); //11
-          $body['settings[no_openidconnect_continue_button]'] =
-          $s->getSetting('no_openidconnect_continue_button');
-          echo H::openTag('label');
-          echo H::tag('input', '', [
-          'type' => 'hidden',
-          'name' => 'settings[no_openidconnect_continue_button]',
-          'value' => '0'
-         ]);
-       echo H::tag('input', '', [
-        'type' => 'checkbox',
-        'name' => 'settings[no_openidconnect_continue_button]',
-        'value' => '1',
-        'checked' => $body['settings[no_openidconnect_continue_button]'] == 1
-       ]);
-       echo  new I()->addClass('bi')->render() . ' Open Id Connect';
-      echo H::closeTag('label');
+         ->selected($value == $body[$kOpenBankingProvider])
+         ->content(ucfirst($value));
+        }
+       echo H::closeTag('select');
+      echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_vkontakte_continue_button]'] =
-      $s->getSetting('no_vkontakte_continue_button');
+      $body[$kNoOpenIdConnect] = $s->getSetting('no_openidconnect_continue_button');
       echo H::openTag('label');
        echo H::tag('input', '', [
         'type' => 'hidden',
-        'name' => 'settings[no_vkontakte_continue_button]',
+        'name' => $kNoOpenIdConnect,
         'value' => '0'
        ]);
        echo H::tag('input', '', [
         'type' => 'checkbox',
-        'name' => 'settings[no_vkontakte_continue_button]',
+        'name' => $kNoOpenIdConnect,
         'value' => '1',
-        'checked' => $body['settings[no_vkontakte_continue_button]'] == 1
+        'checked' => $body[$kNoOpenIdConnect] == 1
+       ]);
+       echo  new I()->addClass('bi')->render() . ' Open Id Connect';
+      echo H::closeTag('label');
+     echo H::closeTag('div'); //6
+
+     echo H::openTag('div', ['class' => 'checkbox']); //6
+      $body[$kNoVkontakte] = $s->getSetting('no_vkontakte_continue_button');
+      echo H::openTag('label');
+       echo H::tag('input', '', [
+        'type' => 'hidden',
+        'name' => $kNoVkontakte,
+        'value' => '0'
+       ]);
+       echo H::tag('input', '', [
+        'type' => 'checkbox',
+        'name' => $kNoVkontakte,
+        'value' => '1',
+        'checked' => $body[$kNoVkontakte] == 1
        ]);
        echo H::tag('img', '', [
         'src' => '/img/vkontakte.jpg',
@@ -301,38 +312,38 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo ' VKontakte';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_x_continue_button]'] =
-      $s->getSetting('no_x_continue_button');
+      $body[$kNoX] = $s->getSetting('no_x_continue_button');
       echo H::openTag('label');
        echo H::tag('input', '', [
         'type' => 'hidden',
-        'name' => 'settings[no_x_continue_button]',
+        'name' => $kNoX,
         'value' => '0'
        ]);
        echo H::tag('input', '', [
         'type' => 'checkbox',
-        'name' => 'settings[no_x_continue_button]',
+        'name' => $kNoX,
         'value' => '1',
-        'checked' => $body['settings[no_x_continue_button]'] == 1
+        'checked' => $body[$kNoX] == 1
        ]);
        echo  new I()->addClass('bi bi-twitter')->render() . ' X i.e Twitter';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
      echo H::openTag('div', ['class' => 'checkbox']); //6
-      $body['settings[no_yandex_continue_button]'] =
-      $s->getSetting('no_yandex_continue_button');
+      $body[$kNoYandex] = $s->getSetting('no_yandex_continue_button');
       echo H::openTag('label');
        echo H::tag('input', '', [
         'type' => 'hidden',
-        'name' => 'settings[no_yandex_continue_button]',
+        'name' => $kNoYandex,
         'value' => '0'
        ]);
        echo H::tag('input', '', [
         'type' => 'checkbox',
-        'name' => 'settings[no_yandex_continue_button]',
+        'name' => $kNoYandex,
         'value' => '1',
-        'checked' => $body['settings[no_yandex_continue_button]'] == 1
+        'checked' => $body[$kNoYandex] == 1
        ]);
        echo H::tag('img', '', [
         'src' => '/img/yandex.jpg',
@@ -342,6 +353,7 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo ' Yandex';
       echo H::closeTag('label');
      echo H::closeTag('div'); //6
+
     echo H::closeTag('div'); //5
    echo H::closeTag('div'); //4
   echo H::closeTag('div'); //3

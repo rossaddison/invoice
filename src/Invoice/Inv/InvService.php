@@ -41,7 +41,6 @@ final readonly class InvService
 {
     public function __construct(
         private InvRepository $repository,
-        private SessionInterface $session,
         private Translator $translator,
         private CR $cR,
         private GR $gR,

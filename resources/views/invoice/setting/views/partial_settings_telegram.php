@@ -35,21 +35,22 @@ echo H::openTag('div', $row); //1
     echo H::openTag('div', $row); //5
      echo H::openTag('div', $colMd6); //6
       echo H::openTag('div', $formGroup); //7
+       $telegram = 'settings[enable_telegram]';
        echo H::openTag('div', $checkbox); //8
-        $body['settings[enable_telegram]'] =
+        $body[$telegram] =
         $s->getSetting('enable_telegram');
         echo H::openTag('label');
          echo H::openTag('input', [
           'type' => 'hidden',
-          'name' => 'settings[enable_telegram]',
+          'name' => $telegram,
           'value' => '0'
          ]);
          echo H::openTag('input', [
           'type' => 'checkbox',
-          'name' => 'settings[enable_telegram]',
+          'name' => $telegram,
           'value' => '1',
           'checked' => (
-          $body['settings[enable_telegram]']
+          $body[$telegram]
           == '1') ? 'checked' : null
          ]);
          echo H::a(
@@ -115,22 +116,21 @@ echo H::openTag('div', $row); //1
         echo H::openTag('b');
          echo '3. Record the token here ...';
         echo H::closeTag('b');
-        echo H::openTag('label', [
-         'for' => 'settings[telegram_token]'
-        ]);
+        echo H::openTag('label', ['for' => 'settings[telegram_token]']);
          echo $translator->translate(
           'telegram.bot.api.token'
          );
+        $token = 'settings[telegram_token]';
         echo H::closeTag('label');
-        $body['settings[telegram_token]'] =
+        $body[$token] =
         $s->getSetting('telegram_token');
         echo H::openTag('input', [
          'type' => 'password',
-         'name' => 'settings[telegram_token]',
-         'id' => 'settings[telegram_token]',
+         'name' => $token,
+         'id' => $token,
          'class' => 'form-control form-control-lg',
          'value' => H::encode(
-         $body['settings[telegram_token]']
+         $body[$token]
         )
         ]);
        echo H::closeTag('p');
@@ -189,27 +189,27 @@ echo H::openTag('div', $row); //1
         echo H::openTag('b');
          echo '7. ';
         echo H::closeTag('b');
+        $chat = 'settings[telegram_chat_id]';
         echo H::openTag('label', [
-         'for' => 'settings[telegram_chat_id]'
+         'for' => $chat
         ]);
          echo $translator->translate(
           'telegram.bot.api.chat.id'
          );
         echo H::closeTag('label');
-        $body['settings[telegram_chat_id]'] =
+        $body[$chat] =
         $s->getSetting('telegram_chat_id');
         echo H::openTag('input', [
          'type' => 'password',
-         'name' => 'settings[telegram_chat_id]',
-         'id' => 'settings[telegram_chat_id]',
+         'name' => $chat,
+         'id' => $chat,
          'class' => 'form-control form-control-lg',
-         'value' => H::encode(
-         $body['settings[telegram_chat_id]']
-        )
+         'value' => H::encode($body[$chat])
         ]);
        echo H::closeTag('p');
+       $testMsg = 'settings[telegram_test_message_use]';
        echo H::openTag('label', [
-        'for' => 'settings[telegram_test_message_use]'
+        'for' => $testMsg
        ]);
         echo H::openTag('b');
          echo '8. ';
@@ -218,28 +218,20 @@ echo H::openTag('div', $row); //1
          'telegram.bot.api.hello.world.test.message.use'
         );
        echo H::closeTag('label');
-       $body['settings[telegram_test_message_use]'] =
+       $body[$testMsg] =
        $s->getSetting('telegram_test_message_use');
        echo H::openTag('select', [
-        'name' => 'settings[telegram_test_message_use]',
-        'id' => 'settings[telegram_test_message_use]',
+        'name' => $testMsg,
+        'id' => $testMsg,
         'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
-         ->selected(
-          $body[
-          'settings[telegram_test_message_use]'
-         ] == '0'
-        )
+         ->selected($body[$testMsg] == '0')
          ->content($translator->translate('no'));
         echo  new Option()
          ->value('1')
-         ->selected(
-          $body[
-          'settings[telegram_test_message_use]'
-         ] == '1'
-        )
+         ->selected($body[$testMsg] == '1')
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
        echo H::openTag('br');
@@ -257,10 +249,8 @@ echo H::openTag('div', $row); //1
          echo 'click here...';
         echo H::closeTag('a');
        echo H::closeTag('p');
-       echo H::openTag('label', [
-        'for' =>
-        'settings[telegram_payment_notifications]'
-       ]);
+       $telegramPayment = 'settings[telegram_payment_notifications]';
+       echo H::openTag('label', ['for' => $telegramPayment]);
         echo H::openTag('b');
          echo '10. ';
         echo H::closeTag('b');
@@ -268,32 +258,22 @@ echo H::openTag('div', $row); //1
          'telegram.bot.api.payment.notifications'
         );
        echo H::closeTag('label');
-       $body['settings[telegram_payment_notifications]'] =
+       $body[$telegramPayment] =
        $s->getSetting(
         'telegram_payment_notifications'
        );
        echo H::openTag('select', [
-        'name' =>
-        'settings[telegram_payment_notifications]',
-        'id' =>
-        'settings[telegram_payment_notifications]',
+        'name' => $telegramPayment,
+        'id' => $telegramPayment,
         'class' => 'form-control form-control-lg',
        ]);
         echo  new Option()
          ->value('0')
-         ->selected(
-          $body[
-          'settings[telegram_payment_notifications]'
-         ] == '0'
-        )
+         ->selected($body[$telegramPayment] == '0')
          ->content($translator->translate('no'));
         echo  new Option()
          ->value('1')
-         ->selected(
-          $body[
-          'settings[telegram_payment_notifications]'
-         ] == '1'
-        )
+         ->selected($body[$telegramPayment] == '1')
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
        echo H::openTag('br');
@@ -302,9 +282,10 @@ echo H::openTag('div', $row); //1
     echo H::closeTag('div'); //5
     echo H::openTag('div', $row); //5
      echo H::openTag('div', $colMd6); //6
+      $telegramNotification =
+       'settings[telegram_payment_notifications]';
       echo H::openTag('label', [
-       'for' =>
-       'settings[telegram_payment_notifications]'
+       'for' => $telegramNotification
       ]);
        echo H::openTag('b');
         echo H::openTag('h4');
@@ -334,30 +315,19 @@ echo H::openTag('div', $row); //1
          echo 'Webhook Secret Token';
         echo H::closeTag('a');
        echo H::closeTag('p');
-       echo H::openTag('label', [
-        'for' =>
-        'settings[telegram_webhook_secret_token]'
-       ]);
+       $telegramToken = 'settings[telegram_webhook_secret_token]';
+       echo H::openTag('label', ['for' => $telegramToken]);
         echo $translator->translate(
          'telegram.bot.api.webhook.secret.token'
         );
        echo H::closeTag('label');
-       $body['settings[telegram_webhook_secret_token]'] =
-       $s->getSetting(
-        'telegram_webhook_secret_token'
-       );
+       $body[$telegramToken] = $s->getSetting('telegram_webhook_secret_token');
        echo H::openTag('input', [
         'type' => 'password',
-        'name' =>
-        'settings[telegram_webhook_secret_token]',
-        'id' =>
-        'settings[telegram_webhook_secret_token]',
+        'name' => $telegramToken,
+        'id' => $telegramToken,
         'class' => 'form-control form-control-lg',
-        'value' => H::encode(
-        $body[
-        'settings[telegram_webhook_secret_token]'
-       ]
-       )
+        'value' => H::encode($body[$telegramToken])
        ]);
       echo H::closeTag('div'); //7
      echo H::closeTag('div'); //6

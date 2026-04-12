@@ -50,11 +50,9 @@ final readonly class ZugFerdHelper
 
     /**
      * @param Inv $invoice
-     * @param IIAR $iiaR
-     * @param InvAmount $inv_amount
      * @return string
      */
-    public function generateInvoiceZugferdXmlTempFile(Inv $invoice, IIAR $iiaR, InvAmount $inv_amount): string
+    public function generateInvoiceZugferdXmlTempFile(Inv $invoice): string
     {
         $this->ensureTempZugferdFolderAndUploadsFolderExist();
         $path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Uploads'
@@ -64,7 +62,7 @@ final readonly class ZugFerdHelper
                                 . ($invoice->getNumber() ?? '_search_null_invoice_id_') . '_zugferd.xml';
         // Generate inv items from Entity Inv->getItems() HasMany function
         // Generate inv item amounts from $iiaR
-        $z = new ZugferdXml($this->s, $invoice, $iiaR, $inv_amount, $this->translator);
+        $z = new ZugferdXml($this->s, $invoice, $this->iiaR, $this->inv_amount, $this->translator);
         $f = fopen($path, 'wb');
         if (!$f) {
             throw new \Exception(sprintf('Unable to create output file %s', $path));

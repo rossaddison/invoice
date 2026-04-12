@@ -6,7 +6,6 @@ use App\Widget\Button;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\I;
 use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 
 /**
@@ -66,7 +65,6 @@ use Yiisoft\Html\Tag\Option;
  */
 
 $vat = $s->getSetting('enable_vat_registration');
-
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 echo $modal_delete_inv;
 if ($vat === '0') {
@@ -228,8 +226,8 @@ echo H::tag('input', '', [
  echo H::openTag('div', ['id' => 'headerbar']);
   echo H::openTag('h1', ['class' => 'headerbar-title']);
    echo H::encode($translator->translate('invoice')) . ' ';
-   echo(H::encode(strlen($inv->getNumber() ?? '') > 0 ?
-        ' #' . ($inv->getNumber() ?? ' #') : $inv->getId()));
+   echo H::encode(strlen($inv->getNumber() ?? '') > 0 ?
+        ' #' . ($inv->getNumber() ?? ' #') : $inv->getId());
   echo H::closeTag('h1');
  echo H::closeTag('div');
 // Toolbar
@@ -777,7 +775,8 @@ if ($inv->getStatusId() === 1
               'value' => $inv->getDateCreated()->format('Y-m-d')
           ]);
           echo H::openTag('span', ['class' => 'input-group-text']);
-           echo H::openTag('i', ['class' => 'bi bi-calendar']);
+           $biCalender = 'bi bi-calendar';
+           echo H::openTag('i', ['class' => $biCalender]);
            echo H::closeTag('i');
           echo H::closeTag('span');
          echo H::closeTag('div');

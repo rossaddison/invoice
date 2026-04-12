@@ -39,6 +39,8 @@ $formGroup = ['class' => 'form-group'];
 $checkbox = ['class' => 'checkbox'];
 $inputGroup = ['class' => 'input-group'];
 $inputGroupText = ['class' => 'input-group-text'];
+$iP = 'https://docs.peppol.eu/poacc/billing/3.0/'
+        . 'syntax/ubl-invoice/cac-InvoicePeriod/';
 echo H::openTag('div', $row); //1
  echo H::openTag('div', $colMd8); //2
 
@@ -257,10 +259,8 @@ echo H::openTag('div', $row); //1
         'peppol.document.currency'
        );
       echo H::closeTag('label');
-      $body[$kPeppolDocCurrency] =
-      $s->getSetting(
-       'peppol_document_currency'
-      ) ?: $config_tax_currency;
+      $body[$kPeppolDocCurrency] = $s->getSetting('peppol_document_currency')
+        ?: $config_tax_currency;
       echo H::openTag('select', [
        'name' => $kPeppolDocCurrency,
        'id' => $kPeppolDocCurrency,
@@ -352,8 +352,7 @@ echo H::openTag('div', $row); //1
          ] == '1') ? 'checked' : null
          ]);
          echo H::a(
-          $translator->translate('peppol.include.delivery.period'),
-          'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/',
+          $translator->translate('peppol.include.delivery.period'), $iP,
           ['style' => 'text-decoration:none']
          );
         echo H::closeTag('label');
@@ -365,9 +364,7 @@ echo H::openTag('div', $row); //1
        'for' => $kStandInCode
       ]);
        echo H::a(
-        $translator->translate('peppol.stand.in.code'),
-        'https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoicePeriod/'
-        . 'cbc-DescriptionCode/',
+        $translator->translate('peppol.stand.in.code'), $iP,
         ['style' => 'text-decoration:none']
        );
       echo H::closeTag('label');

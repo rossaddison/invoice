@@ -21,6 +21,16 @@ $panelHead = ['class' => 'panel-heading'];
 $panelBody = ['class' => 'panel-body'];
 $formGroup = ['class' => 'form-group'];
 $formControl = 'form-control form-control-lg';
+$kFphConnectionMethod = 'settings[fph_connection_method]';
+$kFphClientBrowserJsUserAgent = 'settings[fph_client_browser_js_user_agent]';
+$kFphClientDeviceId = 'settings[fph_client_device_id]';
+$kFphScreenWidth = 'settings[fph_screen_width]';
+$kFphScreenHeight = 'settings[fph_screen_height]';
+$kFphScreenScalingFactor = 'settings[fph_screen_scaling_factor]';
+$kFphScreenColourDepth = 'settings[fph_screen_colour_depth]';
+$kFphTimestamp = 'settings[fph_timestamp]';
+$kFphWindowSize = 'settings[fph_window_size]';
+$kFphGovClientUserId = 'settings[fph_gov_client_user_id]';
 
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', $row); //1
@@ -42,16 +52,16 @@ echo H::openTag('div', $row); //1
     echo H::openTag('div', $row); //5
      echo H::openTag('div', $formGroup); //6
       // Connection Method
-      $body['settings[fph_connection_method]'] =
+      $body[$kFphConnectionMethod] =
       $s->getSetting('fph_connection_method');
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[fph_connection_method]',
-       'id' => 'settings[fph_connection_method]',
+       'name' => $kFphConnectionMethod,
+       'id' => $kFphConnectionMethod,
        'class' => $formControl,
        'readonly' => true,
-       'value' => strlen($body['settings[fph_connection_method]']) > 0
-       ? $body['settings[fph_connection_method]']
+       'value' => strlen($body[$kFphConnectionMethod]) > 0
+       ? $body[$kFphConnectionMethod]
        : 'WEB_APP_VIA_SERVER',
       ]);
       echo H::openTag('label');
@@ -62,15 +72,15 @@ echo H::openTag('div', $row); //1
        echo H::closeTag('h4');
       echo H::closeTag('label');
       // Client Browser User Agent
-      $body['settings[fph_client_browser_js_user_agent]'] =
+      $body[$kFphClientBrowserJsUserAgent] =
       $s->getSetting('fph_client_browser_js_user_agent');
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[fph_client_browser_js_user_agent]',
-       'id' => 'settings[fph_client_browser_js_user_agent]',
+       'name' => $kFphClientBrowserJsUserAgent,
+       'id' => $kFphClientBrowserJsUserAgent,
        'class' => $formControl,
        'readonly' => true,
-       'value' => $body['settings[fph_client_browser_js_user_agent]'],
+       'value' => $body[$kFphClientBrowserJsUserAgent],
       ]);
       echo H::openTag('label');
        echo H::openTag('h4');
@@ -80,15 +90,15 @@ echo H::openTag('div', $row); //1
        echo H::closeTag('h4');
       echo H::closeTag('label');
       // Client Device Id
-      $body['settings[fph_client_device_id]'] =
+      $body[$kFphClientDeviceId] =
       $s->getSetting('fph_client_device_id');
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[fph_client_device_id]',
-       'id' => 'settings[fph_client_device_id]',
+       'name' => $kFphClientDeviceId,
+       'id' => $kFphClientDeviceId,
        'class' => $formControl,
        'readonly' => true,
-       'value' => $body['settings[fph_client_device_id]'],
+       'value' => $body[$kFphClientDeviceId],
       ]);
       echo H::openTag('label');
        echo H::openTag('h4');
@@ -97,83 +107,83 @@ echo H::openTag('div', $row); //1
       echo H::closeTag('label');
       echo H::openTag('br');
       // Screen Width
-      echo H::openTag('label', ['for' => 'settings[fph_screen_width]']);
+      echo H::openTag('label', ['for' => $kFphScreenWidth]);
        echo $translator->translate('mtd.gov.client.screens.width')
        . ' ('
        . $translator->translate('mtd.gov.client.screens.pixels')
        . ')';
       echo H::closeTag('label');
-      $body['settings[fph_screen_width]'] = $s->getSetting('fph_screen_width');
+      $body[$kFphScreenWidth] = $s->getSetting('fph_screen_width');
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[fph_screen_width]',
-       'id' => 'settings[fph_screen_width]',
+       'name' => $kFphScreenWidth,
+       'id' => $kFphScreenWidth,
        'class' => $formControl,
        'readonly' => true,
-       'value' => $body['settings[fph_screen_width]'],
+       'value' => $body[$kFphScreenWidth],
       ]);
       // Screen Height
-      echo H::openTag('label', ['for' => 'settings[fph_screen_height]']);
+      echo H::openTag('label', ['for' => $kFphScreenHeight]);
        echo $translator->translate('mtd.gov.client.screens.height')
        . ' ('
        . $translator->translate('mtd.gov.client.screens.pixels')
        . ')';
       echo H::closeTag('label');
-      $body['settings[fph_screen_height]'] = $s->getSetting('fph_screen_height');
+      $body[$kFphScreenHeight] = $s->getSetting('fph_screen_height');
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[fph_screen_height]',
-       'id' => 'settings[fph_screen_height]',
+       'name' => $kFphScreenHeight,
+       'id' => $kFphScreenHeight,
        'class' => $formControl,
        'readonly' => true,
-       'value' => $body['settings[fph_screen_height]'],
+       'value' => $body[$kFphScreenHeight],
       ]);
       // Screen Scaling Factor
-      echo H::openTag('label', ['for' => 'settings[fph_screen_scaling_factor]']);
+      echo H::openTag('label', ['for' => $kFphScreenScalingFactor]);
        echo $translator->translate('mtd.gov.client.screens.scaling.factor')
        . ' ('
        . $translator->translate('mtd.gov.client.screens.scaling.factor.bits')
        . ')';
       echo H::closeTag('label');
-      $body['settings[fph_screen_scaling_factor]'] =
+      $body[$kFphScreenScalingFactor] =
       $s->getSetting('fph_screen_scaling_factor');
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[fph_screen_scaling_factor]',
-       'id' => 'settings[fph_screen_scaling_factor]',
+       'name' => $kFphScreenScalingFactor,
+       'id' => $kFphScreenScalingFactor,
        'class' => $formControl,
        'readonly' => true,
-       'value' => $body['settings[fph_screen_scaling_factor]'],
+       'value' => $body[$kFphScreenScalingFactor],
       ]);
       // Screen Colour Depth
-      echo H::openTag('label', ['for' => 'settings[fph_screen_colour_depth]']);
+      echo H::openTag('label', ['for' => $kFphScreenColourDepth]);
        echo $translator->translate('mtd.gov.client.screens.colour.depth');
       echo H::closeTag('label');
-      $body['settings[fph_screen_colour_depth]'] =
+      $body[$kFphScreenColourDepth] =
       $s->getSetting('fph_screen_colour_depth');
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[fph_screen_colour_depth]',
-       'id' => 'settings[fph_screen_colour_depth]',
+       'name' => $kFphScreenColourDepth,
+       'id' => $kFphScreenColourDepth,
        'class' => $formControl,
        'readonly' => true,
-       'value' => $body['settings[fph_screen_colour_depth]'],
+       'value' => $body[$kFphScreenColourDepth],
       ]);
       // Timestamp
-      echo H::openTag('label', ['for' => 'settings[fph_timestamp]']);
+      echo H::openTag('label', ['for' => $kFphTimestamp]);
        echo $translator->translate('mtd.fph.screen.timestamp');
       echo H::closeTag('label');
-      $body['settings[fph_timestamp]'] = $s->getSetting('fph_timestamp');
+      $body[$kFphTimestamp] = $s->getSetting('fph_timestamp');
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[fph_timestamp]',
-       'id' => 'settings[fph_timestamp]',
+       'name' => $kFphTimestamp,
+       'id' => $kFphTimestamp,
        'class' => $formControl,
        'readonly' => true,
-       'value' => $body['settings[fph_timestamp]'],
+       'value' => $body[$kFphTimestamp],
       ]);
       // Client Window Size
-      echo H::openTag('label', ['for' => 'settings[fph_window_size]']);
+      echo H::openTag('label', ['for' => $kFphWindowSize]);
        echo H::openTag('h4');
         echo $translator->translate('mtd.gov.client.window.size')
         . ' ('
@@ -181,17 +191,17 @@ echo H::openTag('div', $row); //1
         . ')';
        echo H::closeTag('h4');
       echo H::closeTag('label');
-      $body['settings[fph_window_size]'] = $s->getSetting('fph_window_size');
+      $body[$kFphWindowSize] = $s->getSetting('fph_window_size');
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[fph_window_size]',
-       'id' => 'settings[fph_window_size]',
+       'name' => $kFphWindowSize,
+       'id' => $kFphWindowSize,
        'class' => $formControl,
        'readonly' => true,
-       'value' => $body['settings[fph_window_size]'],
+       'value' => $body[$kFphWindowSize],
       ]);
       // Client User Id
-      echo H::openTag('label', ['for' => 'settings[fph_gov_client_user_id]']);
+      echo H::openTag('label', ['for' => $kFphGovClientUserId]);
        echo H::openTag('h4');
         echo $translator->translate('mtd.gov.client.user.ids')
         . ' ('
@@ -199,15 +209,15 @@ echo H::openTag('div', $row); //1
         . ')';
        echo H::closeTag('h4');
       echo H::closeTag('label');
-      $body['settings[fph_gov_client_user_id]'] =
+      $body[$kFphGovClientUserId] =
       $s->getSetting('fph_gov_client_user_id');
       echo H::openTag('input', [
        'type' => 'text',
-       'name' => 'settings[fph_gov_client_user_id]',
-       'id' => 'settings[fph_gov_client_user_id]',
+       'name' => $kFphGovClientUserId,
+       'id' => $kFphGovClientUserId,
        'class' => $formControl,
        'readonly' => true,
-       'value' => $body['settings[fph_gov_client_user_id]'],
+       'value' => $body[$kFphGovClientUserId],
       ]);
       echo  new Button()
        ->id('btn_fph_generate')

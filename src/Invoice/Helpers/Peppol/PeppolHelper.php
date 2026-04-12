@@ -89,31 +89,62 @@ class PeppolHelper
     public const string UBL_LIST_ID = 'ListId';
 
     // ISO 6523 ICD description prefix constants (used 6+ times in getIso6523Icd())
+    public const string ICD_A_CODE_IDENTIFYING_THE_PRODUCT_IN_NATIONAL =
+            'A code identifying the product in national ';
+    public const string ICD_A_IN_THE_SIO_THE =
+            'a) In the SIO the ';
     public const string ICD_FORMS_THE = 'The ICD code forms the ';
-    public const string ICD_WILL_ALSO = 'The ICD code will also ';
-    public const string ICD_PURPOSE_TO_PROVIDE = 'Intended Purpose/App. Area: To provide ';
-    public const string ICD_PURPOSE_IDENTIFICATION = 'Intended Purpose/App. Area: Identification ';
     public const string ICD_EDIRA_COMPLIANT = '(EDIRA compliant)';
-    public const string ICD_INVOICE_ISSUE_DATE = 'Invoice Issue Date/Time ie. Date Created/Issued';
-
+    public const string ICD_E_INVOICING_PURCHASING_ELECTRONIC_RECEIPTS =
+            'e-invoicing, purchasing, electronic receipts. ';
+    public const string ICD_FINANCIERE_DE_L_ETAT = 'FinanciÃ¨re de lâ€™Etat)';
+    public const string ICD_INVOICE_ISSUE_DATE =
+            'Invoice Issue Date/Time ie. Date Created/Issued';
+    public const string ICD_INITIAL_PART_OSI =
+            'initial part of the OSI network addressing and naming ';
+    public const string ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE =
+            'Issuing agency: AIFE (Agence pour lâ€™Informatique ';
+    public const string ICD_ISSUE_INVOICE_DATE =
+            'Invoice Issue Date/Time ie. Date Created/Issued';
+    public const string ICD_PURPOSE_TO_PROVIDE =
+            'Intended Purpose/App. Area: To provide ';
+    public const string ICD_PURPOSE_IDENTIFICATION =
+            'Intended Purpose/App. Area: Identification ';
+    public const string ICD_PURPOSE_FOR_USE_IN_EDI =
+            'Intended Purpose/App. Area: For use in EDI ';
+    public const string ICD_PURPOSE_USED_TO_IDENTIFY =
+            'Intended Purpose/App. Area: Used to identify';
+    public const string ICD_PURPOSE_ELECTRONIC =
+            'Intended Purpose/App. Area: Electronic ';
+    public const string ICD_REFERENCE_NUMBER_IDENTIFYING_A =
+            'Reference number identifying a ';
+    public const string ICD_SCHEME_WILL_BE_USED_FOR_ELECTRONIC_TRADE_PURPOSES_IN =
+            'scheme will be used for electronic trade purposes in ';
+    public const string ICD_TO_BE_USED_FOR =
+            'To be used for ';
+    public const string ICD_THE_ICD_CODE_WILL_FORM =
+            'The ICD code will form ';
+    public const string ICD_TREE_DEPICTED_ADDENDUM_2_ISO_8348 =
+            'tree as depicted in Addendum 2 to ISO 8348. ';
+    public const string ICD_WILL_ALSO = 'The ICD code will also ';
+   
     private readonly DateHelper $datehelper;
     private string $documentCurrency;
-    
+    private string $from_currency;
+    private string $to_currency;
+
     public function __construct(
         public SRepo $s,
         private readonly DelRepo $delRepo,
-        private readonly IIAR $iiaR,
         private readonly InvAmount $inv_amount,
         private readonly DL $delivery_location,
         private readonly Translator $t,
-        private readonly string $from_currency,
-        private readonly string $to_currency,
-        private readonly string $from_to_manual_input,
-        private readonly string $to_from_manual_input,
     ) {
         $this->datehelper = new DateHelper($this->s);
         $this->documentCurrency =
             $this->s->getSetting(self::SETTING_PEPPOL_DOCUMENT_CURRENCY);
+        $this->from_currency = $this->s->getSetting('currency_code_from');
+        $this->to_currency   = $this->s->getSetting('currency_code_to');
     }
     
     /** @psalm-suppress UnusedReturnValue */
@@ -462,7 +493,7 @@ class PeppolHelper
      * @param UPR $upR
      * @return AdditionalDocumentReference
      */
-    private function AdditionalDocumentReference(Inv $invoice, upR $upR):
+    private function additionalDocumentReference(Inv $invoice, upR $upR):
                                                     AdditionalDocumentReference
     {
         $url_key = $invoice->getUrlKey();
@@ -507,7 +538,7 @@ class PeppolHelper
             }
         }
         $invoice_id = $invoice->getId();
-        return new AdditionalDocumentReference(
+        return new additionalDocumentReference(
             $this->t,
             $invoice_number ?? $this->t->translate(
                 'peppol.document.reference.null') . ($invoice_id ?? 'Not Found'),
@@ -2077,7 +2108,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
 // The below array has been built manually from src\Invoice\Helpers\Peppol\
 //                                                                  uncl2005.php
         $uncl2005_subset_array = [
-            'Invoice Issue Date/Time ie. Date Created/Issued' => '3',
+            self::ICD_ISSUE_INVOICE_DATE => '3',
             'Actual Delivery Date/Time ie. Date Supplied' => '35',
             'Paid to Date' => '432',
         ];
@@ -2092,17 +2123,17 @@ $country_helper->getCountryIdentificationCodeWithLeague(
 // if the issue date (created) is within 14 days after the supply (basic) date
 // then use the issue/created date.
                 return $uncl2005_subset_array[
-                    'Invoice Issue Date/Time ie. Date Created/Issued'];
+                    self::ICD_ISSUE_INVOICE_DATE];
             }
             if ($date_created < $date_supplied) {
                 // normally set the tax point to the date_created
                 return $uncl2005_subset_array[
-                    'Invoice Issue Date/Time ie. Date Created/Issued'];
+                    self::ICD_ISSUE_INVOICE_DATE];
             }
             if ($date_created === $date_supplied) {
                 // normally set the tax point to the date_created
                 return $uncl2005_subset_array[
-                    'Invoice Issue Date/Time ie. Date Created/Issued'];
+                    self::ICD_ISSUE_INVOICE_DATE];
             }
         }
         // If the client is not VAT registered, the tax point is the date
@@ -2113,7 +2144,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         }
         // Default to date created
         return $uncl2005_subset_array[
-            'Invoice Issue Date/Time ie. Date Created/Issued'];
+            self::ICD_ISSUE_INVOICE_DATE];
     }
 
     /**
@@ -2125,7 +2156,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         return [
             '41' => 'Bonus for works ahead of schedule',
             '42' => 'Other Bonus',
-            '60' => 'Manufacturer’s consumer discount',
+            '60' => 'Manufacturerâ€™s consumer discount',
             '62' => 'Due to military status',
             '63' => 'Due to work accident',
             '64' => 'Special agreement',
@@ -2570,25 +2601,24 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             2 => [
                 'Id' => '0004',
                 'Name' => 'NBS/OSI NETWORK',
-                'Description' => $notes . 'The ICD code forms the '
-                . 'initial part of the OSI network addressing and naming '
-                . 'tree as depicted in Addendum 2 to ISO 8348. '
+                'Description' => $notes . self::ICD_FORMS_THE . self::ICD_INITIAL_PART_OSI
+                . self::ICD_TREE_DEPICTED_ADDENDUM_2_ISO_8348
                 . 'Issuing agency: National Bureau of Standards, USA.',
             ],
             3 => [
                 'Id' => '0005',
                 'Name' => 'USA FED GOV OSI NETWORK',
-                'Description' => $notes . 'The ICD code forms the '
-                . 'initial part of the OSI network addressing and naming '
-                . 'tree as depicted in Addendum 2 to ISO 8348. '
+                'Description' => $notes . self::ICD_FORMS_THE
+                . self::ICD_INITIAL_PART_OSI
+                . self::ICD_TREE_DEPICTED_ADDENDUM_2_ISO_8348
                 . 'Issuing agency: National Bureau of Standards, USA.',
             ],
             4 => [
                 'Id' => '0006',
                 'Name' => 'USA DOD OSI NETWORK',
-                'Description' => $notes . 'The ICD code forms the '
-                . 'initial part of the OSI network addressing and naming '
-                . 'tree as depicted in Addendum 2 to ISO 8348. '
+                'Description' => $notes . self::ICD_FORMS_THE
+                . self::ICD_INITIAL_PART_OSI
+                . self::ICD_TREE_DEPICTED_ADDENDUM_2_ISO_8348
                 . 'Issuing agency: Defense Communication Agency, USA.',
             ],
             5 => [
@@ -2653,7 +2683,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             12 => [
                 'Id' => '0014',
                 'Name' => 'NIST/OSI Implememts\' Workshop',
-                'Description' => $notes . 'The ICD code forms the '
+                'Description' => $notes . self::ICD_FORMS_THE
                 . 'initial part of the Workshop naming and addressing tree. '
                 . 'Issuing agency: United States Department of Commerce, '
                 . 'National Institute of Standards and Technology, '
@@ -2667,7 +2697,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             14 => [
                 'Id' => '0016',
                 'Name' => 'EWOS Object Identifiers',
-                'Description' => $notes . 'a) In the SIO the '
+                'Description' => $notes . self::ICD_A_IN_THE_SIO_THE
                 . 'Organization Name will normally be omitted, b) '
                 . 'The code is primarily intended for the registration of '
                 . 'Objects Identifiers according to ISO 8824: '
@@ -2693,7 +2723,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             16 => [
                 'Id' => '0018',
                 'Name' => 'SNA/OSI Network',
-                'Description' => $notes . 'The ICD code will also '
+                'Description' => $notes . self::ICD_WILL_ALSO
                 . 'form the initial part of the OSI Network addressing and '
                 . 'naming tree as depicted in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: International Business Machines Corporation, '
@@ -2712,7 +2742,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             18 => [
                 'Id' => '0020',
                 'Name' => 'European Laboratory for Particle Physics: CERN',
-                'Description' => $notes . 'The ICD code forms the '
+                'Description' => $notes . self::ICD_FORMS_THE
                 . 'initial part of the OSI network addressing and '
                 . 'naming tree as depicted in Addendum 2 of ISO 8348. '
                 . 'Issuing agency: European Laboratory for Particle Physics, '
@@ -2722,7 +2752,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0021',
                 'Name' => 'SOCIETY FOR WORLDWIDE INTERBANK FINANCIAL, '
                 . 'TELECOMMUNICATION S.W.I.F.T.',
-                'Description' => $notes . 'To be used for '
+                'Description' => $notes . self::ICD_TO_BE_USED_FOR
                 . 'assignment of object identifiers (ISO 8824/8825) '
                 . 'Issuing agency: SOCIETY FOR WORLDWIDE INTERBANK FINANCIAL, '
                 . 'TELECOMMUNICATION S.W.I.F.T. BELGIUM.',
@@ -2744,7 +2774,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             21 => [
                 'Id' => '0023',
                 'Name' => 'Nordic University and Research Network: NORDUnet',
-                'Description' => $notes . 'The ICD code forms the '
+                'Description' => $notes . self::ICD_FORMS_THE
                 . 'initial part of the OSI network addressing and tree '
                 . 'as depicted in Addendum 2 of ISO 8348. '
                 . 'Issuing agency: NORDUnet, c/o SICS, Sweden.',
@@ -2752,7 +2782,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             22 => [
                 'Id' => '0024',
                 'Name' => 'Digital Equipment Corporation: DEC',
-                'Description' => $notes . 'The ICD code forms the '
+                'Description' => $notes . self::ICD_FORMS_THE
                 . 'initial part of the OSI network addressing as '
                 . 'described in ISO8348 Addendum 2. '
                 . 'Issuing agency: Digital Equipment (Europe) S.A.R.L. France.',
@@ -2770,7 +2800,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             24 => [
                 'Id' => '0026',
                 'Name' => 'NATO ISO 6523 ICDE coding scheme',
-                'Description' => $notes . 'The ICD code forms the '
+                'Description' => $notes . self::ICD_FORMS_THE
                 . 'initial part of the OSI network addressing and '
                 . 'naming tree depicted in Addendum 2 of ISO 8348. '
                 . 'Issuing agency: North Atlantic Treaty Organisation (NATO), '
@@ -2779,7 +2809,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             25 => [
                 'Id' => '0027',
                 'Name' => 'Aeronautical Telecommunications Network (ATN)',
-                'Description' => $notes . 'The ICD code forms the '
+                'Description' => $notes . self::ICD_FORMS_THE
                 . 'initial part of the ISO network addressing and naming tree '
                 . 'as depicted in Addendum No 2 to ISO 8348 '
                 . 'Issuing agency: International Civil Aviation Organization '
@@ -2801,7 +2831,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             28 => [
                 'Id' => '0030',
                 'Name' => 'AT&T/OSI Network',
-                'Description' => $notes . 'The ICD code will also '
+                'Description' => $notes . self::ICD_WILL_ALSO
                 . 'form the Initial Domain Part of the OSI network, '
                 . 'addressing and naming tree as specified in '
                 . 'Addendum 2 to ISO 8348. Issuing agency: AT&T, '
@@ -2849,7 +2879,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             34 => [
                 'Id' => '0036',
                 'Name' => 'TeleTrust Object Identifiers',
-                'Description' => $notes . 'a) In the SIO the '
+                'Description' => $notes . self::ICD_A_IN_THE_SIO_THE
                 . 'Organization name will normally be omitted. '
                 . 'b) The code is primarily intended for the registration '
                 . 'of Object Identifiers for security related objects '
@@ -2895,7 +2925,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             39 => [
                 'Id' => '0041',
                 'Name' => 'Citicorp Global Information Network',
-                'Description' => $notes . 'The ICD code will also '
+                'Description' => $notes . self::ICD_WILL_ALSO
                 . 'form the initial part of the Citicorp Network addressing '
                 . 'object identifier tree and naming tree as '
                 . 'depicted in Addendum 2 to ISO 8348. '
@@ -2922,7 +2952,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             41 => [
                 'Id' => '0043',
                 'Name' => 'HydroNETT',
-                'Description' => $notes . 'The ICD code forms the '
+                'Description' => $notes . self::ICD_FORMS_THE
                 . 'initial part of the OSI network addressing as depicted'
                 . ' in ISO 8348/AD2. '
                 . 'Issuing agency: Norsk Hydro a.s., Norway.',
@@ -2930,7 +2960,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             42 => [
                 'Id' => '0044',
                 'Name' => 'Thai Industrial Standards Institute (TISI)',
-                'Description' => $notes . 'The ICD code forms the '
+                'Description' => $notes . self::ICD_FORMS_THE
                 . 'initial part of international addressing for Thailand. '
                 . 'Issuing agency: '
                 . 'Thai Industrial Standards Institute (TISI), THAILAND.',
@@ -2998,7 +3028,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0052',
                 'Name' => 'Society of Motion Picture and Television Engineers '
                 . '(SMPTE)',
-                'Description' => $notes . 'The ICD code will also '
+                'Description' => $notes . self::ICD_WILL_ALSO
                 . 'be used to identify SMPTE constituent organizations '
                 . '(committees, working groups, task forces, etc./), and the '
                 . 'objects they, define. The ICD code will also form the '
@@ -3032,7 +3062,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             54 => [
                 'Id' => '0056',
                 'Name' => 'Nokia Object Identifiers (NOI)',
-                'Description' => $notes . 'a) In the SIO the '
+                'Description' => $notes . self::ICD_A_IN_THE_SIO_THE
                 . 'organization name will normally be omitted, b) The code '
                 . 'is primarily intended for the registration of '
                 . 'Object Identifiers according to ISO/IEC 8824: Level 1:iso(1),'
@@ -3043,7 +3073,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             55 => [
                 'Id' => '0057',
                 'Name' => 'Saint Gobain',
-                'Description' => $notes . 'To be used for '
+                'Description' => $notes . self::ICD_TO_BE_USED_FOR
                 . 'assignment of: N.E.T (ISO 8348/Add 2), '
                 . 'A.E.T (FTAM, X.400 Psaps, and so on), and object '
                 . 'identification (ISO 8824/8825) '
@@ -3052,7 +3082,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             56 => [
                 'Id' => '0058',
                 'Name' => 'Siemens Corporate Network',
-                'Description' => $notes . 'The ICD code will form '
+                'Description' => $notes . self::ICD_THE_ICD_CODE_WILL_FORM
                 . 'the initial part of the OSI Network addressing and '
                 . 'naming tree as depicted in Addendum 2 to ISO 8348 '
                 . '(Network layer addressing). These addresses will '
@@ -3157,7 +3187,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             68 => [
                 'Id' => '0070',
                 'Name' => 'DaimlerChrysler Corporate Network',
-                'Description' => $notes . 'The ICD code will form '
+                'Description' => $notes . self::ICD_THE_ICD_CODE_WILL_FORM
                 . 'the initial part of the OSI Network addressing and '
                 . 'naming free as depicted in Addendum 2 to ISO 8348 '
                 . '(Network Layer addressing). '
@@ -3168,7 +3198,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             69 => [
                 'Id' => '0071',
                 'Name' => 'LEGO /OSI NETWORK',
-                'Description' => $notes . 'The ICD code will also '
+                'Description' => $notes . self::ICD_WILL_ALSO
                 . 'form the Initial Domain Part of the OSI network addressing '
                 . 'and naming tree as specified in addendum 2 to ISO 8348. '
                 . 'Issuing agency: LEGO Systems Inc, USA.',
@@ -3176,7 +3206,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             70 => [
                 'Id' => '0072',
                 'Name' => 'NAVISTAR/OSI Network',
-                'Description' => $notes . 'The ICD code will also '
+                'Description' => $notes . self::ICD_WILL_ALSO
                 . 'form the Initial Domain Part of the OSI Network addressing '
                 . 'and naming tree as specified in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: International Truck & Engine Corp, USA.',
@@ -3208,7 +3238,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             73 => [
                 'Id' => '0075',
                 'Name' => 'Alcanet/Alcatel-Alsthom Corporate Network',
-                'Description' => $notes . 'The ICD code forms the '
+                'Description' => $notes . self::ICD_FORMS_THE
                 . 'initial part of the OSI network addressing scheme as '
                 . 'depicted in Addendum 2 of ISO 8384. '
                 . 'Issuing agency: Alcatel Network Services Deutschland GmbH, '
@@ -3218,7 +3248,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0076',
                 'Name' => 'Sistema Italiano di Identificazione di ogetti '
                 . 'gestito da UNINFO',
-                'Description' => $notes . 'To be used for '
+                'Description' => $notes . self::ICD_TO_BE_USED_FOR
                 . 'assignments of object identifiers according to '
                 . 'ISO 8824 and ISO 8825. '
                 . 'Issuing agency: UNINFO, ITALY.',
@@ -3227,7 +3257,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0077',
                 'Name' => 'Sistema Italiano di Indirizzamento di Reti OSI '
                 . 'Gestito da UNINFO',
-                'Description' => $notes . 'The ICD code forms the '
+                'Description' => $notes . self::ICD_FORMS_THE
                 . 'initial part of the OSI network Addressing and '
                 . 'naming tree depicted in Addendum 2 of ISO 8348. '
                 . 'Issuing agency: UNINFO, ITALY.',
@@ -3235,7 +3265,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             76 => [
                 'Id' => '0078',
                 'Name' => 'Mitel terminal or switching equipment',
-                'Description' => $notes . 'The ICD code will form '
+                'Description' => $notes . self::ICD_THE_ICD_CODE_WILL_FORM
                 . 'the initial part of the naming tree for: '
                 . '1 - Private Integrated Services '
                 . 'Network manufacturer-specific information as the '
@@ -3247,14 +3277,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             77 => [
                 'Id' => '0079',
                 'Name' => 'ATM Forum',
-                'Description' => $notes . 'The ICD code will also '
+                'Description' => $notes . self::ICD_WILL_ALSO
                 . 'form part of the Initial Domain Part of the OSI network '
                 . 'addressing as specified in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: The ATM Forum, USA.',
             ],
             78 => [
                 'Id' => '0080',
-                'Name' => 'UK National Health Service Scheme, (EDIRA compliant)',
+                'Name' => 'UK National Health Service Scheme, ' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => $notes . 'EDIRA recommendations '
                 . 'for coding in EDIFACT and other EDI systems. '
                 . 'Issuing agency: National Health Service, UK.',
@@ -3281,7 +3311,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0083',
                 'Name' => 'Advanced Telecommunications Modules Limited, '
                 . 'Corporate Network',
-                'Description' => $notes . 'The ICD code will also '
+                'Description' => $notes . self::ICD_WILL_ALSO
                 . 'form part of the Initial Domain Part of the OSI network
                       addressing as specified in Addendum 2 to ISO 8348. '
                 . 'Issuing agency: ATM Ltd, ENGLAND.',
@@ -3289,7 +3319,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             82 => [
                 'Id' => '0084',
                 'Name' => 'Athens Chamber of Commerce & Industry Scheme '
-                . '(EDIRA compliant)',
+                . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Notes on Use of Code : EDIRA recommendations '
                 . 'for coding in EDIFACT and other EDI syntaxes. '
                 . 'Issuing agency: Athens Chamber of Commerce & Industry, Greece.',
@@ -3305,7 +3335,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             84 => [
                 'Id' => '0086',
                 'Name' => 'United States Council for International Business '
-                . '(USCIB) Scheme, (EDIRA compliant)',
+                . '(USCIB) Scheme, ' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'EDIRA recommendations for coding in EDIFACT '
                 . 'and other EDI syntaxes. '
                 . 'Issuing agency: United States Council for Internationa '
@@ -3314,7 +3344,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             85 => [
                 'Id' => '0087',
                 'Name' => 'National Federation of Chambers of Commerce & '
-                . 'Industry of Belgium, Scheme (EDIRA compliant)',
+                . 'Industry of Belgium, Scheme ' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: National Federartion of '
                 . 'Chambers of Commerce & Industry of, Belgium, Belgium.',
             ],
@@ -3326,7 +3356,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             87 => [
                 'Id' => '0089',
                 'Name' => 'The Association of British Chambers of Commerce '
-                . 'Ltd. Scheme, (EDIRA compliant)',
+                . 'Ltd. Scheme, ' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: The Association of British '
                 . 'Chambers of Commerce Ltd., UK.',
             ],
@@ -3344,13 +3374,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             90 => [
                 'Id' => '0093',
                 'Name' => 'Revenue Canada Business Number Registration '
-                . '(EDIRA compliant)',
+                . '' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: Revenue Canada, CANADA.',
             ],
             91 => [
                 'Id' => '0094',
                 'Name' => 'DEUTSCHER INDUSTRIE- UND HANDELSTAG (DIHT) Scheme '
-                . '(EDIRA compliant)',
+                . '' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: Deutscher Industrie -und '
                 . 'Handelstag (DIHT), Germany.',
             ],
@@ -3362,19 +3392,19 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             ],
             93 => [
                 'Id' => '0096',
-                'Name' => 'DANISH CHAMBER OF COMMERCE Scheme (EDIRA compliant)',
+                'Name' => 'DANISH CHAMBER OF COMMERCE Scheme ' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: Danish Chamber of Commerce, '
                 . 'Denmark.',
             ],
             94 => [
                 'Id' => '0097',
-                'Name' => 'FTI - Ediforum Italia, (EDIRA compliant)',
+                'Name' => 'FTI - Ediforum Italia, ' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: FTI - Ediforum Italia, ITALY.',
             ],
             95 => [
                 'Id' => '0098',
                 'Name' => 'CHAMBER OF COMMERCE TEL AVIV-JAFFA Scheme '
-                . '(EDIRA compliant)',
+                . '' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: Chamber of Commerce Tel '
                 . 'Aviv-Jaffa, ISRAEL.',
             ],
@@ -3409,7 +3439,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             101 => [
                 'Id' => '0105',
                 'Name' => 'Portuguese Chamber of Commerce and Industry Scheme '
-                . '(EDIRA compliant)',
+                . '' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: Portuguese Chamber of '
                 . 'Commerce and Industry, Portugal.',
             ],
@@ -3417,7 +3447,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0106',
                 'Name' => 'Vereniging van Kamers van Koophandel en Fabrieken in '
                 . 'Nederland (Association of Chambers of Commerce and Industry '
-                . 'in the Netherlands), Scheme (EDIRA compliant)',
+                . 'in the Netherlands), Scheme ' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: Vereniging van Kamers van '
                 . 'Koophandel en Fabrieken in Nederland
                       Watermolenlaan, The Netherlands.',
@@ -3425,14 +3455,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             103 => [
                 'Id' => '0107',
                 'Name' => 'Association of Swedish Chambers of Commerce and '
-                . 'Industry Scheme (EDIRA compliant)',
+                . 'Industry Scheme ' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: Association of Swedish '
                 . 'Chambers of Commerce and Industry, Sweden.',
             ],
             104 => [
                 'Id' => '0108',
                 'Name' => 'Australian Chambers of Commerce and Industry Scheme '
-                . '(EDIRA compliant)',
+                . '' . self::ICD_EDIRA_COMPLIANT,
                 'Description' => 'Issuing agency: Australian Chambers of '
                 . 'Commerce and Industry, Australia.',
             ],
@@ -3583,7 +3613,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             131 => [
                 'Id' => '0135',
                 'Name' => 'SIA Object Identifiers',
-                'Description' => 'Issuing agency: SIA-Società Interbancaria '
+                'Description' => 'Issuing agency: SIA-SocietÃ  Interbancaria '
                 . 'per l\'Automazione S.p.A., ITALIA.',
             ],
             132 => [
@@ -3707,19 +3737,19 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             ],
             141 => [
                 'Id' => '0145',
-                'Name' => 'DGCP (Direction Générale de la Comptabilité '
+                'Name' => 'DGCP (Direction GÃ©nÃ©rale de la ComptabilitÃ© '
                 . 'Publique)administrative accounting identification scheme',
                 'Description' => 'de assigned by the French public accounting '
                 . 'office. Issuing agency: DGCP
-                      (Direction Générale de la Comptabilité Publique), 139 Rue '
+                      (Direction GÃ©nÃ©rale de la ComptabilitÃ© Publique), 139 Rue '
                 . 'de Bercy, 75572 Paris Cedex
                       12, France',
             ],
             142 => [
                 'Id' => '0146',
-                'Name' => 'DGI (Direction Générale des Impots) code',
+                'Name' => 'DGI (Direction GÃ©nÃ©rale des Impots) code',
                 'Description' => 'French taxation authority. Issuing agency: '
-                . 'DGI (Direction Générale des Impots), France.',
+                . 'DGI (Direction GÃ©nÃ©rale des Impots), France.',
             ],
             143 => [
                 'Id' => '0147',
@@ -3826,7 +3856,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             154 => [
                 'Id' => '0158',
                 'Name' => 'Identification number of economic subject (ICO) Act '
-                . 'on State Statistics of 29 November 2001, § 27',
+                . 'on State Statistics of 29 November 2001, Â§ 27',
                 'Description' => 'The unique identification of economic '
                 . 'subjects (legal persons and natural persons-entrepreneurs) '
                 . 'used for registration The identification number ICO is used '
@@ -3879,14 +3909,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0162',
                 'Name' => 'CEN/ISSS Object Identifier Scheme',
                 'Description' => 'To allocate OIDs to objects defined in the '
-                . 'standards and specifications developed in CEN’s technical '
+                . 'standards and specifications developed in CENâ€™s technical '
                 . 'bodies (TCs, Workshops, etc) The code is primarily '
                 . 'intended for the registration ofObject Identifiers '
                 . 'according to ISO 8824-1 Annex B Level 1: iso (1)Level 2: '
                 . 'identified-organization (3)Level 3: CEN '
-                . '(nnnn –the ICD allocated)Level 4: and higher: '
+                . '(nnnn â€“the ICD allocated)Level 4: and higher: '
                 . '(defined by CEN conventions). '
-                . 'Issuing agency: Comité Européen de Normalization, Belgium.',
+                . 'Issuing agency: ComitÃ© EuropÃ©en de Normalization, Belgium.',
             ],
             159 => [
                 'Id' => '0163',
@@ -3910,7 +3940,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Name' => 'TELUS Corporation',
                 'Description' => 'SA Addressing Scheme for ATM PNNI '
                 . 'Implementation ICD is required for PNNI implementation on'
-                . ' TELUS’ ATM network in order to establish an addressing'
+                . ' TELUSâ€™ ATM network in order to establish an addressing'
                 . ' scheme for SPVC connections within and between regions'
                 . ' Issuing agency: TELUS Corporation, Canada.',
             ],
@@ -3976,7 +4006,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'internet is to provide a swisswide search function, and '
                 . 'thus provide the public with a service to determine the '
                 . 'legal domicile, the cantonal office for the register of '
-                . 'commerce in charge, and the latter’s address. Issuing '
+                . 'commerce in charge, and the latterâ€™s address. Issuing '
                 . 'agency: Swiss Federal Office of Justice, Switzerland.',
             ],
             166 => [
@@ -4008,14 +4038,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             ],
             168 => [
                 'Id' => '0172',
-                'Name' => 'Project Group “Lists of Properties” (PROLIST®)',
+                'Name' => 'Project Group â€œLists of Propertiesâ€ (PROLISTÂ®)',
                 'Description' => 'To uniquely identify properties, blocks and '
                 . 'lists of properties (LOP) for products and services in the '
                 . 'process industry. The products are electrical and process '
                 . 'control devices. The code is used to uniquely identify the '
                 . 'objects in the PROLIST online dictionary. '
-                . 'Issuing agency: Project Group “Lists of Properties” '
-                . '(PROLIST®) c/o Bayer Technology Services GmbH Geb., Germany.',
+                . 'Issuing agency: Project Group â€œLists of Propertiesâ€ '
+                . '(PROLISTÂ®) c/o Bayer Technology Services GmbH Geb., Germany.',
             ],
             169 => [
                 'Id' => '0173',
@@ -4086,7 +4116,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0179',
                 'Name' => 'Penango Object Identifiers',
                 'Description' => 'To identify objects, policies, and data '
-                . 'related to Penango’s products and services. The ICD is '
+                . 'related to Penangoâ€™s products and services. The ICD is '
                 . 'primarily intended for registration of Object Identifiers '
                 . 'in accordance with ISO/IEC 8824 (ASN.1). '
                 . 'Issuing agency: Penango, Inc., Canada.',
@@ -4104,7 +4134,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             ],
             177 => [
                 'Id' => '0183',
-                'Name' => 'Numéro d\'identification suisse des enterprises '
+                'Name' => 'NumÃ©ro d\'identification suisse des enterprises '
                 . '(IDE), Swiss Unique Business Identification Number (UIDB)',
                 'Description' => 'Intended Purpose/App. Area: To uniquely '
                 . 'identify all companies/organizations registered in '
@@ -4157,7 +4187,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             181 => [
                 'Id' => '0187',
                 'Name' => 'Amazon Unique Identification Scheme',
-                'Description' => 'Intended Purpose/App. Area: To provide '
+                'Description' => self::ICD_PURPOSE_TO_PROVIDE
                 . 'identifiers for properties, classes, groups, or lists of '
                 . 'data and objects specified by or used by Amazon.com, Inc. '
                 . 'and its Affiliates Identifiers assigned under this scheme '
@@ -4186,7 +4216,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             183 => [
                 'Id' => '0189',
                 'Name' => 'European Business Identifier (EBID)',
-                'Description' => 'Intended Purpose/App. Area: For use in EDI '
+                'Description' => self::ICD_PURPOSE_FOR_USE_IN_EDI
                 . 'or other B2B exchanges to identify business entities '
                 . '(organizations). The scheme is used to identify '
                 . 'organisations, and parts of organisations which are '
@@ -4198,7 +4228,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0190',
                 'Name' => 'Organisatie Indentificatie Nummer (OIN)',
                 'Description' => 'Intended Purpose/App. Area: The OIN is part '
-                . 'of the Dutch standard ‘Digikoppeling’ and is used for '
+                . 'of the Dutch standard â€˜Digikoppelingâ€™ and is used for '
                 . 'identifying the organisations that take part in electronic '
                 . 'message exchange with the Dutch Government. The OIN must '
                 . 'also be included in the PKIo certificate. Issuing agency: '
@@ -4227,13 +4257,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 . 'organization number will be used to identify organisations '
                 . 'that are parties to or referenced in electronic '
                 . 'transactions such as electronic invoicing or other B2B '
-                . 'exchanges. Issuing agency: The Brønnøysund Register Centre '
+                . 'exchanges. Issuing agency: The BrÃ¸nnÃ¸ysund Register Centre '
                 . 'in Norway.',
             ],
             187 => [
                 'Id' => '0193',
                 'Name' => 'UBL.BE Party Identifier',
-                'Description' => 'Intended Purpose/App. Area: Identification '
+                'Description' => self::ICD_PURPOSE_IDENTIFICATION
                 . 'and addressing of different parties involved in invoicing. '
                 . 'Issuing agency: UBL.BE in Belgium.',
             ],
@@ -4264,8 +4294,8 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             ],
             190 => [
                 'Id' => '0196',
-                'Name' => 'Icelandic identifier - Íslensk kennitala',
-                'Description' => 'Intended Purpose/App. Area: Identification '
+                'Name' => 'Icelandic identifier - Ãslensk kennitala',
+                'Description' => self::ICD_PURPOSE_IDENTIFICATION
                 . 'of Icelandic individuals and legal entities. '
                 . 'Issuing agency: For individual, Icelandic National'
                 . ' Registry, www.skra.is. For legal entities, Directorate'
@@ -4322,26 +4352,26 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             194 => [
                 'Id' => '0200',
                 'Name' => 'Legal entity code (Lithuania)',
-                'Description' => 'Intended Purpose/App. Area: For use in EDI '
+                'Description' => self::ICD_PURPOSE_FOR_USE_IN_EDI
                 . '(electronic data interchange) for C2B and others exchanges '
                 . 'to identify legal entities. Issuing agency: State Enterprise '
                 . 'Centre of Registers in Lithuania.',
             ],
             195 => [
                 'Id' => '0201',
-                'Name' => 'Codice Univoco Unità Organizzativa iPA',
-                'Description' => 'Intended Purpose/App. Area: Used to identify '
-                . 'uniquely all organizational units of public bodies,'
+                'Name' => 'Codice Univoco UnitÃ  Organizzativa iPA',
+                'Description' => self::ICD_PURPOSE_USED_TO_IDENTIFY
+                . ' uniquely all organizational units of public bodies,'
                 . ' authorities and public services in Italy. '
-                . 'Issuing agency: Agenzia per l’Italia digitale in Italy.',
+                . 'Issuing agency: Agenzia per lâ€™Italia digitale in Italy.',
             ],
             196 => [
                 'Id' => '0202',
                 'Name' => 'Indirizzo di Posta Elettronica Certificata',
-                'Description' => 'Intended Purpose/App. Area: Used to identify'
+                'Description' => self::ICD_PURPOSE_USED_TO_IDENTIFY
                 . ' senders and receivers of certified electronic mail '
                 . 'as defined by Italian law. '
-                . 'Issuing agency: Agenzia per l’Italia digitale in Italy.',
+                . 'Issuing agency: Agenzia per lâ€™Italia digitale in Italy.',
             ],
             197 => [
                 'Id' => '0203',
@@ -4354,14 +4384,14 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             198 => [
                 'Id' => '0204',
                 'Name' => 'Leitweg-ID',
-                'Description' => 'Intended Purpose/App. Area: Identification '
+                'Description' => self::ICD_PURPOSE_IDENTIFICATION
                 . 'of Public Authorities. Issuing agency: Koordinierungsstelle '
-                . 'für IT-Standards (KoSIT) in Germany.',
+                . 'fÃ¼r IT-Standards (KoSIT) in Germany.',
             ],
             199 => [
                 'Id' => '0205',
                 'Name' => 'CODDEST',
-                'Description' => 'Intended Purpose/App. Area: Electronic '
+                'Description' => self::ICD_PURPOSE_ELECTRONIC
                 . 'Invoicing trough Sdl, the Exchange System used in Italy '
                 . 'where the electronic invoices are transmitted to the '
                 . 'Public Administration (Article 1, paragraph 211, of '
@@ -4372,10 +4402,10 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             ],
             200 => [
                 'Id' => '0206',
-                'Name' => 'Registre du Commerce et de l’Industrie : RCI',
-                'Description' => 'Intended Purpose/App. Area: To provide '
+                'Name' => 'Registre du Commerce et de lâ€™Industrie : RCI',
+                'Description' => self::ICD_PURPOSE_TO_PROVIDE
                 . 'identifiers for organizations at national level in Monaco. '
-                . 'Issuing agency: Agence Monégasque de Sécurité Numérique '
+                . 'Issuing agency: Agence MonÃ©gasque de SÃ©curitÃ© NumÃ©rique '
                 . '(AMSN) in Monaco.',
             ],
             201 => [
@@ -4403,13 +4433,13 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0208',
                 'Name' => 'Numero d\'entreprise / ondernemingsnummer / '
                 . 'Unternehmensnummer',
-                'Description' => 'Intended Purpose/App. Area: Identification '
+                'Description' => self::ICD_PURPOSE_IDENTIFICATION
                 . 'number attributed by the BCE/KBO/ZDU (the Belgian register) '
                 . 'to identify entities and establishment units '
                 . 'operating in Belgium. Issuing agency: Banque-Carrefour des '
                 . 'Entreprises (BCE) / Kruispuntbank van Ondernemingen (KBO) '
                 . '/ Zentrale Datenbank der Unternehmen (ZOU) Service public '
-                . 'fédéral Economie, P.M.E.in Belgium.
+                . 'fÃ©dÃ©ral Economie, P.M.E.in Belgium.
           Classes moyennes et Energie',
             ],
             203 => [
@@ -4425,31 +4455,31 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             204 => [
                 'Id' => '0210',
                 'Name' => 'CODICE FISCALE',
-                'Description' => 'Intended Purpose/App. Area: Electronic '
+                'Description' => self::ICD_PURPOSE_ELECTRONIC
                 . 'Invoicing and e-procurement. '
                 . 'Issuing agency: Agenzia delle Entrate, Italy.',
             ],
             205 => [
                 'Id' => '0211',
                 'Name' => 'PARTITA IVA',
-                'Description' => 'Intended Purpose/App. Area: Electronic'
-                . ' Invoicing and e-procurement. '
+                'Description' => self::ICD_PURPOSE_ELECTRONIC
+                . 'Invoicing and e-procurement. '
                 . 'Issuing agency: Agenzia delle Entrate, Italy.',
             ],
             206 => [
                 'Id' => '0212',
                 'Name' => 'Finnish Organization Identifier',
-                'Description' => 'Intended Purpose/App. Area: Identification '
-                . 'scheme will be used for electronic trade purposes in '
-                . 'e-invoicing, purchasing, electronic receipts. '
+                'Description' => self::ICD_PURPOSE_IDENTIFICATION
+                . self::ICD_SCHEME_WILL_BE_USED_FOR_ELECTRONIC_TRADE_PURPOSES_IN
+                . self::ICD_E_INVOICING_PURCHASING_ELECTRONIC_RECEIPTS
                 . 'Issuing agency: State Treasury of Finland / Valtiokonttor.',
             ],
             207 => [
                 'Id' => '0213',
                 'Name' => 'Finnish Organization Value Add Tax Identifier',
-                'Description' => 'Intended Purpose/App. Area: Identification '
-                . 'scheme will be used for electronic trade purposes in '
-                . 'e-invoicing, purchasing, electronic receipts. '
+                'Description' => self::ICD_PURPOSE_IDENTIFICATION
+                . self::ICD_SCHEME_WILL_BE_USED_FOR_ELECTRONIC_TRADE_PURPOSES_IN
+                . self::ICD_E_INVOICING_PURCHASING_ELECTRONIC_RECEIPTS
                 . 'Issuing agency: State Treasury of Finland / Valtiokonttor.',
             ],
             208 => [
@@ -4472,17 +4502,17 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             209 => [
                 'Id' => '0215',
                 'Name' => 'Net service ID',
-                'Description' => 'Intended Purpose/App. Area: Identification '
-                . 'scheme will be used for electronic trade purposes in '
-                . 'e-invoicing, purchasing, electronic receipts. '
+                'Description' => self::ICD_PURPOSE_IDENTIFICATION
+                . self::ICD_SCHEME_WILL_BE_USED_FOR_ELECTRONIC_TRADE_PURPOSES_IN
+                . self::ICD_E_INVOICING_PURCHASING_ELECTRONIC_RECEIPTS
                 . 'Issuing agency: Tieto Finland Oy, FINLAND.',
             ],
             210 => [
                 'Id' => '0216',
                 'Name' => 'OVTcode',
-                'Description' => 'Intended Purpose/App. Area: Identification '
-                . 'scheme will be used for electronic trade purposes in '
-                . 'e-invoicing, purchasing, electronic receipts. '
+                'Description' => self::ICD_PURPOSE_IDENTIFICATION
+                . self::ICD_SCHEME_WILL_BE_USED_FOR_ELECTRONIC_TRADE_PURPOSES_IN
+                . self::ICD_E_INVOICING_PURCHASING_ELECTRONIC_RECEIPTS
                 . 'Issuing agency: TIEKE- Tietoyhteiskunnan kehittamiskeskus, '
                 . 'FINLAND.',
             ],
@@ -4490,7 +4520,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                 'Id' => '0217',
                 'Name' => 'The Netherlands Chamber of Commerce and Industry '
                 . 'establishment number',
-                'Description' => 'Intended Purpose/App. Area: Electronic '
+                'Description' => self::ICD_PURPOSE_ELECTRONIC
                 . 'invoicing. Issuing agency: Nederlands Normalisatie Instituut '
                 . '(NEN)',
             ],
@@ -4556,71 +4586,68 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             217 => [
                 'Id' => '0223',
                 'Name' => 'EU based company',
-                'Description' => 'Intended Purpose/App. Area: To provide '
+                'Description' => self::ICD_PURPOSE_TO_PROVIDE
                 . 'identifiers for organizations based in EU. '
-                . 'Issuing agency: AIFE '
-                . '(Agence pour l’Informatique Financière de l’Etat)',
+                . 'Issuing agency: AIFE (Agence pour lâ€™Informatique FinanciÃ¨re de lâ€™Etat)',
             ],
             218 => [
                 'Id' => '0224',
                 'Name' => 'FTCTC CODE ROUTAGE',
-                'Description' => 'Intended Purpose/App. Area: To provide '
-                . 'identifiers used in electronic invoices for routing among '
-                . 'accredited platforms for the French Continuous '
-                . 'Transactional Control reform on e-invoicing. '
-                . 'Issuing agency: AIFE (Agence pour l’Informatique '
-                . 'Financière de l’Etat)',
+                'Description' => self::ICD_PURPOSE_TO_PROVIDE
+                . 'identifiers for organizations based in EU. '
+                . self::ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE
+                . self::ICD_FINANCIERE_DE_L_ETAT,
             ],
             219 => [
                 'Id' => '0225',
                 'Name' => 'FRCTC ELECTRONIC ADDRESS',
-                'Description' => 'Intended Purpose/App. Area: To provide '
+                'Description' => self::ICD_PURPOSE_TO_PROVIDE
                 . 'identifiers used as electronic addresses in the context'
                 . ' of the French Continuous Transactional Control reform'
                 . ' on e-invoicing. Issuing agency:'
-                . ' AIFE (Agence pour l’Informatique Financière de l’Etat)',
+                . ' AIFE (Agence pour lâ€™Informatique FinanciÃ¨re de lâ€™Etat)',
             ],
             220 => [
                 'Id' => '0226',
                 'Name' => 'FRCTC Particulier',
-                'Description' => 'Intended Purpose/App. Area: To provide '
-                . 'identifiers for French citizen sending invoices to the'
-                . ' French Public Sector. '
-                . 'Issuing agency: AIFE (Agence pour l’Informatique '
-                . 'Financière de l’Etat)',
+                'Dself::ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE
+                . self::ICD_FINANCIERE_DE_L_ETATtizen sending invoices to the'
+                . self::ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE
+                . 'Issuing agency: AIFE (Agence pour lâ€™Informatique '
+                . 'FinanciÃ¨re de lâ€™Etat)',
             ],
             221 => [
                 'Id' => '0227',
-                'Name' => 'NON - EU based company',
-                'Description' => 'Intended Purpose/App. Area: NON - EU based '
-                . 'company. '
-                . 'Issuing agency: AIFE (Agence pour l’Informatique '
-                . 'Financière de l’Etat)',
+                'Nself::ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE
+                . self::ICD_FINANCIERE_DE_L_ETATurpose/App. Area: NON - EU based '
+                . self::ICD_ISSUING_AGENCY_AIFE_AGENCE_POUR_L_INFORMATIQUE
+                . 'Issuing agency: AIFE (Agence pour lâ€™Informatique '
+                . 'FinanciÃ¨re de lâ€™Etat)',
             ],
             222 => [
                 'Id' => '0228',
-                'Name' => 'Répertoire des Entreprises et des Etablissements '
+                'Name' => 'RÃ©pertoire des Entreprises et des Etablissements '
                 . '(RIDET)',
-                'Description' => 'Intended Purpose/App. Area: To provide '
+                'Description' => self::ICD_PURPOSE_TO_PROVIDE
                 . 'identifiers for organizations at national level in Nouvelle'
                 . ' Caledonie (French). '
                 . 'Issuing agency: AIFE '
-                . '(Agence pour l’Informatique Financière de l’Etat)',
+                . '(Agence pour lâ€™Informatique FinanciÃ¨re de lâ€™Etat)',
             ],
             223 => [
                 'Id' => '0229',
-                'Name' => 'T.A.H.I.T.I (traitement automatique hiérarchisé des '
-                . 'institutions de Tahiti et des îles)',
-                'Description' => 'Intended Purpose/App. Area: To provide '
+                'Name' => 'T.A.H.I.T.I (traitement automatique hiÃ©rarchisÃ© des '
+                . 'institutions de Tahiti et des Ã®les)',
+                'Description' => self::ICD_PURPOSE_TO_PROVIDE
                 . 'identifiers for organizations at national level in '
                 . 'TAHITI (French). '
-                . 'Issuing agency: AIFE (Agence pour l’Informatique Financière '
-                . 'de l’Etat)',
+                . 'Issuing agency: AIFE (Agence pour lâ€™Informatique FinanciÃ¨re '
+                . 'de lâ€™Etat)',
             ],
             224 => [
                 'Id' => '0230',
                 'Name' => 'National e-Invoicing Framework',
-                'Description' => 'Intended Purpose/App. Area: Identifier for  '
+                'Description' => 'Intended Purpose/App. Area: Identifier for Â '
                 . 'organizations. '
                 . 'Issuing agency: Malaysia Digital Economy Corporation '
                 . 'Sdn Bhd (MDEC)',
@@ -4808,25 +4835,25 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             27 => [
                 'Id' => 'BB',
                 'Name' => 'Lot number',
-                'Description' => 'A number indicating the lot number of a '
+                'Description' => self::ICD_A_CODE_IDENTIFYING_THE_PRODUCT_IN_NATIONAL
                 . 'product.',
             ],
             28 => [
                 'Id' => 'BC',
                 'Name' => 'National drug code 4-4-2 format',
-                'Description' => 'A code identifying the product in national '
+                'Description' => self::ICD_A_CODE_IDENTIFYING_THE_PRODUCT_IN_NATIONAL
                 . 'drug format 4-4-2.',
             ],
             29 => [
                 'Id' => 'BD',
                 'Name' => 'National drug code 5-3-2 format',
-                'Description' => 'A code identifying the product in national '
+                'Description' => self::ICD_A_CODE_IDENTIFYING_THE_PRODUCT_IN_NATIONAL
                 . 'drug format 5-3-2.',
             ],
             30 => [
                 'Id' => 'BE',
                 'Name' => 'National drug code 5-4-1 format',
-                'Description' => 'A code identifying the product in national '
+                'Description' => self::ICD_A_CODE_IDENTIFYING_THE_PRODUCT_IN_NATIONAL
                 . 'drug format 5-4-1.',
             ],
             31 => [
@@ -5097,7 +5124,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             77 => [
                 'Id' => 'NB',
                 'Name' => 'Batch number',
-                'Description' => 'The item number is a batch number.',
+                'Description' => 'The item number is a batch number',
             ],
             78 => [
                 'Id' => 'ON',
@@ -5107,20 +5134,21 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             79 => [
                 'Id' => 'PD',
                 'Name' => 'Part number description',
-                'Description' => 'Reference number identifying a '
+                'Description' => self::ICD_REFERENCE_NUMBER_IDENTIFYING_A
                 . 'description associated with a number ultimately used to '
                 . 'identify an article.',
             ],
             80 => [
                 'Id' => 'PL',
                 'Name' => 'Purchaser\'s order line number',
-                'Description' => 'Reference number identifying a line entry '
+                'Description' => self::ICD_REFERENCE_NUMBER_IDENTIFYING_A
+                . 'line entry '
                 . 'in a customer\'s order for goods or services.',
             ],
             81 => [
                 'Id' => 'PO',
                 'Name' => 'Purchase order number',
-                'Description' => 'Reference number identifying a '
+                'Description' => self::ICD_REFERENCE_NUMBER_IDENTIFYING_A
                 . 'customer\'s order.',
             ],
             82 => [
@@ -5138,7 +5166,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             84 => [
                 'Id' => 'RC',
                 'Name' => 'Returnable container number',
-                'Description' => 'Reference number identifying a '
+                'Description' => self::ICD_REFERENCE_NUMBER_IDENTIFYING_A
                 . 'returnable container.',
             ],
             85 => [
@@ -5363,7 +5391,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             ],
             119 => [
                 'Id' => 'SSS',
-                'Name' => 'Distributor’s article identifier',
+                'Name' => 'Distributorâ€™s article identifier',
                 'Description' => 'Identifier assigned to an article by the '
                 . 'distributor of that article.',
             ],
@@ -5497,7 +5525,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             ],
             140 => [
                 'Id' => 'STM',
-                'Name' => 'CLADIMED (Classification des Dispositifs Médicaux)',
+                'Name' => 'CLADIMED (Classification des Dispositifs MÃ©dicaux)',
                 'Description' => 'A five level classification '
                 . 'system for medical decvices maintained by the CLADIMED '
                 . 'organisation used in the French market.',
@@ -5641,7 +5669,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
             161 => [
                 'Id' => 'SUH',
                 'Name' => 'Ship\'s store classification type',
-                'Description' => 'Classification of ship’s stores.',
+                'Description' => 'Classification of shipâ€™s stores.',
             ],
             162 => [
                 'Id' => 'SUI',

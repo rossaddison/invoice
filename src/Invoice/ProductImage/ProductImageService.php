@@ -13,7 +13,6 @@ final readonly class ProductImageService
 {
     public function __construct(
         private ProductImageRepository $repository,
-        private SettingRepository $s,
         private PR $pR,
     ) {
     }

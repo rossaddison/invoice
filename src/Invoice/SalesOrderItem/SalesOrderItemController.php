@@ -67,7 +67,7 @@ final class SalesOrderItemController extends BaseController
         UIR $uiR,
         UR $uR,
         SOR $qR,
-    ): \Psr\Http\Message\ResponseInterface {
+    ): Response {
         $so_item = $this->salesorderitem($currentRoute, $soiR);
         if ($so_item) {
             $so = $so_item->getSalesOrder();

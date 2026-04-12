@@ -97,7 +97,7 @@ if (!empty($codes)) {
 }
 ?>
                     <?php
-    $button = new Button($currentRoute, $translator, $urlGenerator);
+    $button = new Button($translator, $urlGenerator);
 $regenerateCodesUrl = $urlGenerator->generate('auth/regenerateCodes');
 echo $button->regenerateRecoveryCodes($regenerateCodesUrl);
 ?>

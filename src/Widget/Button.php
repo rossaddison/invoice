@@ -12,13 +12,11 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Img;
 use Yiisoft\Html\Tag\Span;
-use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 
 final readonly class Button
 {
-    public function __construct(private CurrentRoute $currentRoute,
-        private readonly Translator $translator,
+    public function __construct(private readonly Translator $translator,
         private readonly UrlGenerator $generator)
     {
     }

@@ -615,3 +615,4 @@ echo GridView::widget()
         ['class' => 'card-header bg-warning text-black']
     )
     ->toolbar($toolbarString);
+    

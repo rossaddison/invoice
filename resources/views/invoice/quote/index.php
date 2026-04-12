@@ -70,12 +70,12 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
  */
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
-
+$quoteIndex = 'quote/index';
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-primary me-1 ajax-loader')
     ->content( new I()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName() ?? 'quote/index'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? $quoteIndex))
     ->id('btn-reset')
     ->render();
 
@@ -149,13 +149,13 @@ foreach ($sortedAndPagedPaginator->read() as $quote) {
     $totalAmount += null !== ($total = $quote->getQuoteAmount()->getTotal())
             ? $total : 0.00;
 }
-
+$settingTabindex = 'setting/tabIndex';
 echo Breadcrumbs::widget()
      ->links(
          BreadcrumbLink::to(
              label: $translator->translate('default.quote.group'),
              url: $urlGenerator->generate(
-                 'setting/tabIndex',
+                 $settingTabindex,
                  [],
                  ['active' => 'quotes'],
                  'settings[default_quote_group]',
@@ -171,7 +171,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('default.notes'),
              url: $urlGenerator->generate(
-                 'setting/tabIndex',
+                 $settingTabindex,
                  [],
                  ['active' => 'quotes'],
                  'settings[default_quote_notes]',
@@ -187,7 +187,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('quotes.expire.after'),
              url: $urlGenerator->generate(
-                 'setting/tabIndex',
+                 $settingTabindex,
                  [],
                  ['active' => 'quotes'],
                  'settings[quotes_expire_after]',
@@ -203,7 +203,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('generate.quote.number.for.draft'),
              url: $urlGenerator->generate(
-                 'setting/tabIndex',
+                 $settingTabindex,
                  [],
                  ['active' => 'quotes'],
                  'settings[generate_quote_number_for_draft]',
@@ -219,7 +219,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('default.email.template'),
              url: $urlGenerator->generate(
-                 'setting/tabIndex',
+                 $settingTabindex,
                  [],
                  ['active' => 'quotes'],
                  'settings[email_quote_template]',
@@ -236,7 +236,7 @@ echo Breadcrumbs::widget()
          BreadcrumbLink::to(
              label: $translator->translate('pdf.quote.footer'),
              url: $urlGenerator->generate(
-                 'setting/tabIndex',
+                 $settingTabindex,
                  [],
                  ['active' => 'quotes'],
                  'settings[pdf_quote_footer]',
@@ -602,7 +602,7 @@ if ($enableGrouping) {
 }
 
 $toolbarString
-    =  new Form()->post($urlGenerator->generate('quote/index'))->csrf($csrf)->open()
+    =  new Form()->post($urlGenerator->generate($quoteIndex))->csrf($csrf)->open()
     .  new Div()->addClass('float-start')->content(
          new H4()
             ->addClass('me-3 d-inline-block')
@@ -624,7 +624,7 @@ $toolbarString
                     ->addClass('form-select group-by-select')
                     ->addAttributes([
                         'style' => 'max-width: 150px;',
-                        'data-base-url' => $urlGenerator->generate('quote/index'),
+                        'data-base-url' => $urlGenerator->generate($quoteIndex),
                     ])
                     ->optionsData([
                         'none' => $translator->translate('grouping.none'),

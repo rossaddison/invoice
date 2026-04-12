@@ -1263,7 +1263,7 @@ echo $bootstrap5OffcanvasEnable ? Offcanvas::end() : '';
 echo Html::openTag('div', ['id' => 'main-area']);
  // Display the sidebar if enabled
  if ($s->getSetting('disable_sidebar') !== (string) 1) {
-  include dirname(__DIR__) . '/invoice/layout/sidebar.php';
+  include_once dirname(__DIR__) . '/invoice/layout/sidebar.php';
  }
  echo Html::openTag('main', ['class' => 'container-fluid py-4']); //1
   echo $content;

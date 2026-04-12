@@ -23,6 +23,9 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
+const NATIVE_RESET_INV_FILTER = 'native-reset inv-filter';
+const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
+
 /**
  * @var App\Invoice\Entity\Inv $inv
  * @var App\Invoice\Entity\UserInv $userInv
@@ -90,7 +93,7 @@ $columns = [
         filter: DropdownFilter::widget()
                 ->addAttributes([
                     'id'         => 'filter-inv-number',
-                    'class'      => 'native-reset inv-filter',
+                    'class'      => NATIVE_RESET_INV_FILTER,
                     'aria-label' => 'Filter by invoice number',
                     'title'      => $translator->translate('number'),
                 ])
@@ -142,7 +145,7 @@ $columns = [
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                 ->addAttributes([
                     'id'          => 'filter-amount-paid',
-                    'class'       => 'native-reset inv-amount-filter',
+                    'class'       => NATIVE_RESET_INV_AMOUNT_FILTER,
                     'aria-label'  => 'Filter by paid amount',
                     'title'       => $translator->translate('paid'),
                     'placeholder' => $translator->translate('paid'),
@@ -256,7 +259,7 @@ $columns = [
             ->addAttributes([
                 'id'         => 'filter-status',
                 'name'       => 'status',
-                'class'      => 'native-reset inv-filter',
+                'class'      => NATIVE_RESET_INV_FILTER,
                 'aria-label' => 'Filter by status',
                 'title'      => $translator->translate('status'),
             ])
@@ -291,7 +294,7 @@ $columns = [
         filter: DropdownFilter::widget()
                 ->addAttributes([
                     'id'         => 'filter-credit-inv-number',
-                    'class'      => 'native-reset inv-filter',
+                    'class'      => NATIVE_RESET_INV_FILTER,
                     'aria-label' => 'Filter by credit note parent invoice',
                     'title'      => $translator->translate(
                         'credit.invoice.for.invoice'),
@@ -313,7 +316,7 @@ $columns = [
                 ->addAttributes([
                     'id'         => 'filter-client',
                     'name'       => 'client_id',
-                    'class'      => 'native-reset inv-filter',
+                    'class'      => NATIVE_RESET_INV_FILTER,
                     'aria-label' => 'Filter by client',
                     'title'      => $translator->translate('client'),
                 ])
@@ -362,7 +365,7 @@ $columns = [
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                 ->addAttributes([
                     'id'          => 'filter-amount-total',
-                    'class'       => 'native-reset inv-amount-filter',
+                    'class'       => NATIVE_RESET_INV_AMOUNT_FILTER,
                     'aria-label'  => 'Filter by total amount',
                     'title'       => $translator->translate('total'),
                     'placeholder' => $translator->translate('total'),
@@ -374,20 +377,18 @@ $columns = [
         header: $translator->translate('balance')
             . ' ( ' . $s->getSetting('currency_symbol') . ' ) ',
         content: static function (Inv $model) use ($decimalPlaces): Label {
-            $invAmountBalance = $model->getInvAmount()->getBalance();
-            return   new Label()
-                    ->attributes(['class' => $invAmountBalance > 0.00 ?
+            $invAmntBal = $model->getInvAmount()->getBalance() ?? 0;
+            return new Label()
+                    ->attributes(['class' => $invAmntBal > 0.00 ?
                             'text-danger' : 'text-success'])
-                    ->content(Html::encode(null !== $invAmountBalance
-                            ? number_format($invAmountBalance > 0.00 ?
-                                    $invAmountBalance : 0.00, $decimalPlaces)
-                            : number_format(0, $decimalPlaces)));
+                    ->content(Html::encode(
+                            number_format($invAmntBal, $decimalPlaces)));
         },
         encodeContent: false,
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
                 ->addAttributes([
                     'id'          => 'filter-amount-balance',
-                    'class'       => 'native-reset inv-amount-filter',
+                    'class'       => NATIVE_RESET_INV_AMOUNT_FILTER,
                     'aria-label'  => 'Filter by balance amount',
                     'title'       => $translator->translate('balance'),
                     'placeholder' => $translator->translate('balance'),

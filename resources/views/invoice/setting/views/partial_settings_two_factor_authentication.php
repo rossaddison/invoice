@@ -45,9 +45,10 @@ echo H::openTag('div', ['class' => 'row']); //1
        echo H::closeTag('div'); //8
       echo H::closeTag('div'); //7
       echo H::openTag('div', ['class' => 'form-group']); //7
+      $tfaDisabling = 'settings[enable_tfa_with_disabling]';
        echo H::openTag(
         'label',
-        ['for' => 'settings[enable_tfa_with_disabling]']
+        ['for' => $tfaDisabling]
        );
        echo H::openTag('p');
         echo $translator->translate('yes') . ' = ';
@@ -62,24 +63,24 @@ echo H::openTag('div', ['class' => 'row']); //1
         );
        echo H::closeTag('p');
       echo H::closeTag('label');
-      $body['settings[enable_tfa_with_disabling]'] =
+      $body[$tfaDisabling] =
       $s->getSetting('enable_tfa_with_disabling');
       echo H::openTag('select', [
-       'name' => 'settings[enable_tfa_with_disabling]',
-       'id' => 'settings[enable_tfa_with_disabling]',
+       'name' => $tfaDisabling,
+       'id' => $tfaDisabling,
        'class' => 'form-control form-control-lg',
       ]);
        echo  new Option()
         ->value('0')
         ->content($translator->translate('no'))
         ->selected(
-         $body['settings[enable_tfa_with_disabling]'] == '0'
+         $body[$tfaDisabling] == '0'
         );
        echo  new Option()
         ->value('1')
         ->content($translator->translate('yes'))
         ->selected(
-         $body['settings[enable_tfa_with_disabling]'] == '1'
+         $body[$tfaDisabling] == '1'
         );
       echo H::closeTag('select');
      echo H::closeTag('div'); //6

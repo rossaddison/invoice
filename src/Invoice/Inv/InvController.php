@@ -3560,18 +3560,9 @@ echo file_get_contents($temp_aliase, true);
                             $peppolhelper = new PeppolHelper(
                                 $this->sR,
                                 $delRepo,
-                                $iiaR,
                                 $inv_amount,
                                 $delloc,
                                 $this->translator,
-                                $this->sR->getSetting('currency_code_from'),
-                                $this->sR->getSetting('currency_code_to'),
-                                // one of 'from currency' converts to this
-                                // of 'to currency':
-                                $this->sR->getSetting('currency_from_to'),
-                                // one of 'to currency' converts to this
-                                // of 'from currency':
-                                $this->sR->getSetting('currency_to_from'),
                             );
                             $uploads_temp_peppol_absolute_path_dot_xml =
                         $peppolhelper->generateInvoicePeppolUblXmlTempFile(
@@ -3787,22 +3778,11 @@ echo file_get_contents($temp_aliase, true);
                     $delivery_location = $dlR->repoDeliveryLocationquery(
                         (string) $client_id);
                     if (null !== $delivery_location) {
-                        $inv_amount = $invoice->getInvAmount();
                         $storecovehelper = new StoreCoveHelper(
                             $this->sR,
                             $this->delRepo,
-                            $iiaR,
-                            $inv_amount,
                             $delivery_location,
-                            $this->translator,
-                            $this->sR->getSetting('currency_code_from'),
-                            $this->sR->getSetting('currency_code_to'),
-                            // one of 'from currency' converts to this of
-                            // 'to currency':
-                            $this->sR->getSetting('currency_from_to'),
-                            // one of 'to currency' converts to this of
-                            // 'from currency':
-                            $this->sR->getSetting('currency_to_from'),
+                            $this->translator
                         );
                         $storecove_array =
                     $storecovehelper->maximumPreJsonPhpObjectForAnInvoice(

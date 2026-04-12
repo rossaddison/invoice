@@ -35,12 +35,12 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  */
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
-
+$quoteGuest = 'quote/guest';
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
     ->content( new I()->addClass('bi bi-bootstrap-reboot'))
-    ->href($urlGenerator->generate($currentRoute->getName() ?? 'quote/guest'))
+    ->href($urlGenerator->generate($currentRoute->getName() ?? $quoteGuest))
     ->id('btn-reset')
     ->render();
 
@@ -51,14 +51,14 @@ $statusBar =   new Div()
     ->content(
         Html::a(
             $translator->translate('all'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 0]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 0]),
             [
                 'class' => 'btn ' . ($status == 0 ? 'btn-primary' : 'btn-default'),
             ],
         )
         . Html::a(
             $translator->translate('sent'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 2]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 2]),
             [
                 'class' => 'btn ' . ($status == 2 ? 'btn-primary' : 'btn-default'),
                 'style' => 'text-decoration:none',
@@ -66,7 +66,7 @@ $statusBar =   new Div()
         )
         . Html::a(
             $translator->translate('viewed'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 3]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 3]),
             [
                 'class' => 'btn ' . ($status == 3 ? 'btn-primary' : 'btn-default'),
                 'style' => 'text-decoration:none',
@@ -74,7 +74,7 @@ $statusBar =   new Div()
         )
         . Html::a(
             $translator->translate('approved'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 4]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 4]),
             [
                 'class' => 'btn ' . ($status == 4 ? 'btn-primary' : 'btn-default'),
                 'style' => 'text-decoration:none',
@@ -82,7 +82,7 @@ $statusBar =   new Div()
         )
         . Html::a(
             $translator->translate('rejected'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 5]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 5]),
             [
                 'class' => 'btn ' . ($status == 5 ? 'btn-primary' : 'btn-default'),
                 'style' => 'text-decoration:none',
@@ -90,7 +90,7 @@ $statusBar =   new Div()
         )
         . Html::a(
             $translator->translate('canceled'),
-            $urlGenerator->generate('quote/guest', ['page' => 1, 'status' => 6]),
+            $urlGenerator->generate($quoteGuest, ['page' => 1, 'status' => 6]),
             [
                 'class' => 'btn ' . ($status == 6 ? 'btn-primary' : 'btn-default'),
                 'style' => 'text-decoration:none',

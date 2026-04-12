@@ -63,8 +63,6 @@ final class PaymentInformationController
 
     use OpenBankingProviders;
 
-    private ?string $salt = null;
-
     private string $telegramToken;
 
     public function __construct(

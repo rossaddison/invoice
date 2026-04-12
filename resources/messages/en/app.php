@@ -9,6 +9,8 @@ declare(strict_types=1);
 //      the desired translation locale folder e.g 'de' is compared with
 //      app_lang and any translation key-value pairs that the 'de' folder
 //      does not have is output to the outputoverwrite folder.
+$picc = 'Peppol Item Classification Code';
+$referToConfigParamsArray = ' Refer to config params array.';
 return [
   'account.information' => 'Account Information',
   'active' => 'Active',
@@ -1850,12 +1852,10 @@ prior to importing and no existing documents e.g. Invoices.',
   'product.found' => 'Product found',
   'product.history' => 'Cannot delete.'
     . ' This product is on an invoice or quote.',
-  'product.icc.id' => 'Peppol Item'
-    . ' Classification Code ID   eg. 9873242',
-  'product.icc.listid' => 'Peppol Item'
-    . ' Classificaiton Code List id - eg. SRV',
-  'product.icc.listversionid' => 'Peppol Item'
-    . ' Classification Code List Version ID (Optional)'
+  'product.icc.id' => $picc . ' ID eg. 9873242',
+  'product.icc.listid' => $picc . ' List id - eg. SRV',
+  'product.icc.listversionid' => $picc . ' Code List Version'
+    . ' ID (Optional)'
     . ' - eg. If ItemClassification is provided'
     . ' from Danish suppliers, UNSPSC version '
     . '19.0501 should be used.',
@@ -1868,8 +1868,8 @@ prior to importing and no existing documents e.g. Invoices.',
   'product.peppol.unit' => 'Unit with Peppol',
   'product.price' => 'Price',
   'product.price.base.quantity' => 'qty in Product',
-  'product.property' => ' Product Property',
-  'product.property.add' => ' Product Property Add',
+  'product.property' => 'Product Property',
+  'product.property.add' => 'Product Property Add',
   'product.property.edit' => 'Product Property Edit',
   'product.property.index' => 'Product Property Index',
   'product.property.name' => 'Name',
@@ -2374,19 +2374,19 @@ prior to importing and no existing documents e.g. Invoices.',
     '6.2 Sender Identifier Basis - Legal or Tax',
   'storecove.supplier.contact.email.not.found' =>
     'Supplier Contact Email Not Found.'
-    . ' Refer to config params array.',
+    . $referToConfigParamsArray,
   'storecove.supplier.contact.firstname.not.found' =>
     'Supplier Contact FirstName Not Found.'
-    . ' Refer to config params array.',
+    . $referToConfigParamsArray,
   'storecove.supplier.contact.lastname.not.found' =>
     'Supplier Contact LastName Not Found.'
-    . ' Refer to config params array.',
+    . $referToConfigParamsArray,
   'storecove.supplier.contact.name.not.found' =>
     'Supplier Contact Name Not Found.'
-    . ' Refer to config params array.',
+    . $referToConfigParamsArray,
   'storecove.supplier.contact.telephone.not.found' =>
     'Supplier Contact Telephone Not Found.'
-    . ' Refer to config params array.',
+    . $referToConfigParamsArray,
   'storecove.tax' => 'Tax',
   'storecove.tax.rate.code' => 'Storecove Tax Rate Code',
   'storecove.tax.scheme.identifier.id.not.found' =>

@@ -502,7 +502,7 @@ class PdfHelper
                             'description' => 'ZUGFeRD Invoice',
                             'AFRelationship' => 'Alternative',
                             'mime' => 'text/xml',
-                            'path' => $z->generateInvoiceZugferdXmlTempFile($inv, $iiaR, $inv_amount),
+                            'path' => $z->generateInvoiceZugferdXmlTempFile($inv),
                         ],
                     ];
                 } else {

@@ -268,11 +268,11 @@ $columns = [
         content: static function (SalesOrder $model) use ($urlGenerator):
             string|A {
             $quote = $model->getQuote();
-            return ($quote
+            return $quote
             ? Html::a($quote->getNumber() ?? '#',
                     $urlGenerator->generate('quote/view',
                             ['id' => $quote->getId()]),
-                                    ['style' => 'text-decoration:none']) : '');
+                                    ['style' => 'text-decoration:none']) : '';
         },
         visible: $visible,
     ),
@@ -284,10 +284,10 @@ $columns = [
             $invId = $model->getInvId();
             if ($invId !== null && $invId !== '' && $invId !== '0') {
                 $inv = $iR->repoInvUnloadedquery($invId);
-                return ($inv
+                return $inv
                 ? Html::a($inv->getNumber() ?? '#', $urlGenerator->generate(
                         'inv/view', ['id' => $invId]),
-                                ['style' => 'text-decoration:none']) : '');
+                                ['style' => 'text-decoration:none']) : '';
             }
             return '';
         },

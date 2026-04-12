@@ -36,26 +36,26 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::openTag('div', ['class' => 'panel-body']); //5
      echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
-       echo H::openTag('label', ['for' => 'settings[qr_version]']);
+       $qrVer = 'settings[qr_version]';
+       echo H::openTag('label', ['for' => $qrVer]);
         echo $translator->translate('qr.version');
        echo H::closeTag('label');
-       $body['settings[qr_version]'] =
-       $s->getSetting('qr_version') ?: '40';
-       echo H::input('text', 'settings[qr_version]',
-        $body['settings[qr_version]'] ?? (string) Version::AUTO, [
-        'id' => 'settings[qr_version]',
-        'class' => 'form-control form-control-lg',
+       $body[$qrVer] = $s->getSetting('qr_version') ?: '40';
+       echo H::input('text', $qrVer,
+        $body[$qrVer] ?? (string) Version::AUTO, [
+            'id' => $qrVer,
+            'class' => 'form-control form-control-lg',
        ]);
       echo H::closeTag('div'); //7
       echo H::openTag('div', ['class' => 'form-group']); //7
-       echo H::openTag('label', ['for' => 'settings[qr_ecc_level]']);
+       $qrEcc = 'settings[qr_ecc_level]';
+       echo H::openTag('label', ['for' => $qrEcc]);
         echo $translator->translate('qr.ecc.level');
        echo H::closeTag('label');
-       $body['settings[qr_ecc_level]'] =
-       $s->getSetting('qr_ecc_level');
+       $body[$qrEcc] = $s->getSetting('qr_ecc_level');
        echo H::openTag('select', [
-        'name' => 'settings[qr_ecc_level]',
-        'id' => 'settings[qr_ecc_level]',
+        'name' => $qrEcc,
+        'id' => $qrEcc,
         'class' => 'form-control form-control-lg',
        ]);
         $ecc_levels = ['0' => 'L', '1' => 'M', '2' => 'Q', '3' => 'H'];
@@ -66,25 +66,24 @@ echo H::openTag('div', ['class' => 'row']); //1
         foreach ($ecc_levels as $value => $label) {
         echo  new Option()
          ->value($value)
-         ->selected($value == ($body['settings[qr_ecc_level]'] ?? '0'))
+         ->selected($value == ($body[$qrEcc] ?? '0'))
          ->content($label);
         }
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
       echo H::openTag('div', ['class' => 'form-group']); //7
+       $qrHw = 'settings[qr_height_and_width]';
        echo H::openTag('label', [
-        'for' => 'settings[qr_height_and_width]'
+        'for' => $qrHw
        ]);
         echo $translator->translate('qr.height.and.width');
        echo H::closeTag('label');
-       $body['settings[qr_height_and_width]'] =
-       $s->getSetting('qr_height_and_width');
-       $qr_size = isset($body['settings[qr_height_and_width]'])
-       && !empty($body['settings[qr_height_and_width]'])
-       ? (int) $body['settings[qr_height_and_width]'] : 60;
-       echo H::input('text', 'settings[qr_height_and_width]',
+       $body[$qrHw] = $s->getSetting('qr_height_and_width');
+       $qr_size = isset($body[$qrHw]) && !empty($body[$qrHw]) ?
+            (int) $body[$qrHw] : 60;
+       echo H::input('text', $qrHw,
         (string) $qr_size, [
-        'id' => 'settings[qr_height_and_width]',
+        'id' => $qrHw,
         'class' => 'form-control form-control-lg',
        ]);
       echo H::closeTag('div'); //7
@@ -110,10 +109,8 @@ echo H::openTag('div', ['class' => 'row']); //1
       echo H::closeTag('div'); //7
       echo H::openTag('div', ['class' => 'row']); //7
        echo H::openTag('div', ['class' => 'panel-body']); //8
-        $pixels = (isset($body['settings[qr_height_and_width]'])
-         && ($body['settings[qr_height_and_width]']))
-         ? (int) $body['settings[qr_height_and_width]'] : 60;
-         printf( new Img()
+        $pixels = (isset($body[$qrHw]) && ($body[$qrHw])) ? (int) $body[$qrHw] : 60;
+         printf(new Img()
          ->width($pixels)
          ->height($pixels)
          ->src('%s')
@@ -123,7 +120,7 @@ echo H::openTag('div', ['class' => 'row']); //1
          'https://invoice.myhost/invoice/inv/view/6'
         )
         );
-        echo  new Table()
+        echo new Table()
          ->attributes([
           'class' => 'table table-info table-striped table-bordered'
          ])

@@ -1,15 +1,12 @@
 <?php
 declare(strict_types=1);
-
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\Option;
-
 /**
 * @var App\Invoice\Setting\SettingRepository $s
 * @var Yiisoft\Translator\TranslatorInterface $translator
 * @var array $body
 */
-
 echo H::tag('style', ' label { font-weight: bold; } ');
 echo H::openTag('div', ['class' => 'row']); //1
  echo H::openTag('div', [ //2
@@ -23,26 +20,24 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::openTag('div', ['class' => 'row']); //5
      echo H::openTag('div', ['class' => 'col-xs-12 col-md-6']); //6
       echo H::openTag('div', ['class' => 'form-group']); //7
-       echo H::openTag('label', [
-        'for' => 'settings[email_pdf_attachment]'
-       ]);
+       $sepa = 'settings[email_pdf_attachment]';
+       echo H::openTag('label', ['for' => $sepa]);
         echo $translator->translate('email.pdf.attachment');
        echo H::closeTag('label');
-       $body['settings[email_pdf_attachment]'] =
-       $s->getSetting('email_pdf_attachment');
+       $body[$sepa] = $s->getSetting('email_pdf_attachment');
        echo H::openTag('select', [
-        'name' => 'settings[email_pdf_attachment]',
-        'id' => 'settings[email_pdf_attachment]',
+        'name' => $sepa,
+        'id' => $sepa,
         'class' => 'form-control form-control-lg',
         'data-minimum-results-for-search' => 'Infinity'
        ]);
         echo  new Option()
          ->value('0')
-         ->selected($body['settings[email_pdf_attachment]'] === '0')
+         ->selected($body[$sepa] === '0')
          ->content($translator->translate('no'));
         echo  new Option()
          ->value('1')
-         ->selected($body['settings[email_pdf_attachment]'] === '1')
+         ->selected($body[$sepa] === '1')
          ->content($translator->translate('yes'));
        echo H::closeTag('select');
       echo H::closeTag('div'); //7
@@ -50,11 +45,12 @@ echo H::openTag('div', ['class' => 'row']); //1
     echo H::closeTag('div'); //5
    echo H::closeTag('div'); //4
    echo H::openTag('div', ['class' => 'panel-heading']); //4
+    $sesm = 'settings[email_send_method]';
     echo H::openTag('label', ['for' => 'email_send_method']);
      echo $translator->translate('email.send.method');
     echo H::closeTag('label'); //4
     echo H::openTag('select', [
-     'name' => 'settings[email_send_method]',
+     'name' => $sesm,
      'id' => 'email_send_method',
      'class' => 'form-control form-control-lg',
     ]);
