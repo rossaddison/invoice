@@ -151,7 +151,7 @@
         "codeception/module-asserts": "^3.3.0",
         "codeception/module-cli": "^2.0.1",
         "codeception/module-phpbrowser": "^4.0.0",
-        "friendsofphp/php-cs-fixer": "^3.94.2",
+        "friendsofphp/php-cs-fixer": "^3.95.0",
         "guzzlehttp/promises": ">=2.3",
         "phpunit/phpunit": ">=12.5.14",
         "rector/rector": "^2.4.1",
