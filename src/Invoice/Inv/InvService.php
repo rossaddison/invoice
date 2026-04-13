@@ -6,33 +6,17 @@ namespace App\Invoice\Inv;
 
 // Entities
 use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvItemAllowanceCharge;
-use App\Invoice\Entity\InvAllowanceCharge;
-use App\Invoice\Entity\InvTaxRate;
-use App\Invoice\Entity\InvCustom;
 use App\User\User;
 // Repositories
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Group\GroupRepository as GR;
-use App\Invoice\InvAmount\InvAmountRepository as IAR;
-use App\Invoice\InvCustom\InvCustomRepository as ICR;
-use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
-use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
-use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;
-use App\Invoice\InvItem\InvItemRepository as IIR;
-use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
 use App\Invoice\Setting\SettingRepository as SR;
 use App\User\UserRepository as UR;
 // Helpers
 use App\Invoice\Helpers\DateHelper;
 // Services
-use App\Invoice\InvAmount\InvAmountService as IAS;
-use App\Invoice\InvCustom\InvCustomService as ICS;
-use App\Invoice\InvItem\InvItemService as IIS;
-use App\Invoice\InvTaxRate\InvTaxRateService as ITRS;
+use App\Invoice\Inv\InvDeletionService as IDS;
 // Ancillary
-use Yiisoft\Session\SessionInterface;
 use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use DateTimeImmutable;
@@ -45,6 +29,7 @@ final readonly class InvService
         private CR $cR,
         private GR $gR,
         private UR $uR,
+        private IDS $deletionService,     
     ) {
     }
 
@@ -307,80 +292,6 @@ final readonly class InvService
     }
 
     /**
-     * @param Inv $model
-     * @param ACIR $aciR
-     * @param ACIIR $aciiR
-     * @param IIAR $iiaR
-     * @param ICR $icR
-     * @param ICS $icS
-     * @param IIR $iiR
-     * @param IIS $iiS
-     * @param ITRR $itrR
-     * @param ITRS $itrS
-     * @param IAR $iaR
-     * @param IAS $iaS
-     */
-    public function deleteInv(
-        Inv $model,
-        ACIR $aciR,
-        ACIIR $aciiR,
-        IIAR $iiaR,
-        ICR $icR,
-        ICS $icS,
-        IIR $iiR,
-        IIS $iiS,
-        ITRR $itrR,
-        ITRS $itrS,
-        IAR $iaR,
-        IAS $iaS,
-    ): void {
-        // Compare with function flush which follows LIFO (Last In First Out) record creation
-        // To avoid foreign key constraint violations, delete entities that have FK's first
-        // i.e a field(s) in a table/entity with _id at the end of it
-        $inv_id = $model->getId();
-        if (null !== $inv_id) {
-            /** @var InvItem $item */
-            foreach ($iiR->repoInvItemIdquery($inv_id) as $item) {
-                $itemId = $item->getId();
-                if (null !== $itemId) {
-                    // InvItemAmount has inv_item_id as a foreign key so delete first to avoid Fk integrity error
-                    $invItemAmount = $iiaR->repoInvItemAmountquery((string) $itemId);
-                    if (null !== $invItemAmount) {
-                        $iiaR->delete($invItemAmount);
-                    }
-                    // InvItemAllowanceCharge has an inv_item_id as a foreign key so delete first to avoid FK integrity error
-                    $invItemAllowanceCharges = $aciiR->repoInvItemquery((string) $itemId);
-                    /** @var InvItemAllowanceCharge $invItemAllowanceCharge */
-                    foreach ($invItemAllowanceCharges as $invItemAllowanceCharge) {
-                        $aciiR->delete($invItemAllowanceCharge);
-                    }
-                    // Now can delete the inv item
-                    $iiS->deleteInvItem($item);
-                }
-            }
-            $count = $iaR->repoInvAmountCount((int) $inv_id);
-            if ($count > 0) {
-                $inv_amount = $iaR->repoInvquery((int) $inv_id);
-                null !== $inv_amount ? $iaS->deleteInvAmount($inv_amount) : '';
-            }
-            /** @var InvTaxRate */
-            foreach ($itrR->repoInvquery($inv_id) as $inv_tax_rate) {
-                $itrS->deleteInvTaxRate($inv_tax_rate);
-            }
-            /** @var InvCustom */
-            foreach ($icR->repoFields($inv_id) as $inv_custom) {
-                $icS->deleteInvCustom($inv_custom);
-            }
-            /** @var InvAllowanceCharge */
-            foreach ($aciR->repoACIquery($inv_id) as $inv_allowance_charge) {
-                $aciR->delete($inv_allowance_charge);
-            }
-        }
-
-        $this->repository->delete($model);
-    }
-
-    /**
      * @param User $user
      * @param Inv $model
      * @param array $details
@@ -432,5 +343,11 @@ final readonly class InvService
             $model->setDiscountAmount(0.00);
         }
         $this->repository->save($model);
+    }
+    
+    public function deleteInv(Inv $inv): void
+    {
+        $this->deletionService->delete($inv);
+        $this->repository->delete($inv);
     }
 }

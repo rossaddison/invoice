@@ -366,6 +366,28 @@ trait View
         return $this->webService->getNotFoundResponse();
     }
     
+    // resources/views/invoice/inv/partial_item_table has this route 
+    public function deleteInvTaxRate(#[RouteArgument('id')] int $id,
+            ITRR $invtaxrateRepository):
+        Response {
+        try {
+            $inv_tax_rate = $this->invtaxrate($id, $invtaxrateRepository);
+            $this->inv_tax_rate_service->deleteInvTaxRate($inv_tax_rate);
+        } catch (\Exception $e) {
+            $this->flashMessage('danger', $e->getMessage());
+            unset($e);
+        }
+        $inv_id = (string) $this->session->get('inv_id');
+        return $this->factory->createResponse(
+                $this->webViewRenderer->renderPartialAsString(
+            '//invoice/setting/inv_message',
+            ['heading' => $this->translator->translate('tax.rate'),
+                'message' =>
+                    $this->translator->translate('record.successfully.deleted'),
+                    'url' => 'inv/view', 'id' => $inv_id],
+        ));
+    }
+    
     private function viewCustomFields(
         CFR $cfR, CVR $cvR, array $inv_custom_values): string
     {

@@ -51,24 +51,9 @@ use Psr\{
 
 final class InvController extends BaseController
 {
-    use Add;
-    use Archive;
-    use Attachment;
-    use Credit;
-    use Delete;
-    use Edit;
-    use Email;
-    use Flush;
-    use Guest;
-    use HtmlTrait;
-    use Index;
-    use MultipleCopy;
-    use OptionsData;
-    use PdfTrait;
-    use Peppol;
-    use Storecove;
-    use UrlKey;
-    use View;
+    use Add, Archive, Attachment, Credit, Delete, Edit, Email, Flush, Guest,
+        HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol, Storecove,
+        UrlKey, View;
     
     protected string $controllerName = 'invoice/inv';
 
@@ -206,29 +191,7 @@ final class InvController extends BaseController
                     $this->translator->translate('record.successfully.deleted'),
                 'url' => 'inv/view', 'id' => $inv_id],
         ));
-    }
-
-    // resources/views/invoice/inv/partial_item_table 
-    public function deleteInvTaxRate(#[RouteArgument('id')] int $id,
-            ITRR $invtaxrateRepository):
-        Response {
-        try {
-            $inv_tax_rate = $this->invtaxrate($id, $invtaxrateRepository);
-            $this->inv_tax_rate_service->deleteInvTaxRate($inv_tax_rate);
-        } catch (\Exception $e) {
-            $this->flashMessage('danger', $e->getMessage());
-            unset($e);
-        }
-        $inv_id = (string) $this->session->get('inv_id');
-        return $this->factory->createResponse(
-                $this->webViewRenderer->renderPartialAsString(
-            '//invoice/setting/inv_message',
-            ['heading' => $this->translator->translate('tax.rate'),
-                'message' =>
-                    $this->translator->translate('record.successfully.deleted'),
-                    'url' => 'inv/view', 'id' => $inv_id],
-        ));
-    }
+    }    
     
     // Email, PdfTrait
     public function generateInvNumberIfApplicable(?string $inv_id, IR $iR,

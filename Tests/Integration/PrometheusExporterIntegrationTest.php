@@ -47,13 +47,17 @@ final class PrometheusExporterIntegrationTest extends TestCase
         $output = $this->getMetricsOutput($registry);
         
         // Verify format is compatible with Prometheus/Grafana
-        $this->assertStringContainsString('yii3_invoice_health_application_healthy 1', $output);
-        $this->assertStringContainsString('yii3_invoice_db_connections_active 5', $output);
-        $this->assertStringContainsString('yii3_invoice_php_fpm_processes_active 8', $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_health_application_healthy 1', $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_db_connections_active 5', $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_php_fpm_processes_active 8', $output);
         
         // Ensure metric names follow Prometheus naming conventions
         $lines = explode("\n", $output);
-        $metricLines = array_filter($lines, fn($line) => !str_starts_with($line, '#') && !empty(trim($line)));
+        $metricLines = array_filter($lines, fn($line) =>
+                !str_starts_with($line, '#') && !empty(trim($line)));
         
         foreach ($metricLines as $line) {
             $this->assertMatchesRegularExpression(
@@ -102,10 +106,17 @@ final class PrometheusExporterIntegrationTest extends TestCase
         $output = $this->getMetricsOutput($registry);
         
         // Verify Windows-compatible metrics
-        $this->assertStringContainsString('yii3_invoice_iis_requests_total{status_code="200",method="GET"} 250', $output);
-        $this->assertStringContainsString('yii3_invoice_iis_requests_total{status_code="500",method="POST"} 3', $output);
-        $this->assertStringContainsString('yii3_invoice_service_status{service_name="mysql"} 1', $output);
-        $this->assertStringContainsString('yii3_invoice_temp_files_count 23', $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_iis_requests_total{status_code="200",method="GET"} 250',
+                $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_iis_requests_total{status_code="500",method="POST"} 3',
+                $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_service_status{service_name="mysql"} 1',
+                $output);
+        $this->assertStringContainsString(
+                'yii3_invoice_temp_files_count 23', $output);
     }
 
     public function testGrafanaDashboardCompatibility(): void

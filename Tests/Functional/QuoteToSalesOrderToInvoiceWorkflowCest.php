@@ -480,7 +480,7 @@ private function commentTestSummary(FunctionalTester $i): void
 
     /**
      * Test specific workflow: SalesOrder to Invoice conversion
-     * 
+     *
      * This tests the invoice generation from a confirmed SalesOrder
      */
     public function testSalesOrderToInvoiceConversion(FunctionalTester $i): void
@@ -568,7 +568,7 @@ private function commentTestSummary(FunctionalTester $i): void
 
     /**
      * Test tax calculation consistency
-     * 
+     *
      * Verifies that tax is calculated correctly and consistently
      * across Quote, SalesOrder, and Invoice
      */
