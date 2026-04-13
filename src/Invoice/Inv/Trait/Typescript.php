@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Invoice\{
-    Entity\InvTaxRate, Inv\InvTaxRateForm, Group\GroupRepository as GR,
+    Entity\InvTaxRate, InvTaxRate\InvTaxRateForm, Group\GroupRepository as GR,
     Inv\InvRepository as IR};
 use Psr\{
     Http\Message\ResponseInterface as Response,
