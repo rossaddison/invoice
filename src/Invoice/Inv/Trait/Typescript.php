@@ -12,6 +12,7 @@ use Psr\{
     Http\Message\ServerRequestInterface as Request,
 };
 use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Json\Json;
 
 trait Typescript
 {
