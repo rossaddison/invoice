@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CategoryPrimary;
 
-use App\Invoice\Entity\CategoryPrimary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -21,7 +21,8 @@ final class CategoryPrimaryRepository extends Select\Repository
      * @param Select<TEntity> $select
      * @param EntityWriter $entityWriter
      */
-    public function __construct(Select $select, private readonly EntityWriter $entityWriter)
+    public function __construct(Select $select,
+        private readonly EntityWriter $entityWriter)
     {
         parent::__construct($select);
     }
@@ -90,10 +91,9 @@ final class CategoryPrimaryRepository extends Select\Repository
          * @var CategoryPrimary $categoryPrimary
          */
         foreach ($categoryPrimaries as $categoryPrimary) {
-            $categoryPrimaryId = $categoryPrimary->getId();
-            if (null !== $categoryPrimaryId) {
-                $optionsDataCategoryPrimaries[$categoryPrimaryId] = ($categoryPrimary->getName() ?? '');
-            }
+            $categoryPrimaryId = $categoryPrimary->reqId();
+            $optionsDataCategoryPrimaries[$categoryPrimaryId]
+                = ($categoryPrimary->getName() ?? '');
         }
         return $optionsDataCategoryPrimaries;
     }

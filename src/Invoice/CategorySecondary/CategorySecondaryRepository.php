@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CategorySecondary;
 
-use App\Invoice\Entity\CategorySecondary;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\CategorySecondary;
 
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary as CP;
+use App\Invoice\CategorySecondary\CategorySecondaryRepository as CSR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\CategorySecondary\CategorySecondaryRepository::class)]
+#[Entity(repository: CSR::class)]
 class CategorySecondary
 {
-    #[BelongsTo(target: CategoryPrimary::class, nullable: true, fkAction: 'NO ACTION')]
-    private ?CategoryPrimary $category_primary = null;
+    #[BelongsTo(target: CP::class, nullable: true, fkAction: 'NO ACTION')]
+    private ?CP $category_primary = null;
 
     public function __construct(
         #[Column(type: 'primary')]
@@ -55,12 +57,12 @@ class CategorySecondary
     }
 
     // get relation CategoryPrimary
-    public function getCategoryPrimary(): ?CategoryPrimary
+    public function getCategoryPrimary(): ?CP
     {
         return $this->category_primary;
     }
 
-    public function setCategoryPrimary(?CategoryPrimary $categoryPrimary): void
+    public function setCategoryPrimary(?CP $categoryPrimary): void
     {
         $this->category_primary = $categoryPrimary;
     }

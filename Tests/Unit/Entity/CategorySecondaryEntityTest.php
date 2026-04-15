@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Entity;
 
-use App\Invoice\Entity\CategorySecondary;
-use App\Invoice\Entity\CategoryPrimary;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use Codeception\Test\Unit;
 use PHPUnit\Framework\MockObject\MockObject;
 

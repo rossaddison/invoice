@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\CategoryPrimary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use Codeception\Test\Unit;
 
 final class CategoryPrimaryEntityTest extends Unit

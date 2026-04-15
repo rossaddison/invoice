@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CategorySecondary;
 
-use App\Invoice\Entity\CategorySecondary as CS;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary as CS;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
 
 final readonly class CategorySecondaryService

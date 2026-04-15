@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CategorySecondary;
 
-use App\Invoice\Entity\CategorySecondary;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CategoryPrimary;
 
-use App\Invoice\Entity\CategoryPrimary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 
 final readonly class CategoryPrimaryService
 {

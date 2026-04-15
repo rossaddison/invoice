@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\CategorySecondary;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\CategorySecondary;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository;
 use App\User\UserService;

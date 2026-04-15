@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\CategoryPrimary;
-use App\Invoice\Entity\CategorySecondary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use PHPUnit\Framework\TestCase;
 
 class CategorySecondaryEntityTest extends TestCase

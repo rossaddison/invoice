@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\CategoryPrimary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use PHPUnit\Framework\TestCase;
 
 class CategoryPrimaryEntityTest extends TestCase

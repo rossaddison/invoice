@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\CategoryPrimary;
+use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\CategoryPrimary $categoryprimary
+ * @var App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary $categoryprimary
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
@@ -42,7 +42,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (CategoryPrimary $model) => (string) $model->getId(),
+        content: static fn (CategoryPrimary $model) => (string) $model->reqId(),
     ),
     new DataColumn(
         'name',
@@ -53,7 +53,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (CategoryPrimary $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('categoryprimary/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('categoryprimary/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -63,7 +63,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (CategoryPrimary $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('categoryprimary/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('categoryprimary/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -73,7 +73,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (CategoryPrimary $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('categoryprimary/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('categoryprimary/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

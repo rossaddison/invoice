@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\CategorySecondary;
+use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\CategorySecondary $categorysecondary
+ * @var App\Infrastructure\Persistence\CategorySecondary\CategorySecondary $categorysecondary
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
