@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd3f18c68815fc8da802c03ed8105b13",
+    "content-hash": "6322f3af068242de90c15a1cf8fb7f83",
     "packages": [
         {
             "name": "alexkart/curl-builder",
@@ -927,16 +927,16 @@
         },
         {
             "name": "braintree/braintree_php",
-            "version": "6.33.0",
+            "version": "6.32.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/braintree/braintree_php.git",
-                "reference": "cd733d539403a2e7876addaff78ae848a6182067"
+                "reference": "13bff9a98f9e4bf3066545226288a4b7eac555a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/cd733d539403a2e7876addaff78ae848a6182067",
-                "reference": "cd733d539403a2e7876addaff78ae848a6182067",
+                "url": "https://api.github.com/repos/braintree/braintree_php/zipball/13bff9a98f9e4bf3066545226288a4b7eac555a4",
+                "reference": "13bff9a98f9e4bf3066545226288a4b7eac555a4",
                 "shasum": ""
             },
             "require": {
@@ -970,9 +970,9 @@
             "description": "Braintree PHP Client Library",
             "support": {
                 "issues": "https://github.com/braintree/braintree_php/issues",
-                "source": "https://github.com/braintree/braintree_php/tree/6.33.0"
+                "source": "https://github.com/braintree/braintree_php/tree/6.32.0"
             },
-            "time": "2026-04-09T20:12:19+00:00"
+            "time": "2026-02-02T19:19:44+00:00"
         },
         {
             "name": "brick/math",
