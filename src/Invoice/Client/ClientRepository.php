@@ -185,8 +185,12 @@ final class ClientRepository extends Select\Repository
             /**
              * @var Client $client
              */
-            foreach ($this->repoUserClient($ucR->getClientsWithUserAccounts()) as $client) {
-                $optionsData[(int) $client->getClientId()] = ($client->getClientName() ?: '??') . str_repeat(' ', 3) . ($client->getClientSurname() ?? '??');
+            foreach ($this->repoUserClient($ucR->getClientsWithUserAccounts())
+                    as $client) {
+                $optionsData[$client->reqClientId()] = ($client->getClientName()
+                    ?: '??')
+                        . str_repeat(' ', 3)
+                        . ($client->getClientSurname() ?? '??');
             }
         }
         return $optionsData;

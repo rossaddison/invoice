@@ -264,8 +264,8 @@ final class UploadController extends BaseController
          * @var Client $client
          */
         foreach ($clients as $client) {
-            $key = $client->getClientId();
-            null !== $key ? $optionsDataClients[$key] = $client->getClientFullName() : '';
+            $optionsDataClients[$client->reqClientId()]
+                = $client->getClientFullName();
         }
         return $optionsDataClients;
     }

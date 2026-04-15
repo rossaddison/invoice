@@ -30,13 +30,13 @@ use Yiisoft\Html\Html;
                     <div class="form-group">
                         <label for="create_quote_client_id"><?= $translator->translate('client'); ?></label>
                         <select name="create_quote_client_id" id="create_quote_client_id" class="form-control form-control-lg">
-                            <option value="<?= $quote->getClient()?->getClientId(); ?>"><?= $quote->getClient()?->getClientName() ?? '#'; ?></option>
+                            <option value="<?= $quote->getClient()?->reqClientId(); ?>"><?= $quote->getClient()?->getClientName() ?? '#'; ?></option>
                                 <?php
                                     /**
                                      * @var App\Invoice\Entity\Client $client
                                      */
                                     foreach ($clients as $client) { ?>
-                                    <option value="<?= $client->getClientId(); ?>">
+                                    <option value="<?= $client->reqClientId(); ?>">
                                         <?= Html::encode($client->getClientName()); ?>
                                     </option>
                                 <?php } ?>

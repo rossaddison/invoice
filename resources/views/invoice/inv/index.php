@@ -779,7 +779,7 @@ $columns = [
                     'style' => 'text-decoration:none',
                 ])
                 ->href($urlGenerator->generate('client/edit',
-                    ['id' => $model->getClient()?->getClientId(),
+                    ['id' => $model->getClient()?->reqClientId(),
                         'origin' => 'inv']))
                 ->content($model->getClient()?->getClientActive() ? '✅' : '❌'
             );

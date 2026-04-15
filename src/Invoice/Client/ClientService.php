@@ -51,12 +51,12 @@ final readonly class ClientService
         isset($body['client_age']) ? $model->setClientAge((int) $body['client_age']) : '';
         isset($body['client_gender']) ? $model->setClientGender((int) $body['client_gender']) : '';
         isset($body['postaladdress_id']) ? $model->setPostaladdressId((int) $body['postaladdress_id']) : '';
-        if ($model->isNewRecord()) {
+        if ($model->isPersisted()) {
             $model->setClientActive(true);
             $model->setPostaladdressId(0);
         }
         $this->repository->save($model);
-        return $model->getClientId();
+        return $model->reqClientId();
     }
 
     /**

@@ -113,7 +113,7 @@ $clientColumns = [
         ): Span {
             return (
                 $ucR->repoUserqueryCount(
-                    (string) $model->getClientId()
+                    (string) $model->reqClientId()
                 ) !== 0 && $canEdit
             )
                 ? $button::activeLabel($translator)

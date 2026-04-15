@@ -46,7 +46,7 @@ final readonly class SalesOrderService
             (string) $array['client_id']
         );
         $model->setClient($client);
-        $model->setClientId((int) $client->getClientId());
+        $model->setClientId($client->reqClientId());
         $group = $this->groupRepository->repoGroupquery(
             (string) $array['group_id']
         );

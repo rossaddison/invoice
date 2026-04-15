@@ -19,7 +19,7 @@ class Client
 {
     #[Column(type: 'primary')]
     public ?int $id = null;
-
+ 
     #[Column(type: 'datetime')]
     private DateTimeImmutable $client_date_created;
 
@@ -109,12 +109,26 @@ class Client
         $this->invs = new ArrayCollection();
         $this->product_associations = new ArrayCollection();
     }
-
-    public function getClientId(): ?int
+    
+    /**
+     * Returns the database identifier for this Client.
+     *
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqClientId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException('Client has no ID (not persisted yet)');
+        }
+
         return $this->id;
     }
 
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+    
     public function getClientEmail(): string
     {
         return $this->client_email;
@@ -437,10 +451,5 @@ class Client
     public function addInv(Inv $inv): void
     {
         $this->invs[] = $inv;
-    }
-
-    public function isNewRecord(): bool
-    {
-        return null === $this->getClientId() ? true : false;
     }
 }

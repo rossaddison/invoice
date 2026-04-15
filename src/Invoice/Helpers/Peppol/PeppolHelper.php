@@ -943,7 +943,7 @@ class PeppolHelper
         if ($client) {
             $postaladdress_id = $client->getPostaladdressId();
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                            (string) $client->getClientId());
+                                            (string) $client->reqClientId());
             if (null == $postaladdress_id) {
                 throw new BuyerPostAddNf();
             }
@@ -1068,7 +1068,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         $client = $invoice->getClient();
         if (null !== $client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                               (string) $client->getClientId());
+                                               (string) $client->reqClientId());
             if (null === $client_peppol) {
                 throw new ClientNf($this->t);
             }
@@ -1132,7 +1132,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         $client = $invoice->getClient();
         if ($client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                                (string) $client->getClientId());
+                                                (string) $client->reqClientId());
             if ($client_peppol) {
                 $invoiceLines = [];
                 $b = Schema::CBC;
@@ -1540,13 +1540,11 @@ $country_helper->getCountryIdentificationCodeWithLeague(
     {
         $client = $invoice->getClient();
         if (null !== $client) {
-            $client_id = $client->getClientId();
-            if (null !== $client_id) {
-                $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                                            (string) $client_id);
-                if (null !== $client_peppol) {
-                    return $client_peppol->getBuyerReference();
-                }
+            $client_id = $client->reqClientId();
+            $client_peppol = $cpR->repoClientPeppolLoadedquery(
+                                                        (string) $client_id);
+            if (null !== $client_peppol) {
+                return $client_peppol->getBuyerReference();
             }
         }
         throw new ClientNf($this->t);
@@ -1683,7 +1681,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         $client = $invoice->getClient();
         if (null !== $client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                    (string) $client->getClientId());
+                    (string) $client->reqClientId());
             $supplier_assigned_account_id = null !== $client_peppol ?
                     $client_peppol->getSupplierAssignedAccountId()
               : throw new ClientIdNf($this->t);

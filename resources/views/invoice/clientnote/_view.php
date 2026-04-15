@@ -49,9 +49,10 @@ use Yiisoft\Html\Tag\Form;
  * @var App\Invoice\Entity\Client $client
  */
 foreach ($clients as $client) {
-    if (null !== ($clientId = $client->getClientId())) {
-        $optionsDataClient[$clientId] = $client->getClientName() . ' ' . ($client->getClientSurname() ?? '#');
-    }
+    $clientId = $client->reqClientId();
+    $optionsDataClient[$clientId] = $client->getClientName()
+            . ' '
+            . ($client->getClientSurname() ?? '#');
 }
 echo Field::select($form, 'client_id')
 ->label($translator->translate('client'))

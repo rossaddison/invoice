@@ -59,7 +59,7 @@ echo H::openTag('div', ['class' => 'table-responsive']);
     * @var App\Invoice\Entity\Payment $payment
     */
    foreach ($payments as $payment) {
-       if ($payment->getInv()?->getClientId() === $client->getClientId()) {
+       if ($payment->getInv()?->getClientId() == $client->reqClientId()) {
            echo H::openTag('tr');
             echo H::openTag('td');
              echo !is_string($paymentDate = $payment->getPaymentDate()) ?

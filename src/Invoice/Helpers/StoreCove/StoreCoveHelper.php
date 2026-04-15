@@ -117,7 +117,7 @@ final readonly class StoreCoveHelper
         $client = $invoice->getClient();
         if (null !== $client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                (string) $client->getClientId());
+                (string) $client->reqClientId());
             if (null === $client_peppol) {
                 throw new PeppolClientNotFoundException($this->t);
             }
@@ -597,7 +597,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         $client = $invoice->getClient();
         if ($client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                (string) $client->getClientId());
+                (string) $client->reqClientId());
             if ($client_peppol) {
                 $invoiceLines = [];
                 /**
@@ -715,7 +715,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         if ($client) {
             $postaladdress_id = $client->getPostaladdressId();
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                               (string) $client->getClientId());
+                                               (string) $client->reqClientId());
             if (null == $postaladdress_id) {
                 throw new PeppolBuyerPostalAddressNotFoundException();
             }
@@ -1250,14 +1250,12 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
     {
         $client = $invoice->getClient();
         if (null !== $client) {
-            $client_id = $client->getClientId();
-            if (null !== $client_id) {
-        $client_peppol = $cpR->repoClientPeppolLoadedquery((string) $client_id);
-                if (null !== $client_peppol) {
-                    return $client_peppol->getBuyerReference();
-                }
-                throw new PeppolBuyerReferenceNotFoundException();
+            $client_id = $client->reqClientId();
+            $client_peppol = $cpR->repoClientPeppolLoadedquery((string) $client_id);
+            if (null !== $client_peppol) {
+                return $client_peppol->getBuyerReference();
             }
+            throw new PeppolBuyerReferenceNotFoundException();
         }
         throw new PeppolClientNotFoundException($this->t);
     }

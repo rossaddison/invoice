@@ -61,7 +61,7 @@ trait Storecove
         if ($id) {
             $invoice = $invRepo->repoInvLoadInvAmountquery((string) $id);
             if ($invoice) {
-                $client_id = $invoice->getClient()?->getClientId();
+                $client_id = $invoice->getClient()?->reqClientId();
                 if (null !== $client_id) {
                     $delivery_location = $dlR->repoDeliveryLocationquery(
                         (string) $client_id);

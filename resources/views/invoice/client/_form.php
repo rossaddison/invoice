@@ -210,7 +210,7 @@ use Yiisoft\Html\Tag\Form;
    <?php endif; ?>
    <?php if ($postal_address_count === 0 && $origin == 'edit'): ?>
     <?= Html::a($translator->translate('client.postaladdress.add'),
-        $urlGenerator->generate('postaladdress/add', ['client_id' => $client->getClientId(), 'origin' => 'client']),
+        $urlGenerator->generate('postaladdress/add', ['client_id' => $client->reqClientId(), 'origin' => 'client']),
         ['class' => 'btn btn-warning btn-lg mt-3']); ?>
    <?php endif; ?>
   <?= Html::closeTag('div'); ?>

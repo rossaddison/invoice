@@ -56,7 +56,7 @@ $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn (Client $model) => (string) $model->getClientId(),
+        content: static fn (Client $model) => (string) $model->reqClientId(),
         withSorting: true,
     ),
     new DataColumn(
@@ -72,7 +72,7 @@ $columns = [
         'id',
         header: 'Peppol',
         content: static function (Client $model) use ($cpR, $button, $translator): Span {
-            return ($cpR->repoClientCount((string) $model->getClientId()) !== 0)
+            return ($cpR->repoClientCount((string) $model->reqClientId()) !== 0)
                     ? $button::activeLabel($translator)
                     : $button::inactiveLabel($translator);
         },
@@ -84,7 +84,7 @@ $columns = [
         header: $translator->translate('client.has.user.account'),
         content: static function (Client $model) use ($canEdit, $ucR, $button,
                 $translator, $urlGenerator): Span {
-            return ($ucR->repoUserqueryCount((string) $model->getClientId()) !== 0
+            return ($ucR->repoUserqueryCount((string) $model->reqClientId()) !== 0
                     && $canEdit)
                    ? $button::activeLabel($translator)
                    : $button::inactiveWithAddUserAccount($urlGenerator, $translator);
@@ -97,7 +97,7 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return (new A())
                 ->content(Html::tag('i', '', ['class' => 'bi bi-eye']))
-                ->href($urlGenerator->generate('client/view', ['id' => $model->getClientId()]))
+                ->href($urlGenerator->generate('client/view', ['id' => $model->reqClientId()]))
                 ->encode(false)
                 ->addAttributes(['class' => 'btn btn-outline-info btn-sm']);
         },
@@ -108,7 +108,7 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return (new A())
                 ->content(Html::tag('i', '', ['class' => 'bi bi-pencil-square']))
-                ->href($urlGenerator->generate('client/edit', ['id' => $model->getClientId(), 'origin' => 'edit']))
+                ->href($urlGenerator->generate('client/edit', ['id' => $model->reqClientId(), 'origin' => 'edit']))
                 ->encode(false)
                 ->addAttributes(['class' => 'btn btn-outline-warning btn-sm']);
         },
@@ -128,7 +128,7 @@ $columns = [
                         ],
                     )->encode(false)
                 )
-                ->href($urlGenerator->generate('client/delete', ['id' => $model->getClientId()]))
+                ->href($urlGenerator->generate('client/delete', ['id' => $model->reqClientId()]))
                 ->encode(false);
         },
         encodeContent: false,
@@ -136,68 +136,65 @@ $columns = [
     new DataColumn(
         'invs',
         content: static function (Client $model) use ($iR, $iaR,
-            $urlGenerator, $gridComponents): string {
-            if (null !== ($clientId = $model->getClientId())) {
-                $invoices = $iR->findAllWithClient($clientId);
-                // Initialize a new empty ArrayCollection without the need to create a new entity
-                $model->setInvs();
-                /**
-                 * @var App\Invoice\Entity\Inv $invoice
-                 */
-                foreach ($invoices as $invoice) {
-                    $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId())
-                            > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
-                    if (null !== $invoice_amount
-                            && null !== $invoice_amount->getBalance()
-                            && $invoice_amount->getBalance() > 0) {
-                        // Load into the ArrayCollection the invoices that make
-                        //  up this balance
-                        $model->addInv($invoice);
-                    }
+        $urlGenerator, $gridComponents): string {
+            $clientId = $model->reqClientId(); 
+            $invoices = $iR->findAllWithClient($clientId);
+            // Initialize a new empty ArrayCollection without the need to create a new entity
+            $model->setInvs();
+            /**
+             * @var App\Invoice\Entity\Inv $invoice
+             */
+            foreach ($invoices as $invoice) {
+                $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId())
+                        > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
+                if (null !== $invoice_amount
+                        && null !== $invoice_amount->getBalance()
+                        && $invoice_amount->getBalance() > 0) {
+                    // Load into the ArrayCollection the invoices that make
+                    //  up this balance
+                    $model->addInv($invoice);
                 }
+            }
 
-                // If there are no invoices, return empty string
-                $invCount = $model->getInvs()->count();
-                if ($invCount === 0) {
-                    return '';
-                }
-
-                // Unique collapse id per client so toggles don't conflict
-                $collapseId = 'invoices-client-' . $clientId;
-
-                // Button that toggles the mini table (uses Bootstrap 5 collapse)
-                $buttonHtml = Html::tag(
-                    'button', '➡️' . ' ' . Html::encode((string) $invCount),
-                    [
-                        'type' => 'button',
-                        'class' => 'btn btn-sm btn-outline-primary me-2',
-                        'data-bs-toggle' => 'collapse',
-                        'data-bs-target' => '#' . $collapseId,
-                        'aria-expanded' => 'true',
-                        'aria-controls' => $collapseId,
-                    ]
-                );
-
-                // The mini table content generated by the existing helper
-                $tableHtml = $gridComponents->gridMiniTableOfInvoicesForClient(
-                    $model,
-                    $min_invoices_per_row = 4,
-                    $urlGenerator,
-                );
-
-                // Wrap the table in a collapse container so it can be hidden/shown.
-                // We set it to "show" by default. Toggle will collapse/expand it.
-                $collapseHtml =  new Div()
-                    ->id($collapseId)
-                    ->addClass('collapse show mt-2')
-                    ->content($tableHtml)
-                    ->encode(false)
-                    ->render();
-
-                return $buttonHtml . $collapseHtml;
-            } else {
+            // If there are no invoices, return empty string
+            $invCount = $model->getInvs()->count();
+            if ($invCount === 0) {
                 return '';
             }
+
+            // Unique collapse id per client so toggles don't conflict
+            $collapseId = 'invoices-client-' . $clientId;
+
+            // Button that toggles the mini table (uses Bootstrap 5 collapse)
+            $buttonHtml = Html::tag(
+                'button', '➡️' . ' ' . Html::encode((string) $invCount),
+                [
+                    'type' => 'button',
+                    'class' => 'btn btn-sm btn-outline-primary me-2',
+                    'data-bs-toggle' => 'collapse',
+                    'data-bs-target' => '#' . $collapseId,
+                    'aria-expanded' => 'true',
+                    'aria-controls' => $collapseId,
+                ]
+            );
+
+            // The mini table content generated by the existing helper
+            $tableHtml = $gridComponents->gridMiniTableOfInvoicesForClient(
+                $model,
+                $min_invoices_per_row = 4,
+                $urlGenerator,
+            );
+
+            // Wrap the table in a collapse container so it can be hidden/shown.
+            // We set it to "show" by default. Toggle will collapse/expand it.
+            $collapseHtml =  new Div()
+                ->id($collapseId)
+                ->addClass('collapse show mt-2')
+                ->content($tableHtml)
+                ->encode(false)
+                ->render();
+
+            return $buttonHtml . $collapseHtml;
         },
         encodeContent: false,
     ),
@@ -224,7 +221,7 @@ $columns = [
             return   new A()
                     ->content(Html::encode($model->getClientName()))
                     ->href($urlGenerator->generate('client/view', [
-                        'id' => $model->getClientId()]))
+                        'id' => $model->reqClientId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -243,7 +240,7 @@ $columns = [
             return   new A()
                     ->content(Html::encode($model->getClientSurname() ?? ''))
                     ->href($urlGenerator->generate('client/view', [
-                        'id' => $model->getClientId()]))
+                        'id' => $model->reqClientId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -285,23 +282,20 @@ $columns = [
             . $s->getSetting('currency_symbol')
             . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
-            if (null !== ($clientId = $model->getClientId())) {
-                return Html::encode(
-                    $s->formatCurrency($iR->withTotalBalance($clientId, $iaR)));
-            } else {
-                return '';
-            }
+            $clientId = $model->reqClientId();
+            return Html::encode($s->formatCurrency(
+                $iR->withTotalBalance($clientId, $iaR)));
         },
     ),
     new DataColumn(
         content: static function (Client $model) use ($urlGenerator,
                                                         $translator, $cpR): A {
             $addUrl = $urlGenerator->generate('clientpeppol/add',
-                    ['client_id' => $model->getClientId()]);
+                    ['client_id' => $model->reqClientId()]);
             $editUrl = $urlGenerator->generate('clientpeppol/edit',
-                    ['client_id' => $model->getClientId(), 'origin' => 'edit']);
+                    ['client_id' => $model->reqClientId(), 'origin' => 'edit']);
             $equal = ($cpR->repoClientCount(
-                    (string) $model->getClientId()) === 0 ? true : false);
+                    (string) $model->reqClientId()) === 0 ? true : false);
             $heading = ($equal ? $translator->translate('client.peppol.add') :
                 $translator->translate('client.peppol.edit'));
             return Html::a(

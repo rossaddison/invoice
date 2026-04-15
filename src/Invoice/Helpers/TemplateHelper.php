@@ -459,7 +459,8 @@ final readonly class TemplateHelper
                                                          : ($qR->repoCount($pk) > 0 ? $qR->repoQuoteLoadedquery($pk) : null);
                                     /** @var ClientCustom $replace_custom */
                                     if ($entity) {
-                                        $replace_custom = $this->ccR->repoFormValuequery($entity->getClientId(), $cf_id[1]);
+                                        $replace_custom = $this->ccR->repoFormValuequery(
+                                            $entity->getClientId(), $cf_id[1]);
                                     }
                                     break;
                             }

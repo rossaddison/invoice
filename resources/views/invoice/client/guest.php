@@ -43,7 +43,7 @@ $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn (Client $model) => (string) $model->getClientId(),
+        content: static fn (Client $model) => (string) $model->reqClientId(),
         withSorting: true,
     ),
     new DataColumn(
@@ -78,7 +78,7 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
                     ->content(Html::encode($model->getClientName()))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClientId()]))
+                    ->href($urlGenerator->generate('client/view', ['id' => $model->reqClientId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -90,7 +90,7 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
                     ->content(Html::encode($model->getClientSurname() ?? ''))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->getClientId()]))
+                    ->href($urlGenerator->generate('client/view', ['id' => $model->reqClientId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -108,73 +108,81 @@ $columns = [
     new DataColumn(
         'invs',
         content: static function (Client $model) use ($iR, $iaR): int {
-            if (null !== ($clientId = $model->getClientId())) {
-                $invoices = $iR->findAllWithClient($clientId);
-                /**
-                 *  Initialize the ArrayCollection
-                 *  Related logic: see Doctrine\Common\Collections\ArrayCollection
-                 *  Related logic: see src\Invoice\Entity\Client function setInvs()
-                 */
-                $model->setInvs();
-                /**
-                 * @var App\Invoice\Entity\Inv $invoice
-                 */
-                foreach ($invoices as $invoice) {
-                    $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
-                    if (null !== $invoice_amount && null !== $invoice_amount->getBalance() && $invoice_amount->getBalance() > 0) {
-                        // Load the ArrayCollection
-                        $model->addInv($invoice);
-                    }
+            $clientId = $model->reqClientId();
+            $invoices = $iR->findAllWithClient($clientId);
+            /**
+             *  Initialize the ArrayCollection
+             *  Related logic: see Doctrine\Common\Collections\ArrayCollection
+             *  Related logic: see src\Invoice\Entity\Client function setInvs()
+             */
+            $model->setInvs();
+            /**
+             * @var App\Invoice\Entity\Inv $invoice
+             */
+            foreach ($invoices as $invoice) {
+                $invoice_amount = ($iaR->repoInvAmountCount(
+                        (int) $invoice->getId()) > 0 ?
+                        $iaR->repoInvquery((int) $invoice->getId()) : null);
+                if (null !== $invoice_amount
+                        && null !== $invoice_amount->getBalance()
+                        && $invoice_amount->getBalance() > 0) {
+                    // Load the ArrayCollection
+                    $model->addInv($invoice);
                 }
-                /**
-                 * Use the ArrayCollection count method to determine how many invoices there are for this client
-                 * Related logic: see \vendor\doctrine\Common\Collections\ArrayCollection count method;
-                 */
-                return $model->getInvs()->count();
             }
-            return 0;
+            /**
+             * Use the ArrayCollection count method to determine how many
+             * invoices there are for this client
+             * Related logic: see \vendor\doctrine\Common\Collections\ArrayCollection count method;
+             */
+            return $model->getInvs()->count();
         },
         encodeContent: false,
     ),
     new DataColumn(
         'invs',
-        content: static function (Client $model) use ($iR, $iaR, $urlGenerator, $gridComponents): string {
-            if (null !== ($clientId = $model->getClientId())) {
-                $invoices = $iR->findAllWithClient($clientId);
-                // Initialize a new empty ArrayCollection without the need to create a new entity
-                $model->setInvs();
-                /**
-                 * @var App\Invoice\Entity\Inv $invoice
-                 */
-                foreach ($invoices as $invoice) {
-                    $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId()) > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
-                    if (null !== $invoice_amount && null !== $invoice_amount->getBalance() && $invoice_amount->getBalance() > 0) {
-                        // Load into the ArrayCollection the invoices that make up this balance
-                        $model->addInv($invoice);
-                    }
+        content: static function (Client $model) use ($iR, $iaR,
+        $urlGenerator, $gridComponents): string {
+            $clientId = $model->reqClientId(); 
+            $invoices = $iR->findAllWithClient($clientId);
+            // Initialize a new empty ArrayCollection without the need to
+            // create a new entity
+            $model->setInvs();
+            /**
+             * @var App\Invoice\Entity\Inv $invoice
+             */
+            foreach ($invoices as $invoice) {
+                $invoice_amount = ($iaR->repoInvAmountCount(
+                        (int) $invoice->getId()) > 0 ?
+                        $iaR->repoInvquery((int) $invoice->getId()) : null);
+                if (null !== $invoice_amount
+                        && null !== $invoice_amount->getBalance()
+                        && $invoice_amount->getBalance() > 0) {
+                    // Load into the ArrayCollection the invoices
+                    // that make up this balance
+                    $model->addInv($invoice);
                 }
-                // Iterate across $model->getInvs()->toArray() to generate a mini table
-                // with invoice number, invoice amount, and date
-                return $gridComponents->gridMiniTableOfInvoicesForClient(
-                    $model,
-                    $min_invoices_per_row = 4,
-                    $urlGenerator,
-                );
-            } else {
-                return '';
             }
+            // Iterate across $model->getInvs()->toArray() to generate a mini
+            // table with invoice number, invoice amount, and date
+            return $gridComponents->gridMiniTableOfInvoicesForClient(
+                $model,
+                $min_invoices_per_row = 4,
+                $urlGenerator,
+            );
         },
         encodeContent: false,
     ),
     new DataColumn(
         'client_id',
-        header: $translator->translate('balance') . ' (' . $s->getSetting('currency_symbol') . ')',
+        header: $translator->translate('balance')
+            . ' ('
+            . $s->getSetting('currency_symbol')
+            . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
-            if (null !== ($clientId = $model->getClientId())) {
-                return Html::encode($s->formatCurrency($iR->withTotalBalance($clientId, $iaR)));
-            } else {
-                return '';
-            }
+            $clientId = $model->reqClientId(); 
+            return Html::encode($s->formatCurrency(
+                $iR->withTotalBalance($clientId, $iaR)));
         },
     ),
 ];

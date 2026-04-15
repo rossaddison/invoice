@@ -30,7 +30,7 @@ final readonly class UserClientService
             (string) $array['client_id']
         );
         $model->setClient($client);
-        $model->setClientId((int) $client->getClientId());
+        $model->setClientId($client->reqClientId());
     }
 
     /**

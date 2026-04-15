@@ -299,7 +299,7 @@ final class ClientController extends BaseController
                 if ($returned_form->isValid()) {
                     $this->processCustomFields($body, $formHydrator,
                             $this->clientCustomFieldProcessor,
-                            (string) $client->getClientId());
+                            (string) $client->reqClientId());
                     $this->flashMessage('info',
                             $this->translator->translate('record.successfully.updated'));
                     $redirect = $this->redirectAfterEdit($origin);
@@ -329,7 +329,7 @@ final class ClientController extends BaseController
     private function resolveClientWithId(CurrentRoute $currentRoute, cR $cR): ?Client
     {
         $client = $this->client($currentRoute, $cR);
-        if (!($client instanceof Client) || null === $client->getClientId()) {
+        if (!($client instanceof Client)) {
             return null;
         }
         return $client;
@@ -378,7 +378,7 @@ final class ClientController extends BaseController
         Client $client,
         ?string $origin,
     ): array {
-        $cId             = (string) $client->getClientId();
+        $cId             = (string) $client->reqClientId();
         $form            = new ClientForm($client);
         $countries       = new CountryHelper();
         $custom          = $this->fetchCustomFieldsAndValues($cfR, $cvR, 'client_custom');
@@ -660,10 +660,7 @@ final class ClientController extends BaseController
         if (!($client instanceof Client)) {
             return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
         }
-        $cId = $client->getClientId();
-        if (null === $cId) {
-            return $this->webService->getRedirectResponse(self::ROUTE_INDEX);
-        }
+        $cId = $client->reqClientId();
 
         $clientCustomForm = new ClientCustomForm(new ClientCustom());
 
@@ -701,7 +698,7 @@ final class ClientController extends BaseController
                 ['client_notes' => $cnR->repoClientquery((string) $cId)]
             ),
             // All payments are loaded here and filtered inside the view partial
-            // via: if ($payment->getInv()->getClientId() === $client->getClientId())
+            // via: if ($payment->getInv()->reqClientId() === $client->reqClientId())
             'payment_table' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/payment/partial_payment_table', [
                     'client'   => $client,
@@ -712,7 +709,7 @@ final class ClientController extends BaseController
             ),
             'delivery_locations' => $this->webViewRenderer->renderPartialAsString(
                 '//invoice/client/client_delivery_location_list',
-                ['locations' => $delR->repoClientquery((string) $client->getClientId())]
+                ['locations' => $delR->repoClientquery((string) $client->reqClientId())]
             ),
         ];
 

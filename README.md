@@ -31,6 +31,10 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Architecture Domain Application Infrastructure](docs/ARCHITECTURE_DOMAIN_APPLICATION_INFRASTRUCTURE.md) (April 2026)
+
+[Cycle-Orm Psalm Lifecycle Safe Entities](docs/CYCLE_ORM_PSALM_LIFECYCLE_SAFE_ENTITIES.md) (April 2026)
+
 [Language Flag Dropdown](docs/LANGUAGE_FLAG_DROPDOWN.md) (April 2026)
 
 [Settings Tabs Improvements](docs/SETTINGS_TABS_IMPROVEMENTS.md) (April 2026)

@@ -406,7 +406,7 @@ trait View
 
             'user_id' => $quote->getUser()?->getId(),
             'group_id' => $quote->getGroup()?->getId(),
-            'client_id' => $quote->getClient()?->getClientId(),
+            'client_id' => $quote->getClient()?->reqClientId(),
 
             'date_created' => $quote->getDateCreated(),
             'date_modified' => $quote->getDateModified(),

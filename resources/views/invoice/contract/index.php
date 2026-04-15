@@ -79,7 +79,8 @@ $columns = [
         'client_id',
         header: $translator->translate('client'),
         content: static function (Contract $model) use ($cR): string {
-            $client = ($cR->repoClientCount($model->getClientId()) > 0 ? ($cR->repoClientquery($model->getClientId()))->getClientName() : '');
+            $client = ($cR->repoClientCount($model->getClientId()) > 0 ?
+                    ($cR->repoClientquery($model->getClientId()))->getClientName() : '');
             return $client;
         },
     ),

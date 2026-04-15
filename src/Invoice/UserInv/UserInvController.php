@@ -547,12 +547,12 @@ final class UserInvController extends BaseController
                                         $client->setClientAge($sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
                                         $cR->save($client);
                                         $this->flashMessage('info', $this->translator->translate('assign.client.on.signup.done'));
-                                        if (null !== ($clientId = $client->getClientId())) {
-                                            $userClient = new UserClient();
-                                            $userClient->setUserId((int) $userInv->getUserId());
-                                            $userClient->setClientId($clientId);
-                                            $ucR->save($userClient);
-                                        }
+                                        $clientId = $client->reqClientId();
+                                        $userClient = new UserClient();
+                                        $userClient->setUserId((int) $userInv->getUserId());
+                                        $userClient->setClientId($clientId);
+                                        $ucR->save($userClient);
+                                        
                                         if (strlen($userId) > 0 && $userId > 1) {
                                             $this->manager->revokeAll($userId);
                                             $this->manager->assign('observer', $userId);

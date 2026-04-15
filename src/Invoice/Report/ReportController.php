@@ -129,22 +129,22 @@ class ReportController extends BaseController
             foreach ($clients as $client) {
                 $row['client'] = $clienthelper->formatClient($client);
                 if (null !== $fifteens) {
-                    $row['range_1'] = $numberhelper->formatAmount($this->invoiceAgingSum($fifteens, $client->getClientId()));
+                    $row['range_1'] = $numberhelper->formatAmount($this->invoiceAgingSum($fifteens, $client->reqClientId()));
                 } else {
                     $row['range_1'] = 0.00;
                 }
                 if (null !== $thirties) {
-                    $row['range_2'] = $numberhelper->formatAmount($this->invoiceAgingSum($thirties, $client->getClientId()));
+                    $row['range_2'] = $numberhelper->formatAmount($this->invoiceAgingSum($thirties, $client->reqClientId()));
                 } else {
                     $row['range_2'] = 0.00;
                 }
                 if (null !== $overthirties) {
-                    $row['range_3'] = $numberhelper->formatAmount($this->invoiceAgingSum($overthirties, $client->getClientId()));
+                    $row['range_3'] = $numberhelper->formatAmount($this->invoiceAgingSum($overthirties, $client->reqClientId()));
                 } else {
                     $row['range_3'] = 0.00;
                 }
                 if (null !== $one_to_year) {
-                    $row['total_balance'] = $numberhelper->formatAmount($this->invoiceAgingSum($one_to_year, $client->getClientId()));
+                    $row['total_balance'] = $numberhelper->formatAmount($this->invoiceAgingSum($one_to_year, $client->reqClientId()));
                 } else {
                     $row['total_balance'] = 0.00;
                 }
@@ -220,7 +220,8 @@ class ReportController extends BaseController
         $sum = 0.00;
         foreach ($invamounts as $invamount) {
             if ($invamount instanceof InvAmount) {
-                $sum += ($client_id == $invamount->getInv()?->getClientId()) ? ($invamount->getBalance() ?? 0.00) : 0.00;
+                $sum += ($client_id == $invamount->getInv()?->getClientId()) ?
+                        ($invamount->getBalance() ?? 0.00) : 0.00;
             }
         }
         return $sum;
@@ -419,28 +420,26 @@ class ReportController extends BaseController
          * @var Client $client
          */
         foreach ($clients as $client) {
-            $client_id = $client->getClientId();
-            if (null !== $client_id) {
-                // Client Name and Surname
-                $row['client_name_surname'] = $clienthelper->formatClient($client);
-                $row['inv_count'] = $iR->repoCountByClient($client_id);
-                $row['sales_no_tax'] = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->withItemSubtotalFromTo($client_id, $from, $to, $iaR)
-                              : 0.00;
-                // plus
-                $row['item_tax_total'] = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->withItemTaxTotalFromTo($client_id, $from, $to, $iaR)
-                              : 0.00;
-                // plus
-                $row['tax_total'] = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->withTaxTotalFromTo($client_id, $from, $to, $iaR)
-                              : 0.00;
-                // equals
-                $row['sales_with_tax'] = $iR->repoCountByClient($client_id) > 0
-                              ? $iR->withTotalFromTo($client_id, $from, $to, $iaR)
-                              : 0.00;
-                $results[] = $row;
-            } // null!==$client_id;
+            $client_id = $client->reqClientId();
+            // Client Name and Surname
+            $row['client_name_surname'] = $clienthelper->formatClient($client);
+            $row['inv_count'] = $iR->repoCountByClient($client_id);
+            $row['sales_no_tax'] = $iR->repoCountByClient($client_id) > 0
+                          ? $iR->withItemSubtotalFromTo($client_id, $from, $to, $iaR)
+                          : 0.00;
+            // plus
+            $row['item_tax_total'] = $iR->repoCountByClient($client_id) > 0
+                          ? $iR->withItemTaxTotalFromTo($client_id, $from, $to, $iaR)
+                          : 0.00;
+            // plus
+            $row['tax_total'] = $iR->repoCountByClient($client_id) > 0
+                          ? $iR->withTaxTotalFromTo($client_id, $from, $to, $iaR)
+                          : 0.00;
+            // equals
+            $row['sales_with_tax'] = $iR->repoCountByClient($client_id) > 0
+                          ? $iR->withTotalFromTo($client_id, $from, $to, $iaR)
+                          : 0.00;
+            $results[] = $row;
         }
         return $results;
     }
@@ -805,7 +804,7 @@ class ReportController extends BaseController
                 $immutable_to = $dateHelper->ymdToImmutable($to);
                 $interval = new \DateInterval('P1Y');
                 $daterange = new \DatePeriod($immutable_from, $interval, $immutable_to);
-                $client_id = (int) $client->getClientId();
+                $client_id = $client->reqClientId();
                 foreach ($daterange as $current_year) {
                     $additional_year = $this->quarters($year, $immutable_from, $current_year, $client, $clientHelper, $client_id, $iR, $iaR);
                     $results[] = $additional_year;

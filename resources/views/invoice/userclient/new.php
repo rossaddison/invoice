@@ -67,7 +67,8 @@ use Yiisoft\Security\Random;
 
                         <?= Html::openTag('div', ['id' => 'list_client']); ?>
                             <?php
-   $clients = !empty($availableClientIdList) ? $cR->repoUserClient($availableClientIdList) : [];
+   $clients = !empty($availableClientIdList)
+           ? $cR->repoUserClient($availableClientIdList) : [];
 if ($clients) {
     $optionsDataClient = [];
     /**
@@ -75,10 +76,8 @@ if ($clients) {
      * @var App\Invoice\Entity\Client $client
      */
     foreach ($clients as $client) {
-        $clientId = $client->getClientId();
-        if (null !== $clientId) {
-            $optionsDataClient[$clientId] = Html::encode($clientHelper->formatClient($client));
-        }
+        $optionsDataClient[$client->reqClientId()] = Html::encode(
+            $clientHelper->formatClient($client));
     }
     echo Field::select($form, 'client_id')
     ->label($translator->translate('client'))

@@ -158,11 +158,9 @@ final class ProductClientController extends BaseController
                     }
 
                     // Create association
-                    $clientId = $newClient->getClientId();
-                    if ($clientId !== null) {
-                        $this->createProductClientAssociation(
-                            $currentProductId, $clientId);
-                    }
+                    $clientId = $newClient->reqClientId();
+                    $this->createProductClientAssociation($currentProductId,
+                        $clientId);
 
                     // Move to next product
                     return $this->redirectToNextProduct($productIds, $currentIndex + 1);
@@ -494,7 +492,7 @@ final class ProductClientController extends BaseController
             $status = $client->getClientActive() ?
                 $this->translator->translate('active') :
                 $this->translator->translate('inactive');
-            $options[(string) $client->getClientId()] =
+            $options[(string) $client->reqClientId()] =
                 $client->getClientName()
                     . ' '
                     . ($client->getClientSurname()

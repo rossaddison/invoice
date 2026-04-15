@@ -116,7 +116,7 @@ echo H::tag('input', '', [
  'readonly' => true,
  'hidden' => true,
  'class' => 'form-control form-control-lg',
- 'value' => $quote->getClient()?->getClientId(),
+ 'value' => $quote->getClient()?->reqClientId(),
 ]);
 
 // the quote has already been approved because it has a sales order number associated with it => it can only be viewed

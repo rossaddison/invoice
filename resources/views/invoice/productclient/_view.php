@@ -120,7 +120,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($client->getClientId()); ?>
+                                <?= Html::encode($client->reqClientId()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                         <?= Html::openTag('tr'); ?>
@@ -255,7 +255,7 @@ use Yiisoft\Html\Tag\A;
                 ->addAttributes(['class' => 'btn btn-info'])
                 ->content($translator->translate('view.client'))
                 ->href($urlGenerator->generate(
-                    'client/view', ['id' => $client->getClientId()]))
+                    'client/view', ['id' => $client->reqClientId()]))
                 ->render()
             ?>
         <?= Html::closeTag('div'); ?>
