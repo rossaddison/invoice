@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Invoice\InvTaxRate\InvTaxRateRepository as ITRR;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\InvTaxRate\InvTaxRateRepository::class)]
+#[Entity(repository:ITRR::class)]
 
 class InvTaxRate
 {
@@ -18,11 +20,20 @@ class InvTaxRate
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $tax_rate_id = null, #[Column(type: 'integer(1)', nullable: false, default: 0)]
-        private ?int $include_item_tax = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $inv_id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $tax_rate_id = null,
+        #[Column(type: 'integer(1)',
+        nullable: false, default: 0)]
+        private ?int $include_item_tax = null,
+        #[Column(type: 'decimal(20,2)',
+        nullable: false, default: 0.00)]
         private ?float $inv_tax_rate_amount = 0.00)
     {
     }

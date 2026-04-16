@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Auth\Permissions;
-use App\Invoice\Entity\{InvAllowanceCharge, InvAmount, InvCustom, InvItem};
+use App\Invoice\Entity\{InvAmount, InvCustom, InvItem};
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\{
     InvAllowanceCharge\InvAllowanceChargeForm, InvItem\InvItemForm,
     AllowanceCharge\AllowanceChargeRepository as ACR,

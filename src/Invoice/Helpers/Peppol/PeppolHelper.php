@@ -10,7 +10,8 @@ use Yiisoft\Files\FileHelper;
 use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 // Entities
-use App\Invoice\Entity\{Inv, InvAllowanceCharge, InvItem, InvItemAllowanceCharge,
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
+use App\Invoice\Entity\{Inv, InvItem, InvItemAllowanceCharge,
 InvAmount, InvItemAmount, DeliveryLocation as DL, Upload};
 use App\Invoice\Helpers\{CountryHelper, DateHelper, NumberHelper};
 use App\Invoice\Libraries\PeppolUblXml;
@@ -1917,7 +1918,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
                     foreach ($items as $item) {
                         $item_id = $item->getId();
                         if (null !== $item_id) {
-                            if ($id == $item->getTaxRate()?->getTaxRateId()) {
+                            if ($id == $item->getTaxRate()?->reqId()) {
                                 $item_amount = $iiaR->repoInvItemAmountquery(
                                         (string) $item_id);
                                 if (null !== $item_amount) {

@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
+use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository::class)]
+#[Entity(repository: ACQIR::class)]
 class QuoteItemAllowanceCharge
 {
-    #[BelongsTo(target: AllowanceCharge::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: AllowanceCharge::class,
+        nullable: false, fkAction: 'NO ACTION')]
     private ?AllowanceCharge $allowance_charge = null;
 
     #[BelongsTo(target: QuoteItem::class, nullable: false, fkAction: 'NO ACTION')]
@@ -20,12 +23,23 @@ class QuoteItemAllowanceCharge
     #[BelongsTo(target: Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $quote_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $quote_item_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $allowance_charge_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $amount = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $quote_id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $quote_item_id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $allowance_charge_id = null,
+        #[Column(type: 'decimal(20,2)',
+        nullable: false, default: 0.00)]
+        private ?float $amount = null,
+        #[Column(type: 'decimal(20,2)',
+        nullable: false, default: 0.00)]
         private ?float $vat_or_tax = null)
     {
     }

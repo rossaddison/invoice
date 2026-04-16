@@ -10,7 +10,7 @@ use App\User\UserService;
 // Exceptions
 use App\Invoice\Helpers\InvoicePlane\Exception\NoConnectionException;
 //Entities
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 // Repositories
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Family\FamilyRepository;

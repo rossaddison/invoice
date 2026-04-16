@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use Codeception\Test\Unit;
 
 class TaxRateEntityTest extends Unit
@@ -49,7 +49,7 @@ class TaxRateEntityTest extends Unit
         $this->assertEquals($this->vatStandard, $taxRate->getTaxRateName());
         $this->assertEquals(20.00, $taxRate->getTaxRatePercent());
         $this->assertTrue($taxRate->getTaxRateDefault());
-        $this->assertNull($taxRate->getTaxRateId());
+        $this->assertNull($taxRate->reqId());
     }
 
     public function testTaxRateIdSetterAndGetter(): void

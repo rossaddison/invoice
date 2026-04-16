@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
+
 use App\Invoice\Entity\
 {
-    Inv, InvItemAllowanceCharge, InvAllowanceCharge, InvItem, InvItemAmount,
+    Inv, InvItemAllowanceCharge, InvItem, InvItemAmount,
     InvAmount, InvCustom, InvRecurring, InvSentLog, InvTaxRate, Payment,
     PaymentCustom};
 

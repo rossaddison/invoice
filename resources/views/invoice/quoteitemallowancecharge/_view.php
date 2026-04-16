@@ -51,10 +51,10 @@ use Yiisoft\Html\Tag\Form;
             <?php
                 $optionsDataAllowanceCharge = [];
 /**
- * @var App\Invoice\Entity\AllowanceCharge $allowance_charge
+ * @var App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge $allowance_charge
  */
 foreach ($allowance_charges as $allowance_charge) {
-    $optionsDataAllowanceCharge[$allowance_charge->getId()]
+    $optionsDataAllowanceCharge[$allowance_charge->reqId()]
     = ($allowance_charge->getIdentifier()
     ? $translator->translate('allowance.or.charge.charge')
     : $translator->translate('allowance.or.charge.allowance'))

@@ -89,10 +89,10 @@ $vat = $s->getSetting('enable_vat_registration');
                             <option value="0"><?= $translator->translate('none'); ?></option>
                             <?php
                     /**
-                     * @var App\Invoice\Entity\TaxRate $taxRate
+                     * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
                      */
                     foreach ($trR->findAllPreloaded() as $taxRate) { ?>
-                                <option value="<?php echo $taxRate->getTaxRateId(); ?>">
+                                <option value="<?php echo $taxRate->reqId(); ?>">
                                     <?php
                             $taxRatePercent = $taxRate->getTaxRatePercent();
                         $taxRateName = $taxRate->getTaxRateName();
@@ -225,15 +225,15 @@ foreach ($soItems as $item) { ?>
                             <select disabled name="item_tax_rate_id" class="form-control form-control-lg" data-bs-toggle = "tooltip" title="salesorder_item->tax_rate_id">
                                 <?php
                     /**
-                     * @var App\Invoice\Entity\TaxRate $taxRate
+                     * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
                      */
                     foreach ($trR->findAllPreloaded() as $taxRate) { ?>
-                                    <option value="<?php echo $taxRate->getTaxRateId(); ?>"
+                                    <option value="<?php echo $taxRate->reqId(); ?>"
                                         <?php
                             $taxRatePercent = $taxRate->getTaxRatePercent();
                         $taxRatePercentNumber = $numberHelper->formatAmount($taxRatePercent);
                         $taxRateName = $taxRate->getTaxRateName();
-                        if ($item->getTaxRateId() == $taxRate->getTaxRateId()) { ?>selected="selected"<?php } ?>>
+                        if ($item->getTaxRateId() == $taxRate->reqId()) { ?>selected="selected"<?php } ?>>
                                         <?php
                         if (null !== $taxRatePercentNumber && null !== $taxRateName) {
                             echo  Html::encode($taxRatePercentNumber . '% - ' . $taxRateName);

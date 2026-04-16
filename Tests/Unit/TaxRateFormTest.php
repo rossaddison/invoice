@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Invoice\TaxRate\TaxRateForm;
 use Codeception\Test\Unit;
 

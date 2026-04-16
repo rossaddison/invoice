@@ -56,14 +56,14 @@ echo H::openTag('div', $row) . "\n"; //1
          ->content($translator->translate('none'))
         . "\n";
         /**
-        * @var App\Invoice\Entity\TaxRate $taxRate
+        * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
         */
         foreach ($tax_rates as $taxRate) {
         $percent = (string) $taxRate->getTaxRatePercent();
         $sign = '% - ';
         $name = $taxRate->getTaxRateName() ?? '';
         $content = $percent . $sign . $name;
-        $taxRateId = $taxRate->getTaxRateId();
+        $taxRateId = $taxRate->reqId();
         echo  new Option()
          ->value($taxRateId)
          ->selected(
@@ -96,14 +96,14 @@ echo H::openTag('div', $row) . "\n"; //1
          ->content($translator->translate('none'))
         . "\n";
         /**
-        * @var App\Invoice\Entity\TaxRate $taxRate
+        * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
         */
         foreach ($tax_rates as $taxRate) {
         $percent = (string) $taxRate->getTaxRatePercent();
         $sign = '% - ';
         $name = $taxRate->getTaxRateName() ?? '';
         $content = $percent . $sign . $name;
-        $taxRateId = $taxRate->getTaxRateId();
+        $taxRateId = $taxRate->reqId();
         echo  new Option()
          ->value($taxRateId)
          ->selected(

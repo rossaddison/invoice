@@ -6,7 +6,7 @@ namespace App\Invoice\TaxRate;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Invoice\Enum\StoreCoveTaxType;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -104,7 +104,7 @@ final class TaxRateController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'taxrate/edit',
-                'actionArguments' => ['tax_rate_id' => $taxRate->getTaxRateId()],
+                'actionArguments' => ['tax_rate_id' => $taxRate->reqId()],
                 'form' => $form,
                 'errors' => [],
                 'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
@@ -162,7 +162,7 @@ final class TaxRateController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'taxrate/view',
-                'actionArguments' => ['tax_rate_id' => $taxRate->getTaxRateId()],
+                'actionArguments' => ['tax_rate_id' => $taxRate->reqId()],
                 'form' => $form,
                 'optionsDataPeppolTaxRateCode' => $this->optionsDataPeppolTaxRateCode($peppolArrays->getUncl5305()),
                 'optionsDataStoreCoveTaxType' => $this->optionsDataStoreCoveTaxType(),

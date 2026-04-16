@@ -6,7 +6,7 @@ namespace App\Invoice\Helpers;
 
 use App\Invoice\Entity\Inv;
 
-use App\Invoice\Entity\InvAllowanceCharge;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\QuoteAllowanceCharge;
 use App\Invoice\Entity\SalesOrderAllowanceCharge;
 use App\Invoice\Entity\SalesOrderAmount;

@@ -12,7 +12,7 @@ use App\Invoice\Entity\Product;
 use App\Invoice\Entity\ProductCustom;
 use App\Invoice\Entity\ProductImage;
 use App\Invoice\Entity\QuoteItem;
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Invoice\Entity\Unit;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Family\FamilyRepository as fR;
@@ -424,10 +424,8 @@ final class ProductController extends BaseController
          * @var TaxRate $taxRate
          */
         foreach ($taxRates as $taxRate) {
-            $taxRateId = $taxRate->getTaxRateId();
-            if (null !== $taxRateId) {
-                $array[$taxRateId] = $taxRate->getTaxRateName();
-            }
+            $taxRateId = $taxRate->reqId();
+            $array[$taxRateId] = $taxRate->getTaxRateName();
         }
         return $array;
     }

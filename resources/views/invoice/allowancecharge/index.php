@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\AllowanceCharge;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -65,7 +65,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (AllowanceCharge $model) => $model->getId(),
+        content: static fn (AllowanceCharge $model) => $model->reqId(),
     ),
     new DataColumn(
         property: 'level',
@@ -109,7 +109,7 @@ $columns = [
         content: static function (AllowanceCharge $model) use ($urlGenerator): A {
             return Html::a(
                 Html::tag('i', '', ['class' => 'bi bi-eye']),
-                $urlGenerator->generate('allowancecharge/view', ['id' => $model->getId()]),
+                $urlGenerator->generate('allowancecharge/view', ['id' => $model->reqId()]),
                 ['class' => 'btn btn-outline-info btn-sm'],
             );
         },
@@ -124,7 +124,7 @@ $columns = [
                       Html::tag('i', '', ['class' => 'bi bi-pencil-square']),
                       $urlGenerator->generate(
                           'allowancecharge/editAllowance',
-                          ['id' => $model->getId()],
+                          ['id' => $model->reqId()],
                       ),
                       ['class' => 'btn btn-outline-warning btn-sm'],
                   ) : Html::a();
@@ -140,7 +140,7 @@ $columns = [
                     Html::tag('i', '', ['class' => 'bi bi-pencil-square']),
                     $urlGenerator->generate(
                         'allowancecharge/editCharge',
-                        ['id' => $model->getId()],
+                        ['id' => $model->reqId()],
                     ),
                     ['class' => 'btn btn-outline-warning btn-sm'],
                 ) : Html::a();
@@ -160,7 +160,7 @@ $columns = [
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('allowancecharge/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('allowancecharge/delete', ['id' => $model->reqId()]),
                 [],
             );
         },

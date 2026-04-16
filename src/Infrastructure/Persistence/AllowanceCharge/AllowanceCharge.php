@@ -2,43 +2,71 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\AllowanceCharge;
 
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\AllowanceCharge\AllowanceChargeRepository::class)]
+#[Entity(repository: AllowanceChargeRepository::class)]
 
 class AllowanceCharge
 {
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'bool', typecast: 'bool', default: false, nullable: false)]
-        private bool $identifier = false, #[Column(type: 'tinyInteger(1)', nullable: false, default: 0)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'bool', typecast: 'bool', default: false, nullable: false)]
+        private bool $identifier = false,
+        #[Column(type: 'tinyInteger(1)',
+                nullable: false, default: 0)]
         /* 0 = Overall, 1 = InvoiceLine */
-        private int $level = 0, #[Column(type: 'string(3)', nullable: false)]
-        private string $reason_code = '', #[Column(type: 'longText', nullable: false)]
-        private string $reason = '', #[Column(type: 'integer(11)', nullable: false)]
+        private int $level = 0,
+        #[Column(type: 'string(3)', nullable: false)]
+        private string $reason_code = '',
+        #[Column(type: 'longText', nullable: false)]
+        private string $reason = '',
+        #[Column(type: 'integer(11)', nullable: false)]
         /**
          * $multiplier_factor_numeric x $base_amount = $amount
-         * Fixed $amount i.e. no calculation involved ... use a 0 or 1 for $multiplier_factor_numeric
+         * Fixed $amount i.e. no calculation involved 
+         * ... use a 0 or 1 for $multiplier_factor_numeric
          * $multiplier_factor_numeric > 1 => $base_amount must be > 0
          */
-        private int $multiplier_factor_numeric = 0, #[Column(type: 'integer(11)', nullable: false)]
-        private int $amount = 0, #[Column(type: 'integer(11)', nullable: false)]
-        private int $base_amount = 0, #[Column(type: 'integer(11)', nullable: false)]
+        private int $multiplier_factor_numeric = 0,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private int $amount = 0,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private int $base_amount = 0,
+        #[Column(type: 'integer(11)', nullable: false)]
         private ?int $tax_rate_id = null)
     {
     }
 
-    public function getId(): string
+    /**
+     * Returns the database identifier for this AllowanceCharge
+     *
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
-        return (string) $this->id;
+        if ($this->id === null) {
+            throw new \LogicException('AllowanceCharge has no'
+                . ' ID (not persisted yet)');
+        }
+
+        return $this->id;
     }
 
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+    
     public function setId(int $id): void
     {
         $this->id = $id;

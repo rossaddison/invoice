@@ -6,7 +6,7 @@ namespace App\Invoice\AllowanceCharge;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\AllowanceCharge;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository;
@@ -232,7 +232,7 @@ final class AllowanceChargeController extends BaseController
                 $parameters = [
                     'title' => $this->translator->translate('allowance.or.charge.edit.allowance'),
                     'actionName' => 'allowancecharge/editAllowance',
-                    'actionArguments' => ['id' => $allowanceCharge->getId()],
+                    'actionArguments' => ['id' => $allowanceCharge->reqId()],
                     'errors' => [],
                     'form' => $form,
                     'taxRates' => $tR->findAllPreloaded(),
@@ -280,7 +280,7 @@ final class AllowanceChargeController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('allowance.or.charge.edit.charge'),
                 'actionName' => 'allowancecharge/editAllowance',
-                'actionArguments' => ['id' => $allowanceCharge->getId()],
+                'actionArguments' => ['id' => $allowanceCharge->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'taxRates' => $tR->findAllPreloaded(),
@@ -342,7 +342,7 @@ final class AllowanceChargeController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'allowancecharge/view',
-                'actionArguments' => ['id' => $allowanceCharge->getId()],
+                'actionArguments' => ['id' => $allowanceCharge->reqId()],
                 'form' => $form,
                 'allowanceCharge' => $allowanceCharge,
             ];

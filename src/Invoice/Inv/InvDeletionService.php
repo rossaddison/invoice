@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAllowanceCharge;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\InvCustom;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvItemAllowanceCharge;

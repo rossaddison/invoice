@@ -4,25 +4,37 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as ACQR;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository::class)]
+#[Entity(repository:ACQR::class)]
 
 class QuoteAllowanceCharge
 {
-    #[BelongsTo(target: AllowanceCharge::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: AllowanceCharge::class,
+        nullable: false, fkAction: 'NO ACTION')]
     private ?AllowanceCharge $allowance_charge = null;
 
     #[BelongsTo(target: Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $quote_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $allowance_charge_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $amount = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $quote_id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $allowance_charge_id = null,
+        #[Column(type: 'decimal(20,2)',
+        nullable: false, default: 0.00)]
+        private ?float $amount = null,
+        #[Column(type: 'decimal(20,2)',
+        nullable: false, default: 0.00)]
         private ?float $vat_or_tax = null)
     {
     }

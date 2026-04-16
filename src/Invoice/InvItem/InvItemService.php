@@ -230,7 +230,7 @@ final readonly class InvItemService
         foreach ($originalACs as $originalAC) {
             $iiac = new InvItemAllowanceCharge();
             $iiac->setAllowanceChargeId(
-                (int) $originalAC->getAllowanceCharge()?->getId());
+                (int) $originalAC->getAllowanceCharge()?->reqId());
             $iiac->setInvId((int) $copyInvId);
             $iiac->setInvItemId($newId);
             $iiac->setAmount((float) $originalAC->getAmount());
@@ -258,7 +258,7 @@ final readonly class InvItemService
         foreach ($originalACs as $originalAC) {
             $iiac = new InvItemAllowanceCharge();
             $iiac->setAllowanceChargeId(
-                (int) $originalAC->getAllowanceCharge()?->getId());
+                (int) $originalAC->getAllowanceCharge()?->reqId());
             $iiac->setInvId((int) $copyInvId);
             $iiac->setInvItemId($newId);
             $iiac->setAmount((float) $originalAC->getAmount());
@@ -409,7 +409,7 @@ final readonly class InvItemService
         // This function is used in invitem/edit_task when editing an item on
         // the inv view. Related logic: https://github.com/cycle/orm/issues/348
         isset($array['tax_rate_id']) ?
-            $model->setTaxRate($model->getTaxRate()?->getTaxRateId() ==
+            $model->setTaxRate($model->getTaxRate()?->reqId() ==
                 (int) $array['tax_rate_id'] ? $model->getTaxRate() : null) : '';
         $tax_rate_id = ((isset($array['tax_rate_id'])) ?
             (int) $array['tax_rate_id'] : '');

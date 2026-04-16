@@ -511,7 +511,7 @@ trait QuoteToSo
             $acsoItem->setSalesOrderId((int) $new_so_id);
             $acsoItem->setSalesOrderItemId((int) $newSalesOrderItem->getId());
             $acsoItem->setAllowanceChargeId(
-                (int) $quoteItemAllowanceCharge->getAllowanceCharge()?->getId()
+                (int) $quoteItemAllowanceCharge->getAllowanceCharge()?->reqId()
             );
 
             $acsoItem->setAmount((float) $quoteItemAllowanceCharge->getAmount());

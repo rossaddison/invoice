@@ -110,15 +110,15 @@ foreach ($tasks as $task) {
                                 <?php
     $optionsDataTaxRate = [];
 /**
- * @var App\Invoice\Entity\TaxRate $taxRate
+ * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
  */
 foreach ($taxRates as $taxRate) {
-    $taxRateId = $taxRate->getTaxRateId();
+    $taxRateId = $taxRate->reqId();
     $taxRatePercent = $taxRate->getTaxRatePercent();
     $taxRatePercentNumber = $numberHelper->formatAmount($taxRatePercent);
     $taxRateName = $taxRate->getTaxRateName();
     // Only build the drop down item if all values are present
-    if (null !== $taxRatePercentNumber && null !== $taxRateName && null !== $taxRateId) {
+    if (null !== $taxRatePercentNumber && null !== $taxRateName) {
         $optionsDataTaxRate[$taxRateId] =  $taxRatePercentNumber . '% - ' . $taxRateName;
     }
 }

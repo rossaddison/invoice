@@ -35,10 +35,10 @@ declare(strict_types=1);
                                 <option value="0"><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\TaxRate $taxRate
+                                     * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
                                      */
                                     foreach ($taxRates as $taxRate) { ?>
-                                    <option value="<?= $taxRate->getTaxRateId(); ?>">
+                                    <option value="<?= $taxRate->reqId(); ?>">
                                         <?php
                                                 $taxRatePercent = $numberHelper->formatAmount($taxRate->getTaxRatePercent());
                                         $taxRateName = $taxRate->getTaxRateName();

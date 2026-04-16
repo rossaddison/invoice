@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAllowanceCharge;
 
-use App\Invoice\Entity\InvAllowanceCharge;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use Yiisoft\Validator\Rule\GreaterThan;
 use Yiisoft\FormModel\FormModel;
 

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\Entity\TaxRate $taxRate
+ * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
  * @var App\Invoice\Entity\Unit $unit
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @psalm-var array<array-key, array<array-key, string>|string> $taxRates
@@ -30,10 +30,10 @@ declare(strict_types=1);
                                 <option value="">-- <?= $translator->translate('tax.rate'); ?> --</option>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\TaxRate $taxRate
+                                     * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
                                      */
                                     foreach ($taxRates as $taxRate): ?>
-                                    <option value="<?= $taxRate->getTaxRateId(); ?>">
+                                    <option value="<?= $taxRate->reqId(); ?>">
                                         <?= $taxRate->getTaxRateName() ?? ''; ?> (<?= $taxRate->getTaxRatePercent() ?? ''; ?>%)</option>
                                 <?php endforeach; ?>
                             </select>

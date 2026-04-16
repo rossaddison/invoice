@@ -249,7 +249,7 @@ foreach ($quoteItems as $item) {
            ->value('0')
            ->content($translator->translate('none'));
        /**
-        * @var App\Invoice\Entity\TaxRate $taxRate
+        * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
         */
        foreach ($taxRates as $taxRate) {
            $taxRatePercent = $numberHelper->formatAmount(
@@ -263,8 +263,8 @@ foreach ($quoteItems as $item) {
                $taxRateContent = $taxRatePercent . '% - ' . $taxRateName;
            }
            echo  new Option()
-               ->value((string) $taxRate->getTaxRateId())
-               ->selected($item->getTaxRateId() == $taxRate->getTaxRateId())
+               ->value((string) $taxRate->reqId())
+               ->selected($item->getTaxRateId() == $taxRate->reqId())
                ->content($taxRateContent);
        }
        echo H::closeTag('select'); //7

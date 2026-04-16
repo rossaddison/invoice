@@ -21,7 +21,7 @@ use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAllowanceCharge;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\QuoteAmount;
 use App\Invoice\Entity\QuoteItem;

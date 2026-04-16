@@ -14,15 +14,15 @@ use Brick\Money\Money;
 // Yiisoft
 use Yiisoft\Translator\TranslatorInterface as Translator;
 // Entities
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\DeliveryLocation as DL;
 use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAllowanceCharge;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvItemAllowanceCharge;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvItemAmount;
 use App\Invoice\Entity\PaymentPeppol;
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Invoice\Entity\Upload;
 // Helpers
 use App\Invoice\Helpers\CountryHelper;
@@ -1169,7 +1169,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
          * @var TaxRate $taxRate
          */
         foreach ($taxRates as $taxRate) {
-            $id = $taxRate->getTaxRateId();
+            $id = $taxRate->reqId();
             $tax_category = $taxRate->getPeppolTaxRateCode();
             $tax_percent = $taxRate->getTaxRatePercent();
             // Throw an exception if any Tax Category does not have a code
@@ -1179,60 +1179,59 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
             if (null === $tax_percent) {
                 throw new PeppolTaxCategoryPercentNotFoundException($this->t);
             }
-            if (null !== $id) {
-                $taxable_amount_total = 0.00;
-                $tax_amount_total = 0.00;
-                $items = $invoice->getItems();
-                /**
-                 * @var InvItem $item
-                 */
-                foreach ($items as $item) {
-                    $item_id = $item->getId();
-                    if (null !== $item_id) {
-                        if ($id === $item->getTaxRate()?->getTaxRateId()) {
-                            $item_amount = $iiaR->repoInvItemAmountquery((string) $item_id);
-                            if (null !== $item_amount) {
-                                $item_sub_total = $item_amount->getSubtotal();
-                                if (null !== $item_sub_total) {
-                                    $taxable_amount_total += $item_sub_total;
-                                }
-                                $item_tax_total = $item_amount->getTaxTotal();
-                                if (null !== $item_tax_total) {
-                                    $tax_amount_total += $item_tax_total;
-                                }
+            
+            $taxable_amount_total = 0.00;
+            $tax_amount_total = 0.00;
+            $items = $invoice->getItems();
+            /**
+             * @var InvItem $item
+             */
+            foreach ($items as $item) {
+                $item_id = $item->getId();
+                if (null !== $item_id) {
+                    if ($id === $item->getTaxRate()?->reqId()) {
+                        $item_amount = $iiaR->repoInvItemAmountquery((string) $item_id);
+                        if (null !== $item_amount) {
+                            $item_sub_total = $item_amount->getSubtotal();
+                            if (null !== $item_sub_total) {
+                                $taxable_amount_total += $item_sub_total;
+                            }
+                            $item_tax_total = $item_amount->getTaxTotal();
+                            if (null !== $item_tax_total) {
+                                $tax_amount_total += $item_tax_total;
                             }
                         }
                     }
                 }
+            }
 
-                /**
-                 * @var array $array[$id]
-                 */
-                $sub_array = $array[$id] ?? [];
-                /**
-                 *  @var float $sub_array['TaxableAmounts']
-                 */
-                $sub_array['TaxableAmounts'] = (float) $this->s->currencyConverter(
-                                                         $taxable_amount_total);
-                /**
-                 *  @var float $sub_array['TaxAmount']
-                 */
-                $sub_array['TaxAmount'] = (float) $this->s->currencyConverter(
-                                                            $tax_amount_total);
-                /**
-                 *  @var float $sub_array['TaxCategory']
-                 */
-                $sub_array['TaxCategory'] = $tax_category;
-                /**
-                 *  @var float $sub_array['TaxCategoryPercent']
-                 */
-                $sub_array['TaxCategoryPercent'] = $tax_percent;
-                /**
-                 *  @var string $sub_array['DocumentCurrency']
-                 */
-                $sub_array['DocumentCurrency'] = $this->to_currency;
-                $array[$id] = $sub_array;
-            } // null!==$id
+            /**
+             * @var array $array[$id]
+             */
+            $sub_array = $array[$id] ?? [];
+            /**
+             *  @var float $sub_array['TaxableAmounts']
+             */
+            $sub_array['TaxableAmounts'] = (float) $this->s->currencyConverter(
+                                                     $taxable_amount_total);
+            /**
+             *  @var float $sub_array['TaxAmount']
+             */
+            $sub_array['TaxAmount'] = (float) $this->s->currencyConverter(
+                                                        $tax_amount_total);
+            /**
+             *  @var float $sub_array['TaxCategory']
+             */
+            $sub_array['TaxCategory'] = $tax_category;
+            /**
+             *  @var float $sub_array['TaxCategoryPercent']
+             */
+            $sub_array['TaxCategoryPercent'] = $tax_percent;
+            /**
+             *  @var string $sub_array['DocumentCurrency']
+             */
+            $sub_array['DocumentCurrency'] = $this->to_currency;
+            $array[$id] = $sub_array;
         }
         return $array;
     }

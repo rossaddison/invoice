@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTime;
 use DateTimeImmutable;
 
-#[Entity(repository: \App\Invoice\QuoteItem\QuoteItemRepository::class)]
+#[Entity(repository:QIR::class)]
 class QuoteItem
 {
     #[Column(type: 'date', nullable: false)]

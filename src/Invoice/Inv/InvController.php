@@ -7,7 +7,8 @@ namespace App\Invoice\Inv;
 use App\Auth\Permissions;
 use App\Widget\FormFields;
 use App\Widget\ButtonsToolbarFull;
-use App\Invoice\Entity\{Inv, InvItemAllowanceCharge, InvItem, InvTaxRate, TaxRate};
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Invoice\Entity\{Inv, InvItemAllowanceCharge, InvItem, InvTaxRate};
 use App\User\UserService;
 use App\User\User;
 
@@ -127,14 +128,14 @@ final class InvController extends BaseController
         }
     }
 
-    public function defaultTaxInv(TaxRate $taxrate, Inv $inv,
+    public function defaultTaxInv(TaxRate $taxRate, Inv $inv,
             FormHydrator $formHydrator): void
     {
         $invTaxRate = new InvTaxRate();
         $invTaxRateForm = new InvTaxRateForm($invTaxRate);
         $inv_tax_rate = [];
         $inv_tax_rate['inv_id'] = $inv->getId();
-        $inv_tax_rate['tax_rate_id'] = $taxrate->getTaxRateId();
+        $inv_tax_rate['tax_rate_id'] = $taxRate->reqId();
         /**
         * Related logic: see Settings ... View ... Taxes ...
         * Default Invoice Tax Rate Placement

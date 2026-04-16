@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use App\Invoice\SalesOrderAllowanceCharge\SalesOrderAllowanceChargeRepository
     AS ACSOR;
 use Cycle\Annotated\Annotation\Column;

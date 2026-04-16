@@ -130,17 +130,16 @@ foreach ($allowances as $value) {
             <?php
     $optionsDataTax = [];
 /**
- * @var App\Invoice\Entity\TaxRate $taxRate
+ * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
  */
 foreach ($taxRates as $taxRate) {
-    $taxRateId = $taxRate->getTaxRateId();
-    if (null !== $taxRateId) {
-        $optionsDataTax[$taxRateId] = (string) $taxRateId
-            . ':  '
-            . (string) $taxRate->getTaxRateName()
-            . ' '
-            . (string) $taxRate->getTaxRatePercent();
-    }
+    $taxRateId = $taxRate->reqId();
+    $optionsDataTax[$taxRateId] = (string) $taxRateId
+        . ':  '
+        . (string) $taxRate->getTaxRateName()
+        . ' '
+        . (string) $taxRate->getTaxRatePercent();
+    
 }
 ?>
             <?= Field::select($form, 'tax_rate_id')

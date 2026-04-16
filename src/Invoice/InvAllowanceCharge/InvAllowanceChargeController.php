@@ -6,7 +6,7 @@ namespace App\Invoice\InvAllowanceCharge;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\InvAllowanceCharge;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as aciR;
 use App\Invoice\Setting\SettingRepository as sR;

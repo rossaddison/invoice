@@ -148,7 +148,7 @@ $columns = [
     new DataColumn(
         property: 'tax_rate_id',
         header: $translator->translate('tax.rate'),
-        content: static fn (Product $model): string => ($model->getTaxrate()?->getTaxRateId() > 0)
+        content: static fn (Product $model): string => ($model->getTaxrate()?->reqId() > 0)
                     ? Html::encode($model->getTaxrate()?->getTaxRateName())
                     : $translator->translate('none'),
         visible: $visible,

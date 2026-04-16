@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTime;
 use DateTimeImmutable;
 
-#[Entity(repository: \App\Invoice\SalesOrderItem\SalesOrderItemRepository::class)]
+#[Entity(repository:SOIR::class)]
 class SalesOrderItem
 {
     #[Column(type: 'date', nullable: false)]

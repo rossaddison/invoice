@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Command\Invoice;
 
-use App\Invoice\Entity\AllowanceCharge;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use App\Invoice\Entity\Client;
 use App\Invoice\Entity\Group;
 use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAllowanceCharge;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvItemAllowanceCharge;
@@ -16,7 +16,7 @@ use App\Invoice\Entity\InvItemAmount;
 use App\Invoice\Entity\InvTaxRate;
 use App\Invoice\Entity\Family;
 use App\Invoice\Entity\Product;
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Invoice\Entity\Unit;
 use App\Invoice\Entity\UserClient;
 use App\Invoice\Entity\UserInv;
@@ -337,7 +337,7 @@ final class ItemsCommand extends Command
                     $taxRateId = (int)($allowanceCharge?->getTaxRateId() ?? 1);
                     $taxRatePercent = 0;
                     foreach ($this->taxRates as $taxRate) {
-                        if ((int)$taxRate->getTaxRateId() === $taxRateId) {
+                        if ($taxRate->reqId() === $taxRateId) {
                             $taxRatePercent = $taxRate->getTaxRatePercent();
                             break;
                         }

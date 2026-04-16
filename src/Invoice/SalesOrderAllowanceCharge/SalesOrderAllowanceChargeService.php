@@ -26,9 +26,7 @@ final readonly class SalesOrderAllowanceChargeService
         );
         if ($allowance_charge) {
             $model->setAllowanceCharge($allowance_charge);
-            $model->setAllowanceChargeId(
-                (int) $allowance_charge->getId()
-            );
+            $model->setAllowanceChargeId($allowance_charge->reqId());
         }
         $sales_order = $this->soR->repoSalesOrderUnLoadedquery(
             (string) $array['sales_order_id']

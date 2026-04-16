@@ -414,7 +414,7 @@ final readonly class QuoteItemService
         // see https://github.com/cycle/orm/issues/348
         isset($array['tax_rate_id']) ?
             $model->setTaxRate(
-                $model->getTaxRate()?->getTaxRateId() ==
+                $model->getTaxRate()?->reqId() ==
                     (int) $array['tax_rate_id'] ?
                     $model->getTaxRate() : null
             ) : '';
@@ -500,7 +500,7 @@ final readonly class QuoteItemService
         // see https://github.com/cycle/orm/issues/348
         isset($array['tax_rate_id']) ?
             $model->setTaxRate(
-                $model->getTaxRate()?->getTaxRateId() ==
+                $model->getTaxRate()?->reqId() ==
                     (int) $array['tax_rate_id'] ?
                     $model->getTaxRate() : null
             ) : '';

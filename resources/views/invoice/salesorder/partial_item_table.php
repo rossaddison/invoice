@@ -257,12 +257,12 @@ foreach ($soItems as $item) {
                                 </option>
                                 <?php
                                 /**
-                                 * @var App\Invoice\Entity\TaxRate $taxRate
+                                 * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
                                  */
     foreach ($taxRates as $taxRate) { ?>
                                     <option value="
-    <?php echo $taxRate->getTaxRateId(); ?>"
-        <?php if ($item->getTaxRateId() == $taxRate->getTaxRateId()) { ?>
+    <?php echo $taxRate->reqId(); ?>"
+        <?php if ($item->getTaxRateId() == $taxRate->reqId()) { ?>
                                         selected="selected"<?php } ?>>
                 <?php
                     $taxRatePercent = $numberHelper->formatAmount(

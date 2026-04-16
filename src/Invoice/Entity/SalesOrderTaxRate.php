@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository as SOTRR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository::class)]
+#[Entity(repository:SOTRR::class)]
 
 class SalesOrderTaxRate
 {

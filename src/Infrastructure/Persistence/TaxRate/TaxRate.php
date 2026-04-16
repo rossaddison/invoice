@@ -2,23 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\TaxRate;
 
+use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
-#[Entity(repository: \App\Invoice\TaxRate\TaxRateRepository::class)]
+#[Entity(repository: TRR::class)]
 class TaxRate
 {
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    public function __construct(#[Column(type: 'string(2)', nullable: true)]
-        private ?string $tax_rate_code = '', #[Column(type: 'string(2)', nullable: true)]
-        private ?string $peppol_tax_rate_code = '', #[Column(type: 'string(30)', nullable: false, default: 'standard')]
-        private string $storecove_tax_type = '', #[Column(type: 'text', nullable: true)]
-        private ?string $tax_rate_name = '', #[Column(type: 'decimal(5,2)', nullable: false, default_value: 0.00)]
-        private ?float $tax_rate_percent = 0.00, #[Column(type: 'bool', default: false)]
+    public function __construct(
+        #[Column(type: 'string(2)', nullable: true)]
+        private ?string $tax_rate_code = '',
+        #[Column(type: 'string(2)', nullable: true)]
+        private ?string $peppol_tax_rate_code = '',
+        #[Column(type: 'string(30)', nullable: false, default: 'standard')]
+        private string $storecove_tax_type = '',
+        #[Column(type: 'text', nullable: true)]
+        private ?string $tax_rate_name = '',
+        #[Column(type: 'decimal(5,2)', nullable: false, default_value: 0.00)]
+        private ?float $tax_rate_percent = 0.00,
+        #[Column(type: 'bool', default: false)]
         private bool $tax_rate_default = false)
     {
     }
@@ -28,9 +35,23 @@ class TaxRate
         $this->id = $tax_rate_id;
     }
 
-    public function getTaxRateId(): ?int
+    /**
+     * Returns the database identifier for this TaxRate
+     *
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException('TaxRate has no ID (not persisted yet)');
+        }
+
         return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function getTaxRateName(): ?string
@@ -91,10 +112,5 @@ class TaxRate
     public function setTaxRateDefault(bool $tax_rate_default): void
     {
         $this->tax_rate_default = $tax_rate_default;
-    }
-
-    public function isNewRecord(): bool
-    {
-        return $this->getTaxRateId() === null;
     }
 }

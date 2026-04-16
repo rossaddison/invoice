@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\AllowanceCharge;
 
-use App\Invoice\Entity\AllowanceCharge as AC;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge as AC;
 use App\Invoice\TaxRate\TaxRateRepository as trR;
 
 final readonly class AllowanceChargeService

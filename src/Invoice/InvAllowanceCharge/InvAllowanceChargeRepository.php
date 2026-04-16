@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAllowanceCharge;
 
-use App\Invoice\Entity\InvAllowanceCharge;
 use Cycle\ORM\Select;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
- * @template TEntity of InvAllowanceCharge
+ * @template TEntity of
+    App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge
  * @extends Select\Repository<TEntity>
  */
 final class InvAllowanceChargeRepository extends Select\Repository

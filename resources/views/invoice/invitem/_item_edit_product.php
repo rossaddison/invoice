@@ -167,10 +167,10 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 <?php
                                     $optionsDataTaxRate = [];
                                 /**
-                                 * @var App\Invoice\Entity\TaxRate $taxRate
+                                 * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
                                  */
                                 foreach ($taxRates as $taxRate) {
-                                    $taxRateId = $taxRate->getTaxRateId();
+                                    $taxRateId = $taxRate->reqId();
                                     $taxRatePercent =
                                         $taxRate->getTaxRatePercent() ?? 0.00;
                                     $taxRateName = $taxRate->getTaxRateName()
@@ -178,8 +178,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                     $formattedNumber =
                                         $numberHelper->formatAmount(
                                             $taxRatePercent);
-                                    if ((null !== $taxRateId)
-                                            && ($taxRatePercent >= 0.00)
+                                    if (($taxRatePercent >= 0.00)
                                             && (strlen($taxRateName) > 0)
                                                     && $formattedNumber
                                                                >= 0.00) {

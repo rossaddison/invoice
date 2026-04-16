@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\TaxRate;
 
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;

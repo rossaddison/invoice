@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command\Invoice;
 
-use App\Invoice\Entity\AllowanceCharge;
-use App\Invoice\Entity\InvAllowanceCharge;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\InvItemAllowanceCharge;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvAmount;

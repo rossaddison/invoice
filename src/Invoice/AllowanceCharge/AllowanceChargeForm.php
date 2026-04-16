@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Invoice\AllowanceCharge;
 
-use App\Invoice\Entity\AllowanceCharge;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Integer;
 
 final class AllowanceChargeForm extends FormModel
 {
-    private readonly string $id;
+    private readonly int $id;
 
     #[Required]
     private ?bool $identifier = false;
@@ -41,7 +41,7 @@ final class AllowanceChargeForm extends FormModel
 
     public function __construct(AllowanceCharge $allowanceCharge)
     {
-        $this->id = $allowanceCharge->getId();
+        $this->id = $allowanceCharge->reqId();
         $this->identifier = $allowanceCharge->getIdentifier();
         $this->level = $allowanceCharge->getLevel();
         $this->reason_code = $allowanceCharge->getReasonCode();
@@ -92,7 +92,7 @@ final class AllowanceChargeForm extends FormModel
         return $this->tax_rate_id;
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }

@@ -504,6 +504,7 @@ return [
  */
         'entity-paths' => [
             '@src',
+            '@src/Infrastructure'
         ],
         'conveyor' => MetadataSchemaConveyor::class,
     ],

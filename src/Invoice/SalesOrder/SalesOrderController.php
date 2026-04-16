@@ -5,22 +5,18 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrder;
 
 use App\Auth\Permissions;
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\{
 BaseController, Client\ClientRepository as CR,
 CustomField\CustomFieldRepository as CFR,
 CustomValue\CustomValueRepository as CVR,
 DeliveryLocation\DeliveryLocationRepository as DR,
 Entity\CustomField, Entity\DeliveryLocation, Entity\Group, Entity\Inv,
-Entity\InvAllowanceCharge, Entity\InvAmount, Entity\InvCustom,
-Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrder,
-Entity\SalesOrderAmount, Entity\SalesOrderCustom, Entity\SalesOrderItem,
-Entity\SalesOrderTaxRate, Entity\SalesOrderItemAllowanceCharge,
+Entity\InvAmount, Entity\InvCustom, Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrder, Entity\SalesOrderAmount, Entity\SalesOrderCustom, Entity\SalesOrderItem, Entity\SalesOrderTaxRate, Entity\SalesOrderItemAllowanceCharge,
 Group\GroupRepository as GR, Entity\SalesOrderAllowanceCharge,
 Helpers\CustomValuesHelper as CVH, Helpers\PdfHelper, Inv\InvForm,
-Inv\InvRepository as InvRepo, Inv\InvService,
-InvAllowanceCharge\InvAllowanceChargeForm,
-InvAllowanceCharge\InvAllowanceChargeService,
-InvAmount\InvAmountForm,
+Inv\InvRepository as InvRepo, Inv\InvService, InvAllowanceCharge\InvAllowanceChargeForm,
+InvAllowanceCharge\InvAllowanceChargeService, InvAmount\InvAmountForm,
 InvAmount\InvAmountService, InvCustom\InvCustomForm, InvCustom\InvCustomService,
 InvItem\InvItemForm, InvItem\InvItemService,
 InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR,
@@ -1248,7 +1244,7 @@ final class SalesOrderController extends BaseController
             $acInvItem->setInvId((int) $new_inv_id);
             $acInvItem->setInvItemId((int) $newInvItem->getId());
             $acInvItem->setAllowanceChargeId(
-            (int) $salesOrderItemAllowanceCharge->getAllowanceCharge()?->getId()
+            (int) $salesOrderItemAllowanceCharge->getAllowanceCharge()?->reqId()
             );
 
             // Set other properties

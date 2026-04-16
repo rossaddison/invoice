@@ -52,9 +52,7 @@ final readonly class SalesOrderItemService
             );
             if ($tax_rate) {
                 $model->setTaxRate($tax_rate);
-                $model->setTaxRateId(
-                    (int) $tax_rate->getTaxRateId()
-                );
+                $model->setTaxRateId($tax_rate->reqId());
             }
         }
         if (isset($array['product_id'])) {

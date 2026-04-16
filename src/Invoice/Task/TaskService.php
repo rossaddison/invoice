@@ -34,9 +34,7 @@ final readonly class TaskService
             );
             if ($tax_rate) {
                 $model->setTaxRate($tax_rate);
-                $model->setTaxRateId(
-                    (int) $tax_rate->getTaxRateId()
-                );
+                $model->setTaxRateId($tax_rate->reqId());
             }
         }
     }

@@ -2,27 +2,36 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\InvAllowanceCharge;
 
+use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository;
+use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository::class)]
+#[Entity(repository: InvAllowanceChargeRepository::class)]
 
 class InvAllowanceCharge
 {
-    #[BelongsTo(target: AllowanceCharge::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: AllowanceCharge::class, nullable: false,
+        fkAction: 'NO ACTION')]
     private ?AllowanceCharge $allowance_charge = null;
 
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Inv $inv = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $inv_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $allowance_charge_id = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $amount = null, #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $inv_id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $allowance_charge_id = null,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $amount = null,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $vat_or_tax = null)
     {
     }

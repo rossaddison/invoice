@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Invoice\Task\TaskRepository as TR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTime;
 use DateTimeImmutable;
 
-#[Entity(repository: \App\Invoice\Task\TaskRepository::class)]
+#[Entity(repository:TR::class)]
 class Task
 {
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]

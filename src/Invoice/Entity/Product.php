@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Invoice\Product\ProductRepository as PR;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\Annotated\Annotation\Relation\HasMany;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[Entity(repository: \App\Invoice\Product\ProductRepository::class)]
+#[Entity(repository:PR::class)]
 class Product
 {
     #[Column(type: 'primary')]

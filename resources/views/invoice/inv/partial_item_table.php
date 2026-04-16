@@ -260,12 +260,12 @@ foreach ($invItems as $item) {
           echo $translator->translate('none');
          echo H::closeTag('option');
          /**
-          * @var App\Invoice\Entity\TaxRate $taxRate
+          * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
           */
          foreach ($taxRates as $taxRate) {
-             $selected = ($item->getTaxRateId() == $taxRate->getTaxRateId());
+             $selected = ($item->getTaxRateId() == $taxRate->reqId());
              echo H::openTag('option', [
-                 'value' => $taxRate->getTaxRateId(),
+                 'value' => $taxRate->reqId(),
                  'selected' => $selected ? 'selected' : null
              ]);
               $taxRatePercent = $numberHelper->formatAmount(

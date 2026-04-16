@@ -131,14 +131,14 @@ foreach ($tasks as $task) {
                                 <?php
      $optionsDataTaxRate = [];
 /**
- * @var App\Invoice\Entity\TaxRate $taxRate
+ * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
  */
 foreach ($taxRates as $taxRate) {
-    $taxRateId = $taxRate->getTaxRateId();
+    $taxRateId = $taxRate->reqId();
     $taxRatePercent = $taxRate->getTaxRatePercent() ?? 0.00;
     $taxRateName = $taxRate->getTaxRateName() ?? '';
     $formattedNumber = $numberHelper->formatAmount($taxRatePercent);
-    if ((null !== $taxRateId) && ($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0) && $formattedNumber >= 0.00) {
+    if (($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0) && $formattedNumber >= 0.00) {
         $optionsDataTaxRate[$taxRateId] = (string) $formattedNumber . '% - ' . $taxRateName;
     }
 }

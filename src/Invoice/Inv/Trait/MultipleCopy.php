@@ -6,8 +6,9 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Invoice\Entity\
 {
-    Inv, InvAllowanceCharge, InvItem, InvCustom, InvTaxRate 
+    Inv, InvItem, InvCustom, InvTaxRate 
 };
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\{
     InvItemAmount\InvItemAmountService as IIAS,
     InvAllowanceCharge\InvAllowanceChargeForm, InvCustom\InvCustomForm,

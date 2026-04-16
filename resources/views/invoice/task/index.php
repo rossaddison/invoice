@@ -128,7 +128,7 @@ $columns = [
     new DataColumn(
         'tax_rate_id',
         header: $translator->translate('tax.rate'),
-        content: static fn (Task $model): string => ($model->getTaxrate()?->getTaxRateId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('none'),
+        content: static fn (Task $model): string => ($model->getTaxRate()?->reqId() > 0) ? Html::encode($model->getTaxrate()?->getTaxRateName()) : $translator->translate('none'),
     ),
     new ActionColumn(buttons: [
         new ActionButton(

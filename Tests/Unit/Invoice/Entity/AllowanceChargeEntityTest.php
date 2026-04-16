@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\AllowanceCharge;
-use App\Invoice\Entity\TaxRate;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use PHPUnit\Framework\TestCase;
 
 class AllowanceChargeEntityTest extends TestCase
@@ -22,7 +22,7 @@ class AllowanceChargeEntityTest extends TestCase
     {
         $allowanceCharge = new AllowanceCharge();
         
-        $this->assertSame('', $allowanceCharge->getId());
+        $this->assertSame('', $allowanceCharge->reqId());
         $this->assertFalse($allowanceCharge->getIdentifier());
         $this->assertSame(0, $allowanceCharge->getLevel());
         $this->assertSame('', $allowanceCharge->getReasonCode());
@@ -48,7 +48,7 @@ class AllowanceChargeEntityTest extends TestCase
             tax_rate_id: 100
         );
         
-        $this->assertSame('1', $allowanceCharge->getId());
+        $this->assertSame('1', $allowanceCharge->reqId());
         $this->assertTrue($allowanceCharge->getIdentifier());
         $this->assertSame(1, $allowanceCharge->getLevel());
         $this->assertSame('DIS', $allowanceCharge->getReasonCode());
@@ -65,7 +65,7 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge = new AllowanceCharge();
         $allowanceCharge->setId(50);
         
-        $this->assertSame('50', $allowanceCharge->getId());
+        $this->assertSame('50', $allowanceCharge->reqId());
     }
 
     public function testIdentifierSetterAndGetter(): void
@@ -157,8 +157,8 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge = new AllowanceCharge();
         $allowanceCharge->setId(999);
         
-        $this->assertIsString($allowanceCharge->getId());
-        $this->assertSame('999', $allowanceCharge->getId());
+        $this->assertIsString($allowanceCharge->reqId());
+        $this->assertSame('999', $allowanceCharge->reqId());
     }
 
     public function testTaxRateIdTypeConversion(): void
@@ -181,7 +181,7 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge->setBaseAmount(0);
         $allowanceCharge->setTaxRateId(0);
         
-        $this->assertSame('0', $allowanceCharge->getId());
+        $this->assertSame('0', $allowanceCharge->reqId());
         $this->assertSame(0, $allowanceCharge->getLevel());
         $this->assertSame(0, $allowanceCharge->getMultiplierFactorNumeric());
         $this->assertSame(0, $allowanceCharge->getAmount());
@@ -200,7 +200,7 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge->setBaseAmount(-5000);
         $allowanceCharge->setTaxRateId(-10);
         
-        $this->assertSame('-1', $allowanceCharge->getId());
+        $this->assertSame('-1', $allowanceCharge->reqId());
         $this->assertSame(-1, $allowanceCharge->getLevel());
         $this->assertSame(-5, $allowanceCharge->getMultiplierFactorNumeric());
         $this->assertSame(-1000, $allowanceCharge->getAmount());
@@ -220,7 +220,7 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge->setBaseAmount($largeValue);
         $allowanceCharge->setTaxRateId($largeValue);
         
-        $this->assertSame((string)$largeValue, $allowanceCharge->getId());
+        $this->assertSame((string)$largeValue, $allowanceCharge->reqId());
         $this->assertSame($largeValue, $allowanceCharge->getLevel());
         $this->assertSame($largeValue, $allowanceCharge->getMultiplierFactorNumeric());
         $this->assertSame($largeValue, $allowanceCharge->getAmount());
@@ -483,7 +483,7 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge->setTaxRateId(100);
         $allowanceCharge->setTaxrate($taxRate);
         
-        $this->assertSame('1', $allowanceCharge->getId());
+        $this->assertSame('1', $allowanceCharge->reqId());
         $this->assertFalse($allowanceCharge->getIdentifier());
         $this->assertSame(0, $allowanceCharge->getLevel());
         $this->assertSame('DIS', $allowanceCharge->getReasonCode());
@@ -509,7 +509,7 @@ class AllowanceChargeEntityTest extends TestCase
             tax_rate_id: 50
         );
         
-        $this->assertIsString($allowanceCharge->getId());
+        $this->assertIsString($allowanceCharge->reqId());
         $this->assertIsBool($allowanceCharge->getIdentifier());
         $this->assertIsInt($allowanceCharge->getLevel());
         $this->assertIsString($allowanceCharge->getReasonCode());
@@ -613,7 +613,7 @@ class AllowanceChargeEntityTest extends TestCase
         );
         
         // Verify initial state
-        $this->assertSame('999', $allowanceCharge->getId());
+        $this->assertSame('999', $allowanceCharge->reqId());
         $this->assertTrue($allowanceCharge->getIdentifier());
         $this->assertSame(1, $allowanceCharge->getLevel());
         $this->assertSame('TEST', $allowanceCharge->getReasonCode());
@@ -635,7 +635,7 @@ class AllowanceChargeEntityTest extends TestCase
         $allowanceCharge->setTaxRateId(222);
         
         // Verify changes
-        $this->assertSame('111', $allowanceCharge->getId());
+        $this->assertSame('111', $allowanceCharge->reqId());
         $this->assertFalse($allowanceCharge->getIdentifier());
         $this->assertSame(0, $allowanceCharge->getLevel());
         $this->assertSame('MOD', $allowanceCharge->getReasonCode());

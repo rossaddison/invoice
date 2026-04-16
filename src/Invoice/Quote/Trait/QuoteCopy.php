@@ -259,7 +259,7 @@ trait QuoteCopy
             $acqItem->setQuoteId((int) $new_quote_id);
             $acqItem->setQuoteItemId((int) $newQuoteItem->getId());
             $acqItem->setAllowanceChargeId(
-                (int) $quoteItemAllowanceCharge->getAllowanceCharge()?->getId()
+                (int) $quoteItemAllowanceCharge->getAllowanceCharge()?->reqId()
             );
 
             // Set other properties

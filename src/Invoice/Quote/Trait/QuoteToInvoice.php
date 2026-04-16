@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
+use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\{
-    CustomField, Inv, InvAllowanceCharge, InvAmount, InvCustom, InvItem,
+    CustomField, Inv, InvAmount, InvCustom, InvItem,
     InvTaxRate, QuoteCustom, QuoteItem, QuoteTaxRate,
 };
 use App\Invoice\{

@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository::class)]
+#[Entity(repository: ACIIR::class)]
 class InvItemAllowanceCharge
 {
-    #[BelongsTo(target: AllowanceCharge::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: AllowanceCharge::class, nullable: false,
+        fkAction: 'NO ACTION')]
     private ?AllowanceCharge $allowance_charge = null;
 
-    #[BelongsTo(target: InvItem::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(target: InvItem::class, nullable: false,
+        fkAction: 'NO ACTION')]
     private ?InvItem $inv_item = null;
 
     #[BelongsTo(target: Inv::class, nullable: false, fkAction: 'NO ACTION')]

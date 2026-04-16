@@ -7,9 +7,8 @@ namespace App\Invoice\Quote;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Widget\FormFields;
-use App\Invoice\Entity\{Quote, QuoteItem, QuoteTaxRate,
-    TaxRate,
-};
+use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Invoice\Entity\{Quote, QuoteItem, QuoteTaxRate};
 use App\User\UserService;
 use App\User\User;
 use App\Invoice\{
@@ -149,15 +148,15 @@ final class QuoteController extends BaseController
         }
     }
 
-    private function defaultTaxQuote(?TaxRate $taxrate,
+    private function defaultTaxQuote(?TaxRate $taxRate,
             Quote $quote, FormHydrator $formHydrator): void
     {
         $quoteTaxRate = new QuoteTaxRate();
         $quoteTaxRateForm = new QuoteTaxRateForm($quoteTaxRate);
         $quote_tax_rate = [];
         $quote_tax_rate['quote_id'] = $quote->getId();
-        if (null !== $taxrate) {
-            $quote_tax_rate['tax_rate_id'] = $taxrate->getTaxRateId();
+        if (null !== $taxRate) {
+            $quote_tax_rate['tax_rate_id'] = $taxRate->reqId();
         } else {
             $quote_tax_rate['tax_rate_id'] = 1;
         }

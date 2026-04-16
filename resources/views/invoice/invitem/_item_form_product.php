@@ -57,7 +57,8 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
 ->open() ?>
 
         <?= Html::openTag('div', ['class' => 'table-striped table-responsive']); ?>
-            <?= Html::openTag('table', ['id' => 'item_table', 'class' => 'items table-primary table table-bordered no-margin']); ?>
+            <?= Html::openTag('table', ['id' => 'item_table',
+                'class' => 'items table-primary table table-bordered no-margin']); ?>
                 <?= Html::openTag('tbody', ['id' => 'new_inv_item_row']); ?>
                     <?= Html::openTag('tr'); ?>
                         <?= Html::openTag('td', ['rowspan' => '2', 'class' => 'td-icon']); ?>
@@ -68,10 +69,14 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                         <?=  new I()
                                     ->addAttributes([
                                         'title' => $translator->translate('recurring'),
-                                        'class' => 'js-item-recurrence-toggler cursor-pointer bi bi-calendar text-muted',
+                                        'class' => 'js-item-recurrence-toggler'
+                                        . ' cursor-pointer bi bi-calendar text-muted',
                                     ]);
                                     ?>
-                                        <?= Html::openTag('input', ['type' => 'hidden', 'name' => 'is_recurring', 'value' => '/']); ?>
+                                        <?= Html::openTag('input',
+                                                ['type' => 'hidden',
+                                                    'name' => 'is_recurring',
+                                                    'value' => '/']); ?>
                                 <?php endif; ?>
                         <?= Html::closeTag('td'); ?>
                         <?= Html::openTag('td', ['class' => 'td-text']); ?>
@@ -82,7 +87,8 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                             <?= Field::hidden($form, 'task_id')
                                 ->value('0')
                                 ->hideLabel(); ?>
-                            <?= Html::openTag('div', ['class' => 'input-group', 'id' => 'product-no-task']); ?>
+                            <?= Html::openTag('div', ['class' => 'input-group',
+                                'id' => 'product-no-task']); ?>
                                 <?php
                                     $optionsDataProduct = [];
 /**
@@ -128,7 +134,9 @@ foreach ($products as $product) {
          'class' => 'input-lg form-control amount has-feedback',
          'data-bs-toggle' => 'tooltip',
          'data-placement' => 'bottom',
-         'title' => $s->getSetting('currency_symbol') . ' ' . $translator->translate('per.item'),
+         'title' => $s->getSetting('currency_symbol')
+             . ' '
+             . $translator->translate('per.item'),
      ])
      ->value($numberHelper->formatAmount($form->getDiscountAmount() ?? 0.00)); ?>
                             <?= Html::closeTag('div'); ?>
@@ -138,15 +146,18 @@ foreach ($products as $product) {
                                 <?php
      $optionsDataTaxRate = [];
 /**
- * @var App\Invoice\Entity\TaxRate $taxRate
+ * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
  */
 foreach ($taxRates as $taxRate) {
-    $taxRateId = $taxRate->getTaxRateId();
+    $taxRateId = $taxRate->reqId();
     $taxRatePercent = $taxRate->getTaxRatePercent() ?? 0.00;
     $taxRateName = $taxRate->getTaxRateName() ?? '';
     $formattedNumber = $numberHelper->formatAmount($taxRatePercent);
-    if ((null !== $taxRateId) && ($taxRatePercent >= 0.00) && (strlen($taxRateName) > 0) && $formattedNumber >= 0.00) {
-        $optionsDataTaxRate[$taxRateId] = (string) $formattedNumber . '% - ' . $taxRateName;
+    if (($taxRatePercent >= 0.00)
+            && (strlen($taxRateName) > 0)
+            && $formattedNumber >= 0.00) {
+        $optionsDataTaxRate[$taxRateId] = (string) $formattedNumber
+            . '% - ' . $taxRateName;
     }
 }
 ?>
