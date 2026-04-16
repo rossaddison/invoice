@@ -12,8 +12,7 @@ use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Cycle\Writer\EntityWriter;
 
 /**
- * @template TEntity of
-    App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge
+ * @template TEntity of InvAllowanceCharge
  * @extends Select\Repository<TEntity>
  */
 final class InvAllowanceChargeRepository extends Select\Repository
