@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
@@ -86,7 +86,7 @@ final class InvForm extends FormModel
         $this->payment_method = $inv->getPaymentMethod();
         $this->creditinvoice_parent_id = (int) $inv->getCreditinvoiceParentId();
         /**
-         * Related logic: see App\Invoice\Entity\Client
+         * Related logic: see 
                 #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
                 private ?Client $client = null;
          */

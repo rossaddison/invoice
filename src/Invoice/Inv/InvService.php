@@ -173,9 +173,7 @@ final readonly class InvService
     {
         $client = 'client_id';
         if (isset($array[$client])) {
-            $model->setClient(
-                $this->cR->repoClientquery(
-                    (string) $array[$client]));
+            $model->setClient($this->cR->repoClientquery((int) $array[$client]));
         }
         $group = 'group_id';
         if (isset($array[$group])) {

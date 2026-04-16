@@ -67,7 +67,7 @@ trait Peppol
         if ($id) {
             $invoice = $invRepo->repoInvLoadInvAmountquery((string) $id);
             if ($invoice) {
-                $client_id = $invoice->getClient()?->reqClientId();
+                $client_id = $invoice->getClient()?->reqId();
                 $delLocId = $invoice->getDeliveryLocationId();
                 if (null !== $client_id) {
                     if ($this->peppolClientFullySetup(

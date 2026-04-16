@@ -43,7 +43,7 @@ class AllowanceCharge
         #[Column(type: 'integer(11)', nullable: false)]
         private int $base_amount = 0,
         #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $tax_rate_id = null)
+        private int $tax_rate_id = 0)
     {
     }
 
@@ -147,14 +147,14 @@ class AllowanceCharge
         return $this->tax_rate;
     }
 
-    public function setTaxrate(?TaxRate $taxrate): void
+    public function setTaxRate(?TaxRate $taxRate): void
     {
-        $this->tax_rate = $taxrate;
+        $this->tax_rate = $taxRate;
     }
 
-    public function getTaxRateId(): string
+    public function getTaxRateId(): int
     {
-        return (string) $this->tax_rate_id;
+        return $this->tax_rate_id;
     }
 
     public function setTaxRateId(int $tax_rate_id): void

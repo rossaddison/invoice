@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Widget;
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\Inv;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;

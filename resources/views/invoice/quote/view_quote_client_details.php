@@ -20,12 +20,12 @@ use App\Widget\LabelSwitch;
 
 <div class="col-xs-12 col-sm-6 col-md-5">
     <h3>
-        <a href="<?= $urlGenerator->generate('client/view', ['_language' => $_language, 'id' => (int) $quote->getClient()?->reqClientId()]); ?>">
+        <a href="<?= $urlGenerator->generate('client/view', ['_language' => $_language, 'id' => (int) $quote->getClient()?->reqId()]); ?>">
         <?= Html::encode($clientHelper->formatClient($quote->getClient())); ?>
         </a>
     </h3>
     <br>
-    <div id="pre_save_client_id" value="<?php echo $quote->getClient()?->reqClientId(); ?>" hidden></div>
+    <div id="pre_save_client_id" value="<?php echo $quote->getClient()?->reqId(); ?>" hidden></div>
     <div class="client-address">
         <span class="client-address-street-line-1">
             <?php echo null !== $quote->getClient()?->getClientAddress1() ? Html::encode($quote->getClient()?->getClientAddress1()) . '<br>' : ''; ?>

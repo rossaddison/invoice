@@ -193,7 +193,7 @@ trait Index
         Response
     {
         $body = $request->getQueryParams();
-        $client = $cR->repoClientquery((string) $body['client_id']);
+        $client = $cR->repoClientquery((int) $body['client_id']);
         $parameters = [
             'success' => 1,
             // Set a client id on quote/view.php so that details

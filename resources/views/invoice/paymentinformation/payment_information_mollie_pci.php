@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Label;
 
 /**
  * Related logic: see PaymentInformationController function mollieInForm
- * @var App\Invoice\Entity\Client $client_on_invoice
+ * @var App\Infrastructure\Persistence\Client\Client $client_on_invoice
  * @var App\Invoice\Entity\Inv $invoice
  *
  * Related logic: see config\common\params 'yiisoft/view'

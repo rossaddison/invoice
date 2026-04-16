@@ -6,7 +6,7 @@ namespace App\Invoice\Report;
 
 use App\Invoice\BaseController;
 // Entites
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\Payment;
 // Repositories
@@ -129,22 +129,22 @@ class ReportController extends BaseController
             foreach ($clients as $client) {
                 $row['client'] = $clienthelper->formatClient($client);
                 if (null !== $fifteens) {
-                    $row['range_1'] = $numberhelper->formatAmount($this->invoiceAgingSum($fifteens, $client->reqClientId()));
+                    $row['range_1'] = $numberhelper->formatAmount($this->invoiceAgingSum($fifteens, $client->reqId()));
                 } else {
                     $row['range_1'] = 0.00;
                 }
                 if (null !== $thirties) {
-                    $row['range_2'] = $numberhelper->formatAmount($this->invoiceAgingSum($thirties, $client->reqClientId()));
+                    $row['range_2'] = $numberhelper->formatAmount($this->invoiceAgingSum($thirties, $client->reqId()));
                 } else {
                     $row['range_2'] = 0.00;
                 }
                 if (null !== $overthirties) {
-                    $row['range_3'] = $numberhelper->formatAmount($this->invoiceAgingSum($overthirties, $client->reqClientId()));
+                    $row['range_3'] = $numberhelper->formatAmount($this->invoiceAgingSum($overthirties, $client->reqId()));
                 } else {
                     $row['range_3'] = 0.00;
                 }
                 if (null !== $one_to_year) {
-                    $row['total_balance'] = $numberhelper->formatAmount($this->invoiceAgingSum($one_to_year, $client->reqClientId()));
+                    $row['total_balance'] = $numberhelper->formatAmount($this->invoiceAgingSum($one_to_year, $client->reqId()));
                 } else {
                     $row['total_balance'] = 0.00;
                 }
@@ -420,7 +420,7 @@ class ReportController extends BaseController
          * @var Client $client
          */
         foreach ($clients as $client) {
-            $client_id = $client->reqClientId();
+            $client_id = $client->reqId();
             // Client Name and Surname
             $row['client_name_surname'] = $clienthelper->formatClient($client);
             $row['inv_count'] = $iR->repoCountByClient($client_id);
@@ -804,7 +804,7 @@ class ReportController extends BaseController
                 $immutable_to = $dateHelper->ymdToImmutable($to);
                 $interval = new \DateInterval('P1Y');
                 $daterange = new \DatePeriod($immutable_from, $interval, $immutable_to);
-                $client_id = $client->reqClientId();
+                $client_id = $client->reqId();
                 foreach ($daterange as $current_year) {
                     $additional_year = $this->quarters($year, $immutable_from, $current_year, $client, $clientHelper, $client_id, $iR, $iaR);
                     $results[] = $additional_year;

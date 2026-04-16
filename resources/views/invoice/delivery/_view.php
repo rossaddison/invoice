@@ -112,13 +112,18 @@ use Yiisoft\Html\Tag\Form;
             <?php
     if ($del_count > 0) {
         $optionsDataDel = [];
-        /**
-         * @var App\Invoice\Entity\DeliveryLocation $del
-         */
+/**
+ * @var App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation $del
+ */
         foreach ($dels as $del) {
-            if (null !== $delId = $del->getId()) {
-                $optionsDataDel[$delId] = ($del->getAddress1() ?? '') . ', ' . ($del->getAddress2() ?? '') . ', ' . ($del->getCity() ?? '') . ', ' . ($del->getZip() ?? '');
-            }
+            $optionsDataDel[$del->reqId()] = ($del->getAddress1() ?? '')
+                    . ', '
+                    . ($del->getAddress2() ?? '')
+                    . ', '
+                    . ($del->getCity() ?? '')
+                    . ', '
+                    . ($del->getZip() ?? '');
+            
         }
         echo Field::select($form, 'delivery_location_id')
         ->label($translator->translate('delivery.location'))

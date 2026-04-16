@@ -52,10 +52,10 @@ use Yiisoft\Html\Tag\Form;
                 <?php
     $optionsDataClient = [];
 /**
- * @var App\Invoice\Entity\Client $client
+ * @var App\Infrastructure\Persistence\Client\Client $client
  */
 foreach ($clients as $client) {
-    $clientId = $client->reqClientId(); 
+    $clientId = $client->reqId(); 
     $optionsDataClient[$clientId] = $client->getClientName()
             . ' '
             . ($client->getClientSurname() ?? '#');

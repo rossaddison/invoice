@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice;
 
 use App\Auth\Permissions;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\Family;
 use App\Invoice\Entity\Group;
 use App\Invoice\Entity\PaymentMethod;
@@ -1230,7 +1230,7 @@ final class InvoiceController extends BaseController
         $client->setClientSurname('Client');
         $client->setClientEmail('email@email.com');
         $client->setClientLanguage('Japanese');
-        $client->setClientBirthdate(new \DateTime());
+        $client->setClientBirthdate(new \DateTimeImmutable());
         $client->setClientGender(2);
         $cR->save($client);
     }
@@ -1246,7 +1246,7 @@ final class InvoiceController extends BaseController
         $client->setClientSurname('Foreign');
         $client->setClientEmail('email@foreign.com');
         $client->setClientLanguage('English');
-        $client->setClientBirthdate(new \DateTime());
+        $client->setClientBirthdate(new \DateTimeImmutable());
         $client->setClientGender(2);
         $cR->save($client);
     }

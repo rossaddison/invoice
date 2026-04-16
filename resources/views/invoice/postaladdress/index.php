@@ -48,9 +48,9 @@ $columns = [
         'client_id',
         header: $translator->translate('client.name'),
         content: static function (PostalAddress $model) use ($cR): string {
-            $clientName = ($cR->repoClientCount($model->getClientId()) > 0 ?
+            $clientName = ($cR->repoClientCount((int)$model->getClientId()) > 0 ?
                 Html::encode(
-                    ($cR->repoClientquery(
+                    ($cR->repoClientquery((int)
                             $model->getClientId()))->getClientName()) : '');
             return $clientName;
         },
@@ -61,8 +61,8 @@ $columns = [
         content: static function (PostalAddress $model) use ($cR): string {
             $clientId = $model->getClientId();
             if ($clientId) {
-                $clientSurname = ($cR->repoClientCount($clientId) > 0 ?
-                    Html::encode(($cR->repoClientquery($clientId))->getClientSurname())
+                $clientSurname = ($cR->repoClientCount((int) $clientId) > 0 ?
+                    Html::encode(($cR->repoClientquery((int) $clientId))->getClientSurname())
                         : '');
                 return $clientSurname;
             }
@@ -74,7 +74,7 @@ $columns = [
         header: $translator->translate('active'),
         content: static function (PostalAddress $model)
             use ($cR, $urlGenerator): Yiisoft\Html\Tag\A|string {
-            $client = $cR->repoClientquery($model->getClientId());
+            $client = $cR->repoClientquery((int) $model->getClientId());
             if (null !== $client->getPostaladdressId()
                     && $client->getPostaladdressId() > 0) {
                 return 'Postal Address Used';

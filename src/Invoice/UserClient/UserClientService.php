@@ -26,11 +26,9 @@ final readonly class UserClientService
             $model->setUser($user);
             $model->setUserId((int) $user->getId());
         }
-        $client = $this->cR->repoClientquery(
-            (string) $array['client_id']
-        );
+        $client = $this->cR->repoClientquery((int) $array['client_id']);
         $model->setClient($client);
-        $model->setClientId($client->reqClientId());
+        $model->setClientId($client->reqId());
     }
 
     /**

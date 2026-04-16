@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html as H;
-use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 use Yiisoft\Html\Tag\Form;
 
@@ -112,16 +111,16 @@ echo H::openTag('div', ['class' => 'card-header']); //4
          'class' => 'form-control form-control-lg',
          'disabled' => true,
         ]); //10
-         /**
-          * @var App\Invoice\Entity\DeliveryLocation $del
-          */
+/**
+ * @var App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation $del
+ */
          foreach ($dels as $del) {
           $delAddress1 = $del->getAddress1();
           $delAddress2 = $del->getAddress2();
           $delCity     = $del->getCity();
           $delZip      = $del->getZip();
           echo new Option()
-           ->value((string) $del->getId())
+           ->value((string) $del->reqId())
            ->selected(true)
            ->content(
             (null !== $delAddress1 ? $delAddress1 : '') . ', '

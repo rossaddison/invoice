@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Img;
 /**
  * Related logic: see App\Invoice\Helpers\PdfHelper generate_inv_html
  * Related logic: see InvController function urlKey
- * @var App\Invoice\Entity\Client $client
+ * @var App\Infrastructure\Persistence\Client\Client $client
  * @var App\Invoice\Entity\Inv $inv
  * @var App\Invoice\Entity\InvAmount $inv_amount
  * @var App\Invoice\Entity\PaymentMethod $payment_method

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Infrastructure\Persistence\Client\Client;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -19,9 +20,13 @@ class ClientNote
     #[Column(type: 'primary')]
     private ?int $id = null;
 
-    public function __construct(#[Column(type: 'integer(11)', nullable: false)]
-        private ?int $client_id = null, #[Column(type: 'longText', nullable: false)]
-        private string $note = '', #[Column(type: 'date', nullable: false)]
+    public function __construct(
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $client_id = null,
+        #[Column(type: 'longText', nullable: false)]
+        private string $note = '',
+        #[Column(type: 'date', nullable: false)]
         private mixed $date_note = '')
     {
     }

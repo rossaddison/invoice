@@ -17,7 +17,7 @@ class CategoryPrimaryEntityTest extends TestCase
     {
         $categoryPrimary = new CategoryPrimary();
         
-        $this->assertNull($categoryPrimary->getId());
+        $this->assertFalse($categoryPrimary->isPersisted());
         $this->assertSame('', $categoryPrimary->getName());
     }
 
@@ -25,7 +25,7 @@ class CategoryPrimaryEntityTest extends TestCase
     {
         $categoryPrimary = new CategoryPrimary('Electronics');
         
-        $this->assertNull($categoryPrimary->getId());
+        $this->assertFalse($categoryPrimary->isPersisted());
         $this->assertSame('Electronics', $categoryPrimary->getName());
     }
 
@@ -33,15 +33,19 @@ class CategoryPrimaryEntityTest extends TestCase
     {
         $categoryPrimary = new CategoryPrimary('');
         
-        $this->assertNull($categoryPrimary->getId());
+        $this->assertFalse($categoryPrimary->isPersisted());
         $this->assertSame('', $categoryPrimary->getName());
     }
 
-    public function testGetIdReturnsNull(): void
+    public function testPersistenceCheck(): void
     {
         $categoryPrimary = new CategoryPrimary();
         
-        $this->assertNull($categoryPrimary->getId());
+        $this->assertFalse($categoryPrimary->isPersisted());
+        
+        // After construction with name, should still not be persisted
+        $categoryPrimary->setName('Test');
+        $this->assertFalse($categoryPrimary->isPersisted());
     }
 
     public function testNameSetterAndGetter(): void
@@ -315,18 +319,18 @@ class CategoryPrimaryEntityTest extends TestCase
     {
         $categoryPrimary = new CategoryPrimary('Test');
         
-        // ID should remain null after construction and name changes
-        $this->assertNull($categoryPrimary->getId());
+        // Entity should remain unpersisted after construction and name changes
+        $this->assertFalse($categoryPrimary->isPersisted());
         
         $categoryPrimary->setName('Updated Name');
-        $this->assertNull($categoryPrimary->getId());
+        $this->assertFalse($categoryPrimary->isPersisted());
     }
 
     public function testMethodReturnTypes(): void
     {
         $categoryPrimary = new CategoryPrimary('Electronics');
         
-        $this->assertNull($categoryPrimary->getId());
+        $this->assertFalse($categoryPrimary->isPersisted());
         $this->assertIsString($categoryPrimary->getName());
     }
 
@@ -612,16 +616,16 @@ class CategoryPrimaryEntityTest extends TestCase
         
         // Verify initial state
         $this->assertSame($this->initialCategory, $categoryPrimary->getName());
-        $this->assertNull($categoryPrimary->getId());
+        $this->assertFalse($categoryPrimary->isPersisted());
         
         // Change name
         $categoryPrimary->setName($this->updatedCategory);
         $this->assertSame($this->updatedCategory, $categoryPrimary->getName());
-        $this->assertNull($categoryPrimary->getId());
+        $this->assertFalse($categoryPrimary->isPersisted());
         
         // Set empty name
         $categoryPrimary->setName('');
         $this->assertSame('', $categoryPrimary->getName());
-        $this->assertNull($categoryPrimary->getId());
+        $this->assertFalse($categoryPrimary->isPersisted());
     }
 }

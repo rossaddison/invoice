@@ -6,7 +6,7 @@ namespace App\Invoice\ProductClient;
 
 use App\Invoice\BaseController;
 use App\Invoice\Entity\ProductClient;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\ProductClient\ProductClientForm;
 use App\Invoice\ProductClient\ProductClientService;
 use App\Invoice\ProductClient\ProductClientRepository;
@@ -132,8 +132,8 @@ final class ProductClientController extends BaseController
             if ($associationType === 'existing') {
                 // Associate with existing client
                 $clientId = (int)($body['client_id'] ?? 0);
-                if ($clientRepository->repoClientCount((string) $clientId) > 0) {
-                    $client = $clientRepository->repoClientQuery((string) $clientId);
+                if ($clientRepository->repoClientCount($clientId) > 0) {
+                    $client = $clientRepository->repoClientQuery($clientId);
                     // Save client group for future suggestions
                     if (strlen($clientGroup = ($client->getClientGroup() ?? '')) > 0) {
                         $this->saveClientGroupToSession($clientGroup);
@@ -158,7 +158,7 @@ final class ProductClientController extends BaseController
                     }
 
                     // Create association
-                    $clientId = $newClient->reqClientId();
+                    $clientId = $newClient->reqId();
                     $this->createProductClientAssociation($currentProductId,
                         $clientId);
 
@@ -492,7 +492,7 @@ final class ProductClientController extends BaseController
             $status = $client->getClientActive() ?
                 $this->translator->translate('active') :
                 $this->translator->translate('inactive');
-            $options[(string) $client->reqClientId()] =
+            $options[(string) $client->reqId()] =
                 $client->getClientName()
                     . ' '
                     . ($client->getClientSurname()

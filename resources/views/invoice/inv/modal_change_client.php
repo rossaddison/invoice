@@ -17,22 +17,32 @@ declare(strict_types=1);
     <div class="modal-dialog">
         <div class="modal-content">
            <div class="modal-header">
-               <h5 class="modal-title"><?= $translator->translate('change.client'); ?></h5>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               <h5 class="modal-title">
+                    <?= $translator->translate('change.client'); ?>
+               </h5>
+               <button type="button"
+                       class="btn-close"
+                       data-bs-dismiss="modal"
+                   aria-label="Close">
+               </button>
             </div>
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
                     <div class="form-group">
-                        <label for="change_client_id"><?= $translator->translate('client'); ?></label>
-                        <select name="change_client_id" id="change_client_id" class="form-control form-control-lg">
+                        <label for="change_client_id">
+                            <?= $translator->translate('client'); ?>
+                        </label>
+                        <select name="change_client_id"
+                                id="change_client_id"
+                                class="form-control form-control-lg">
                             <option value="0"><?= $translator->translate('none'); ?></option>
                                 <?php
-                                    /**
-                                     * @var App\Invoice\Entity\Client $client
-                                     */
+/**
+ * @var App\Infrastructure\Persistence\Client\Client $client
+ */
                                     foreach ($clients as $client) { ?>
-                                    <option value="<?= $client->reqClientId(); ?>">
+                                    <option value="<?= $client->reqId(); ?>">
                                         <?= $client->getClientName() ?: '#'; ?>
                                     </option>
                                 <?php } ?>
@@ -43,8 +53,10 @@ declare(strict_types=1);
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
-                    <button class="client_change_confirm btn btn-success" id="client_change_confirm" type="button">
-                        <i class="bi bi-check-lg"></i> <?= $translator->translate('submit'); ?>
+                    <button class="client_change_confirm btn btn-success"
+                            id="client_change_confirm" type="button">
+                        <i class="bi bi-check-lg"></i>
+                            <?= $translator->translate('submit'); ?>
                     </button>
                 </div>
             </div>

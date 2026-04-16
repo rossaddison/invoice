@@ -104,7 +104,7 @@ if ($openInvsCount > 0) {
             $optionsDataInvId[(int) $inv->getId()]
                = ($inv->getNumber() ?? $translator->translate('number.no'))
                . ' - '
-               . ($clientHelper->formatClient($cR->repoClientquery($inv->getClientId())))
+               . ($clientHelper->formatClient($cR->repoClientquery((int) $inv->getClientId())))
                . ' - '
                . ($numberHelper->formatCurrency($invAmount->getBalance()));
         }

@@ -84,7 +84,7 @@ trait Add
                                          . ($client_surname ?? '');
                     } else {
                         $this->flashMessage('danger',
-                            $clientRepository->repoClientquery($client_id)
+                            $clientRepository->repoClientquery((int) $client_id)
                                 ->getClientFullName() . ': '
                                     . $this->translator->translate(
                                         'user.client.no.account'));

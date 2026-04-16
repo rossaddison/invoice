@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Infrastructure\Persistence\Client\Client;
+use App\Invoice\Entity\CustomField;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -17,10 +19,16 @@ class ClientCustom
     #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $client_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $client_id = null,
+        #[Column(type: 'integer(11)',
+        nullable: false)]
+        private ?int $custom_field_id = null,
+        #[Column(type: 'text', nullable: true)]
         private ?string $value = null)
     {
     }

@@ -10,9 +10,10 @@ use Yiisoft\Files\FileHelper;
 use Yiisoft\Security\Random;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 // Entities
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation as DL; 
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\{Inv, InvItem, InvItemAllowanceCharge,
-InvAmount, InvItemAmount, DeliveryLocation as DL, Upload};
+InvAmount, InvItemAmount, Upload};
 use App\Invoice\Helpers\{CountryHelper, DateHelper, NumberHelper};
 use App\Invoice\Libraries\PeppolUblXml;
 use App\Invoice\{Setting\SettingRepository as SRepo,
@@ -944,7 +945,7 @@ class PeppolHelper
         if ($client) {
             $postaladdress_id = $client->getPostaladdressId();
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                            (string) $client->reqClientId());
+                                            (string) $client->reqId());
             if (null == $postaladdress_id) {
                 throw new BuyerPostAddNf();
             }
@@ -1069,7 +1070,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         $client = $invoice->getClient();
         if (null !== $client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                               (string) $client->reqClientId());
+                                               (string) $client->reqId());
             if (null === $client_peppol) {
                 throw new ClientNf($this->t);
             }
@@ -1133,7 +1134,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         $client = $invoice->getClient();
         if ($client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                                (string) $client->reqClientId());
+                                                (string) $client->reqId());
             if ($client_peppol) {
                 $invoiceLines = [];
                 $b = Schema::CBC;
@@ -1541,7 +1542,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
     {
         $client = $invoice->getClient();
         if (null !== $client) {
-            $client_id = $client->reqClientId();
+            $client_id = $client->reqId();
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
                                                         (string) $client_id);
             if (null !== $client_peppol) {
@@ -1682,7 +1683,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         $client = $invoice->getClient();
         if (null !== $client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                    (string) $client->reqClientId());
+                    (string) $client->reqId());
             $supplier_assigned_account_id = null !== $client_peppol ?
                     $client_peppol->getSupplierAssignedAccountId()
               : throw new ClientIdNf($this->t);

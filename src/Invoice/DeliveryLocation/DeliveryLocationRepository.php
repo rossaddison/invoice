@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\DeliveryLocation;
 
-use App\Invoice\Entity\DeliveryLocation;
+use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 

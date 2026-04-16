@@ -20,23 +20,36 @@ use Yiisoft\Html\Html;
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-               <h5 class="modal-title"><?php echo $translator->translate('copy.invoice'); ?></h5>
-               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               <h5 class="modal-title">
+                    <?php echo $translator->translate('copy.invoice'); ?>
+               </h5>
+               <button type="button"
+                       class="btn-close"
+                       data-bs-dismiss="modal"
+                       aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="user_id" id="user_id" value="<?= $inv->getUserId(); ?>">
+                    <input type="hidden"
+                           name="user_id"
+                           id="user_id"
+                           value="<?= $inv->getUserId(); ?>">
                     <div class="form-group">
-                        <label for="create_inv_client_id"><?= $translator->translate('client'); ?></label>
-                        <select name="create_inv_client_id" id="create_inv_client_id" class="form-control form-control-lg">
-                            <option value="<?= $inv->getClient()?->reqClientId(); ?>"><?= $inv->getClient()?->getClientName() ?? '#'; ?></option>
+                        <label for="create_inv_client_id">
+                            <?= $translator->translate('client'); ?>
+                        </label>
+                        <select name="create_inv_client_id"
+                                id="create_inv_client_id"
+                                class="form-control form-control-lg">
+                            <option value="<?= $inv->getClient()?->reqId(); ?>">
+                        <?= $inv->getClient()?->getClientName() ?? '#'; ?></option>
                                 <?php
-                                    /**
-                                     * @var App\Invoice\Entity\Client $client
-                                     */
+/**
+* @var App\Infrastructure\Persistence\Client\Client $client
+*/
                                     foreach ($clients as $client) { ?>
-                                    <option value="<?= $client->reqClientId(); ?>">
+                                    <option value="<?= $client->reqId(); ?>">
                                         <?= Html::encode($client->getClientName()); ?>
                                     </option>
                                 <?php } ?>
@@ -45,10 +58,17 @@ use Yiisoft\Html\Html;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?= $translator->translate('cancel'); ?></button>
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                                <?= $translator->translate('cancel'); ?>
+                </button>
                 <!-- inv.js inv_to_inv_confirm, InvController function invToInvConfirm -->
-                <button type="button" class="inv_to_inv_confirm btn btn-success" id="inv_to_inv_confirm">
-                    <i class="bi bi-check-lg"></i> <?= $translator->translate('submit'); ?>
+                <button type="button"
+                        class="inv_to_inv_confirm btn btn-success"
+                        id="inv_to_inv_confirm">
+                    <i class="bi bi-check-lg"></i>
+                        <?= $translator->translate('submit'); ?>
                 </button>
             </div>
         </div>

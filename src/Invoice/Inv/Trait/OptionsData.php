@@ -6,9 +6,14 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Invoice\Entity\
 {
-    Client, Contract, Delivery, DeliveryLocation, Group,
-    Inv, PaymentMethod, PostalAddress, Setting, TaxRate, Upload,
+    Contract, Delivery, Group,
+    Inv, PaymentMethod, PostalAddress, Setting, Upload,
     UserClient
+};
+use App\Infrastructure\Persistence\{
+    Client\Client,
+    DeliveryLocation\DeliveryLocation,
+    TaxRate\TaxRate
 };
 use App\Invoice\{
     Client\ClientRepository as CR,
@@ -88,13 +93,12 @@ trait OptionsData
          * @var DeliveryLocation $dLoc
          */
         foreach ($dLocs as $dLoc) {
-            $dLocId = $dLoc->getId();
-            if (null !== $dLocId) {
-                $optionsDataDeliveryLocations[$dLocId] = ($dLoc->getAddress1()
-                    ?? '') . ', ' . ($dLoc->getAddress2() ?? '') . ', '
-                        . ($dLoc->getCity() ?? '') . ', '
-                        . ($dLoc->getZip() ?? '');
-            }
+            $dLocId = $dLoc->reqId();
+            $optionsDataDeliveryLocations[$dLocId] = ($dLoc->getAddress1()
+                ?? '') . ', ' . ($dLoc->getAddress2() ?? '') . ', '
+                    . ($dLoc->getCity() ?? '') . ', '
+                    . ($dLoc->getZip() ?? '');
+            
         }
         $optionsDataGroup = [];
         /**

@@ -98,7 +98,7 @@ trait Attachment
             }
             $invoice = $iR->repoInvLoadedquery((string) $inv_id) ?: null;
             if ($invoice instanceof Inv) {
-                $client_id = $invoice->getClient()?->reqClientId();
+                $client_id = $invoice->getClient()?->reqId();
                 if (null !== $client_id) {
                     $url_key = $invoice->getUrlKey();
                     if (!empty($_FILES)) {

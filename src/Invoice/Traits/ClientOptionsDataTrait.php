@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Traits;
 
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Entity\PostalAddress;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -93,7 +94,7 @@ trait ClientOptionsDataTrait
         $optionsDataClientName = [];
         $clients = $cR->findAllPreloaded();
         /**
-         * @var \App\Invoice\Entity\Client $client
+         * @var Client $client
          */
         foreach ($clients as $client) {
             $firstname = $client->getClientName();
@@ -111,7 +112,7 @@ trait ClientOptionsDataTrait
         $optionsDataClientSurname = [];
         $clients = $cR->findAllPreloaded();
         /**
-         * @var \App\Invoice\Entity\Client $client
+         * @var Client $client
          */
         foreach ($clients as $client) {
             $surname = $client->getClientSurname();

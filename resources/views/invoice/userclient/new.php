@@ -8,7 +8,6 @@ use Yiisoft\Security\Random;
 
 /**
  * @var App\Invoice\Entity\UserInv $userinv
- * @var App\Invoice\Entity\Client $client
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
@@ -73,10 +72,10 @@ if ($clients) {
     $optionsDataClient = [];
     /**
      * @var Yiisoft\Data\Cycle\Reader\EntityReader|array $clients
-     * @var App\Invoice\Entity\Client $client
+     * @var App\Infrastructure\Persistence\Client\Client $client
      */
     foreach ($clients as $client) {
-        $optionsDataClient[$client->reqClientId()] = Html::encode(
+        $optionsDataClient[$client->reqId()] = Html::encode(
             $clientHelper->formatClient($client));
     }
     echo Field::select($form, 'client_id')

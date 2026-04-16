@@ -107,7 +107,7 @@ final class ContractController extends BaseController
         $contract->setClientId((int) $client_id);
         $form = new ContractForm($contract);
         if (null !== $client_id) {
-            $title = $cR->repoClientquery($client_id)->getClientName();
+            $title = $cR->repoClientquery((int) $client_id)->getClientName();
         } else {
             $title = $this->translator->translate('not.available');
         }

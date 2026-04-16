@@ -15,7 +15,7 @@ use Brick\Money\Money;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 // Entities
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
-use App\Invoice\Entity\DeliveryLocation as DL;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation as DL;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvItemAllowanceCharge;
@@ -117,7 +117,7 @@ final readonly class StoreCoveHelper
         $client = $invoice->getClient();
         if (null !== $client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                (string) $client->reqClientId());
+                (string) $client->reqId());
             if (null === $client_peppol) {
                 throw new PeppolClientNotFoundException($this->t);
             }
@@ -597,7 +597,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         $client = $invoice->getClient();
         if ($client) {
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                (string) $client->reqClientId());
+                (string) $client->reqId());
             if ($client_peppol) {
                 $invoiceLines = [];
                 /**
@@ -715,7 +715,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         if ($client) {
             $postaladdress_id = $client->getPostaladdressId();
             $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                               (string) $client->reqClientId());
+                                               (string) $client->reqId());
             if (null == $postaladdress_id) {
                 throw new PeppolBuyerPostalAddressNotFoundException();
             }
@@ -1086,7 +1086,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         $countrySubEntity = $this->delivery_location->getState();
         $country_name = $this->delivery_location->getCountry();
         /**
-         * Related logic: see App\Invoice\Entity\DeliveryLocation
+         * Related logic: see DeliveryLocation
          */
         if (null !== $country_name) {
             return $this->ublDeliveryLocation(
@@ -1249,7 +1249,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
     {
         $client = $invoice->getClient();
         if (null !== $client) {
-            $client_id = $client->reqClientId();
+            $client_id = $client->reqId();
             $client_peppol = $cpR->repoClientPeppolLoadedquery((string) $client_id);
             if (null !== $client_peppol) {
                 return $client_peppol->getBuyerReference();

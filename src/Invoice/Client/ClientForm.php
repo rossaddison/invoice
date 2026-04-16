@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Client;
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Integer;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\UserClient;
 
 use App\Invoice\Entity\UserClient;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\UserClient\UserClientService as UCS;
 use App\Invoice\UserInv\UserInvRepository as UIR;
@@ -201,7 +201,7 @@ final class UserClientRepository extends Select\Repository
         $every_client_ids = [];
         /** @var Client $client */
         foreach ($all_clients as $client) {
-            $client_id = $client->reqClientId();
+            $client_id = $client->reqId();
             // Exclude clients, that already have user accounts, from the dropdown box
             // if the client id does not appear in the user client table as a client
             // => this client has not been already assigned therefore it can be made available
@@ -228,7 +228,7 @@ final class UserClientRepository extends Select\Repository
         $unassigned_client_ids = [];
         /** @var Client $client */
         foreach ($all_clients as $client) {
-            $client_id = $client->reqClientId();
+            $client_id = $client->reqId();
             // Exclude clients, that already have user accounts, from the dropdown box
             // if the client id does not appear in the user client table as a client
             // => this client has not been already assigned therefore it can be made available

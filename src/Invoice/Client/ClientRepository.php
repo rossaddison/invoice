@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Client;
 
 use Cycle\ORM\Select;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\UserClient\UserClientRepository;
 use Cycle\Database\Injection\Parameter;
 use Throwable;
@@ -109,12 +109,8 @@ final class ClientRepository extends Select\Repository
                 ->withOrder(['id' => 'asc']),
         );
     }
-
-    /**
-     * @param string $id
-     * @return int
-     */
-    public function repoClientCount(string $id): int
+    
+    public function repoClientCount(int $id): int
     {
         return $this->select()
                       ->where(['id' => $id])
@@ -126,7 +122,7 @@ final class ClientRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoClientqueryOrig(string $id): ?Client
+    public function repoClientqueryOrig(int $id): ?Client
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -138,7 +134,7 @@ final class ClientRepository extends Select\Repository
      *
      * @psalm-return TEntity
      */
-    public function repoClientquery(string $id): Client
+    public function repoClientquery(int $id): Client
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -187,7 +183,7 @@ final class ClientRepository extends Select\Repository
              */
             foreach ($this->repoUserClient($ucR->getClientsWithUserAccounts())
                     as $client) {
-                $optionsData[$client->reqClientId()] = ($client->getClientName()
+                $optionsData[$client->reqId()] = ($client->getClientName()
                     ?: '??')
                         . str_repeat(' ', 3)
                         . ($client->getClientSurname() ?? '??');

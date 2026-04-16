@@ -23,7 +23,7 @@ class AllowanceChargeEntityTest extends Unit
     {
         $allowanceCharge = new AllowanceCharge();
         
-        $this->assertSame('', $allowanceCharge->reqId());
+        $this->assertFalse($allowanceCharge->isPersisted());
         $this->assertFalse($allowanceCharge->getIdentifier());
         $this->assertSame(0, $allowanceCharge->getLevel());
         $this->assertSame('', $allowanceCharge->getReasonCode());
@@ -32,24 +32,34 @@ class AllowanceChargeEntityTest extends Unit
         $this->assertSame(0, $allowanceCharge->getAmount());
         $this->assertSame(0, $allowanceCharge->getBaseAmount());
         $this->assertNull($allowanceCharge->getTaxRate());
-        $this->assertSame('', $allowanceCharge->getTaxRateId());
+        $this->assertSame(0, $allowanceCharge->getTaxRateId());
+    }
+
+    public function testReqIdThrowsWhenNotPersisted(): void
+    {
+        $allowanceCharge = new AllowanceCharge();
+        
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('AllowanceCharge has no ID (not persisted yet)');
+        $allowanceCharge->reqId();
     }
 
     public function testConstructorWithAllParameters(): void
     {
         $allowanceCharge = new AllowanceCharge(
-            1,                  // id
-            true,               // identifier
-            1,                  // level
-            'REA',              // reason_code
-            'Test reason',      // reason
-            100,                // multiplier_factor_numeric
-            1000,               // amount
-            500,                // base_amount
-            2                   // tax_rate_id
+            1,
+            true,
+            1,
+            'REA',
+            'Test reason',
+            100,
+            1000,
+            500,
+            2
         );
         
-        $this->assertSame('1', $allowanceCharge->reqId());
+        $this->assertTrue($allowanceCharge->isPersisted());
+        $this->assertSame(1, $allowanceCharge->reqId());
         $this->assertTrue($allowanceCharge->getIdentifier());
         $this->assertSame(1, $allowanceCharge->getLevel());
         $this->assertSame('REA', $allowanceCharge->getReasonCode());
@@ -57,7 +67,7 @@ class AllowanceChargeEntityTest extends Unit
         $this->assertSame(100, $allowanceCharge->getMultiplierFactorNumeric());
         $this->assertSame(1000, $allowanceCharge->getAmount());
         $this->assertSame(500, $allowanceCharge->getBaseAmount());
-        $this->assertSame('2', $allowanceCharge->getTaxRateId());
+        $this->assertSame(2, $allowanceCharge->getTaxRateId());
     }
 
     public function testIdSetterAndGetter(): void
@@ -65,10 +75,11 @@ class AllowanceChargeEntityTest extends Unit
         $allowanceCharge = new AllowanceCharge();
         
         $allowanceCharge->setId(123);
-        $this->assertSame('123', $allowanceCharge->reqId());
+        $this->assertTrue($allowanceCharge->isPersisted());
+        $this->assertSame(123, $allowanceCharge->reqId());
         
         $allowanceCharge->setId(456);
-        $this->assertSame('456', $allowanceCharge->reqId());
+        $this->assertSame(456, $allowanceCharge->reqId());
     }
 
     public function testIdentifierSetterAndGetter(): void
@@ -86,10 +97,10 @@ class AllowanceChargeEntityTest extends Unit
     {
         $allowanceCharge = new AllowanceCharge();
         
-        $allowanceCharge->setLevel(0); // Overall
+        $allowanceCharge->setLevel(0);
         $this->assertSame(0, $allowanceCharge->getLevel());
         
-        $allowanceCharge->setLevel(1); // InvoiceLine
+        $allowanceCharge->setLevel(1);
         $this->assertSame(1, $allowanceCharge->getLevel());
     }
 
@@ -164,19 +175,30 @@ class AllowanceChargeEntityTest extends Unit
         $allowanceCharge = new AllowanceCharge();
         
         $allowanceCharge->setTaxRateId(5);
-        $this->assertSame('5', $allowanceCharge->getTaxRateId());
+        $this->assertSame(5, $allowanceCharge->getTaxRateId());
         
         $allowanceCharge->setTaxRateId(10);
-        $this->assertSame('10', $allowanceCharge->getTaxRateId());
+        $this->assertSame(10, $allowanceCharge->getTaxRateId());
+    }
+
+    public function testIsPersistedReturnsFalseByDefault(): void
+    {
+        $allowanceCharge = new AllowanceCharge();
+        $this->assertFalse($allowanceCharge->isPersisted());
+    }
+
+    public function testIsPersistedReturnsTrueAfterSetId(): void
+    {
+        $allowanceCharge = new AllowanceCharge();
+        $allowanceCharge->setId(1);
+        $this->assertTrue($allowanceCharge->isPersisted());
     }
 
     public function testReasonCodeFormats(): void
     {
         $allowanceCharge = new AllowanceCharge();
         
-        $reasonCodes = ['REA', 'DIS', 'CHG', 'SUP', 'TAX'];
-        
-        foreach ($reasonCodes as $code) {
+        foreach (['REA', 'DIS', 'CHG', 'SUP', 'TAX'] as $code) {
             $allowanceCharge->setReasonCode($code);
             $this->assertSame($code, $allowanceCharge->getReasonCode());
         }
@@ -255,19 +277,19 @@ class AllowanceChargeEntityTest extends Unit
     {
         $allowanceCharge = new AllowanceCharge();
         
-        // Setup a complete discount scenario
         $allowanceCharge->setId(1);
         $allowanceCharge->setIdentifier(true);
-        $allowanceCharge->setLevel(0); // Overall
+        $allowanceCharge->setLevel(0);
         $allowanceCharge->setReasonCode('DIS');
         $allowanceCharge->setReason('Volume discount for bulk purchase');
-        $allowanceCharge->setMultiplierFactorNumeric(10); // 10%
-        $allowanceCharge->setAmount(100); // €100 discount
-        $allowanceCharge->setBaseAmount(1000); // Based on €1000
+        $allowanceCharge->setMultiplierFactorNumeric(10);
+        $allowanceCharge->setAmount(100);
+        $allowanceCharge->setBaseAmount(1000);
         $allowanceCharge->setTaxRateId(1);
         $allowanceCharge->setTaxrate($this->taxRate);
         
-        $this->assertSame('1', $allowanceCharge->reqId());
+        $this->assertTrue($allowanceCharge->isPersisted());
+        $this->assertSame(1, $allowanceCharge->reqId());
         $this->assertTrue($allowanceCharge->getIdentifier());
         $this->assertSame(0, $allowanceCharge->getLevel());
         $this->assertSame('DIS', $allowanceCharge->getReasonCode());
@@ -275,7 +297,7 @@ class AllowanceChargeEntityTest extends Unit
         $this->assertSame(10, $allowanceCharge->getMultiplierFactorNumeric());
         $this->assertSame(100, $allowanceCharge->getAmount());
         $this->assertSame(1000, $allowanceCharge->getBaseAmount());
-        $this->assertSame('1', $allowanceCharge->getTaxRateId());
+        $this->assertSame(1, $allowanceCharge->getTaxRateId());
         $this->assertSame($this->taxRate, $allowanceCharge->getTaxRate());
     }
 
@@ -294,7 +316,6 @@ class AllowanceChargeEntityTest extends Unit
     {
         $allowanceCharge = new AllowanceCharge(1, true, 1, 'CHG', 'Test charge', 150, 750, 500, 3);
         
-        // Multiple calls should return same values
         $this->assertSame($allowanceCharge->reqId(), $allowanceCharge->reqId());
         $this->assertSame($allowanceCharge->getIdentifier(), $allowanceCharge->getIdentifier());
         $this->assertSame($allowanceCharge->getLevel(), $allowanceCharge->getLevel());
@@ -310,7 +331,6 @@ class AllowanceChargeEntityTest extends Unit
     {
         $allowanceCharge = new AllowanceCharge();
         
-        // Test toggling identifier
         $this->assertFalse($allowanceCharge->getIdentifier());
         $allowanceCharge->setIdentifier(!$allowanceCharge->getIdentifier());
         $this->assertTrue($allowanceCharge->getIdentifier());
@@ -322,10 +342,9 @@ class AllowanceChargeEntityTest extends Unit
     {
         $allowanceCharge = new AllowanceCharge();
         
-        // Test calculation: multiplier_factor_numeric x base_amount = amount
         $baseAmount = 1000;
-        $multiplier = 15; // 15%
-        $expectedAmount = 150; // 15% of 1000
+        $multiplier = 15;
+        $expectedAmount = 150;
         
         $allowanceCharge->setBaseAmount($baseAmount);
         $allowanceCharge->setMultiplierFactorNumeric($multiplier);
@@ -340,43 +359,34 @@ class AllowanceChargeEntityTest extends Unit
     {
         $allowanceCharge = new AllowanceCharge();
         
-        // Test fixed amount scenario (multiplier = 0 or 1, no calculation)
-        $fixedAmount = 50;
-        
-        $allowanceCharge->setAmount($fixedAmount);
+        $allowanceCharge->setAmount(50);
         $allowanceCharge->setMultiplierFactorNumeric(1);
-        $allowanceCharge->setBaseAmount(0); // Not used for fixed amounts
+        $allowanceCharge->setBaseAmount(0);
         
-        $this->assertSame($fixedAmount, $allowanceCharge->getAmount());
+        $this->assertSame(50, $allowanceCharge->getAmount());
         $this->assertSame(1, $allowanceCharge->getMultiplierFactorNumeric());
         $this->assertSame(0, $allowanceCharge->getBaseAmount());
     }
 
-    public function testIdStringConversion(): void
+    public function testIdIntType(): void
     {
         $allowanceCharge = new AllowanceCharge();
         
-        // Test that ID is always returned as string
-        $allowanceCharge->setId(0);
-        $this->assertSame('0', $allowanceCharge->reqId());
-        $this->assertIsString($allowanceCharge->reqId());
-        
         $allowanceCharge->setId(999);
-        $this->assertSame('999', $allowanceCharge->reqId());
-        $this->assertIsString($allowanceCharge->reqId());
+        $this->assertSame(999, $allowanceCharge->reqId());
+        $this->assertIsInt($allowanceCharge->reqId());
     }
 
     public function testTaxRateIdStringConversion(): void
     {
         $allowanceCharge = new AllowanceCharge();
         
-        // Test that TaxRateId is always returned as string
         $allowanceCharge->setTaxRateId(0);
-        $this->assertSame('0', $allowanceCharge->getTaxRateId());
-        $this->assertIsString($allowanceCharge->getTaxRateId());
+        $this->assertSame(0, $allowanceCharge->getTaxRateId());
+        $this->assertIsInt($allowanceCharge->getTaxRateId());
         
         $allowanceCharge->setTaxRateId(123);
-        $this->assertSame('123', $allowanceCharge->getTaxRateId());
-        $this->assertIsString($allowanceCharge->getTaxRateId());
+        $this->assertSame(123, $allowanceCharge->getTaxRateId());
+        $this->assertIsInt($allowanceCharge->getTaxRateId());
     }
 }

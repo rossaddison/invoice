@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -13,7 +13,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 /**
  * A list of clients that the guest user has
- * @var App\Invoice\Entity\Client $client
+ * @var App\Infrastructure\Persistence\Client\Client $client
  * @var App\Invoice\Entity\UserInv $userInv
  * @var App\Invoice\ClientPeppol\ClientPeppolRepository $cpR
  * @var App\Invoice\Inv\InvRepository $iR
@@ -43,7 +43,7 @@ $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn (Client $model) => (string) $model->reqClientId(),
+        content: static fn (Client $model) => (string) $model->reqId(),
         withSorting: true,
     ),
     new DataColumn(
@@ -78,7 +78,7 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
                     ->content(Html::encode($model->getClientName()))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->reqClientId()]))
+                    ->href($urlGenerator->generate('client/view', ['id' => $model->reqId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -90,7 +90,7 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return   new A()
                     ->content(Html::encode($model->getClientSurname() ?? ''))
-                    ->href($urlGenerator->generate('client/view', ['id' => $model->reqClientId()]))
+                    ->href($urlGenerator->generate('client/view', ['id' => $model->reqId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -108,7 +108,7 @@ $columns = [
     new DataColumn(
         'invs',
         content: static function (Client $model) use ($iR, $iaR): int {
-            $clientId = $model->reqClientId();
+            $clientId = $model->reqId();
             $invoices = $iR->findAllWithClient($clientId);
             /**
              *  Initialize the ArrayCollection
@@ -143,7 +143,7 @@ $columns = [
         'invs',
         content: static function (Client $model) use ($iR, $iaR,
         $urlGenerator, $gridComponents): string {
-            $clientId = $model->reqClientId(); 
+            $clientId = $model->reqId(); 
             $invoices = $iR->findAllWithClient($clientId);
             // Initialize a new empty ArrayCollection without the need to
             // create a new entity
@@ -180,7 +180,7 @@ $columns = [
             . $s->getSetting('currency_symbol')
             . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
-            $clientId = $model->reqClientId(); 
+            $clientId = $model->reqId(); 
             return Html::encode($s->formatCurrency(
                 $iR->withTotalBalance($clientId, $iaR)));
         },

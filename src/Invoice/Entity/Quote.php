@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Infrastructure\Persistence\Client\Client;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -268,7 +269,8 @@ class Quote
                 $days = $setting->getSettingValue() ?: 30;
             }
         }
-        $this->date_expires = (new DateTimeImmutable('now'))->add(new \DateInterval('P' . (string) $days . 'D'));
+        $this->date_expires = (new DateTimeImmutable('now'))
+                               ->add(new \DateInterval('P' . (string) $days . 'D'));
     }
 
     public function getDateExpires(): DateTimeImmutable

@@ -46,8 +46,7 @@ final readonly class InvSentLogService
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
-                $this->cR->repoClientquery(
-                    (string) $array[$client]));
+                $this->cR->repoClientquery((int) $array[$client]));
         }
         $inv = 'inv_id';
         if (isset($array[$inv])) {

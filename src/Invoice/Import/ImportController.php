@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Import;
 
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\BaseController;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -299,7 +300,7 @@ final class ImportController extends BaseController
          * @var array $client
          */
         foreach ($clients as $client) {
-            $newClient = new \App\Invoice\Entity\Client();
+            $newClient = new Client();
             $newClient->setClientDateCreated((string) $client['client_date_created']);
             $newClient->setClientDateModified((string) $client['client_date_modified']);
             $newClient->setClientName((string) $client['client_name']);
@@ -319,7 +320,7 @@ final class ImportController extends BaseController
             $newClient->setClientTaxCode((string) $client['client_tax_code']);
             $newClient->setClientLanguage((string) $client['client_language']);
             $newClient->setClientActive($client['client_active'] === '1' ? true : false);
-            $newClient->setClientBirthdate(new \DateTime((string) $client['client_birthdate']));
+            $newClient->setClientBirthdate(new \DateTimeImmutable((string) $client['client_birthdate']));
             $newClient->setClientGender((int) $client['client_gender']);
             $this->cR->save($newClient);
         }

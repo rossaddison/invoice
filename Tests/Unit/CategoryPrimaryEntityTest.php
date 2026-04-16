@@ -2,163 +2,142 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use Codeception\Test\Unit;
 
-final class CategoryPrimaryEntityTest extends Unit
+class CategoryPrimaryEntityTest extends Unit
 {
     public function testConstructorWithDefaults(): void
     {
         $category = new CategoryPrimary();
-        
-        $this->assertNull($category->getId());
+
+        $this->assertFalse($category->isPersisted());
         $this->assertSame('', $category->getName());
     }
 
     public function testConstructorWithName(): void
     {
         $category = new CategoryPrimary('Electronics');
-        
-        $this->assertNull($category->getId());
+
         $this->assertSame('Electronics', $category->getName());
     }
 
-    public function testIdGetter(): void
+    public function testConstructorWithNullName(): void
+    {
+        $category = new CategoryPrimary(null);
+
+        $this->assertNull($category->getName());
+    }
+
+    public function testReqIdThrowsWhenNotPersisted(): void
     {
         $category = new CategoryPrimary();
-        
-        $this->assertNull($category->getId());
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('CategoryPrimary has no ID (not persisted yet)');
+        $category->reqId();
+    }
+
+    public function testIsPersistedReturnsFalseByDefault(): void
+    {
+        $category = new CategoryPrimary();
+
+        $this->assertFalse($category->isPersisted());
     }
 
     public function testNameSetterAndGetter(): void
     {
         $category = new CategoryPrimary();
-        $category->setName('Books');
-        
-        $this->assertSame('Books', $category->getName());
+
+        $category->setName('Food & Beverage');
+        $this->assertSame('Food & Beverage', $category->getName());
+
+        $category->setName('Electronics');
+        $this->assertSame('Electronics', $category->getName());
     }
 
-    public function testPublicNameProperty(): void
+    public function testNameSetterOverridesConstructorValue(): void
     {
-        $category = new CategoryPrimary('Test Category');
-        
-        // Test that name property is accessible as public
-        $this->assertSame('Test Category', $category->name);
-        
-        // Test setting via public property
-        $category->name = 'Updated Category';
-        $this->assertSame('Updated Category', $category->getName());
+        $category = new CategoryPrimary('Original');
+
+        $category->setName('Updated');
+        $this->assertSame('Updated', $category->getName());
     }
 
-    public function testCommonCategoryTypes(): void
+    public function testEmptyStringName(): void
     {
-        $electronics = new CategoryPrimary('Electronics');
-        $this->assertSame('Electronics', $electronics->getName());
+        $category = new CategoryPrimary('');
 
-        $clothing = new CategoryPrimary('Clothing');
-        $this->assertSame('Clothing', $clothing->getName());
-
-        $books = new CategoryPrimary('Books');
-        $this->assertSame('Books', $books->getName());
-
-        $homeGarden = new CategoryPrimary('Home & Garden');
-        $this->assertSame('Home & Garden', $homeGarden->getName());
+        $this->assertSame('', $category->getName());
     }
 
-    public function testLongCategoryNames(): void
+    public function testSetNameWithEmptyString(): void
     {
-        $longName = 'Very Long Category Name That Could Potentially Exceed Normal Database Limits And Still Be Valid';
-        $category = new CategoryPrimary($longName);
-        
+        $category = new CategoryPrimary('Electronics');
+
+        $category->setName('');
+        $this->assertSame('', $category->getName());
+    }
+
+    public function testLongName(): void
+    {
+        $category = new CategoryPrimary();
+        $longName = str_repeat('Category Name ', 100);
+
+        $category->setName($longName);
         $this->assertSame($longName, $category->getName());
     }
 
     public function testSpecialCharactersInName(): void
     {
-        $category = new CategoryPrimary('Electronics & Gadgets');
-        
-        $this->assertSame('Electronics & Gadgets', $category->getName());
+        $category = new CategoryPrimary();
+        $specialName = 'Category: Electronics & Gadgets (2024) - 50% Off!';
+
+        $category->setName($specialName);
+        $this->assertSame($specialName, $category->getName());
     }
 
-    public function testUnicodeInName(): void
+    public function testUnicodeCharactersInName(): void
     {
-        $category = new CategoryPrimary('Électronique & 电子产品');
-        
-        $this->assertSame('Électronique & 电子产品', $category->getName());
+        $category = new CategoryPrimary();
+        $unicodeName = 'Électronique & Ménager 世界中の製品 €100+';
+
+        $category->setName($unicodeName);
+        $this->assertSame($unicodeName, $category->getName());
     }
 
-    public function testNullNameHandling(): void
+    public function testGetNameReturnTypeIsNullableString(): void
     {
+        $category = new CategoryPrimary();
+        $this->assertIsString($category->getName());
+
         $category = new CategoryPrimary(null);
-        
         $this->assertNull($category->getName());
     }
 
-    public function testEmptyNameHandling(): void
-    {
-        $category = new CategoryPrimary('');
-        
-        $this->assertSame('', $category->getName());
-    }
-
-    public function testNameSetterOverridesConstructor(): void
-    {
-        $category = new CategoryPrimary('Original Name');
-        $this->assertSame('Original Name', $category->getName());
-        
-        $category->setName('Updated Name');
-        $this->assertSame('Updated Name', $category->getName());
-    }
-
-    public function testCompleteCategorySetup(): void
+    public function testMultipleNameUpdates(): void
     {
         $category = new CategoryPrimary();
-        $category->setName('Complete Setup Category');
-        
-        $this->assertSame('Complete Setup Category', $category->getName());
-        $this->assertNull($category->getId()); // ID remains null until persisted
+
+        foreach (['Electronics', 'Food', 'Clothing', 'Books'] as $name) {
+            $category->setName($name);
+            $this->assertSame($name, $category->getName());
+        }
     }
 
-    public function testCategoryNamesWithNumbers(): void
+    public function testCompleteSetup(): void
     {
-        $category = new CategoryPrimary('Category 123');
-        
-        $this->assertSame('Category 123', $category->getName());
-    }
+        $category = new CategoryPrimary('Initial');
 
-    public function testCategoryNamesWithSpecialFormats(): void
-    {
-        $category1 = new CategoryPrimary('A/B Testing');
-        $this->assertSame('A/B Testing', $category1->getName());
+        $this->assertFalse($category->isPersisted());
+        $this->assertSame('Initial', $category->getName());
 
-        $category2 = new CategoryPrimary('Level-1 Category');
-        $this->assertSame('Level-1 Category', $category2->getName());
+        $category->setName('Updated Category');
+        $this->assertSame('Updated Category', $category->getName());
 
-        $category3 = new CategoryPrimary('Parent: Child Category');
-        $this->assertSame('Parent: Child Category', $category3->getName());
-    }
-
-    public function testIdPropertyType(): void
-    {
-        $category = new CategoryPrimary();
-        
-        // Verify ID getter returns int|null type
-        $this->assertNull($category->getId());
-        $this->assertTrue(is_null($category->getId()) || is_int($category->getId()));
-    }
-
-    public function testNamePropertyNullability(): void
-    {
-        $category = new CategoryPrimary();
-        
-        // Test null assignment
-        $category->setName('Test');
-        $this->assertSame('Test', $category->getName());
-        
-        // Note: setter requires string parameter, so null testing done via constructor
-        $nullCategory = new CategoryPrimary(null);
-        $this->assertNull($nullCategory->getName());
+        $this->expectException(\LogicException::class);
+        $category->reqId();
     }
 }

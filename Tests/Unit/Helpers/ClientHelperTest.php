@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Helpers;
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Helpers\ClientHelper;
 use App\Invoice\Setting\SettingRepository;
 use Codeception\Test\Unit;

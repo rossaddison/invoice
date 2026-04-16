@@ -2,188 +2,304 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Tests\Unit\Entity;
 
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use Codeception\Test\Unit;
 
 class TaxRateEntityTest extends Unit
 {
-    private TaxRate $taxRate;
-    
-    public string $vatStandard = 'VAT Standard';
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->taxRate = new TaxRate();
-    }
-
     public function testConstructorWithDefaults(): void
     {
-        $defaultTaxRate = new TaxRate();
-        
-        $this->assertEquals('', $defaultTaxRate->getTaxRateCode());
-        $this->assertEquals('', $defaultTaxRate->getPeppolTaxRateCode());
-        $this->assertEquals('', $defaultTaxRate->getStorecoveTaxType());
-        $this->assertEquals('', $defaultTaxRate->getTaxRateName());
-        $this->assertEquals(0.00, $defaultTaxRate->getTaxRatePercent());
-        $this->assertFalse($defaultTaxRate->getTaxRateDefault());
-        $this->assertNull($defaultTaxRate->getTaxRateId());
+        $taxRate = new TaxRate();
+
+        $this->assertFalse($taxRate->isPersisted());
+        $this->assertSame('', $taxRate->getTaxRateCode());
+        $this->assertSame('', $taxRate->getPeppolTaxRateCode());
+        $this->assertSame('', $taxRate->getStorecoveTaxType());
+        $this->assertSame('', $taxRate->getTaxRateName());
+        $this->assertSame(0.00, $taxRate->getTaxRatePercent());
+        $this->assertFalse($taxRate->getTaxRateDefault());
     }
 
     public function testConstructorWithAllParameters(): void
     {
         $taxRate = new TaxRate(
-            tax_rate_code: 'VT',
-            peppol_tax_rate_code: 'S',
-            storecove_tax_type: 'standard',
-            tax_rate_name: $this->vatStandard,
-            tax_rate_percent: 20.00,
-            tax_rate_default: true
+            'S',
+            'S',
+            'standard',
+            'Standard Rate',
+            20.00,
+            true
         );
 
-        $this->assertEquals('VT', $taxRate->getTaxRateCode());
-        $this->assertEquals('S', $taxRate->getPeppolTaxRateCode());
-        $this->assertEquals('standard', $taxRate->getStorecoveTaxType());
-        $this->assertEquals($this->vatStandard, $taxRate->getTaxRateName());
-        $this->assertEquals(20.00, $taxRate->getTaxRatePercent());
+        $this->assertFalse($taxRate->isPersisted());
+        $this->assertSame('S', $taxRate->getTaxRateCode());
+        $this->assertSame('S', $taxRate->getPeppolTaxRateCode());
+        $this->assertSame('standard', $taxRate->getStorecoveTaxType());
+        $this->assertSame('Standard Rate', $taxRate->getTaxRateName());
+        $this->assertSame(20.00, $taxRate->getTaxRatePercent());
         $this->assertTrue($taxRate->getTaxRateDefault());
-        $this->assertNull($taxRate->reqId());
     }
 
-    public function testTaxRateIdSetterAndGetter(): void
+    public function testReqIdThrowsWhenNotPersisted(): void
     {
-        $this->assertNull($this->taxRate->getTaxRateId());
-        
-        $this->taxRate->setTaxRateId(42);
-        $this->assertEquals(42, $this->taxRate->getTaxRateId());
-        
-        $this->taxRate->setTaxRateId(0);
-        $this->assertEquals(0, $this->taxRate->getTaxRateId());
+        $taxRate = new TaxRate();
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('TaxRate has no ID (not persisted yet)');
+        $taxRate->reqId();
+    }
+
+    public function testIsPersistedReturnsFalseByDefault(): void
+    {
+        $taxRate = new TaxRate();
+
+        $this->assertFalse($taxRate->isPersisted());
+    }
+
+    public function testIsPersistedReturnsTrueAfterSetTaxRateId(): void
+    {
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRateId(1);
+        $this->assertTrue($taxRate->isPersisted());
+    }
+
+    public function testReqIdReturnsIntAfterSetTaxRateId(): void
+    {
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRateId(42);
+        $this->assertSame(42, $taxRate->reqId());
+        $this->assertIsInt($taxRate->reqId());
+    }
+
+    public function testSetTaxRateIdAndReqId(): void
+    {
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRateId(1);
+        $this->assertSame(1, $taxRate->reqId());
+
+        $taxRate->setTaxRateId(999);
+        $this->assertSame(999, $taxRate->reqId());
     }
 
     public function testTaxRateCodeSetterAndGetter(): void
     {
-        $this->assertEquals('', $this->taxRate->getTaxRateCode());
-        
-        $this->taxRate->setTaxRateCode('VT');
-        $this->assertEquals('VT', $this->taxRate->getTaxRateCode());
-        
-        $this->taxRate->setTaxRateCode('');
-        $this->assertEquals('', $this->taxRate->getTaxRateCode());
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRateCode('S');
+        $this->assertSame('S', $taxRate->getTaxRateCode());
+
+        $taxRate->setTaxRateCode('Z');
+        $this->assertSame('Z', $taxRate->getTaxRateCode());
     }
 
     public function testPeppolTaxRateCodeSetterAndGetter(): void
     {
-        $this->assertEquals('', $this->taxRate->getPeppolTaxRateCode());
-        
-        $this->taxRate->setPeppolTaxRateCode('S');
-        $this->assertEquals('S', $this->taxRate->getPeppolTaxRateCode());
-        
-        $this->taxRate->setPeppolTaxRateCode('Z');
-        $this->assertEquals('Z', $this->taxRate->getPeppolTaxRateCode());
+        $taxRate = new TaxRate();
+
+        $taxRate->setPeppolTaxRateCode('S');
+        $this->assertSame('S', $taxRate->getPeppolTaxRateCode());
+
+        $taxRate->setPeppolTaxRateCode('Z');
+        $this->assertSame('Z', $taxRate->getPeppolTaxRateCode());
     }
 
     public function testStorecoveTaxTypeSetterAndGetter(): void
     {
-        $this->assertEquals('', $this->taxRate->getStorecoveTaxType());
-        
-        $this->taxRate->setStorecoveTaxType('standard');
-        $this->assertEquals('standard', $this->taxRate->getStorecoveTaxType());
-        
-        $this->taxRate->setStorecoveTaxType('reduced');
-        $this->assertEquals('reduced', $this->taxRate->getStorecoveTaxType());
+        $taxRate = new TaxRate();
+
+        $taxRate->setStorecoveTaxType('standard');
+        $this->assertSame('standard', $taxRate->getStorecoveTaxType());
+
+        $taxRate->setStorecoveTaxType('exempt');
+        $this->assertSame('exempt', $taxRate->getStorecoveTaxType());
     }
 
     public function testTaxRateNameSetterAndGetter(): void
     {
-        $this->assertEquals('', $this->taxRate->getTaxRateName());
-        
-        $this->taxRate->setTaxRateName($this->vatStandard);
-        $this->assertEquals($this->vatStandard, $this->taxRate->getTaxRateName());
-        
-        $this->taxRate->setTaxRateName('Zero Rate');
-        $this->assertEquals('Zero Rate', $this->taxRate->getTaxRateName());
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRateName('Standard Rate');
+        $this->assertSame('Standard Rate', $taxRate->getTaxRateName());
+
+        $taxRate->setTaxRateName('Zero Rate');
+        $this->assertSame('Zero Rate', $taxRate->getTaxRateName());
     }
 
     public function testTaxRatePercentSetterAndGetter(): void
     {
-        $this->assertEquals(0.00, $this->taxRate->getTaxRatePercent());
-        
-        $this->taxRate->setTaxRatePercent(20.00);
-        $this->assertEquals(20.00, $this->taxRate->getTaxRatePercent());
-        
-        $this->taxRate->setTaxRatePercent(5.5);
-        $this->assertEquals(5.5, $this->taxRate->getTaxRatePercent());
-        
-        $this->taxRate->setTaxRatePercent(0.0);
-        $this->assertEquals(0.0, $this->taxRate->getTaxRatePercent());
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRatePercent(20.00);
+        $this->assertSame(20.00, $taxRate->getTaxRatePercent());
+
+        $taxRate->setTaxRatePercent(5.50);
+        $this->assertSame(5.50, $taxRate->getTaxRatePercent());
     }
 
     public function testTaxRateDefaultSetterAndGetter(): void
     {
-        $this->assertFalse($this->taxRate->getTaxRateDefault());
-        
-        $this->taxRate->setTaxRateDefault(true);
-        $this->assertTrue($this->taxRate->getTaxRateDefault());
-        
-        $this->taxRate->setTaxRateDefault(false);
-        $this->assertFalse($this->taxRate->getTaxRateDefault());
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRateDefault(true);
+        $this->assertTrue($taxRate->getTaxRateDefault());
+
+        $taxRate->setTaxRateDefault(false);
+        $this->assertFalse($taxRate->getTaxRateDefault());
     }
 
-    public function testHighPrecisionTaxRates(): void
+    public function testTaxRatePercentWithZero(): void
     {
-        // Test with high precision decimal values
-        $this->taxRate->setTaxRatePercent(19.99);
-        $this->assertEquals(19.99, $this->taxRate->getTaxRatePercent());
-        
-        $this->taxRate->setTaxRatePercent(0.01);
-        $this->assertEquals(0.01, $this->taxRate->getTaxRatePercent());
-        
-        $this->taxRate->setTaxRatePercent(99.99);
-        $this->assertEquals(99.99, $this->taxRate->getTaxRatePercent());
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRatePercent(0.00);
+        $this->assertSame(0.00, $taxRate->getTaxRatePercent());
     }
 
-    public function testTaxRateCodesWithEmptyValues(): void
+    public function testTaxRatePercentWithDecimal(): void
     {
-        // Test setting empty string values
-        $this->taxRate->setTaxRateCode('');
-        $this->assertEquals('', $this->taxRate->getTaxRateCode());
-        
-        $this->taxRate->setPeppolTaxRateCode('');
-        $this->assertEquals('', $this->taxRate->getPeppolTaxRateCode());
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRatePercent(17.50);
+        $this->assertSame(17.50, $taxRate->getTaxRatePercent());
+    }
+
+    public function testNullableTaxRateCode(): void
+    {
+        $taxRate = new TaxRate(null);
+
+        $this->assertNull($taxRate->getTaxRateCode());
+    }
+
+    public function testNullablePeppolTaxRateCode(): void
+    {
+        $taxRate = new TaxRate('S', null);
+
+        $this->assertNull($taxRate->getPeppolTaxRateCode());
+    }
+
+    public function testNullableTaxRateName(): void
+    {
+        $taxRate = new TaxRate('S', 'S', 'standard', null);
+
+        $this->assertNull($taxRate->getTaxRateName());
+    }
+
+    public function testNullableTaxRatePercent(): void
+    {
+        $taxRate = new TaxRate('S', 'S', 'standard', 'Standard', null);
+
+        $this->assertNull($taxRate->getTaxRatePercent());
+    }
+
+    public function testTaxRateDefaultToggling(): void
+    {
+        $taxRate = new TaxRate();
+
+        $this->assertFalse($taxRate->getTaxRateDefault());
+        $taxRate->setTaxRateDefault(!$taxRate->getTaxRateDefault());
+        $this->assertTrue($taxRate->getTaxRateDefault());
+        $taxRate->setTaxRateDefault(!$taxRate->getTaxRateDefault());
+        $this->assertFalse($taxRate->getTaxRateDefault());
+    }
+
+    public function testEmptyStringValues(): void
+    {
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRateCode('');
+        $taxRate->setPeppolTaxRateCode('');
+        $taxRate->setStorecoveTaxType('');
+        $taxRate->setTaxRateName('');
+
+        $this->assertSame('', $taxRate->getTaxRateCode());
+        $this->assertSame('', $taxRate->getPeppolTaxRateCode());
+        $this->assertSame('', $taxRate->getStorecoveTaxType());
+        $this->assertSame('', $taxRate->getTaxRateName());
+    }
+
+    public function testUnicodeCharactersInName(): void
+    {
+        $taxRate = new TaxRate();
+        $unicodeName = 'Mehrwertsteuer 世界中の税率 20%';
+
+        $taxRate->setTaxRateName($unicodeName);
+        $this->assertSame($unicodeName, $taxRate->getTaxRateName());
+    }
+
+    public function testSpecialCharactersInName(): void
+    {
+        $taxRate = new TaxRate();
+        $specialName = 'Tax Rate: 20% (Standard) - Valid from 01/01/2024!';
+
+        $taxRate->setTaxRateName($specialName);
+        $this->assertSame($specialName, $taxRate->getTaxRateName());
+    }
+
+    public function testGetterMethodsConsistency(): void
+    {
+        $taxRate = new TaxRate('S', 'S', 'standard', 'Standard Rate', 20.00, true);
+
+        $this->assertSame($taxRate->getTaxRateCode(), $taxRate->getTaxRateCode());
+        $this->assertSame($taxRate->getPeppolTaxRateCode(), $taxRate->getPeppolTaxRateCode());
+        $this->assertSame($taxRate->getStorecoveTaxType(), $taxRate->getStorecoveTaxType());
+        $this->assertSame($taxRate->getTaxRateName(), $taxRate->getTaxRateName());
+        $this->assertSame($taxRate->getTaxRatePercent(), $taxRate->getTaxRatePercent());
+        $this->assertSame($taxRate->getTaxRateDefault(), $taxRate->getTaxRateDefault());
     }
 
     public function testCompleteEntitySetup(): void
     {
-        // Test setting up a complete tax rate entity
-        $this->taxRate->setTaxRateId(1);
-        $this->taxRate->setTaxRateCode('VT');
-        $this->taxRate->setPeppolTaxRateCode('S');
-        $this->taxRate->setStorecoveTaxType('standard');
-        $this->taxRate->setTaxRateName('VAT Standard Rate');
-        $this->taxRate->setTaxRatePercent(20.00);
-        $this->taxRate->setTaxRateDefault(true);
+        $taxRate = new TaxRate();
 
-        $this->assertEquals(1, $this->taxRate->getTaxRateId());
-        $this->assertEquals('VT', $this->taxRate->getTaxRateCode());
-        $this->assertEquals('S', $this->taxRate->getPeppolTaxRateCode());
-        $this->assertEquals('standard', $this->taxRate->getStorecoveTaxType());
-        $this->assertEquals('VAT Standard Rate', $this->taxRate->getTaxRateName());
-        $this->assertEquals(20.00, $this->taxRate->getTaxRatePercent());
-        $this->assertTrue($this->taxRate->getTaxRateDefault());
+        $taxRate->setTaxRateId(1);
+        $taxRate->setTaxRateCode('S');
+        $taxRate->setPeppolTaxRateCode('S');
+        $taxRate->setStorecoveTaxType('standard');
+        $taxRate->setTaxRateName('Standard Rate');
+        $taxRate->setTaxRatePercent(20.00);
+        $taxRate->setTaxRateDefault(true);
+
+        $this->assertTrue($taxRate->isPersisted());
+        $this->assertSame(1, $taxRate->reqId());
+        $this->assertSame('S', $taxRate->getTaxRateCode());
+        $this->assertSame('S', $taxRate->getPeppolTaxRateCode());
+        $this->assertSame('standard', $taxRate->getStorecoveTaxType());
+        $this->assertSame('Standard Rate', $taxRate->getTaxRateName());
+        $this->assertSame(20.00, $taxRate->getTaxRatePercent());
+        $this->assertTrue($taxRate->getTaxRateDefault());
     }
 
-    public function testChainedSetterCalls(): void
+    public function testCommonTaxRates(): void
     {
-        // Test that setters work in a chained manner
-        $this->taxRate->setTaxRateCode('VT');
-        $this->taxRate->setTaxRateName('VAT');
-        $this->taxRate->setTaxRatePercent(15.0);
-        
-        $this->assertEquals('VT', $this->taxRate->getTaxRateCode());
-        $this->assertEquals('VAT', $this->taxRate->getTaxRateName());
-        $this->assertEquals(15.0, $this->taxRate->getTaxRatePercent());
+        $rates = [0.00, 5.00, 9.00, 12.00, 17.50, 20.00, 25.00];
+
+        foreach ($rates as $rate) {
+            $taxRate = new TaxRate();
+            $taxRate->setTaxRatePercent($rate);
+            $this->assertSame($rate, $taxRate->getTaxRatePercent());
+        }
+    }
+
+    public function testMultipleUpdates(): void
+    {
+        $taxRate = new TaxRate();
+
+        foreach (['standard', 'exempt', 'zero', 'reduced'] as $type) {
+            $taxRate->setStorecoveTaxType($type);
+            $this->assertSame($type, $taxRate->getStorecoveTaxType());
+        }
+    }
+
+    public function testReqIdReturnTypeIsInt(): void
+    {
+        $taxRate = new TaxRate();
+
+        $taxRate->setTaxRateId(1);
+        $this->assertIsInt($taxRate->reqId());
     }
 }

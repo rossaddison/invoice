@@ -8,7 +8,7 @@ use Yiisoft\Html\Html as H;
  * Related logic: see App\Invoice\Client\ClientController function
  *  view 'payment_table'
  *
- * @var App\Invoice\Entity\Client $client
+ * @var App\Infrastructure\Persistence\Client\Client $client
  *
  * Related logic: see There is no need to declare ClientHelper in the
  * ClientController because it is declared in:
@@ -59,7 +59,7 @@ echo H::openTag('div', ['class' => 'table-responsive']);
     * @var App\Invoice\Entity\Payment $payment
     */
    foreach ($payments as $payment) {
-       if ($payment->getInv()?->getClientId() == $client->reqClientId()) {
+       if ($payment->getInv()?->getClientId() == $client->reqId()) {
            echo H::openTag('tr');
             echo H::openTag('td');
              echo !is_string($paymentDate = $payment->getPaymentDate()) ?

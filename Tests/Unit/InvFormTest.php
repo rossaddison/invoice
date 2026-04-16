@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice;
 
 use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Inv\InvForm;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Validator\Validator;

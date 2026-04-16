@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Entity;
 
 use App\Invoice\Entity\Delivery;
-use App\Invoice\Entity\DeliveryLocation;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use Codeception\Test\Unit;
 use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;

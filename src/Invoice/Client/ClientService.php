@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Client;
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository;
 
@@ -45,8 +45,8 @@ final readonly class ClientService
         isset($body['client_tax_code']) ? $model->setClientTaxCode((string) $body['client_tax_code']) : '';
         isset($body['client_language']) ? $model->setClientLanguage((string) $body['client_language']) : '';
         $model->setClientActive($body['client_active'] === '1' ? true : false);
-        $datetime = new \DateTime();
-        isset($body['client_birthdate']) ? $model->setClientBirthdate($datetime::createFromFormat('Y-m-d', (string) $body['client_birthdate']) ?: $datetime) : '';
+        $datetime = new \DateTimeImmutable();
+        isset($body['client_birthdate']) ? $model->setClientBirthdate(\DateTimeImmutable::createFromFormat('Y-m-d', (string) $body['client_birthdate']) ?: $datetime) : '';
 
         isset($body['client_age']) ? $model->setClientAge((int) $body['client_age']) : '';
         isset($body['client_gender']) ? $model->setClientGender((int) $body['client_gender']) : '';
@@ -56,7 +56,7 @@ final readonly class ClientService
             $model->setPostaladdressId(0);
         }
         $this->repository->save($model);
-        return $model->reqClientId();
+        return $model->reqId();
     }
 
     /**

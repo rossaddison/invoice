@@ -49,7 +49,7 @@ final class AllowanceChargeForm extends FormModel
         $this->multiplier_factor_numeric = $allowanceCharge->getMultiplierFactorNumeric();
         $this->amount = $allowanceCharge->getAmount();
         $this->base_amount = $allowanceCharge->getBaseAmount();
-        $this->tax_rate_id = (int) $allowanceCharge->getTaxRateId();
+        $this->tax_rate_id = $allowanceCharge->getTaxRateId();
     }
 
     public function getIdentifier(): ?bool

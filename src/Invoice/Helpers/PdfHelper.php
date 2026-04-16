@@ -38,7 +38,10 @@ class PdfHelper
 {
     private readonly CountryHelper $countryhelper;
 
-    public function __construct(private readonly SR $s, private readonly Session $session, private readonly Translator $translator)
+    public function __construct(
+        private readonly SR $s,
+        private readonly Session $session,
+        private readonly Translator $translator)
     {
         $this->countryhelper = new CountryHelper();
     }
@@ -175,7 +178,7 @@ class PdfHelper
                     ),
                     'delivery_location' => $this->viewPartialDeliveryLocation((string) $_language, $dlR, $quote->getDeliveryLocationId(), $webViewRenderer),
                     'userInv' => $userinv,
-                    'client' => $cR->repoClientquery((string) $quote->getClient()?->reqClientId()),
+                    'client' => $cR->repoClientqueryOrig($quote->getClient()?->reqId() ?? 0),
                     'quote_amount' => $quote_amount,
                     // Use the temporary print language to define cldr
                     'cldr' => array_search($this->getPrintLanguage($quote), $this->s->localeLanguageArray()),
@@ -299,7 +302,7 @@ class PdfHelper
                         ],
                     ),
                     'userInv' => $userinv,
-                    'client' => $cR->repoClientquery((string) $so->getClient()?->reqClientId()),
+                    'client' => $cR->repoClientqueryOrig($so->getClient()?->reqId() ?? 0),
                     'so_amount' => $so_amount,
                     // Use the temporary print language to define cldr
                     'cldr' => array_search($this->getPrintLanguage($so), $this->s->localeLanguageArray()),
@@ -434,7 +437,7 @@ class PdfHelper
                 ),
                 'inv_allowance_charges' => $this->viewPartialInvAllowanceCharges($inv_id, $vat, $aciR, $webViewRenderer),
                 'delivery_location' => $this->viewPartialDeliveryLocation((string) $_language, $dlR, $inv->getDeliveryLocationId(), $webViewRenderer),
-                'client' => $cR->repoClientquery((string) $inv->getClient()?->reqClientId()),
+                'client' => $cR->repoClientqueryOrig($inv->getClient()?->reqId() ?? 0),
                 'inv_amount' => $inv_amount,
                 'cldr' => array_search($this->getPrintLanguage($inv), $this->s->localeLanguageArray()),
             ];

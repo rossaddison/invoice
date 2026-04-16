@@ -5,10 +5,10 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 
-/**
+/** 
+ * @var App\Infrastructure\Persistence\Client\Client $client 
  * @var App\Invoice\Entity\ProductClient $productClient
  * @var App\Invoice\Entity\Product $product
- * @var App\Invoice\Entity\Client $client
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $alert
@@ -120,7 +120,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($client->reqClientId()); ?>
+                                <?= Html::encode($client->reqId()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                         <?= Html::openTag('tr'); ?>
@@ -255,7 +255,7 @@ use Yiisoft\Html\Tag\A;
                 ->addAttributes(['class' => 'btn btn-info'])
                 ->content($translator->translate('view.client'))
                 ->href($urlGenerator->generate(
-                    'client/view', ['id' => $client->reqClientId()]))
+                    'client/view', ['id' => $client->reqId()]))
                 ->render()
             ?>
         <?= Html::closeTag('div'); ?>

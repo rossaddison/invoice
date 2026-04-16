@@ -8,7 +8,7 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Auth\TokenRepository as tR;
 use App\Invoice\Client\ClientRepository as cR;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\UserClient;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Helpers\CountryHelper;
@@ -547,7 +547,7 @@ final class UserInvController extends BaseController
                                         $client->setClientAge($sR->getSetting('signup_default_age_minimum_eighteen') == '1' ? 18 : 0);
                                         $cR->save($client);
                                         $this->flashMessage('info', $this->translator->translate('assign.client.on.signup.done'));
-                                        $clientId = $client->reqClientId();
+                                        $clientId = $client->reqId();
                                         $userClient = new UserClient();
                                         $userClient->setUserId((int) $userInv->getUserId());
                                         $userClient->setClientId($clientId);

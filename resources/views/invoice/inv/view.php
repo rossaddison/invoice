@@ -671,13 +671,13 @@ if ($inv->getStatusId() === 1
     echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-5']);
      echo H::openTag('h3');
       echo H::openTag('a', ['href' => $urlGenerator->generate('client/view',
-              ['id' => $inv->getClient()?->reqClientId()])]);
+              ['id' => $inv->getClient()?->reqId()])]);
        echo H::encode($clientHelper->formatClient($inv->getClient()));
       echo H::closeTag('a');
      echo H::closeTag('h3');
      echo '<br>';
      echo H::openTag('div', ['id' => 'pre_save_client_id',
-         'value' => $inv->getClient()?->reqClientId(), 'hidden' => true]);
+         'value' => $inv->getClient()?->reqId(), 'hidden' => true]);
      echo H::closeTag('div');
      echo H::openTag('div', ['class' => 'client-address']);
       echo H::openTag('span', ['class' => 'client-address-street-line-1']);
@@ -1025,7 +1025,7 @@ if (!empty($inv->getSoId())) {
             'id' => 'dropzone_client_id',
             'readonly' => true,
             'class' => 'form-control form-control-lg',
-            'value' => $inv->getClient()?->reqClientId(),
+            'value' => $inv->getClient()?->reqId(),
             'hidden' => true
         ]);
        echo H::closeTag('div');

@@ -40,8 +40,7 @@ final readonly class ClientCustomService
     {
         $client = 'client_id';
         if (isset($array[$client])) {
-            $model->setClient(
-                $this->cR->repoClientquery((string) $array[$client]));
+            $model->setClient($this->cR->repoClientquery((int) $array[$client]));
         }
         $custom_field = 'custom_field_id';
         if (isset($array[$custom_field])) {

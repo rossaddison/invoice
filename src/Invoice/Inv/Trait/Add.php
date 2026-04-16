@@ -77,8 +77,8 @@ trait Add
                         // no warning necessary a user client relationship exists
                     } else {
                         $this->flashMessage('danger',
-                            $clientRepository->repoClientquery(
-                                $client_id)->getClientFullName()
+                            $clientRepository->repoClientquery((int) $client_id)
+                                             ->getClientFullName()
                                     . ': ' . $this->translator->translate(
                                             'user.client.no.account'));
                     }

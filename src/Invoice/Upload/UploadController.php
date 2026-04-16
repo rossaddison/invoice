@@ -6,7 +6,7 @@ namespace App\Invoice\Upload;
 
 use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\Upload;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
@@ -264,7 +264,7 @@ final class UploadController extends BaseController
          * @var Client $client
          */
         foreach ($clients as $client) {
-            $optionsDataClients[$client->reqClientId()]
+            $optionsDataClients[$client->reqId()]
                 = $client->getClientFullName();
         }
         return $optionsDataClients;

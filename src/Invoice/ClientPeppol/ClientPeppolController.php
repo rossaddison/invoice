@@ -89,7 +89,7 @@ final class ClientPeppolController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if (is_array($body)) {
                         $body['client_id'] = $client_id;
-                        $client = $clientRepository->repoClientquery($client_id);
+                        $client = $clientRepository->repoClientquery((int)$client_id);
                         $client_peppol->setClient($client);
                         $this->clientPeppolService->saveClientPeppol(
                                 $client_peppol, $body);

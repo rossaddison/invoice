@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\Invoice;
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\ClientCustom;
 use App\Invoice\Entity\ClientNote;
 use App\Invoice\Entity\ClientPeppol;
@@ -14,7 +14,7 @@ use App\Invoice\Entity\Contract;
 use App\Invoice\Entity\CustomField;
 use App\Invoice\Entity\CustomValue;
 use App\Invoice\Entity\Delivery;
-use App\Invoice\Entity\DeliveryLocation;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\Entity\DeliveryParty;
 use App\Invoice\Entity\EmailTemplate;
 use App\Invoice\Entity\Family;

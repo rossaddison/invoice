@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Command\Invoice;
 
 use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\Group;
 use App\Invoice\Entity\Inv;
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
@@ -334,7 +334,7 @@ final class ItemsCommand extends Command
                     $vatOrTax = (float)$invItemAllowanceCharge->getVatOrTax();
 
                     // Get the tax rate percentage from the AllowanceCharge entity
-                    $taxRateId = (int)($allowanceCharge?->getTaxRateId() ?? 1);
+                    $taxRateId = $allowanceCharge?->getTaxRateId() ?? 1;
                     $taxRatePercent = 0;
                     foreach ($this->taxRates as $taxRate) {
                         if ($taxRate->reqId() === $taxRateId) {

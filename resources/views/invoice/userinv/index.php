@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\UserInv;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
@@ -67,7 +67,7 @@ $unAssignedClients = array_values(array_filter(
     array_map(
         fn (int|null $id): ?Client =>
             $id !== null
-                ? $cR->repoClientquery((string) $id)
+                ? $cR->repoClientquery($id)
                 : null,
         $unAssignedClientIds
     ),
@@ -111,11 +111,8 @@ $clientColumns = [
             $translator,
             $urlGenerator
         ): Span {
-            return (
-                $ucR->repoUserqueryCount(
-                    (string) $model->reqClientId()
-                ) !== 0 && $canEdit
-            )
+            return ($ucR->repoUserqueryCount((string) $model->reqId()) !== 0
+                    && $canEdit)
                 ? $button::activeLabel($translator)
                 : $button::inactiveWithAddUserAccount(
                     $urlGenerator,

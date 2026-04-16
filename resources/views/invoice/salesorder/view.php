@@ -151,14 +151,14 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
      echo H::openTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-5']); //5
       echo H::openTag('h3'); //6
        echo H::openTag('a', ['href' => $urlGenerator->generate('client/view',
-        ['id' => $so->getClient()?->reqClientId()])]); //7
+        ['id' => $so->getClient()?->reqId()])]); //7
         echo H::encode($clienthelper->formatClient($so->getClient()));
        echo H::closeTag('a'); //7
       echo H::closeTag('h3'); //6
       echo H::tag('br', '');
       echo H::openTag('div', [
        'id' => 'pre_save_client_id',
-       'value' => $so->getClient()?->reqClientId(),
+       'value' => $so->getClient()?->reqId(),
        'hidden' => true,
       ]); //6
       echo H::closeTag('div'); //6
@@ -381,7 +381,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
           'readonly' => true,
           'hidden' => true,
           'class' => 'form-control form-control-lg',
-          'value' => $so->getClient()?->reqClientId(),
+          'value' => $so->getClient()?->reqId(),
          ]);
         echo H::closeTag('div'); //8
        echo H::closeTag('div'); //7

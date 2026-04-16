@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Quote;
 
 use App\Invoice\Entity\Quote;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\Group;
 use App\Invoice\Quote\QuoteForm;
 use App\User\User;

@@ -81,8 +81,7 @@ final readonly class ClientPeppolService
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
-                $this->cR->repoClientquery(
-                    (string) $array[$client]));
+                $this->cR->repoClientquery((int) $array[$client]));
         }
     }
 

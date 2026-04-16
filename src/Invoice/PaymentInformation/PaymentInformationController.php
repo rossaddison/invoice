@@ -178,7 +178,7 @@ final class PaymentInformationController
             'balance'                => $balance,
             'client_chosen_gateway'  => $client_chosen_gateway,
             'client_on_invoice'      =>
-                                 $cR->repoClientquery($invoice->getClientId()),
+                                 $cR->repoClientquery((int) $invoice->getClientId()),
             'disable_form'           => $disable_form,
             'invoice'                => $invoice,
             'inv_url_key'            => $url_key,
@@ -188,7 +188,7 @@ final class PaymentInformationController
             'partial_client_address' =>
                                      $this->webViewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address',
-                ['client' => $cR->repoClientquery($invoice->getClientId())],
+                ['client' => $cR->repoClientquery((int) $invoice->getClientId())],
             ),
             'payment_method' => $payment_method_for_this_invoice,
             'provider'       => $provider,
@@ -705,7 +705,7 @@ final class PaymentInformationController
             'amazonPayButton'        => $amazonPayButton,
             'balance'                => $balance,
             'client_chosen_gateway'  => $client_chosen_gateway,
-            'client_on_invoice'      => $cR->repoClientquery($invoice->getClientId()),
+            'client_on_invoice'      => $cR->repoClientquery((int) $invoice->getClientId()),
             'crypt'                  => $this->sR,
             'disable_form'           => $disable_form,
             'invoice'                => $invoice,
@@ -716,7 +716,7 @@ final class PaymentInformationController
             'partial_client_address' => $this->webViewRenderer
                 ->renderPartialAsString(
                     '//invoice/client/partial_client_address',
-                    ['client' => $cR->repoClientquery($invoice->getClientId())],
+                    ['client' => $cR->repoClientquery((int) $invoice->getClientId())],
                 ),
             'payment_method' => $payment_method_for_this_invoice,
             'return_url'     => ['paymentinformation/amazonComplete',
@@ -775,7 +775,7 @@ final class PaymentInformationController
             'return_url'             => ['paymentinformation/braintree_complete', ['url_key' => $url_key]],
             'balance'                => $balance,
             'body'                   => $request->getParsedBody() ?? [],
-            'client_on_invoice'      => $cR->repoClientquery($invoice->getClientId()),
+            'client_on_invoice'      => $cR->repoClientquery((int) $invoice->getClientId()),
             'json_encoded_items'     => Json::encode($items_array),
             'client_token'           => $clientToken,
             'disable_form'           => $disable_form,
@@ -786,7 +786,7 @@ final class PaymentInformationController
             'partial_client_address' => $this->webViewRenderer
                 ->renderPartialAsString(
                     '//invoice/client/partial_client_address',
-                    ['client' => $cR->repoClientquery($invoice->getClientId())],
+                    ['client' => $cR->repoClientquery((int) $invoice->getClientId())],
                 ),
             'payment_method' => $payment_method_for_this_invoice,
             'total'          => $total,
@@ -968,7 +968,7 @@ final class PaymentInformationController
             'return_url'                 => ['inv/urlKey', ['url_key' => $url_key]],
             'balance'                    => $balance,
             'client_on_invoice'          =>
-                $cR->repoClientquery($invoice->getClientId()),
+                $cR->repoClientquery((int) $invoice->getClientId()),
             'pci_client_publishable_key' =>
                 $this->sR->decode($this->sR->getSetting(
                         'gateway_mollie_publishableKey')),
@@ -983,7 +983,7 @@ final class PaymentInformationController
                 $this->webViewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address',
                 [
-                    'client' => $cR->repoClientquery($invoice->getClientId()),
+                    'client' => $cR->repoClientquery((int) $invoice->getClientId()),
                 ],
             ),
             'payment_methods'        => $mollieClient->methods->allEnabled(),
@@ -1250,7 +1250,7 @@ final class PaymentInformationController
                 ['paymentinformation/stripe_complete', ['url_key' => $url_key]],
             'balance'                    => $balance,
             'client_on_invoice'          =>
-                $cR->repoClientquery($invoice->getClientId()),
+                $cR->repoClientquery((int) $invoice->getClientId()),
             'pci_client_publishable_key' => $publishableKey,
             'json_encoded_items'         => Json::encode($items_array),
             'client_secret'              => $clientSecret,
@@ -1262,7 +1262,7 @@ final class PaymentInformationController
             'partial_client_address'     => $this->webViewRenderer
                 ->renderPartialAsString(
                     '//invoice/client/partial_client_address',
-                    ['client' => $cR->repoClientquery($invoice->getClientId())],
+                    ['client' => $cR->repoClientquery((int) $invoice->getClientId())],
                 ),
             'payment_method' => $payment_method_for_this_invoice ?: 'None',
             'total'          => $total,

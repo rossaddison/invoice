@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Form;
 /**
  * @var App\Invoice\Client\ClientForm $form
  * @var App\Invoice\ClientCustom\ClientCustomForm $clientCustomForm
- * @var App\Invoice\Entity\Client $client
+ * @var App\Infrastructure\Persistence\Client\Client $client
  * @var App\Widget\FormFields $formFields
  *
  * Related logic: see config\common\params.php 'cvH'
@@ -210,7 +210,7 @@ use Yiisoft\Html\Tag\Form;
    <?php endif; ?>
    <?php if ($postal_address_count === 0 && $origin == 'edit'): ?>
     <?= Html::a($translator->translate('client.postaladdress.add'),
-        $urlGenerator->generate('postaladdress/add', ['client_id' => $client->reqClientId(), 'origin' => 'client']),
+        $urlGenerator->generate('postaladdress/add', ['client_id' => $client->reqId(), 'origin' => 'client']),
         ['class' => 'btn btn-warning btn-lg mt-3']); ?>
    <?php endif; ?>
   <?= Html::closeTag('div'); ?>

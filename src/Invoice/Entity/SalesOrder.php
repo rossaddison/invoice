@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Entity;
 
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;

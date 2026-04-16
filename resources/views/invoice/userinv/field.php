@@ -73,7 +73,7 @@ $client_helper = new ClientHelper($s);
                                         ['id' => $userClient->getClientId()]); ?>"
                                        style="text-decoration:none">
                                         <?php
-                                            $client = $cR->repoClientquery(
+                                            $client = $cR->repoClientquery((int) 
                                                     $userClient->getClientId());
                                     echo $client_helper->formatClient($client);
                                 ?>

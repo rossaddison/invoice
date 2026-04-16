@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\Img;
 
 /**
  * Related logic: see QuoteController function urlKey
- * @var App\Invoice\Entity\Client $client
+ * @var App\Infrastructure\Persistence\Client\Client $client
  * @var App\Invoice\Entity\Quote $quote
  * @var App\Invoice\Entity\QuoteAmount $quote_amount
  * @var App\Invoice\Entity\UserInv $userInv

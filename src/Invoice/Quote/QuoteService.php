@@ -36,9 +36,7 @@ final readonly class QuoteService
     private function persist(array $array, Quote $model): void
     {
         if (isset($array['client_id'])) {
-            $client = $this->cR->repoClientquery(
-                (string) $array['client_id']
-            );
+            $client = $this->cR->repoClientquery((int) $array['client_id']);
             $model->setClient($client);
         }
         if (isset($array['group_id'])) {

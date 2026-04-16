@@ -8,7 +8,7 @@ use Yiisoft\Html\Tag\Img;
 
 /**
  * Related logic: see SalesOrderController function urlKey
- * @var App\Invoice\Entity\Client $client
+ * @var App\Infrastructure\Persistence\Client\Client $client
  * @var App\Invoice\Entity\SalesOrder $salesorder
  * @var App\Invoice\Entity\SalesOrderAmount $salesorder_amount
  * @var App\Invoice\Entity\UserInv $userInv

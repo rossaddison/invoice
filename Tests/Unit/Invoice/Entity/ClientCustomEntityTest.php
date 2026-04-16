@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\ClientCustom;
 use App\Invoice\Entity\CustomField;
 use PHPUnit\Framework\TestCase;

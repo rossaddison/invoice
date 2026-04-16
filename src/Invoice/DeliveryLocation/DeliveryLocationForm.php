@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\DeliveryLocation;
 
-use App\Invoice\Entity\DeliveryLocation;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
@@ -55,10 +55,10 @@ final class DeliveryLocationForm extends FormModel
 
     public function __construct(DeliveryLocation $del)
     {
-        $this->id = $del->getId();
+        $this->id = $del->reqId();
         $this->date_created = $del->getDateCreated();
         $this->date_modified = $del->getDateModified();
-        $this->client_id = $del->getClientId();
+        $this->client_id = (string) $del->getClientId();
         $this->name = $del->getName();
         $this->building_number = $del->getBuildingNumber();
         $this->address_1 = $del->getAddress1();

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\DeliveryLocation;
 
-use App\Invoice\Entity\DeliveryLocation;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\Client\ClientRepository as CR;
 
 final readonly class DeliveryLocationService
@@ -59,8 +59,7 @@ final readonly class DeliveryLocationService
         $client = 'client_id';
         if (isset($array[$client])) {
             $model->setClient(
-                $this->cR->repoClientquery(
-                    (string) $array[$client]));
+                $this->cR->repoClientquery((int) $array[$client]));
         }
     }
 

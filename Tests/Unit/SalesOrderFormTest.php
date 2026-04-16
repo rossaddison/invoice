@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\SalesOrder;
 
 use App\Invoice\Entity\SalesOrder;
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Entity\Group;
 use App\Invoice\SalesOrder\SalesOrderForm;
 use App\User\User;

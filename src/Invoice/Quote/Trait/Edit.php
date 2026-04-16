@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Invoice\Entity\{Contract, DeliveryLocation, Group, Quote, QuoteCustom, QuoteTaxRate};
+use App\Invoice\Entity\{Contract, Group, Quote, QuoteCustom, QuoteTaxRate};
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\{
     Client\ClientRepository as CR,
     Contract\ContractRepository as ContractRepo,
@@ -206,20 +207,19 @@ trait Edit
          * @var DeliveryLocation $dLoc
          */
         foreach ($dLocs as $dLoc) {
-            $dLocId = $dLoc->getId();
+            $dLocId = $dLoc->reqId();
             $address = [];
-            if (null !== $dLocId) {
-                if (null !== $dLoc->getAddress1()) {
-                    $address[] = $dLoc->getAddress1();
-                }
-                if (null !== $dLoc->getAddress2()) {
-                    $address[] = $dLoc->getAddress2();
-                }
-                if (null !== $dLoc->getCity()) {
-                    $address[] = $dLoc->getCity();
-                }
-                $optionsDataDeliveryLocations[$dLocId] = implode(', ', $address);
+            if (null !== $dLoc->getAddress1()) {
+                $address[] = $dLoc->getAddress1();
             }
+            if (null !== $dLoc->getAddress2()) {
+                $address[] = $dLoc->getAddress2();
+            }
+            if (null !== $dLoc->getCity()) {
+                $address[] = $dLoc->getCity();
+            }
+            $optionsDataDeliveryLocations[$dLocId] = implode(', ', $address);
+            
         }
 
         $groups = $groupRepo->findAllPreloaded();

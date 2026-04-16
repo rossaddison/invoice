@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrder;
 
 use App\Auth\Permissions;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\{
 BaseController, Client\ClientRepository as CR,
 CustomField\CustomFieldRepository as CFR,
 CustomValue\CustomValueRepository as CVR,
 DeliveryLocation\DeliveryLocationRepository as DR,
-Entity\CustomField, Entity\DeliveryLocation, Entity\Group, Entity\Inv,
+Entity\CustomField, Entity\Group, Entity\Inv,
 Entity\InvAmount, Entity\InvCustom, Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrder, Entity\SalesOrderAmount, Entity\SalesOrderCustom, Entity\SalesOrderItem, Entity\SalesOrderTaxRate, Entity\SalesOrderItemAllowanceCharge,
 Group\GroupRepository as GR, Entity\SalesOrderAllowanceCharge,
 Helpers\CustomValuesHelper as CVH, Helpers\PdfHelper, Inv\InvForm,
@@ -1530,14 +1531,12 @@ final class SalesOrderController extends BaseController
          * @var DeliveryLocation $dLoc
          */
         foreach ($dLocs as $dLoc) {
-            $dLocId = $dLoc->getId();
-            if (null !== $dLocId) {
-                $optionsDataDeliveryLocations[$dLocId] =
-                    ($dLoc->getAddress1() ?? '')
-                        . ', ' . ($dLoc->getAddress2() ?? '') . ', '
-                        . ($dLoc->getCity() ?? '') . ', '
-                        . ($dLoc->getZip() ?? '');
-            }
+            $dLocId = $dLoc->reqId();
+              $optionsDataDeliveryLocations[$dLocId] =
+                  ($dLoc->getAddress1() ?? '')
+                      . ', ' . ($dLoc->getAddress2() ?? '') . ', '
+                      . ($dLoc->getCity() ?? '') . ', '
+                      . ($dLoc->getZip() ?? '');
         }
         $optionsDataGroup = [];
         /**

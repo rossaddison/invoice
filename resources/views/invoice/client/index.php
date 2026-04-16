@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Client;
+use App\Infrastructure\Persistence\Client\Client;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 /**
- * @var App\Invoice\Entity\Client $client
+ * @var App\Infrastructure\Persistence\Client\Client $client
  * @var App\Invoice\ClientPeppol\ClientPeppolRepository $cpR
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Inv\InvRepository $iR
@@ -56,7 +56,7 @@ $columns = [
     new DataColumn(
         'id',
         header: 'id',
-        content: static fn (Client $model) => (string) $model->reqClientId(),
+        content: static fn (Client $model) => (string) $model->reqId(),
         withSorting: true,
     ),
     new DataColumn(
@@ -72,7 +72,7 @@ $columns = [
         'id',
         header: 'Peppol',
         content: static function (Client $model) use ($cpR, $button, $translator): Span {
-            return ($cpR->repoClientCount((string) $model->reqClientId()) !== 0)
+            return ($cpR->repoClientCount((string) $model->reqId()) !== 0)
                     ? $button::activeLabel($translator)
                     : $button::inactiveLabel($translator);
         },
@@ -84,7 +84,7 @@ $columns = [
         header: $translator->translate('client.has.user.account'),
         content: static function (Client $model) use ($canEdit, $ucR, $button,
                 $translator, $urlGenerator): Span {
-            return ($ucR->repoUserqueryCount((string) $model->reqClientId()) !== 0
+            return ($ucR->repoUserqueryCount((string) $model->reqId()) !== 0
                     && $canEdit)
                    ? $button::activeLabel($translator)
                    : $button::inactiveWithAddUserAccount($urlGenerator, $translator);
@@ -97,7 +97,7 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return (new A())
                 ->content(Html::tag('i', '', ['class' => 'bi bi-eye']))
-                ->href($urlGenerator->generate('client/view', ['id' => $model->reqClientId()]))
+                ->href($urlGenerator->generate('client/view', ['id' => $model->reqId()]))
                 ->encode(false)
                 ->addAttributes(['class' => 'btn btn-outline-info btn-sm']);
         },
@@ -108,7 +108,7 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator): A {
             return (new A())
                 ->content(Html::tag('i', '', ['class' => 'bi bi-pencil-square']))
-                ->href($urlGenerator->generate('client/edit', ['id' => $model->reqClientId(), 'origin' => 'edit']))
+                ->href($urlGenerator->generate('client/edit', ['id' => $model->reqId(), 'origin' => 'edit']))
                 ->encode(false)
                 ->addAttributes(['class' => 'btn btn-outline-warning btn-sm']);
         },
@@ -128,7 +128,7 @@ $columns = [
                         ],
                     )->encode(false)
                 )
-                ->href($urlGenerator->generate('client/delete', ['id' => $model->reqClientId()]))
+                ->href($urlGenerator->generate('client/delete', ['id' => $model->reqId()]))
                 ->encode(false);
         },
         encodeContent: false,
@@ -137,7 +137,7 @@ $columns = [
         'invs',
         content: static function (Client $model) use ($iR, $iaR,
         $urlGenerator, $gridComponents): string {
-            $clientId = $model->reqClientId(); 
+            $clientId = $model->reqId(); 
             $invoices = $iR->findAllWithClient($clientId);
             // Initialize a new empty ArrayCollection without the need to create a new entity
             $model->setInvs();
@@ -221,7 +221,7 @@ $columns = [
             return   new A()
                     ->content(Html::encode($model->getClientName()))
                     ->href($urlGenerator->generate('client/view', [
-                        'id' => $model->reqClientId()]))
+                        'id' => $model->reqId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -240,7 +240,7 @@ $columns = [
             return   new A()
                     ->content(Html::encode($model->getClientSurname() ?? ''))
                     ->href($urlGenerator->generate('client/view', [
-                        'id' => $model->reqClientId()]))
+                        'id' => $model->reqId()]))
                     ->addClass('btn btn-warning ms-2');
         },
         encodeContent: false,
@@ -258,7 +258,7 @@ $columns = [
         content: static function (Client $model): string {
             $clientBirthDate = $model->getClientBirthdate();
             /**
-             * Related logic: see App\Invoice\Entity\Client B)
+             * Related logic: see  B)
              */
             if (null !== $clientBirthDate && !is_string($clientBirthDate)) {
                 return Html::encode($clientBirthDate->format('Y-m-d'));
@@ -282,7 +282,7 @@ $columns = [
             . $s->getSetting('currency_symbol')
             . ')',
         content: static function (Client $model) use ($iR, $iaR, $s): string {
-            $clientId = $model->reqClientId();
+            $clientId = $model->reqId();
             return Html::encode($s->formatCurrency(
                 $iR->withTotalBalance($clientId, $iaR)));
         },
@@ -291,11 +291,11 @@ $columns = [
         content: static function (Client $model) use ($urlGenerator,
                                                         $translator, $cpR): A {
             $addUrl = $urlGenerator->generate('clientpeppol/add',
-                    ['client_id' => $model->reqClientId()]);
+                    ['client_id' => $model->reqId()]);
             $editUrl = $urlGenerator->generate('clientpeppol/edit',
-                    ['client_id' => $model->reqClientId(), 'origin' => 'edit']);
+                    ['client_id' => $model->reqId(), 'origin' => 'edit']);
             $equal = ($cpR->repoClientCount(
-                    (string) $model->reqClientId()) === 0 ? true : false);
+                    (string) $model->reqId()) === 0 ? true : false);
             $heading = ($equal ? $translator->translate('client.peppol.add') :
                 $translator->translate('client.peppol.edit'));
             return Html::a(

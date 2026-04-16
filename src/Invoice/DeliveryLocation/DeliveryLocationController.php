@@ -6,7 +6,7 @@ namespace App\Invoice\DeliveryLocation;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\DeliveryLocation;
+use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Quote\QuoteRepository as QR;
@@ -199,7 +199,7 @@ final class DeliveryLocationController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'del/edit',
-                'actionArguments' => ['id' => $del->getId()],
+                'actionArguments' => ['id' => $del->reqId()],
                 'actionQueryParameters' => [
                     'origin' => $origin,
                     'origin_id' => $origin_id,
@@ -287,14 +287,14 @@ final class DeliveryLocationController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'del/view',
-                'actionArguments' => ['id' => $del->getId()],
+                'actionArguments' => ['id' => $del->reqId()],
                 'form' => $form,
                 'del' =>
-                $delRepository->repoDeliveryLocationquery((string) $del->getId()),
+                $delRepository->repoDeliveryLocationquery((string) $del->reqId()),
                 'electronic_address_scheme' =>
                 PeppolArrays::electronicAddressScheme(),
             ];
-            if ($this->rbacObserver($del->getClientId(), $ucR, $uiR) ||
+            if ($this->rbacObserver((string) $del->getClientId(), $ucR, $uiR) ||
                 $this->rbacAdmin()) {
                 return $this->webViewRenderer->render('_view', $parameters);
             }
