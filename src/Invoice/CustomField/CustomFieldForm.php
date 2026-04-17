@@ -10,7 +10,6 @@ use Yiisoft\Validator\Rule\Required;
 
 final class CustomFieldForm extends FormModel
 {
-    private ?int $id = null;
     private ?string $table = '';
     private ?string $label = '';
     #[Required]
@@ -37,7 +36,6 @@ final class CustomFieldForm extends FormModel
     private ?int $number_max = null;
     public function __construct(CustomField $custom_field)
     {
-        $this->id = (int) $custom_field->getId();
         $this->table = $custom_field->getTable();
         $this->label = $custom_field->getLabel();
         $this->type = $custom_field->getType();
@@ -58,11 +56,6 @@ final class CustomFieldForm extends FormModel
         $this->text_area_wrap = $custom_field->getTextAreaWrap();
         $this->number_min = $custom_field->getNumberMin();
         $this->number_max = $custom_field->getNumberMax();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getTable(): ?string

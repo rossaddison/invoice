@@ -104,6 +104,7 @@ trait Edit
                 'invCustomValues' => $this->invCustomValues($inv_id, $icR),
                 'invCustomForm' => $invCustomForm,
                 'noteOnTaxPoint' => $note_on_tax_point ?: '',
+                'originId' => $inv->getId(),
                 'optionsData' => $this->editOptionsData(
                     $peppol_array,
                     $inv,

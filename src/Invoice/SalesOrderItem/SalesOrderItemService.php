@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItem;
 
+use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
+use App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\{
+    SalesOrderItemAllowanceCharge,
+};
 use App\Invoice\{
 Entity\SalesOrderItemAmount,
-Entity\SalesOrderItem,
 Product\ProductRepository as PR,
 SalesOrder\SalesOrderRepository as SOR,
 SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR,
@@ -41,9 +44,7 @@ final readonly class SalesOrderItemService
                 );
             if ($sales_order) {
                 $model->setSalesOrder($sales_order);
-                $model->setSalesOrderId(
-                    (int) $sales_order->getId()
-                );
+                $model->setSalesOrderId($sales_order->reqId());
             }
         }
         if (isset($array['tax_rate_id'])) {
@@ -344,7 +345,7 @@ final readonly class SalesOrderItemService
         $all_allowances = 0.00;
         $acsois = $this->acsoiR->repoSalesOrderItemquery(
                                                 (string)$sales_order_item_id);
-        /** @var \App\Invoice\Entity\SalesOrderItemAllowanceCharge $acsoi */
+        /** @var SalesOrderItemAllowanceCharge $acsoi */
         foreach ($acsois as $acsoi) {
             if ($acsoi->getAllowanceCharge()?->getIdentifier() == '1') {
                 $all_charges += (float) $acsoi->getAmount();

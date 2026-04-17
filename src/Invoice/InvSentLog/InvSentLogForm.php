@@ -11,22 +11,15 @@ use DateTimeImmutable;
 
 final class InvSentLogForm extends FormModel
 {
-    private ?int $id = null;
     private ?int $inv_id = null;
     private mixed $date_sent = '';
     private ?Inv $inv = null;
 
     public function __construct(InvSentLog $invsentlog)
     {
-        $this->id = $invsentlog->getId();
         $this->inv = $invsentlog->getInv();
         $this->inv_id = $invsentlog->getInvId();
         $this->date_sent = $invsentlog->getDateSent();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getInvId(): ?int

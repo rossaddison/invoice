@@ -69,9 +69,6 @@ foreach ($companies as $company) {
                     <?= $formFields->companyPrivateCompanySelect($form, $optionsDataCompany, $company_public); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-                    <?= $formFields->companyPrivateHiddenField($form, 'id'); ?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
                     <?= $formFields->companyPrivateTextField($form, 'tax_code', 'tax.code'); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>

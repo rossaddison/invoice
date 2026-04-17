@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrder;
 
-use App\Invoice\Entity\SalesOrder;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Length;
@@ -61,8 +61,10 @@ final class SalesOrderForm extends FormModel
     {
         $this->number = $salesOrder->getNumber();
         $this->date_created = $salesOrder->getDateCreated();
-        $this->quote_id = $salesOrder->getQuoteId();
-        $this->inv_id = $salesOrder->getInvId();
+        $this->quote_id = $salesOrder->getQuoteId() !== null
+            ? (string) $salesOrder->getQuoteId() : null;
+        $this->inv_id = $salesOrder->getInvId() !== null
+            ? (string) $salesOrder->getInvId() : null;
         $this->group_id = (int) $salesOrder->getGroupId();
         $this->client_id = (int) $salesOrder->getClientId();
         $this->client_po_number = $salesOrder->getClientPoNumber();

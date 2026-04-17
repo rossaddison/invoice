@@ -6,8 +6,8 @@ namespace App\Invoice\SalesOrderItem;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\SalesOrder;
-use App\Invoice\Entity\SalesOrderItem;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
+use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderItemAmount;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountService as SOIAS;
@@ -74,7 +74,7 @@ final class SalesOrderItemController extends BaseController
             if (null!== $so && ($this->rbacObserver($so, $ucR, $uiR)
              || $this->rbacAccountant()
              || $this->rbacAdmin())) {
-                $so_id = $so_item->getSalesOrderId();
+                $so_id = (string) $so_item->getSalesOrderId();
                 $form = new SalesOrderItemForm($so_item, $so_id);
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
@@ -139,8 +139,9 @@ final class SalesOrderItemController extends BaseController
                 // the salesorder is intended for the current user
                 && ($so->getUserId() === $this->userService->getUser()?->getId())
                 // the salesorder client is associated with the above user
-                && ($ucR->repoUserClientqueryCount($so->getUserId(),
-                                                $so->getClientId()) > 0)) {
+                && ($ucR->repoUserClientqueryCount(
+                    (string) $so->getUserId(),
+                    (string) $so->getClientId()) > 0)) {
                 $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {

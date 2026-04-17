@@ -92,10 +92,6 @@ use Yiisoft\VarDumper\VarDumper;
                                     ->value($form->getClientId() ?? $client_id)
                                 ?>
 
-                                <?= Field::hidden($form, 'id')
-                                    ->value($form->getId() ?? '')
-                                ?>
-
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                   <?= Field::email($form, 'endpointid')
                     ->label($translator->translate('client.peppol.endpointid'))

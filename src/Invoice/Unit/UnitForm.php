@@ -11,8 +11,6 @@ use Yiisoft\Validator\Rule\Required;
 
 final class UnitForm extends FormModel
 {
-    private ?int $unit_id = null;
-
     #[Required]
     #[Length(min: 0, max: 50)]
     private ?string $unit_name = null;
@@ -22,14 +20,8 @@ final class UnitForm extends FormModel
 
     public function __construct(Unit $unit)
     {
-        $this->unit_id = $unit->getUnitId();
         $this->unit_name = $unit->getUnitName();
         $this->unit_name_plrl = $unit->getUnitNamePlrl();
-    }
-
-    public function getUnitId(): ?int
-    {
-        return $this->unit_id;
     }
 
     public function getUnitName(): ?string

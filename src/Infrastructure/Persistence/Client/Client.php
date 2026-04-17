@@ -203,7 +203,9 @@ class Client
     {
         if (null == $this->client_full_name) {
             if (null !== $this->client_surname) {
-                return ltrim(rtrim($this->client_name . ' ' . $this->client_surname));
+                return ltrim(rtrim(
+                    $this->client_name . ' ' . $this->client_surname
+                ));
             }
             return ltrim(rtrim($this->client_name));
         }

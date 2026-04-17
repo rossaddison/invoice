@@ -199,7 +199,9 @@ class DeliveryLocation
         return $this->electronic_address_scheme;
     }
 
-    public function setElectronicAddressScheme(string $electronic_address_scheme): void
+    public function setElectronicAddressScheme(
+        string $electronic_address_scheme
+    ): void
     {
         $this->electronic_address_scheme = $electronic_address_scheme;
     }

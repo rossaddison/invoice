@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\SalesOrder;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\SalesOrder $so
+ * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\SalesOrderAmount\SalesOrderAmountRepository $soaR
  * @var App\Invoice\SalesOrder\SalesOrderRepository $soR
@@ -153,7 +153,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (SalesOrder $model): string {
-            return (string) $model->getId();
+            return (string) $model->reqId();
         },
     ),
     new DataColumn(
@@ -212,7 +212,7 @@ $columns = [
         'id',
         header: $translator->translate('total'),
         content: function (SalesOrder $model) use ($s, $soaR): string {
-            $so_id = $model->getId();
+            $so_id = $model->reqId();
             $so_amount = (($soaR->repoSalesOrderAmountCount(
                     (string) $so_id) > 0) ? $soaR->repoSalesOrderquery(
                             (string) $so_id) : null);
@@ -225,7 +225,7 @@ $columns = [
         content: static function (SalesOrder $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'bi-eye']),
                 $urlGenerator->generate(
-                        'salesorder/view', ['id' => $model->getId()]), []);
+                        'salesorder/view', ['id' => $model->reqId()]), []);
         },
     ),
 ];

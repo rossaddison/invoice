@@ -12,7 +12,6 @@ use DateTimeImmutable;
 
 final class InvItemForm extends FormModel
 {
-    private ?string $id = '';
     private ?string $inv_id = '';
     private ?string $so_item_id = '';
 
@@ -55,7 +54,6 @@ final class InvItemForm extends FormModel
 
     public function __construct(InvItem $invitem, int $inv_id)
     {
-        $this->id = (string) $invitem->getId();
         $this->inv_id = (string) $inv_id;
         $this->so_item_id = $invitem->getSoItemId();
         $this->tax_rate_id = $invitem->getTaxRateId();
@@ -73,11 +71,6 @@ final class InvItemForm extends FormModel
         $this->date = $invitem->getDate();
         $this->belongs_to_vat_invoice = (int) $invitem->getBelongsToVatInvoice();
         $this->delivery_id = $invitem->getDeliveryId();
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
     }
 
     public function getDate(): DateTimeImmutable

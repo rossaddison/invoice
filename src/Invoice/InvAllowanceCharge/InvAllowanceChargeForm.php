@@ -10,8 +10,6 @@ use Yiisoft\FormModel\FormModel;
 
 final class InvAllowanceChargeForm extends FormModel
 {
-    private ?int $id = null;
-
     private ?int $allowance_charge_id = null;
 
     #[GreaterThan(0)]
@@ -24,11 +22,6 @@ final class InvAllowanceChargeForm extends FormModel
         $this->allowance_charge_id = (int) $invAllowanceCharge->getAllowanceChargeId();
         $this->amount = (int) $invAllowanceCharge->getAmount();
         $this->vat_or_tax = (int) $invAllowanceCharge->getVatOrTax();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getInvId(): ?int

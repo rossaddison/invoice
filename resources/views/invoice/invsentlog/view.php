@@ -41,21 +41,15 @@ use Yiisoft\FormModel\Field;
         <?= Html::encode($title); ?>
     <?= Html::closeTag('h5'); ?>
     <?= Html::openTag('div'); ?>
-        <?= Field::text($form, 'id')
-            ->value(Html::encode($form->getId()))
-            ->readonly(true)
-?>
-    <?= Html::closeTag('div'); ?>
-    <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'inv_id')
-   ->label($translator->translate('number'))
-   ->addInputAttributes([
-       'class' => 'form-control form-control-lg',
-   ])
-   ->value(Html::encode($form->getInv()?->getNumber() ?? '#'))
-   ->placeholder($translator->translate('number'))
-   ->readonly(true)
-?>
+           ->label($translator->translate('number'))
+           ->addInputAttributes([
+               'class' => 'form-control form-control-lg',
+           ])
+           ->value(Html::encode($form->getInv()?->getNumber() ?? '#'))
+           ->placeholder($translator->translate('number'))
+           ->readonly(true)
+        ?>
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div'); ?>
         <?= Field::text($form, 'date_sent')

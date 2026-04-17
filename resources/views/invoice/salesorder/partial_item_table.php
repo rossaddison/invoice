@@ -6,7 +6,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 
 /**
- * @var App\Invoice\Entity\SalesOrder $so
+ * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var App\Invoice\Entity\SalesOrderAmount $soAmount
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -63,7 +63,7 @@ $subtotalTooltip = 'sales_order_amount->item_subtotal ='
 // ********
 $count = 1;
 /**
- * @var App\Invoice\Entity\SalesOrderItem $item
+ * @var App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem $item
  */
 foreach ($soItems as $item) {
     $productId = $item->getProductId();
@@ -78,7 +78,7 @@ foreach ($soItems as $item) {
                     'id' => $productId,
                 ])
            )
-           ->content($productId)
+           ->content((string) $productId)
            ->render();
     }
     if ($taskId > 0) {
@@ -89,7 +89,7 @@ foreach ($soItems as $item) {
                        'id' => $taskId,
                    ])
            )
-           ->content($taskId)
+           ->content((string) $taskId)
            ->render();
     }
     ?>
@@ -98,8 +98,14 @@ foreach ($soItems as $item) {
                     <td class="td-text" style="background-color: lightgreen">
                         <b>
                             <div class="input-group">
-<?php echo $count . '-' . $item->getSalesOrderId() . '-' . $item->getId() . '-'
-    . ($productId > 0 ? $productRef : '') . ($taskId > 0 ? $taskRef : ''); ?>
+<?php echo $count
+        . '-'
+        . (string) $item->getSalesOrderId()
+        . '-'
+        . (string) $item->reqId()
+        . '-'
+        . ((string) $productId > 0 ? $productRef : '')
+        . ((string) $taskId > 0 ? $taskRef : ''); ?>
 
                             </div>
                             <div class="input-group">
@@ -291,12 +297,12 @@ foreach ($soItems as $item) {
                     ($item->getTask()?->getName() ?? '')); ?>">
                                 <a class="btn btn-info"
                                    data-bs-toggle="modal"
-                                   href="#view-product-<?= $item->getId(); ?>"
+                                   href="#view-product-<?= $item->reqId(); ?>"
                                    style="text-decoration:none">
                                     <i class="bi bi-eye"></i>
                                 </a>
                             </span>
-                            <div id="view-product-<?= $item->getId(); ?>"
+                            <div id="view-product-<?= $item->reqId(); ?>"
                                  class="modal modal-lg" tabindex="-1">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -348,7 +354,7 @@ foreach ($soItems as $item) {
                             <span>
                                 <a class="btn btn-primary"
                                    href="
-<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]); ?>"
+<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->reqId()]); ?>"
                                    style="text-decoration:none"><?= '🖉'; ?></a>
                             </span>
                         <?php } ?>
@@ -425,9 +431,9 @@ foreach ($soItems as $item) {
 <?php
     if ($s->getSetting('enable_peppol') == '1') {
 /**
- * @var App\Invoice\Entity\SalesOrderItemAllowanceCharge $acsoi
+ * @var App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge $acsoi
  */
-foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
+foreach ($acsoiR->repoSalesOrderItemquery((string) $item->reqId()) as $acsoi) { ?>
     <?php $isCharge =
         ($acsoi->getAllowanceCharge()?->getIdentifier() == 1 ? true : false); ?>
                         <tr>
@@ -483,8 +489,8 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount">
                         <?= $numberHelper->formatCurrency(
-                                $soiaR->repoSalesOrderItemAmountquery(
-                                        $item->getId())?->getSubtotal()); ?>
+                                $soiaR->repoSalesOrderItemAmountquery((string) 
+                                        $item->reqId())?->getSubtotal()); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
@@ -500,8 +506,8 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->discount">
                         (<?= $numberHelper->formatCurrency(
-                                $soiaR->repoSalesOrderItemAmountquery(
-                                        $item->getId())?->getDiscount()); ?>)
+                                $soiaR->repoSalesOrderItemAmountquery((string) 
+                                        $item->reqId())?->getDiscount()); ?>)
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle"
@@ -518,7 +524,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->tax_total">
                             <?= $numberHelper->formatCurrency(
-    $soiaR->repoSalesOrderItemAmountquery($item->getId())?->getTaxTotal()); ?>
+    $soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getTaxTotal()); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle"
@@ -534,7 +540,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->getId()) as $acsoi) { ?>
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->total">
                             <?= $numberHelper->formatCurrency(
-    $soiaR->repoSalesOrderItemAmountquery($item->getId())?->getTotal()); ?>
+    $soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getTotal()); ?>
                         </span>
                     </td>
                 </tr>

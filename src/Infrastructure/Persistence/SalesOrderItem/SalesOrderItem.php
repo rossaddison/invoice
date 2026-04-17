@@ -2,37 +2,55 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\SalesOrderItem;
 
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
+use App\Invoice\Entity\Task;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use DateTime;
 use DateTimeImmutable;
 
-#[Entity(repository:SOIR::class)]
+#[Entity(repository: SOIR::class)]
 class SalesOrderItem
 {
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 
-    #[BelongsTo(target: SalesOrder::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(
+        target: SalesOrder::class,
+        nullable: false,
+        fkAction: 'NO ACTION'
+    )]
     private ?SalesOrder $sales_order = null;
 
-    #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
+    #[BelongsTo(
+        target: TaxRate::class,
+        nullable: false,
+        fkAction: 'NO ACTION'
+    )]
     private ?TaxRate $tax_rate = null;
 
-    #[BelongsTo(target: Product::class, nullable: true, fkAction: 'NO ACTION')]
+    #[BelongsTo(
+        target: Product::class,
+        nullable: true,
+        fkAction: 'NO ACTION'
+    )]
     private ?Product $product = null;
 
-    #[BelongsTo(target: Task::class, nullable: true, fkAction: 'NO ACTION')]
+    #[BelongsTo(
+        target: Task::class,
+        nullable: true,
+        fkAction: 'NO ACTION'
+    )]
     private ?Task $task = null;
 
     public function __construct(
         #[Column(type: 'primary')]
-        public ?int $id = null,
+        private ?int $id = null,
         #[Column(type: 'text', nullable: true)]
         private ?string $peppol_po_itemid = '',
         #[Column(type: 'text', nullable: true)]
@@ -47,7 +65,6 @@ class SalesOrderItem
         private ?float $price = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: true, default: 0.00)]
         private ?float $discount_amount = 0.00,
-        // the relative order of the item on the invoice.
         #[Column(type: 'integer(2)', nullable: true, default: 0)]
         private ?int $order = null,
         #[Column(type: 'string(50)', nullable: true)]
@@ -68,13 +85,34 @@ class SalesOrderItem
         $this->date_added = new DateTimeImmutable();
     }
 
-    //relation $tax_rate
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
+    {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'SalesOrderItem has no ID (not persisted yet)'
+            );
+        }
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getTaxRate(): ?TaxRate
     {
         return $this->tax_rate;
     }
 
-    //set relation $taxrate
     public function setTaxRate(?TaxRate $taxrate): void
     {
         $this->tax_rate = $taxrate;
@@ -85,7 +123,6 @@ class SalesOrderItem
         return $this->product;
     }
 
-    //set relation $product
     public function setProduct(?Product $product): void
     {
         $this->product = $product;
@@ -111,19 +148,9 @@ class SalesOrderItem
         $this->sales_order = $sales_order;
     }
 
-    public function getId(): string
+    public function getSalesOrderId(): ?int
     {
-        return (string) $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getSalesOrderId(): string
-    {
-        return (string) $this->sales_order_id;
+        return $this->sales_order_id;
     }
 
     public function setSalesOrderId(int $sales_order_id): void
@@ -131,9 +158,9 @@ class SalesOrderItem
         $this->sales_order_id = $sales_order_id;
     }
 
-    public function getQuoteItemId(): string
+    public function getQuoteItemId(): ?int
     {
-        return (string) $this->quote_item_id;
+        return $this->quote_item_id;
     }
 
     public function setQuoteItemId(int $quote_item_id): void
@@ -161,9 +188,9 @@ class SalesOrderItem
         $this->peppol_po_lineid = $peppol_po_lineid;
     }
 
-    public function getTaxRateId(): string
+    public function getTaxRateId(): ?int
     {
-        return (string) $this->tax_rate_id;
+        return $this->tax_rate_id;
     }
 
     public function setTaxRateId(int $tax_rate_id): void
@@ -171,9 +198,9 @@ class SalesOrderItem
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getProductId(): string
+    public function getProductId(): ?int
     {
-        return (string) $this->product_id;
+        return $this->product_id;
     }
 
     public function setProductId(int $product_id): void
@@ -181,9 +208,9 @@ class SalesOrderItem
         $this->product_id = $product_id;
     }
 
-    public function getTaskId(): string
+    public function getTaskId(): ?int
     {
-        return (string) $this->task_id;
+        return $this->task_id;
     }
 
     public function setTaskId(int $task_id): void
@@ -197,7 +224,7 @@ class SalesOrderItem
         return $this->date_added;
     }
 
-    public function setDateAdded(DateTime $date_added): void
+    public function setDateAdded(DateTimeImmutable $date_added): void
     {
         $this->date_added = $date_added;
     }
@@ -272,9 +299,9 @@ class SalesOrderItem
         $this->product_unit = $product_unit;
     }
 
-    public function getProductUnitId(): string
+    public function getProductUnitId(): ?int
     {
-        return (string) $this->product_unit_id;
+        return $this->product_unit_id;
     }
 
     public function setProductUnitId(int $product_unit_id): void

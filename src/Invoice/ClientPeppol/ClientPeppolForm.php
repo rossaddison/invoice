@@ -12,7 +12,6 @@ use Yiisoft\Validator\Rule\Required;
 
 final class ClientPeppolForm extends FormModel
 {
-    private ?int $id = null;
     private ?int $client_id = null;
 
     #[Required, Length(min: 0, max: 30)]
@@ -59,7 +58,6 @@ final class ClientPeppolForm extends FormModel
 
     public function __construct(ClientPeppol $client_peppol)
     {
-        $this->id = (int) $client_peppol->getId();
         $this->client_id = (int) $client_peppol->getClientId();
         $this->accounting_cost = $client_peppol->getAccountingCost();
         $this->buyer_reference = $client_peppol->getBuyerReference();
@@ -82,11 +80,6 @@ final class ClientPeppolForm extends FormModel
         $this->taxschemeid = $client_peppol->getTaxschemeid();
         $this->supplier_assigned_accountid =
                 $client_peppol->getSupplierAssignedAccountId();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getClientId(): ?int

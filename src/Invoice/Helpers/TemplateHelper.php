@@ -443,7 +443,7 @@ final readonly class TemplateHelper
                                     // $pk = so id;
                                     $so = $soR->repoCount($pk) > 0 ? $soR->repoSalesOrderLoadedquery($pk) : null;
                                     if ($so) {
-                                        $replace_custom = $this->socR->repoFormValuequery((string) $so->getId(), $cf_id[1]);
+                                        $replace_custom = $this->socR->repoFormValuequery((string) $so->reqId(), $cf_id[1]);
                                     }
                                     break;
                                 case 'inv_custom':

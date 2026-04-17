@@ -14,8 +14,6 @@ use Yiisoft\Validator\Rule\Url;
 
 final class CompanyForm extends FormModel
 {
-    private ?int $id = null;
-
     #[Integer(min: 0, max: 1)]
     private ?int $current = 0;
 
@@ -80,7 +78,6 @@ final class CompanyForm extends FormModel
 
     public function __construct(Company $company)
     {
-        $this->id = $company->getId();
         $this->current = $company->getCurrent();
         $this->name = $company->getName();
         $this->address_1 = $company->getAddress1();
@@ -101,11 +98,6 @@ final class CompanyForm extends FormModel
         $this->whatsapp = $company->getWhatsapp();
         $this->arbitration_body = $company->getArbitrationBody();
         $this->arbitration_jurisdiction = $company->getArbitrationJurisdiction();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getCurrent(): ?int

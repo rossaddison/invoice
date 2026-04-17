@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrder;
 
 use App\Auth\Permissions;
-use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
-use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
+use App\Infrastructure\Persistence\{
+        DeliveryLocation\DeliveryLocation,
+        InvAllowanceCharge\InvAllowanceCharge,
+        SalesOrder\SalesOrder,
+        SalesOrderItem\SalesOrderItem,
+        SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge,
+};
 use App\Invoice\{
 BaseController, Client\ClientRepository as CR,
 CustomField\CustomFieldRepository as CFR,
 CustomValue\CustomValueRepository as CVR,
 DeliveryLocation\DeliveryLocationRepository as DR,
 Entity\CustomField, Entity\Group, Entity\Inv,
-Entity\InvAmount, Entity\InvCustom, Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrder, Entity\SalesOrderAmount, Entity\SalesOrderCustom, Entity\SalesOrderItem, Entity\SalesOrderTaxRate, Entity\SalesOrderItemAllowanceCharge,
+Entity\InvAmount, Entity\InvCustom, Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrderAmount, Entity\SalesOrderCustom, Entity\SalesOrderTaxRate,
 Group\GroupRepository as GR, Entity\SalesOrderAllowanceCharge,
 Helpers\CustomValuesHelper as CVH, Helpers\PdfHelper, Inv\InvForm,
 Inv\InvRepository as InvRepo, Inv\InvService, InvAllowanceCharge\InvAllowanceChargeForm,
@@ -266,7 +271,7 @@ final class SalesOrderController extends BaseController
             if ($soR->repoUrlKeyGuestCount($url_key) > 0) {
                 $so = $soR->repoUrlKeyGuestLoaded($url_key);
                 if ($so && $this->rbacObserver($so, $ucR, $uiR)) {
-                    $so_id = $so->getId();
+                    $so_id = $so->reqId();
                     $so->setStatusId(3);
                     $soR->save($so);
                     $so_statuses = $soR->getStatuses($this->translator);
@@ -308,7 +313,7 @@ final class SalesOrderController extends BaseController
                     // so check that the salesorder being rejected is linked to
                     // the current user
                     if ($this->rbacObserver($so, $ucR, $uiR)) {
-                        $so_id = $so->getId();
+                        $so_id = $so->reqId();
                         // see SalesOrderRepository getStatuses function
                         $so->setStatusId(9);
                         $soR->save($so);
@@ -409,7 +414,7 @@ final class SalesOrderController extends BaseController
         // Update each item
         foreach ($item_ids as $item_id) {
             $item = $soiR->repoSalesOrderItemquery($item_id);
-            if ($item && $item->getSalesOrderId() === $salesorder->getId()) {
+            if ($item && $item->getSalesOrderId() === $salesorder->reqId()) {
                 $peppol_po_itemid = $peppol_po_itemids[$item_id] ?? '';
                 $peppol_po_lineid = $peppol_po_lineids[$item_id] ?? '';
 
@@ -522,25 +527,25 @@ final class SalesOrderController extends BaseController
         if ($so && ($this->rbacObserver($so, $ucR, $uiR) || $this->rbacAdmin()
                                                 || $this->rbacAccountant())) {
             $form = new SalesOrderForm($so);
-            $dels = $delRepo->repoClientquery($so->getClientId());
-            $so_id = $so->getId();
+            $dels = $delRepo->repoClientquery((string) $so->getClientId());
+            $so_id = $so->reqId();
             $inv_id = $so->getInvId();
             /**
              * @var Inv $inv
              */
             if (null !== $inv_id) {
-                $inv = $invRepo->repoInvUnloadedquery($inv_id);
+                $inv = $invRepo->repoInvUnloadedquery((string) $inv_id);
             }
             $inv_number = null !== $inv_id
                     && null !== $inv ? (string) $inv->getNumber() : '';
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'salesorder/edit',
-                'actionArguments' => ['id' => $so->getId()],
+                'actionArguments' => ['id' => $so->reqId()],
                 'actionArgumentsDelAdd' => [
-                    'client_id' => $so->getClientId(),
+                    'client_id' => (string) $so->getClientId(),
                     'origin' => 'salesorder',
-                    'origin_id' => $so->getClientId(),
+                    'origin_id' => (string) $so->getClientId(),
                     'action' => 'edit',
                 ],
                 // Only make clients that have a user account available in the
@@ -558,7 +563,7 @@ final class SalesOrderController extends BaseController
                 'invNumber' => $inv_number,
                 // if the delivery location is zero present the link to delivery
                 // locations add
-                'delCount' => $delRepo->repoClientCount($so->getClientId()),
+                'delCount' => $delRepo->repoClientCount((string) $so->getClientId()),
                 'dels' => $dels,
                 'terms_and_conditions_file' =>
                     $this->webViewRenderer->renderPartialAsString(
@@ -566,7 +571,7 @@ final class SalesOrderController extends BaseController
                 'terms_and_conditions' =>
                     $settingRepository->getTermsAndConditions(),
                 // if there are no delivery locations add a flash message
-                'no_delivery_locations' => $delRepo->repoClientCount(
+                'no_delivery_locations' => $delRepo->repoClientCount((string) 
                     $so->getClientId()) > 0 ? '' :
                         $this->flashMessage(
                                 'warning', $this->translator->translate(
@@ -575,9 +580,7 @@ final class SalesOrderController extends BaseController
                 'so' => $so,
                 'cfR' => $cfR,
                 'cvR' => $cvR,
-                'so_custom_values' =>
-                    null !== $so_id ? $this->salesorderCustomValues(
-                        $so_id, $socR) : null,
+                'so_custom_values' => $this->salesorderCustomValues((string) $so_id, $socR),
                 'so_statuses' => $soR->getStatuses($this->translator),
             ];
             if ($request->getMethod() === Method::POST) {
@@ -692,7 +695,7 @@ final class SalesOrderController extends BaseController
             $stream = true;
             $so = $soR->repoSalesOrderUnloadedquery($so_id);
             if ($so) {
-                $pdfhelper->generateSalesorderPdf($so_id, $so->getUserId(),
+                $pdfhelper->generateSalesorderPdf($so_id, (string) $so->getUserId(),
                     $stream, $custom, $salesorder_amount,
                         $salesorder_custom_values, $cR, $cvR, $cfR,
                             $soiR, $soiaR, $acsoiR, $soR, $sotrR, $uiR,
@@ -766,25 +769,21 @@ final class SalesOrderController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $so = $this->salesorderunloaded($id, $soR, false);
         if ($so) {
-            $so_id = $so->getId();
+            $so_id = $so->reqId();
             // pdf => need session variable
             $this->session->set('so_id', $so_id);
             $so_tax_rates = (($sotrR->repoCount((string) $so_id) > 0) ?
                 $sotrR->repoSalesOrderquery((string) $so_id) : null);
             $inv_id = $so->getInvId();
             if (null !== $inv_id) {
-                $inv = $invRepo->repoInvUnloadedquery($inv_id);
+                $inv = $invRepo->repoInvUnloadedquery((string) $inv_id);
                 $invNumber = ($inv ? $inv->getNumber() : '');
             } else {
                 $invNumber = '';
             }
             $quote_id = $so->getQuoteId();
-            if ($quote_id !== '' && $quote_id !== '0') {
-                $quote = $qR->repoQuoteUnLoadedQuery($quote_id);
-                $quoteNumber = ($quote ? $quote->getNumber() : '');
-            } else {
-                $quoteNumber = '';
-            }
+            $quote = $qR->repoQuoteUnLoadedQuery((string) $quote_id);
+            $quoteNumber = $quote?->getNumber() ?? 'None';
             $so_amount = (($soaR->repoSalesOrderAmountCount(
                 (string) $so_id) > 0) ? $soaR->repoSalesOrderquery(
                     (string) $so_id) : null);
@@ -825,7 +824,7 @@ final class SalesOrderController extends BaseController
                             '//invoice/salesorder/partial_item_table', [
                         'acsoiR' => $acsoiR,
                         'packHandleShipTotal' => $acsoR->getPackHandleShipTotal(
-                                    (string) $so->getId()),
+                                    (string) $so->reqId()),
                         'included' => $this->translator->translate(
                                 'item.tax.included'),
                         'excluded' => $this->translator->translate(
@@ -873,7 +872,7 @@ final class SalesOrderController extends BaseController
                     ]),
                     'partial_quote_delivery_location' => null!==
                         ($quote = $qR->repoQuoteUnLoadedQuery(
-                            $so->getQuoteId())) ?
+                                (string) $so->getQuoteId())) ?
                         $this->viewPartialDeliveryLocation(
                             $_language, $dR, $quote->getDeliveryLocationId())
                                 : '',
@@ -888,7 +887,7 @@ final class SalesOrderController extends BaseController
                     return $this->webViewRenderer->render('view', $parameters);
                 }
             } // $so_amount
-        } // $so->getId()
+        } // $so->reqId()
         return $this->webService->getNotFoundResponse();
     }
 
@@ -915,9 +914,9 @@ final class SalesOrderController extends BaseController
                 // the salesorder is intended for the current user
                 && ($so->getUserId() === $this->userService->getUser()?->getId())
                 // the salesorder client is associated with the above user
-                && ($ucR->repoUserClientqueryCount($so->getUserId(),
-                                                $so->getClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery($so->getUserId());
+                && ($ucR->repoUserClientqueryCount((string) $so->getUserId(),
+                                                (string) $so->getClientId()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery((string) $so->getUserId());
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {
                     return true;
@@ -1042,8 +1041,7 @@ final class SalesOrderController extends BaseController
         $so = $soR->repoSalesOrderUnloadedquery($so_id);
         if ($so) {
             // Get client_id from sales order entity or fallback to query params
-            $client_id = $so->getClientId() ?:
-                (string) ($body['client_id'] ?? '');
+            $client_id = (string) ($so->getClientId() ?? $body['client_id'] ?? '');
             // Use default invoice group, not the sales order group
             $group_id = $sR->getSetting('default_invoice_group');
 
@@ -1051,7 +1049,7 @@ final class SalesOrderController extends BaseController
                 'client_id' => $client_id,
                 'group_id' => $group_id,
                 'quote_id' => $so->getQuoteId(),
-                'so_id' => $so->getId(),
+                'so_id' => $so->reqId(),
                 'status_id' => 2,
                 'password' => $body['password'] ?? '',
                 'number' => $gR->generateNumber((int) $group_id),
@@ -1065,7 +1063,7 @@ final class SalesOrderController extends BaseController
             $form = new InvForm($inv);
             if ($formHydrator->populateAndValidate($form, $inv_body)
                   // Salesorder has not been copied before:  inv_id = 0
-                  && ($so->getInvId() === (string) 0)
+                  && ($so->getInvId() === 0)
             ) {
                 /**
                  * @var string $inv_body['client_id']
@@ -1099,7 +1097,7 @@ final class SalesOrderController extends BaseController
                                 $this->soToInvoiceSoAllowanceCharges(
                                     $so_id, $inv_id, $acsoR, $formHydrator);
                                 // Update the sos inv_id.
-                                $so->setInvId($inv_id);
+                                $so->setInvId((int) $inv_id);
                                 // Set salesorder's status to invoice generated
                                 $so->setStatusId(8);
                                 $this->flashMessage('info',
@@ -1168,7 +1166,7 @@ final class SalesOrderController extends BaseController
         $items = $soiR->repoSalesOrderItemIdquery($so_id);
         /** @var SalesOrderItem $so_item */
         foreach ($items as $so_item) {
-            $origSoItemId = $so_item->getId();
+            $origSoItemId = $so_item->reqId();
             $newInvItem = new InvItem();
             $inv_item = [
                 'inv_id' => $new_inv_id,
@@ -1196,7 +1194,7 @@ final class SalesOrderController extends BaseController
                     $newInvItem, $inv_item, $new_inv_id, $pR, $taskR, $unR,
                     $this->translator);
                 $this->copySoItemAllowanceChargesToInv(
-                        $origSoItemId, $acsoiR, $new_inv_id,
+                        (string) $origSoItemId, $acsoiR, $new_inv_id,
                         $savedInvItem, $aciiR);
                 $tax_rate_percentage = $this->invItemService->taxratePercentage(
                         (int) $inv_item['tax_rate_id'], $trR);
@@ -1427,12 +1425,10 @@ final class SalesOrderController extends BaseController
         $salesorder = $soR->repoUrlKeyGuestLoaded($url_key);
         $salesorder_tax_rates = null;
         if ($salesorder) {
-            $salesorder_id = $salesorder->getId();
-            if (null !== $salesorder_id) {
-                if ($sotrR->repoCount($salesorder_id) > 0) {
-                    $salesorder_tax_rates = $sotrR->repoSalesOrderquery(
-                        $salesorder_id);
-                }
+            $salesorder_id = (string) $salesorder->reqId();
+            if ($sotrR->repoCount($salesorder_id) > 0) {
+                $salesorder_tax_rates = $sotrR->repoSalesOrderquery(
+                    $salesorder_id);
             }
             if (in_array($salesorder->getStatusId(), [2,3,4,5,6,7,8,9,10])) {
 // If the user exists
@@ -1449,7 +1445,7 @@ final class SalesOrderController extends BaseController
                     // ...User Account...Assigned Clients
                     $user_client = $ucR->repoUserClientqueryCount(
                         $this->userService->getUser()?->getId(),
-                            $salesorder->getClientId()) === 1 ? true : false;
+                            (string) $salesorder->getClientId()) === 1 ? true : false;
                     if ($user_inv && $user_client && $user_inv->getActive()) {
                         // If the userinv is a Guest => type = 1 ie. NOT an
                         // administrator =>type = 0 and they are active
@@ -1462,53 +1458,51 @@ final class SalesOrderController extends BaseController
                                 'sales_order' =>
                                             $cfR->repoTablequery('sales_order'),
                             ];
-                            if (null !== $salesorder_id) {
-                                $salesorder_amount =
-                                    (($soaR->repoSalesOrderAmountCount(
-                                        $salesorder_id) > 0) ?
-                                            $soaR->repoSalesOrderquery(
-                                                $salesorder_id) : null);
-                                if ($salesorder_amount) {
-                                    $parameters = [
-                                        'renderTemplate' =>
-                                     $this->webViewRenderer->renderPartialAsString(
-                                        '//invoice/template/salesorder/public/'
-                                             . ($this->sR->getSetting(
-                                                'public_salesorder_template')
-                                                        ?: 'SalesOrder_Web'), [
-                                            'isGuest' => $currentUser->isGuest(),
-                                            'terms_and_conditions_file' =>
-                                     $this->webViewRenderer->renderPartialAsString(
-                              '//invoice/salesorder/terms_and_conditions_file'),
-                                            'alert' => $this->alert(),
-                                            'salesorder' => $salesorder,
-                                            'soiaR' => $soiaR,
-                                            'acsoiR' => $acsoiR,
-                                            'salesorder_amount' =>
-                                                            $salesorder_amount,
-                                            'items' =>
-                                    $soiR->repoSalesOrderquery($salesorder_id),
-                                            // Get all the salesorder tax rates
-                                            // that have been setup for this
-                                            // salesorder
-                                            'salesorder_tax_rates' =>
-                                                $salesorder_tax_rates,
-                                            'salesorder_url_key' => $url_key,
-                                            'custom_fields' => $custom_fields,
-                                            'client' => $salesorder->getClient(),
-                                            // Get the details of the user of
-                                            // this quote
-                                            'userInv' =>
-                                                $uiR->repoUserInvUserIdcount(
-                                                    $salesorder->getUserId())
-                                            > 0 ? $uiR->repoUserInvUserIdquery(
-                                              $salesorder->getUserId()) : null,
-                                        ]),
-                                    ];
-                                    return $this->webViewRenderer->render('url_key',
-                                        $parameters);
-                                } // if salesorder_amount
-                            } // if there is a salesorder id
+                            $salesorder_amount =
+                                (($soaR->repoSalesOrderAmountCount(
+                                    $salesorder_id) > 0) ?
+                                        $soaR->repoSalesOrderquery(
+                                            $salesorder_id) : null);
+                            if ($salesorder_amount) {
+                                $parameters = [
+                                    'renderTemplate' =>
+                                 $this->webViewRenderer->renderPartialAsString(
+                                    '//invoice/template/salesorder/public/'
+                                         . ($this->sR->getSetting(
+                                            'public_salesorder_template')
+                                                    ?: 'SalesOrder_Web'), [
+                                        'isGuest' => $currentUser->isGuest(),
+                                        'terms_and_conditions_file' =>
+                                 $this->webViewRenderer->renderPartialAsString(
+                          '//invoice/salesorder/terms_and_conditions_file'),
+                                        'alert' => $this->alert(),
+                                        'salesorder' => $salesorder,
+                                        'soiaR' => $soiaR,
+                                        'acsoiR' => $acsoiR,
+                                        'salesorder_amount' =>
+                                                        $salesorder_amount,
+                                        'items' =>
+                                $soiR->repoSalesOrderquery($salesorder_id),
+                                        // Get all the salesorder tax rates
+                                        // that have been setup for this
+                                        // salesorder
+                                        'salesorder_tax_rates' =>
+                                            $salesorder_tax_rates,
+                                        'salesorder_url_key' => $url_key,
+                                        'custom_fields' => $custom_fields,
+                                        'client' => $salesorder->getClient(),
+                                        // Get the details of the user of
+                                        // this quote
+                                        'userInv' =>
+                                            $uiR->repoUserInvUserIdcount((string)
+                                                $salesorder->getUserId())
+                                        > 0 ? $uiR->repoUserInvUserIdquery((string)
+                                          $salesorder->getUserId()) : null,
+                                    ]),
+                                ];
+                                return $this->webViewRenderer->render('url_key',
+                                    $parameters);
+                            } // if salesorder_amount
                         } // user_inv->getType
                     } // user_inv
                 } // $uiR

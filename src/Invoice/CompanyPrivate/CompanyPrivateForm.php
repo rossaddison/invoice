@@ -12,8 +12,6 @@ use DateTimeImmutable;
 
 final class CompanyPrivateForm extends FormModel
 {
-    private ?int $id = null;
-
     #[Required]
     private ?int $company_id = null;
 
@@ -44,7 +42,6 @@ final class CompanyPrivateForm extends FormModel
 
     public function __construct(CompanyPrivate $company_private)
     {
-        $this->id = $company_private->getId();
         $this->company_id = (int) $company_private->getCompanyId();
         $this->company_public_name = $company_private->getCompany()?->getName();
         $this->vat_id = $company_private->getVatId();
@@ -59,12 +56,7 @@ final class CompanyPrivateForm extends FormModel
         $this->start_date = $company_private->getStartDate();
         $this->end_date = $company_private->getEndDate();
     }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
+    
     public function getCompanyId(): ?int
     {
         return $this->company_id;

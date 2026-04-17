@@ -70,8 +70,6 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('td', ['class' => 'td-text']); ?>
                             <?= Field::hidden($form, 'inv_id')
                                 ->hideLabel(); ?>
-                            <?= Field::hidden($form, 'id')
-                                ->hideLabel(); ?>
                             <?= Field::hidden($form, 'product_id')
                                 ->value('0')
                                 ->hideLabel(); ?>

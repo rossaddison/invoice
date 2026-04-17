@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrderAmount;
 
 use App\Invoice\Entity\SalesOrderAmount as SoAmount;
-use App\Invoice\Entity\SalesOrderItem as SoItem;
+use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem as SoItem;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
@@ -30,7 +30,7 @@ final readonly class SalesOrderAmountService
         );
         if ($sales_order) {
             $model->setSalesOrder($sales_order);
-            $model->setSalesOrderId((int) $sales_order->getId());
+            $model->setSalesOrderId($sales_order->reqId());
         }
     }
 
@@ -148,7 +148,7 @@ final readonly class SalesOrderAmountService
                  * @var SoItem $item
                  */
                 foreach ($items as $item) {
-                    $salesorderItemId = $item->getId();
+                    $salesorderItemId = (string) $item->reqId();
                     $salesorderItemAmount =
                         $soiaR->repoSalesOrderItemAmountquery(
                             $salesorderItemId

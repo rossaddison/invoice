@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see id="so-to-pdf" triggered by <a href="#so-to-pdf" data-bs-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php
- * @var App\Invoice\Entity\SalesOrder $so
+ * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf
  * */
@@ -22,7 +22,7 @@ declare(strict_types=1);
                     <div class="control-label">
                         <?= $translator->translate('custom.fields'); ?>?
                     </div>
-                    <input type="hidden" name="salesorder_id" id="salesorder_id" value="<?php echo $so->getId(); ?>">
+                    <input type="hidden" name="salesorder_id" id="salesorder_id" value="<?php echo $so->reqId(); ?>">
                 </form>
             </div>
             <div class="modal-footer">

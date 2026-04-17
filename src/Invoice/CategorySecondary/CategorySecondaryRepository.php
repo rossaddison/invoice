@@ -132,10 +132,9 @@ final class CategorySecondaryRepository extends Select\Repository
          * @var CategorySecondary $categorySecondary
          */
         foreach ($categorySecondaries as $categorySecondary) {
-            $categorySecondaryId = $categorySecondary->getId();
-            if (null !== $categorySecondaryId) {
-                $optionsDataCategorySecondaries[$categorySecondaryId] = ($categorySecondary->getName() ?? '');
-            }
+            $categorySecondaryId = $categorySecondary->reqId();
+            $optionsDataCategorySecondaries[$categorySecondaryId] =
+                ($categorySecondary->getName() ?? '');
         }
         return $optionsDataCategorySecondaries;
     }
@@ -143,18 +142,20 @@ final class CategorySecondaryRepository extends Select\Repository
     /**
      * @return array
      */
-    public function optionsDataCategorySecondariesWithCategoryPrimaryId(string $category_primary_id): array
-    {
-        $categorySecondaries = $this->repoCategoryPrimaryIdQuery($category_primary_id);
+    public function optionsDataCategorySecondariesWithCategoryPrimaryId(
+        string $category_primary_id
+    ): array {
+        $categorySecondaries = $this->repoCategoryPrimaryIdQuery(
+            $category_primary_id
+        );
         $optionsDataCategorySecondaries = [];
         /**
          * @var CategorySecondary $categorySecondary
          */
         foreach ($categorySecondaries as $categorySecondary) {
-            $categorySecondaryId = $categorySecondary->getId();
-            if (null !== $categorySecondaryId) {
-                $optionsDataCategorySecondaries[$categorySecondaryId] = ($categorySecondary->getName() ?? '');
-            }
+            $categorySecondaryId = $categorySecondary->reqId();
+            $optionsDataCategorySecondaries[$categorySecondaryId] =
+                ($categorySecondary->getName() ?? '');
         }
         return $optionsDataCategorySecondaries;
     }

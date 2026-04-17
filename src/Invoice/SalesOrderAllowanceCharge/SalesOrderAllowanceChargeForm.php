@@ -10,8 +10,6 @@ use Yiisoft\FormModel\FormModel;
 
 final class SalesOrderAllowanceChargeForm extends FormModel
 {
-    private ?int $id = null;
-
     private ?int $allowance_charge_id = null;
 
     #[GreaterThan(0)]
@@ -27,11 +25,6 @@ final class SalesOrderAllowanceChargeForm extends FormModel
                 (int) $salesorderAllowanceCharge->getAllowanceChargeId();
         $this->amount = (int) $salesorderAllowanceCharge->getAmount();
         $this->vat_or_tax = (int) $salesorderAllowanceCharge->getVatOrTax();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getSalesorderId(): ?int

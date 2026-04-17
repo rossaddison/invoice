@@ -12,8 +12,6 @@ use Yiisoft\Validator\Rule\Required;
 final class CustomValueForm extends FormModel
 {
     #[Required]
-    private ?int $id = null;
-    #[Required]
     private ?int $custom_field_id = null;
     #[Required]
     private ?string $value = '';
@@ -26,17 +24,11 @@ final class CustomValueForm extends FormModel
 
     public function __construct(CustomValue $custom_value)
     {
-        $this->id = (int) $custom_value->getId();
         $this->custom_field_id = $custom_value->getCustomFieldId();
         $this->value = $custom_value->getValue();
         $this->customfield = $custom_value->getCustomField();
     }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
+    
     public function getCustomFieldId(): ?int
     {
         return $this->custom_field_id;

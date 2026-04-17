@@ -29,7 +29,9 @@ class CategoryPrimary
     public function reqId(): int
     {
         if ($this->id === null) {
-            throw new \LogicException('CategoryPrimary has no ID (not persisted yet)');
+            throw new \LogicException(
+                'CategoryPrimary has no ID (not persisted yet)'
+            );
         }
 
         return $this->id;
@@ -39,7 +41,12 @@ class CategoryPrimary
     {
         return $this->id !== null;
     }
-    
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getName(): ?string
     {
         return $this->name;

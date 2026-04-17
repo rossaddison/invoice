@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\SalesOrder;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
@@ -24,7 +24,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 
 /**
- * @var App\Invoice\Entity\SalesOrder $so
+ * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\SalesOrderAmount\SalesOrderAmountRepository $soaR
@@ -216,7 +216,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (SalesOrder $model): string {
-            return (string) $model->getId();
+            return (string) $model->reqId();
         },
         visible: $visible,
     ),
@@ -226,7 +226,7 @@ $columns = [
             return Html::a(Html::tag('i', '',
                     ['class' => 'bi-eye']),
                     $urlGenerator->generate('salesorder/view',
-                            ['id' => $model->getId()]), []);
+                            ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
@@ -246,7 +246,7 @@ $columns = [
                     return Html::tag('a', $spanTag, [
                         'href' => $urlGenerator->generate(
                                 'salesorder/soToInvoice',
-                                ['id' => $model->getId()]),
+                                ['id' => $model->reqId()]),
                         'style' => 'text-decoration:none']);
                 }
             }
@@ -258,7 +258,7 @@ $columns = [
         content: static function (SalesOrder $model) use ($urlGenerator): A {
             return Html::a($model->getNumber() ?? '#',
                 $urlGenerator->generate('salesorder/view',
-                        ['id' => $model->getId()]),
+                        ['id' => $model->reqId()]),
                                             ['style' => 'text-decoration:none']);
         },
     ),
@@ -281,15 +281,12 @@ $columns = [
         header: $translator->translate('invoice'),
         content: static function (SalesOrder $model) use ($urlGenerator, $iR):
             string|A {
-            $invId = $model->getInvId();
-            if ($invId !== null && $invId !== '' && $invId !== '0') {
-                $inv = $iR->repoInvUnloadedquery($invId);
-                return $inv
-                ? Html::a($inv->getNumber() ?? '#', $urlGenerator->generate(
-                        'inv/view', ['id' => $invId]),
-                                ['style' => 'text-decoration:none']) : '';
-            }
-            return '';
+            $invId = (string) $model->getInvId();
+            $inv = $iR->repoInvUnloadedquery($invId);
+            return $inv ? Html::a($inv->getNumber() ?? '#',
+                    $urlGenerator->generate(
+                    'inv/view', ['id' => $invId]),
+                            ['style' => 'text-decoration:none']) : '';
         },
         visible: $visible,
     ),
@@ -326,7 +323,7 @@ $columns = [
         'id',
         header: $translator->translate('total'),
         content: function (SalesOrder $model) use ($s, $soaR): string {
-            $so_id = $model->getId();
+            $so_id = $model->reqId();
             $so_amount = (($soaR->repoSalesOrderAmountCount(
                 (string) $so_id) > 0) ? $soaR->repoSalesOrderquery(
                         (string) $so_id) : null);
@@ -367,7 +364,7 @@ $getGroupValue = static function (SalesOrder $salesorder) use ($groupBy, $soR):
 $groupTotals = [];
 if ($enableGrouping) {
     /**
-     * @var SalesOrder $salesorder
+     * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $salesorder
      */
     foreach ($salesorders as $salesorder) {
         $groupValue = $getGroupValue($salesorder);
@@ -378,7 +375,7 @@ if ($enableGrouping) {
             ];
         }
         $groupTotals[$groupValue]['count']++;
-        $so_id = $salesorder->getId();
+        $so_id = $salesorder->reqId();
         $so_amount = (($soaR->repoSalesOrderAmountCount((string) $so_id) > 0) ?
                             $soaR->repoSalesOrderquery((string) $so_id) : null);
         $groupTotals[$groupValue]['total'] += null !== $so_amount ?

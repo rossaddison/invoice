@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrder;
 
-use App\Invoice\Entity\SalesOrder;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Invoice\Group\GroupRepository as GR;
 use Cycle\ORM\Select;
 use Throwable;

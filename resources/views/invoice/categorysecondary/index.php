@@ -40,7 +40,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (CategorySecondary $model) => Html::encode($model->getId()),
+        content: static fn (CategorySecondary $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'name',
@@ -52,7 +52,7 @@ $columns = [
             content: '🔎',
             url: function (CategorySecondary $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('categorysecondary/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('categorysecondary/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -63,7 +63,7 @@ $columns = [
             content: '✎',
             url: function (CategorySecondary $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('categorysecondary/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('categorysecondary/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -74,7 +74,7 @@ $columns = [
             content: '❌',
             url: function (CategorySecondary $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('categorysecondary/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('categorysecondary/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

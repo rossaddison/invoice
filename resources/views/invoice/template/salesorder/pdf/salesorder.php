@@ -8,7 +8,7 @@ use Yiisoft\Html\Html;
  * Related logic: see App\Invoice\Helpers\PdfHelper function generateSalesorderPdf
  *
  * @var App\Invoice\Entity\SalesOrderAmount $so_amount
- * @var App\Invoice\Entity\SalesOrder $salesorder
+ * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $salesorder
  * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
@@ -132,21 +132,20 @@ if (strlen($clientPhone = $salesorder->getClient()?->getClientPhone() ?? '') > 0
         <?php
 if ($items) {
     /**
-     * @var App\Invoice\Entity\InvItem $item
+     * @var App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem $item
      */
     foreach ($items as $item) {
-        $salesorder_item_amount = $soiaR->repoSalesOrderItemAmountquery((string) $item->getId());
+        $salesorder_item_amount = $soiaR->repoSalesOrderItemAmountquery((string) $item->reqId());
         // Display item-level allowances/charges BEFORE the item
         // if Peppol is enabled
         if ($s->getSetting('enable_peppol') == '1') {
-            $itemId = $item->getId();
-            if (null !== $itemId) {
+            $itemId = $item->reqId();
             $salesOrderItemAllowanceCharges =
                 $acsoiR->repoSalesOrderItemquery(
                     (string)$itemId
                 );
             /**
-             * @var App\Invoice\Entity\SalesOrderItemAllowanceCharge $salesOrderItemAllowanceCharge
+             * @var App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge $salesOrderItemAllowanceCharge
              */
             foreach (
                 $salesOrderItemAllowanceCharges
@@ -208,7 +207,6 @@ if ($items) {
                 </td>
             </tr>
         <?php
-            }
             }
         }
         ?>

@@ -31,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Entity to Infrastructure Migration Process](docs/ENTITY_TO_INFRASTRUCTURE_PROCESS.md) (April 2026)
+
 [Architecture Domain Application Infrastructure](docs/ARCHITECTURE_DOMAIN_APPLICATION_INFRASTRUCTURE.md) (April 2026)
 
 [Cycle-Orm Psalm Lifecycle Safe Entities](docs/CYCLE_ORM_PSALM_LIFECYCLE_SAFE_ENTITIES.md) (April 2026)

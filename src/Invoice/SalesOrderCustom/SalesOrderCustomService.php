@@ -27,7 +27,7 @@ final readonly class SalesOrderCustomService
             );
         if ($sales_order) {
             $model->setSalesOrder($sales_order);
-            $model->setSalesOrderId((int) $sales_order->getId());
+            $model->setSalesOrderId($sales_order->reqId());
         }
         $custom_field =
             $this->customFieldRepository->repoCustomFieldquery(

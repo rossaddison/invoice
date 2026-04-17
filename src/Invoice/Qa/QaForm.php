@@ -11,8 +11,6 @@ use Yiisoft\Validator\Rule\Length;
 
 final class QaForm extends FormModel
 {
-    private ?int $id = null;
-
     #[Integer(min: 0, max: 1)]
     private ?int $active = 0;
 
@@ -26,16 +24,10 @@ final class QaForm extends FormModel
 
     public function __construct(Qa $qa)
     {
-        $this->id = $qa->getId();
         $this->active = $qa->getActive();
         $this->question = $qa->getQuestion();
         $this->answer = $qa->getAnswer();
         $this->sort_order = (string) $qa->getSortOrder();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getActive(): ?int

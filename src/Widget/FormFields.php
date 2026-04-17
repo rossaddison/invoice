@@ -778,26 +778,7 @@ final readonly class FormFields
             ->ariaDescribedBy($this->translator->translate($labelKey))
             ->render();
     }
-
-    /**
-     * Company hidden field
-     */
-    public function companyHiddenField(CompanyForm $form, string $fieldName): string
-    {
-        $value = match ($fieldName) {
-            'id' => $form->getId(),
-            default => null,
-        };
-
-        return Field::hidden($form, $fieldName)
-            ->addInputAttributes([
-                'class' => 'form-control form-control-lg',
-                'value' => Html::encode($value !== null ? (string) $value : ''),
-            ])
-            ->hideLabel()
-            ->render();
-    }
-
+    
     /**
      * CompanyPrivate text field with consistent styling
      */
@@ -859,27 +840,7 @@ final readonly class FormFields
             ->hint($this->translator->translate('hint.this.field.is.required'))
             ->render();
     }
-
-    /**
-     * CompanyPrivate hidden field
-     */
-    public function companyPrivateHiddenField(CompanyPrivateForm $form,
-        string $fieldName): string
-    {
-        $value = match ($fieldName) {
-            'id' => $form->getId(),
-            default => null,
-        };
-
-        return Field::hidden($form, $fieldName)
-            ->addInputAttributes([
-                'class' => 'form-control form-control-lg',
-                'value' => Html::encode($value !== null ? (string) $value : ''),
-            ])
-            ->hideLabel()
-            ->render();
-    }
-
+    
     /**
      * CompanyPrivate file field
      */

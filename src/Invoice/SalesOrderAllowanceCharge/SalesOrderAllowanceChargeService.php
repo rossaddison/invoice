@@ -33,7 +33,7 @@ final readonly class SalesOrderAllowanceChargeService
         );
         if ($sales_order) {
             $model->setSalesOrder($sales_order);
-            $model->setSalesOrderId((int) $sales_order->getId());
+            $model->setSalesOrderId($sales_order->reqId());
         }
     }
 

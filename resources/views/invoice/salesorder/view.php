@@ -15,7 +15,7 @@ use App\Invoice\Helpers\CountryHelper;
  * @var App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository $soiaR
  * @var App\Invoice\TaxRate\TaxRateRepository $trR
  * @var App\Invoice\Unit\UnitRepository $uR
- * @var App\Invoice\Entity\SalesOrder $so
+ * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var App\Invoice\Entity\SalesOrderAmount $so_amount
  * @var App\Invoice\Entity\SalesOrderTaxRate $soTaxRates
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -68,7 +68,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
   echo H::openTag('h1', ['class' => 'headerbar-title']); //2
    echo $translator->translate('salesorder');
    $soNumber = $so->getNumber();
-   echo null !== $soNumber ? ' #' . $soNumber : $so->getId();
+   echo null !== $soNumber ? ' #' . $soNumber : $so->reqId();
   echo H::closeTag('h1'); //2
   echo H::tag('br', '');
   echo H::openTag('div', ['class' => 'headerbar-item pull-left btn-group']); //2
@@ -85,7 +85,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
      if ($invEdit) {
       echo H::openTag('li'); //5
        echo H::openTag('a', [
-        'href' => $urlGenerator->generate('salesorder/edit', ['id' => $so->getId()]),
+        'href' => $urlGenerator->generate('salesorder/edit', ['id' => $so->reqId()]),
         'style' => 'text-decoration:none',
        ]); //6
         echo H::openTag('i', ['class' => 'bi-pencil-square']); //7

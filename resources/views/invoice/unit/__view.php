@@ -41,13 +41,6 @@ use Yiisoft\Html\Tag\Form;
         <?= Html::openTag('div', ['class' => 'row']); ?>
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= Field::text($form, 'unit_id')
-                        ->label($translator->translate('unit.id'))
-                        ->value(Html::encode($form->getUnitId() ?? ''))
-                        ->disabled(true);
-?>
-                <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::text($form, 'unit_name')
     ->label($translator->translate('unit.name'))
     ->value(Html::encode($form->getUnitName() ?? ''))

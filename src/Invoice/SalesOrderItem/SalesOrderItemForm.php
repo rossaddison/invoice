@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItem;
 
-use App\Invoice\Entity\SalesOrderItem as SoItem;
+use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem as SoItem;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
 final class SalesOrderItemForm extends FormModel
 {
-    private ?string $id = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
     private ?string $peppol_po_itemid = '';
     #[Length(min: 0, max: 50, skipOnEmpty: true)]
@@ -44,7 +43,6 @@ final class SalesOrderItemForm extends FormModel
 
     public function __construct(SoItem $salesOrderItem, private readonly ?string $so_id )
     {
-        $this->id = $salesOrderItem->getId();
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
         $this->peppol_po_itemid = $salesOrderItem->getPeppolPoItemid();
 
@@ -57,16 +55,11 @@ final class SalesOrderItemForm extends FormModel
         $this->discount_amount = $salesOrderItem->getDiscountAmount();
         $this->order = $salesOrderItem->getOrder();
         $this->product_unit = $salesOrderItem->getProductUnit();
-        $this->tax_rate_id = $salesOrderItem->getTaxRateId();
-        $this->product_id = $salesOrderItem->getProductId();
-        $this->task_id = $salesOrderItem->getTaskId();
+        $this->tax_rate_id = (string) $salesOrderItem->getTaxRateId();
+        $this->product_id = (string) $salesOrderItem->getProductId();
+        $this->task_id = (string) $salesOrderItem->getTaskId();
         $this->product_unit_id = (int) $salesOrderItem->getProductUnitId();
         $this->date_added = $salesOrderItem->getDateAdded();
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
     }
 
     public function getSoId(): ?string

@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Option;
 /**
  * Related logic: see id="so-to-invoice" triggered by <a href="#so-to-invoice" data-bs-toggle="modal"  style="text-decoration:none"> on views/salesorder/view.php line 86
  * @var App\Invoice\Group\GroupRepository $gR
- * @var App\Invoice\Entity\SalesOrder $so
+ * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf
@@ -37,7 +37,7 @@ echo H::openTag('div', ['id' => 'so-to-invoice', 'class' => 'modal', 'tabindex' 
                                      ->value($so->getClientId());
      echo new Input()->type('hidden')->name('so_id')
                                      ->id('so_id')
-                                     ->value($so->getId());
+                                     ->value($so->reqId());
      echo new Input()->type('hidden')->name('user_id')
                                      ->id('user_id')
                                      ->value($so->getUserId());

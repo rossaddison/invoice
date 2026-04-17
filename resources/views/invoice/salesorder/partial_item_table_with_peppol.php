@@ -10,7 +10,7 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository $soiaR
  * @var App\Invoice\TaxRate\TaxRateRepository $trR
  * @var App\Invoice\Unit\UnitRepository $uR
- * @var App\Invoice\Entity\SalesOrder $so
+ * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var App\Invoice\Entity\SalesOrderAmount $so_amount
  * @var App\Invoice\Entity\SalesOrderTaxRate $soTaxRates
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -53,7 +53,7 @@ $vat = $s->getSetting('enable_vat_registration');
             <tr>
                 <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;"><i class="bi bi-arrows-move"></i></td>
                 <td class="td-text">
-                    <input type="hidden" name="quote_id" maxlength="7" size="7" value="<?php echo $so->getId(); ?>">
+                    <input type="hidden" name="quote_id" maxlength="7" size="7" value="<?php echo $so->reqId(); ?>">
                     <input type="hidden" name="item_id" maxlength="7" size="7" value="">
                     <input type="hidden" name="item_product_id" maxlength="7" size="7" value="">
 
@@ -162,7 +162,7 @@ $vat = $s->getSetting('enable_vat_registration');
                 // ************************************************************************************
                 $count = 1;
 /**
- * @var App\Invoice\Entity\SalesOrderItem $item
+ * @var App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem $item
  */
 
 foreach ($soItems as $item) { ?>
@@ -175,7 +175,7 @@ foreach ($soItems as $item) { ?>
                     <td class="td-text">
                         <div class="input-group">
                             <input type="text" disabled="true" maxlength="1" size="1" name="so_id" value="<?= $item->getSalesOrderId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->quote_id">
-                            <input type="text" disabled="true" maxlength="1" size="1" name="item_id" value="<?= $item->getId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->getId()">
+                            <input type="text" disabled="true" maxlength="1" size="1" name="item_id" value="<?= (string) $item->reqId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->getId()">
                             <input type="text" disabled="true" maxlength="1" size="1" name="item_product_id" value="<?= $item->getProductId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->product_id">
                             <input type="text" disabled="true" placeholder="Peppol" maxlength="8" size="8" name="item_peppol_po_itemid" value="<?= $item->getPeppolPoItemid(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->peppol_po_itemid This value is editable if the client or customer is going to pay by Peppol. They have to supply their corresponding Purchase Order Item Id here. https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/cbc-ID/">
                             <input type="text" disabled="true" placeholder="Peppol" maxlength="8" size="8" name="item_peppol_po_lineid" value="<?= $item->getPeppolPoLineid(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->peppol_po_lineid This value is editable if the client or customer is going to pay by Peppol. They have to supply their corresponding Purchase Order Line Number here. https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/">
@@ -246,7 +246,7 @@ foreach ($soItems as $item) { ?>
                     </td>
                     <td class="td-icon text-right td-vert-middle">
                     <?php if ($invEdit || $invView) { ?>
-                        <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]) ?>" class="btn btn-md btn-link"><i class="bi bi-pencil"></i></a>
+                        <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => (string) $item->reqId()]) ?>" class="btn btn-md btn-link"><i class="bi bi-pencil"></i></a>
                     </td>
                     <?php } ?>
                 </tr>
@@ -266,25 +266,25 @@ foreach ($soItems as $item) { ?>
                     <td class="td-amount td-vert-middle">
                         <span><?= $translator->translate('subtotal'); ?></span><br/>
                         <span name="subtotal" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->subtotal">
-                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->getId())?->getSubtotal() ?? 0.00); ?>
+                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getSubtotal() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span class="input-group-text"><?= $vat === '0' ? $translator->translate('item.discount') : $translator->translate('cash.discount'); ?></span>
                         <span name="item_discount_total" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->discount">
-                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->getId())?->getDiscount() ?? 0.00); ?>
+                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getDiscount() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $vat === '0' ? $translator->translate('tax') : $translator->translate('vat.abbreviation') ?></span><br/>
                         <span name="item_tax_total" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->tax_total">
-                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->getId())?->getTaxTotal() ?? 0.00); ?>
+                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getTaxTotal() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $translator->translate('total'); ?></span><br/>
                         <span name="item_total" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->total">
-                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->getId())?->getTotal() ?? 0.00); ?>
+                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getTotal() ?? 0.00); ?>
                         </span>
                     </td>
                 </tr>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserCustom;
 
-use App\Invoice\Entity\UserCustom;
+use App\Infrastructure\Persistence\UserCustom\UserCustom;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

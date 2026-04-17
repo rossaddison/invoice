@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItemAllowanceCharge;
 
-use App\Invoice\Entity\SalesOrderItemAllowanceCharge;
+use App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\{
+    SalesOrderItemAllowanceCharge,
+};
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

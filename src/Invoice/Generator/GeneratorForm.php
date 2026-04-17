@@ -10,7 +10,6 @@ use Yiisoft\Validator\Rule\Required;
 
 final class GeneratorForm extends FormModel
 {
-    private ?int $id = null;
     #[Required]
     private string $route_prefix = '';
     #[Required]

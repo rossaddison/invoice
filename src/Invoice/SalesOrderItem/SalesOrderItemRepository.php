@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItem;
 
-use App\Invoice\Entity\SalesOrderItem;
+use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use Cycle\ORM\Select;
 use Cycle\Database\Injection\Parameter;
 use Throwable;

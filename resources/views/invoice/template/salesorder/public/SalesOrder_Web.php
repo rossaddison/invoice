@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\SalesOrderItemAllowanceCharge;
+use App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\{
+    SalesOrderItemAllowanceCharge,
+};
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Img;
 
 /**
  * Related logic: see SalesOrderController function urlKey
  * @var App\Infrastructure\Persistence\Client\Client $client
- * @var App\Invoice\Entity\SalesOrder $salesorder
+ * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $salesorder
  * @var App\Invoice\Entity\SalesOrderAmount $salesorder_amount
  * @var App\Invoice\Entity\UserInv $userInv
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
@@ -76,8 +78,8 @@ $vat = $s->getSetting('enable_vat_registration');
                 // 3=>Client Agreed to Terms
                 // 8=>Rejected
                 if (in_array($salesorder->getStatusId(),
-                    [2, 8]) && $salesorder->getQuoteId() !== '0'
-                        && $salesorder->getInvId() === '0') : ?>
+                    [2, 8]) && $salesorder->getQuoteId() !== 0
+                        && $salesorder->getInvId() === 0) : ?>
                 <a href="<?= $urlGenerator->generate('salesorder/agreeToTerms',
                     ['url_key' => $salesorder_url_key]); ?>"
                    class="btn btn-success"
@@ -89,8 +91,8 @@ $vat = $s->getSetting('enable_vat_registration');
                 </a>
             <?php endif; ?>
             <?php if (in_array($salesorder->getStatusId(), [2])
-                    && $salesorder->getQuoteId() !== '0'
-                    && $salesorder->getInvId() === '0') :  ?>
+                    && $salesorder->getQuoteId() !== 0
+                    && $salesorder->getInvId() === 0) :  ?>
                 <a href="<?= $urlGenerator->generate('salesorder/reject',
                         ['url_key' => $salesorder_url_key]); ?>"
                    class="btn btn-danger">
@@ -99,8 +101,8 @@ $vat = $s->getSetting('enable_vat_registration');
                 </a>
             <?php endif; ?>
             <?php if (in_array($salesorder->getStatusId(), [3])
-                    && $salesorder->getQuoteId() !== '0'
-                    && $salesorder->getInvId() === '0') :  ?>
+                    && $salesorder->getQuoteId() !== 0
+                    && $salesorder->getInvId() === 0) :  ?>
                 <label class="btn btn-success">
              <?= $translator->translate('salesorder.client.confirmed.terms'); ?>
                 </label>
@@ -111,7 +113,6 @@ $vat = $s->getSetting('enable_vat_registration');
         <?php
         // Show Peppol form for guests when terms are agreed (status 3 or 4) and before invoice is generated
         if (in_array($salesorder->getStatusId(), [3, 4])
-            && $salesorder->getInvId() === '0'
             && isset($isGuest) && $isGuest === true) :
         ?>
             <div class="alert alert-info" role="alert">
@@ -277,7 +278,6 @@ $vat = $s->getSetting('enable_vat_registration');
                             <?php
                             // Show edit column for guests when they can edit Peppol fields
                             if (in_array($salesorder->getStatusId(), [3, 4])
-                                && $salesorder->getInvId() === '0'
                                 && isset($isGuest) && $isGuest === true) :
                             ?>
                             <th class="text-center">
@@ -288,9 +288,9 @@ $vat = $s->getSetting('enable_vat_registration');
                         </thead>
                         <tbody>
                         <?php
-                           /**
-                             * @var App\Invoice\Entity\SalesOrderItem $item
-                             */
+/**
+ * @var App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem $item
+ */
                             foreach ($items as $item) :
                                 // Show Peppol fields if they have been entered
                                 $peppolItemId = $item->getPeppolPoItemid();
@@ -313,11 +313,10 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <?php
                                 // Show edit button for guests when they can edit Peppol fields
                                 if (in_array($salesorder->getStatusId(), [3, 4])
-                                    && $salesorder->getInvId() === '0'
                                     && isset($isGuest) && $isGuest === true) :
                                 ?>
                                 <td class="text-center">
-                                    <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => $item->getId()]); ?>"
+                                    <a href="<?= $urlGenerator->generate('salesorderitem/edit', ['id' => (string) $item->reqId()]); ?>"
                                        class="btn btn-sm btn-primary"
                                        data-bs-toggle="tooltip"
                                        title="<?= $translator->translate('invoice.peppol.edit.item'); ?>">
@@ -347,8 +346,8 @@ $vat = $s->getSetting('enable_vat_registration');
                                             $item->getDiscountAmount()); ?>
                                 </td>
 <?php
-    $query = $soiaR->repoSalesOrderItemAmountquery(
-        $item->getId()
+    $query = $soiaR->repoSalesOrderItemAmountquery((string) 
+        $item->reqId()
     );
 ?>
                                 <td class="amount">
@@ -367,8 +366,8 @@ $vat = $s->getSetting('enable_vat_registration');
                              * @var SalesOrderItemAllowanceCharge $salesOrderItemAllowanceCharge
                              */
                             foreach (
-                                $acsoiR->repoSalesOrderItemquery(
-                                    $item->getId()
+                                $acsoiR->repoSalesOrderItemquery((string) 
+                                    $item->reqId()
                                 )
                                 as $salesOrderItemAllowanceCharge
                             ) {

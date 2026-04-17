@@ -19,8 +19,6 @@ final class GeneratorRelationForm extends FormModel
     #[Required]
     private ?string $view_field_name = '';
 
-    private ?int $id = null;
-
     #[Required]
     private ?int $gentor_id = null;
 

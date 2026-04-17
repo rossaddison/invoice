@@ -12,7 +12,6 @@ use Yiisoft\Validator\Rule\Required;
 
 final class PostalAddressForm extends FormModel
 {
-    private ?int    $id = null;
     #[Required]
     #[Length(min: 0, max: 50)]
     private ?string $street_name = '';
@@ -38,10 +37,6 @@ final class PostalAddressForm extends FormModel
     public function __construct(private readonly Translator $translator, PostalAddress $postalAddress, #[Required]
         private readonly ?int $client_id)
     {
-        // two hidden fields with ->hideLabel(true) in the view
-        $this->id = (int) $postalAddress->getId();
-
-        // not hidden fields
         $this->street_name = $postalAddress->getStreetName();
         $this->additional_street_name = $postalAddress->getAdditionalStreetName();
         $this->building_number = $postalAddress->getBuildingNumber();
@@ -79,11 +74,6 @@ final class PostalAddressForm extends FormModel
             'countrysubentity' => $this->translator->translate($required),
             'country' => $this->translator->translate($required),
         ];
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getClientId(): ?int

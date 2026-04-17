@@ -49,15 +49,6 @@ use Yiisoft\Html\Tag\Form;
             ->onlyCommonErrors();
 ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-        <?= Html::openTag('div', ['class' => 'mb3 form-group']); ?>
-            <?= Field::hidden($form, 'id')
-            ->addInputAttributes([
-                'class' => 'form-control form-control-lg',
-            ])
-            ->hideLabel()
-            ->value(Html::encode($form->getId()));
-?>
-        <?= Html::closeTag('div'); ?>
         <?= Html::openTag('div', ['class' => 'form-check form-switch']); ?>
             <?= Field::checkbox($form, 'level')
     ->inputLabel($translator->translate('allowance.or.charge.level')) // set the custom label here

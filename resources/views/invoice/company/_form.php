@@ -44,9 +44,6 @@ use Yiisoft\Html\Tag\Form;
                         ->onlyCommonErrors()
 ?>
                 <?= Html::closeTag('div'); ?>
-                <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= $formFields->companyHiddenField($form, 'id'); ?>
-                <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'form-check form-switch']); ?>
                     <?= $formFields->companyCheckboxField($form, 'current', 'active'); ?>
                 <?= Html::closeTag('div'); ?>

@@ -11,8 +11,6 @@ use DateTimeImmutable;
 
 final class ContractForm extends FormModel
 {
-    private ?int $id = null;
-
     #[Required]
     private ?string $reference = null;
 
@@ -30,17 +28,11 @@ final class ContractForm extends FormModel
 
     public function __construct(Contract $contract)
     {
-        $this->id = $contract->getId();
         $this->reference = $contract->getReference();
         $this->name = $contract->getName();
         $this->period_start = $contract->getPeriodStart();
         $this->period_end = $contract->getPeriodEnd();
         $this->client_id = $contract->getClientId();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getReference(): ?string

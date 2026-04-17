@@ -28,6 +28,7 @@ use Yiisoft\Html\Tag\Form;
  * @var int $defaultGroupId
  * @var int $delCount
  * @var int $deliveryCount
+ * @var string $originId
  * @var int $postalAddressCount
  * @var string $alert
  * @var string $csrf
@@ -145,7 +146,7 @@ if ($vat) {
                                                  * Related logic: see vendor\yiisoft\router\UrlGeneratorInterface;
                                                  */
                                             'origin' => 'inv',
-                                            'origin_id' => $form->getId(),
+                                            'origin_id' => $originId,
                                             'action' => 'edit',
                                         ],
                                     ); ?>"><i class="bi bi-pencil"></i><?= $translator->translate('delivery.location') ?>
@@ -219,7 +220,7 @@ if ($vat) {
                                                  * Related logic: see vendor\yiisoft\router\UrlGeneratorInterface;
                                                  */
                                             'origin' => 'inv',
-                                            'origin_id' => $form->getId(),
+                                            'origin_id' => $originId,
                                             'action' => 'edit',
                                         ],
                                     ); ?>"><i class="bi bi-pencil"></i><?= $translator->translate('client.postaladdress') ?>

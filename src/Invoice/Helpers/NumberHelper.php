@@ -10,7 +10,7 @@ use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\QuoteAllowanceCharge;
 use App\Invoice\Entity\SalesOrderAllowanceCharge;
 use App\Invoice\Entity\SalesOrderAmount;
-use App\Invoice\Entity\SalesOrderItem;
+use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderItemAmount;
 use App\Invoice\Entity\SalesOrderTaxRate;
 use App\Invoice\Entity\InvAmount;

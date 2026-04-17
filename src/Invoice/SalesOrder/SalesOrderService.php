@@ -6,9 +6,9 @@ namespace App\Invoice\SalesOrder;
 
 // Entities
 use App\User\User;
-use App\Invoice\Entity\SalesOrder;
 use App\Invoice\Entity\SalesOrderCustom;
-use App\Invoice\Entity\SalesOrderItem;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
+use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderTaxRate;
 // Repositories
 use App\Invoice\Client\ClientRepository;
@@ -120,7 +120,7 @@ final readonly class SalesOrderService
             ? $model->setPaymentTerm((string) $array['payment_term'])
             : '';
         $model->setNumber((string) $array['number']);
-        if ($model->isNewRecord()) {
+        if (!$model->isPersisted()) {
             $model->setStatusId(1);
             $model->setDateCreated(new \DateTimeImmutable('now'));
         }
@@ -212,7 +212,7 @@ final readonly class SalesOrderService
         SoAR $soaR,
         SoAS $soaS
     ): void {
-        $so_id = $model->getId();
+        $so_id = $model->isPersisted() ? (string) $model->reqId() : null;
         // SalesOrders with no items: If there are no items
         // there will be no amount record so check if there is an
         // amount otherwise null error will occur.

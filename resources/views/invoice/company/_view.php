@@ -34,14 +34,6 @@ echo new Form()
   echo Html::openTag('div', ['id' => 'content']); //2
    echo Html::openTag('div', ['class' => 'row']);//3
    echo Html::closeTag('div'); //3
-   echo Html::openTag('div', ['class' => 'mb-3 form-group']); //3
-    echo Field::hidden($form, 'id')
-         ->addInputAttributes([
-              'class' => 'form-control form-control-lg',
-         ])
-         ->hideLabel()
-         ->value(Html::encode($form->getId() ??  ''));
-   echo Html::closeTag('div'); //3
    echo Html::openTag('div', ['class' => 'form-check form-switch']); //3
     echo Field::checkbox($form, 'current')
          ->inputLabelAttributes(['class' => 'form-check-label'])

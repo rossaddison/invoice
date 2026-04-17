@@ -95,13 +95,6 @@ use Yiisoft\Html\Tag\Form;
     ->value(Html::encode(!is_string($endDate = $form->getEndDate()) ? $endDate->format('Y-m-d') : ''))
     ->readonly(true)
 ?>
-            <?= Field::hidden($form, 'id')
-    ->addInputAttributes([
-        'form-control form-control-lg',
-        'id' => 'id',
-    ])
-    ->value(Html::encode($form->getId()))
-?>
             <?= Field::hidden($form, 'inv_id')
     ->addInputAttributes([
         'form-control form-control-lg',

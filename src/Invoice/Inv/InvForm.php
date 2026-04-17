@@ -13,7 +13,6 @@ use DateTimeImmutable;
 
 final class InvForm extends FormModel
 {
-    private ?string $id = '';
     #[Length(min: 0, max: 100, skipOnEmpty: true)]
     private ?string $number = '';
     private mixed $date_created = '';
@@ -58,7 +57,6 @@ final class InvForm extends FormModel
 
     public function __construct(Inv $inv)
     {
-        $this->id = $inv->getId();
         $this->date_created = $inv->getDateCreated();
         $this->date_modified = $inv->getDateModified();
         $this->client_id = $inv->getClientId();
@@ -91,11 +89,6 @@ final class InvForm extends FormModel
                 private ?Client $client = null;
          */
         $this->client = $inv->getClient();
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
     }
 
     public function getClient(): ?Client
