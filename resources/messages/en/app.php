@@ -209,6 +209,7 @@ return [
   'can.be.changed' => 'Can be changed',
   'cancel' => 'Cancel',
   'canceled' => 'Cancelled',
+  'cannot.delete' => 'Cannot delete. Delete associated records first',
   'case.date' => 'Case Date',
   'case.number' => 'Case Number',
   'cash.discount' => 'Cash Discount',

@@ -113,13 +113,15 @@ final class CategoryPrimaryController extends BaseController
                 $categoryPrimary = $this->categoryprimary($categoryPrimaryRepository, $id);
                 if ($categoryPrimary) {
                     $this->categoryPrimaryService->deleteCategoryPrimary($categoryPrimary);
-                    $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
-                    return $this->webService->getRedirectResponse('categoryprimary/index');
+                    $this->flashMessage('info',
+                        $this->translator->translate('record.successfully.deleted'));
                 }
             }
             return $this->webService->getRedirectResponse('categoryprimary/index');
+            // catch the foreign key constraint
         } catch (Exception $e) {
-            $this->flashMessage('danger', $e->getMessage());
+            unset($e);
+            $this->flashMessage('danger', $this->translator->translate('cannot.delete'));
             return $this->webService->getRedirectResponse('categoryprimary/index');
         }
     }
