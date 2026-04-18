@@ -64,12 +64,12 @@ echo H::openTag('div', ['id' => 'so-to-invoice', 'class' => 'modal', 'tabindex' 
        'class' => 'form-control form-control-lg',
       ]); //6
        /**
-        * @var App\Invoice\Entity\Group $group
+        * @var App\Infrastructure\Persistence\Group\Group $group
         */
        foreach ($gR->findAllPreloaded() as $group) {
         echo new Option()
-         ->value($group->getId())
-         ->selected($s->getSetting('default_invoice_group') === $group->getId())
+         ->value($group->reqId())
+         ->selected($s->getSetting('default_invoice_group') === (string) $group->reqId())
          ->content(H::encode($group->getName()));
        }
       echo H::closeTag('select'); //6

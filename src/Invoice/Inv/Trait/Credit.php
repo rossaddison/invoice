@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Infrastructure\Persistence\{
+    Group\Group
+};
 use App\Invoice\Entity\{Inv, InvAmount};
 
 use App\Invoice\{
@@ -45,10 +48,10 @@ trait Credit
         $optionsGroupData = [];
         $groups = $gR->findAllPreloaded();
         /**
-         * @var \App\Invoice\Entity\Group
+         * @var Group
          */
         foreach ($groups as $group) {
-            $optionsGroupData[$group->getId()] = $group->getName();
+            $optionsGroupData[$group->reqId()] = $group->getName();
         }
         $parameters = [
             'title' => $this->translator->translate('add'),

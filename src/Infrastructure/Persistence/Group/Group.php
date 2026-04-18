@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\Group;
 
+use App\Invoice\Group\GroupRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
-#[Entity(repository: \App\Invoice\Group\GroupRepository::class)]
+#[Entity(repository: GroupRepository::class)]
 class Group
 {
+    #[Column(type: 'primary')]
+    private ?int $id = null;
+
     public function __construct(
-        #[Column(type: 'primary')]
-        private ?int $id = null,
         #[Column(type: 'text', nullable: true)]
         private ?string $name = '',
         #[Column(type: 'string(191)', nullable: true)]
@@ -24,9 +26,20 @@ class Group
     ) {
     }
 
-    public function getId(): string
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
-        return (string) $this->id;
+        if ($this->id === null) {
+            throw new \LogicException('Group has no ID (not persisted yet)');
+        }
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -54,9 +67,9 @@ class Group
         $this->identifier_format = $identifier_format;
     }
 
-    public function getNextId(): string
+    public function getNextId(): ?int
     {
-        return (string) $this->next_id;
+        return $this->next_id;
     }
 
     public function setNextId(int $next_id): void

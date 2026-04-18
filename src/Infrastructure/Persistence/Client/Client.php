@@ -97,7 +97,7 @@ class Client
         #[Column(type: 'bool', default: false)]
         private bool $client_active = false,
         #[Column(type: 'date', nullable: true)]
-        private mixed $client_birthdate = null,
+        private DateTimeImmutable|string|null $client_birthdate = null,
         #[Column(type: 'integer', nullable: false, default: 0)]
         private int $client_age = 0,
         #[Column(type: 'tinyInteger(4)', nullable: false, default: 0)]

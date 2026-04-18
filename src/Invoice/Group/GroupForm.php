@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Group;
 
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 

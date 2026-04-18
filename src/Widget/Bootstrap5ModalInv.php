@@ -37,10 +37,10 @@ final class Bootstrap5ModalInv
         $optionsGroupData = [];
         $groups = $this->gR->findAllPreloaded();
         /**
-         * @var \App\Invoice\Entity\Group
+         * @var \App\Infrastructure\Persistence\Group\Group
          */
         foreach ($groups as $group) {
-            $optionsGroupData[$group->getId()] = $group->getName();
+            $optionsGroupData[$group->reqId()] = $group->getName();
         }
         $this->formParameters = [
             'origin' => $origin,

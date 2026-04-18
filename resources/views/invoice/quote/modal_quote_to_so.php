@@ -91,12 +91,12 @@ echo H::openTag('div', ['id' => 'quote-to-so', 'class' => 'modal', 'tabindex' =>
        'class' => 'form-control form-control-lg',
       ]); //6
        /**
-        * @var App\Invoice\Entity\Group $group
+        * @var App\Infrastructure\Persistence\Group\Group $group
         */
        foreach ($groups as $group) {
         echo new Option()
-         ->value($group->getId())
-         ->selected($s->getSetting('default_sales_order_group') === $group->getId())
+         ->value($group->reqId())
+         ->selected($s->getSetting('default_sales_order_group') === (string) $group->reqId())
          ->content(H::encode($group->getName()));
        }
       echo H::closeTag('select'); //6

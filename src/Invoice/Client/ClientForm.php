@@ -60,7 +60,7 @@ final class ClientForm extends FormModel
     private ?bool $client_active = false;
     #[Length(min: 0, max: 151, skipOnEmpty: true)]
     private ?string $client_surname = '';
-    private readonly mixed $client_birthdate;
+    private ?string $client_birthdate = null;
 
     #[Required]
     #[Integer(min: 16, max: 100)]
@@ -69,34 +69,39 @@ final class ClientForm extends FormModel
     private ?int $client_gender = null;
     private ?int $postaladdress_id = null;
 
-    public function __construct(Client $client)
+    public static function show(Client $client): self
     {
-        $this->client_title = $client->getClientTitle();
-        $this->client_name = $client->getClientName();
-        $this->client_group = $client->getClientGroup();
-        $this->client_frequency = $client->getClientFrequency();
-        $this->client_number = $client->getClientNumber();
-        $this->client_address_1 = $client->getClientAddress1();
-        $this->client_address_2 = $client->getClientAddress2();
-        $this->client_building_number = $client->getClientBuildingNumber();
-        $this->client_city = $client->getClientCity();
-        $this->client_state = $client->getClientState();
-        $this->client_zip = $client->getClientZip();
-        $this->client_country = $client->getClientCountry();
-        $this->client_phone = $client->getClientPhone();
-        $this->client_fax = $client->getClientFax();
-        $this->client_mobile = $client->getClientMobile();
-        $this->client_email = $client->getClientEmail();
-        $this->client_web = $client->getClientWeb();
-        $this->client_vat_id = $client->getClientVatId();
-        $this->client_tax_code = $client->getClientTaxCode();
-        $this->client_language = $client->getClientLanguage();
-        $this->client_active = $client->getClientActive();
-        $this->client_surname = $client->getClientSurname();
-        $this->client_birthdate = $client->getClientBirthdate();
-        $this->client_age = $client->getClientAge();
-        $this->client_gender = $client->getClientGender();
-        //$this->postaladdress_id = $client->getPostaladdressId();
+        $form = new self();
+        $form->client_title = $client->getClientTitle();
+        $form->client_name = $client->getClientName();
+        $form->client_group = $client->getClientGroup();
+        $form->client_frequency = $client->getClientFrequency();
+        $form->client_number = $client->getClientNumber();
+        $form->client_address_1 = $client->getClientAddress1();
+        $form->client_address_2 = $client->getClientAddress2();
+        $form->client_building_number = $client->getClientBuildingNumber();
+        $form->client_city = $client->getClientCity();
+        $form->client_state = $client->getClientState();
+        $form->client_zip = $client->getClientZip();
+        $form->client_country = $client->getClientCountry();
+        $form->client_phone = $client->getClientPhone();
+        $form->client_fax = $client->getClientFax();
+        $form->client_mobile = $client->getClientMobile();
+        $form->client_email = $client->getClientEmail();
+        $form->client_web = $client->getClientWeb();
+        $form->client_vat_id = $client->getClientVatId();
+        $form->client_tax_code = $client->getClientTaxCode();
+        $form->client_language = $client->getClientLanguage();
+        $form->client_active = $client->getClientActive();
+        $form->client_surname = $client->getClientSurname();
+        $birthdate = $client->getClientBirthdate();
+        $form->client_birthdate = $birthdate instanceof DateTimeImmutable
+            ? $birthdate->format('Y-m-d')
+            : null;
+        $form->client_age = $client->getClientAge();
+        $form->client_gender = $client->getClientGender();
+        //$form->postaladdress_id = $client->getPostaladdressId();
+        return $form;
     }
 
     public function getAttributeLabels(): array
@@ -219,11 +224,8 @@ final class ClientForm extends FormModel
         return $this->client_surname;
     }
 
-    public function getClientBirthdate(): string|DateTimeImmutable|null
+    public function getClientBirthdate(): ?string
     {
-        /**
-         * @var DateTimeImmutable|string|null $this->client_birthdate
-         */
         return $this->client_birthdate;
     }
 

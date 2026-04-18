@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Invoice;
 
 use App\Auth\Permissions;
-use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\{Client\Client, Group\Group};
 use App\Invoice\Entity\Family;
-use App\Invoice\Entity\Group;
 use App\Invoice\Entity\PaymentMethod;
 use App\Invoice\Entity\Product;
 use App\Invoice\Entity\Setting;

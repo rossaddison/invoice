@@ -6,7 +6,7 @@ namespace App\Command\Invoice;
 
 use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\Entity\Inv;
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\InvAmount;

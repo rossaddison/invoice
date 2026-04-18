@@ -355,7 +355,7 @@ $toolbarString
             ->render()
             .  new A()
             ->href($urlGenerator->generate('client/add',
-                    ['origin' => 'add']))
+                    ['origin' => 'main']))
             ->addClass('btn btn-info')
             ->content('➕')
             ->render(),

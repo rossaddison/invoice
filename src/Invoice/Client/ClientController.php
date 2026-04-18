@@ -136,7 +136,7 @@ final class ClientController extends BaseController
     ): Response {
         $origin     = $currentRoute->getArgument('origin');
         $new_client = new Client();
-        $form       = new ClientForm($new_client);
+        $form       = new ClientForm();
         $parameters         = $this->buildAddParameters($currentRoute,
             $cfR, $cvR, $new_client, $origin);
         $parameters['form'] = $form;
@@ -150,9 +150,14 @@ final class ClientController extends BaseController
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
                 /** @var array<string, mixed> $body */
-                $cId = $this->clientService->saveClient($new_client, $body);
+                $formName = $form->getFormName();
+                /** @var array<string, mixed> $saveBody */
+                $saveBody = isset($body[$formName]) && is_array($body[$formName])
+                    ? $body[$formName]
+                    : $body;
+                $cId = $this->clientService->saveClient($new_client, $saveBody);
                 if (null !== $cId) {
-                    $this->saveNewClientCustomFields($body, $cId, $formHydrator);
+                    $this->saveNewClientCustomFields($saveBody, $cId, $formHydrator);
                     $this->flashMessage('info',
                         $this->translator->translate('record.successfully.created'));
                     $redirect = $this->redirectAfterAdd($origin);
@@ -379,7 +384,7 @@ final class ClientController extends BaseController
         ?string $origin,
     ): array {
         $cId             = (string) $client->reqId();
-        $form            = new ClientForm($client);
+        $form            = ClientForm::show($client);
         $countries       = new CountryHelper();
         $custom          = $this->fetchCustomFieldsAndValues($cfR, $cvR, 'client_custom');
         $postaladdresses = $paR->repoClientAll($cId);
@@ -459,7 +464,12 @@ final class ClientController extends BaseController
             Client $client, FormHydrator $formHydrator): ClientForm
     {
         if ($formHydrator->populateAndValidate($form, $body)) {
-            $this->clientService->saveClient($client, $body);
+            $formName = $form->getFormName();
+            /** @var array<string, mixed> $saveBody */
+            $saveBody = isset($body[$formName]) && is_array($body[$formName])
+                ? $body[$formName]
+                : $body;
+            $this->clientService->saveClient($client, $saveBody);
         }
         return $form;
     }

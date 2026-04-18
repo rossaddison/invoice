@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Group;
 
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -178,7 +178,7 @@ final class GroupRepository extends Select\Repository
          * @var Group $group
          */
         foreach ($groups as $group) {
-            $optionsData[$group->getId()] = $group->getName();
+            $optionsData[$group->reqId()] = $group->getName();
         }
         return $optionsData;
     }

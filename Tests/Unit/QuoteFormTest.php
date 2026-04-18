@@ -6,7 +6,7 @@ namespace Tests\Unit\Quote;
 
 use App\Invoice\Entity\Quote;
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\Quote\QuoteForm;
 use App\User\User;
 use PHPUnit\Framework\TestCase;

@@ -6,7 +6,7 @@ namespace App\Invoice\Group;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -116,7 +116,7 @@ final class GroupController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'group/edit',
-                'actionArguments' => ['id' => $group->getId()],
+                'actionArguments' => ['id' => $group->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];
@@ -174,10 +174,10 @@ final class GroupController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'group/view',
-                'actionArguments' => ['id' => $group->getId()],
+                'actionArguments' => ['id' => $group->reqId()],
                 'errors' => [],
                 'form' => $form,
-                'group' => $groupRepository->repoGroupquery($group->getId()),
+                'group' => $groupRepository->repoGroupquery((string) $group->reqId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }

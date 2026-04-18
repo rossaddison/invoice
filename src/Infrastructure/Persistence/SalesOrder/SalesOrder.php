@@ -6,7 +6,7 @@ namespace App\Infrastructure\Persistence\SalesOrder;
 
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\Entity\Quote;
 use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;

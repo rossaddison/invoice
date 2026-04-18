@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -41,33 +41,33 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Group $model) => Html::encode($model->getId()),
+        content: static fn (Group $model): string => (string) $model->reqId(),
     ),
     new DataColumn(
         'name',
         header: $translator->translate('name'),
-        content: static fn (Group $model) => Html::encode($model->getName()),
+        content: static fn (Group $model): string => Html::encode($model->getName()),
     ),
     new DataColumn(
         'identifier_format',
         header: $translator->translate('identifier.format'),
-        content: static fn (Group $model) => Html::encode($model->getIdentifierFormat()),
+        content: static fn (Group $model): string => Html::encode($model->getIdentifierFormat()),
     ),
     new DataColumn(
         'left_pad',
         header: $translator->translate('left.pad'),
-        content: static fn (Group $model) => Html::encode($model->getLeftPad()),
+        content: static fn (Group $model): string => (string) ($model->getLeftPad() ?? ''),
     ),
     new DataColumn(
         'next_id',
         header: $translator->translate('next.id'),
-        content: static fn (Group $model) => Html::encode($model->getNextId()),
+        content: static fn (Group $model): string => (string) ($model->getNextId() ?? ''),
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (Group $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('group/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('group/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -77,7 +77,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Group $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('group/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('group/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -87,7 +87,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Group $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('group/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('group/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

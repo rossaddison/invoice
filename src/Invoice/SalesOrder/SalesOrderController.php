@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrder;
 
 use App\Auth\Permissions;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Infrastructure\Persistence\{
         DeliveryLocation\DeliveryLocation,
+        Group, Group,
         InvAllowanceCharge\InvAllowanceCharge,
         SalesOrder\SalesOrder,
         SalesOrderAllowanceCharge\SalesOrderAllowanceCharge,
@@ -19,7 +21,7 @@ BaseController, Client\ClientRepository as CR,
 CustomField\CustomFieldRepository as CFR,
 CustomValue\CustomValueRepository as CVR,
 DeliveryLocation\DeliveryLocationRepository as DR,
-Entity\CustomField, Entity\Group, Entity\Inv,
+Entity\CustomField, Entity\Inv,
 Entity\InvAmount, Entity\InvCustom, Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrderCustom, Entity\SalesOrderTaxRate,
 Group\GroupRepository as GR,
 Helpers\CustomValuesHelper as CVH, Helpers\PdfHelper, Inv\InvForm,
@@ -1536,10 +1538,10 @@ final class SalesOrderController extends BaseController
         }
         $optionsDataGroup = [];
         /**
-         * @var Group $group
+         * @var \App\Infrastructure\Persistence\Group\Group $group
          */
         foreach ($groupRepo->findAllPreloaded() as $group) {
-            $optionsDataGroup[$group->getId()] = $group->getName();
+            $optionsDataGroup[$group->reqId()] = $group->getName();
         }
 
         $optionsDataSalesOrderStatus = [];

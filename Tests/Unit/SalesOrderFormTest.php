@@ -6,7 +6,7 @@ namespace Tests\Unit\SalesOrder;
 
 use App\Invoice\Entity\SalesOrder;
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\SalesOrder\SalesOrderForm;
 use App\User\User;
 use PHPUnit\Framework\TestCase;

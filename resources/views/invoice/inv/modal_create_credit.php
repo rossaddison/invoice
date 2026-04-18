@@ -51,15 +51,15 @@ echo $credit_date; ?>">
                         <select name="inv_group_id" id="inv_group_id" class="hidden">
                             <?php
      /**
-      * @var App\Invoice\Entity\Group $invoice_group
+      * @var App\Infrastructure\Persistence\Group\Group $invoice_group
       */
      foreach ($invoice_groups as $invoice_group) { ?>
-                                <option value="<?= $invoice_group->getId(); ?>"
-                                    <?php if ($s->getSetting('default_invoice_group') === $invoice_group->getId()) {
+                                <option value="<?= $invoice_group->reqId(); ?>"
+                                    <?php if ($s->getSetting('default_invoice_group') === (string) $invoice_group->reqId()) {
                                         echo 'selected="selected"';
                                         $credit_invoice_group = Html::encode($invoice_group->getName() ?? '');
                                     } ?>>
-                                    <?php if ($s->getSetting('default_invoice_group') === $invoice_group->getId()) {
+                                    <?php if ($s->getSetting('default_invoice_group') === (string) $invoice_group->reqId()) {
                                         echo $credit_invoice_group;
                                     } else {
                                         echo '';

@@ -54,13 +54,12 @@ echo H::openTag('div', $row); //1
          ->value('')
          ->content($translator->translate('none'));
         /**
-        * @var App\Invoice\Entity\Group
-        * $invoice_group
+        * @var App\Infrastructure\Persistence\Group\Group $invoice_group
         */
         foreach ($invoice_groups as $invoice_group) {
         echo  new Option()
-         ->value($invoice_group->getId())
-         ->selected($body[$dqg] == $invoice_group->getId())
+         ->value($invoice_group->reqId())
+         ->selected($body[$dqg] == $invoice_group->reqId())
          ->content(
           $invoice_group->getName() ?? ''
          );

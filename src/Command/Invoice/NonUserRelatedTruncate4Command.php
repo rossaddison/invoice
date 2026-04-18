@@ -19,7 +19,7 @@ use App\Invoice\Entity\DeliveryParty;
 use App\Invoice\Entity\EmailTemplate;
 use App\Invoice\Entity\Family;
 use App\Invoice\Entity\FromDropDown;
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\Entity\PostalAddress;
 use App\Invoice\Entity\ProductCustom;
 use App\Invoice\Entity\Product;

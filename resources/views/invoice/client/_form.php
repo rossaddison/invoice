@@ -134,16 +134,7 @@ use Yiisoft\Html\Tag\Form;
   ]); ?>
   <?= $formFields->clientTextField($form, 'client_name', 'client.name', true); ?>
   <?= $formFields->clientTextField($form, 'client_surname', 'client.surname', false); ?>
-  <?= Html::tag('label', $translator->translate('email'), ['class' => 'form-label', 'for' => 'client_email']); ?>
-  <?= Html::openTag('div', ['class' => 'input-group mb-3']); ?>
-   <?= Html::tag('span', '<i class="bi bi-envelope-fill fs-4"></i>', ['class' => 'input-group-text'])->encode(false); ?>
-   <?= Html::input('email', 'ClientForm[client_email]', Html::encode($form->getClientEmail() ?? ''), [
-    'id'           => 'client_email',
-    'class'        => 'form-control form-control-lg',
-    'placeholder'  => $translator->translate('email'),
-    'autocomplete' => 'email',
-   ]); ?>
-  <?= Html::closeTag('div'); ?>
+  <?= $formFields->clientEmailField($form); ?>
   <?= $formFields->clientTelephoneField($form, 'client_mobile', 'mobile'); ?>
   <?= $formFields->clientTextField($form, 'client_group', 'client.group', false); ?>
   <?= Field::select($form, 'client_frequency')
@@ -238,9 +229,9 @@ use Yiisoft\Html\Tag\Form;
         'id'           => 'client_birthdate',
         'role'         => 'presentation',
         'autocomplete' => 'off',
+        'onclick'      => 'this.showPicker()',
     ])
-    ->value(Html::encode(!is_string($form->getClientBirthdate()) && null !== $form->getClientBirthdate()
-        ? $form->getClientBirthdate()->format('Y-m-d') : ''))
+    ->value(Html::encode($form->getClientBirthdate() ?? ''))
     ->required(false); ?>
   <?= Field::number($form, 'client_age')
     ->label($translator->translate('client.age'))

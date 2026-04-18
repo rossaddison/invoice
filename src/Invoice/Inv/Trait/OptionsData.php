@@ -6,13 +6,13 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Invoice\Entity\
 {
-    Contract, Delivery, Group,
-    Inv, PaymentMethod, PostalAddress, Setting, Upload,
+    Contract, Delivery, Inv, PaymentMethod, PostalAddress, Setting, Upload,
     UserClient
 };
 use App\Infrastructure\Persistence\{
     Client\Client,
     DeliveryLocation\DeliveryLocation,
+    Group\Group,
     TaxRate\TaxRate
 };
 use App\Invoice\{
@@ -105,7 +105,7 @@ trait OptionsData
          * @var Group $group
          */
         foreach ($groupRepo->findAllPreloaded() as $group) {
-            $optionsDataGroup[$group->getId()] = $group->getName();
+            $optionsDataGroup[$group->reqId()] = $group->getName();
         }
 
         $optionsDataPaymentMethod = [];

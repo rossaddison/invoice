@@ -269,6 +269,7 @@ declare(strict_types=1);
  */
 
 use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
+use App\Infrastructure\Persistence\Group\Group;
 use App\Infrastructure\Persistence\Task\Task;
 use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Infrastructure\Persistence\ProductClient\ProductClient;
@@ -461,7 +462,30 @@ return [
     'FromDropDown'                  => null,
     'Gentor'                        => null,
     'GentorRelation'                => null,
-    'Group'                         => null,
+    'Group'                         => [
+        'class'               => Group::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Command/Invoice/ItemsCommand.php',
+            'src/Invoice/Group/GroupController.php',
+            'src/Invoice/Group/GroupForm.php',
+            'src/Invoice/Group/GroupRepository.php',
+            'src/Invoice/Group/GroupService.php',
+            'src/Invoice/Inv/Trait/OptionsData.php',
+            'src/Invoice/Quote/Trait/Edit.php',
+            'src/Invoice/SalesOrder/SalesOrderController.php',
+            'src/Invoice/Entity/Inv.php',
+            'src/Invoice/Entity/Quote.php',
+            'resources/views/invoice/group/index.php',
+        ],
+        'callers_updated'     => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+    ],
     'Inv'                           => null,
     'InvAmount'                     => null,
     'InvCustom'                     => null,

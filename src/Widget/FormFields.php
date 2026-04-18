@@ -402,10 +402,11 @@ final readonly class FormFields
         return Field::email($form, 'client_email')
             ->label($this->translator->translate('email'))
             ->addInputAttributes([
-                'placeholder' => $this->translator->translate('email'),
-                'value' => Html::encode($form->getClientEmail() ?? ''),
-                'class' => 'form-control form-control-lg',
-                'id' => 'client_email',
+                'placeholder'  => $this->translator->translate('email'),
+                'value'        => Html::encode($form->getClientEmail() ?? ''),
+                'class'        => 'form-control form-control-lg',
+                'id'           => 'client_email',
+                'autocomplete' => 'email',
             ])
             ->required(false)
             ->render();

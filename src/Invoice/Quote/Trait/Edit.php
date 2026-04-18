@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Invoice\Entity\{Contract, Group, Quote, QuoteCustom, QuoteTaxRate};
+use App\Infrastructure\Persistence\Group\Group;
+use App\Invoice\Entity\{Contract, Quote, QuoteCustom, QuoteTaxRate};
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\{
     Client\ClientRepository as CR,
@@ -228,7 +229,7 @@ trait Edit
          * @var Group $group
          */
         foreach ($groups as $group) {
-            $optionsDataGroup[$group->getId()] = $group->getName();
+            $optionsDataGroup[$group->reqId()] = $group->getName();
         }
 
         $optionsDataQuoteStatus = [];

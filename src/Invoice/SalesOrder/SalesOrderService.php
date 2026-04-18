@@ -50,7 +50,7 @@ final readonly class SalesOrderService
         );
         if ($group) {
             $model->setGroup($group);
-            $model->setGroupId((int) $group->getId());
+            $model->setGroupId($group->reqId());
         }
         if (isset($array['user_id'])) {
             $user = $this->userRepository->findById(

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\Group;
+use App\Infrastructure\Persistence\Group\Group;
 use Codeception\Test\Unit;
 
 final class GroupEntityTest extends Unit

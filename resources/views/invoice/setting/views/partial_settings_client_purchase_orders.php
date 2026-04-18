@@ -36,12 +36,12 @@ echo H::openTag('div', ['class' => 'row']); //1
          ->value('')
          ->content($translator->translate('none'));
         /**
-        * @var App\Invoice\Entity\Group $invoice_group
+        * @var App\Infrastructure\Persistence\Group\Group $invoice_group
         */
         foreach ($gR->findAllPreloaded() as $invoice_group) {
-        $selected = $body[$settingKey] == $invoice_group->getId();
+        $selected = $body[$settingKey] == $invoice_group->reqId();
         echo  new Option()
-         ->value($invoice_group->getId())
+         ->value($invoice_group->reqId())
          ->selected($selected)
          ->content($invoice_group->getName() ?? '');
         }
