@@ -31,6 +31,8 @@ Automated generation and transmission of compliant UBL 2.1 documents via the
 
 **Recent Implementations**
 
+[Adapting forms for DDD](docs/FORMS_DDD.md) (April 2026)
+
 [Entity to Infrastructure Migration Process](docs/ENTITY_TO_INFRASTRUCTURE_PROCESS.md) (April 2026)
 
 [Architecture Domain Application Infrastructure](docs/ARCHITECTURE_DOMAIN_APPLICATION_INFRASTRUCTURE.md) (April 2026)

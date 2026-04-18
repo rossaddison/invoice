@@ -11,23 +11,22 @@ use Yiisoft\Validator\Rule\Required;
 final class CategoryPrimaryForm extends FormModel
 {
     #[Required]
-    private ?string $name = '';
+    private string $name = '';
 
-    public function __construct(CategoryPrimary $categoryPrimary)
-    {
-        $this->name = $categoryPrimary->getName();
-    }
-
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     *
-     * @psalm-return ''
-     */
+    public static function show(CategoryPrimary $categoryPrimary): self
+    {
+        $form = new self();
+        
+        $form->name = $categoryPrimary->getName() ?? '';
+
+        return $form;
+    }
+
     #[\Override]
     public function getFormName(): string
     {

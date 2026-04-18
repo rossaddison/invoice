@@ -138,8 +138,8 @@ $columns = [
             $categoryPrimaryId = $model->getCategoryPrimaryId();
             $categoryPrimary = $cpR->repoCategoryPrimaryQuery($categoryPrimaryId);
             return null !== $categoryPrimary ?
-                    ($categoryPrimary->getName() ?? $translator->translate('not.set'))
-                        : $translator->translate('not.set');
+                    $categoryPrimary->getName() ?? $translator->translate('not.set')
+                                             : $translator->translate('not.set');
         },
     ),
     new DataColumn(

@@ -53,7 +53,7 @@ final class CategoryPrimaryController extends BaseController
         FormHydrator $formHydrator,
     ): Response {
         $categoryPrimary = new CategoryPrimary();
-        $form = new CategoryPrimaryForm($categoryPrimary);
+        $form = new CategoryPrimaryForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'categoryprimary/add',
@@ -136,7 +136,7 @@ final class CategoryPrimaryController extends BaseController
         if ($id) {
             $categoryprimary = $this->categoryprimary($categoryPrimaryRepository, $id);
             if ($categoryprimary) {
-                $form = new CategoryPrimaryForm($categoryprimary);
+                $form = CategoryPrimaryForm::show($categoryprimary);
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
                     'actionName' => 'categoryprimary/edit',
@@ -198,7 +198,7 @@ final class CategoryPrimaryController extends BaseController
         if ($id) {
             $category_primary = $this->categoryprimary($categoryPrimaryRepository, $id);
             if ($category_primary) {
-                $form = new CategoryPrimaryForm($category_primary);
+                $form = CategoryPrimaryForm::show($category_primary);
                 $parameters = [
                     'title' => $this->translator->translate('view'),
                     'actionName' => 'categoryprimary/view',
