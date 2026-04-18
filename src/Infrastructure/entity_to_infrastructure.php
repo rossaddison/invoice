@@ -163,16 +163,28 @@ declare(strict_types=1);
  *   Add entry here with all flags false.
  *
  * STAGE 2 — audit callers before touching anything
- *   Two greps are required — the first finds fully-qualified references,
- *   the second finds files that import by short name:
+ *   Three greps are required:
  *
+ *   (a) Fully-qualified references:
  *   grep -rl "App\\Invoice\\Entity\\{Name}" src/ resources/
- *   grep -rl "{Name}" src/ resources/ --include="*.php"
  *
- *   Combine both result lists (deduplicated) into the 'callers' array.
- *   Using only the first grep will miss files that reference the class
- *   by short name after a use statement, producing Psalm errors after
- *   the entity file is deleted.
+ *   (b) Files importing by short name (use statement + @var docblock):
+ *   grep -rl "use App\\Invoice\\Entity\\{Name}" src/ resources/
+ *
+ *   (c) Short-name @var docblocks WITHOUT a use statement — common in
+ *   Entity files within App\Invoice\Entity that share the same namespace
+ *   and reference siblings by bare class name with no use statement:
+ *   grep -rn "@var {Name}" src/ resources/ --include="*.php"
+ *   Also grep for implicit same-namespace usage inside other entity
+ *   files (BelongsTo, HasMany targets using bare class names):
+ *   grep -rn "{Name}" src/Invoice/Entity/ --include="*.php"
+ *
+ *   Combine all result lists (deduplicated) into the 'callers' array.
+ *   Using only grep (a) will miss:
+ *   • Files using a short-name use statement + @var Task $task docblock
+ *     (QuoteItemService pattern — caught only by grep (b))
+ *   • Entity files relying on implicit same-namespace resolution with no
+ *     use statement at all (InvItem/QuoteItem pattern — caught by grep (c))
  *
  * STAGE 3 — apply reqId() pattern
  *   Update the infrastructure class: reqId(), isPersisted(), setId().
@@ -208,6 +220,17 @@ declare(strict_types=1);
  *     • Replace use App\Invoice\Entity\{Name} with infrastructure FQCN
  *     • Update every @var App\Invoice\Entity\{Name} annotation
  *     • Verify no bare @var $variable was left behind
+ *     • For entity files that had no use statement (implicit same-namespace):
+ *       add an explicit use App\Infrastructure\Persistence\{Name}\{Name}
+ *       statement — do NOT assume the new class is in the same namespace.
+ *     • Check for return type changes: if the infrastructure class changes
+ *       a getter from string to ?int (e.g. getProjectId(): string → ?int),
+ *       every caller passing that value to a string-expecting method must
+ *       add a (string) cast. grep for the getter name to find all call sites:
+ *       grep -rn "get{Property}()" src/ resources/ --include="*.php"
+ *     • Watch for RiskyTruthyFalsyComparison: !empty($x->get{Property}())
+ *       where the property changed from string to ?int. Replace with
+ *       $x->get{Property}() !== null.
  *   This step cannot be automated reliably. Do it by hand.
  *   Set 'callers_updated' => true.
  *
