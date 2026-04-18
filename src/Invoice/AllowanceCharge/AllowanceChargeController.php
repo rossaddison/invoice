@@ -54,7 +54,7 @@ final class AllowanceChargeController extends BaseController
         TaxRateRepository $tR,
     ): Response {
         $allowanceCharge = new AllowanceCharge();
-        $form = new AllowanceChargeForm($allowanceCharge);
+        $form = new AllowanceChargeForm();
         $peppolArrays = new PeppolArrays();
         $allowances = $peppolArrays->getAllowancesSubsetArray();
         $parameters = [
@@ -115,7 +115,7 @@ final class AllowanceChargeController extends BaseController
         TaxRateRepository $tR,
     ): Response {
         $allowanceCharge = new AllowanceCharge();
-        $form = new AllowanceChargeForm($allowanceCharge);
+        $form = new AllowanceChargeForm();
         $peppolArrays = new PeppolArrays();
         $charges = $peppolArrays->getChargesArray();
         $parameters = [
@@ -153,7 +153,7 @@ final class AllowanceChargeController extends BaseController
             }
         }
         if ($request->getMethod() === Method::POST) {
-            $form = new AllowanceChargeForm($allowanceCharge);
+            $form = new AllowanceChargeForm();
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
                 $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
@@ -224,9 +224,9 @@ final class AllowanceChargeController extends BaseController
     ): Response {
         $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
         $body = $request->getParsedBody() ?? [];
-        if (is_array($body)) {
+        
             if (null !== $allowanceCharge) {
-                $form = new AllowanceChargeForm($allowanceCharge);
+                $form = AllowanceChargeForm::show($allowanceCharge);
                 $peppolArrays = new PeppolArrays();
                 $allowances = $peppolArrays->getAllowancesSubsetArray();
                 $parameters = [
@@ -239,17 +239,20 @@ final class AllowanceChargeController extends BaseController
                     'allowances' => $allowances,
                 ];
                 if ($request->getMethod() === Method::POST) {
-                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
-                        $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
-                        return $this->webService->getRedirectResponse('allowancecharge/index');
+                    if (is_array($body)) {
+                        if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                            $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
+                            $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
+                            return $this->webService->getRedirectResponse('allowancecharge/index');
+                        }
+                        $parameters['form'] = $form;
+                        $parameters['errors'] =
+                                $form->getValidationResult()
+                                ->getErrorMessagesIndexedByProperty();
                     }
-                    $parameters['form'] = $form;
-                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
                 }
                 return $this->webViewRenderer->render('_form_allowance', $parameters);
             }
-        }
         return $this->webService->getRedirectResponse('allowancecharge/index');
     }
 
@@ -271,7 +274,7 @@ final class AllowanceChargeController extends BaseController
         $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
         $body = $request->getParsedBody() ?? [];
         if (null !== $allowanceCharge) {
-            $form = new AllowanceChargeForm($allowanceCharge);
+            $form = AllowanceChargeForm::show($allowanceCharge);
             $peppolArrays = new PeppolArrays();
             $charges = $peppolArrays->getChargesArray();
             //$shippingCharges = $peppolArrays->getCommonChargesShipping();
@@ -287,7 +290,6 @@ final class AllowanceChargeController extends BaseController
                 'charges' => $charges,
             ];
             if ($request->getMethod() === Method::POST) {
-                $form = new AllowanceChargeForm($allowanceCharge);
                 if (is_array($body)) {
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
@@ -338,7 +340,7 @@ final class AllowanceChargeController extends BaseController
     {
         $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
         if ($allowanceCharge) {
-            $form = new AllowanceChargeForm($allowanceCharge);
+            $form = AllowanceChargeForm::show($allowanceCharge);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'allowancecharge/view',
