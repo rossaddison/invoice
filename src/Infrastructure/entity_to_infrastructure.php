@@ -248,6 +248,21 @@ declare(strict_types=1);
  *   Any remaining errors indicate missed callers from Stage 5.
  *   Resolve before considering the conversion complete.
  *
+ * STAGE 9 — clear the Cycle ORM schema cache
+ *   Delete runtime/schema.php so Cycle ORM regenerates it from the
+ *   #[Entity] attributes on the new infrastructure class on the next
+ *   request. Without this step, Cycle's proxy factory still maps the
+ *   old App\Invoice\Entity\{Name}::class and throws:
+ *
+ *     RuntimeException: The entity `App\Invoice\Entity\{Name}` class
+ *     does not exist. Proxy factory can not create classless entities.
+ *
+ *   Command:
+ *     rm runtime/schema.php
+ *
+ *   Then refresh the browser — Cycle rebuilds schema.php automatically.
+ *   Set 'schema_cache_cleared' => true.
+ *
  * ==========================================================================
  *
  * Update this file when:
@@ -263,6 +278,7 @@ declare(strict_types=1);
  *   • Group use applied where needed       — 'group_use'          => true.
  *   • Psalm passes cleanly after any edit  — 'psalm'              => true.
  *   • src/Invoice/Entity/{Name}.php deleted — 'entity_removed'    => true.
+ *   • Schema cache deleted + browser OK    — 'schema_cache_cleared' => true.
  *   • Any referenced entity is converted   — reset 'var_annotations',
  *     'callers_updated', and 'psalm' to false until use statements,
  *     @var annotations, and all callers are updated and re-verified.
@@ -301,7 +317,8 @@ return [
         'group_use'           => true,
         'view_get_id_updated' => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'CategoryPrimary'   => [
         'class'               => CategoryPrimary::class,
@@ -313,7 +330,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'CategorySecondary' => [
         'class'               => CategorySecondary::class,
@@ -329,7 +347,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'Client'            => [
         'class'               => Client::class,
@@ -341,7 +360,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'DeliveryLocation'  => [
         'class'               => DeliveryLocation::class,
@@ -353,7 +373,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'TaxRate'           => [
         'class'               => TaxRate::class,
@@ -365,7 +386,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'SalesOrderItemAllowanceCharge' => [
         'class'               => SalesOrderItemAllowanceCharge::class,
@@ -388,7 +410,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
 
     'UserCustom'        => [
@@ -403,7 +426,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
 
     // -------------------------------------------------------------------------
@@ -419,7 +443,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
 
     // -------------------------------------------------------------------------
@@ -444,7 +469,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'ClientCustom'                  => null,
     'ClientNote'                    => null,
@@ -484,7 +510,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'Inv'                           => null,
     'InvAmount'                     => null,
@@ -540,7 +567,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'SalesOrderAllowanceCharge' => [
         'class'               => SalesOrderAllowanceCharge::class,
@@ -559,7 +587,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'SalesOrderAmount' => [
         'class'               => SalesOrderAmount::class,
@@ -588,7 +617,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'SalesOrderCustom'              => null,
     'SalesOrderItem' => [
@@ -613,7 +643,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'SalesOrderItemAmount'          => null,
     'SalesOrderTaxRate'             => null,
@@ -648,7 +679,8 @@ return [
         'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
-        'entity_removed'      => true,
+        'entity_removed'       => true,
+        'schema_cache_cleared' => true,
     ],
     'Unit'                          => null,
     'UnitPeppol'                    => null,

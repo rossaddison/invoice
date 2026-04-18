@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrder;
 
 use App\Auth\Permissions;
-use App\Infrastructure\Persistence\Group\Group;
 use App\Infrastructure\Persistence\{
         DeliveryLocation\DeliveryLocation,
-        Group, Group,
+        Group\Group,
         InvAllowanceCharge\InvAllowanceCharge,
         SalesOrder\SalesOrder,
         SalesOrderAllowanceCharge\SalesOrderAllowanceCharge,
