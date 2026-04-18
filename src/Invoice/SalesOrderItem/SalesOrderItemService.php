@@ -73,7 +73,7 @@ final readonly class SalesOrderItemService
             );
             if ($task) {
                 $model->setTask($task);
-                $model->setTaskId((int) $task->getId());
+                $model->setTaskId($task->reqId());
             }
         }
     }

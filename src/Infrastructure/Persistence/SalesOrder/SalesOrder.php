@@ -8,7 +8,7 @@ use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Invoice\Entity\Group;
 use App\Invoice\Entity\Quote;
-use App\Invoice\Entity\SalesOrderAmount;
+use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\User\User;
 use Cycle\Annotated\Annotation\Column;

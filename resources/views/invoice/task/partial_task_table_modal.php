@@ -29,16 +29,16 @@ use Yiisoft\Html\Html;
 
         <?php
             /**
-             * @var App\Invoice\Entity\Task $task
+             * @var App\Infrastructure\Persistence\Task\Task $task
              */
             foreach ($tasks as $task) { ?>
             <tr class="task-row">
                 <td class="text-left">
                     <input type="checkbox" class="modal-task-id" name="task_ids[]"
-                           id="task-id-<?= $task->getId() ?>" value="<?= $task->getId(); ?>">
+                           id="task-id-<?= $task->reqId() ?>" value="<?= $task->reqId(); ?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?php echo ($projectR->count($task->getProjectId()) > 0 ? $projectR->repoProjectquery($task->getProjectId())?->getName() : '') ?></b>
+                    <b><?php echo ($projectR->count((string) $task->getProjectId()) > 0 ? $projectR->repoProjectquery((string) $task->getProjectId())?->getName() : '') ?></b>
                 </td>
                 <td>
                     <b><?php echo Html::encode($task->getName()); ?></b>

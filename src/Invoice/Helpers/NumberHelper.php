@@ -11,7 +11,7 @@ use App\Invoice\Entity\QuoteAllowanceCharge;
 use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\{
     SalesOrderAllowanceCharge,
 };
-use App\Invoice\Entity\SalesOrderAmount;
+use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderItemAmount;
 use App\Invoice\Entity\SalesOrderTaxRate;

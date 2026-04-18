@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Task;
+use App\Infrastructure\Persistence\Task\Task;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Html\Html;
@@ -19,7 +19,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @var App\Invoice\Entity\Task $task
+ * @var App\Infrastructure\Persistence\Task\Task $task
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s
@@ -70,13 +70,13 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Task $model) => Html::encode($model->getId()),
+        content: static fn (Task $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'project_id',
         header: $translator->translate('project'),
         content: static function (Task $model) use ($prjctR): string {
-            return Html::encode(($prjctR->count($model->getProjectId()) > 0 ? $prjctR->repoProjectquery($model->getProjectId())?->getName() : ''));
+            return Html::encode(($prjctR->count((string) $model->getProjectId()) > 0 ? $prjctR->repoProjectquery((string) $model->getProjectId())?->getName() : ''));
         },
     ),
     new DataColumn(
@@ -134,7 +134,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Task $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('task/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('task/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -144,7 +144,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Task $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('task/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('task/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -154,7 +154,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Task $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('task/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('task/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

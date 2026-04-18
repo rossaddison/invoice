@@ -156,12 +156,12 @@ foreach ($invItems as $item) {
              echo $translator->translate('none');
             echo H::closeTag('option');
             /**
-             * @var App\Invoice\Entity\Task $task
+             * @var App\Infrastructure\Persistence\Task\Task $task
              */
            foreach ($tasks as $task) {
-                $selected = ($item->getTaskId() == $task->getId());
+                $selected = ($item->getTaskId() == $task->reqId());
                 echo H::openTag('option', [
-                    'value' => $task->getId(),
+                    'value' => $task->reqId(),
                     'selected' => $selected ? 'selected' : null
                 ]);
                  echo $task->getName();

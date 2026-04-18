@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Task;
 
-use App\Invoice\Entity\Task;
+use App\Infrastructure\Persistence\Task\Task;
 use Cycle\ORM\Select;
 use Throwable;
 use Cycle\Database\Injection\Parameter;

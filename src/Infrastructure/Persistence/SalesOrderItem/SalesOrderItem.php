@@ -7,7 +7,7 @@ namespace App\Infrastructure\Persistence\SalesOrderItem;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Invoice\Entity\Product;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
-use App\Invoice\Entity\Task;
+use App\Infrastructure\Persistence\Task\Task;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;

@@ -2,16 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\ProductClient;
 
 use App\Infrastructure\Persistence\Client\Client;
+use App\Invoice\Entity\Product;
+use App\Invoice\ProductClient\ProductClientRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use DateTimeImmutable;
 use Cycle\ORM\Entity\Behavior;
+use DateTimeImmutable;
 
-#[Entity(repository: \App\Invoice\ProductClient\ProductClientRepository::class)]
+#[Entity(repository: ProductClientRepository::class)]
 #[Behavior\CreatedAt(field: 'created_at', column: 'created_at')]
 #[Behavior\UpdatedAt(field: 'updated_at', column: 'updated_at')]
 class ProductClient
@@ -34,19 +36,32 @@ class ProductClient
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $product_id = null,
         #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $client_id = null
+        private ?int $client_id = null,
     ) {
         $this->created_at = new DateTimeImmutable();
         $this->updated_at = new DateTimeImmutable();
     }
 
-    // Getters and Setters
-    public function getId(): ?int
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'ProductClient has no ID (not persisted yet)'
+            );
+        }
+
         return $this->id;
     }
 
-    public function setId(?int $id): void
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -76,7 +91,7 @@ class ProductClient
         return $this->product_id;
     }
 
-    public function setProductId(?int $product_id): void
+    public function setProductId(int $product_id): void
     {
         $this->product_id = $product_id;
     }
@@ -86,7 +101,7 @@ class ProductClient
         return $this->client_id;
     }
 
-    public function setClientId(?int $client_id): void
+    public function setClientId(int $client_id): void
     {
         $this->client_id = $client_id;
     }
@@ -96,9 +111,9 @@ class ProductClient
         return $this->created_at;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): void
+    public function setCreatedAt(DateTimeImmutable $created_at): void
     {
-        $this->created_at = $createdAt;
+        $this->created_at = $created_at;
     }
 
     public function getUpdatedAt(): DateTimeImmutable
@@ -106,8 +121,8 @@ class ProductClient
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): void
+    public function setUpdatedAt(DateTimeImmutable $updated_at): void
     {
-        $this->updated_at = $updatedAt;
+        $this->updated_at = $updated_at;
     }
 }

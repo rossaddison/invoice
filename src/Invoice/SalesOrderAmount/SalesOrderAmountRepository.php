@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderAmount;
 
-use App\Invoice\Entity\SalesOrderAmount;
+use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\Setting\SettingRepository as SR;

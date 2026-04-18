@@ -6,7 +6,7 @@ namespace App\Invoice\Task;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Task;
+use App\Infrastructure\Persistence\Task\Task;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\QuoteItem;
 use App\Invoice\Helpers\NumberHelper;
@@ -152,7 +152,7 @@ final class TaskController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'task/edit',
-                'actionArguments' => ['id' => $task->getId()],
+                'actionArguments' => ['id' => $task->reqId()],
                 'alert' => $this->alert(),
                 'form' => $form,
                 'errors' => [],
@@ -286,7 +286,7 @@ final class TaskController extends BaseController
             'name' => $task->getName(),
             'inv_id' => $inv_id,
             'tax_rate_id' => $task->getTaxRateId(),
-            'task_id' => $task->getId(),
+            'task_id' => $task->reqId(),
             'product_id' => null,
             'date_added' => new \DateTimeImmutable('now'),
             'description' => $task->getDescription(),
@@ -367,7 +367,7 @@ final class TaskController extends BaseController
             'name' => $task->getName(),
             'quote_id' => $quote_id,
             'tax_rate_id' => $task->getTaxRateId(),
-            'task_id' => $task->getId(),
+            'task_id' => $task->reqId(),
             'product_id' => null,
             'date_added' => new \DateTimeImmutable('now'),
             'description' => $task->getDescription(),
@@ -402,10 +402,10 @@ final class TaskController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'task/view',
-                'actionArguments' => ['id' => $task->getId()],
+                'actionArguments' => ['id' => $task->reqId()],
                 'errors' => [],
                 'form' => $taskForm,
-                'task' => $tR->repoTaskquery($task->getId()),
+                'task' => $tR->repoTaskquery((string) $task->reqId()),
                 'taxRates' => $trR->optionsDataTaxRates(),
                 'projects' => $pR->optionsDataProjects(),
             ];

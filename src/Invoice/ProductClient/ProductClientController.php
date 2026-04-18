@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\ProductClient;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\ProductClient;
+use App\Infrastructure\Persistence\ProductClient\ProductClient;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\ProductClient\ProductClientForm;
 use App\Invoice\ProductClient\ProductClientService;

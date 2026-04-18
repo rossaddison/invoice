@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Task;
 
 use DateTimeImmutable;
-use App\Invoice\Entity\Task;
+use App\Infrastructure\Persistence\Task\Task;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 

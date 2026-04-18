@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\A;
 
 /** 
  * @var App\Infrastructure\Persistence\Client\Client $client 
- * @var App\Invoice\Entity\ProductClient $productClient
+ * @var App\Infrastructure\Persistence\ProductClient\ProductClient $productClient
  * @var App\Invoice\Entity\Product $product
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -232,7 +232,7 @@ use Yiisoft\Html\Tag\A;
                 ->addAttributes(['class' => 'btn btn-primary me-2'])
                 ->content($translator->translate('i.edit'))
                 ->href($urlGenerator->generate(
-                    'productclient/edit', ['id' => $productClient->getId()]))
+                    'productclient/edit', ['id' => $productClient->reqId()]))
                 ->render()
             ?>
 

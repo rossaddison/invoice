@@ -246,6 +246,9 @@ declare(strict_types=1);
  */
 
 use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
+use App\Infrastructure\Persistence\Task\Task;
+use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
+use App\Infrastructure\Persistence\ProductClient\ProductClient;
 use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\SalesOrderAllowanceCharge;
 use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
@@ -384,7 +387,7 @@ return [
     // -------------------------------------------------------------------------
     'InvAllowanceCharge' => [
         'class'               => InvAllowanceCharge::class,
-        'req_id'              => false,
+        'req_id'              => true,
         'var_annotations'     => true,
         'callers'             => [],
         'callers_updated'     => true,
@@ -398,6 +401,27 @@ return [
     // -------------------------------------------------------------------------
     // Pending — infrastructure class not yet created
     // -------------------------------------------------------------------------
+    'ProductClient' => [
+        'class'               => ProductClient::class,
+        'req_id'              => true,
+        'var_annotations'     => false,
+        'callers'             => [
+            'src/Infrastructure/Persistence/Client/Client.php',
+            'src/Invoice/Entity/Product.php',
+            'src/Invoice/ProductClient/ProductClientController.php',
+            'src/Invoice/ProductClient/ProductClientForm.php',
+            'src/Invoice/ProductClient/ProductClientRepository.php',
+            'src/Invoice/ProductClient/ProductClientService.php',
+            'resources/views/invoice/productclient/_form.php',
+            'resources/views/invoice/productclient/_view.php',
+        ],
+        'callers_updated'     => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+    ],
     'ClientCustom'                  => null,
     'ClientNote'                    => null,
     'ClientPeppol'                  => null,
@@ -432,7 +456,6 @@ return [
     'PaymentPeppol'                 => null,
     'PostalAddress'                 => null,
     'Product'                       => null,
-    'ProductClient'                 => null,
     'ProductCustom'                 => null,
     'ProductImage'                  => null,
     'ProductProperty'               => null,
@@ -466,8 +489,8 @@ return [
             'resources/views/invoice/salesorder/index.php',
         ],
         'callers_updated'     => true,
-        'null_guards_removed' => false,
-        'view_get_id_updated' => false,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
         'group_use'           => true,
         'psalm'               => true,
         'entity_removed'      => true,
@@ -491,7 +514,35 @@ return [
         'psalm'               => true,
         'entity_removed'      => true,
     ],
-    'SalesOrderAmount'              => null,
+    'SalesOrderAmount' => [
+        'class'               => SalesOrderAmount::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Command/Invoice/SalesOrderTruncate3Command.php',
+            'src/Infrastructure/Persistence/SalesOrder/SalesOrder.php',
+            'src/Invoice/Helpers/NumberHelper.php',
+            'src/Invoice/Quote/Trait/QuoteToSo.php',
+            'src/Invoice/SalesOrder/SalesOrderController.php',
+            'src/Invoice/SalesOrder/SalesOrderService.php',
+            'src/Invoice/SalesOrderAmount/SalesOrderAmountForm.php',
+            'src/Invoice/SalesOrderAmount/SalesOrderAmountRepository.php',
+            'src/Invoice/SalesOrderAmount/SalesOrderAmountService.php',
+            'resources/views/invoice/salesorder/guest.php',
+            'resources/views/invoice/salesorder/index.php',
+            'resources/views/invoice/salesorder/partial_item_table.php',
+            'resources/views/invoice/salesorder/partial_item_table_with_peppol.php',
+            'resources/views/invoice/salesorder/view.php',
+            'resources/views/invoice/template/salesorder/pdf/salesorder.php',
+            'resources/views/invoice/template/salesorder/public/SalesOrder_Web.php',
+        ],
+        'callers_updated'     => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+    ],
     'SalesOrderCustom'              => null,
     'SalesOrderItem' => [
         'class'               => SalesOrderItem::class,
@@ -520,7 +571,38 @@ return [
     'SalesOrderItemAmount'          => null,
     'SalesOrderTaxRate'             => null,
     'Setting'                       => null,
-    'Task'                          => null,
+    'Task' => [
+        'class'               => Task::class,
+        'req_id'              => true,
+        'var_annotations'     => false,
+        'callers'             => [
+            'src/Command/Invoice/NonUserRelatedTruncate4Command.php',
+            'src/Infrastructure/Persistence/SalesOrderItem/SalesOrderItem.php',
+            'src/Invoice/Entity/InvItem.php',
+            'src/Invoice/Entity/QuoteItem.php',
+            'src/Invoice/InvItem/InvItemService.php',
+            'src/Invoice/Report/ReportController.php',
+            'src/Invoice/Task/TaskController.php',
+            'src/Invoice/Task/TaskForm.php',
+            'src/Invoice/Task/TaskRepository.php',
+            'src/Invoice/Task/TaskService.php',
+            'resources/views/invoice/dashboard/index.php',
+            'resources/views/invoice/inv/partial_item_table.php',
+            'resources/views/invoice/invitem/_item_form_task.php',
+            'resources/views/invoice/quote/partial_item_table.php',
+            'resources/views/invoice/quoteitem/_item_edit_form_task.php',
+            'resources/views/invoice/quoteitem/_item_form_task.php',
+            'resources/views/invoice/salesorder/partial_item_table.php',
+            'resources/views/invoice/task/index.php',
+            'resources/views/invoice/task/partial_task_table_modal.php',
+        ],
+        'callers_updated'     => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+    ],
     'Unit'                          => null,
     'UnitPeppol'                    => null,
     'Upload'                        => null,

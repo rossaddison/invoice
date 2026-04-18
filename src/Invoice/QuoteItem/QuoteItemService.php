@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItem;
 
+use App\Infrastructure\Persistence\Task\Task;
 use App\Invoice\
 {
     Entity\QuoteItemAmount,
     Entity\QuoteItem,
-    Entity\Task,
     Product\ProductRepository as PR,
     Quote\QuoteRepository as QR,
     QuoteItemAmount\QuoteItemAmountRepository as QIAR,
@@ -510,7 +510,7 @@ final readonly class QuoteItemService
 
         isset($array['task_id']) ?
             $model->setTask(
-                $model->getTask()?->getId() ==
+                $model->getTask()?->reqId() ==
                     (int) $array['task_id'] ?
                     $model->getTask() : null
             ) : '';

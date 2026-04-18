@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductClient;
 
-use App\Invoice\Entity\ProductClient;
+use App\Infrastructure\Persistence\ProductClient\ProductClient;
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Product\ProductRepository as PR;
 

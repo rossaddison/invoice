@@ -7,7 +7,7 @@ namespace App\Infrastructure\Persistence\Client;
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\ProductClient;
+use App\Infrastructure\Persistence\ProductClient\ProductClient;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasMany;

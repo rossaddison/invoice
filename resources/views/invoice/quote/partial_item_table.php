@@ -151,12 +151,12 @@ foreach ($quoteItems as $item) {
                ->value('0')
                ->content($translator->translate('none'));
            /**
-            * @var App\Invoice\Entity\Task $task
+            * @var App\Infrastructure\Persistence\Task\Task $task
             */
            foreach ($tasks as $task) {
                echo  new Option()
-                   ->value($task->getId())
-                   ->selected($item->getTaskId() == $task->getId())
+                   ->value($task->reqId())
+                   ->selected($item->getTaskId() == $task->reqId())
                    ->content($task->getName() ?? '');
            }
        }

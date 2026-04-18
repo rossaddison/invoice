@@ -565,7 +565,7 @@ use Yiisoft\Html\Html;
                             <tbody>
                             <?php
                                         /**
-                                         * @var App\Invoice\Entity\Task $task
+                                         * @var App\Infrastructure\Persistence\Task\Task $task
                                          */
                                         foreach ($taskR->findAllPreloaded() as $task) { ?>
                                 <tr>
@@ -578,7 +578,7 @@ use Yiisoft\Html\Html;
                                     <td>
                                         <a href="<?= $urlGenerator->generate(
                                                 'task/edit',
-                                                ['id' => $task->getId()]); ?>">
+                                                ['id' => $task->reqId()]); ?>">
                                          <?= Html::encode($task->getName()); ?>
                                         </a>
                                     </td>
@@ -590,7 +590,7 @@ use Yiisoft\Html\Html;
                                     </span>
                                     </td>
                                     <td>
-                                    <?php  if (!empty($task->getProjectId())) { ?>
+                                    <?php  if ($task->getProjectId() !== null) { ?>
                                             <a href="<?= $urlGenerator->generate(
                                                     'project/view',
                                          ['id' => $task->getProjectId()]); ?>">

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderAmount;
 
-use App\Invoice\Entity\SalesOrderAmount as SoAmount;
+use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount as SoAmount;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem as SoItem;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;

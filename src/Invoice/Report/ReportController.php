@@ -647,10 +647,10 @@ class ReportController extends BaseController
         ];
         $tasks = $taskR->findAllPreloaded();
         /**
-         * @var \\App\Invoice\Entity\Task $task
+         * @var \App\Infrastructure\Persistence\Task\Task $task
          */
         foreach ($tasks as $task) {
-            $task_id = (int) $task->getId();
+            $task_id = $task->reqId();
             if (!empty($task_id)) {
                 // Task name
                 $row['task_name'] = (string) $task->getName();

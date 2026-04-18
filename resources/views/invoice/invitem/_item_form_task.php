@@ -77,10 +77,10 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 <?php
                                     $optionsDataTask = [];
 /**
- * @var App\Invoice\Entity\Task $task
+ * @var App\Infrastructure\Persistence\Task\Task $task
  */
 foreach ($tasks as $task) {
-    $taskId = $task->getId();
+    $taskId = $task->reqId();
     $taskName = $task->getName() ?? '';
     if (!empty($taskId) && strlen($taskName) > 0) {
         $optionsDataTask[$taskId] = $taskName;

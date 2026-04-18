@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\Task;
 
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Invoice\Entity\Project;
 use App\Invoice\Task\TaskRepository as TR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -12,7 +13,7 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use DateTime;
 use DateTimeImmutable;
 
-#[Entity(repository:TR::class)]
+#[Entity(repository: TR::class)]
 class Task
 {
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
@@ -21,16 +22,46 @@ class Task
     #[BelongsTo(target: Project::class, nullable: true, fkAction: 'NO ACTION')]
     private ?Project $project = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: true, default: null)]
-        private ?int $project_id = null, #[Column(type: 'text', nullable: true)]
-        private ?string $name = '', #[Column(type: 'longText', nullable: false)]
-        private string $description = '', #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $price = null, #[Column(type: 'date', nullable: true)]
-        private mixed $finish_date = '', #[Column(type: 'int', nullable: false)]
-        private ?int $status = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $tax_rate_id = null)
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: true, default: null)]
+        private ?int $project_id = null,
+        #[Column(type: 'text', nullable: true)]
+        private ?string $name = '',
+        #[Column(type: 'longText', nullable: false)]
+        private string $description = '',
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $price = null,
+        #[Column(type: 'date', nullable: true)]
+        private mixed $finish_date = '',
+        #[Column(type: 'int', nullable: false)]
+        private ?int $status = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $tax_rate_id = null,
+    ) {
+    }
+
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException('Task has no ID (not persisted yet)');
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getTaxRate(): ?TaxRate
@@ -53,19 +84,9 @@ class Task
         $this->project = $project;
     }
 
-    public function getId(): string
+    public function getProjectId(): ?int
     {
-        return (string) $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getProjectId(): string
-    {
-        return (string) $this->project_id;
+        return $this->project_id;
     }
 
     public function setProjectId(int $project_id): void
@@ -124,9 +145,9 @@ class Task
         $this->status = $status;
     }
 
-    public function getTaxRateId(): string
+    public function getTaxRateId(): ?int
     {
-        return (string) $this->tax_rate_id;
+        return $this->tax_rate_id;
     }
 
     public function setTaxRateId(int $tax_rate_id): void
@@ -134,7 +155,7 @@ class Task
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function IsOverdue(): bool
+    public function isOverdue(): bool
     {
         return $this->finish_date < new DateTime(date('Y-m-d')) ? false : true;
     }

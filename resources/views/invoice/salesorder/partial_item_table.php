@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\A;
 
 /**
  * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
- * @var App\Invoice\Entity\SalesOrderAmount $soAmount
+ * @var App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount $soAmount
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\ProductImage\ProductImageRepository $piR
@@ -173,11 +173,11 @@ foreach ($soItems as $item) {
                                 <?= $translator->translate('none'); ?></option>
                                 <?php
                                 /**
-                                 * @var App\Invoice\Entity\Task $task
+                                 * @var App\Infrastructure\Persistence\Task\Task $task
                                  */
                                 foreach ($tasks as $task) { ?>
-                                    <option value="<?php echo $task->getId(); ?>"
-    <?php if ($item->getTaskId() == $task->getId()) { ?>
+                                    <option value="<?php echo $task->reqId(); ?>"
+    <?php if ($item->getTaskId() == $task->reqId()) { ?>
                                             selected="selected"<?php } ?>>
                                         <?php echo $task->getName(); ?>
                                     </option>

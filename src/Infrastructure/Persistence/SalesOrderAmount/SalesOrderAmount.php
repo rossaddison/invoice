@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
-
+namespace App\Infrastructure\Persistence\SalesOrderAmount;
 
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository;
@@ -14,35 +13,51 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: SalesOrderAmountRepository::class)]
 class SalesOrderAmount
 {
-    #[BelongsTo(target: SalesOrder::class, nullable: true,
-                                                         fkAction: 'NO ACTION')]
+    #[BelongsTo(target: SalesOrder::class, nullable: true, fkAction: 'NO ACTION')]
     private ?SalesOrder $sales_order = null;
 
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
-
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $sales_order_id = null,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $item_subtotal = 0.00,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $item_tax_total = 0.00,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private float $packhandleship_total = 0.00,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private float $packhandleship_tax = 0.00,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $tax_total = 0.00,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $total = 0.00)
+        private ?float $total = 0.00,
+    ) {
+    }
+
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'SalesOrderAmount has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getSalesOrder(): ?SalesOrder
@@ -55,19 +70,9 @@ class SalesOrderAmount
         $this->sales_order = $sales_order;
     }
 
-    public function getId(): string
+    public function getSalesOrderId(): ?int
     {
-        return (string) $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getSalesOrderId(): string
-    {
-        return (string) $this->sales_order_id;
+        return $this->sales_order_id;
     }
 
     public function setSalesOrderId(int $sales_order_id): void

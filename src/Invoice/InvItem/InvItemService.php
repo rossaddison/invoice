@@ -8,7 +8,7 @@ use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvItemAmount;
 use App\Invoice\Entity\InvItemAllowanceCharge;
 use App\Invoice\Entity\QuoteItemAllowanceCharge;
-use App\Invoice\Entity\Task;
+use App\Infrastructure\Persistence\Task\Task;
 use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository
     as ACQIR;
 use App\Invoice\Inv\InvRepository as IR;
@@ -416,7 +416,7 @@ final readonly class InvItemService
         $model->setTaxRateId((int) $tax_rate_id);
 
         isset($array['task_id']) ?
-            $model->setTask($model->getTask()?->getId() ==
+            $model->setTask($model->getTask()?->reqId() ==
                 (int) $array['task_id'] ? $model->getTask() : null) : '';
         $task_id = ((isset($array['task_id']))
                 ? (int) $array['task_id'] : '');

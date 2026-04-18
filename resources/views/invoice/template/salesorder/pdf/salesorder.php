@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 /**
  * Related logic: see App\Invoice\Helpers\PdfHelper function generateSalesorderPdf
  *
- * @var App\Invoice\Entity\SalesOrderAmount $so_amount
+ * @var App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount $so_amount
  * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $salesorder
  * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
