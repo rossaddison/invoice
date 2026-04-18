@@ -14,11 +14,16 @@ final class CategorySecondaryForm extends FormModel
 
     #[Required]
     private ?string $name = '';
-
-    public function __construct(CategorySecondary $categorySecondary)
+    
+    public static function show(CategorySecondary $categorySecondary): self
     {
-        $this->category_primary_id = $categorySecondary->getCategoryPrimaryId();
-        $this->name = $categorySecondary->getName();
+        $form = new self();
+        
+        $form->category_primary_id = $categorySecondary->getCategoryPrimaryId();
+        
+        $form->name = $categorySecondary->getName() ?? '';
+        
+        return $form;
     }
 
     public function getCategoryPrimaryId(): ?int

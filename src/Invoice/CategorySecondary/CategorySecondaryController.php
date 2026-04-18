@@ -50,7 +50,7 @@ final class CategorySecondaryController extends BaseController
         CategoryPrimaryRepository $categoryPrimaryRepository,
     ): Response {
         $categorySecondary = new CategorySecondary();
-        $form = new CategorySecondaryForm($categorySecondary);
+        $form = new CategorySecondaryForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'categorysecondary/add',
@@ -125,7 +125,7 @@ final class CategorySecondaryController extends BaseController
     ): Response {
         $categorySecondary = $this->categorysecondary($categorySecondaryRepository, $id);
         if ($categorySecondary) {
-            $form = new CategorySecondaryForm($categorySecondary);
+            $form = CategorySecondaryForm::show($categorySecondary);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'categorysecondary/edit',
@@ -177,7 +177,7 @@ final class CategorySecondaryController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $categorysecondary = $this->categorysecondary($categorysecondaryRepository, $id);
         if ($categorysecondary) {
-            $form = new CategorySecondaryForm($categorysecondary);
+            $form = CategorySecondaryForm::show($categorysecondary);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'categorysecondary/view',
