@@ -9,9 +9,11 @@ use App\Infrastructure\Persistence\{
     SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge,
     SalesOrderItem\SalesOrderItem as SoItem
 };
+use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\{
+    SalesOrderAllowanceCharge,
+};
 use App\Invoice\Entity\{
     CustomField, QuoteCustom, QuoteItemAllowanceCharge, QuoteTaxRate,
-    SalesOrderAllowanceCharge,
     SalesOrderCustom as SoCustom,
     SalesOrderTaxRate as SoTaxRate,
 };

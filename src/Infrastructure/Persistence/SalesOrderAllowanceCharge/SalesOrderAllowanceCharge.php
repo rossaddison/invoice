@@ -2,51 +2,79 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\SalesOrderAllowanceCharge;
 
-use App\Infrastructure\Persistence\{
-    AllowanceCharge\AllowanceCharge,
-    SalesOrder\SalesOrder
-};
+use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Invoice\SalesOrderAllowanceCharge\SalesOrderAllowanceChargeRepository
-    AS ACSOR;
+    as SOACR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: ACSOR::class)]
-
+#[Entity(repository: SOACR::class)]
 class SalesOrderAllowanceCharge
 {
-    #[BelongsTo(target: AllowanceCharge::class, nullable: false,
-                                                         fkAction: 'NO ACTION')]
+    #[BelongsTo(
+        target: AllowanceCharge::class,
+        nullable: false,
+        fkAction: 'NO ACTION'
+    )]
     private ?AllowanceCharge $allowance_charge = null;
 
-    #[BelongsTo(target: SalesOrder::class, nullable: false,
-                                                         fkAction: 'NO ACTION')]
+    #[BelongsTo(
+        target: SalesOrder::class,
+        nullable: false,
+        fkAction: 'NO ACTION'
+    )]
     private ?SalesOrder $sales_order = null;
 
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
-
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $sales_order_id = null,
-
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $allowance_charge_id = null,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $amount = null,
-
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $vat_or_tax = null)
+        private ?float $vat_or_tax = null,
+    ) {
+    }
+
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'SalesOrderAllowanceCharge has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getAllowanceCharge(): ?AllowanceCharge
     {
         return $this->allowance_charge;
+    }
+
+    public function setAllowanceCharge(?AllowanceCharge $allowance_charge): void
+    {
+        $this->allowance_charge = $allowance_charge;
     }
 
     public function getSalesOrder(): ?SalesOrder
@@ -59,24 +87,9 @@ class SalesOrderAllowanceCharge
         $this->sales_order = $sales_order;
     }
 
-    public function setAllowanceCharge(?AllowanceCharge $allowance_charge): void
+    public function getSalesOrderId(): ?int
     {
-        $this->allowance_charge = $allowance_charge;
-    }
-
-    public function getId(): string
-    {
-        return (string) $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getSalesOrderId(): string
-    {
-        return (string) $this->sales_order_id;
+        return $this->sales_order_id;
     }
 
     public function setSalesOrderId(int $sales_order_id): void
@@ -84,9 +97,9 @@ class SalesOrderAllowanceCharge
         $this->sales_order_id = $sales_order_id;
     }
 
-    public function getAllowanceChargeId(): string
+    public function getAllowanceChargeId(): ?int
     {
-        return (string) $this->allowance_charge_id;
+        return $this->allowance_charge_id;
     }
 
     public function setAllowanceChargeId(int $allowance_charge_id): void
@@ -94,9 +107,9 @@ class SalesOrderAllowanceCharge
         $this->allowance_charge_id = $allowance_charge_id;
     }
 
-    public function getAmount(): string
+    public function getAmount(): ?float
     {
-        return (string) $this->amount;
+        return $this->amount;
     }
 
     public function setAmount(float $amount): void
@@ -104,9 +117,9 @@ class SalesOrderAllowanceCharge
         $this->amount = $amount;
     }
 
-    public function getVatOrTax(): string
+    public function getVatOrTax(): ?float
     {
-        return (string) $this->vat_or_tax;
+        return $this->vat_or_tax;
     }
 
     public function setVatOrTax(float $vat_or_tax): void

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderAllowanceCharge;
 
-use App\Invoice\Entity\SalesOrderAllowanceCharge;
+use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\{
+    SalesOrderAllowanceCharge,
+};
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 

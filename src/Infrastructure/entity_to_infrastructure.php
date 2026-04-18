@@ -81,10 +81,11 @@ declare(strict_types=1);
  *                        arbitrary alias. Not required when the import
  *                        fits within 85 characters on one line.
  *   'psalm'           => bool — true when:
- *                        vendor/bin/psalm src/Infrastructure/Persistence/{Name}/
+ *                        vendor/bin/psalm
  *                        reports zero errors at errorLevel 1 with 100%
- *                        type inference. Must be reset to false after any
- *                        edit and re-verified before setting back to true.
+ *                        type inference across the full project. Must be
+ *                        reset to false after any edit and re-verified
+ *                        before setting back to true.
  *                        Requires var_annotations => true first.
  *   'entity_removed'  => bool — true when the corresponding
  *                        src/Invoice/Entity/{Name}.php has been deleted,
@@ -210,8 +211,8 @@ declare(strict_types=1);
  *   This step cannot be automated reliably. Do it by hand.
  *   Set 'callers_updated' => true.
  *
- * STAGE 6 — run Psalm scoped to the infrastructure class
- *   vendor/bin/psalm src/Infrastructure/Persistence/{Name}/
+ * STAGE 6 — run full project-wide Psalm
+ *   vendor/bin/psalm
  *   Must report zero errors at errorLevel 1, 100% type inference.
  *   Set 'psalm' => true only after a clean run.
  *
@@ -245,6 +246,7 @@ declare(strict_types=1);
  */
 
 use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
+use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\SalesOrderAllowanceCharge;
 use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary;
 use App\Infrastructure\Persistence\CategorySecondary\CategorySecondary;
 use App\Infrastructure\Persistence\Client\Client;
@@ -470,7 +472,25 @@ return [
         'psalm'               => true,
         'entity_removed'      => true,
     ],
-    'SalesOrderAllowanceCharge'     => null,
+    'SalesOrderAllowanceCharge' => [
+        'class'               => SalesOrderAllowanceCharge::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Invoice/Helpers/NumberHelper.php',
+            'src/Invoice/Quote/Trait/QuoteToSo.php',
+            'src/Invoice/SalesOrder/SalesOrderController.php',
+            'src/Invoice/SalesOrderAllowanceCharge/SalesOrderAllowanceChargeForm.php',
+            'src/Invoice/SalesOrderAllowanceCharge/SalesOrderAllowanceChargeRepository.php',
+            'src/Invoice/SalesOrderAllowanceCharge/SalesOrderAllowanceChargeService.php',
+        ],
+        'callers_updated'     => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+    ],
     'SalesOrderAmount'              => null,
     'SalesOrderCustom'              => null,
     'SalesOrderItem' => [

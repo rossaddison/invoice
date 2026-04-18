@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderAllowanceCharge;
 
-use App\Invoice\Entity\SalesOrderAllowanceCharge;
+use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\{
+    SalesOrderAllowanceCharge,
+};
 use Yiisoft\Validator\Rule\GreaterThan;
 use Yiisoft\FormModel\FormModel;
 

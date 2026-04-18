@@ -8,7 +8,9 @@ use App\Invoice\Entity\Inv;
 
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\QuoteAllowanceCharge;
-use App\Invoice\Entity\SalesOrderAllowanceCharge;
+use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\{
+    SalesOrderAllowanceCharge,
+};
 use App\Invoice\Entity\SalesOrderAmount;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderItemAmount;
