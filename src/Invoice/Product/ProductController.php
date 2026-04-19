@@ -13,7 +13,7 @@ use App\Invoice\Entity\ProductCustom;
 use App\Invoice\Entity\ProductImage;
 use App\Invoice\Entity\QuoteItem;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Family\FamilyRepository as fR;
 use App\Invoice\CustomValue\CustomValueRepository as cvR;
@@ -383,10 +383,7 @@ final class ProductController extends BaseController
          * @var Unit $unit
          */
         foreach ($units as $unit) {
-            $unit_id = $unit->getUnitId();
-            if (null !== $unit_id) {
-                $array[$unit_id] = $unit->getUnitName() . ' ' . $unit->getUnitNamePlrl();
-            }
+            $array[$unit->reqId()] = $unit->getUnitName() . ' ' . $unit->getUnitNamePlrl();
         }
         return $array;
     }

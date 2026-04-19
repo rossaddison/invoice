@@ -301,6 +301,7 @@ use App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\{
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Infrastructure\Persistence\Unit\Unit;
 use App\Infrastructure\Persistence\UserCustom\UserCustom;
 
 return [
@@ -688,7 +689,37 @@ return [
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
     ],
-    'Unit'                          => null,
+    'Unit'                          => [
+        'class'               => Unit::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Invoice/Unit/UnitController.php',
+            'src/Invoice/Unit/UnitForm.php',
+            'src/Invoice/Unit/UnitRepository.php',
+            'src/Invoice/Unit/UnitService.php',
+            'src/Invoice/Product/ProductController.php',
+            'src/Invoice/UnitPeppol/UnitPeppolController.php',
+            'src/Invoice/InvoiceController.php',
+            'src/Invoice/Import/ImportController.php',
+            'src/Command/Invoice/NonUserRelatedTruncate4Command.php',
+            'src/Command/Invoice/ItemsCommand.php',
+            'resources/views/invoice/unit/index.php',
+        ],
+        'callers_updated'     => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => false,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/UnitEntityTest.php',
+            'Tests/Unit/UnitFormTest.php',
+            'Tests/Unit/Invoice/Entity/UnitPeppolEntityTest.php',
+        ],
+        'tests_updated'       => true,
+    ],
     'UnitPeppol'                    => null,
     'Upload'                        => null,
     'UserClient'                    => null,

@@ -11,7 +11,7 @@ use App\Invoice\Entity\PaymentMethod;
 use App\Invoice\Entity\Product;
 use App\Invoice\Entity\Setting;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 // Repositories
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Family\FamilyRepository;

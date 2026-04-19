@@ -205,13 +205,13 @@ foreach ($taxRates as $taxRate) {
                                 <?php
     $optionsDataProductUnit = [];
 /**
- * @var App\Invoice\Entity\Unit $unit
+ * @var App\Infrastructure\Persistence\Unit\Unit $unit
  */
 foreach ($units as $unit) {
-    $unitId = $unit->getUnitId();
+    $unitId = $unit->reqId();
     $unitName = $unit->getUnitName();
     $unitNamePlrl = $unit->getUnitNamePlrl();
-    if ((null !== $unitId) && (strlen($unitName) > 0) && (strlen($unitNamePlrl) > 0)) {
+    if ((strlen($unitName) > 0) && (strlen($unitNamePlrl) > 0)) {
         $optionsDataProductUnit[$unitId] = Html::encode($unitName) . "/" . Html::encode($unitNamePlrl);
     }
 }

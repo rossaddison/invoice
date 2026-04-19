@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Unit;
 
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 
 final readonly class UnitService
 {
@@ -18,7 +18,6 @@ final readonly class UnitService
      */
     public function saveUnit(Unit $model, array $array): void
     {
-        isset($array['unit_id']) ? $model->setUnitId((int) $array['unit_id']) : '';
         isset($array['unit_name']) ? $model->setUnitName((string) $array['unit_name']) : '';
         isset($array['unit_name_plrl']) ? $model->setUnitNamePlrl((string) $array['unit_name_plrl']) : '';
         $this->repository->save($model);

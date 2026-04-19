@@ -259,7 +259,7 @@ final class ImportController extends BaseController
          * @var array $unit
          */
         foreach ($units as $unit) {
-            $newUnit = new \App\Invoice\Entity\Unit();
+            $newUnit = new \App\Infrastructure\Persistence\Unit\Unit();
             $newUnit->setUnitName((string) $unit['unit_name']);
             $newUnit->setUnitNamePlrl((string) $unit['unit_name_plrl']);
             $this->uR->save($newUnit);

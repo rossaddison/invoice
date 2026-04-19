@@ -17,7 +17,7 @@ use App\Invoice\Entity\InvTaxRate;
 use App\Invoice\Entity\Family;
 use App\Invoice\Entity\Product;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Entity\UserClient;
 use App\Invoice\Entity\UserInv;
 use App\User\User;

@@ -127,10 +127,10 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <option value="0"><?= $translator->translate('none'); ?></option>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\Unit $unit
+                                     * @var App\Infrastructure\Persistence\Unit\Unit $unit
                                      */
                                     foreach ($uR->findAllPreloaded() as $unit) { ?>
-                                    <option value="<?= $unit->getUnitId(); ?>">
+                                    <option value="<?= $unit->reqId(); ?>">
                                         <?= Html::encode($unit->getUnitName()) . "/" . Html::encode($unit->getUnitNamePlrl()); ?>
                                     </option>
                                 <?php } ?>

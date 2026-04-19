@@ -162,13 +162,13 @@ foreach ($taxRates as $taxRate) {
                                 <?php
     $optionsDataProductUnit = [];
 /**
- * @var App\Invoice\Entity\Unit $unit
+ * @var App\Infrastructure\Persistence\Unit\Unit $unit
  */
 foreach ($units as $unit) {
-    $unitId = $unit->getUnitId();
+    $unitId = $unit->reqId();
     $unitName = $unit->getUnitName();
     $unitPlrl = $unit->getUnitNamePlrl();
-    if (null !== $unitId && !empty($unitName) && !empty($unitPlrl)) {
+    if (!empty($unitName) && !empty($unitPlrl)) {
         $optionsDataProductUnit[$unitId] = Html::encode($unitName) . "/" . Html::encode($unitPlrl);
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\UnitPeppol;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Entity\UnitPeppol;
 use App\Invoice\Helpers\Peppol\Peppol_UNECERec20_11e;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -292,8 +292,7 @@ final class UnitPeppolController extends BaseController
          * @var Unit $unit
          */
         foreach ($units as $unit) {
-            $key = $unit->getUnitId();
-            null !== $key ? $optionsDataUnits[$key] = $unit->getUnitName() . ' ' . $unit->getUnitNamePlrl() : '';
+            $optionsDataUnits[$unit->reqId()] = $unit->getUnitName() . ' ' . $unit->getUnitNamePlrl();
         }
         return $optionsDataUnits;
     }

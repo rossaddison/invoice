@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\View\WebView;
@@ -16,7 +16,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\Unit $unit
+ * @var App\Infrastructure\Persistence\Unit\Unit $unit
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var string $alert
@@ -42,7 +42,7 @@ $columns = [
     new DataColumn(
         property: 'unit_id',
         header: $translator->translate('id'),
-        content: static fn (Unit $model) => Html::encode($model->getUnitId()),
+        content: static fn (Unit $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         property: 'unit_name',
@@ -62,7 +62,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Unit $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('unit/view', ['unit_id' => $model->getUnitId()]);
+                return $urlGenerator->generate('unit/view', ['unit_id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -73,7 +73,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Unit $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('unit/edit', ['unit_id' => $model->getUnitId()]);
+                return $urlGenerator->generate('unit/edit', ['unit_id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -84,7 +84,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Unit $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('unit/delete', ['unit_id' => $model->getUnitId()]);
+                return $urlGenerator->generate('unit/delete', ['unit_id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

@@ -634,7 +634,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                                 'quantity' => $item->getQuantity(),
                                 'quantityUnitCode' =>
                         $this->UnitCode(
-                (string) $item->getProduct()?->getUnit()?->getUnitId(), $unpR),
+                (string) ($item->getProduct()?->getUnit()?->isPersisted() ? $item->getProduct()?->getUnit()?->reqId() : ''), $unpR),
                                 'tax' => [
                                     'percentage' =>
                        $item->getProduct()?->getTaxRate()?->getTaxRatePercent(),

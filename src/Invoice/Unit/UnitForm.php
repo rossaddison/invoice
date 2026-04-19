@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Unit;
 
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;

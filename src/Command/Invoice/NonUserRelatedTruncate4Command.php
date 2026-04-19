@@ -29,7 +29,7 @@ use App\Invoice\Entity\Profile;
 use App\Invoice\Entity\Project;
 use App\Infrastructure\Persistence\Task\Task;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Entity\UnitPeppol;
 use App\Invoice\Entity\Upload;
 use Symfony\Component\Console\Command\Command;

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * @var App\Infrastructure\Persistence\TaxRate\TaxRate $taxRate
- * @var App\Invoice\Entity\Unit $unit
+ * @var App\Infrastructure\Persistence\Unit\Unit $unit
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @psalm-var array<array-key, array<array-key, string>|string> $taxRates
  * @psalm-var array<array-key, array<array-key, string>|string> $units
@@ -47,10 +47,10 @@ declare(strict_types=1);
                                  --</option>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\Unit $unit
+                                     * @var App\Infrastructure\Persistence\Unit\Unit $unit
                                      */
                                     foreach ($units as $unit): ?>
-                                    <option value="<?= $unit->getUnitId(); ?>">
+                                    <option value="<?= $unit->reqId(); ?>">
                                         <?= $unit->getUnitName(); ?>
                                     </option>
                                 <?php endforeach; ?>

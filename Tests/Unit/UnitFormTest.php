@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Unit\UnitForm;
 use Codeception\Test\Unit as BaseUnit;
 
@@ -18,7 +18,6 @@ class UnitFormTest extends BaseUnit
         parent::setUp();
 
         $this->unitEntity = new Unit(
-            id: 1,
             unit_name: 'Piece',
             unit_name_plrl: 'Pieces'
         );
@@ -40,7 +39,6 @@ class UnitFormTest extends BaseUnit
     public function testUnitWithEmptyValues(): void
     {
         $emptyUnit = new Unit(
-            id: null,
             unit_name: '',
             unit_name_plrl: ''
         );
@@ -56,7 +54,6 @@ class UnitFormTest extends BaseUnit
         $longPlural = str_repeat('B', 50);
 
         $longUnit = new Unit(
-            id: 99,
             unit_name: $longName,
             unit_name_plrl: $longPlural
         );
@@ -78,9 +75,8 @@ class UnitFormTest extends BaseUnit
             ['Item', 'Items']
         ];
 
-        foreach ($commonUnits as $index => [$singular, $plural]) {
+        foreach ($commonUnits as [$singular, $plural]) {
             $unit = new Unit(
-                id: $index + 10,
                 unit_name: $singular,
                 unit_name_plrl: $plural
             );
@@ -101,7 +97,6 @@ class UnitFormTest extends BaseUnit
     public function testNullIdHandling(): void
     {
         $nullIdUnit = new Unit(
-            id: null,
             unit_name: 'Test Unit',
             unit_name_plrl: 'Test Units'
         );
@@ -114,7 +109,6 @@ class UnitFormTest extends BaseUnit
     public function testSameNameSingularAndPlural(): void
     {
         $sameNameUnit = new Unit(
-            id: 42,
             unit_name: 'Sheep',
             unit_name_plrl: 'Sheep'
         );
@@ -127,7 +121,6 @@ class UnitFormTest extends BaseUnit
     public function testSpecialCharactersInNames(): void
     {
         $specialUnit = new Unit(
-            id: 100,
             unit_name: 'M²',
             unit_name_plrl: 'M²'
         );
@@ -140,9 +133,9 @@ class UnitFormTest extends BaseUnit
     public function testFormNameIsConsistent(): void
     {
         $units = [
-            new Unit(id: 1, unit_name: 'A', unit_name_plrl: 'As'),
-            new Unit(id: 2, unit_name: 'B', unit_name_plrl: 'Bs'),
-            new Unit(id: null, unit_name: '', unit_name_plrl: '')
+            new Unit(unit_name: 'A', unit_name_plrl: 'As'),
+            new Unit(unit_name: 'B', unit_name_plrl: 'Bs'),
+            new Unit(unit_name: '', unit_name_plrl: ''),
         ];
 
         foreach ($units as $unit) {

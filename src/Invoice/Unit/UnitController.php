@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Unit;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UnitPeppol\UnitPeppolRepository;
 use App\Service\WebControllerService;

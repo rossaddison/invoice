@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\Unit;
+use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Entity\UnitPeppol;
 use PHPUnit\Framework\TestCase;
 
