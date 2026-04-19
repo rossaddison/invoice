@@ -529,7 +529,7 @@ final class SalesOrderController extends BaseController
         // line numbers i.e. no browser manipulation
         if ($so && ($this->rbacObserver($so, $ucR, $uiR) || $this->rbacAdmin()
                                                 || $this->rbacAccountant())) {
-            $form = new SalesOrderForm($so);
+            $form = SalesOrderForm::show($so);
             $dels = $delRepo->repoClientquery((string) $so->getClientId());
             $so_id = $so->reqId();
             $inv_id = $so->getInvId();
@@ -793,7 +793,7 @@ final class SalesOrderController extends BaseController
             if ($so_amount) {
                 $salesorder_custom_values = $this->salesorderCustomValues(
                         (string) $so_id, $socR);
-                $form = new SalesOrderForm($so);
+                $form = SalesOrderForm::show($so);
                 $parameters = [
                     'alert' => $this->alert(),
                     'title' => $this->translator->translate('view'),
@@ -1385,7 +1385,7 @@ final class SalesOrderController extends BaseController
                 'amount' => $so_allowance_charge->getAmount(),
             ];
             $invAllowanceCharge = new InvAllowanceCharge();
-            $form = new InvAllowanceChargeForm($invAllowanceCharge,
+            $form = InvAllowanceChargeForm::show($invAllowanceCharge,
                 (int) $new_inv_id);
             if ($formHydrator->populateAndValidate($form, $new_inv_ac)) {
                 $this->inv_allowance_charge_service->saveInvAllowanceCharge(

@@ -14,19 +14,24 @@ final class SalesOrderAllowanceChargeForm extends FormModel
 {
     private ?int $allowance_charge_id = null;
 
+    private ?int $salesorder_id = null;
+    
     #[GreaterThan(0)]
     private ?int $amount = null;
 
     private ?int $vat_or_tax = null;
 
-    public function __construct(
+    public static function show(
         SalesOrderAllowanceCharge $salesorderAllowanceCharge,
-            private readonly ?int $salesorder_id)
+        ?int $salesorder_id): self
     {
-        $this->allowance_charge_id =
+        $form = new self();
+        $form->allowance_charge_id =
                 (int) $salesorderAllowanceCharge->getAllowanceChargeId();
-        $this->amount = (int) $salesorderAllowanceCharge->getAmount();
-        $this->vat_or_tax = (int) $salesorderAllowanceCharge->getVatOrTax();
+        $form->amount = (int) $salesorderAllowanceCharge->getAmount();
+        $form->salesorder_id = $salesorder_id;
+        $form->vat_or_tax = (int) $salesorderAllowanceCharge->getVatOrTax();
+        return $form;
     }
 
     public function getSalesorderId(): ?int

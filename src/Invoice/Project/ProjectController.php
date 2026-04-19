@@ -70,7 +70,7 @@ final class ProjectController extends BaseController
         ClientRepository $clientRepository,
     ): Response {
         $project = new Project();
-        $form = new ProjectForm($project);
+        $form = new ProjectForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'project/add',
@@ -111,7 +111,7 @@ final class ProjectController extends BaseController
     ): Response {
         $project = $this->project($currentRoute, $projectRepository);
         if ($project) {
-            $form = new ProjectForm($project);
+            $form = ProjectForm::show($project);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'project/edit',
@@ -162,7 +162,7 @@ final class ProjectController extends BaseController
     {
         $project = $this->project($currentRoute, $projectRepository);
         if ($project) {
-            $form = new ProjectForm($project);
+            $form = ProjectForm::show($project);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'project/view',

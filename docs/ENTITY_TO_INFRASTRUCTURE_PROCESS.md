@@ -141,8 +141,17 @@ For each file in the Stage 2 list:
   ```
 - Verify no bare `@var $variable` left behind
 - Remove null guards made redundant by `reqId()` returning non-nullable `int`
+- Update every view file that calls `getId()` on this class to `reqId()`
+- Create or update `src/Invoice/{Name}/{Name}Form.php` to reference the
+  infrastructure FQCN (not `App\Invoice\Entity\{Name}`). The Form is always
+  a caller and is required before the `add` / `edit` controller actions
+  can function correctly. The `add` action must initialise the form via
+  `{Name}Form::show($entity)` rather than `new {Name}Form()` so that any
+  `#[Required]` fields pre-populated from the entity (e.g. `client_id`)
+  survive `FormHydrator` validation.
 
-Set `'callers_updated' => true` and `'null_guards_removed' => true`.
+Set `'callers_updated' => true`, `'form_created' => true`,
+`'null_guards_removed' => true`, and `'view_get_id_updated' => true`.
 
 ---
 
@@ -175,18 +184,66 @@ conversion complete.
 
 ---
 
+### Stage 9 — clear the Cycle ORM schema cache
+
+```bash
+rm runtime/schema.php
+```
+
+Cycle ORM caches its entity map at `runtime/schema.php`. Without clearing it,
+the proxy factory still maps the old `App\Invoice\Entity\{Name}::class` and
+throws:
+
+```
+RuntimeException: The entity `App\Invoice\Entity\{Name}` class does not exist.
+Proxy factory can not create classless entities.
+```
+
+Refresh the browser — Cycle rebuilds `schema.php` automatically on the next
+request. Set `'schema_cache_cleared' => true`.
+
+---
+
 ## Registry flags per entry
 
-| Flag | Meaning |
-|---|---|
-| `req_id` | `reqId()` / `isPersisted()` / `setId()` pattern in place |
-| `var_annotations` | All `@var` in infrastructure class correctly typed |
-| `callers` | List of files referencing the old entity |
-| `callers_updated` | All callers updated to infrastructure FQCN |
-| `null_guards_removed` | Redundant null guards removed after `reqId()` |
-| `group_use` | Group use syntax used where import exceeds 85 chars |
-| `psalm` | Scoped Psalm passes at errorLevel 1 |
-| `entity_removed` | Old `src/Invoice/Entity/{Name}.php` deleted |
+| Flag | Set in stage | Meaning |
+|---|---|---|
+| `req_id` | 3 | `reqId()` / `isPersisted()` / `setId()` pattern in place |
+| `var_annotations` | 4 | All `@var` in infrastructure class correctly typed |
+| `callers` | 2 | List of files referencing the old entity |
+| `callers_updated` | 5 | All callers updated to infrastructure FQCN |
+| `form_created` | 5 | `src/Invoice/{Name}/{Name}Form.php` created/updated to use infrastructure FQCN |
+| `null_guards_removed` | 5 | Redundant null guards removed after `reqId()` |
+| `view_get_id_updated` | 5 | All view `getId()` calls replaced with `reqId()` |
+| `group_use` | 5 | Group use syntax applied where import exceeds 85 chars |
+| `psalm` | 6 | Full project-wide Psalm passes at errorLevel 1 |
+| `entity_removed` | 7 | Old `src/Invoice/Entity/{Name}.php` deleted |
+| `schema_cache_cleared` | 9 | `runtime/schema.php` deleted and browser confirmed working |
+| `tests` | — | List of test files covering this entity (where present) |
+| `tests_updated` | — | All listed test files updated to infrastructure FQCN |
+
+---
+
+## Recent changes (April 2026)
+
+- `form_created` flag added to all registry entries and documented in
+  `entity_to_infrastructure.php` and this file.
+- `view_get_id_updated` and `schema_cache_cleared` flags added to the
+  flags table (were already tracked in the registry but undocumented here).
+- Stage 9 (schema cache clearing) added to the process.
+- `Project` promoted from `null` to a full registry entry:
+  `entity_removed => true`, `form_created => true`, other flags pending
+  verification.
+- `DeliveryLocation` add function fixed: `add()` now calls
+  `DeliveryLocationForm::show($entity)` instead of `new DeliveryLocationForm()`
+  so that `client_id` is pre-populated before `FormHydrator` validation runs.
+  A hidden `client_id` input was added to `_form.php` to ensure `persist()`
+  receives it in the POST body.
+- `DeliveryLocationForm` date getters hardened: `getDateCreated()` and
+  `getDateModified()` now parse non-empty string values (from POST hydration)
+  into `DateTimeImmutable` rather than falling back to `now`.
+- Date timezone applied in `_form.php` and `_view.php` via
+  `$s->getSetting('time_zone')` with `'Europe/London'` fallback.
 
 ---
 
@@ -197,7 +254,7 @@ infrastructure):
 
 | Blocking entity | Blocked infrastructure class |
 |---|---|
-| `SalesOrder` | `SalesOrderItemAllowanceCharge` |
-| `SalesOrderItem` | `SalesOrderItemAllowanceCharge` |
 | `Inv` | `InvAllowanceCharge`, `Client` |
-| `ProductClient` | `Client` |
+
+Previously blocking entities now resolved: `SalesOrder`, `SalesOrderItem`,
+and `ProductClient` are fully converted (`entity_removed => true`).

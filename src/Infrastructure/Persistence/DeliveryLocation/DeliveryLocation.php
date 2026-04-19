@@ -240,9 +240,4 @@ class DeliveryLocation
     {
         $this->client = $client;
     }
-
-    public function isNewRecord(): bool
-    {
-        return $this->id === null;
-    }
 }

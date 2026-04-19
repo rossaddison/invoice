@@ -121,7 +121,7 @@ trait QuoteToSo
                             $this->translator->translate(
                                 'salesorder.agree.to.terms'));
                         $new_so = new SoEntity();
-                        $form = new SoForm($new_so);
+                        $form = new SoForm();
                         if ($formHydrator->populateAndValidate($form, $so_body)
                             && ($quote->getSoId() === (string) 0)) {
                             $quote_id = $so_body['quote_id'];
@@ -263,7 +263,7 @@ trait QuoteToSo
                 'notes' => '',
             ];
             $new_so = new SoEntity();
-            $form = new SoForm($new_so);
+            $form = new SoForm();
             if ($formHydrator->populateAndValidate($form, $so_body)) {
                 /**
                  * @var string $so_body['client_id']
@@ -462,7 +462,7 @@ trait QuoteToSo
                 'order' => $quote_item->getOrder(),
                 'date_added' => new \DateTimeImmutable(),
             ];
-            $form = new SoItemForm($newSoItem, $new_so_id);
+            $form = SoItemForm::show($newSoItem, $new_so_id);
             if ($formHydrator->populateAndValidate($form, $so_item)) {
                 // Save the SO item without calculating amounts yet
                 $this->so_item_service->addSoItemProductTask($newSoItem, $so_item, $new_so_id,
@@ -539,7 +539,7 @@ trait QuoteToSo
                 'amount' => $quote_allowance_charge->getAmount(),
             ];
             $salesOrderAllowanceCharge = new SalesOrderAllowanceCharge();
-            $form = new SalesOrderAllowanceChargeForm($salesOrderAllowanceCharge,
+            $form = SalesOrderAllowanceChargeForm::show($salesOrderAllowanceCharge,
                 (int) $new_so_id);
             if ($formHydrator->populateAndValidate($form,
                 $new_so_ac)) {

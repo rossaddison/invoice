@@ -70,7 +70,7 @@ final class UnitController extends BaseController
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
         $unit = new Unit();
-        $form = new UnitForm($unit);
+        $form = new UnitForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'unit/add',
@@ -109,7 +109,7 @@ final class UnitController extends BaseController
     ): Response {
         $unit = $this->unit($unit_id, $unitRepository);
         if ($unit) {
-            $form = new UnitForm($unit);
+            $form = UnitForm::show($unit);
             $parameters = [
                 'title' => $this->translator->translate('unit.edit'),
                 'actionName' => 'unit/edit',
@@ -162,7 +162,7 @@ final class UnitController extends BaseController
     {
         $unit = $this->unit($unit_id, $unitRepository);
         if ($unit) {
-            $form = new UnitForm($unit);
+            $form = UnitForm::show($unit);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'unit/view',

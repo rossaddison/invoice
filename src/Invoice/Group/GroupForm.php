@@ -19,12 +19,14 @@ final class GroupForm extends FormModel
     #[Required]
     private ?int $left_pad = null;
 
-    public function __construct(Group $group)
+    public static function show(Group $group): self
     {
-        $this->name = $group->getName();
-        $this->identifier_format = $group->getIdentifierFormat();
-        $this->next_id = (int) $group->getNextId();
-        $this->left_pad = (int) $group->getLeftPad();
+        $form = new self();
+        $form->name = $group->getName();
+        $form->identifier_format = $group->getIdentifierFormat();
+        $form->next_id = (int) $group->getNextId();
+        $form->left_pad = (int) $group->getLeftPad();
+        return $form;
     }
 
     public function getName(): ?string

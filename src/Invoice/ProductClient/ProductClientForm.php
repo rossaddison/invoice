@@ -12,6 +12,8 @@ final class ProductClientForm extends FormModel
 {
     private mixed $created_at = '';
     private mixed $updated_at = '';
+    private ?int $client_id = null;
+    private ?int $product_id = null;
 
     // New client creation fields
     private string $new_client_name = '';
@@ -20,14 +22,18 @@ final class ProductClientForm extends FormModel
     private string $new_client_mobile = '';
     private string $new_client_group = '';
 
-    public function __construct(
+    public static function show(
         ProductClient $productClient,
-        private readonly ?int $product_id,
-        private readonly ?int $client_id
-    )
+        ?int $product_id,
+        ?int $client_id
+    ): self
     {
-        $this->created_at = $productClient->getCreatedAt();
-        $this->updated_at = $productClient->getUpdatedAt();
+        $form = new self();
+        $form->product_id = $product_id ?? 0;
+        $form->client_id = $client_id ?? 0;
+        $form->created_at = $productClient->getCreatedAt();
+        $form->updated_at = $productClient->getUpdatedAt();
+        return $form;
     }
 
     public function getProductId(): ?int

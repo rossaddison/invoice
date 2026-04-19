@@ -41,25 +41,31 @@ final class SalesOrderItemForm extends FormModel
 
     private ?int $product_unit_id = null;
 
-    public function __construct(SoItem $salesOrderItem, private readonly ?string $so_id )
+    private ?string $so_id = null;
+    
+    public static function show(
+        SoItem $salesOrderItem,
+        ?string $so_id): self
     {
-        //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
-        $this->peppol_po_itemid = $salesOrderItem->getPeppolPoItemid();
-
+        $form = new self();
+        $form->so_id = $so_id;
+//https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/
+        $form->peppol_po_itemid = $salesOrderItem->getPeppolPoItemid();
         //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/
-        $this->peppol_po_lineid = $salesOrderItem->getPeppolPoLineid();
-        $this->name = $salesOrderItem->getName();
-        $this->description = $salesOrderItem->getDescription();
-        $this->quantity = $salesOrderItem->getQuantity();
-        $this->price = $salesOrderItem->getPrice();
-        $this->discount_amount = $salesOrderItem->getDiscountAmount();
-        $this->order = $salesOrderItem->getOrder();
-        $this->product_unit = $salesOrderItem->getProductUnit();
-        $this->tax_rate_id = (string) $salesOrderItem->getTaxRateId();
-        $this->product_id = (string) $salesOrderItem->getProductId();
-        $this->task_id = (string) $salesOrderItem->getTaskId();
-        $this->product_unit_id = (int) $salesOrderItem->getProductUnitId();
-        $this->date_added = $salesOrderItem->getDateAdded();
+        $form->peppol_po_lineid = $salesOrderItem->getPeppolPoLineid();
+        $form->name = $salesOrderItem->getName();
+        $form->description = $salesOrderItem->getDescription();
+        $form->quantity = $salesOrderItem->getQuantity();
+        $form->price = $salesOrderItem->getPrice();
+        $form->discount_amount = $salesOrderItem->getDiscountAmount();
+        $form->order = $salesOrderItem->getOrder();
+        $form->product_unit = $salesOrderItem->getProductUnit();
+        $form->tax_rate_id = (string) $salesOrderItem->getTaxRateId();
+        $form->product_id = (string) $salesOrderItem->getProductId();
+        $form->task_id = (string) $salesOrderItem->getTaskId();
+        $form->product_unit_id = (int) $salesOrderItem->getProductUnitId();
+        $form->date_added = $salesOrderItem->getDateAdded();
+        return $form;
     }
 
     public function getSoId(): ?string

@@ -75,7 +75,7 @@ final class SalesOrderItemController extends BaseController
              || $this->rbacAccountant()
              || $this->rbacAdmin())) {
                 $so_id = (string) $so_item->getSalesOrderId();
-                $form = new SalesOrderItemForm($so_item, $so_id);
+                $form = SalesOrderItemForm::show($so_item, $so_id);
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
                     'actionName' => 'salesorderitem/edit',

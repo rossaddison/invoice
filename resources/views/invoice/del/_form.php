@@ -10,6 +10,7 @@ use Yiisoft\Html\Tag\Form;
 /**
  * Related logic: see App\Invoice\DeliveryLocation\DeliveryLocationController function form
  * @var App\Invoice\DeliveryLocation\DeliveryLocationForm $form
+ * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -29,6 +30,7 @@ use Yiisoft\Html\Tag\Form;
     ->csrf($csrf)
     ->id('DeliveryLocationForm')
     ->open() ?>
+<?= Html::hiddenInput('client_id', Html::encode($form->getClientId() ?? '')) ?>
 
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
@@ -54,17 +56,25 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'date_created')
                     ->label($translator->translate('common.date.created'))
-                    ->value(Html::encode(($form->getDateCreated())->format('Y-m-d')))
+                    ->value(Html::encode($form->getDateCreated()
+                                              ->setTimeZone(new DateTimeZone(
+                                                    $s->getSetting('time_zone') ?:
+                                                    'Europe/London'))
+                                              ->format('Y-m-d H:i:s')))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('common.date.created'),
                         'readonly' => 'readonly',
-                    ])
+                    ]);
                 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'date_modified')
                     ->label($translator->translate('common.date.modified'))
-                    ->value(Html::encode(($form->getDateModified())->format('Y-m-d')))
+                    ->value(Html::encode($form->getDateModified()
+                                              ->setTimeZone(new DateTimeZone(
+                                                    $s->getSetting('time_zone') ?:
+                                                    'Europe/London')) 
+                                              ->format('Y-m-d H:i:s')))
                     ->addInputAttributes([
                         'placeholder' => $translator->translate('common.date.modified'),
                         'readonly' => 'readonly',

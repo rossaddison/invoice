@@ -102,7 +102,7 @@ final class TaskController extends BaseController
         trR $trR,
     ): Response {
         $task = new Task();
-        $form = new TaskForm($task);
+        $form = new TaskForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'task/add',
@@ -148,7 +148,7 @@ final class TaskController extends BaseController
     ): Response {
         $task = $this->task($currentRoute, $tR);
         if ($task) {
-            $form = new TaskForm($task);
+            $form = TaskForm::show($task);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'task/edit',
@@ -398,7 +398,7 @@ final class TaskController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $task = $this->task($currentRoute, $tR);
         if ($task) {
-            $taskForm = new TaskForm($task);
+            $taskForm = TaskForm::show($task);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'task/view',

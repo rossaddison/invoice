@@ -496,15 +496,15 @@ use Yiisoft\Html\Html;
 
                             <tbody>
                             <?php
-                                /**
-                                 * @var App\Invoice\Entity\Project $project
-                                 */
+/**
+ * @var App\Infrastructure\Persistence\Project\Project $project
+ */
                                 foreach ($projects as $project) { ?>
                                 <tr>
                                     <td>
                                         <a href="<?= $urlGenerator->generate(
                                                 'project/view',
-                                                ['id' => $project->getId()]); ?>">
+                                                ['id' => $project->reqId()]); ?>">
                                             <?= Html::encode($project->getName()); ?>
                                         </a>
                                     </td>

@@ -57,25 +57,27 @@ final class SalesOrderForm extends FormModel
 
     private ?string $payment_term = '';
 
-    public function __construct(SalesOrder $salesOrder)
+    public static function show(SalesOrder $salesOrder): self
     {
-        $this->number = $salesOrder->getNumber();
-        $this->date_created = $salesOrder->getDateCreated();
-        $this->quote_id = $salesOrder->getQuoteId() !== null
+        $form = new self();
+        $form->number = $salesOrder->getNumber();
+        $form->date_created = $salesOrder->getDateCreated();
+        $form->quote_id = $salesOrder->getQuoteId() !== null
             ? (string) $salesOrder->getQuoteId() : null;
-        $this->inv_id = $salesOrder->getInvId() !== null
+        $form->inv_id = $salesOrder->getInvId() !== null
             ? (string) $salesOrder->getInvId() : null;
-        $this->group_id = (int) $salesOrder->getGroupId();
-        $this->client_id = (int) $salesOrder->getClientId();
-        $this->client_po_number = $salesOrder->getClientPoNumber();
-        $this->client_po_line_number = $salesOrder->getClientPoLineNumber();
-        $this->client_po_person = $salesOrder->getClientPoPerson();
-        $this->status_id = $salesOrder->getStatusId();
-        $this->discount_amount = $salesOrder->getDiscountAmount();
-        $this->url_key = $salesOrder->getUrlKey();
-        $this->password = $salesOrder->getPassword();
-        $this->notes = $salesOrder->getNotes();
-        $this->payment_term = $salesOrder->getPaymentTerm();
+        $form->group_id = (int) $salesOrder->getGroupId();
+        $form->client_id = (int) $salesOrder->getClientId();
+        $form->client_po_number = $salesOrder->getClientPoNumber();
+        $form->client_po_line_number = $salesOrder->getClientPoLineNumber();
+        $form->client_po_person = $salesOrder->getClientPoPerson();
+        $form->status_id = $salesOrder->getStatusId();
+        $form->discount_amount = $salesOrder->getDiscountAmount();
+        $form->url_key = $salesOrder->getUrlKey();
+        $form->password = $salesOrder->getPassword();
+        $form->notes = $salesOrder->getNotes();
+        $form->payment_term = $salesOrder->getPaymentTerm();
+        return $form;
     }
 
     // The Entities ie. Entity/SalesOrder.php have return type string => return type strings in the form

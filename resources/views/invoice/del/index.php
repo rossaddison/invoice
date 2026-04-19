@@ -143,9 +143,24 @@ $columns = [
     new DataColumn(
         'date_created',
         header: $translator->translate('date.created'),
-        content: static fn(DeliveryLocation $model): string => ($model->getDateCreated())->format(
-            'Y-m-d',
-        ),
+        content: static function(DeliveryLocation $model) use ($s) : string {
+            return $model->getDateCreated()
+                         ->setTimeZone(new DateTimeZone(
+                            $s->getSetting('time_zone') ?:
+                            'Europe/London'))
+                         ->format('Y-m-d H:i:s'); 
+        }
+    ),
+    new DataColumn(
+        'date_modified',
+        header: $translator->translate('date.modified'),
+        content: static function(DeliveryLocation $model) use ($s) : string {
+            return $model->getDateModified()
+                         ->setTimeZone(new DateTimeZone(
+                            $s->getSetting('time_zone') ?:
+                            'Europe/London'))
+                         ->format('Y-m-d H:i:s'); 
+        }
     ),
     new DataColumn(
         header: $translator->translate('view'),

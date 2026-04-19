@@ -18,10 +18,12 @@ final class UnitForm extends FormModel
     #[Length(min: 0, max: 50)]
     private ?string $unit_name_plrl = null;
 
-    public function __construct(Unit $unit)
+    public static function show(Unit $unit): self
     {
-        $this->unit_name = $unit->getUnitName();
-        $this->unit_name_plrl = $unit->getUnitNamePlrl();
+        $form = new self();
+        $form->unit_name = $unit->getUnitName();
+        $form->unit_name_plrl = $unit->getUnitNamePlrl();
+        return $form;
     }
 
     public function getUnitName(): ?string

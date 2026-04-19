@@ -16,10 +16,12 @@ final class ProjectForm extends FormModel
     #[Required]
     private ?string $name = '';
 
-    public function __construct(Project $project)
+    public static function show(Project $project): self
     {
-        $this->client_id = (int) $project->getClientId();
-        $this->name = $project->getName();
+        $form = new self();
+        $form->client_id = (int) $project->getClientId();
+        $form->name = $project->getName() ?? '';
+        return $form;
     }
 
     public function getClientId(): ?int

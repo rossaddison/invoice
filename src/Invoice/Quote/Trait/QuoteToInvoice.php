@@ -359,7 +359,7 @@ trait QuoteToInvoice
                 'vat_or_tax' => $quote_allowance_charge->getVatOrTax(),
             ];
             $invAllowanceCharge = new InvAllowanceCharge();
-            $form = new InvAllowanceChargeForm($invAllowanceCharge,
+            $form = InvAllowanceChargeForm::show($invAllowanceCharge,
                 (int) $copy_id);
             if ($formHydrator->populateAndValidate($form, $copy_inv_ac)) {
                 $this->inv_allowance_charge_service->saveInvAllowanceCharge(

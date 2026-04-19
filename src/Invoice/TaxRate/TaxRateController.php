@@ -66,7 +66,7 @@ final class TaxRateController extends BaseController
     {
         $peppolArrays = new PeppolArrays();
         $taxRate = new TaxRate();
-        $form = new TaxRateForm($taxRate);
+        $form = new TaxRateForm();
         $parameters = [
             'title' => $this->translator->translate('tax.rate.add'),
             'actionName' => 'taxrate/add',
@@ -100,7 +100,7 @@ final class TaxRateController extends BaseController
         $taxRate = $this->taxRate($currentRoute, $taxRateRepository);
         $peppolArrays = new PeppolArrays();
         if ($taxRate) {
-            $form = new TaxRateForm($taxRate);
+            $form = TaxRateForm::show($taxRate);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'taxrate/edit',
@@ -158,7 +158,7 @@ final class TaxRateController extends BaseController
         $taxRate = $this->taxRate($currentRoute, $taxRateRepository);
         $peppolArrays = new PeppolArrays();
         if ($taxRate) {
-            $form = new TaxRateForm($taxRate);
+            $form = TaxRateForm::show($taxRate);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'taxrate/view',

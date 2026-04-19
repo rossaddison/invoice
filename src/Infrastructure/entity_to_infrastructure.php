@@ -233,6 +233,15 @@ declare(strict_types=1);
  *       $x->get{Property}() !== null.
  *   This step cannot be automated reliably. Do it by hand.
  *   Set 'callers_updated' => true.
+ *   'form_created'    => bool — true when src/Invoice/{Name}/{Name}Form.php
+ *                        exists and has been updated to reference the
+ *                        infrastructure FQCN (not App\Invoice\Entity\{Name}).
+ *                        The Form is always a caller (listed in 'callers')
+ *                        and is verified as part of Stage 5, but tracked
+ *                        separately because it is required before the add/
+ *                        edit controller actions can function correctly.
+ *                        Set 'form_created' => true once the Form exists
+ *                        and uses the infrastructure class throughout.
  *
  * STAGE 6 — run full project-wide Psalm
  *   vendor/bin/psalm
@@ -273,6 +282,7 @@ declare(strict_types=1);
  *   • The reqId() refactor is completed    — 'req_id'             => true.
  *   • @var annotations verified            — 'var_annotations'    => true.
  *   • All external callers updated         — 'callers_updated'    => true.
+ *   • {Name}Form.php created/updated       — 'form_created'       => true.
  *   • Null guards removed from callers     — 'null_guards_removed' => true.
  *   • View getId() calls replaced          — 'view_get_id_updated' => true.
  *   • Group use applied where needed       — 'group_use'          => true.
@@ -301,6 +311,7 @@ use App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\{
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Infrastructure\Persistence\Project\Project;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Infrastructure\Persistence\UserCustom\UserCustom;
 
@@ -314,6 +325,7 @@ return [
         'var_annotations'     => true,
         'callers'             => [],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'group_use'           => true,
         'view_get_id_updated' => true,
@@ -327,6 +339,7 @@ return [
         'var_annotations'     => true,
         'callers'             => [],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -344,6 +357,7 @@ return [
             'resources/views/invoice/categorysecondary/index.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -357,6 +371,7 @@ return [
         'var_annotations'     => true,
         'callers'             => [],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -370,6 +385,7 @@ return [
         'var_annotations'     => true,
         'callers'             => [],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -383,6 +399,7 @@ return [
         'var_annotations'     => true,
         'callers'             => [],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -407,6 +424,7 @@ return [
             'resources/views/invoice/template/salesorder/public/SalesOrder_Web.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -423,6 +441,7 @@ return [
             'src/Invoice/UserCustom/UserCustomRepository.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -440,6 +459,7 @@ return [
         'var_annotations'     => true,
         'callers'             => [],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -466,6 +486,7 @@ return [
             'resources/views/invoice/productclient/_view.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -507,6 +528,7 @@ return [
             'resources/views/invoice/group/index.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -541,7 +563,26 @@ return [
     'ProductImage'                  => null,
     'ProductProperty'               => null,
     'Profile'                       => null,
-    'Project'                       => null,
+    'Project'                       => [
+        'class'               => Project::class,
+        'req_id'              => true,
+        'var_annotations'     => false,
+        'callers'             => [
+            'src/Invoice/Project/ProjectController.php',
+            'src/Invoice/Project/ProjectForm.php',
+            'src/Invoice/Project/ProjectRepository.php',
+            'src/Invoice/Project/ProjectService.php',
+            'resources/views/invoice/dashboard/index.php',
+        ],
+        'callers_updated'     => false,
+        'form_created'        => true,
+        'null_guards_removed' => false,
+        'view_get_id_updated' => false,
+        'group_use'           => false,
+        'psalm'               => false,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => false,
+    ],
     'Qa'                            => null,
     'Quote'                         => null,
     'QuoteAllowanceCharge'          => null,
@@ -570,6 +611,7 @@ return [
             'resources/views/invoice/salesorder/index.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -590,6 +632,7 @@ return [
             'src/Invoice/SalesOrderAllowanceCharge/SalesOrderAllowanceChargeService.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -620,6 +663,7 @@ return [
             'resources/views/invoice/template/salesorder/public/SalesOrder_Web.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -646,6 +690,7 @@ return [
             'src/Invoice/SalesOrderItem/SalesOrderItemService.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -682,6 +727,7 @@ return [
             'resources/views/invoice/task/partial_task_table_modal.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -707,6 +753,7 @@ return [
             'resources/views/invoice/unit/index.php',
         ],
         'callers_updated'     => true,
+        'form_created'        => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => false,

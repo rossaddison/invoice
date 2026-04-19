@@ -12,9 +12,8 @@ use DateTimeImmutable;
 
 final class DeliveryLocationForm extends FormModel
 {
-
-    private readonly DateTimeImmutable $date_created;
-    private readonly DateTimeImmutable $date_modified;
+    private mixed $date_created = '';
+    private mixed $date_modified = '';
 
     #[Required]
     private ?string $client_id = '';
@@ -50,34 +49,49 @@ final class DeliveryLocationForm extends FormModel
 
     #[Length(min: 0, max: 4, skipOnEmpty: true)]
     private ?string $electronic_address_scheme = '';
-
-    public function __construct(DeliveryLocation $del)
+    
+    public static function show(DeliveryLocation $del): self
     {
-        $this->date_created = $del->getDateCreated();
-        $this->date_modified = $del->getDateModified();
-        $this->client_id = (string) $del->getClientId();
-        $this->name = $del->getName();
-        $this->building_number = $del->getBuildingNumber();
-        $this->address_1 = $del->getAddress1();
-        $this->address_2 = $del->getAddress2();
-        $this->city = $del->getCity();
-        $this->state = $del->getState();
-        $this->zip = $del->getZip();
-        $this->country = $del->getCountry();
+        $form = new self();
+        $form->date_created = $del->getDateCreated();
+        $form->date_modified = $del->getDateModified();
+        $form->client_id = (string) $del->getClientId();
+        $form->name = $del->getName();
+        $form->building_number = $del->getBuildingNumber();
+        $form->address_1 = $del->getAddress1();
+        $form->address_2 = $del->getAddress2();
+        $form->city = $del->getCity();
+        $form->state = $del->getState();
+        $form->zip = $del->getZip();
+        $form->country = $del->getCountry();
         // 13 digit code
-        $this->global_location_number = $del->getGlobalLocationNumber();
+        $form->global_location_number = $del->getGlobalLocationNumber();
         // the key of the array is saved
-        $this->electronic_address_scheme = $del->getElectronicAddressScheme();
+        $form->electronic_address_scheme = $del->getElectronicAddressScheme();
+        return $form;
     }
-
+    
     public function getDateCreated(): DateTimeImmutable
     {
-        return $this->date_created;
+        
+        if ($this->date_created instanceof DateTimeImmutable) {
+            return $this->date_created;
+        }
+        if (is_string($this->date_created) && $this->date_created !== '') {
+            return new DateTimeImmutable($this->date_created);
+        }
+        return new DateTimeImmutable('now');
     }
 
     public function getDateModified(): DateTimeImmutable
     {
-        return $this->date_modified;
+        if ($this->date_modified instanceof DateTimeImmutable) {
+            return $this->date_modified;
+        }
+        if (is_string($this->date_modified) && $this->date_modified !== '') {
+            return new DateTimeImmutable($this->date_modified);
+        }
+        return new DateTimeImmutable('now');
     }
 
     public function getClientId(): ?string

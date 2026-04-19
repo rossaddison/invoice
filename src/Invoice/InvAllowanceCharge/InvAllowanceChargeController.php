@@ -58,7 +58,7 @@ final class InvAllowanceChargeController extends BaseController
     ): Response {
         $invAllowanceCharge = new InvAllowanceCharge();
         $inv_id = $currentRoute->getArgument('inv_id');
-        $form = new InvAllowanceChargeForm($invAllowanceCharge, (int) $inv_id);
+        $form = InvAllowanceChargeForm::show($invAllowanceCharge, (int) $inv_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'invallowancecharge/add',
@@ -185,7 +185,7 @@ final class InvAllowanceChargeController extends BaseController
         $invAllowanceCharge = $this->invallowancecharge($currentRoute, $invAllowanceChargeRepository);
         if ($invAllowanceCharge) {
             $inv_id = $invAllowanceCharge->getInvId();
-            $form = new InvAllowanceChargeForm($invAllowanceCharge, (int) $inv_id);
+            $form = InvAllowanceChargeForm::show($invAllowanceCharge, (int) $inv_id);
             $parameters = [
                 'title' => $this->translator->translate('allowance.or.charge'),
                 'actionName' => 'invallowancecharge/edit',
@@ -249,7 +249,7 @@ final class InvAllowanceChargeController extends BaseController
         $invAllowanceCharge = $this->invallowancecharge($currentRoute, $invallowancechargeRepository);
         if ($invAllowanceCharge) {
             $inv_id = $invAllowanceCharge->getInvId();
-            $form = new InvAllowanceChargeForm($invAllowanceCharge, (int) $inv_id);
+            $form = InvAllowanceChargeForm::show($invAllowanceCharge, (int) $inv_id);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'invallowancecharge/view',

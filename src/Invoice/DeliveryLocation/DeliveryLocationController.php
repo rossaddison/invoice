@@ -125,7 +125,7 @@ final class DeliveryLocationController extends BaseController
 
         $delivery_location = new DeliveryLocation();
         $delivery_location->setClientId((int) $client_id);
-        $form = new DeliveryLocationForm($delivery_location);
+        $form = DeliveryLocationForm::show($delivery_location);
 
         $parameters = [
             'title' => $this->translator->translate('delivery.location.add'),
@@ -195,7 +195,7 @@ final class DeliveryLocationController extends BaseController
             $origin_id = (int) $queryParams['origin_id'];
             $action = (string) $queryParams['action'];
 
-            $form = new DeliveryLocationForm($del);
+            $form = DeliveryLocationForm::show($del);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'del/edit',
@@ -283,7 +283,7 @@ final class DeliveryLocationController extends BaseController
     {
         $del = $this->del($currentRoute, $delRepository);
         if ($del) {
-            $form = new DeliveryLocationForm($del);
+            $form = DeliveryLocationForm::show($del);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'del/view',

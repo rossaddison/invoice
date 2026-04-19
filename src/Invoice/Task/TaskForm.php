@@ -31,15 +31,17 @@ final class TaskForm extends FormModel
     #[Required]
     private ?int $tax_rate_id = null;
 
-    public function __construct(Task $task)
+    public static function show(Task $task): self
     {
-        $this->project_id = (int) $task->getProjectId();
-        $this->name = $task->getName();
-        $this->description = $task->getDescription();
-        $this->price = $task->getPrice();
-        $this->finish_date = $task->getFinishDate();
-        $this->status = $task->getStatus();
-        $this->tax_rate_id = (int) $task->getTaxRateId();
+        $form = new self();
+        $form->project_id = (int) $task->getProjectId();
+        $form->name = $task->getName();
+        $form->description = $task->getDescription();
+        $form->price = $task->getPrice();
+        $form->finish_date = $task->getFinishDate();
+        $form->status = $task->getStatus();
+        $form->tax_rate_id = (int) $task->getTaxRateId();
+        return $form;
     }
 
     public function getProjectId(): ?int

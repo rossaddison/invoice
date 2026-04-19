@@ -185,7 +185,7 @@ final class ProductClientController extends BaseController
                 'index' => $currentIndex
             ],
             'errors' => [],
-            'form' => new ProductClientForm(
+            'form' => ProductClientForm::show(
                 new ProductClient(), $currentProductId, null),
             'clients' => $this->buildClientOptionsArray(
                 $clientRepository->findAllPreloaded()),
@@ -325,7 +325,7 @@ final class ProductClientController extends BaseController
     ) : Response
     {
         $productclient = new ProductClient();
-        $form = new ProductClientForm($productclient, (int) $productId, (int) $clientId);
+        $form = ProductClientForm::show($productclient, (int) $productId, (int) $clientId);
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'productclient/add',
@@ -392,7 +392,7 @@ final class ProductClientController extends BaseController
         #[RouteArgument('id')] int $id): Response {
         $productclient = $this->productclient($productclientRepository, $id);
         if ($productclient){
-            $form = new ProductClientForm($productclient,
+            $form = ProductClientForm::show($productclient,
             $productclient->getProductId(), $productclient->getClientId());
             $parameters = [
                 'title' => $this->translator->translate('edit'),
@@ -456,7 +456,7 @@ final class ProductClientController extends BaseController
             $product = $productclient->getProduct();
             $client = $productclient->getClient();
 
-            $form = new ProductClientForm(
+            $form = ProductClientForm::show(
                 $productclient,
                 $productclient->getProductId(),
                 $productclient->getClientId()

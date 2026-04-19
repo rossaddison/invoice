@@ -104,8 +104,8 @@ trait View
             }
             $invoice = $inv->getId();
             $invAllowanceCharge = new InvAllowanceCharge();
-            $invAllowanceChargeForm =
-                new InvAllowanceChargeForm($invAllowanceCharge, (int) $invoice);
+            $invAllowanceChargeForm = InvAllowanceChargeForm::show(
+                $invAllowanceCharge, (int) $invoice);
             $read_only = $inv->getIsReadOnly();
             $this->session->set('inv_id', $inv->getId());
             $this->numberHelper->calculateInv(

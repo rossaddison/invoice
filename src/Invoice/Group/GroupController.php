@@ -74,7 +74,7 @@ final class GroupController extends BaseController
         FormHydrator $formHydrator,
     ): Response {
         $group = new Group();
-        $form = new GroupForm($group);
+        $form = GroupForm::show($group);
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'group/add',
@@ -112,7 +112,7 @@ final class GroupController extends BaseController
     ): Response {
         $group = $this->group($currentRoute, $groupRepository);
         if ($group) {
-            $form = new GroupForm($group);
+            $form = GroupForm::show($group);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'group/edit',
@@ -170,7 +170,7 @@ final class GroupController extends BaseController
     ): Response {
         $group = $this->group($currentRoute, $groupRepository);
         if ($group) {
-            $form = new GroupForm($group);
+            $form = GroupForm::show($group);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'group/view',
