@@ -31,6 +31,11 @@ class CategorySecondary
      *
      * @throws \LogicException if the entity has not been persisted yet.
      */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function reqId(): int
     {
         if ($this->id === null) {

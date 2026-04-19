@@ -512,6 +512,12 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/GroupEntityTest.php',
+            'Tests/Unit/QuoteFormTest.php',
+            'Tests/Unit/SalesOrderFormTest.php',
+        ],
+        'tests_updated'       => true,
     ],
     'Inv'                           => null,
     'InvAmount'                     => null,

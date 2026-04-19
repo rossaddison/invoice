@@ -241,7 +241,6 @@ final class InvFormTest extends TestCase
     {
         $form = new InvForm($this->inv);
         
-        $this->assertEquals('1', $form->getId());
         $this->assertEquals('INV-001', $form->getNumber());
         $this->assertEquals('Test terms', $form->getTerms());
         $this->assertEquals('Test note', $form->getNote());
@@ -258,7 +257,6 @@ final class InvFormTest extends TestCase
         $client = $this->createMock(Client::class);
         $now = new DateTimeImmutable();
         
-        $inv->method('getId')->willReturn('1');
         $inv->method('getNumber')->willReturn('INV-001');
         $inv->method('getTerms')->willReturn('Test terms');
         $inv->method('getNote')->willReturn('Test note');

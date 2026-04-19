@@ -246,7 +246,6 @@ final class CompanyPrivateFormTest extends TestCase
     {
         $form = new CompanyPrivateForm($this->companyPrivate);
         
-        $this->assertEquals(1, $form->getId());
         $this->assertEquals(1, $form->getCompanyId());
         $this->assertEquals('GB123456789', $form->getVatId());
         $this->assertEquals('TC12345', $form->getTaxCode());
@@ -295,7 +294,6 @@ final class CompanyPrivateFormTest extends TestCase
         
         $company->method('getName')->willReturn('Test Company');
         
-        $companyPrivate->method('getId')->willReturn(1);
         $companyPrivate->method('getCompanyId')->willReturn('1');
         $companyPrivate->method('getCompany')->willReturn($company);
         $companyPrivate->method('getVatId')->willReturn('GB123456789');
@@ -326,7 +324,7 @@ final class CompanyPrivateFormTest extends TestCase
 
        foreach ($data as $property => $value) {
            if (!$reflection->hasProperty($property)) {
-               throw new RuntimeException("Property '{$property}' "
+               throw new \RuntimeException("Property '{$property}' "
                . "does not exist on "
                . CompanyPrivateForm::class);
            }

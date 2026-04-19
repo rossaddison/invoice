@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\SalesOrder;
 
-use App\Invoice\Entity\SalesOrder;
+use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\SalesOrder\SalesOrderForm;
@@ -314,10 +314,10 @@ final class SalesOrderFormTest extends TestCase
         
         $salesOrder->method('getNumber')->willReturn('SO-001');
         $salesOrder->method('getDateCreated')->willReturn($now);
-        $salesOrder->method('getQuoteId')->willReturn('1');
-        $salesOrder->method('getInvId')->willReturn('1');
-        $salesOrder->method('getGroupId')->willReturn('1');
-        $salesOrder->method('getClientId')->willReturn('1');
+        $salesOrder->method('getQuoteId')->willReturn(1);
+        $salesOrder->method('getInvId')->willReturn(1);
+        $salesOrder->method('getGroupId')->willReturn(1);
+        $salesOrder->method('getClientId')->willReturn(1);
         $salesOrder->method('getClientPoNumber')->willReturn('PO12345');
         $salesOrder->method('getClientPoLineNumber')->willReturn('LN001');
         $salesOrder->method('getClientPoPerson')->willReturn('John Doe');

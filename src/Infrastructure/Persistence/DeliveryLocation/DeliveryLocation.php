@@ -74,6 +74,11 @@ class DeliveryLocation
      *
      * @throws \LogicException if the entity has not been persisted yet.
      */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function reqId(): int
     {
         if ($this->id === null) {
@@ -189,7 +194,7 @@ class DeliveryLocation
         return $this->global_location_number;
     }
 
-    public function setGlobalLocationNumber(string $global_location_number): void
+    public function setGlobalLocationNumber(?string $global_location_number): void
     {
         $this->global_location_number = $global_location_number;
     }
@@ -200,7 +205,7 @@ class DeliveryLocation
     }
 
     public function setElectronicAddressScheme(
-        string $electronic_address_scheme
+        ?string $electronic_address_scheme
     ): void
     {
         $this->electronic_address_scheme = $electronic_address_scheme;

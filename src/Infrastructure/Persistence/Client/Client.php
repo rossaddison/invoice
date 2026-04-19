@@ -120,6 +120,11 @@ class Client
      *
      * @throws \LogicException if the entity has not been persisted yet.
      */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function reqId(): int
     {
         if ($this->id === null) {

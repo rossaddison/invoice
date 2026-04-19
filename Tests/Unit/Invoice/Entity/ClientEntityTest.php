@@ -117,7 +117,7 @@ class ClientEntityTest extends Unit
     public function testIsPersistedReturnsTrueWhenIdSet(): void
     {
         $client = new Client();
-        $client->id = 1;
+        $client->setId(1);
 
         $this->assertTrue($client->isPersisted());
     }
@@ -125,7 +125,7 @@ class ClientEntityTest extends Unit
     public function testReqIdReturnsIntWhenPersisted(): void
     {
         $client = new Client();
-        $client->id = 42;
+        $client->setId(42);
 
         $this->assertSame(42, $client->reqId());
         $this->assertIsInt($client->reqId());
@@ -485,7 +485,7 @@ class ClientEntityTest extends Unit
             client_email: 'john.doe@example.com',
         );
 
-        $client->id = 1;
+        $client->setId(1);
         $client->setClientActive(true);
         $client->setClientCity('Glasgow');
         $client->setClientCountry('GB');
