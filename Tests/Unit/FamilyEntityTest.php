@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\Family;
+use App\Infrastructure\Persistence\Family\Family;
 use Codeception\Test\Unit;
 
 final class FamilyEntityTest extends Unit
@@ -103,17 +103,13 @@ final class FamilyEntityTest extends Unit
     public function testPublicIdProperty(): void
     {
         $family = new Family();
-        
-        // Test that id property is accessible as public
-        $this->assertNull($family->id);
+        $this->assertNull($family->getFamilyId());
     }
 
     public function testPublicFamilyNameProperty(): void
     {
         $family = new Family('Test Family');
-        
-        // Test that family_name property is accessible as public
-        $this->assertSame('Test Family', $family->family_name);
+        $this->assertSame('Test Family', $family->getFamilyName());
     }
 
     public function testZeroCategoryIds(): void

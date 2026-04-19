@@ -22,7 +22,7 @@ class UnitFormTest extends BaseUnit
             unit_name_plrl: 'Pieces'
         );
 
-        $this->form = new UnitForm($this->unitEntity);
+        $this->form = UnitForm::show($this->unitEntity);
     }
 
     public function testFormInitializationFromEntity(): void
@@ -42,7 +42,7 @@ class UnitFormTest extends BaseUnit
             unit_name: '',
             unit_name_plrl: ''
         );
-        $emptyForm = new UnitForm($emptyUnit);
+        $emptyForm = UnitForm::show($emptyUnit);
 
         $this->assertEquals('', $emptyForm->getUnitName());
         $this->assertEquals('', $emptyForm->getUnitNamePlrl());
@@ -57,7 +57,7 @@ class UnitFormTest extends BaseUnit
             unit_name: $longName,
             unit_name_plrl: $longPlural
         );
-        $longForm = new UnitForm($longUnit);
+        $longForm = UnitForm::show($longUnit);
 
         $this->assertEquals($longName, $longForm->getUnitName());
         $this->assertEquals($longPlural, $longForm->getUnitNamePlrl());
@@ -80,7 +80,7 @@ class UnitFormTest extends BaseUnit
                 unit_name: $singular,
                 unit_name_plrl: $plural
             );
-            $form = new UnitForm($unit);
+            $form = UnitForm::show($unit);
 
             $this->assertEquals($singular, $form->getUnitName());
             $this->assertEquals($plural, $form->getUnitNamePlrl());
@@ -100,7 +100,7 @@ class UnitFormTest extends BaseUnit
             unit_name: 'Test Unit',
             unit_name_plrl: 'Test Units'
         );
-        $nullIdForm = new UnitForm($nullIdUnit);
+        $nullIdForm = UnitForm::show($nullIdUnit);
 
         $this->assertEquals('Test Unit', $nullIdForm->getUnitName());
         $this->assertEquals('Test Units', $nullIdForm->getUnitNamePlrl());
@@ -112,7 +112,7 @@ class UnitFormTest extends BaseUnit
             unit_name: 'Sheep',
             unit_name_plrl: 'Sheep'
         );
-        $sameNameForm = new UnitForm($sameNameUnit);
+        $sameNameForm = UnitForm::show($sameNameUnit);
 
         $this->assertEquals('Sheep', $sameNameForm->getUnitName());
         $this->assertEquals('Sheep', $sameNameForm->getUnitNamePlrl());
@@ -124,7 +124,7 @@ class UnitFormTest extends BaseUnit
             unit_name: 'M²',
             unit_name_plrl: 'M²'
         );
-        $specialForm = new UnitForm($specialUnit);
+        $specialForm = UnitForm::show($specialUnit);
 
         $this->assertEquals('M²', $specialForm->getUnitName());
         $this->assertEquals('M²', $specialForm->getUnitNamePlrl());
@@ -139,7 +139,7 @@ class UnitFormTest extends BaseUnit
         ];
 
         foreach ($units as $unit) {
-            $form = new UnitForm($unit);
+            $form = UnitForm::show($unit);
             $this->assertEquals('', $form->getFormName());
         }
     }

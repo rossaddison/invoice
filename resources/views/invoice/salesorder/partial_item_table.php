@@ -157,7 +157,7 @@ foreach ($soItems as $item) {
                                 </option>
                                 <?php
                                 /**
-                                 * @var App\Invoice\Entity\Product $product
+                                 * @var App\Infrastructure\Persistence\Product\Product $product
                                  */
                                 foreach ($products as $product) { ?>
                                     <option value="

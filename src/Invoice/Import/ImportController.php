@@ -273,7 +273,7 @@ final class ImportController extends BaseController
          * @var array $family
          */
         foreach ($families as $family) {
-            $newFamily = new \App\Invoice\Entity\Family();
+            $newFamily = new \App\Infrastructure\Persistence\Family\Family();
             $newFamily->setFamilyName((string) $family['family_name']);
             $this->fR->save($newFamily);
         }
@@ -333,7 +333,7 @@ final class ImportController extends BaseController
          * @var array $product
          */
         foreach ($products as $product) {
-            $newProduct = new \App\Invoice\Entity\Product();
+            $newProduct = new \App\Infrastructure\Persistence\Product\Product();
             $newProduct->setFamilyId((int) $product['family_id']);
             $newProduct->setProductSku((string) $product['product_sku']);
             $newProduct->setProductName((string) $product['product_name']);

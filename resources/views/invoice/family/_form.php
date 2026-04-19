@@ -12,7 +12,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
 /**
  * @var App\Invoice\Family\FamilyForm $form
  * @var App\Invoice\FamilyCustom\FamilyCustomForm $familyCustomForm
- * @var App\Invoice\Entity\Family $family
+ * @var App\Infrastructure\Persistence\Family\Family $family
  *
  * Related logic: see config\common\params.php 'cvH'
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH

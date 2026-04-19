@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\ProductClient;
 
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Invoice\ProductClient\ProductClientRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;

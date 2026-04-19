@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\SalesOrderItem;
 
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\Task\Task;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;

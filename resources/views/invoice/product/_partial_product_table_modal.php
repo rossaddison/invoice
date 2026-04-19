@@ -33,7 +33,7 @@ echo H::openTag('div', ['class' => 'table-responsive']); //1
    echo H::closeTag('th'); //4
   echo H::closeTag('tr'); //3
   /**
-   * @var App\Invoice\Entity\Product $product
+   * @var App\Infrastructure\Persistence\Product\Product $product
    */
   foreach ($products as $product) {
    echo H::openTag('tr', ['class' => 'product']); //3

@@ -182,10 +182,10 @@ class DeliveryLocationEntityTest extends TestCase
     public function testIsNewRecord(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $this->assertTrue($deliveryLocation->isNewRecord());
+        $this->assertFalse($deliveryLocation->isPersisted());
         
         $deliveryLocation->setId(1);
-        $this->assertFalse($deliveryLocation->isNewRecord());
+        $this->assertTrue($deliveryLocation->isPersisted());
     }
 
     public function testDateTimeImmutableProperties(): void
@@ -337,7 +337,7 @@ class DeliveryLocationEntityTest extends TestCase
         $this->assertSame($this->testCountry, $deliveryLocation->getCountry());
         $this->assertSame($this->seqNumbers, $deliveryLocation->getGlobalLocationNumber());
         $this->assertSame('GLN', $deliveryLocation->getElectronicAddressScheme());
-        $this->assertFalse($deliveryLocation->isNewRecord());
+        $this->assertTrue($deliveryLocation->isPersisted());
     }
 
     public function testGetterMethodsConsistency(): void
@@ -426,7 +426,7 @@ class DeliveryLocationEntityTest extends TestCase
     {
         // Create new delivery location
         $deliveryLocation = new DeliveryLocation();
-        $this->assertTrue($deliveryLocation->isNewRecord());
+        $this->assertFalse($deliveryLocation->isPersisted());
         
         // Set basic information
         $deliveryLocation->setName('New Delivery Location');
@@ -435,16 +435,16 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation->setZip($this->oneToFive);
         
         // Still new until ID is set
-        $this->assertTrue($deliveryLocation->isNewRecord());
+        $this->assertFalse($deliveryLocation->isPersisted());
         
         // Assign ID (simulating database save)
         $deliveryLocation->setId(1);
-        $this->assertFalse($deliveryLocation->isNewRecord());
+        $this->assertTrue($deliveryLocation->isPersisted());
         
         // Update location
         $deliveryLocation->setAddress1('456 Updated Street');
         $this->assertSame('456 Updated Street', $deliveryLocation->getAddress1());
-        $this->assertFalse($deliveryLocation->isNewRecord());
+        $this->assertTrue($deliveryLocation->isPersisted());
     }
 
     public function testTimezoneHandling(): void
@@ -462,7 +462,7 @@ class DeliveryLocationEntityTest extends TestCase
     {
         $deliveryLocation = new DeliveryLocation();
         
-        $this->assertTrue($deliveryLocation->isNewRecord());
+        $this->assertFalse($deliveryLocation->isPersisted());
         $this->assertNull($deliveryLocation->getClient());
         $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateCreated());
         $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateModified());

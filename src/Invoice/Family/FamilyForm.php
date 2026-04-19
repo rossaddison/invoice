@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Family;
 
-use App\Invoice\Entity\Family;
+use App\Infrastructure\Persistence\Family\Family;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -21,14 +21,16 @@ final class FamilyForm extends FormModel
 
     public ?string $category_secondary_id = null;
 
-    public function __construct(Family $family)
+    public static function show(Family $family): self
     {
-        $this->family_name = $family->getFamilyName();
-        $this->family_commalist = $family->getFamilyCommalist();
-        $this->family_productprefix = $family->getFamilyProductprefix();
-        $this->category_primary_id = $family->getCategoryPrimaryId();
-        $this->category_secondary_id = $family->getCategorySecondaryId();
-     }
+        $form = new self();
+        $form->family_name = $family->getFamilyName();
+        $form->family_commalist = $family->getFamilyCommalist();
+        $form->family_productprefix = $family->getFamilyProductprefix();
+        $form->category_primary_id = $family->getCategoryPrimaryId();
+        $form->category_secondary_id = $family->getCategorySecondaryId();
+        return $form;
+    }
 
     public function getFamilyName(): ?string
     {

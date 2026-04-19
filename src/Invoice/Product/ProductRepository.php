@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Product;
 
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Product\Product;
 use Cycle\ORM\Select;
 use Throwable;
 use Cycle\Database\Injection\Parameter;

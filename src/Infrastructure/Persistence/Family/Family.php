@@ -2,29 +2,53 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\Family;
 
+use App\Invoice\Family\FamilyRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
-#[Entity(repository: \App\Invoice\Family\FamilyRepository::class)]
+#[Entity(repository: FamilyRepository::class)]
 class Family
 {
     #[Column(type: 'primary')]
-    public ?int $id = null;
+    private ?int $id = null;
 
     public function __construct(
         #[Column(type: 'text', nullable: true)]
-        public ?string $family_name = '',
+        private ?string $family_name = '',
         #[Column(type: 'text', nullable: true)]
-        public ?string $family_commalist = '',
+        private ?string $family_commalist = '',
         #[Column(type: 'text', nullable: true)]
-        public ?string $family_productprefix = '',
+        private ?string $family_productprefix = '',
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $category_primary_id = null,
         #[Column(type: 'integer(11)', nullable: true)]
         private ?int $category_secondary_id = null,
     ) {
+    }
+
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
+    {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'Family has no ID (not persisted yet)'
+            );
+        }
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getFamilyId(): ?int
@@ -57,8 +81,9 @@ class Family
         return $this->family_productprefix;
     }
 
-    public function setFamilyProductprefix(string $family_productprefix): void
-    {
+    public function setFamilyProductprefix(
+        string $family_productprefix
+    ): void {
         $this->family_productprefix = $family_productprefix;
     }
 
@@ -77,8 +102,9 @@ class Family
         return (string) $this->category_secondary_id;
     }
 
-    public function setCategorySecondaryId(int $category_secondary_id): void
-    {
+    public function setCategorySecondaryId(
+        int $category_secondary_id
+    ): void {
         $this->category_secondary_id = $category_secondary_id;
     }
 }

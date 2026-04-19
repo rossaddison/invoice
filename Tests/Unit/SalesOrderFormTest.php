@@ -269,7 +269,7 @@ final class SalesOrderFormTest extends TestCase
      */
     public function testFormInitializationFromEntity(): void
     {
-        $form = new SalesOrderForm($this->salesOrder);
+        $form = SalesOrderForm::show($this->salesOrder);
         
         $this->assertEquals('SO-001', $form->getNumber());
         $this->assertEquals('Test sales order notes', $form->getNotes());
@@ -340,7 +340,7 @@ final class SalesOrderFormTest extends TestCase
     private function createFormWithData(array $data): SalesOrderForm
     {
         $salesOrder = $this->createMockSalesOrder();
-        $form = new SalesOrderForm($salesOrder);
+        $form = SalesOrderForm::show($salesOrder);
         
         // Use reflection to set properties for testing
         $reflection = new \ReflectionClass($form);

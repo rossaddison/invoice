@@ -242,6 +242,20 @@ declare(strict_types=1);
  *                        edit controller actions can function correctly.
  *                        Set 'form_created' => true once the Form exists
  *                        and uses the infrastructure class throughout.
+ *   'form_show_pattern' => bool — true when src/Invoice/{Name}/{Name}Form.php
+ *                        uses a static show({Name} $entity): self factory
+ *                        method (DDD rule: NO entity in the constructor).
+ *                        Controller usage rules:
+ *                          add()        → new {Name}Form()  (default)
+ *                          edit()/view() → {Name}Form::show($entity)
+ *                        Use show() in add() only as a last resort when a
+ *                        #[Required] field must be pre-populated from a route
+ *                        argument not present in the POST body (e.g.
+ *                        DeliveryLocationForm needs client_id from the URL).
+ *                        Never: new {Name}Form($entity)
+ *                        Entity creation belongs inside the POST save block,
+ *                        not at the top of add().
+ *                        Set 'form_show_pattern' => true once verified.
  *
  * STAGE 6 — run full project-wide Psalm
  *   vendor/bin/psalm
@@ -283,6 +297,7 @@ declare(strict_types=1);
  *   • @var annotations verified            — 'var_annotations'    => true.
  *   • All external callers updated         — 'callers_updated'    => true.
  *   • {Name}Form.php created/updated       — 'form_created'       => true.
+ *   • Form uses show() not constructor     — 'form_show_pattern'  => true.
  *   • Null guards removed from callers     — 'null_guards_removed' => true.
  *   • View getId() calls replaced          — 'view_get_id_updated' => true.
  *   • Group use applied where needed       — 'group_use'          => true.
@@ -312,6 +327,8 @@ use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Project\Project;
+use App\Infrastructure\Persistence\Family\Family;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Infrastructure\Persistence\UserCustom\UserCustom;
 
@@ -326,6 +343,7 @@ return [
         'callers'             => [],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'group_use'           => true,
         'view_get_id_updated' => true,
@@ -340,6 +358,7 @@ return [
         'callers'             => [],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -358,6 +377,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -372,6 +392,7 @@ return [
         'callers'             => [],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -386,6 +407,7 @@ return [
         'callers'             => [],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -400,6 +422,7 @@ return [
         'callers'             => [],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -425,6 +448,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -442,6 +466,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -460,6 +485,7 @@ return [
         'callers'             => [],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -487,6 +513,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -505,7 +532,39 @@ return [
     'Delivery'                      => null,
     'DeliveryParty'                 => null,
     'EmailTemplate'                 => null,
-    'Family'                        => null,
+    'Family'                        => [
+        'class'               => Family::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Infrastructure/Persistence/Product/Product.php',
+            'src/Command/Invoice/ItemsCommand.php',
+            'src/Command/Invoice/NonUserRelatedTruncate4Command.php',
+            'src/Invoice/Entity/FamilyCustom.php',
+            'src/Invoice/Family/FamilyController.php',
+            'src/Invoice/Family/FamilyForm.php',
+            'src/Invoice/Family/FamilyRepository.php',
+            'src/Invoice/Family/FamilyService.php',
+            'src/Invoice/Import/ImportController.php',
+            'src/Invoice/InvoiceController.php',
+            'src/Invoice/Product/ProductController.php',
+            'resources/views/invoice/family/index.php',
+            'resources/views/invoice/family/_form.php',
+            'resources/views/invoice/product/modal_product_lookups_inv.php',
+            'resources/views/invoice/product/modal_product_lookups_quote.php',
+        ],
+        'callers_updated'     => true,
+        'form_created'        => true,
+        'form_show_pattern'   => true,
+        'null_guards_removed' => false,
+        'view_get_id_updated' => false,
+        'group_use'           => false,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => true,
+        'tests'               => ['Tests/Unit/FamilyEntityTest.php'],
+        'tests_updated'       => true,
+    ],
     'FamilyCustom'                  => null,
     'FromDropDown'                  => null,
     'Gentor'                        => null,
@@ -529,6 +588,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -558,7 +618,53 @@ return [
     'PaymentMethod'                 => null,
     'PaymentPeppol'                 => null,
     'PostalAddress'                 => null,
-    'Product'                       => null,
+    'Product'                       => [
+        'class'               => Product::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Infrastructure/Persistence/ProductClient/ProductClient.php',
+            'src/Infrastructure/Persistence/SalesOrderItem/SalesOrderItem.php',
+            'src/Command/Invoice/ItemsCommand.php',
+            'src/Command/Invoice/NonUserRelatedTruncate4Command.php',
+            'src/Invoice/Family/FamilyController.php',
+            'src/Invoice/Helpers/Peppol/Exception/' .
+                'PeppolProductItemClassificationCodeSchemeIdNotFoundException.php',
+            'src/Invoice/Helpers/Peppol/Exception/' .
+                'PeppolProductUnitCodeNotFoundException.php',
+            'src/Invoice/Import/ImportController.php',
+            'src/Invoice/InvoiceController.php',
+            'src/Invoice/Product/ProductController.php',
+            'src/Invoice/Product/ProductForm.php',
+            'src/Invoice/Product/ProductRepository.php',
+            'src/Invoice/Product/ProductService.php',
+            'src/Invoice/ProductProperty/ProductPropertyForm.php',
+            'src/Invoice/Report/ReportController.php',
+            'resources/views/invoice/inv/partial_item_table.php',
+            'resources/views/invoice/invitem/_item_edit_product.php',
+            'resources/views/invoice/invitem/_item_form_product.php',
+            'resources/views/invoice/product/index.php',
+            'resources/views/invoice/product/_partial_product_table_modal.php',
+            'resources/views/invoice/product/views/partial_product_details.php',
+            'resources/views/invoice/product/views/partial_product_gallery.php',
+            'resources/views/invoice/product/views/partial_product_properties.php',
+            'resources/views/invoice/productclient/_view.php',
+            'resources/views/invoice/quote/partial_item_table.php',
+            'resources/views/invoice/quoteitem/_item_edit_form_product.php',
+            'resources/views/invoice/quoteitem/_item_form_product.php',
+            'resources/views/invoice/salesorder/partial_item_table.php',
+            'resources/views/invoice/salesorder/partial_item_table_with_peppol.php',
+        ],
+        'callers_updated'     => true,
+        'form_created'        => true,
+        'form_show_pattern'   => true,
+        'null_guards_removed' => false,
+        'view_get_id_updated' => false,
+        'group_use'           => false,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => true,
+    ],
     'ProductCustom'                 => null,
     'ProductImage'                  => null,
     'ProductProperty'               => null,
@@ -576,6 +682,7 @@ return [
         ],
         'callers_updated'     => false,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => false,
         'view_get_id_updated' => false,
         'group_use'           => false,
@@ -612,6 +719,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -633,6 +741,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -664,6 +773,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -691,6 +801,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -728,6 +839,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => true,
@@ -754,6 +866,7 @@ return [
         ],
         'callers_updated'     => true,
         'form_created'        => true,
+        'form_show_pattern'   => true,
         'null_guards_removed' => true,
         'view_get_id_updated' => true,
         'group_use'           => false,

@@ -34,7 +34,7 @@ use Yiisoft\Html\Tag\Button;
                                     <option value="0"><?= $translator->translate('any.family'); ?></option>
                                     <?php
                                         /**
-                                         * @var App\Invoice\Entity\Family $family
+                                         * @var App\Infrastructure\Persistence\Family\Family $family
                                          */
                                         foreach ($families as $family) { ?>
                                         <option value="<?= $family->getFamilyId(); ?>"

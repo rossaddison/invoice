@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductProperty;
 
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Invoice\Entity\ProductProperty;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;

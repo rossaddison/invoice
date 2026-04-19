@@ -534,7 +534,7 @@ class ReportController extends BaseController
         ];
         $products = $pR->findAllPreloaded();
         /**
-         * @var \\App\Invoice\Entity\Product $product
+         * @var \App\Infrastructure\Persistence\Product\Product $product
          */
         foreach ($products as $product) {
             $product_id = (int) $product->getProductId();

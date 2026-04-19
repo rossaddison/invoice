@@ -57,7 +57,7 @@ echo H::openTag('div', [
           echo H::encode($translator->translate('any.family'));
          echo H::closeTag('option');
          /**
-          * @var App\Invoice\Entity\Family $family
+          * @var App\Infrastructure\Persistence\Family\Family $family
           */
          foreach ($families as $family) {
              $attributes = ['value' => $family->getFamilyId()];

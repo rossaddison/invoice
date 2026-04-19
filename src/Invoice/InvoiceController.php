@@ -6,9 +6,9 @@ namespace App\Invoice;
 
 use App\Auth\Permissions;
 use App\Infrastructure\Persistence\{Client\Client, Group\Group};
-use App\Invoice\Entity\Family;
+use App\Infrastructure\Persistence\Family\Family;
 use App\Invoice\Entity\PaymentMethod;
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Invoice\Entity\Setting;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Unit\Unit;

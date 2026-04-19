@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Family;
+use App\Infrastructure\Persistence\Family\Family;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;

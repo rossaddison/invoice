@@ -98,7 +98,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                                 <?php
                                     $optionsDataProduct = [];
                         /**
-                         * @var App\Invoice\Entity\Product $product
+                         * @var App\Infrastructure\Persistence\Product\Product $product
                          */
                         foreach ($products as $product) {
                             $productId = $product->getProductId();

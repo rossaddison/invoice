@@ -7,8 +7,8 @@ namespace App\Invoice\Product;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Widget\FormFields;
-use App\Invoice\Entity\Family;
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Family\Family;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Invoice\Entity\ProductCustom;
 use App\Invoice\Entity\ProductImage;
 use App\Invoice\Entity\QuoteItem;
@@ -125,8 +125,7 @@ final class ProductController extends BaseController
     {
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
-        $product = new Product();
-        $form = new ProductForm($product);
+        $form = new ProductForm();
         $productCustom = new ProductCustom();
         $productCustomForm = new ProductCustomForm($productCustom);
         $parameters = [
@@ -161,6 +160,7 @@ final class ProductController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
+                    $product = new Product();
                     $product_id = $this->productService->saveProduct($product, $body);
                     if ($product_id) {
                         if (isset($body['custom'])) {
@@ -237,7 +237,7 @@ final class ProductController extends BaseController
         $product = $this->product($id, $pR);
         if ($product) {
             $product_id = $product->getProductId();
-            $form = new ProductForm($product);
+            $form = ProductForm::show($product);
             $productCustom = new ProductCustom();
             $productCustomForm = new ProductCustomForm($productCustom);
             if ($product_id) {
@@ -841,7 +841,7 @@ final class ProductController extends BaseController
         $language = (string) $this->session->get('_language');
         $peppolarrays = new PeppolArrays();
         if ($product) {
-            $productForm = new ProductForm($product);
+            $productForm = ProductForm::show($product);
             $productCustom = new ProductCustom();
             $productCustomForm = new ProductCustomForm($productCustom);
             $product_id = $product->getProductId();

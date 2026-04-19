@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\Family;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Family;
+use App\Infrastructure\Persistence\Family\Family;
 use App\Invoice\Entity\FamilyCustom;
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
 use App\Invoice\CategorySecondary\CategorySecondaryRepository as csR;
@@ -111,8 +111,7 @@ final class FamilyController extends BaseController
      */
     public function search(cpR $cpR): Response
     {
-        $family = new Family();
-        $form = new FamilyForm($family);
+        $form = new FamilyForm();
         $parameters = [
             'title' => $this->translator->translate('search.family'),
             'form' => $form,
@@ -143,8 +142,7 @@ final class FamilyController extends BaseController
         csR $csR
     ): Response
     {
-        $family = new Family();
-        $form = new FamilyForm($family);
+        $form = new FamilyForm();
         $familyCustom = new FamilyCustom();
         $familyCustomForm = new FamilyCustomForm($familyCustom);
         $custom = $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom');
@@ -166,6 +164,7 @@ final class FamilyController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
+                    $family = new Family();
                     $this->familyService->saveFamily($family, $body);
                     if (null !== $family_id = $family->getFamilyId()) {
                         if (isset($body['custom'])) {
@@ -288,7 +287,7 @@ final class FamilyController extends BaseController
     {
         $family = $this->family($id, $familyRepository);
         if ($family) {
-            $form = new FamilyForm($family);
+            $form = FamilyForm::show($family);
             $familyCustom = new FamilyCustom();
             $familyCustomForm = new FamilyCustomForm($familyCustom);
             $parameters = [
@@ -413,7 +412,7 @@ final class FamilyController extends BaseController
     {
         $family = $this->family($id, $familyRepository);
         if ($family) {
-            $form = new FamilyForm($family);
+            $form = FamilyForm::show($family);
             $familyCustom = new FamilyCustom();
             $familyCustomForm = new FamilyCustomForm($familyCustom);
             $parameters = [

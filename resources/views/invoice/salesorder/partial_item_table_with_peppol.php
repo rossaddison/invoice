@@ -185,7 +185,7 @@ foreach ($soItems as $item) { ?>
                             <select name="item_name" class="form-control form-control-lg" disabled>
                                 <?php
                     /**
-                     * @var App\Invoice\Entity\Product $product
+                     * @var App\Infrastructure\Persistence\Product\Product $product
                      */
                     foreach ($pR->findAllPreloaded() as $product) { ?>
                                     <option value="<?php echo $product->getProductId(); ?>"

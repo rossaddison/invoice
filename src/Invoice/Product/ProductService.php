@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Product;
 
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Product\Product;
 use App\Invoice\Family\FamilyRepository as FR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use App\Invoice\Unit\UnitRepository as UR;

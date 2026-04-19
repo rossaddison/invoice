@@ -5,7 +5,7 @@ use Yiisoft\Html\Html;
 
 /**
  * Related logic: see App\Invoice\Product\ProductController function view $parameters['partial_product_properties']
- * @var App\Invoice\Entity\Product $product
+ * @var App\Infrastructure\Persistence\Product\Product $product
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $language

@@ -137,7 +137,7 @@ foreach ($quoteItems as $item) {
                ->value('0')
                ->content($translator->translate('none'));
            /**
-            * @var App\Invoice\Entity\Product $product
+            * @var App\Infrastructure\Persistence\Product\Product $product
             */
            foreach ($products as $product) {
                echo  new Option()

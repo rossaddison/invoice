@@ -8,7 +8,7 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\Product
+ * @var App\Infrastructure\Persistence\Product\Product $product
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\Product\ProductForm $form
  * @var App\Invoice\ProductCustom\ProductCustomForm $productCustomForm

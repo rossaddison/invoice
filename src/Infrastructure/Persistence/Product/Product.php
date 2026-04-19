@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\Product;
 
-use App\Invoice\Product\ProductRepository as PR;
+use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\ProductClient\ProductClient;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Unit\Unit;
+use App\Invoice\Product\ProductRepository as PR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 use Cycle\Annotated\Annotation\Relation\HasMany;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[Entity(repository:PR::class)]
+#[Entity(repository: PR::class)]
 class Product
 {
     #[Column(type: 'primary')]
@@ -23,7 +24,6 @@ class Product
     #[BelongsTo(target: Family::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Family $family = null;
 
-    // A product has to have a tax rate before it can be created even if it is a zero tax rate
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
@@ -79,45 +79,62 @@ class Product
         $this->client_associations = new ArrayCollection();
     }
 
-    //get relation $family
-    public function getFamily(): ?Family
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
-        return $this->family;
+        if ($this->id === null) {
+            throw new \LogicException(
+                'Product has no ID (not persisted yet)'
+            );
+        }
+        return $this->id;
     }
 
-    //set relation $family
-    public function setFamily(?Family $family): void
+    public function isPersisted(): bool
     {
-        $this->family = $family;
+        return $this->id !== null;
     }
 
-    //relation $tax_rate
-    public function getTaxRate(): ?TaxRate
+    public function setId(int $id): void
     {
-        return $this->tax_rate;
-    }
-
-    //set relation $taxrate
-    public function setTaxrate(?TaxRate $taxrate): void
-    {
-        $this->tax_rate = $taxrate;
-    }
-
-    //relation $unit
-    public function getUnit(): ?Unit
-    {
-        return $this->unit;
-    }
-
-    //set relation $unit
-    public function setUnit(?Unit $unit): void
-    {
-        $this->unit = $unit;
+        $this->id = $id;
     }
 
     public function getProductId(): string
     {
         return (string) $this->id;
+    }
+
+    public function getFamily(): ?Family
+    {
+        return $this->family;
+    }
+
+    public function setFamily(?Family $family): void
+    {
+        $this->family = $family;
+    }
+
+    public function getTaxRate(): ?TaxRate
+    {
+        return $this->tax_rate;
+    }
+
+    public function setTaxrate(?TaxRate $taxrate): void
+    {
+        $this->tax_rate = $taxrate;
+    }
+
+    public function getUnit(): ?Unit
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(?Unit $unit): void
+    {
+        $this->unit = $unit;
     }
 
     public function getFamilyId(): string
@@ -140,32 +157,16 @@ class Product
         $this->product_sku = $product_sku;
     }
 
-    // https://docs.peppol.eu/poacc/billing/3.0/bis/#_item_identifiers
-    // Standard Item Identification Code Default '0160'
-
-    /**
-     * Used with PeppolArrays getIso_6523_icd function
-     * @return string|null
-     */
     public function getProductSiiSchemeid(): ?string
     {
         return $this->product_sii_schemeid;
     }
 
-    /**
-     * Mandatory (M) eg. 0160 from PeppolArrays getIso6523_icd()
-     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
-     * @param string $product_sii_schemeid
-     */
     public function setProductSiiSchemeid(?string $product_sii_schemeid): void
     {
         $this->product_sii_schemeid = $product_sii_schemeid;
     }
 
-    /**
-     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-StandardItemIdentification/cbc-ID/
-     * @return string|null
-     */
     public function getProductSiiId(): ?string
     {
         return $this->product_sii_id;
@@ -176,11 +177,6 @@ class Product
         $this->product_sii_id = $product_sii_id;
     }
 
-    /**
-     * Used with src/Invoice/Helpers/Peppol/PeppolArrays function getUncl7143 eg. SRV
-     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-CommodityClassification/cbc-ItemClassificationCode/listID/
-     * @return string|null
-     */
     public function getProductIccListid(): ?string
     {
         return $this->product_icc_listid;
@@ -196,8 +192,9 @@ class Product
         return $this->product_icc_listversionid;
     }
 
-    public function setProductIccListversionid(?string $product_icc_listversionid): void
-    {
+    public function setProductIccListversionid(
+        ?string $product_icc_listversionid
+    ): void {
         $this->product_icc_listversionid = $product_icc_listversionid;
     }
 
@@ -211,9 +208,11 @@ class Product
         $this->product_icc_id = $product_icc_id;
     }
 
-    public function setProductCountryOfOriginCode(?string $product_country_of_origin_code): void
-    {
-        $this->product_country_of_origin_code = $product_country_of_origin_code;
+    public function setProductCountryOfOriginCode(
+        ?string $product_country_of_origin_code
+    ): void {
+        $this->product_country_of_origin_code =
+            $product_country_of_origin_code;
     }
 
     public function getProductCountryOfOriginCode(): ?string
@@ -256,19 +255,20 @@ class Product
         return $this->purchase_price;
     }
 
+    public function setPurchasePrice(float $purchase_price): void
+    {
+        $this->purchase_price = $purchase_price;
+    }
+
     public function getProductPriceBaseQuantity(): float
     {
         return $this->product_price_base_quantity;
     }
 
-    public function setProductPriceBaseQuantity(float $product_price_base_quantity): void
-    {
+    public function setProductPriceBaseQuantity(
+        float $product_price_base_quantity
+    ): void {
         $this->product_price_base_quantity = $product_price_base_quantity;
-    }
-
-    public function setPurchasePrice(float $purchase_price): void
-    {
-        $this->purchase_price = $purchase_price;
     }
 
     public function getProviderName(): ?string
@@ -281,34 +281,28 @@ class Product
         $this->provider_name = $provider_name;
     }
 
-    /**
-     * eg. Colour
-     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-AdditionalItemProperty/
-     * @return string|null
-     */
     public function getProductAdditionalItemPropertyName(): ?string
     {
         return $this->product_additional_item_property_name;
     }
 
-    public function setProductAdditionalItemPropertyName(?string $product_additional_item_property_name): void
-    {
-        $this->product_additional_item_property_name = $product_additional_item_property_name;
+    public function setProductAdditionalItemPropertyName(
+        ?string $product_additional_item_property_name
+    ): void {
+        $this->product_additional_item_property_name =
+            $product_additional_item_property_name;
     }
 
-    /**
-     * eg. Black
-     * Related logic: see https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-AdditionalItemProperty/
-     * @return string|null
-     */
     public function getProductAdditionalItemPropertyValue(): ?string
     {
         return $this->product_additional_item_property_value;
     }
 
-    public function setProductAdditionalItemPropertyValue(?string $product_additional_item_property_value): void
-    {
-        $this->product_additional_item_property_value = $product_additional_item_property_value;
+    public function setProductAdditionalItemPropertyValue(
+        ?string $product_additional_item_property_value
+    ): void {
+        $this->product_additional_item_property_value =
+            $product_additional_item_property_value;
     }
 
     public function setTaxRateId(int $tax_rate_id): void

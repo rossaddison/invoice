@@ -8,7 +8,7 @@ use Yiisoft\Html\Tag\A;
 /** 
  * @var App\Infrastructure\Persistence\Client\Client $client 
  * @var App\Infrastructure\Persistence\ProductClient\ProductClient $productClient
- * @var App\Invoice\Entity\Product $product
+ * @var App\Infrastructure\Persistence\Product\Product $product
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var string $alert

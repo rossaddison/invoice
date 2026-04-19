@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see ...src\Invoice\Product\ProductController function view $parameters['partial_product_gallery']
- * @var App\Invoice\Entity\Product $product
+ * @var App\Infrastructure\Persistence\Product\Product $product
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\View\WebView $this

@@ -27,7 +27,7 @@ class TaxRateFormTest extends Unit
             tax_rate_default: true
         );
         
-        $this->form = new TaxRateForm($this->taxRate);
+        $this->form = TaxRateForm::show($this->taxRate);
     }
 
     public function testFormInitializationFromEntity(): void
@@ -52,7 +52,7 @@ class TaxRateFormTest extends Unit
             tax_rate_name: '',
             tax_rate_percent: 10.00
         );
-        $emptyForm = new TaxRateForm($emptyEntity);
+        $emptyForm = TaxRateForm::show($emptyEntity);
         
         $this->assertEquals('', $emptyForm->getTaxRateName());
         $this->assertEquals(10.00, $emptyForm->getTaxRatePercent());
@@ -64,7 +64,7 @@ class TaxRateFormTest extends Unit
             tax_rate_name: 'High Tax',
             tax_rate_percent: 99.99
         );
-        $highTaxForm = new TaxRateForm($highTaxEntity);
+        $highTaxForm = TaxRateForm::show($highTaxEntity);
         
         $this->assertEquals('High Tax', $highTaxForm->getTaxRateName());
         $this->assertEquals(99.99, $highTaxForm->getTaxRatePercent());
@@ -77,7 +77,7 @@ class TaxRateFormTest extends Unit
             tax_rate_percent: 0.00,
             tax_rate_default: false
         );
-        $zeroTaxForm = new TaxRateForm($zeroTaxEntity);
+        $zeroTaxForm = TaxRateForm::show($zeroTaxEntity);
         
         $this->assertEquals('Zero Rate', $zeroTaxForm->getTaxRateName());
         $this->assertEquals(0.00, $zeroTaxForm->getTaxRatePercent());
@@ -90,7 +90,7 @@ class TaxRateFormTest extends Unit
             tax_rate_name: 'Basic Tax',
             tax_rate_percent: 15.00
         );
-        $minimalForm = new TaxRateForm($minimalEntity);
+        $minimalForm = TaxRateForm::show($minimalEntity);
         
         $this->assertEquals('Basic Tax', $minimalForm->getTaxRateName());
         $this->assertEquals(15.00, $minimalForm->getTaxRatePercent());
@@ -109,7 +109,7 @@ class TaxRateFormTest extends Unit
             tax_rate_name: 'Code Test',
             tax_rate_percent: 5.00
         );
-        $codeForm = new TaxRateForm($codeEntity);
+        $codeForm = TaxRateForm::show($codeEntity);
         
         $this->assertEquals('VT', $codeForm->getTaxRateCode());
         $this->assertEquals('AA', $codeForm->getPeppolTaxRateCode());
@@ -123,7 +123,7 @@ class TaxRateFormTest extends Unit
             tax_rate_name: 'Reduced Rate',
             tax_rate_percent: 5.00
         );
-        $storecoveForm = new TaxRateForm($storecoveEntity);
+        $storecoveForm = TaxRateForm::show($storecoveEntity);
         
         $this->assertEquals('reduced', $storecoveForm->getStorecoveTaxType());
         $this->assertEquals('Reduced Rate', $storecoveForm->getTaxRateName());
@@ -145,7 +145,7 @@ class TaxRateFormTest extends Unit
     public function testDefaultValues(): void
     {
         $defaultEntity = new TaxRate();
-        $defaultForm = new TaxRateForm($defaultEntity);
+        $defaultForm = TaxRateForm::show($defaultEntity);
         
         $this->assertEquals('', $defaultForm->getTaxRateName());
         $this->assertEquals(0.00, $defaultForm->getTaxRatePercent());

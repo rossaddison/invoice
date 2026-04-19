@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers\Peppol\Exception;
 
-use App\Invoice\Entity\Product;
+use App\Infrastructure\Persistence\Product\Product;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
