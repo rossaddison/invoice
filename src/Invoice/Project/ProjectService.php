@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Project;
 
-use App\Invoice\Entity\Project;
+use App\Infrastructure\Persistence\Project\Project;
 use App\Invoice\Client\ClientRepository as CR;
 
 final readonly class ProjectService

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Project;
 
-use App\Invoice\Entity\Project;
+use App\Infrastructure\Persistence\Project\Project;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -111,7 +111,7 @@ final class ProjectRepository extends Select\Repository
          * @var Project $project
          */
         foreach ($this->findAllPreloaded() as $project) {
-            $optionsDataProjects[$project->getId()] = $project->getName();
+            $optionsDataProjects[$project->reqId()] = $project->getName();
         }
         return $optionsDataProjects;
     }

@@ -7,7 +7,7 @@ namespace App\Invoice\Project;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
-use App\Invoice\Entity\Project;
+use App\Infrastructure\Persistence\Project\Project;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -115,7 +115,7 @@ final class ProjectController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'project/edit',
-                'actionArguments' => ['id' => $project->getId()],
+                'actionArguments' => ['id' => $project->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'clients' => $clientRepository->findAllPreloaded(),
@@ -166,7 +166,7 @@ final class ProjectController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'project/view',
-                'actionArguments' => ['id' => $project->getId()],
+                'actionArguments' => ['id' => $project->reqId()],
                 'form' => $form,
                 'clients' => $clientRepository->findAllPreloaded(),
             ];

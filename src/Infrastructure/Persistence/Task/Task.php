@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Task;
 
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Invoice\Entity\Project;
+use App\Infrastructure\Persistence\Project\Project;
 use App\Invoice\Task\TaskRepository as TR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;

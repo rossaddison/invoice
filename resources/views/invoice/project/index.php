@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Project;
+use App\Infrastructure\Persistence\Project\Project;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Html\Html;
@@ -18,7 +18,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @var App\Invoice\Entity\Project $project
+ * @var App\Infrastructure\Persistence\Project\Project $project
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Cycle\Reader\EntityReader $projects
@@ -45,7 +45,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Project $model) => Html::encode($model->getId()),
+        content: static fn (Project $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'client_id',
@@ -72,7 +72,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Project $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('project/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('project/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -83,7 +83,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Project $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('project/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('project/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -94,7 +94,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Project $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('project/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('project/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

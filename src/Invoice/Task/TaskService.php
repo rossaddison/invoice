@@ -25,7 +25,7 @@ final readonly class TaskService
             );
             if ($project) {
                 $model->setProject($project);
-                $model->setProjectId((int) $project->getId());
+                $model->setProjectId($project->reqId());
             }
         }
         if (isset($array['tax_rate_id'])) {
