@@ -499,7 +499,8 @@ final class FamilyController extends BaseController
                             continue;
                         }
 
-                        $productId = $productService->saveProduct(new Product(), [
+                        $newProduct = new Product();
+                        $productService->saveProduct($newProduct, [
                             'ProductForm' => [
                                 'product_name'        => $productName,
                                 'product_description' => $productName,
@@ -511,8 +512,8 @@ final class FamilyController extends BaseController
                             ],
                         ]);
 
-                        if ($productId) {
-                            $newProductIds[] = $productId;
+                        if ($newProduct->isPersisted()) {
+                            $newProductIds[] = (string) $newProduct->reqId();
                         }
                         $generatedCount++;
                     }

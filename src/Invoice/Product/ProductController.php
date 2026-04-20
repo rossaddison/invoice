@@ -161,8 +161,8 @@ final class ProductController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $product = new Product();
-                    $product_id = $this->productService->saveProduct($product, $body);
-                    if ($product_id) {
+                    $this->productService->saveProduct($product, $body);
+                    if ($product->isPersisted()) {
                         if (isset($body['custom'])) {
                             // Retrieve the custom array
                             /** @var array $custom */
@@ -176,7 +176,7 @@ final class ProductController extends BaseController
                                 $formProductCustom =
                                     new ProductCustomForm($productCustom);
                                 $product_custom = [];
-                                $product_custom['product_id'] = $product_id;
+                                $product_custom['product_id'] = (string) $product->reqId();
                                 $product_custom['custom_field_id'] = $custom_field_id;
                                 $product_custom['value'] = is_array($value) ? serialize($value) : $value;
                                 if ($formHydrator->populateAndValidate(

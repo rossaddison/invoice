@@ -22,12 +22,11 @@ final readonly class ProductService
     /**
      * @param Product $model
      * @param array $array
-     * @return string
      */
     public function saveProduct(
         Product $model,
         array $array
-    ): string {
+    ): void {
         /**
          * @var array $array['ProductForm']
          */
@@ -92,7 +91,6 @@ final readonly class ProductService
         isset($apf['family_id']) ?
             $model->setFamilyId((int) $apf['family_id']) : '';
         $this->repository->save($model);
-        return $model->getProductId();
     }
 
     private function persist(
