@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ItemLookup;
 
-use App\Invoice\Entity\ItemLookup;
+use App\Infrastructure\Persistence\ItemLookup\ItemLookup;
 use Cycle\ORM\Select;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;

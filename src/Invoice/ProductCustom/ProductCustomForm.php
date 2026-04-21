@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductCustom;
 
-use App\Invoice\Entity\ProductCustom;
+use App\Infrastructure\Persistence\ProductCustom\ProductCustom;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Required;
@@ -24,11 +24,13 @@ final class ProductCustomForm extends FormModel
     #[Required]
     private ?string $value = '';
 
-    public function __construct(ProductCustom $product_custom)
+    public static function show(ProductCustom $product_custom): self
     {
-        $this->product_id = (int) $product_custom->getProductId();
-        $this->custom_field_id = (int) $product_custom->getCustomFieldId();
-        $this->value = $product_custom->getValue();
+        $form = new self();
+        $form->product_id = (int) $product_custom->getProductId();
+        $form->custom_field_id = (int) $product_custom->getCustomFieldId();
+        $form->value = $product_custom->getValue();
+        return $form;
     }
 
     public function getProductId(): ?int

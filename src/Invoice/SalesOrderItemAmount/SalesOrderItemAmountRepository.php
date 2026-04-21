@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItemAmount;
 
-use App\Invoice\Entity\SalesOrderItemAmount;
+use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

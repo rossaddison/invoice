@@ -6,6 +6,7 @@ namespace App\Invoice\Quote\Trait;
 
 use App\Infrastructure\Persistence\{
     SalesOrder\SalesOrder as SoEntity,
+    SalesOrderCustom\SalesOrderCustom as SoCustom,
     SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge,
     SalesOrderItem\SalesOrderItem as SoItem
 };
@@ -14,7 +15,6 @@ use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\{
 };
 use App\Invoice\Entity\{
     CustomField, QuoteCustom, QuoteItemAllowanceCharge, QuoteTaxRate,
-    SalesOrderCustom as SoCustom,
     SalesOrderTaxRate as SoTaxRate,
 };
 use App\Invoice\{
@@ -397,7 +397,7 @@ trait QuoteToSo
                     'value' => $quote_custom->getValue(),
                 ];
                 $entity = new SoCustom();
-                $form = new SoCustomForm($entity);
+                $form = new SoCustomForm();
                 if ($formHydrator->populateAndValidate($form, $so_custom)) {
                     $this->so_custom_service->saveSoCustom($entity, $so_custom);
                 }

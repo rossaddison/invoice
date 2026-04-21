@@ -9,7 +9,7 @@ use App\Invoice\BaseController;
 use App\Widget\FormFields;
 use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\Product\Product;
-use App\Invoice\Entity\ProductCustom;
+use App\Infrastructure\Persistence\ProductCustom\ProductCustom;
 use App\Invoice\Entity\ProductImage;
 use App\Invoice\Entity\QuoteItem;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
@@ -126,8 +126,7 @@ final class ProductController extends BaseController
         $countries = new CountryHelper();
         $peppolarrays = new PeppolArrays();
         $form = new ProductForm();
-        $productCustom = new ProductCustom();
-        $productCustomForm = new ProductCustomForm($productCustom);
+        $productCustomForm = new ProductCustomForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'product/add',
@@ -173,8 +172,7 @@ final class ProductController extends BaseController
                              */
                             foreach ($custom as $custom_field_id => $value) {
                                 $productCustom = new ProductCustom();
-                                $formProductCustom =
-                                    new ProductCustomForm($productCustom);
+                                $formProductCustom = new ProductCustomForm();
                                 $product_custom = [];
                                 $product_custom['product_id'] = (string) $product->reqId();
                                 $product_custom['custom_field_id'] = $custom_field_id;
@@ -238,8 +236,7 @@ final class ProductController extends BaseController
         if ($product) {
             $product_id = $product->getProductId();
             $form = ProductForm::show($product);
-            $productCustom = new ProductCustom();
-            $productCustomForm = new ProductCustomForm($productCustom);
+            $productCustomForm = new ProductCustomForm();
             if ($product_id) {
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
@@ -300,8 +297,7 @@ final class ProductController extends BaseController
                                         'value' => is_array($value) ? serialize($value) : $value,
                                     ];
 
-                                    $productCustomForm =
-                                            new ProductCustomForm($product_custom);
+                                    $productCustomForm = new ProductCustomForm();
                                     if ($formHydrator->populateAndValidate(
                                         $productCustomForm, $product_custom_input)) {
                                         $this->productCustomService->saveProductCustom(
@@ -842,8 +838,7 @@ final class ProductController extends BaseController
         $peppolarrays = new PeppolArrays();
         if ($product) {
             $productForm = ProductForm::show($product);
-            $productCustom = new ProductCustom();
-            $productCustomForm = new ProductCustomForm($productCustom);
+            $productCustomForm = new ProductCustomForm();
             $product_id = $product->getProductId();
             $product_images = $piR->repoProductImageProductquery((int) $product_id);
             $parameters = [

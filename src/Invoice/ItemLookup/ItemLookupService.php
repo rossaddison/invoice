@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ItemLookup;
 
-use App\Invoice\Entity\ItemLookup;
+use App\Infrastructure\Persistence\ItemLookup\ItemLookup;
 
 final readonly class ItemLookupService
 {

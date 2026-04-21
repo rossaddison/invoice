@@ -7,7 +7,7 @@ namespace App\Command\Invoice;
 use App\Invoice\Entity\Quote;
 use App\Invoice\Entity\QuoteAmount;
 use App\Invoice\Entity\QuoteItem;
-use App\Invoice\Entity\QuoteItemAmount;
+use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
 use App\Invoice\Entity\QuoteTaxRate;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

@@ -7,7 +7,7 @@ namespace App\Command\Invoice;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
-use App\Invoice\Entity\SalesOrderItemAmount;
+use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 use App\Invoice\Entity\SalesOrderTaxRate;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

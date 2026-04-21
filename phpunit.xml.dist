@@ -7,22 +7,29 @@
     cacheDirectory=".phpunit.cache"
     executionOrder="depends,defects"
     requireCoverageMetadata="false"
+    beStrictAboutChangesToGlobalState="true"
     beStrictAboutCoverageMetadata="true"
     beStrictAboutOutputDuringTests="true"
+    beStrictAboutTestsThatDoNotTestAnything="true"
+    failOnDeprecation="true"
+    failOnEmptyTestSuite="true"
+    failOnIncomplete="true"
+    failOnNotice="true"
+    failOnPhpunitDeprecation="true"
+    failOnPhpunitWarning="true"
     failOnRisky="true"
+    failOnSkipped="true"
     failOnWarning="true"
     colors="true"
     displayDetailsOnPhpunitDeprecations="true">
     <php>
         <ini name="error_reporting" value="-1"/>
     </php>
-
-    <testsuites>
+   <testsuites>
         <testsuite name="PHPUnit">
             <directory>./tests/PHPUnit</directory>
         </testsuite>
     </testsuites>
-
     <source>
         <include>
             <directory>./src</directory>

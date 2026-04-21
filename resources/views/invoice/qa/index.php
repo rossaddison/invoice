@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Qa;
+use App\Infrastructure\Persistence\Qa\Qa;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\OrderHelper;
@@ -19,7 +19,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @var App\Invoice\Entity\Qa $qa
+ * @var App\Infrastructure\Persistence\Qa\Qa $qa
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
@@ -52,7 +52,7 @@ echo new Div();
         new DataColumn(
             'id',
             header: $translator->translate('id'),
-            content: static fn (Qa $model) => Html::encode($model->getId()),
+            content: static fn (Qa $model) => Html::encode($model->reqId()),
             withSorting: true,
         ),
         new DataColumn(
@@ -79,7 +79,7 @@ echo new Div();
                 content: '🔎',
                 url: function (Qa $model) use ($urlGenerator): string {
                     /** @psalm-suppress InvalidArgument */
-                    return $urlGenerator->generate('qa/view', ['id' => $model->getId()]);
+                    return $urlGenerator->generate('qa/view', ['id' => $model->reqId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -90,7 +90,7 @@ echo new Div();
                 content: '✎',
                 url: function (Qa $model) use ($urlGenerator): string {
                     /** @psalm-suppress InvalidArgument */
-                    return $urlGenerator->generate('qa/edit', ['id' => $model->getId()]);
+                    return $urlGenerator->generate('qa/edit', ['id' => $model->reqId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -101,7 +101,7 @@ echo new Div();
                 content: '❌',
                 url: function (Qa $model) use ($urlGenerator): string {
                     /** @psalm-suppress InvalidArgument */
-                    return $urlGenerator->generate('qa/delete', ['id' => $model->getId()]);
+                    return $urlGenerator->generate('qa/delete', ['id' => $model->reqId()]);
                 },
                 attributes: [
                     'title' => $translator->translate('delete'),

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItem;
 
+use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
 use App\Infrastructure\Persistence\Task\Task;
 use App\Invoice\
 {
-    Entity\QuoteItemAmount,
     Entity\QuoteItem,
     Product\ProductRepository as PR,
     Quote\QuoteRepository as QR,

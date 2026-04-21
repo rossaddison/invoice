@@ -6,7 +6,7 @@ namespace App\Invoice\DeliveryParty;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\DeliveryParty;
+use App\Infrastructure\Persistence\DeliveryParty\DeliveryParty;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -49,8 +49,7 @@ final class DeliveryPartyController extends BaseController
         Request $request,
         FormHydrator $formHydrator,
     ): Response {
-        $deliveryParty = new DeliveryParty();
-        $form = new DeliveryPartyForm($deliveryParty);
+        $form = new DeliveryPartyForm();
         $parameters = [
             'canEdit' => $this->rbac(),
             'title' => $this->translator->translate('add'),
@@ -128,13 +127,13 @@ final class DeliveryPartyController extends BaseController
     ): Response {
         $deliveryparty = $this->deliveryparty($currentRoute, $deliverypartyRepository);
         if ($deliveryparty) {
-            $form = new DeliveryPartyForm($deliveryparty);
+            $form = DeliveryPartyForm::show($deliveryparty);
             $parameters = [
                 'canEdit' => $this->rbac(),
                 'form' => $form,
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'deliveryparty/edit',
-                'actionArguments' => ['id' => $deliveryparty->getId()],
+                'actionArguments' => ['id' => $deliveryparty->reqId()],
                 'errors' => [],
             ];
             if ($request->getMethod() === Method::POST) {
@@ -201,11 +200,11 @@ final class DeliveryPartyController extends BaseController
     {
         $deliveryparty = $this->deliveryparty($currentRoute, $deliverypartyRepository);
         if ($deliveryparty) {
-            $form = new DeliveryPartyForm($deliveryparty);
+            $form = DeliveryPartyForm::show($deliveryparty);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'deliveryparty/view',
-                'actionArguments' => ['id' => $deliveryparty->getId()],
+                'actionArguments' => ['id' => $deliveryparty->reqId()],
                 'form' => $form,
                 'deliveryparty' => $deliveryparty,
             ];

@@ -8,8 +8,8 @@ use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\{
     SalesOrderItemAllowanceCharge,
 };
+use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 use App\Invoice\{
-Entity\SalesOrderItemAmount,
 Product\ProductRepository as PR,
 SalesOrder\SalesOrderRepository as SOR,
 SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository as ACSOIR,

@@ -2,16 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\ProductCustom;
 
 use App\Infrastructure\Persistence\Product\Product;
+use App\Invoice\Entity\CustomField;
+use App\Invoice\ProductCustom\ProductCustomRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\ProductCustom\ProductCustomRepository::class)]
+#[Entity(repository: ProductCustomRepository::class)]
 class ProductCustom
 {
+    #[Column(type: 'primary')]
+    private ?int $id = null;
+
     #[BelongsTo(target: Product::class, nullable: false)]
     private ?Product $product = null;
 
@@ -19,15 +24,37 @@ class ProductCustom
     private ?CustomField $custom_field = null;
 
     public function __construct(
-        #[Column(type: 'primary')]
-        private ?int $id = null,
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $product_id = null,
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $custom_field_id = null,
         #[Column(type: 'text', nullable: true)]
-        private ?string $value = '')
+        private ?string $value = '',
+    ) {
+    }
+
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'ProductCustom has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getProduct(): ?Product
@@ -48,16 +75,6 @@ class ProductCustom
     public function setCustomField(?CustomField $custom_field): void
     {
         $this->custom_field = $custom_field;
-    }
-
-    public function getId(): string
-    {
-        return (string) $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
     }
 
     public function getProductId(): string

@@ -7,7 +7,7 @@ namespace App\Invoice\ClientPeppol;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
-use App\Invoice\Entity\ClientPeppol;
+use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Helpers\Peppol\PeppolArrays;
 use App\Invoice\Helpers\StoreCove\StoreCoveArrays;
@@ -63,7 +63,7 @@ final class ClientPeppolController extends BaseController
     ): Response {
         $client_id = $currentRoute->getArgument('client_id');
         $client_peppol = new ClientPeppol();
-        $form = new ClientPeppolForm($client_peppol);
+        $form = new ClientPeppolForm();
         $electronic_address_scheme = PeppolArrays::electronicAddressScheme();
         $peppolArrays = new PeppolArrays();
         if (null !== $client_id) {
@@ -230,7 +230,7 @@ final class ClientPeppolController extends BaseController
         $body = $request->getParsedBody() ?? [];
         if ($clientpeppol) {
             $peppolarrays = new PeppolArrays();
-            $form = new ClientPeppolForm($clientpeppol);
+            $form = ClientPeppolForm::show($clientpeppol);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'clientpeppol/edit',

@@ -6,7 +6,7 @@ namespace App\Invoice\ItemLookup;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\ItemLookup;
+use App\Infrastructure\Persistence\ItemLookup\ItemLookup;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -65,7 +65,7 @@ final class ItemLookupController extends BaseController
         FormHydrator $formHydrator,
     ): Response {
         $itemLookup = new ItemLookup();
-        $form = new ItemLookupForm($itemLookup);
+        $form = new ItemLookupForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'itemlookup/add',
@@ -104,11 +104,11 @@ final class ItemLookupController extends BaseController
     ): Response {
         $lookup = $this->itemlookup($currentRoute, $itemlookupRepository);
         if (null !== $lookup) {
-            $form = new ItemLookupForm($lookup);
+            $form = ItemLookupForm::show($lookup);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'itemlookup/edit',
-                'actionArguments' => ['id' => $lookup->getId()],
+                'actionArguments' => ['id' => $lookup->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];
@@ -158,11 +158,11 @@ final class ItemLookupController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $itemLookup = $this->itemlookup($currentRoute, $itemlookupRepository);
         if (null !== $itemLookup) {
-            $form = new ItemLookupForm($itemLookup);
+            $form = ItemLookupForm::show($itemLookup);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'itemlookup/view',
-                'actionArguments' => ['id' => $itemLookup->getId()],
+                'actionArguments' => ['id' => $itemLookup->reqId()],
                 'form' => $form,
             ];
             return $this->webViewRenderer->render('_view', $parameters);

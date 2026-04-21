@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItemAmount;
 
-use App\Invoice\Entity\QuoteItemAmount;
+use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

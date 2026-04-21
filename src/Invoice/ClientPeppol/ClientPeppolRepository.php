@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientPeppol;
 
-use App\Invoice\Entity\ClientPeppol;
+use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\ItemLookup;
+use App\Infrastructure\Persistence\ItemLookup\ItemLookup;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -38,7 +38,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (ItemLookup $model) => Html::encode($model->getId()),
+        content: static fn (ItemLookup $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'name',
@@ -59,7 +59,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (ItemLookup $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('itemlookup/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('itemlookup/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -69,7 +69,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (ItemLookup $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('itemlookup/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('itemlookup/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -79,7 +79,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (ItemLookup $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('itemlookup/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('itemlookup/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

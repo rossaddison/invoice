@@ -2,25 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\QuoteItemAmount;
 
-use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
-use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SOIAR;
+use App\Invoice\Entity\QuoteItem;
+use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: SOIAR::class)]
-class SalesOrderItemAmount
+#[Entity(repository: QuoteItemAmountRepository::class)]
+class QuoteItemAmount
 {
-    #[BelongsTo(target: SalesOrderItem::class, nullable: false)]
-    private ?SalesOrderItem $sales_order_item = null;
+    #[Column(type: 'primary')]
+    private ?int $id = null;
+
+    #[BelongsTo(target: QuoteItem::class, nullable: false)]
+    private ?QuoteItem $quote_item = null;
 
     public function __construct(
-        #[Column(type: 'primary')]
-        private ?int $id = null,
         #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $sales_order_item_id = null,
+        private ?int $quote_item_id = null,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $subtotal = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
@@ -32,23 +33,27 @@ class SalesOrderItemAmount
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
         private ?float $allowance = 0.00,
         #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
-        private ?float $total = 0.00)
-    {
+        private ?float $total = 0.00,
+    ) {
     }
 
-    public function getSalesOrderItem(): ?SalesOrderItem
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
-        return $this->sales_order_item;
+        if ($this->id === null) {
+            throw new \LogicException(
+                'QuoteItemAmount has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
     }
 
-    public function setSalesOrderItem(?SalesOrderItem $sales_order_item): void
+    public function isPersisted(): bool
     {
-        $this->sales_order_item = $sales_order_item;
-    }
-
-    public function getId(): string
-    {
-        return (string) $this->id;
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -56,14 +61,24 @@ class SalesOrderItemAmount
         $this->id = $id;
     }
 
-    public function getSalesOrderItemId(): string
+    public function getQuoteItem(): ?QuoteItem
     {
-        return (string) $this->sales_order_item_id;
+        return $this->quote_item;
     }
 
-    public function setSalesOrderItemId(int $sales_order_item_id): void
+    public function setQuoteItem(?QuoteItem $quote_item): void
     {
-        $this->sales_order_item_id = $sales_order_item_id;
+        $this->quote_item = $quote_item;
+    }
+
+    public function getQuoteItemId(): string
+    {
+        return (string) $this->quote_item_id;
+    }
+
+    public function setQuoteItemId(int $quote_item_id): void
+    {
+        $this->quote_item_id = $quote_item_id;
     }
 
     public function getSubtotal(): ?float

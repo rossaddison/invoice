@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\DeliveryParty;
 
-use App\Invoice\Entity\DeliveryParty;
+use App\Infrastructure\Persistence\DeliveryParty\DeliveryParty;
 
 final readonly class DeliveryPartyService
 {

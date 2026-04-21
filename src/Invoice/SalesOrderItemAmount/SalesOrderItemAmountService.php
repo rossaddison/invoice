@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderItemAmount;
 
-use App\Invoice\Entity\SalesOrderItemAmount;
+use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
 
 final readonly class SalesOrderItemAmountService

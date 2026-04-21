@@ -86,6 +86,51 @@ When reviewing PHP files, Claude should:
 
 ---
 
+## DDD Infrastructure Migration
+
+Entities in `src/Invoice/Entity/` are being replaced by infrastructure persistence
+classes in `src/Infrastructure/Persistence/{Name}/{Name}.php` (Cycle ORM).
+
+### Definition of Done — per entity
+
+A migration step is only complete when **all** of the following are true:
+
+- [ ] Old `src/Invoice/Entity/{Name}.php` deleted
+- [ ] `src/Infrastructure/Persistence/{Name}/{Name}.php` created with Cycle ORM attributes
+- [ ] All controllers, services, repositories, forms updated to use the new FQCN
+- [ ] View `@var` annotations updated to the infrastructure FQCN
+- [ ] PHPUnit test file exists at `Tests/Unit/Invoice/Entity/{Name}EntityTest.php`
+- [ ] Test file uses infrastructure FQCN (not old entity)
+- [ ] `reqId(): int` pattern used — never `getId(): string`; `isPersisted()` tested
+- [ ] Test file passes Psalm at errorLevel 1 (run directly: `vendor/bin/psalm --no-cache Tests/Unit/Invoice/Entity/{Name}EntityTest.php`)
+- [ ] `tests_updated: true` set in `src/Infrastructure/entity_to_infrastructure.php`
+
+### Key API differences (old entity → new infrastructure class)
+
+| Old | New |
+|-----|-----|
+| `new Entity($id, ...)` | `new Entity(...); $e->setId($id);` |
+| `getId(): string` | `reqId(): int` (throws `\LogicException` when unpersisted) |
+| _(no method)_ | `isPersisted(): bool` |
+| `assertSame('N', $e->getId())` | `assertSame(N, $e->reqId())` |
+| `assertIsString($e->getId())` | `assertIsInt($e->reqId())` |
+| `assertSame('', $e->getId())` | `assertFalse($e->isPersisted())` |
+
+### Old Codeception tests (`Tests/Unit/*EntityTest.php`)
+
+When an entity is deleted, any matching Codeception test at `Tests/Unit/` must also
+be updated: swap the `use` import, replace positional-id constructor args with
+`setId()`, and replace all `getId()` assertions with `reqId()` int equivalents.
+
+### Test quality standard
+
+Every test marker other than `.` (pass) is a failure:
+- `S` skipped, `I` incomplete, `R` risky, `D` deprecation, `N` notice, `W` warning
+- Never use `markTestSkipped()` as a workaround — mock the dependency instead
+- PHPUnit notices from Cycle ORM `createMock()` are known/acceptable (pre-existing pattern)
+
+---
+
 ## Useful Context
 
 - Invoice-related domain strings (statuses, types, codes) are central to the codebase

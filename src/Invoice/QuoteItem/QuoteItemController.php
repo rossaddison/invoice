@@ -6,7 +6,7 @@ namespace App\Invoice\QuoteItem;
 
 use App\Invoice\BaseController;
 use App\Invoice\Entity\QuoteItem;
-use App\Invoice\Entity\QuoteItemAmount;
+use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
 use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;

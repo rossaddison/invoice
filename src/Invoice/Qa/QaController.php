@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Qa;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Qa;
+use App\Infrastructure\Persistence\Qa\Qa;
 use App\Invoice\Qa\QaForm;
 use App\Invoice\Qa\QaService;
 use App\Invoice\Qa\QaRepository;
@@ -71,7 +71,7 @@ final class QaController extends BaseController
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
         $qa = new Qa();
-        $form = new QaForm($qa);
+        $form = new QaForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'qa/add',
@@ -124,7 +124,7 @@ final class QaController extends BaseController
         QaRepository $qaRepository, #[RouteArgument('id')] int $id): Response {
         $qa = $this->qa($qaRepository, $id);
         if ($qa){
-            $form = new QaForm($qa);
+            $form = QaForm::show($qa);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'qa/edit',
@@ -175,7 +175,7 @@ final class QaController extends BaseController
     {
         $qa = $this->qa($qaRepository, $id);
         if ($qa) {
-            $form = new QaForm($qa);
+            $form = QaForm::show($qa);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'qa/view',

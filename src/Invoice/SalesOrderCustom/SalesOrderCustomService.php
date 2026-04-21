@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrderCustom;
 
 use App\Invoice\CustomField\CustomFieldRepository;
-use App\Invoice\Entity\SalesOrderCustom;
+use App\Infrastructure\Persistence\SalesOrderCustom\SalesOrderCustom;
 use App\Invoice\SalesOrder\SalesOrderRepository;
 
 final readonly class SalesOrderCustomService

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientPeppol;
 
-use App\Invoice\Entity\ClientPeppol;
+use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
 use App\Invoice\Client\ClientRepository as CR;
 
 final readonly class ClientPeppolService

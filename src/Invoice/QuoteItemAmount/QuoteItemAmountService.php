@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItemAmount;
 
-use App\Invoice\Entity\QuoteItemAmount;
+use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
 use App\Invoice\QuoteItem\QuoteItemRepository;
 
 final readonly class QuoteItemAmountService

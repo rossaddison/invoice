@@ -13,7 +13,7 @@ use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\{
 };
 use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
-use App\Invoice\Entity\SalesOrderItemAmount;
+use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 use App\Invoice\Entity\SalesOrderTaxRate;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvItem;
@@ -21,7 +21,7 @@ use App\Invoice\Entity\InvTaxRate;
 use App\Invoice\Entity\Payment;
 use App\Invoice\Entity\QuoteAmount;
 use App\Invoice\Entity\QuoteItem;
-use App\Invoice\Entity\QuoteItemAmount;
+use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
 use App\Invoice\Entity\QuoteTaxRate;
 use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;

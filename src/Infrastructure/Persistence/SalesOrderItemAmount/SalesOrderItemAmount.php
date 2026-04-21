@@ -1,0 +1,143 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure\Persistence\SalesOrderItemAmount;
+
+use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
+use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SOIAR;
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\BelongsTo;
+
+#[Entity(repository: SOIAR::class)]
+class SalesOrderItemAmount
+{
+    #[Column(type: 'primary')]
+    private ?int $id = null;
+
+    #[BelongsTo(target: SalesOrderItem::class, nullable: false)]
+    private ?SalesOrderItem $sales_order_item = null;
+
+    public function __construct(
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $sales_order_item_id = null,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $subtotal = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $tax_total = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $discount = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $charge = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $allowance = 0.00,
+        #[Column(type: 'decimal(20,2)', nullable: false, default: 0.00)]
+        private ?float $total = 0.00,
+    ) {
+    }
+
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
+    {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'SalesOrderItemAmount has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getSalesOrderItem(): ?SalesOrderItem
+    {
+        return $this->sales_order_item;
+    }
+
+    public function setSalesOrderItem(?SalesOrderItem $sales_order_item): void
+    {
+        $this->sales_order_item = $sales_order_item;
+    }
+
+    public function getSalesOrderItemId(): string
+    {
+        return (string) $this->sales_order_item_id;
+    }
+
+    public function setSalesOrderItemId(int $sales_order_item_id): void
+    {
+        $this->sales_order_item_id = $sales_order_item_id;
+    }
+
+    public function getSubtotal(): ?float
+    {
+        return $this->subtotal;
+    }
+
+    public function setSubtotal(float $subtotal): void
+    {
+        $this->subtotal = $subtotal;
+    }
+
+    public function getTaxTotal(): ?float
+    {
+        return $this->tax_total;
+    }
+
+    public function setTaxTotal(float $tax_total): void
+    {
+        $this->tax_total = $tax_total;
+    }
+
+    public function getDiscount(): ?float
+    {
+        return $this->discount;
+    }
+
+    public function setDiscount(float $discount): void
+    {
+        $this->discount = $discount;
+    }
+
+    public function getCharge(): ?float
+    {
+        return $this->charge;
+    }
+
+    public function setCharge(float $charge): void
+    {
+        $this->charge = $charge;
+    }
+
+    public function getAllowance(): ?float
+    {
+        return $this->allowance;
+    }
+
+    public function setAllowance(float $allowance): void
+    {
+        $this->allowance = $allowance;
+    }
+
+    public function getTotal(): ?float
+    {
+        return $this->total;
+    }
+
+    public function setTotal(float $total): void
+    {
+        $this->total = $total;
+    }
+}

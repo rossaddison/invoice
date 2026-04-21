@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductCustom;
 
-use App\Invoice\Entity\ProductCustom;
+use App\Infrastructure\Persistence\ProductCustom\ProductCustom;
 use App\Invoice\CustomField\CustomFieldRepository as CFR;
 use App\Invoice\Product\ProductRepository as PR;
 

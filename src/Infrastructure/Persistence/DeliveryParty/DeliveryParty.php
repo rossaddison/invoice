@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\DeliveryParty;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -11,15 +11,25 @@ use Cycle\Annotated\Annotation\Entity;
 
 class DeliveryParty
 {
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'text', nullable: true)]
-        private ?string $party_name = '')
-    {
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'text', nullable: true)]
+        private ?string $party_name = ''
+    ) {
     }
 
-    public function getId(): ?int
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException('DeliveryParty has not been persisted yet.');
+        }
         return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -35,10 +45,5 @@ class DeliveryParty
     public function setPartyName(string $party_name): void
     {
         $this->party_name = $party_name;
-    }
-
-    public function isNewRecord(): bool
-    {
-        return $this->getId() === null;
     }
 }

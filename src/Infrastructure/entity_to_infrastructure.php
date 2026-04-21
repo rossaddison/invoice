@@ -92,6 +92,38 @@ declare(strict_types=1);
  *                        leaving no remnant of the old entity class.
  *                        false means the file still exists and the
  *                        migration is incomplete.
+ *   'schema_cache_cleared' => bool — true when runtime/schema.php has
+ *                        been deleted and the browser confirmed Cycle ORM
+ *                        regenerated the schema successfully on the next
+ *                        request.
+ *   'tests'           => string[] — every PHPUnit test file (path relative
+ *                        to the project root) that references this entity
+ *                        or its infrastructure class and therefore needs
+ *                        to be reviewed after the DDD migration:
+ *                          • Tests that instantiate App\Invoice\Entity\{Name}
+ *                          • Tests whose @var annotations point to the old
+ *                            entity FQCN
+ *                          • Tests that call getId() instead of reqId()
+ *                        Populated by running:
+ *                          grep -rl "Entity\\{Name}\|Invoice\\Entity\\{Name}" \
+ *                            Tests/ --include="*.php"
+ *                        Empty array [] when no test file references this
+ *                        entity (nothing to adapt).
+ *   'tests_updated'   => bool — true when every file listed in 'tests'
+ *                        has been updated:
+ *                          • use App\Invoice\Entity\{Name} replaced with
+ *                            the infrastructure FQCN (or removed if the
+ *                            test no longer needs a direct class reference)
+ *                          • getId() replaced with reqId() in assertions
+ *                          • @var annotations pointing at the entity FQCN
+ *                            updated to the infrastructure FQCN
+ *                          • PHPUnit assertions re-verified to pass against
+ *                            the infrastructure class interface
+ *                        Set to true only after running the test suite and
+ *                        confirming zero failures for the affected files:
+ *                          vendor/bin/phpunit Tests/Unit/
+ *                        Set to true immediately (without needing edits)
+ *                        when 'tests' is an empty array.
  *
  * Pending entries (infrastructure class not yet created) are null.
  *
@@ -161,6 +193,8 @@ declare(strict_types=1);
  * STAGE 1 — create the infrastructure class
  *   Create src/Infrastructure/Persistence/{Name}/{Name}.php.
  *   Add entry here with all flags false.
+ *   Populate 'tests' immediately (see grep command in flag definition above)
+ *   so the test burden is visible from the start.
  *
  * STAGE 2 — audit callers before touching anything
  *   Three greps are required:
@@ -286,6 +320,16 @@ declare(strict_types=1);
  *   Then refresh the browser — Cycle rebuilds schema.php automatically.
  *   Set 'schema_cache_cleared' => true.
  *
+ * STAGE 10 — update PHPUnit tests
+ *   For each file listed in 'tests':
+ *     • Replace use App\Invoice\Entity\{Name} with the infrastructure FQCN
+ *     • Replace getId() with reqId() in all assertions
+ *     • Update @var annotations pointing at the old entity FQCN
+ *     • Run the affected test files to confirm zero failures:
+ *         vendor/bin/phpunit Tests/Unit/
+ *   Set 'tests_updated' => true once the suite is green.
+ *   If 'tests' is empty, set 'tests_updated' => true immediately.
+ *
  * ==========================================================================
  *
  * Update this file when:
@@ -293,6 +337,7 @@ declare(strict_types=1);
  *     src/Infrastructure/Persistence/{Name}/{Name}.php
  *     — add an entry with all flags false, then flip each to true
  *     as that step is completed.
+ *     — populate 'tests' at the same time (grep Tests/ for the entity name).
  *   • The reqId() refactor is completed    — 'req_id'             => true.
  *   • @var annotations verified            — 'var_annotations'    => true.
  *   • All external callers updated         — 'callers_updated'    => true.
@@ -304,6 +349,7 @@ declare(strict_types=1);
  *   • Psalm passes cleanly after any edit  — 'psalm'              => true.
  *   • src/Invoice/Entity/{Name}.php deleted — 'entity_removed'    => true.
  *   • Schema cache deleted + browser OK    — 'schema_cache_cleared' => true.
+ *   • PHPUnit suite green for all 'tests'  — 'tests_updated'      => true.
  *   • Any referenced entity is converted   — reset 'var_annotations',
  *     'callers_updated', and 'psalm' to false until use statements,
  *     @var annotations, and all callers are updated and re-verified.
@@ -331,6 +377,13 @@ use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Infrastructure\Persistence\UserCustom\UserCustom;
+use App\Infrastructure\Persistence\SalesOrderCustom\SalesOrderCustom;
+use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
+use App\Infrastructure\Persistence\ProductCustom\ProductCustom;
+use App\Infrastructure\Persistence\ItemLookup\ItemLookup;
+use App\Infrastructure\Persistence\Qa\Qa;
+use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
+use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 
 return [
     // -------------------------------------------------------------------------
@@ -350,6 +403,11 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Entity/AllowanceChargeEntityTest.php',
+            'Tests/Unit/Invoice/Entity/AllowanceChargeEntityTest.php',
+        ],
+        'tests_updated'       => false,
     ],
     'CategoryPrimary'   => [
         'class'               => CategoryPrimary::class,
@@ -365,6 +423,11 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/CategoryPrimaryEntityTest.php',
+            'Tests/Unit/Invoice/Entity/CategoryPrimaryEntityTest.php',
+        ],
+        'tests_updated'       => false,
     ],
     'CategorySecondary' => [
         'class'               => CategorySecondary::class,
@@ -384,6 +447,11 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Entity/CategorySecondaryEntityTest.php',
+            'Tests/Unit/Invoice/Entity/CategorySecondaryEntityTest.php',
+        ],
+        'tests_updated'       => false,
     ],
     'Client'            => [
         'class'               => Client::class,
@@ -399,6 +467,10 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/ClientEntityTest.php',
+        ],
+        'tests_updated'       => false,
     ],
     'DeliveryLocation'  => [
         'class'               => DeliveryLocation::class,
@@ -414,6 +486,10 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/DeliveryLocationEntityTest.php',
+        ],
+        'tests_updated'       => false,
     ],
     'TaxRate'           => [
         'class'               => TaxRate::class,
@@ -429,6 +505,11 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/TaxRateEntityTest.php',
+            'Tests/Unit/TaxRateFormTest.php',
+        ],
+        'tests_updated'       => false,
     ],
     'SalesOrderItemAllowanceCharge' => [
         'class'               => SalesOrderItemAllowanceCharge::class,
@@ -455,6 +536,8 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [],
+        'tests_updated'       => true,
     ],
 
     'UserCustom'        => [
@@ -473,6 +556,10 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/UserCustomEntityTest.php',
+        ],
+        'tests_updated'       => true,
     ],
 
     // -------------------------------------------------------------------------
@@ -492,6 +579,10 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/InvAllowanceChargeEntityTest.php',
+        ],
+        'tests_updated'       => true,
     ],
 
     // -------------------------------------------------------------------------
@@ -520,10 +611,36 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [],
+        'tests_updated'       => true,
     ],
     'ClientCustom'                  => null,
     'ClientNote'                    => null,
-    'ClientPeppol'                  => null,
+    'ClientPeppol' => [
+        'class'               => ClientPeppol::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Command/Invoice/NonUserRelatedTruncate4Command.php',
+            'src/Invoice/ClientPeppol/ClientPeppolController.php',
+            'src/Invoice/ClientPeppol/ClientPeppolForm.php',
+            'src/Invoice/ClientPeppol/ClientPeppolRepository.php',
+            'src/Invoice/ClientPeppol/ClientPeppolService.php',
+        ],
+        'callers_updated'     => true,
+        'form_created'        => true,
+        'form_show_pattern'   => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/ClientPeppolEntityTest.php',
+        ],
+        'tests_updated'       => true,
+    ],
     'Company'                       => null,
     'CompanyPrivate'                => null,
     'Contract'                      => null,
@@ -611,7 +728,31 @@ return [
     'InvRecurring'                  => null,
     'InvSentLog'                    => null,
     'InvTaxRate'                    => null,
-    'ItemLookup'                    => null,
+    'ItemLookup' => [
+        'class'               => ItemLookup::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Invoice/ItemLookup/ItemLookupController.php',
+            'src/Invoice/ItemLookup/ItemLookupForm.php',
+            'src/Invoice/ItemLookup/ItemLookupRepository.php',
+            'src/Invoice/ItemLookup/ItemLookupService.php',
+            'resources/views/invoice/itemlookup/index.php',
+        ],
+        'callers_updated'     => true,
+        'form_created'        => true,
+        'form_show_pattern'   => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/ItemLookupEntityTest.php',
+        ],
+        'tests_updated'       => true,
+    ],
     'Merchant'                      => null,
     'Payment'                       => null,
     'PaymentCustom'                 => null,
@@ -664,8 +805,34 @@ return [
         'psalm'               => true,
         'entity_removed'      => true,
         'schema_cache_cleared' => true,
+        'tests'               => [],
+        'tests_updated'       => true,
     ],
-    'ProductCustom'                 => null,
+    'ProductCustom' => [
+        'class'               => ProductCustom::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Command/Invoice/NonUserRelatedTruncate4Command.php',
+            'src/Invoice/Product/ProductController.php',
+            'src/Invoice/ProductCustom/ProductCustomForm.php',
+            'src/Invoice/ProductCustom/ProductCustomRepository.php',
+            'src/Invoice/ProductCustom/ProductCustomService.php',
+        ],
+        'callers_updated'     => true,
+        'form_created'        => true,
+        'form_show_pattern'   => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/ProductCustomEntityTest.php',
+        ],
+        'tests_updated'       => true,
+    ],
     'ProductImage'                  => null,
     'ProductProperty'               => null,
     'Profile'                       => null,
@@ -689,15 +856,66 @@ return [
         'psalm'               => false,
         'entity_removed'      => true,
         'schema_cache_cleared' => false,
+        'tests'               => [],
+        'tests_updated'       => true,
     ],
-    'Qa'                            => null,
+    'Qa' => [
+        'class'               => Qa::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Invoice/Qa/QaController.php',
+            'src/Invoice/Qa/QaForm.php',
+            'src/Invoice/Qa/QaRepository.php',
+            'src/Invoice/Qa/QaService.php',
+            'resources/views/invoice/qa/index.php',
+        ],
+        'callers_updated'     => true,
+        'form_created'        => true,
+        'form_show_pattern'   => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/QaEntityTest.php',
+        ],
+        'tests_updated'       => true,
+    ],
     'Quote'                         => null,
     'QuoteAllowanceCharge'          => null,
     'QuoteAmount'                   => null,
     'QuoteCustom'                   => null,
     'QuoteItem'                     => null,
     'QuoteItemAllowanceCharge'      => null,
-    'QuoteItemAmount'               => null,
+    'QuoteItemAmount' => [
+        'class'               => QuoteItemAmount::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Command/Invoice/QuoteTruncate2Command.php',
+            'src/Invoice/Helpers/NumberHelper.php',
+            'src/Invoice/QuoteItem/QuoteItemController.php',
+            'src/Invoice/QuoteItem/QuoteItemService.php',
+            'src/Invoice/QuoteItemAmount/QuoteItemAmountRepository.php',
+            'src/Invoice/QuoteItemAmount/QuoteItemAmountService.php',
+        ],
+        'callers_updated'     => true,
+        'form_created'        => true,
+        'form_show_pattern'   => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/QuoteItemAmountEntityTest.php',
+        ],
+        'tests_updated'       => true,
+    ],
     'QuoteTaxRate'                  => null,
     'SalesOrder' => [
         'class'               => SalesOrder::class,
@@ -726,6 +944,8 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [],
+        'tests_updated'       => true,
     ],
     'SalesOrderAllowanceCharge' => [
         'class'               => SalesOrderAllowanceCharge::class,
@@ -748,6 +968,10 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/SalesOrderAllowanceChargeEntityTest.php',
+        ],
+        'tests_updated'       => true,
     ],
     'SalesOrderAmount' => [
         'class'               => SalesOrderAmount::class,
@@ -780,8 +1004,35 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [],
+        'tests_updated'       => true,
     ],
-    'SalesOrderCustom'              => null,
+    'SalesOrderCustom' => [
+        'class'               => SalesOrderCustom::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Invoice/Quote/Trait/QuoteToSo.php',
+            'src/Invoice/SalesOrder/SalesOrderController.php',
+            'src/Invoice/SalesOrder/SalesOrderService.php',
+            'src/Invoice/SalesOrderCustom/SalesOrderCustomForm.php',
+            'src/Invoice/SalesOrderCustom/SalesOrderCustomRepository.php',
+            'src/Invoice/SalesOrderCustom/SalesOrderCustomService.php',
+        ],
+        'callers_updated'     => true,
+        'form_created'        => true,
+        'form_show_pattern'   => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/SalesOrderCustomEntityTest.php',
+        ],
+        'tests_updated'       => true,
+    ],
     'SalesOrderItem' => [
         'class'               => SalesOrderItem::class,
         'req_id'              => true,
@@ -808,8 +1059,35 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [],
+        'tests_updated'       => true,
     ],
-    'SalesOrderItemAmount'          => null,
+    'SalesOrderItemAmount' => [
+        'class'               => SalesOrderItemAmount::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Command/Invoice/SalesOrderTruncate3Command.php',
+            'src/Invoice/Helpers/NumberHelper.php',
+            'src/Invoice/SalesOrderItem/SalesOrderItemController.php',
+            'src/Invoice/SalesOrderItem/SalesOrderItemService.php',
+            'src/Invoice/SalesOrderItemAmount/SalesOrderItemAmountRepository.php',
+            'src/Invoice/SalesOrderItemAmount/SalesOrderItemAmountService.php',
+        ],
+        'callers_updated'     => true,
+        'form_created'        => true,
+        'form_show_pattern'   => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => true,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/SalesOrderItemAmountEntityTest.php',
+        ],
+        'tests_updated'       => true,
+    ],
     'SalesOrderTaxRate'             => null,
     'Setting'                       => null,
     'Task' => [
@@ -846,6 +1124,8 @@ return [
         'psalm'               => true,
         'entity_removed'       => true,
         'schema_cache_cleared' => true,
+        'tests'               => [],
+        'tests_updated'       => true,
     ],
     'Unit'                          => [
         'class'               => Unit::class,

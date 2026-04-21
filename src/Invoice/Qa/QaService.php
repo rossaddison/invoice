@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Qa;
 
-use App\Invoice\Entity\Qa;
+use App\Infrastructure\Persistence\Qa\Qa;
 
 final readonly class QaService
 {

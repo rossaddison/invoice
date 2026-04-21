@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderCustom;
 
-use App\Invoice\Entity\SalesOrderCustom;
+use App\Infrastructure\Persistence\SalesOrderCustom\SalesOrderCustom;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

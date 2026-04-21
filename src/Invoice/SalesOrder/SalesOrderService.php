@@ -6,7 +6,7 @@ namespace App\Invoice\SalesOrder;
 
 // Entities
 use App\User\User;
-use App\Invoice\Entity\SalesOrderCustom;
+use App\Infrastructure\Persistence\SalesOrderCustom\SalesOrderCustom;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Invoice\Entity\SalesOrderTaxRate;

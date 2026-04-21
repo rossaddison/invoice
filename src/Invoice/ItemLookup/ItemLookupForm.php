@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ItemLookup;
 
-use App\Invoice\Entity\ItemLookup;
+use App\Infrastructure\Persistence\ItemLookup\ItemLookup;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\GreaterThan;
@@ -20,11 +20,13 @@ final class ItemLookupForm extends FormModel
     #[GreaterThan(0.00)]
     private ?float $price = null;
 
-    public function __construct(ItemLookup $itemLookup)
+    public static function show(ItemLookup $itemLookup): self
     {
-        $this->name = $itemLookup->getName();
-        $this->description = $itemLookup->getDescription();
-        $this->price = $itemLookup->getPrice();
+        $form = new self();
+        $form->name = $itemLookup->getName();
+        $form->description = $itemLookup->getDescription();
+        $form->price = $itemLookup->getPrice();
+        return $form;
     }
 
     public function getName(): ?string

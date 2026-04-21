@@ -2,23 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\ClientPeppol;
 
 use App\Infrastructure\Persistence\Client\Client;
+use App\Invoice\ClientPeppol\ClientPeppolRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
-#[Entity(repository: \App\Invoice\ClientPeppol\ClientPeppolRepository::class)]
-
+#[Entity(repository: ClientPeppolRepository::class)]
 class ClientPeppol
 {
+    #[Column(type: 'primary')]
+    private ?int $id = null;
+
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
     public function __construct(
-        #[Column(type: 'primary')]
-        private ?int $id = null,
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $client_id = null,
         #[Column(type: 'string(100)', nullable: false)]
@@ -48,8 +49,32 @@ class ClientPeppol
         #[Column(type: 'string(20)', nullable: false)]
         private string $supplier_assigned_accountid = '',
         #[Column(type: 'string(20)', nullable: false)]
-        private string $buyer_reference = '')
+        private string $buyer_reference = '',
+    ) {
+    }
+
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'ClientPeppol has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getClient(): ?Client
@@ -60,16 +85,6 @@ class ClientPeppol
     public function setClient(?Client $client): void
     {
         $this->client = $client;
-    }
-
-    public function getId(): string
-    {
-        return (string) $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
     }
 
     public function getClientId(): string

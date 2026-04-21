@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\SalesOrderCustom;
 
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
+use App\Invoice\Entity\CustomField;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -13,6 +14,9 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: SOCR::class)]
 class SalesOrderCustom
 {
+    #[Column(type: 'primary')]
+    private ?int $id = null;
+
     #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
@@ -20,9 +24,6 @@ class SalesOrderCustom
     private ?SalesOrder $sales_order = null;
 
     public function __construct(
-        #[Column(type: 'primary')]
-        private ?int $id = null,
-
         #[Column(type: 'integer(11)', nullable: false)]
         private ?int $sales_order_id = null,
 
@@ -30,8 +31,32 @@ class SalesOrderCustom
         private ?int $custom_field_id = null,
 
         #[Column(type: 'text', nullable: true)]
-        private string $value = '')
+        private string $value = '',
+    ) {
+    }
+
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'SalesOrderCustom has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function getCustomField(): ?CustomField
@@ -52,16 +77,6 @@ class SalesOrderCustom
     public function setSalesOrder(?SalesOrder $sales_order): void
     {
         $this->sales_order = $sales_order;
-    }
-
-    public function getId(): string
-    {
-        return (string) $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
     }
 
     public function getSalesOrderId(): string

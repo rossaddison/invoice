@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientPeppol;
 
-use App\Invoice\Entity\ClientPeppol;
+use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Email;
@@ -56,30 +56,32 @@ final class ClientPeppolForm extends FormModel
     #[Required, Length(min: 0, max: 20)]
     private ?string $supplier_assigned_accountid = '';
 
-    public function __construct(ClientPeppol $client_peppol)
+    public static function show(ClientPeppol $client_peppol): self
     {
-        $this->client_id = (int) $client_peppol->getClientId();
-        $this->accounting_cost = $client_peppol->getAccountingCost();
-        $this->buyer_reference = $client_peppol->getBuyerReference();
-        $this->endpointid = $client_peppol->getEndpointid();
-        $this->endpointid_schemeid = $client_peppol->getEndpointidSchemeid();
-        $this->financial_institution_branchid =
+        $form = new self();
+        $form->client_id = (int) $client_peppol->getClientId();
+        $form->accounting_cost = $client_peppol->getAccountingCost();
+        $form->buyer_reference = $client_peppol->getBuyerReference();
+        $form->endpointid = $client_peppol->getEndpointid();
+        $form->endpointid_schemeid = $client_peppol->getEndpointidSchemeid();
+        $form->financial_institution_branchid =
                 $client_peppol->getFinancialInstitutionBranchid();
-        $this->identificationid = $client_peppol->getIdentificationid();
-        $this->identificationid_schemeid =
+        $form->identificationid = $client_peppol->getIdentificationid();
+        $form->identificationid_schemeid =
                 $client_peppol->getIdentificationidSchemeid();
-        $this->legal_entity_registration_name =
+        $form->legal_entity_registration_name =
                 $client_peppol->getLegalEntityRegistrationName();
-        $this->legal_entity_companyid =
+        $form->legal_entity_companyid =
                 $client_peppol->getLegalEntityCompanyid();
-        $this->legal_entity_companyid_schemeid =
+        $form->legal_entity_companyid_schemeid =
                 $client_peppol->getLegalEntityCompanyidSchemeid();
-        $this->legal_entity_company_legal_form =
+        $form->legal_entity_company_legal_form =
                 $client_peppol->getLegalEntityCompanyLegalForm();
-        $this->taxschemecompanyid = $client_peppol->getTaxschemecompanyid();
-        $this->taxschemeid = $client_peppol->getTaxschemeid();
-        $this->supplier_assigned_accountid =
+        $form->taxschemecompanyid = $client_peppol->getTaxschemecompanyid();
+        $form->taxschemeid = $client_peppol->getTaxschemeid();
+        $form->supplier_assigned_accountid =
                 $client_peppol->getSupplierAssignedAccountId();
+        return $form;
     }
 
     public function getClientId(): ?int

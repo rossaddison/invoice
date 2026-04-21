@@ -8,7 +8,7 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
-use App\Invoice\Entity\SalesOrderItemAmount;
+use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountService as SOIAS;
 use App\Invoice\Product\ProductRepository as PR;

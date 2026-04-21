@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Qa;
 
-use App\Invoice\Entity\Qa;
+use App\Infrastructure\Persistence\Qa\Qa;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Length;
@@ -22,12 +22,14 @@ final class QaForm extends FormModel
 
     private ?string $sort_order = null;
 
-    public function __construct(Qa $qa)
+    public static function show(Qa $qa): self
     {
-        $this->active = $qa->getActive();
-        $this->question = $qa->getQuestion();
-        $this->answer = $qa->getAnswer();
-        $this->sort_order = (string) $qa->getSortOrder();
+        $form = new self();
+        $form->active = $qa->getActive();
+        $form->question = $qa->getQuestion();
+        $form->answer = $qa->getAnswer();
+        $form->sort_order = (string) $qa->getSortOrder();
+        return $form;
     }
 
     public function getActive(): ?int
