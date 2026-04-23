@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CompanyPrivate;
 
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository as CR;
 
 final readonly class CompanyPrivateService

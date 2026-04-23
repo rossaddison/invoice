@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Invoice\Helpers;
 
 use App\Invoice\CustomValue\CustomValueRepository as cvR;
-use App\Invoice\Entity\CustomField;
-use App\Invoice\Entity\CustomValue;
+use App\Infrastructure\Persistence\CustomField\CustomField;
+use App\Infrastructure\Persistence\CustomValue\CustomValue;
 use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\Helpers\DateHelper as DHelp;
 use Yiisoft\FormModel\Field;
@@ -102,7 +102,7 @@ class CustomValuesHelper
         array $entity_custom_values,
         array $custom_value,
     ): void {
-        $customFieldId = $custom_field->getId();
+        $customFieldId = $custom_field->reqId();
         $customBracketCustomField = 'custom[' . $customFieldId . ']';
         $fieldValue = $this->formValue($entity_custom_values, $customFieldId) ?? '';
         $label = $custom_field->getLabel() ?? '';
@@ -137,11 +137,11 @@ class CustomValuesHelper
                 $optionsData = [];
                 /** @var CustomValue $choice */
                 foreach ($choices as $choice) {
-                    $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
+                    $optionsData[$choice->reqId()] = Html::encode($choice->getValue());
                 }
 
                 echo  new Label()
-                ->forId($customFieldId, )
+                ->forId((string) $customFieldId)
                 ->content(Html::encode($label)) . $leftArrowCfEditableAt;
 
                 echo  new Select()
@@ -168,15 +168,16 @@ class CustomValuesHelper
                 // The mySql serialized $fieldValue eg. a:2:{i:0;s:2:"41";i:1;s:2:"43";}
                 // must now be unserialized to an array and placed in '->values($selChoices)'
                 // Search 'serialize' in e.g. src/Invoice/Client/ClientController
-                $selChoices = $this->isSerialized($fieldValue, true) ? (array) unserialize((string) $fieldValue) : [];
+                $selChoices = $this->isSerialized($fieldValue, true) ?
+                    (array) unserialize((string) $fieldValue) : [];
                 $optionsData = [];
                 /** @var CustomValue $choice */
                 foreach ($choices as $choice) {
-                    $optionsData[(int) $choice->getId()] = Html::encode($choice->getValue());
+                    $optionsData[$choice->reqId()] = Html::encode($choice->getValue());
                 }
 
                 echo  new Label()
-                ->forId($customFieldId)
+                ->forId((string) $customFieldId)
                 ->content(Html::encode($label)) . $leftArrowCfEditableAt;
 
                 /**
@@ -197,13 +198,13 @@ class CustomValuesHelper
 
             case 'RADIOLIST-CHOICE':
                 $groupName = $customBracketCustomField;
-                $custom_values = $this->cvR->repoCustomFieldquery((int) $customFieldId);
+                $custom_values = $this->cvR->repoCustomFieldquery($customFieldId);
                 $items = [];
                 /**
                  * @var CustomValue $customValue
                  */
                 foreach ($custom_values as $customValue) {
-                    $items[$customValue->getId()] = $customValue->getValue();
+                    $items[$customValue->reqId()] = $customValue->getValue();
                 }
                 echo Field::radioList($formModel, 'custom_field_id')
                 ->name($groupName)
@@ -339,7 +340,7 @@ class CustomValuesHelper
      */
     public function printFieldForView(CustomField $custom_field, FormModel $formModel, array $entity_custom_values): void
     {
-        $customFieldId = $custom_field->getId();
+        $customFieldId = $custom_field->reqId();
         $fieldValue = $this->formValue($entity_custom_values, $customFieldId) ?? '';
         $customBracketCustomField = 'custom[' . $customFieldId . ']';
         switch ($custom_field->getType()) {
@@ -358,7 +359,8 @@ class CustomValuesHelper
                 break;
 
             case 'SINGLE-CHOICE':
-                $customValue = $this->cvR->repoCustomValueDropDown((string) $fieldValue, $customFieldId);
+                $customValue = $this->cvR->repoCustomValueDropDown(
+                        (string) $fieldValue, (string) $customFieldId);
                 if (null !== $customValue) {
                     echo Field::text($formModel, 'custom_field_id')
                     ->addInputAttributes([
@@ -379,7 +381,8 @@ class CustomValuesHelper
                  * @var string $value
                  */
                 foreach ($selChoices as $value) {
-                    $printValue = $this->cvR->repoCustomValueDropDown($value, $customFieldId);
+                    $printValue = $this->cvR->repoCustomValueDropDown(
+                            $value, (string) $customFieldId);
                     if (null !== $printValue) {
                         $fieldValues .= ($printValue->getValue()) . ', ';
                     }
@@ -397,13 +400,13 @@ class CustomValuesHelper
                 break;
             case 'RADIOLIST-CHOICE':
                 $groupName = $customBracketCustomField;
-                $custom_values = $this->cvR->repoCustomFieldquery((int) $customFieldId);
+                $custom_values = $this->cvR->repoCustomFieldquery($customFieldId);
                 $items = [];
                 /**
                  * @var CustomValue $customValue
                  */
                 foreach ($custom_values as $customValue) {
-                    $items[$customValue->getId()] = $customValue->getValue();
+                    $items[$customValue->reqId()] = $customValue->getValue();
                 }
                 echo Field::radioList($formModel, 'custom_field_id')
                 ->name($groupName)
@@ -498,7 +501,7 @@ class CustomValuesHelper
      */
     public function printFieldForPdf(Translator $translator, array $entity_custom_values, CustomField $custom_field, cvR $cvR): void
     {
-        $customFieldId = $custom_field->getId();
+        $customFieldId = $custom_field->reqId();
         echo  new Br();
         $content =  new Label()->content(Html::encode($custom_field->getLabel()));
         echo  new B()
@@ -636,10 +639,10 @@ class CustomValuesHelper
      * Note the string could be serialized; Normally containing the multiple
      * values of a Multiple Choice Dropdown
      * @param array $entity_custom_values
-     * @param string $custom_field_id
+     * @param int $custom_field_id
      * @return int|string|null
      */
-    public function formValue(array $entity_custom_values, string $custom_field_id): string|int|null
+    public function formValue(array $entity_custom_values, int $custom_field_id): string|int|null
     {
         /** @var CustomValue $entity_custom_value */
         foreach ($entity_custom_values as $entity_custom_value) {
@@ -652,11 +655,11 @@ class CustomValuesHelper
 
     /**
      * @param array $entity_custom_values
-     * @param string $custom_field_id
+     * @param int $custom_field_id
      * @param cvR $cvR
      * @return int|string|null
      */
-    public function selectedValue(array $entity_custom_values, string $custom_field_id, cvR $cvR): string|int|null
+    public function selectedValue(array $entity_custom_values, int $custom_field_id, cvR $cvR): string|int|null
     {
         $form_custom_value = $this->formValue($entity_custom_values, $custom_field_id);
         if (($form_custom_value !== '') && (null !== $form_custom_value)) {

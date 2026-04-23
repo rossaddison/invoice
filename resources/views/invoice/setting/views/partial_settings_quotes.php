@@ -275,15 +275,14 @@ echo H::openTag('div', $row); //1
         echo  new Option()
          ->value('')
          ->content($translator->translate('none'));
-        /**
-        * @var App\Invoice\Entity\EmailTemplate
-        * $email_template
-        */
+/**
+ * @var App\Infrastructure\Persistence\EmailTemplate\EmailTemplate $email_template
+ */
         foreach ($email_templates_quote as $email_template) {
          echo  new Option()
-         ->value($email_template->getEmailTemplateId())
+         ->value($email_template->reqEmailTemplateId())
          ->selected($body['settings[email_quote_template]'] ==
-            $email_template->getEmailTemplateId())
+            $email_template->reqEmailTemplateId())
          ->content(
           $email_template
           ->getEmailTemplateTitle()

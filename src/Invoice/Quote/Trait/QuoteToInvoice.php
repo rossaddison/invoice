@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
+use App\Infrastructure\Persistence\{        
+        CustomField\CustomField, 
+        InvAllowanceCharge\InvAllowanceCharge
+};
 use App\Invoice\Entity\{
-    CustomField, Inv, InvAmount, InvCustom, InvItem,
+    Inv, InvAmount, InvCustom, InvItem,
     InvTaxRate, QuoteCustom, QuoteItem, QuoteTaxRate,
 };
 use App\Invoice\{
@@ -305,7 +308,7 @@ trait QuoteToInvoice
                 // Build the inv_custom field record
                 $inv_custom = [
                     'inv_id' => $inv_id,
-                    'custom_field_id' => $custom_field->getId(),
+                    'custom_field_id' => $custom_field->reqId(),
                     'value' => $quote_custom->getValue(),
                 ];
                 $entity = new InvCustom();

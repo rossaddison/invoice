@@ -34,11 +34,7 @@ use Yiisoft\Html\Tag\Form;
 <?= Field::text($form, 'reference')->readonly(true);?>
 <?= Field::text($form, 'name')->readonly(true);?>
 <?= Field::text($form, 'period_start')
-    ->value(
-        Html::encode(Html::encode($form->getPeriodStart()->format('Y-m-d'))),
-    )->readonly(true);?>
+    ->value(Html::encode($form->getPeriodStart()))->readonly(true); ?>
 <?= Field::text($form, 'period_end')
-    ->value(
-        Html::encode(Html::encode($form->getPeriodEnd()->format('Y-m-d'))),
-    )->readonly(true);?>
+    ->value(Html::encode($form->getPeriodEnd()))->readonly(true); ?>
 

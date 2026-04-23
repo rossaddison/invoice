@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Company;
+use App\Infrastructure\Persistence\Company\Company;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\Company $company
+ * @var App\Infrastructure\Persistence\Company\Company $company
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
@@ -39,12 +39,15 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Company $model) => Html::encode($model->getId()),
+        content: static fn (Company $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'current',
         header: $translator->translate('active'),
-        content: static fn (Company $model) => Html::encode($model->getCurrent() == '1' ? ($translator->translate('active') . ' ' . '✔️') : $translator->translate('inactive') . ' ' . '❌'),
+        content: static fn (Company $model) => Html::encode(
+            $model->getCurrent() == '1' ?
+                ($translator->translate('active') . ' ' . '✔️') :
+                $translator->translate('inactive') . ' ' . '❌'),
     ),
     new DataColumn(
         'name',
@@ -65,7 +68,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Company $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('company/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('company/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -75,7 +78,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Company $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('company/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('company/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -85,7 +88,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Company $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('company/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('company/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

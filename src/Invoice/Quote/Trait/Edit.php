@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Infrastructure\Persistence\Group\Group;
-use App\Invoice\Entity\{Contract, Quote, QuoteCustom, QuoteTaxRate};
+use App\Infrastructure\Persistence\{Contract\Contract, Group\Group};
+use App\Invoice\Entity\{Quote, QuoteCustom, QuoteTaxRate};
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\{
     Client\ClientRepository as CR,
@@ -189,17 +189,16 @@ trait Edit
          * @var Contract $contract
          */
         foreach ($contracts as $contract) {
-            $id = $contract->getId();
+            $id = $contract->reqId();
             $contractLine = [];
-            if (null !== $id) {
-                if (null !== $contract->getName()) {
-                    $contractLine[] = $contract->getName();
-                }
-                if (null !== $contract->getReference()) {
-                    $contractLine[] = $contract->getReference();
-                }
-                $optionsDataContract[$id] = implode(',', $contractLine);
+            if (null !== $contract->getName()) {
+                $contractLine[] = $contract->getName();
             }
+            if (null !== $contract->getReference()) {
+                $contractLine[] = $contract->getReference();
+            }
+            $optionsDataContract[$id] = implode(',', $contractLine);
+            
         }
 
         $dLocs = $delRepo->repoClientquery((string) $client_id);

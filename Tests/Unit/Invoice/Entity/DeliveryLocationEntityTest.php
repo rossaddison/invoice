@@ -179,7 +179,7 @@ class DeliveryLocationEntityTest extends TestCase
         $this->assertSame($client, $deliveryLocation->getClient());
     }
 
-    public function testIsNewRecord(): void
+    public function testIsPersisted(): void
     {
         $deliveryLocation = new DeliveryLocation();
         $this->assertFalse($deliveryLocation->isPersisted());

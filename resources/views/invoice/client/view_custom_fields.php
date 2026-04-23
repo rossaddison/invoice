@@ -27,7 +27,7 @@ use Yiisoft\Html\Html;
                         <div class="form-group">
                             <?php $i = 0; ?>
                             <?php
-                               /** @var App\Invoice\Entity\CustomField $custom_field */
+                               /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
                                foreach ($custom_fields as $custom_field): ?>
                                 <?php if ($custom_field->getLocation() != 0) {
                                     continue;
@@ -41,7 +41,7 @@ use Yiisoft\Html\Html;
                         <div class="form-group">
                             <?php $i = 0; ?>
                             <?php
-                               /** @var App\Invoice\Entity\CustomField $custom_field */
+                               /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
                                foreach ($custom_fields as $custom_field): ?>
                                 <?php if ($custom_field->getLocation() != 0) {
                                     continue;

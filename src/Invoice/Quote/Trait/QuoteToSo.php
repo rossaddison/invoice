@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Quote\Trait;
 
 use App\Infrastructure\Persistence\{
+    CustomField\CustomField, 
     SalesOrder\SalesOrder as SoEntity,
     SalesOrderCustom\SalesOrderCustom as SoCustom,
     SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge,
@@ -14,7 +15,7 @@ use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\{
     SalesOrderAllowanceCharge,
 };
 use App\Invoice\Entity\{
-    CustomField, QuoteCustom, QuoteItemAllowanceCharge, QuoteTaxRate,
+    QuoteCustom, QuoteItemAllowanceCharge, QuoteTaxRate,
     SalesOrderTaxRate as SoTaxRate,
 };
 use App\Invoice\{
@@ -393,7 +394,7 @@ trait QuoteToSo
                 // Build the so_custom field record
                 $so_custom = [
                     'so_id' => $so_id,
-                    'custom_field_id' => $custom_field->getId(),
+                    'custom_field_id' => $custom_field->reqId(),
                     'value' => $quote_custom->getValue(),
                 ];
                 $entity = new SoCustom();

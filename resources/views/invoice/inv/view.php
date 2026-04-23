@@ -844,7 +844,7 @@ if ($vat === '1') {
         echo H::closeTag('div');
         echo H::openTag('div');
         /**
-         * @var App\Invoice\Entity\CustomField $custom_field
+         * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
          */
         foreach ($custom_fields as $custom_field) {
             if ($custom_field->getLocation() !== 1) {

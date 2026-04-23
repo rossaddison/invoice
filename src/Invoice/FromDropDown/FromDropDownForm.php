@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\FromDropDown;
 
-use App\Invoice\Entity\FromDropDown;
+use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -17,11 +17,13 @@ final class FromDropDownForm extends FormModel
     #[Required]
     private ?bool $default_email = false;
 
-    public function __construct(FromDropDown $from)
+    public static function show(FromDropDown $from): self
     {
-        $this->email = $from->getEmail();
-        $this->include = $from->getInclude();
-        $this->default_email = $from->getDefaultEmail();
+        $form = new self();
+        $form->email = $from->getEmail();
+        $form->include = $from->getInclude();
+        $form->default_email = $from->getDefaultEmail();
+        return $form;
     }
 
     public function getEmail(): ?string

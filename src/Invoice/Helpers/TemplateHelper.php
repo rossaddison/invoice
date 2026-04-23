@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
 
-use App\Invoice\Entity\ClientCustom;
-use App\Invoice\Entity\CustomField;
-use App\Invoice\Entity\CustomValue;
+use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
+use App\Infrastructure\Persistence\CustomField\CustomField;
+use App\Infrastructure\Persistence\CustomValue\CustomValue;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\UserInv;
 use App\Invoice\Setting\SettingRepository as SRepo;
@@ -457,8 +457,11 @@ final readonly class TemplateHelper
                                     // Client custom fields can be included on either an invoice or a quote
                                     $entity = $isInvoice ? ($iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null)
                                                          : ($qR->repoCount($pk) > 0 ? $qR->repoQuoteLoadedquery($pk) : null);
-                                    /** @var ClientCustom $replace_custom */
+
                                     if ($entity) {
+/**
+ * @var \App\Infrastructure\Persistence\ClientCustom\ClientCustom $replace_custom
+ */
                                         $replace_custom = $this->ccR->repoFormValuequery(
                                             $entity->getClientId(), $cf_id[1]);
                                     }

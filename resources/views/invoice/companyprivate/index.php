@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -50,7 +50,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (CompanyPrivate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('companyprivate/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('companyprivate/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -60,7 +60,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (CompanyPrivate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('companyprivate/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('companyprivate/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -70,7 +70,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (CompanyPrivate $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('companyprivate/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('companyprivate/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

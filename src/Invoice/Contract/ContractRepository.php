@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Contract;
 
-use App\Invoice\Entity\Contract;
+use App\Infrastructure\Persistence\Contract\Contract;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

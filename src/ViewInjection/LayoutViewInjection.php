@@ -6,8 +6,8 @@ namespace App\ViewInjection;
 
 use App\Auth\Identity;
 // Entities
-use App\Invoice\Entity\Company;
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\Company\Company;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 // Repositories
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\Setting\SettingRepository;
@@ -87,7 +87,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompanyId() == (string) $company->getId()
+                    if ($private->getCompanyId() == (string) $company->reqId()
                         && (
                             $private->getStartDate()?->format('Y-m-d')
                            < (new \DateTimeImmutable('now'))->format('Y-m-d')

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\Contract;
+use App\Infrastructure\Persistence\Contract\Contract;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
@@ -19,14 +19,14 @@ class ContractEntityTest extends TestCase
     {
         $contract = new Contract();
         
-        $this->assertNull($contract->getId());
+        $this->assertFalse($contract->isPersisted());
         $this->assertSame('', $contract->getName());
         $this->assertSame('', $contract->getReference());
         $this->assertSame('', $contract->getClientId());
         $this->assertNull($contract->getClient());
         $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodStart());
         $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodEnd());
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertFalse($contract->isPersisted());
     }
 
     public function testConstructorWithAllParameters(): void
@@ -37,7 +37,7 @@ class ContractEntityTest extends TestCase
             client_id: 123
         );
         
-        $this->assertNull($contract->getId());
+        $this->assertFalse($contract->isPersisted());
         $this->assertSame('Annual Service Contract', $contract->getName());
         $this->assertSame('ASC-2024-001', $contract->getReference());
         $this->assertSame('123', $contract->getClientId());
@@ -96,17 +96,17 @@ class ContractEntityTest extends TestCase
         $this->assertSame($endDate, $contract->getPeriodEnd());
     }
 
-    public function testIsNewRecord(): void
+    public function testIsPersisted(): void
     {
         $contract = new Contract();
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertFalse($contract->isPersisted());
         
         // Contract doesn't have setId method, but id is public
         $contract->id = 1;
-        $this->assertFalse($contract->isNewRecord());
+        $this->assertTrue($contract->isPersisted());
         
         $contract->id = null;
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertFalse($contract->isPersisted());
     }
 
     public function testDateTimeImmutableProperties(): void
@@ -231,14 +231,14 @@ class ContractEntityTest extends TestCase
         $contract->setPeriodStart($startDate);
         $contract->setPeriodEnd($endDate);
         
-        $this->assertSame(1, $contract->getId());
+        $this->assertSame(1, $contract->reqId());
         $this->assertSame('Complete Test Contract', $contract->getName());
         $this->assertSame('CTC-2024-001', $contract->getReference());
         $this->assertSame('100', $contract->getClientId());
         $this->assertSame($client, $contract->getClient());
         $this->assertSame($startDate, $contract->getPeriodStart());
         $this->assertSame($endDate, $contract->getPeriodEnd());
-        $this->assertFalse($contract->isNewRecord());
+        $this->assertTrue($contract->isPersisted());
     }
 
     public function testGetterMethodsConsistency(): void
@@ -289,7 +289,7 @@ class ContractEntityTest extends TestCase
         
         $contract->id = 1;
         
-        $this->assertIsInt($contract->getId());
+        $this->assertIsInt($contract->reqId());
         $this->assertIsString($contract->getClientId());
         $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodStart());
         $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodEnd());
@@ -310,7 +310,7 @@ class ContractEntityTest extends TestCase
     {
         // Create new contract
         $contract = new Contract();
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertFalse($contract->isPersisted());
         
         // Set contract details
         $contract->setName('Workflow Test Contract');
@@ -318,16 +318,16 @@ class ContractEntityTest extends TestCase
         $contract->setClientId(500);
         
         // Still new until ID is set
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertFalse($contract->isPersisted());
         
         // Assign ID (simulating database save)
         $contract->id = 1;
-        $this->assertFalse($contract->isNewRecord());
+        $this->assertTrue($contract->isPersisted());
         
         // Update contract details
         $contract->setName('Updated Workflow Contract');
         $this->assertSame('Updated Workflow Contract', $contract->getName());
-        $this->assertFalse($contract->isNewRecord());
+        $this->assertTrue($contract->isPersisted());
     }
 
     public function testClientRelationshipManagement(): void
@@ -366,7 +366,7 @@ class ContractEntityTest extends TestCase
     {
         $contract = new Contract();
         
-        $this->assertTrue($contract->isNewRecord());
+        $this->assertFalse($contract->isPersisted());
         $this->assertNull($contract->getClient());
         $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodStart());
         $this->assertInstanceOf(DateTimeImmutable::class, $contract->getPeriodEnd());

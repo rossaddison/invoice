@@ -289,7 +289,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
          }
          echo H::openTag('div'); //9
           /**
-           * @var App\Invoice\Entity\CustomField $customField
+           * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
            */
           foreach ($customFields as $customField) {
            if ($customField->getLocation() !== 1) {

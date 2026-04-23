@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Entity;
 
-use App\Invoice\Entity\Delivery;
+use App\Infrastructure\Persistence\Delivery\Delivery;
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use Codeception\Test\Unit;
 use DateTimeImmutable;
@@ -26,7 +26,7 @@ class DeliveryEntityTest extends Unit
     {
         $delivery = new Delivery();
         
-        $this->assertNull($delivery->getId());
+        $this->assertFalse($delivery->isPersisted());
         $this->assertNull($delivery->getInvId());
         $this->assertNull($delivery->getInvItemId());
         $this->assertSame('', $delivery->getDeliveryLocationId());
@@ -45,7 +45,7 @@ class DeliveryEntityTest extends Unit
     {
         $delivery = new Delivery(1, 100, 200, 5, 10);
         
-        $this->assertSame(1, $delivery->getId());
+        $this->assertSame(1, $delivery->reqId());
         $this->assertSame(100, $delivery->getInvId());
         $this->assertSame(200, $delivery->getInvItemId());
         $this->assertSame('5', $delivery->getDeliveryLocationId());
@@ -58,10 +58,10 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery();
         
         $delivery->setId(123);
-        $this->assertSame(123, $delivery->getId());
+        $this->assertSame(123, $delivery->reqId());
         
         $delivery->setId(456);
-        $this->assertSame(456, $delivery->getId());
+        $this->assertSame(456, $delivery->reqId());
     }
 
     public function testInvIdSetterAndGetter(): void
@@ -170,16 +170,14 @@ class DeliveryEntityTest extends Unit
         $this->assertNull($delivery->getDeliveryLocation());
     }
 
-    public function testIsNewRecord(): void
+    public function testIsPersisted(): void
     {
         $delivery = new Delivery();
-        
-        // New record (ID is null)
-        $this->assertTrue($delivery->isNewRecord());
-        
-        // Existing record (ID is set)
+
+        $this->assertFalse($delivery->isPersisted());
+
         $delivery->setId(1);
-        $this->assertFalse($delivery->isNewRecord());
+        $this->assertTrue($delivery->isPersisted());
     }
 
     public function testConstructorDateDefaults(): void
@@ -208,13 +206,13 @@ class DeliveryEntityTest extends Unit
         $delivery->setDeliveryLocationId(5);
         $delivery->setDeliveryPartyId(10);
         
-        $this->assertSame(1, $delivery->getId());
+        $this->assertSame(1, $delivery->reqId());
         $this->assertSame(100, $delivery->getInvId());
         $this->assertSame(50, $delivery->getInvItemId());
         $this->assertSame('5', $delivery->getDeliveryLocationId());
         $this->assertSame('10', $delivery->getDeliveryPartyId());
-        $this->assertFalse($delivery->isNewRecord());
-        
+        $this->assertTrue($delivery->isPersisted());
+
         // Step 2: Set delivery dates
         $startDate = new DateTimeImmutable('2023-01-01');
         $endDate = new DateTimeImmutable('2023-01-31');
@@ -256,7 +254,7 @@ class DeliveryEntityTest extends Unit
         $delivery->setDeliveryLocationId(0);
         $delivery->setDeliveryPartyId(0);
         
-        $this->assertSame(0, $delivery->getId());
+        $this->assertSame(0, $delivery->reqId());
         $this->assertSame(0, $delivery->getInvId());
         $this->assertSame(0, $delivery->getInvItemId());
         $this->assertSame('0', $delivery->getDeliveryLocationId());
@@ -269,7 +267,7 @@ class DeliveryEntityTest extends Unit
         $delivery->setDeliveryLocationId(666666666);
         $delivery->setDeliveryPartyId(555555555);
         
-        $this->assertSame(999999999, $delivery->getId());
+        $this->assertSame(999999999, $delivery->reqId());
         $this->assertSame(888888888, $delivery->getInvId());
         $this->assertSame(777777777, $delivery->getInvItemId());
         $this->assertSame('666666666', $delivery->getDeliveryLocationId());
@@ -300,7 +298,7 @@ class DeliveryEntityTest extends Unit
         $delivery->setDateModified($modifiedDate);
         
         // Verify all properties
-        $this->assertSame(1, $delivery->getId());
+        $this->assertSame(1, $delivery->reqId());
         $this->assertSame(100, $delivery->getInvId());
         $this->assertSame(200, $delivery->getInvItemId());
         $this->assertSame('5', $delivery->getDeliveryLocationId());
@@ -310,7 +308,7 @@ class DeliveryEntityTest extends Unit
         $this->assertSame($actualDate, $delivery->getActualDeliveryDate());
         $this->assertSame($createdDate, $delivery->getDateCreated());
         $this->assertSame($modifiedDate, $delivery->getDateModified());
-        $this->assertFalse($delivery->isNewRecord());
+        $this->assertTrue($delivery->isPersisted());
         $this->assertNull($delivery->getDeliveryLocation()); // Relationship set by ORM
     }
 
@@ -319,7 +317,7 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery(1, 100, 200, 5, 10);
         
         // Multiple calls should return same values
-        $this->assertSame($delivery->getId(), $delivery->getId());
+        $this->assertSame($delivery->reqId(), $delivery->reqId());
         $this->assertSame($delivery->getInvId(), $delivery->getInvId());
         $this->assertSame($delivery->getInvItemId(), $delivery->getInvItemId());
         $this->assertSame($delivery->getDeliveryLocationId(), $delivery->getDeliveryLocationId());
@@ -330,7 +328,7 @@ class DeliveryEntityTest extends Unit
         $this->assertSame($delivery->getDateCreated(), $delivery->getDateCreated());
         $this->assertSame($delivery->getDateModified(), $delivery->getDateModified());
         $this->assertSame($delivery->getDeliveryLocation(), $delivery->getDeliveryLocation());
-        $this->assertSame($delivery->isNewRecord(), $delivery->isNewRecord());
+        $this->assertSame($delivery->isPersisted(), $delivery->isPersisted());
     }
 
     public function testDateComparisons(): void
@@ -356,7 +354,7 @@ class DeliveryEntityTest extends Unit
         $delivery = new Delivery(1, 100, 200, 5, 10);
         
         // Test return types
-        $this->assertIsInt($delivery->getId());
+        $this->assertIsInt($delivery->reqId());
         $this->assertIsInt($delivery->getInvId());
         $this->assertIsInt($delivery->getInvItemId());
         $this->assertIsString($delivery->getDeliveryLocationId());
@@ -367,7 +365,7 @@ class DeliveryEntityTest extends Unit
         $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getDateCreated());
         $this->assertInstanceOf(DateTimeImmutable::class, $delivery->getDateModified());
         $this->assertNull($delivery->getDeliveryLocation());
-        $this->assertIsBool($delivery->isNewRecord());
+        $this->assertIsBool($delivery->isPersisted());
     }
 
     public function testNegativeIds(): void
@@ -381,7 +379,7 @@ class DeliveryEntityTest extends Unit
         $delivery->setDeliveryLocationId(-5);
         $delivery->setDeliveryPartyId(-10);
         
-        $this->assertSame(-1, $delivery->getId());
+        $this->assertSame(-1, $delivery->reqId());
         $this->assertSame(-100, $delivery->getInvId());
         $this->assertSame(-200, $delivery->getInvItemId());
         $this->assertSame('-5', $delivery->getDeliveryLocationId());
@@ -426,12 +424,12 @@ class DeliveryEntityTest extends Unit
                 $scenario['party_id']
             );
             
-            $this->assertSame($scenario['id'], $delivery->getId());
+            $this->assertSame($scenario['id'], $delivery->reqId());
             $this->assertSame($scenario['inv_id'], $delivery->getInvId());
             $this->assertSame($scenario['item_id'], $delivery->getInvItemId());
             $this->assertSame((string)$scenario['location_id'], $delivery->getDeliveryLocationId());
             $this->assertSame((string)$scenario['party_id'], $delivery->getDeliveryPartyId());
-            $this->assertFalse($delivery->isNewRecord());
+            $this->assertTrue($delivery->isPersisted());
         }
     }
 
@@ -486,27 +484,24 @@ class DeliveryEntityTest extends Unit
 
     public function testEntityStateAfterConstruction(): void
     {
-        // Test various constructor states
         $delivery1 = new Delivery();
-        $this->assertNull($delivery1->getId());
-        $this->assertTrue($delivery1->isNewRecord());
-        
+        $this->assertFalse($delivery1->isPersisted());
+
         $delivery2 = new Delivery(1);
-        $this->assertSame(1, $delivery2->getId());
-        $this->assertFalse($delivery2->isNewRecord());
-        
+        $this->assertSame(1, $delivery2->reqId());
+        $this->assertTrue($delivery2->isPersisted());
+
         $delivery3 = new Delivery(null, 100);
-        $this->assertNull($delivery3->getId());
+        $this->assertFalse($delivery3->isPersisted());
         $this->assertSame(100, $delivery3->getInvId());
-        $this->assertTrue($delivery3->isNewRecord());
-        
+
         $delivery4 = new Delivery(1, 100, 200, 5, 10);
-        $this->assertSame(1, $delivery4->getId());
+        $this->assertSame(1, $delivery4->reqId());
         $this->assertSame(100, $delivery4->getInvId());
         $this->assertSame(200, $delivery4->getInvItemId());
         $this->assertSame('5', $delivery4->getDeliveryLocationId());
         $this->assertSame('10', $delivery4->getDeliveryPartyId());
-        $this->assertFalse($delivery4->isNewRecord());
+        $this->assertTrue($delivery4->isPersisted());
     }
 
     public function testActualDeliveryDateNullHandling(): void

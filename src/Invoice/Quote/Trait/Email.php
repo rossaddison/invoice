@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Invoice\Entity\EmailTemplate;
+use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
 use App\Invoice\{
     Client\ClientRepository as CR,
     ClientCustom\ClientCustomRepository as CCR,

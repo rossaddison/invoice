@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\Company;
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\Company\Company;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use DateTime;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +20,7 @@ class CompanyPrivateEntityTest extends TestCase
     {
         $companyPrivate = new CompanyPrivate();
         
-        $this->assertNull($companyPrivate->getId());
+        $this->assertFalse($companyPrivate->isPersisted());
         $this->assertSame('', $companyPrivate->getCompanyId());
         $this->assertSame('', $companyPrivate->getVatId());
         $this->assertSame('', $companyPrivate->getTaxCode());
@@ -36,7 +36,7 @@ class CompanyPrivateEntityTest extends TestCase
         $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDateCreated());
         $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDateModified());
         $this->assertNull($companyPrivate->getCompany());
-        $this->assertTrue($companyPrivate->isNewRecord());
+        $this->assertFalse($companyPrivate->isPersisted());
     }
 
     public function testConstructorWithAllParameters(): void
@@ -56,7 +56,7 @@ class CompanyPrivateEntityTest extends TestCase
             // Skip date parameters due to entity design issue
         );
         
-        $this->assertSame(1, $companyPrivate->getId());
+        $this->assertSame(1, $companyPrivate->reqId());
         $this->assertSame('123', $companyPrivate->getCompanyId());
         $this->assertSame('VAT123456789', $companyPrivate->getVatId());
         $this->assertSame('TAX987654321', $companyPrivate->getTaxCode());
@@ -74,7 +74,7 @@ class CompanyPrivateEntityTest extends TestCase
         $companyPrivate = new CompanyPrivate();
         $companyPrivate->setId(100);
         
-        $this->assertSame(100, $companyPrivate->getId());
+        $this->assertSame(100, $companyPrivate->reqId());
     }
 
     public function testCompanyIdSetterAndGetter(): void
@@ -188,13 +188,13 @@ class CompanyPrivateEntityTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testIsNewRecord(): void
+    public function testIsPersisted(): void
     {
         $companyPrivate = new CompanyPrivate();
-        $this->assertTrue($companyPrivate->isNewRecord());
+        $this->assertFalse($companyPrivate->isPersisted());
         
         $companyPrivate->setId(1);
-        $this->assertFalse($companyPrivate->isNewRecord());
+        $this->assertTrue($companyPrivate->isPersisted());
     }
 
     public function testIsActiveTodayWithNullDates(): void
@@ -423,7 +423,7 @@ class CompanyPrivateEntityTest extends TestCase
         $companyPrivate->setStartDate(new DateTime('2024-01-01'));
         $companyPrivate->setEndDate(new DateTime('2024-12-31'));
         
-        $this->assertSame(1, $companyPrivate->getId());
+        $this->assertSame(1, $companyPrivate->reqId());
         $this->assertSame('100', $companyPrivate->getCompanyId());
         $this->assertSame($company, $companyPrivate->getCompany());
         $this->assertSame('DE987654321', $companyPrivate->getVatId());
@@ -436,7 +436,7 @@ class CompanyPrivateEntityTest extends TestCase
         $this->assertSame(80, $companyPrivate->getLogoHeight());
         $this->assertSame(12, $companyPrivate->getLogoMargin());
         // Skip date getters due to entity type mismatch
-        $this->assertFalse($companyPrivate->isNewRecord());
+        $this->assertTrue($companyPrivate->isPersisted());
     }
 
     public function testGetterMethodsConsistency(): void
@@ -455,7 +455,7 @@ class CompanyPrivateEntityTest extends TestCase
             logo_margin: 10
         );
         
-        $this->assertIsInt($companyPrivate->getId());
+        $this->assertIsInt($companyPrivate->reqId());
         $this->assertIsString($companyPrivate->getCompanyId());
         $this->assertIsString($companyPrivate->getVatId());
         $this->assertIsString($companyPrivate->getTaxCode());
@@ -518,7 +518,7 @@ class CompanyPrivateEntityTest extends TestCase
     {
         $companyPrivate = new CompanyPrivate();
         
-        $this->assertTrue($companyPrivate->isNewRecord());
+        $this->assertFalse($companyPrivate->isPersisted());
         $this->assertNull($companyPrivate->getCompany());
         $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDateCreated());
         $this->assertInstanceOf(DateTimeImmutable::class, $companyPrivate->getDateModified());

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Contract;
 
-use App\Invoice\Entity\Contract;
+use App\Infrastructure\Persistence\Contract\Contract;
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository as SR;

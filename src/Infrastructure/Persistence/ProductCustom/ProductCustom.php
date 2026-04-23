@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\ProductCustom;
 
 use App\Infrastructure\Persistence\Product\Product;
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use App\Invoice\ProductCustom\ProductCustomRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;

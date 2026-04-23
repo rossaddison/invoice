@@ -7,8 +7,8 @@ namespace App\ViewInjection;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Yii\View\Renderer\CommonParametersInjectionInterface;
-use App\Invoice\Entity\Company;
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\Company\Company;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository;
 use App\Invoice\Setting\SettingRepository;
@@ -69,7 +69,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompanyId() == (string) $company->getId()) {
+                    if ($private->getCompanyId() == (string) $company->reqId()) {
 // site's logo: take the first logo where the current date falls within
 //  the logo's start and end dates
                         if (($private->getStartDate()?->format('Y-m-d') <

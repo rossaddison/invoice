@@ -7,7 +7,7 @@ namespace App\Invoice\Family;
 use App\Invoice\CustomFieldProcessor;
 use App\Invoice\FamilyCustom\FamilyCustomRepository;
 use App\Invoice\FamilyCustom\FamilyCustomService;
-use App\Invoice\Entity\FamilyCustom;
+use App\Infrastructure\Persistence\FamilyCustom\FamilyCustom;
 use App\Invoice\FamilyCustom\FamilyCustomForm;
 use Yiisoft\FormModel\FormHydrator;
 
@@ -26,13 +26,13 @@ final class FamilyCustomFieldProcessor implements CustomFieldProcessor
     }
 
     #[\Override]
-    public function findExisting(string $entityId, string $customFieldId): ?\App\Invoice\Entity\FamilyCustom
+    public function findExisting(string $entityId, string $customFieldId): ?\App\Infrastructure\Persistence\FamilyCustom\FamilyCustom
     {
         return $this->familyCustomRepository->repoFormValuequery($entityId, $customFieldId);
     }
 
     #[\Override]
-    public function createEntity(): \App\Invoice\Entity\FamilyCustom
+    public function createEntity(): \App\Infrastructure\Persistence\FamilyCustom\FamilyCustom
     {
         return new FamilyCustom();
     }
@@ -40,10 +40,10 @@ final class FamilyCustomFieldProcessor implements CustomFieldProcessor
     #[\Override]
     public function createForm(object $entity): \Yiisoft\FormModel\FormModelInterface
     {
-        if (!$entity instanceof \App\Invoice\Entity\FamilyCustom) {
+        if (!$entity instanceof \App\Infrastructure\Persistence\FamilyCustom\FamilyCustom) {
             throw new \InvalidArgumentException('Entity must be an instance of FamilyCustom');
         }
-        return new FamilyCustomForm($entity);
+        return new FamilyCustomForm();
     }
 
     #[\Override]
@@ -59,7 +59,7 @@ final class FamilyCustomFieldProcessor implements CustomFieldProcessor
     #[\Override]
     public function save(object $entity, array $inputData): void
     {
-        if (!$entity instanceof \App\Invoice\Entity\FamilyCustom) {
+        if (!$entity instanceof \App\Infrastructure\Persistence\FamilyCustom\FamilyCustom) {
             throw new \InvalidArgumentException('Entity must be an instance of FamilyCustom');
         }
         $this->familyCustomService->saveFamilyCustom($entity, $inputData);

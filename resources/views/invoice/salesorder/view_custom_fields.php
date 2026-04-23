@@ -26,7 +26,7 @@ declare(strict_types=1);
                                 <?php $i = 0; ?>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\CustomField
+                                     * @var App\Infrastructure\Persistence\CustomField\CustomField
                                      */
                                     foreach ($customFields as $customField): ?>
                                     <?php if ($customField->getLocation() != 0) {
@@ -42,7 +42,7 @@ declare(strict_types=1);
                                 <?php $i = 0; ?>
                                 <?php
                                     /**
-                                     * @var App\Invoice\Entity\CustomField
+                                     * @var App\Infrastructure\Persistence\CustomField\CustomField
                                      */
                                     foreach ($customFields as $customField): ?>
                                     <?php if ($customField->getLocation() !== 0) {

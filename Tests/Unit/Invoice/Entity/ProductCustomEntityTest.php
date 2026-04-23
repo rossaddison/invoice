@@ -6,7 +6,7 @@ namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\ProductCustom\ProductCustom;
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use PHPUnit\Framework\TestCase;
 
 class ProductCustomEntityTest extends TestCase

@@ -7,7 +7,7 @@ namespace App\Invoice\CompanyPrivate;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Invoice\Company\CompanyRepository;
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -72,7 +72,7 @@ final class CompanyPrivateController extends BaseController
         CompanyRepository $companyRepository,
     ): Response {
         $company_private = new CompanyPrivate();
-        $form = new CompanyPrivateForm($company_private);
+        $form = new CompanyPrivateForm();
         $body = $request->getParsedBody() ?? [];
         $parameters = [
             'title' => $this->translator->translate('add'),
@@ -188,11 +188,11 @@ final class CompanyPrivateController extends BaseController
     ): Response {
         $company_private = $this->companyprivate($currentRoute, $companyprivateRepository);
         if ($company_private) {
-            $form = new CompanyPrivateForm($company_private);
+            $form = CompanyPrivateForm::show($company_private);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'companyprivate/edit',
-                'actionArguments' => ['id' => $company_private->getId()],
+                'actionArguments' => ['id' => $company_private->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'formFields' => $this->formFields,
@@ -228,7 +228,7 @@ final class CompanyPrivateController extends BaseController
                     $this->companyPrivateService->saveCompanyPrivate($company_private, $body);
 
                     // Prepare the after save for the logo_filename field
-                    $after_save = $companyprivateRepository->repoCompanyPrivatequery((string) $company_private->getId());
+                    $after_save = $companyprivateRepository->repoCompanyPrivatequery((string) $company_private->reqId());
                     if ($after_save) {
                         // A new file upload must replace the previous one or keep existing file
                         /**
@@ -301,11 +301,11 @@ final class CompanyPrivateController extends BaseController
     ): Response {
         $company_private = $this->companyprivate($currentRoute, $companyprivateRepository);
         if ($company_private) {
-            $form = new CompanyPrivateForm($company_private);
+            $form = CompanyPrivateForm::show($company_private);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'companyprivate/view',
-                'actionArguments' => ['id' => $company_private->getId()],
+                'actionArguments' => ['id' => $company_private->reqId()],
                 'form' => $form,
                 'formFields' => $this->formFields,
                 'companies' => $companyRepository->findAllPreloaded(),

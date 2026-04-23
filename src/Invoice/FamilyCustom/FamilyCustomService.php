@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\FamilyCustom;
 
-use App\Invoice\Entity\FamilyCustom;
+use App\Infrastructure\Persistence\FamilyCustom\FamilyCustom;
 use App\Invoice\Family\FamilyRepository as FR;
 use App\Invoice\CustomField\CustomFieldRepository as CFR;
 

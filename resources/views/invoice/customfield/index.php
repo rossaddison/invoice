@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
@@ -36,7 +36,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (CustomField $model): string {
-            return Html::encode($model->getId());
+            return Html::encode($model->reqId());
         },
     ),
     new DataColumn(
@@ -78,7 +78,7 @@ $columns = [
                 $urlGenerator): string|A {
             if (in_array($model->getType(), $custom_value_fields)) {
                 return  new A()
-                       ->href($urlGenerator->generate('customvalue/field', ['id' => $model->getId()]))
+                       ->href($urlGenerator->generate('customvalue/field', ['id' => $model->reqId()]))
                        ->addClass('btn btn-default')
                        ->addAttributes([
                            'style' => 'text-decoration:none; background:lightblue',
@@ -93,7 +93,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (CustomField $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('customfield/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('customfield/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -103,7 +103,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (CustomField $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('customfield/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('customfield/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -113,7 +113,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (CustomField $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('customfield/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('customfield/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\CustomField $custom_field
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
  * @var App\Invoice\CustomValue\CustomValueForm $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -84,7 +84,7 @@ use Yiisoft\Html\Tag\Form;
     ->addInputAttributes([
         'class' => 'form-control form-control-lg',
         'id' => 'custom_field_id'])
-    ->value(Html::encode($custom_field->getId()))
+    ->value(Html::encode($custom_field->reqId()))
     ->hideLabel();
 ?>
                 <?= Html::closeTag('div'); ?>

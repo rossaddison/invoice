@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\ClientNote;
 
 use App\Infrastructure\Persistence\Client\Client;
+use App\Invoice\ClientNote\ClientNoteRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
-use DateTime;
 use DateTimeImmutable;
 
-#[Entity(repository: \App\Invoice\ClientNote\ClientNoteRepository::class)]
+#[Entity(repository: ClientNoteRepository::class)]
 class ClientNote
 {
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
@@ -26,8 +26,9 @@ class ClientNote
         private ?int $client_id = null,
         #[Column(type: 'longText', nullable: false)]
         private string $note = '',
-        #[Column(type: 'date', nullable: false)]
-        private mixed $date_note = '')
+        #[Column(type: 'date', nullable: true)]
+        private DateTimeImmutable|string|null $date_note = null,
+    )
     {
     }
 
@@ -42,11 +43,22 @@ class ClientNote
     }
 
     /**
-     * @return numeric-string|null
+     * @throws \LogicException if the entity has not been persisted yet.
      */
-    public function getId(): ?string
+    public function reqId(): int
     {
-        return $this->id === null ? null : (string) $this->id;
+        if ($this->id === null) {
+            throw new \LogicException(
+                'ClientNote has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -64,15 +76,15 @@ class ClientNote
         $this->client_id = $client_id;
     }
 
-    public function getDateNote(): string|DateTimeImmutable
+    public function getDateNote(): string|DateTimeImmutable|null
     {
         /**
-         * @var DateTimeImmutable|string $this->date_note
+         * @var DateTimeImmutable|string|null $this->date_note
          */
         return $this->date_note;
     }
 
-    public function setDateNote(DateTime $date_note): void
+    public function setDateNote(?DateTimeImmutable $date_note): void
     {
         $this->date_note = $date_note;
     }
@@ -85,10 +97,5 @@ class ClientNote
     public function setNote(string $note): void
     {
         $this->note = $note;
-    }
-
-    public function isNewRecord(): bool
-    {
-        return null === $this->getId() ? true : false;
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomValue;
 
-use App\Invoice\Entity\CustomValue;
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomValue\CustomValue;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -143,8 +143,8 @@ final class CustomValueRepository extends Select\Repository
                     ['SINGLE-CHOICE','MULTIPLE-CHOICE','RADIOLIST-CHOICE'])) {
 // build the $custom_values array with the eg. dropdown values for the field
 // whether it be a multiple-choice field or a single-choice field
-                $custom_values[$custom_field->getId()] =
-                        $this->repoCustomFieldquery((int) $custom_field->getId());
+                $custom_values[$custom_field->reqId()] =
+                        $this->repoCustomFieldquery($custom_field->reqId());
             }
         }
         return $custom_values;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\EmailTemplate;
+use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -46,7 +46,7 @@ $columns = [
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn (EmailTemplate $model) => Html::encode((string) $model->getEmailTemplateId()),
+        content: static fn (EmailTemplate $model) => Html::encode((string) $model->reqEmailTemplateId()),
         withSorting: true,
     ),
     new DataColumn(
@@ -67,7 +67,7 @@ $columns = [
             return (new A())
                 ->href($urlGenerator->generate(
                     'emailtemplate/preview',
-                    ['email_template_id' => $model->getEmailTemplateId()],
+                    ['email_template_id' => $model->reqEmailTemplateId()],
                 ))
                 ->content('🖼️')
                 ->render();
@@ -79,7 +79,7 @@ $columns = [
             content: '🔎',
             url: static function (EmailTemplate $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('emailtemplate/view',
-                    ['email_template_id' => $model->getEmailTemplateId()]);
+                    ['email_template_id' => $model->reqEmailTemplateId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -91,7 +91,7 @@ $columns = [
             url: static function (EmailTemplate $model) use ($urlGenerator): string {
                 return $urlGenerator->generate(
                     'emailtemplate/edit' . ($model->getEmailTemplateType() === 'Invoice' ? 'Invoice' : 'Quote'),
-                    ['email_template_id' => $model->getEmailTemplateId()],
+                    ['email_template_id' => $model->reqEmailTemplateId()],
                 );
             },
             attributes: [
@@ -103,7 +103,7 @@ $columns = [
             content: '❌',
             url: static function (EmailTemplate $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('emailtemplate/delete',
-                    ['email_template_id' => $model->getEmailTemplateId()]);
+                    ['email_template_id' => $model->reqEmailTemplateId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

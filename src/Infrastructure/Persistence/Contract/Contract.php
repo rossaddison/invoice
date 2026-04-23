@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\Contract;
 
 use App\Infrastructure\Persistence\Client\Client;
 use Cycle\Annotated\Annotation\Column;
@@ -36,10 +36,24 @@ class Contract
         $this->period_start = new DateTimeImmutable();
         $this->period_end = new DateTimeImmutable();
     }
-
-    public function getId(): ?int
+    
+   /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'Contract has no ID (not persisted yet)'
+            );
+        }
+
         return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function getClientId(): string
@@ -100,10 +114,5 @@ class Contract
     public function setPeriodEnd(DateTimeImmutable $period_end): void
     {
         $this->period_end = $period_end;
-    }
-
-    public function isNewRecord(): bool
-    {
-        return null === $this->getId() ? true : false;
     }
 }

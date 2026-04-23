@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Contract;
 
-use App\Invoice\Entity\Contract;
+use App\Infrastructure\Persistence\Contract\Contract;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
@@ -18,21 +18,23 @@ final class ContractForm extends FormModel
     private ?string $name = '';
 
     #[Required]
-    private readonly DateTimeImmutable $period_start;
+    private mixed $period_start = '';
 
     #[Required]
-    private readonly DateTimeImmutable $period_end;
+    private mixed $period_end = '';
 
     #[Required]
     private ?string $client_id = '';
 
-    public function __construct(Contract $contract)
+    public static function show(Contract $contract): self
     {
-        $this->reference = $contract->getReference();
-        $this->name = $contract->getName();
-        $this->period_start = $contract->getPeriodStart();
-        $this->period_end = $contract->getPeriodEnd();
-        $this->client_id = $contract->getClientId();
+        $form = new self();
+        $form->reference = $contract->getReference();
+        $form->name = $contract->getName();
+        $form->period_start = $contract->getPeriodStart()->format('Y-m-d');
+        $form->period_end = $contract->getPeriodEnd()->format('Y-m-d');
+        $form->client_id = $contract->getClientId();
+        return $form;
     }
 
     public function getReference(): ?string
@@ -45,13 +47,19 @@ final class ContractForm extends FormModel
         return $this->name;
     }
 
-    public function getPeriodStart(): DateTimeImmutable
+    public function getPeriodStart(): DateTimeImmutable|string
     {
+        /**
+         * @var DateTimeImmutable|string $this->period_start
+         */
         return $this->period_start;
     }
 
-    public function getPeriodEnd(): DateTimeImmutable
+    public function getPeriodEnd(): DateTimeImmutable|string
     {
+        /**
+         * @var DateTimeImmutable|string $this->period_end
+         */
         return $this->period_end;
     }
 

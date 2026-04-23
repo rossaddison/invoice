@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\FromDropDown;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -17,9 +17,23 @@ class FromDropDown
         private bool $include = false, #[Column(type: 'bool', default: false, nullable: false)]
         private bool $default_email = false) {}
 
-    public function getId(): string
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
-        return (string) $this->id;
+        if ($this->id === null) {
+            throw new \LogicException(
+                'FromDropDown has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void

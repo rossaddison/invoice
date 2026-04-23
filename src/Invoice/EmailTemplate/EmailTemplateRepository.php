@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\EmailTemplate;
 
 use App\Invoice\Setting\SettingRepository;
-use App\Invoice\Entity\EmailTemplate;
+use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

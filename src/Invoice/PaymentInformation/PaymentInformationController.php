@@ -10,8 +10,8 @@ use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Company\CompanyRepository as compR;
 // Entities
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository as cPR;
-use App\Invoice\Entity\Company;
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\Company\Company;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvItem;
@@ -1510,7 +1510,7 @@ final class PaymentInformationController
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompanyId() == (string) $company->getId()) {
+                    if ($private->getCompanyId() == (string) $company->reqId()) {
                         $companyLogoFileName = $private->getLogoFilename();
                         $companyLogoWidth = $private->getLogoWidth() ?? 0;
                         $companyLogoHeight = $private->getLogoHeight() ?? 0;

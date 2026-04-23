@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\EmailTemplate;
+use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
 use Codeception\Test\Unit;
 
 final class EmailTemplateEntityTest extends Unit
@@ -23,7 +23,7 @@ final class EmailTemplateEntityTest extends Unit
     {
         $emailTemplate = new EmailTemplate();
         
-        $this->assertNull($emailTemplate->getEmailTemplateId());
+        $this->assertFalse($emailTemplate->isPersisted());
         $this->assertSame('', $emailTemplate->getEmailTemplateTitle());
         $this->assertSame('', $emailTemplate->getEmailTemplateType());
         $this->assertSame('', $emailTemplate->getEmailTemplateBody());
@@ -49,7 +49,7 @@ final class EmailTemplateEntityTest extends Unit
             'invoice_template.pdf'
         );
         
-        $this->assertNull($emailTemplate->getEmailTemplateId());
+        $this->assertFalse($emailTemplate->isPersisted());
         $this->assertSame($this->invoiceTemplate, $emailTemplate->getEmailTemplateTitle());
         $this->assertSame('invoice', $emailTemplate->getEmailTemplateType());
         $this->assertSame('<p>Your invoice is ready</p>', $emailTemplate->getEmailTemplateBody());
@@ -61,11 +61,11 @@ final class EmailTemplateEntityTest extends Unit
         $this->assertSame('invoice_template.pdf', $emailTemplate->getEmailTemplatePdfTemplate());
     }
 
-    public function testIdGetter(): void
+    public function testIsNotPersistedByDefault(): void
     {
         $emailTemplate = new EmailTemplate();
-        
-        $this->assertNull($emailTemplate->getEmailTemplateId());
+
+        $this->assertFalse($emailTemplate->isPersisted());
     }
 
     public function testTitleSetterAndGetter(): void

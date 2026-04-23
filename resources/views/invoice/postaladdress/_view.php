@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\PostalAddress $postalAddress
+ * @var App\Infrastructure\Persistence\PostalAddress\PostalAddress $postalAddress
  * @var App\Invoice\PostalAddress\PostalAddressForm $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -39,50 +39,54 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 <?= Html::openTag('div', ['id' => 'headerbar']); ?>
     <?= $button::back(); ?>
+    <?= $pAdd = 'client.postaladdress.'; ?>
     <?= Html::openTag('div', ['id' => 'content']); ?>
         <?= Html::openTag('div', ['class' => 'row']); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::hidden($form, 'id')
-                    ->hideLabel(); ?>
-            <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::hidden($form, 'client_id')
                     ->hideLabel(); ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'street_name')
+                    ->label($translator->translate($pAdd . 'street.name'))
                     ->disabled(true);
 ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
-                <?= Field::text($form, 'additional_street_name')
-   ->disabled(true);
-?>
+                <?= Field::text($form, $pAdd. 'additional_street_name')
+                    ->label($translator->translate($pAdd . 'additional.street.name'))
+               ->disabled(true);
+            ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'building_number')
-    ->disabled(true);
-?>
+                    ->label($translator->translate($pAdd . 'building.number'))
+                    ->disabled(true);
+                ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'city_name')
-    ->disabled(true);
-?>
+                    ->label($translator->translate($pAdd . 'city.name'))
+                    ->disabled(true);
+                ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'postalzone')
-    ->disabled(true);
-?>
+                    ->label($translator->translate($pAdd . 'postalzone'))
+                    ->disabled(true);
+                ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'countrysubentity')
-    ->disabled(true);
-?>
+                    ->label($translator->translate($pAdd . 'countrysubentity'))
+                    ->disabled(true);
+                ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div'); ?>
                 <?= Field::text($form, 'country')
-    ->disabled(true);
-?>
+                    ->label($translator->translate($pAdd . 'country'))
+                    ->disabled(true);
+                ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>
     <?= Html::closeTag('div'); ?>

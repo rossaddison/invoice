@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\Delivery;
 
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use Cycle\Annotated\Annotation\Column;
@@ -54,9 +54,23 @@ class Delivery
         $this->end_date = new DateTimeImmutable(date('Y-m-t'));
     }
 
-    public function getId(): ?int
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'Delivery has no ID (not persisted yet)'
+            );
+        }
+
         return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function getDeliveryLocation(): ?DeliveryLocation
@@ -168,10 +182,5 @@ class Delivery
     public function setDeliveryPartyId(int $delivery_party_id): void
     {
         $this->delivery_party_id = $delivery_party_id;
-    }
-
-    public function isNewRecord(): bool
-    {
-        return $this->getId() === null;
     }
 }

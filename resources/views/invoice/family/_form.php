@@ -141,7 +141,7 @@ echo Html::cssFile('/assets/css/family-commalist-picker.css');
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php
                     /**
-                     * @var App\Invoice\Entity\CustomField $customField
+                     * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
                      */
                     foreach ($customFields as $customField): ?>
                         <?php

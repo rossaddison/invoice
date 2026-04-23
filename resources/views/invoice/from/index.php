@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\FromDropDown;
+use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -36,7 +36,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (FromDropDown $model) => $model->getId(),
+        content: static fn (FromDropDown $model) => $model->reqId(),
     ),
     new DataColumn(
         'default_email',
@@ -46,14 +46,14 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (FromDropDown $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('from/view', ['id' => $model->getId()]), [])->render();
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('from/view', ['id' => $model->reqId()]), [])->render();
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (FromDropDown $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil']), $urlGenerator->generate('from/edit', ['id' => $model->getId()]), [])->render();
+            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil']), $urlGenerator->generate('from/edit', ['id' => $model->reqId()]), [])->render();
         },
         encodeContent: false,
     ),
@@ -70,7 +70,7 @@ $columns = [
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('from/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('from/delete', ['id' => $model->reqId()]),
                 [],
             );
         },

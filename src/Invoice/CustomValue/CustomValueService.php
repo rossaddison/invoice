@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomValue;
 
-use App\Invoice\Entity\CustomValue;
+use App\Infrastructure\Persistence\CustomValue\CustomValue;
 use App\Invoice\CustomField\CustomFieldRepository as CFR;
 
 final readonly class CustomValueService

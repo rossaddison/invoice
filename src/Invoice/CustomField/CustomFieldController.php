@@ -6,7 +6,7 @@ namespace App\Invoice\CustomField;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use App\Invoice\CustomValue\CustomValueRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
@@ -105,7 +105,7 @@ final class CustomFieldController extends BaseController
     ): Response {
         $body = $request->getParsedBody() ?? [];
         $custom_field = new CustomField();
-        $form = new CustomFieldForm($custom_field);
+        $form = new CustomFieldForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'customfield/add',
@@ -148,11 +148,11 @@ final class CustomFieldController extends BaseController
     ): Response {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field) {
-            $form = new CustomFieldForm($custom_field);
+            $form = CustomFieldForm::show($custom_field);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'customfield/edit',
-                'actionArguments' => ['id' => $custom_field->getId()],
+                'actionArguments' => ['id' => $custom_field->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'tables' => $this->customTables(),
@@ -185,7 +185,7 @@ final class CustomFieldController extends BaseController
     {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field instanceof CustomField) {
-            $custom_values = $customvalueRepository->repoCustomFieldqueryCount((int) $custom_field->getId());
+            $custom_values = $customvalueRepository->repoCustomFieldqueryCount($custom_field->reqId());
             // Make sure all custom values associated with the custom field have been deleted first before commencing
             if (!($custom_values > 0)) {
                 $this->customFieldService->deleteCustomField($custom_field);
@@ -205,11 +205,11 @@ final class CustomFieldController extends BaseController
     {
         $custom_field = $this->customfield($currentRoute, $customfieldRepository);
         if ($custom_field) {
-            $form = new CustomFieldForm($custom_field);
+            $form = CustomFieldForm::show($custom_field);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'customfield/edit',
-                'actionArguments' => ['id' => $custom_field->getId()],
+                'actionArguments' => ['id' => $custom_field->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'custom_tables' => $this->customTables(),

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\EmailTemplate;
 
-use App\Invoice\Entity\EmailTemplate;
+use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Length;
@@ -34,17 +34,19 @@ final class EmailTemplateForm extends FormModel
     #[Length(min: 0, max: 151, skipOnEmpty: true)]
     private ?string $email_template_pdf_template = null;
 
-    public function __construct(EmailTemplate $emailtemplate)
+    public static function show(EmailTemplate $emailtemplate): self
     {
-        $this->email_template_title = $emailtemplate->getEmailTemplateTitle();
-        $this->email_template_type = $emailtemplate->getEmailTemplateType();
-        $this->email_template_body = $emailtemplate->getEmailTemplateBody();
-        $this->email_template_subject = $emailtemplate->getEmailTemplateSubject();
-        $this->email_template_from_name = $emailtemplate->getEmailTemplateFromName();
-        $this->email_template_from_email = $emailtemplate->getEmailTemplateFromEmail();
-        $this->email_template_cc = $emailtemplate->getEmailTemplateCc();
-        $this->email_template_bcc = $emailtemplate->getEmailTemplateBcc();
-        $this->email_template_pdf_template = $emailtemplate->getEmailTemplatePdfTemplate();
+        $form = new self();
+        $form->email_template_title = $emailtemplate->getEmailTemplateTitle();
+        $form->email_template_type = $emailtemplate->getEmailTemplateType();
+        $form->email_template_body = $emailtemplate->getEmailTemplateBody();
+        $form->email_template_subject = $emailtemplate->getEmailTemplateSubject();
+        $form->email_template_from_name = $emailtemplate->getEmailTemplateFromName();
+        $form->email_template_from_email = $emailtemplate->getEmailTemplateFromEmail();
+        $form->email_template_cc = $emailtemplate->getEmailTemplateCc();
+        $form->email_template_bcc = $emailtemplate->getEmailTemplateBcc();
+        $form->email_template_pdf_template = $emailtemplate->getEmailTemplatePdfTemplate();
+        return $form;
     }
 
     public function getEmailTemplateTitle(): ?string

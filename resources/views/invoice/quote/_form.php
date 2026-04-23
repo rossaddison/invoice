@@ -154,7 +154,7 @@ if ($form->getStatusId() == 1) { ?>
                         <?= Html::closeTag('div'); ?>
                     <?php
                         /**
-                         * @var App\Invoice\Entity\CustomField $customField
+                         * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
                          */
                         foreach ($customFields as $customField): ?>
                         <?php $cvH->printFieldForForm($customField, $quoteCustomForm, $translator, $urlGenerator, $quoteCustomValues, $customValues); ?>

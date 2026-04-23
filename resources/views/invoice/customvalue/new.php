@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\CustomField $custom_field
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
  * @var App\Invoice\CustomValue\CustomValueForm $form
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -85,12 +85,12 @@ use Yiisoft\Html\Tag\Form;
   //                    (2) The value field where new data will be entered?>
                 <?= Html::openTag('div', ['class' => 'form-group']); ?>
                     <?= Field::hidden($form, 'custom_field_id')
-    ->addInputAttributes([
-        'class' => 'form-control form-control-lg',
-        'id' => 'custom_field_id'])
-    ->value($custom_field->getId())
-    ->hideLabel();
-?>
+                        ->addInputAttributes([
+                            'class' => 'form-control form-control-lg',
+                            'id' => 'custom_field_id'])
+                        ->value($custom_field->reqId())
+                        ->hideLabel();
+                    ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'form-group']); ?>
                     <?= Field::text($form, 'value')

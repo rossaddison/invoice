@@ -633,30 +633,17 @@ echo H::openTag('div', $row); //1
        ]);
         echo  new Option()
          ->value('')
-         ->content(
-          $translator->translate('none')
-         );
+         ->content($translator->translate('none'));
 
-        /**
-        * @var App\Invoice\Entity\EmailTemplate
-        *      $email_template
+       /**
+        * @var App\Infrastructure\Persistence\EmailTemplate\EmailTemplate $email_template
         */
         foreach ($email_templates_invoice
          as $email_template) {
          echo  new Option()
-         ->value(
-         $email_template
-         ->GetEmailTemplateId()
-        )
-         ->selected(
-          $body[$seit] == $email_template
-          ->getEmailTemplateId()
-        )
-         ->content(
-          $email_template
-          ->getEmailTemplateTitle()
-          ?? ''
-         );
+         ->value($email_template->reqEmailTemplateId())
+         ->selected($body[$seit] == $email_template->reqEmailTemplateId())
+         ->content($email_template->getEmailTemplateTitle() ?? '');
         }
 
        echo H::closeTag('select');
@@ -682,24 +669,21 @@ echo H::openTag('div', $row); //1
        ]);
         echo  new Option()
          ->value('')
-         ->content(
-          $translator->translate('none')
-         );
+         ->content($translator->translate('none'));
 
         /**
-        * @var App\Invoice\Entity\EmailTemplate
-        *      $email_template
-        */
+         * @var App\Infrastructure\Persistence\EmailTemplate\EmailTemplate $email_template
+         */
         foreach ($email_templates_invoice
          as $email_template) {
          echo  new Option()
          ->value(
          $email_template
-         ->getEmailTemplateId()
+         ->reqEmailTemplateId()
         )
          ->selected(
           $body[$seitp] == $email_template
-          ->getEmailTemplateId()
+          ->reqEmailTemplateId()
         )
          ->content(
           $email_template
@@ -736,20 +720,19 @@ echo H::openTag('div', $row); //1
           $translator->translate('none')
          );
 
-        /**
-        * @var App\Invoice\Entity\EmailTemplate
-        *      $email_template
-        */
+/**
+ * @var App\Infrastructure\Persistence\EmailTemplate\EmailTemplate $email_template
+ */
         foreach ($email_templates_invoice
          as $email_template) {
          echo  new Option()
          ->value(
          $email_template
-         ->getEmailTemplateId()
+         ->reqEmailTemplateId()
         )
          ->selected(
           $body[$seito] == $email_template
-          ->getEmailTemplateId()
+          ->reqEmailTemplateId()
         )
          ->content(
           $email_template

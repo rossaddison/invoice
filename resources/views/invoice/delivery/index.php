@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Delivery;
+use App\Infrastructure\Persistence\Delivery\Delivery;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -39,7 +39,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Delivery $model) => Html::encode($model->getId()),
+        content: static fn (Delivery $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'start_date',

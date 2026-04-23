@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CompanyPrivate;
 
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

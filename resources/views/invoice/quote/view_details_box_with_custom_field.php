@@ -56,7 +56,7 @@ use Yiisoft\Html\Html;
 <div>
     <?php
         /**
-         * @var App\Invoice\Entity\CustomField $customField
+         * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
          */
         foreach ($customFields as $customField): ?>
         <?php if ($customField->getLocation() !== 1) {

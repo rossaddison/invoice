@@ -6,7 +6,7 @@ namespace App\Invoice\Company;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Company;
+use App\Infrastructure\Persistence\Company\Company;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
 use App\User\UserService;
@@ -68,7 +68,7 @@ final class CompanyController extends BaseController
         FormHydrator $formHydrator,
     ): Response {
         $body = $request->getParsedBody() ?? [];
-        $form = new CompanyForm(new Company());
+        $form = new CompanyForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'company/add',
@@ -107,11 +107,11 @@ final class CompanyController extends BaseController
     ): Response {
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
-            $form = new CompanyForm($company);
+            $form = CompanyForm::show($company);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'company/edit',
-                'actionArguments' => ['id' => $company->getId()],
+                'actionArguments' => ['id' => $company->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'formFields' => $this->formFields,
@@ -162,11 +162,11 @@ final class CompanyController extends BaseController
     ): Response {
         $company = $this->company($currentRoute, $companyRepository);
         if ($company) {
-            $form = new CompanyForm($company);
+            $form = CompanyForm::show($company);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'company/view',
-                'actionArguments' => ['id' => $company->getId()],
+                'actionArguments' => ['id' => $company->reqId()],
                 'companyPublic' => $this->translator->translate('company.public'),
                 'form' => $form,
             ];

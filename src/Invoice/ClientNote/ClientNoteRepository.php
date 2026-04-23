@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientNote;
 
-use App\Invoice\Entity\ClientNote;
+use App\Infrastructure\Persistence\ClientNote\ClientNote;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

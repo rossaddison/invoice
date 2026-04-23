@@ -4,33 +4,35 @@ declare(strict_types=1);
 
 namespace App\Invoice\Delivery;
 
-use App\Invoice\Entity\Delivery;
+use App\Infrastructure\Persistence\Delivery\Delivery;
 use Yiisoft\FormModel\FormModel;
 use DateTimeImmutable;
 
 final class DeliveryForm extends FormModel
 {
-    private readonly mixed $date_created;
-    private readonly mixed $date_modified;
-    private readonly mixed $start_date;
-    private readonly mixed $actual_delivery_date;
-    private readonly mixed $end_date;
+    private mixed $date_created = '';
+    private mixed $date_modified = '';
+    private mixed $start_date = '';
+    private mixed $actual_delivery_date = '';
+    private mixed $end_date = '';
     private ?int $delivery_location_id = null;
     private ?int $delivery_party_id = null;
     private ?int $inv_id = null;
     private ?int $inv_item_id = null;
 
-    public function __construct(Delivery $delivery)
+    public static function show(Delivery $delivery): self
     {
-        $this->date_created = $delivery->getDateCreated();
-        $this->date_modified = $delivery->getDateModified();
-        $this->start_date = $delivery->getStartDate();
-        $this->actual_delivery_date = $delivery->getActualDeliveryDate();
-        $this->end_date = $delivery->getEndDate();
-        $this->delivery_location_id = (int) $delivery->getDeliveryLocationId();
-        $this->delivery_party_id = (int) $delivery->getDeliveryPartyId();
-        $this->inv_id = $delivery->getInvId();
-        $this->inv_item_id = $delivery->getInvItemId();
+        $form = new self();
+        $form->date_created = $delivery->getDateCreated();
+        $form->date_modified = $delivery->getDateModified();
+        $form->start_date = $delivery->getStartDate();
+        $form->actual_delivery_date = $delivery->getActualDeliveryDate();
+        $form->end_date = $delivery->getEndDate();
+        $form->delivery_location_id = (int) $delivery->getDeliveryLocationId();
+        $form->delivery_party_id = (int) $delivery->getDeliveryPartyId();
+        $form->inv_id = $delivery->getInvId();
+        $form->inv_item_id = $delivery->getInvItemId();
+        return $form;
     }
 
     public function getDateCreated(): string|DateTimeImmutable
@@ -38,16 +40,16 @@ final class DeliveryForm extends FormModel
         /**
          * @var DateTimeImmutable|string $this->date_created
          */
-        return $this->date_created;
-    }
+            return $this->date_created;
+        }
 
     public function getDateModified(): string|DateTimeImmutable
     {
         /**
          * @var DateTimeImmutable|string $this->date_modified
          */
-        return $this->date_modified;
-    }
+            return $this->date_modified;
+        }
 
     public function getStartDate(): string|DateTimeImmutable
     {

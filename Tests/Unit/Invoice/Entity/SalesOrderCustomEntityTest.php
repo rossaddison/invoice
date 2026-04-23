@@ -6,7 +6,7 @@ namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderCustom\SalesOrderCustom;
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use PHPUnit\Framework\TestCase;
 
 class SalesOrderCustomEntityTest extends TestCase

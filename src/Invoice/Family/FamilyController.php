@@ -6,7 +6,7 @@ namespace App\Invoice\Family;
 
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Family\Family;
-use App\Invoice\Entity\FamilyCustom;
+use App\Infrastructure\Persistence\FamilyCustom\FamilyCustom;
 use App\Infrastructure\Persistence\Product\Product;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CategoryPrimary\CategoryPrimaryRepository as cpR;
@@ -143,8 +143,7 @@ final class FamilyController extends BaseController
     ): Response
     {
         $form = new FamilyForm();
-        $familyCustom = new FamilyCustom();
-        $familyCustomForm = new FamilyCustomForm($familyCustom);
+        $familyCustomForm = new FamilyCustomForm();
         $custom = $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom');
         $parameters = [
             'title' => $this->translator->translate('add.family'),
@@ -177,7 +176,7 @@ final class FamilyController extends BaseController
                              */
                             foreach ($custom as $custom_field_id => $value) {
                                 $familyCustom = new FamilyCustom();
-                                $familyCustomForm = new FamilyCustomForm($familyCustom);
+                                $familyCustomForm = new FamilyCustomForm();
                                 $family_custom = [];
                                 $family_custom['family_id'] = $family_id;
                                 $family_custom['custom_field_id'] = $custom_field_id;
@@ -185,8 +184,8 @@ final class FamilyController extends BaseController
                                 if ($formHydrator->populateAndValidate($familyCustomForm, $family_custom)) {
                                     $this->familyCustomService->saveFamilyCustom($familyCustom, $family_custom);
                                 }
-                                // These two can be used to create customised labels for custom field error validation on the form
-                                // Currently not used.
+// These two can be used to create customised labels for custom field error validation on the form
+// Currently not used.
                                 $parameters['familyCustomForm'] = $familyCustomForm;
                                 $parameters['errorsCustom'] = $familyCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
                             }
@@ -289,7 +288,7 @@ final class FamilyController extends BaseController
         if ($family) {
             $form = FamilyForm::show($family);
             $familyCustom = new FamilyCustom();
-            $familyCustomForm = new FamilyCustomForm($familyCustom);
+            $familyCustomForm = FamilyCustomForm::show($familyCustom);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'family/edit',
@@ -414,7 +413,7 @@ final class FamilyController extends BaseController
         if ($family) {
             $form = FamilyForm::show($family);
             $familyCustom = new FamilyCustom();
-            $familyCustomForm = new FamilyCustomForm($familyCustom);
+            $familyCustomForm = FamilyCustomForm::show($familyCustom);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'familyCustomForm' => $familyCustomForm,

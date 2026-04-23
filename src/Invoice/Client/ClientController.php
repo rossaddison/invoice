@@ -8,7 +8,7 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // Entity's
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\ClientCustom;
+use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Inv\InvForm;
 use App\Invoice\Entity\Quote;
@@ -42,9 +42,9 @@ use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Client\ClientCustomFieldProcessor;
 // Traits
-use App\Invoice\Traits\ClientCustomFieldTrait;
-use App\Invoice\Traits\ClientNoteTrait;
-use App\Invoice\Traits\ClientOptionsDataTrait;
+use App\Invoice\Client\Traits\ClientCustomFieldTrait;
+use App\Invoice\Client\Traits\ClientNoteTrait;
+use App\Invoice\Client\Traits\ClientOptionsDataTrait;
 // Psr\\Http
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -218,7 +218,7 @@ final class ClientController extends BaseController
             'customFields'    => $custom['customFields'],
             'customValues'    => $custom['customValues'],
             'clientCustomValues' => [],
-            'clientCustomForm'   => new ClientCustomForm(new ClientCustom()),
+            'clientCustomForm'   => new ClientCustomForm(),
             'formFields'         => $this->formFields,
         ];
     }
@@ -245,7 +245,7 @@ final class ClientController extends BaseController
         $custom = $body['custom'];
         foreach ($custom as $custom_field_id => $value) {
             $clientCustom     = new ClientCustom();
-            $clientCustomForm = new ClientCustomForm($clientCustom);
+            $clientCustomForm = new ClientCustomForm();
             $client_custom    = [
                 'client_id'       => $cId,
                 'custom_field_id' => $custom_field_id,
@@ -417,7 +417,7 @@ final class ClientController extends BaseController
             'customFields' => $custom['customFields'],
             'customValues' => $custom['customValues'],
             'clientCustomValues' => $this->clientCustomValues($cId, $ccR),
-            'clientCustomForm'   => new ClientCustomForm(new ClientCustom()),
+            'clientCustomForm'   => new ClientCustomForm(),
             'formFields'         => $this->formFields,
         ];
     }
@@ -672,7 +672,7 @@ final class ClientController extends BaseController
         }
         $cId = $client->reqId();
 
-        $clientCustomForm = new ClientCustomForm(new ClientCustom());
+        $clientCustomForm = ClientCustomForm::show(new ClientCustom());
 
         // Note: client_id is used as the 'origin'
         //  (could be 'quote','main','dashboard')

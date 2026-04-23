@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientNote;
 
-use App\Invoice\Entity\ClientNote;
+use App\Infrastructure\Persistence\ClientNote\ClientNote;
 use App\Invoice\Client\ClientRepository as CR;
-use DateTime;
 
 final readonly class ClientNoteService
 {
@@ -23,21 +22,10 @@ final readonly class ClientNoteService
         $this->persist($model, $array);
         isset($array['client_id']) ?
             $model->setClientId((int) $array['client_id']) : '';
-
-        $datetime = new DateTime();
-        /**
-         * @var string $array['date_note']
-         */
-        $date = $array['date_note'] ?? '';
-        /**
-         * Related logic:
-         * @see https://www.php.net/manual/en/datetime.createfromformat
-         * @var bool|DateTime $result
-         */
-        $result = $datetime::createFromFormat('Y-m-d', $date);
-        $model->setDateNote(
-            !is_bool($result) ? $result : $datetime);
-
+        $datetime = new \DateTimeImmutable();
+        isset($array['date_note']) ?
+            $model->setDateNote(\DateTimeImmutable::createFromFormat('Y-m-d',
+                    (string) $array['date_note']) ?: $datetime) : '';
         isset($array['note']) ?
             $model->setNote((string) $array['note']) : '';
         $this->repository->save($model);
@@ -54,21 +42,12 @@ final readonly class ClientNoteService
         $this->persist($model, $array);
         isset($array['client_id']) ?
             $model->setClientId((int) $array['client_id']) : '';
-
-        $datetime = new DateTime();
-        /**
-         * @var string $array['date_note']
-         */
-        $date = $array['date_note'] ?? '';
-        /**
-         * Related logic:
-         * @see https://www.php.net/manual/en/datetime.createfromformat
-         * @var bool|DateTime $result
-         */
-        $result = $datetime::createFromFormat('Y-m-d', $date);
-        $model->setDateNote(
-            !is_bool($result) ? $result : $datetime);
-
+        
+        $datetime = new \DateTimeImmutable();
+        isset($array['date_note']) ?
+            $model->setDateNote(\DateTimeImmutable::createFromFormat('Y-m-d',
+                    (string) $array['date_note']) ?: $datetime) : '';
+        
         isset($array['note']) ?
             $model->setNote((string) $array['note']) : '';
         $this->repository->save($model);

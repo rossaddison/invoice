@@ -280,7 +280,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::openTag('div', ['class' => 'panel-body']); ?>
       <?php
         /**
-         * @var App\Invoice\Entity\CustomField $customField
+         * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
          */
         foreach ($custom_fields as $customField): ?>
           <?php $cvH->printFieldForView($customField, $productCustomForm, $product_custom_values); ?>

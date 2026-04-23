@@ -7,7 +7,7 @@ use Yiisoft\FormModel\Field;
 
 /**
  * @var App\Invoice\CustomField\CustomFieldForm $field_form
- * @var App\Invoice\Entity\CustomField $custom_field
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
  * @var App\Widget\Button $button
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\FastRoute\UrlGenerator $urlGenerator
@@ -15,7 +15,7 @@ use Yiisoft\FormModel\Field;
  * @var array $custom_values_types
  * @var string $csrf
  */
-$customFieldId = $custom_field->getId();
+$customFieldId = $custom_field->reqId();
 
 echo H::openTag('form', ['method' => 'post']);
  echo H::tag('input', '', ['type' => 'hidden', 'name' => '_csrf', 'value' => $csrf]); //1
@@ -102,12 +102,12 @@ echo H::openTag('form', ['method' => 'post']);
             echo H::closeTag('thead');
             echo H::openTag('tbody'); //12
              /**
-              * @var App\Invoice\Entity\CustomValue $custom_value
+              * @var App\Infrastructure\Persistence\CustomValue\CustomValue $custom_value
               */
              foreach ($custom_values as $custom_value) {
              echo H::openTag('tr');
               echo H::openTag('td');
-               echo H::encode($custom_value->getId());
+               echo H::encode($custom_value->reqId());
               echo H::closeTag('td');
               echo H::openTag('td');
                echo H::encode($custom_value->getValue());
@@ -122,7 +122,7 @@ echo H::openTag('form', ['method' => 'post']);
                     . ' btn-sm dropdown-toggle',
                     'type' => 'button',
                     'id' => 'dropdownMenuButton'
-                    . $custom_value->getId(),
+                    . $custom_value->reqId(),
                     'data-bs-toggle' => 'dropdown',
                     'aria-expanded' => 'false',
                    ],
@@ -130,7 +130,7 @@ echo H::openTag('form', ['method' => 'post']);
                  echo H::openTag('ul', [
                    'class' => 'dropdown-menu',
                    'aria-labelledby' => 'dropdownMenuButton'
-                   . $custom_value->getId()]);
+                   . $custom_value->reqId()]);
                   echo H::openTag('li');
                    echo H::tag(
                      'a',
@@ -139,7 +139,7 @@ echo H::openTag('form', ['method' => 'post']);
                         'class' => 'dropdown-item',
                         'href' => $urlGenerator->generate('customvalue/view',
                         [
-                            'id' => $custom_value->getId()]),
+                            'id' => $custom_value->reqId()]),
                             'style' => 'text-decoration:none',
                         ],
                      );
@@ -151,7 +151,7 @@ echo H::openTag('form', ['method' => 'post']);
                        [
                         'class' => 'dropdown-item',
                         'href' => $urlGenerator->generate('customvalue/edit',
-                            ['id' => $custom_value->getId()]),
+                            ['id' => $custom_value->reqId()]),
                         'style' => 'text-decoration:none',
                        ],
                       );
@@ -162,7 +162,7 @@ echo H::openTag('form', ['method' => 'post']);
                        '❌ ' . $translator->translate('delete'),
                         [
                          'class' => 'dropdown-item text-danger',
-                         'href' => $urlGenerator->generate('customvalue/delete', ['id' => $custom_value->getId()]),
+                         'href' => $urlGenerator->generate('customvalue/delete', ['id' => $custom_value->reqId()]),
                          'style' => 'text-decoration:none',
                          'onclick' => "return confirm('"
                             . addslashes(

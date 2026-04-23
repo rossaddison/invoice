@@ -32,7 +32,8 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::openTag('div', ['class' => 'container-fluid py-3']); ?>
 <?= Html::openTag('div', ['class' => 'row justify-content-center']); ?>
 <?= Html::openTag('div', ['class' => 'col-12 col-lg-10 col-xl-10']); ?>
-<?= Html::openTag('div', ['class' => 'card border border-dark shadow-2-strong rounded-3']); ?>
+<?= Html::openTag('div', ['class' =>
+    'card border border-dark shadow-2-strong rounded-3']); ?>
 <?= Html::openTag('div', ['class' => 'card-header']); ?>
 
 <?= Html::openTag('h1', ['class' => 'fw-normal h3 text-center']); ?>
@@ -73,23 +74,30 @@ echo Field::select($form, 'client_id')
             <?= Html::openTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::date($form, 'date_note')
-    ->label($translator->translate('date'))
-    ->required(true)
-    ->value(!is_string($dateNote = $form->getDateNote()) ? $dateNote->format('Y-m-d') : '')
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+                      ->label($translator->translate('date'))
+                      ->addInputAttributes([
+                          'placeholder'  => $translator->translate('date'),
+                          'class'        => 'form-control form-control-lg',
+                          'id'           => 'date_note',
+                          'role'         => 'presentation',
+                          'autocomplete' => 'off',
+                          'onclick'      => 'this.showPicker()',
+                      ])
+                      ->value(Html::encode($form->getDateNote() ?? ''))
+                      ->hint($translator->translate(
+                            'hint.this.field.is.required')); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::textarea($form, 'note')
-    ->label($translator->translate('note'))
-    ->addInputAttributes([
-        'placeholder' => $translator->translate('note'),
-        'value' => Html::encode($form->getNote() ?? ''),
-        'class' => 'form-control form-control-lg',
-        'id' => 'note',
-    ])
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+                    ->label($translator->translate('note'))
+                    ->addInputAttributes([
+                        'placeholder' => $translator->translate('note'),
+                        'value' => Html::encode($form->getNote() ?? ''),
+                        'class' => 'form-control form-control-lg',
+                        'id' => 'note',
+                    ])
+                    ->hint($translator->translate('hint.this.field.is.required'));
+                ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

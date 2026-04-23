@@ -153,7 +153,7 @@ if ($openInvsCount > 0) {
             <?= Html::openTag('div'); ?>
                 <?php
 /**
- * @var App\Invoice\Entity\CustomField $customField
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
  */
 foreach ($customFields as $customField): ?>
                         <?php $cvH->printFieldForForm($customField, $paymentCustomForm, $translator, $urlGenerator, $paymentCustomValues, $customValues); ?>

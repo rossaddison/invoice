@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\Company;
 
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasMany;
@@ -83,11 +83,25 @@ class Company
         return $this->companyPrivates;
     }
 
-    public function getId(): ?int
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'ClientNote has no ID (not persisted yet)'
+            );
+        }
+
         return $this->id;
     }
 
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+    
     public function setId(int $id): void
     {
         $this->id = $id;
@@ -303,10 +317,5 @@ class Company
     public function getDateModified(): DateTimeImmutable
     {
         return $this->date_modified;
-    }
-
-    public function isNewRecord(): bool
-    {
-        return $this->getId() === null;
     }
 }

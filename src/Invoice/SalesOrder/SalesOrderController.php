@@ -6,6 +6,7 @@ namespace App\Invoice\SalesOrder;
 
 use App\Auth\Permissions;
 use App\Infrastructure\Persistence\{
+        CustomField\CustomField,
         DeliveryLocation\DeliveryLocation,
         Group\Group,
         InvAllowanceCharge\InvAllowanceCharge,
@@ -21,8 +22,9 @@ BaseController, Client\ClientRepository as CR,
 CustomField\CustomFieldRepository as CFR,
 CustomValue\CustomValueRepository as CVR,
 DeliveryLocation\DeliveryLocationRepository as DR,
-Entity\CustomField, Entity\Inv,
-Entity\InvAmount, Entity\InvCustom, Entity\InvItem,Entity\InvItemAllowanceCharge, Entity\InvTaxRate, Entity\SalesOrderTaxRate,
+Entity\Inv, Entity\InvAmount, Entity\InvCustom,
+Entity\InvItem,Entity\InvItemAllowanceCharge,
+Entity\InvTaxRate, Entity\SalesOrderTaxRate,
 Group\GroupRepository as GR,
 Helpers\CustomValuesHelper as CVH, Helpers\PdfHelper, Inv\InvForm,
 Inv\InvRepository as InvRepo, Inv\InvService, InvAllowanceCharge\InvAllowanceChargeForm,
@@ -1329,7 +1331,7 @@ final class SalesOrderController extends BaseController
                 // Build the inv_custom field record
                 $inv_custom = [
                     'inv_id' => $inv_id,
-                    'custom_field_id' => $custom_field->getId(),
+                    'custom_field_id' => $custom_field->reqId(),
                     'value' => $so_custom->getValue(),
                 ];
                 $entity = new InvCustom();

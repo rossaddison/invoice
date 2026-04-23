@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Traits;
+namespace App\Invoice\Client\Traits;
 
 use App\Infrastructure\Persistence\Client\Client;
 use App\Invoice\Client\ClientRepository as cR;
-use App\Invoice\Entity\PostalAddress;
+use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Translator\TranslatorInterface;
 
@@ -44,7 +44,7 @@ trait ClientOptionsDataTrait
         $optionsDataPostalAddress = [];
         /** @var PostalAddress $postalAddress */
         foreach ($postalAddresses as $postalAddress) {
-            $paId = (int) $postalAddress->getId();
+            $paId = $postalAddress->reqId();
             if ($paId > 0) {
                 $optionsDataPostalAddress[$paId] = implode(',', $this->buildAddressParts($postalAddress));
             }

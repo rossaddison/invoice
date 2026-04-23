@@ -6,7 +6,7 @@ namespace App\Invoice\PostalAddress;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\PostalAddress;
+use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
@@ -49,18 +49,15 @@ final class PostalAddressController extends BaseController
     public function add(
         CurrentRoute $currentRoute,
         Request $request,
-        FormHydrator $formHydrator,
+        FormHydrator $formHydrator
     ): Response {
-        $client_id = $currentRoute->getArgument('client_id');
+        $client_id = (int) $currentRoute->getArgument('client_id');
         $queryParams = $request->getQueryParams();
         $origin = (string) ($queryParams['origin'] ?? '');
         $origin_id = (int) ($queryParams['origin_id'] ?? 0);
         $action = (string) ($queryParams['action'] ?? '');
         $postalAddress = new PostalAddress();
-        $form = new PostalAddressForm(
-                $this->translator,
-                $postalAddress,
-                (int) $client_id);
+        $form = PostalAddressForm::show($postalAddress, $client_id);
         $parameters = [
             'canEdit' => ($this->userService->hasPermission(Permissions::VIEW_INV)
                 && $this->userService->hasPermission(Permissions::EDIT_INV)) ?
@@ -89,10 +86,8 @@ final class PostalAddressController extends BaseController
                         'record.successfully.created'));
                     $url = $origin . '/' . ($action ?: 'index');
                     if ($origin_id) {
-                        /**
-                         * @psalm-suppress MixedArgumentTypeCoercion
-                         */
                         return $this->webService->getRedirectResponse($url, [
+                            '_language' => $this->session->get('_language'),
                             'id' => $origin_id,
                         ]);
                     }
@@ -192,12 +187,11 @@ final class PostalAddressController extends BaseController
             $origin = (string) ($queryParams['origin'] ?? '');
             $origin_id = (int) ($queryParams['origin_id'] ?? 0);
             $action = (string) ($queryParams['action'] ?? '');
-            $form = new PostalAddressForm($this->translator,
-                        $postalAddress, (int) $postalAddress->getClientId());
+            $form = PostalAddressForm::show($postalAddress, null);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'postaladdress/edit',
-                'actionArguments' => ['id' => $postalAddress->getId()],
+                'actionArguments' => ['id' => $postalAddress->reqId()],
                 'actionQueryParameters' => [
                     'origin' => $origin,
                     'origin_id' => $origin_id,
@@ -283,14 +277,11 @@ final class PostalAddressController extends BaseController
         $postalAddress = $this->postaladdress($currentRoute,
                                                     $postalAddressRepository);
         if ($postalAddress) {
-            $form = new PostalAddressForm(
-                    $this->translator,
-                    $postalAddress,
-                    (int) $postalAddress->getClientId());
+            $form = PostalAddressForm::show($postalAddress, null);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'postaladdress/view',
-                'actionArguments' => ['id' => $postalAddress->getId()],
+                'actionArguments' => ['id' => $postalAddress->reqId()],
                 'form' => $form,
                 'postaladdress' => $postalAddress,
             ];

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\PostalAddress;
 
 use Cycle\ORM\Select;
-use App\Invoice\Entity\PostalAddress;
+use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;

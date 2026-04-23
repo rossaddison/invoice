@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 
 /**
- * @var App\Invoice\Entity\CustomField|null $custom_field
+ * @var App\Infrastructure\Persistence\CustomField\CustomField|null $custom_field
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -98,11 +98,11 @@ echo H::openTag('form', ['method' => 'post']); //0
        echo H::closeTag('thead'); //6
        echo H::openTag('tbody'); //6
         /**
-         * @var App\Invoice\Entity\CustomValue $custom_value
+         * @var App\Infrastructure\Persistence\CustomValue\CustomValue $custom_value
          */
         foreach ($custom_values as $custom_value) {
          echo H::openTag('tr'); //7
-          echo H::tag('td', $custom_value->getId());
+          echo H::tag('td', (string) $custom_value->reqId());
           echo H::tag('td', H::encode($custom_value->getValue()));
           echo H::openTag('td'); //8
            echo H::openTag('div', ['class' => 'options btn-group']); //9
@@ -121,7 +121,7 @@ echo H::openTag('form', ['method' => 'post']); //0
                       . ' '
                       . $translator->translate('edit'),
                $urlGenerator->generate('customvalue/edit',
-                    ['id' => $custom_value->getId()]),
+                    ['id' => $custom_value->reqId()]),
                ['style' => 'text-decoration:none']
               );
              echo H::closeTag('li'); //11
@@ -130,7 +130,7 @@ echo H::openTag('form', ['method' => 'post']); //0
                H::tag('i', '', ['class' => 'bi-trash'])
                       . $translator->translate('delete'),
                $urlGenerator->generate('customvalue/delete',
-                    ['id' => $custom_value->getId()]),
+                    ['id' => $custom_value->reqId()]),
                [
                 'style'   => 'text-decoration:none',
                 'onclick' => 'return confirm('

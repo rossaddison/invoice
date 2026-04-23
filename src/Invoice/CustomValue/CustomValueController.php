@@ -6,7 +6,7 @@ namespace App\Invoice\CustomValue;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\CustomValue;
+use App\Infrastructure\Persistence\CustomValue\CustomValue;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\CustomField\CustomFieldForm;
 use App\Invoice\CustomField\CustomFieldRepository;
@@ -36,7 +36,8 @@ final class CustomValueController extends BaseController
         WebControllerService $webService,
         Flash $flash,
     ) {
-        parent::__construct($webService, $userService, $translator, $webViewRenderer, $session, $sR, $flash);
+        parent::__construct($webService, $userService, $translator,
+                $webViewRenderer, $session, $sR, $flash);
         $this->customValueService = $customValueService;
     }
 
@@ -76,7 +77,7 @@ final class CustomValueController extends BaseController
             $custom_field = $customfieldRepository->repoCustomFieldquery($id);
             $customvalues = $customvalueRepository->repoCustomFieldquery((int) $id);
             if ($custom_field) {
-                $field_form = new CustomFieldForm($custom_field);
+                $field_form = new CustomFieldForm();
                 $parameters = [
                     'field_form' => $field_form,
                     'custom_field' => $custom_field,
@@ -108,7 +109,7 @@ final class CustomValueController extends BaseController
             $custom_field = $custom_fieldRepository->repoCustomFieldquery($field_id);
             $custom_value = new CustomValue();
             if ($custom_field) {
-                $form = new CustomValueForm($custom_value);
+                $form = new CustomValueForm();
                 $parameters = [
                     'actionName' => 'customvalue/new',
                     'actionArguments' => ['id' => $field_id],
@@ -154,10 +155,10 @@ final class CustomValueController extends BaseController
         $custom_field = $custom_fieldRepository->repoCustomFieldquery($custom_field_id);
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_field && $custom_value) {
-            $form = new CustomValueForm($custom_value);
+            $form = new CustomValueForm();
             $parameters = [
                 'actionName' => 'customvalue/edit',
-                'actionArguments' => ['id' => $custom_value->getId()],
+                'actionArguments' => ['id' => $custom_value->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'custom_field' => $custom_field,
@@ -206,11 +207,11 @@ final class CustomValueController extends BaseController
     {
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_value) {
-            $form = new CustomValueForm($custom_value);
+            $form = new CustomValueForm();
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'customvalue/view',
-                'actionArguments' => ['id' => $custom_value->getId()],
+                'actionArguments' => ['id' => $custom_value->reqId()],
                 'form' => $form,
             ];
             return $this->webViewRenderer->render('_view', $parameters);

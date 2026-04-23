@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Delivery;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Delivery;
+use App\Infrastructure\Persistence\Delivery\Delivery;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -67,7 +67,7 @@ final class DeliveryController extends BaseController
             $delivery = new Delivery();
             // inv_id is a hidden field and is static
             $delivery->setInvId((int) $inv_id);
-            $form = new DeliveryForm($delivery);
+            $form = new DeliveryForm();
             $parameters = [
                 'title' => $this->translator->translate('delivery.add'),
                 'actionName' => 'delivery/add',
@@ -186,7 +186,7 @@ final class DeliveryController extends BaseController
     ): Response {
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {
-            $form = new DeliveryForm($delivery);
+            $form = new DeliveryForm();
             $inv_id = $delivery->getInvId();
             $inv = $iR->repoInvLoadedquery((string) $inv_id);
             if (null !== $inv) {
@@ -194,7 +194,7 @@ final class DeliveryController extends BaseController
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
                     'actionName' => 'delivery/edit',
-                    'actionArguments' => ['id' => $delivery->getId()],
+                    'actionArguments' => ['id' => $delivery->reqId()],
                     'errors' => [],
                     'form' => $form,
                     'inv' => $inv,
@@ -253,11 +253,11 @@ final class DeliveryController extends BaseController
     {
         $delivery = $this->delivery($currentRoute, $deliveryRepository);
         if ($delivery) {
-            $form = new DeliveryForm($delivery);
+            $form = new DeliveryForm();
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'delivery/view',
-                'actionArguments' => ['id' => $delivery->getId()],
+                'actionArguments' => ['id' => $delivery->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'delivery' => $delivery,

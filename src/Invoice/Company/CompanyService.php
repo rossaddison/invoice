@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Company;
 
-use App\Invoice\Entity\Company;
+use App\Infrastructure\Persistence\Company\Company;
 
 final readonly class CompanyService
 {

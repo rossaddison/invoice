@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PostalAddress;
 
-use App\Invoice\Entity\PostalAddress;
+use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
 
 final readonly class PostalAddressService
 {

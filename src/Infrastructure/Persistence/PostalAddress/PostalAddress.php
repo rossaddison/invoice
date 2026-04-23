@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\PostalAddress;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -11,22 +11,45 @@ use Cycle\Annotated\Annotation\Entity;
 
 class PostalAddress
 {
-    public function __construct(#[Column(type: 'primary')]
-        public ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $client_id = null, #[Column(type: 'string(50)', nullable: false)]
-        private string $street_name = '', #[Column(type: 'string(50)', nullable: false)]
-        private string $additional_street_name = '', #[Column(type: 'string(4)', nullable: false)]
-        private string $building_number = '', #[Column(type: 'string(50)', nullable: false)]
-        private string $city_name = '', #[Column(type: 'string(7)', nullable: false)]
-        private string $postalzone = '', #[Column(type: 'string(50)', nullable: false)]
-        private string $countrysubentity = '', #[Column(type: 'string(50)', nullable: false)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        public ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $client_id = null,
+        #[Column(type: 'string(50)', nullable: false)]
+        private string $street_name = '',
+        #[Column(type: 'string(50)', nullable: false)]
+        private string $additional_street_name = '',
+        #[Column(type: 'string(4)', nullable: false)]
+        private string $building_number = '',
+        #[Column(type: 'string(50)', nullable: false)]
+        private string $city_name = '',
+        #[Column(type: 'string(7)', nullable: false)]
+        private string $postalzone = '',
+        #[Column(type: 'string(50)', nullable: false)]
+        private string $countrysubentity = '',
+        #[Column(type: 'string(50)', nullable: false)]
         private string $country = '')
     {
     }
 
-    public function getId(): string
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
-        return (string) $this->id;
+        if ($this->id === null) {
+            throw new \LogicException(
+                'PostalAddress has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -34,9 +57,9 @@ class PostalAddress
         $this->id = $id;
     }
 
-    public function getClientId(): string
+    public function getClientId(): ?int
     {
-        return (string) $this->client_id;
+        return $this->client_id;
     }
 
     public function setClientId(int $client_id): void

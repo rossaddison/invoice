@@ -6,13 +6,14 @@ namespace App\Invoice\Inv\Trait;
 
 use App\Invoice\Entity\
 {
-    Contract, Delivery, Inv, PaymentMethod, PostalAddress, Setting, Upload,
+    Inv, PaymentMethod, Setting, Upload,
     UserClient
 };
 use App\Infrastructure\Persistence\{
-    Client\Client,
+    Client\Client, Contract\Contract, Delivery\Delivery,
     DeliveryLocation\DeliveryLocation,
     Group\Group,
+    PostalAddress\PostalAddress,
     TaxRate\TaxRate
 };
 use App\Invoice\{
@@ -54,11 +55,10 @@ trait OptionsData
          * @var Contract $contract
          */
         foreach ($contracts as $contract) {
-            $id = $contract->getId();
-            if (null !== $id) {
-                $optionsDataContract[$id] = ($contract->getName() ?? '')
-                    . ' ' . ($contract->getReference() ?? '');
-            }
+            $id = $contract->reqId();
+            $optionsDataContract[$id] = ($contract->getName() ?? '')
+                . ' ' . ($contract->getReference() ?? '');
+            
         }
         $deliverys = $deliveryRepo->findAllPreloaded();
         $optionsDataDelivery = [];
@@ -66,7 +66,7 @@ trait OptionsData
          * @var Delivery $delivery
          */
         foreach ($deliverys as $delivery) {
-            $delivery_id = $delivery->getId();
+            $delivery_id = $delivery->reqId();
             /**
              * @var \DateTimeImmutable $startDate
              */
@@ -132,7 +132,7 @@ trait OptionsData
          * @var PostalAddress $postalAddress
          */
         foreach ($paR->repoClientAll((string) $client_id) as $postalAddress) {
-            $optionsDataPostalAddress[$postalAddress->getId()] =
+            $optionsDataPostalAddress[$postalAddress->reqId()] =
                     $postalAddress->getStreetName()
                         . ', ' . $postalAddress->getAdditionalStreetName()
                         . ', ' . $postalAddress->getBuildingNumber() . ', '

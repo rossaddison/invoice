@@ -6,10 +6,9 @@ namespace App\Invoice\ClientNote;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\ClientNote;
+use App\Infrastructure\Persistence\ClientNote\ClientNote;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\Invoice\Helpers\DateHelper;
 use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserService;
@@ -70,7 +69,7 @@ final class ClientNoteController extends BaseController
         ClientRepository $clientRepository,
     ): Response {
         $clientnote = new ClientNote();
-        $form = new ClientNoteForm($clientnote);
+        $form = new ClientNoteForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'clientnote/add',
@@ -85,6 +84,7 @@ final class ClientNoteController extends BaseController
                 $body = $request->getParsedBody() ?? [];
                 if (is_array($body)) {
                     $this->clientNoteService->addClientNote($clientnote, $body);
+                    $this->translator->translate('record.successfully.created');
                     return $this->webService->getRedirectResponse('clientnote/index');
                 }
             }
@@ -112,11 +112,11 @@ final class ClientNoteController extends BaseController
     ): Response {
         $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
         if (null !== $client_note) {
-            $form = new ClientNoteForm($client_note);
+            $form = ClientNoteForm::show($client_note);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'clientnote/edit',
-                'actionArguments' => ['id' => $client_note->getId()],
+                'actionArguments' => ['id' => $client_note->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'clients' => $clientRepository->findAllPreloaded(),
@@ -128,6 +128,8 @@ final class ClientNoteController extends BaseController
                                                              $form, $request)) {
                         $this->clientNoteService->saveClientNote(
                                                             $client_note, $body);
+                        $this->flashMessage('info',
+                        $this->translator->translate('record.successfully.updated'));
                         return $this->webService->getRedirectResponse(
                                                             'clientnote/index');
                     }
@@ -150,12 +152,19 @@ final class ClientNoteController extends BaseController
         ClientNoteRepository $clientnoteRepository,
         CurrentRoute $currentRoute,
     ): Response {
-        $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
-        if ($client_note) {
-            $this->clientNoteService->deleteClientNote($client_note);
+        try {
+            $client_note = $this->clientnote($currentRoute, $clientnoteRepository);
+            if ($client_note) {
+                $this->clientNoteService->deleteClientNote($client_note);
+                $this->flashMessage('info',
+                    $this->translator->translate('record.successfully.deleted'));
+                return $this->webService->getRedirectResponse('clientnote/index');
+            }
+            return $this->webService->getRedirectResponse('clientnote/index');
+        } catch (\Exception $e) {
+            $this->flashMessage('danger', $e->getMessage());
             return $this->webService->getRedirectResponse('clientnote/index');
         }
-        return $this->webService->getRedirectResponse('clientnote/index');
     }
 
     /**
@@ -175,11 +184,11 @@ final class ClientNoteController extends BaseController
     ): Response {
         $clientNote = $this->clientnote($currentRoute, $clientnoteRepository);
         if ($clientNote) {
-            $form = new ClientNoteForm($clientNote);
+            $form = ClientNoteForm::show($clientNote);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'clientnote/edit',
-                'actionArguments' => ['id' => $clientNote->getId()],
+                'actionArguments' => ['id' => $clientNote->reqId()],
                 'form' => $form,
                 'clients' => $clientRepository->findAllPreloaded(),
             ];

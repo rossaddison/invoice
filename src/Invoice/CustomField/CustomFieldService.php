@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomField;
 
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 
 final readonly class CustomFieldService
 {

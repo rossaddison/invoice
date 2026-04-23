@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\FromDropDown;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\FromDropDown;
+use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -48,7 +48,7 @@ final class FromDropDownController extends BaseController
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
         $entity = new FromDropDown();
-        $form = new FromDropDownForm($entity);
+        $form = new FromDropDownForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'from/add',
@@ -126,11 +126,11 @@ final class FromDropDownController extends BaseController
     ): Response {
         $from = $this->from($currentRoute, $fromRepository);
         if ($from) {
-            $form = new FromDropDownForm($from);
+            $form = FromDropDownForm::show($from);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'from/edit',
-                'actionArguments' => ['id' => $from->getId()],
+                'actionArguments' => ['id' => $from->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];
@@ -185,11 +185,11 @@ final class FromDropDownController extends BaseController
     {
         $from = $this->from($currentRoute, $fromRepository);
         if ($from) {
-            $form = new FromDropDownForm($from);
+            $form = FromDropDownForm::show($from);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'from/view',
-                'actionArguments' => ['id' => $from->getId()],
+                'actionArguments' => ['id' => $from->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'from' => $from,

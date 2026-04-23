@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Traits;
+namespace App\Invoice\Client\Traits;
 
 use App\Invoice\ClientCustom\ClientCustomForm;
 use App\Invoice\ClientCustom\ClientCustomRepository as ccR;
-use App\Invoice\Entity\ClientCustom;
+use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\FormModel\FormHydrator;
@@ -146,7 +146,7 @@ trait ClientCustomFieldTrait
                 ? $ccR->repoFormValuequery($cId, $key)
                 : new ClientCustom();
             if ($model instanceof ClientCustom) {
-                $form = new ClientCustomForm($model);
+                $form = new ClientCustomForm();
                 if ($formHydrator->populateAndValidate($form, $clientCustom)) {
                     $this->clientCustomService->saveClientCustom($model, $clientCustom);
                 }

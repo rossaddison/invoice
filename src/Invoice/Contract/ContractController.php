@@ -6,7 +6,7 @@ namespace App\Invoice\Contract;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Contract;
+use App\Infrastructure\Persistence\Contract\Contract;
 use App\Invoice\Contract\ContractRepository as contractR;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Invoice\Inv\InvRepository as iR;
@@ -105,7 +105,7 @@ final class ContractController extends BaseController
         $contract = new Contract();
         // To pass the client id variable to the form, set it first in the entity
         $contract->setClientId((int) $client_id);
-        $form = new ContractForm($contract);
+        $form = ContractForm::show($contract);
         if (null !== $client_id) {
             $title = $cR->repoClientquery((int) $client_id)->getClientName();
         } else {
@@ -151,11 +151,11 @@ final class ContractController extends BaseController
     ): Response {
         $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {
-            $form = new ContractForm($contract);
+            $form = ContractForm::show($contract);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'contract/edit',
-                'actionArguments' => ['id' => $contract->getId()],
+                'actionArguments' => ['id' => $contract->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];
@@ -230,11 +230,11 @@ final class ContractController extends BaseController
     {
         $contract = $this->contract($currentRoute, $contractRepository);
         if ($contract) {
-            $form = new ContractForm($contract);
+            $form = ContractForm::show($contract);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'contract/view',
-                'actionArguments' => ['id' => $contract->getId()],
+                'actionArguments' => ['id' => $contract->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\ClientNote;
+use App\Infrastructure\Persistence\ClientNote\ClientNote;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -39,7 +39,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (ClientNote $model) => Html::encode($model->getId()),
+        content: static fn (ClientNote $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'client_id',
@@ -54,13 +54,21 @@ $columns = [
     new DataColumn(
         'date_note',
         header: $translator->translate('client.note.date'),
-        content: static fn (ClientNote $model): string => Html::encode((!is_string($dateNote = $model->getDateNote()) ? $dateNote->format('Y-m-d') : '')),
+        content: static function (ClientNote $model): string {
+            $dateNote = $model->getDateNote();
+            if (!is_string($dateNote) && null!==$dateNote) {
+                return Html::encode($dateNote->format('Y-m-d'));
+            }
+            return '';
+        },
+        withSorting: true,
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (ClientNote $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('clientnote/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('clientnote/view',
+                        ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -70,7 +78,8 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (ClientNote $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('clientnote/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('clientnote/edit',
+                        ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -80,11 +89,15 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (ClientNote $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('clientnote/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('clientnote/delete',
+                        ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
-                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                'onclick' => "return confirm("
+                    . "'"
+                    . $translator->translate('delete.record.warning')
+                    . "');",
             ],
         ),
     ]),

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ClientCustom;
 
-use App\Invoice\Entity\ClientCustom;
+use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Required;
@@ -24,11 +24,13 @@ final class ClientCustomForm extends FormModel
     #[Required]
     private ?string $value = '';
 
-    public function __construct(ClientCustom $clientCustom)
+    public static function show(ClientCustom $clientCustom): self
     {
-        $this->client_id = (int) $clientCustom->getClientId();
-        $this->custom_field_id = (int) $clientCustom->getCustomFieldId();
-        $this->value = (string) $clientCustom->getValue();
+        $form = new self();
+        $form->client_id = (int) $clientCustom->getClientId();
+        $form->custom_field_id = (int) $clientCustom->getCustomFieldId();
+        $form->value = (string) $clientCustom->getValue();
+        return $form;
     }
 
     public function getClientId(): ?int

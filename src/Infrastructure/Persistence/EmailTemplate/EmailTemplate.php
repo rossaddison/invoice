@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\EmailTemplate;
 
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -25,10 +25,24 @@ class EmailTemplate
         private ?string $email_template_pdf_template = '')
     {
     }
-
-    public function getEmailTemplateId(): ?int
+    
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqEmailTemplateId(): int
     {
+        if ($this->id === null) {
+            throw new \LogicException(
+                'EmailTemplate has no ID (not persisted yet)'
+            );
+        }
+
         return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function getEmailTemplateTitle(): ?string

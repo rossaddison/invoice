@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\FromDropDown;
 
-use App\Invoice\Entity\FromDropDown;
+use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
 
 final readonly class FromDropDownService
 {

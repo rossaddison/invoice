@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\FromDropDown;
 
-use App\Invoice\Entity\FromDropDown;
+use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;

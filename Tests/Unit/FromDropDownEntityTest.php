@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\FromDropDown;
+use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
 use Codeception\Test\Unit;
 
 final class FromDropDownEntityTest extends Unit
@@ -15,7 +15,7 @@ final class FromDropDownEntityTest extends Unit
     {
         $fromDropDown = new FromDropDown();
         
-        $this->assertSame('', $fromDropDown->getId());
+        $this->assertFalse($fromDropDown->isPersisted());
         $this->assertSame('', $fromDropDown->getEmail());
         $this->assertFalse($fromDropDown->getInclude());
         $this->assertFalse($fromDropDown->getDefaultEmail());
@@ -25,7 +25,7 @@ final class FromDropDownEntityTest extends Unit
     {
         $fromDropDown = new FromDropDown(1, $this->testExampleCom, true, true);
         
-        $this->assertSame('1', $fromDropDown->getId());
+        $this->assertSame(1, $fromDropDown->reqId());
         $this->assertSame($this->testExampleCom, $fromDropDown->getEmail());
         $this->assertTrue($fromDropDown->getInclude());
         $this->assertTrue($fromDropDown->getDefaultEmail());
@@ -36,7 +36,7 @@ final class FromDropDownEntityTest extends Unit
         $fromDropDown = new FromDropDown();
         $fromDropDown->setId(42);
         
-        $this->assertSame('42', $fromDropDown->getId());
+        $this->assertSame(42, $fromDropDown->reqId());
     }
 
     public function testEmailSetterAndGetter(): void
@@ -114,10 +114,10 @@ final class FromDropDownEntityTest extends Unit
     public function testZeroAndLargeIds(): void
     {
         $zeroId = new FromDropDown(0, 'zero@test.com', false, false);
-        $this->assertSame('0', $zeroId->getId());
+        $this->assertSame(0, $zeroId->reqId());
 
         $largeId = new FromDropDown(999999, 'large@test.com', false, false);
-        $this->assertSame('999999', $largeId->getId());
+        $this->assertSame(999999, $largeId->reqId());
     }
 
     public function testChainedSetterCalls(): void
@@ -128,7 +128,7 @@ final class FromDropDownEntityTest extends Unit
         $fromDropDown->setInclude(true);
         $fromDropDown->setDefaultEmail(true);
         
-        $this->assertSame('100', $fromDropDown->getId());
+        $this->assertSame(100, $fromDropDown->reqId());
         $this->assertSame('chained@test.com', $fromDropDown->getEmail());
         $this->assertTrue($fromDropDown->getInclude());
         $this->assertTrue($fromDropDown->getDefaultEmail());
@@ -138,9 +138,8 @@ final class FromDropDownEntityTest extends Unit
     {
         $fromDropDown = new FromDropDown(123, $this->testExampleCom, false, false);
         
-        // Verify ID getter returns string even though setter accepts int
-        $this->assertIsString($fromDropDown->getId());
-        $this->assertSame('123', $fromDropDown->getId());
+        $this->assertIsInt($fromDropDown->reqId());
+        $this->assertSame(123, $fromDropDown->reqId());
     }
 
     public function testBooleanProperties(): void
@@ -162,7 +161,7 @@ final class FromDropDownEntityTest extends Unit
         $fromDropDown->setInclude(true);
         $fromDropDown->setDefaultEmail(true);
         
-        $this->assertSame('999', $fromDropDown->getId());
+        $this->assertSame(999, $fromDropDown->reqId());
         $this->assertSame('complete@setup.com', $fromDropDown->getEmail());
         $this->assertTrue($fromDropDown->getInclude());
         $this->assertTrue($fromDropDown->getDefaultEmail());

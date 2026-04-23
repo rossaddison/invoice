@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\PostalAddress;
+use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -12,7 +12,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\PostalAddress $postaladdress
+ * @var App\Infrastructure\Persistence\PostalAddress\PostalAddress $postaladdress
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
@@ -42,31 +42,33 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (PostalAddress $model) => $model->getId(),
+        content: static fn (PostalAddress $model) => $model->reqId(),
     ),
     new DataColumn(
         'client_id',
         header: $translator->translate('client.name'),
         content: static function (PostalAddress $model) use ($cR): string {
-            $clientName = ($cR->repoClientCount((int)$model->getClientId()) > 0 ?
-                Html::encode(
-                    ($cR->repoClientquery((int)
-                            $model->getClientId()))->getClientName()) : '');
-            return $clientName;
+            if (null!==($clientId = $model->getClientId())) {
+                $clientName = ($cR->repoClientCount($clientId) > 0 ?
+                    Html::encode(
+                        ($cR->repoClientquery($clientId))->getClientName()) : '');
+                return $clientName;
+            } else {
+                return Html::encode('');
+            }
         },
     ),
     new DataColumn(
         'client_id',
         header: $translator->translate('client.surname'),
         content: static function (PostalAddress $model) use ($cR): string {
-            $clientId = $model->getClientId();
-            if ($clientId) {
-                $clientSurname = ($cR->repoClientCount((int) $clientId) > 0 ?
-                    Html::encode(($cR->repoClientquery((int) $clientId))->getClientSurname())
+            if (null!==($clientId = $model->getClientId())) {
+                $clientSurname = ($cR->repoClientCount($clientId) > 0 ?
+                    Html::encode(($cR->repoClientquery($clientId))->getClientSurname())
                         : '');
                 return $clientSurname;
             }
-            return '';
+            return Html::encode('');
         },
     ),
     new DataColumn(
@@ -74,14 +76,17 @@ $columns = [
         header: $translator->translate('active'),
         content: static function (PostalAddress $model)
             use ($cR, $urlGenerator): Yiisoft\Html\Tag\A|string {
-            $client = $cR->repoClientquery((int) $model->getClientId());
-            if (null !== $client->getPostaladdressId()
-                    && $client->getPostaladdressId() > 0) {
-                return 'Postal Address Used';
-            } else {
-                return Html::a('No Postal address', $urlGenerator->generate('client/edit',
-                            ['id' => $model->getClientId(), 'origin' => 'inv']));
+            if (null!==($clientId = $model->getClientId())) {
+                $client = $cR->repoClientquery($clientId);
+                if (null !== $client->getPostaladdressId()
+                        && $client->getPostaladdressId() > 0) {
+                    return 'Postal Address Used';
+                } else {
+                    return Html::a('No Postal address', $urlGenerator->generate('client/edit',
+                        ['id' => $clientId, 'origin' => 'inv']));
+                }
             }
+            return Html::encode('');
         },
     ),
     new DataColumn(
@@ -89,7 +94,7 @@ $columns = [
         content: static function (PostalAddress $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'bi-eye']),
                 $urlGenerator->generate('postaladdress/view',
-                    ['id' => $model->getId()]), []);
+                    ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
@@ -97,7 +102,7 @@ $columns = [
         content: static function (PostalAddress $model) use ($urlGenerator): A {
             return Html::a(Html::tag('i', '', ['class' => 'bi-eye']),
                 $urlGenerator->generate('postaladdress/edit',
-                    ['id' => $model->getId()]), []);
+                    ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
@@ -118,7 +123,7 @@ $columns = [
                     ],
                 ),
                     $urlGenerator->generate('postaladdress/delete',
-                        ['id' => $model->getId()]),
+                        ['id' => $model->reqId()]),
                 [],
             );
         },

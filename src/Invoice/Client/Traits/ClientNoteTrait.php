@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Traits;
+namespace App\Invoice\Client\Traits;
 
 use App\Invoice\ClientNote\ClientNoteRepository as cnR;
 use App\Invoice\ClientNote\ClientNoteService as cnS;
 use App\Invoice\ClientNote\ClientNoteForm;
-use App\Invoice\Entity\ClientNote;
+use App\Infrastructure\Persistence\ClientNote\ClientNote;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\FormModel\FormHydrator;
@@ -64,9 +64,10 @@ trait ClientNoteTrait
             'date' => $date->format('Y-m-d'),
             'note' => $note,
         ];
-        $form = new ClientNoteForm(new ClientNote());
+        $entity = new ClientNote();
+        $form = new ClientNoteForm();
         if ($formHydrator->populateAndValidate($form, $data)) {
-            $cnS->addClientNote(new ClientNote(), $data);
+            $cnS->addClientNote($entity, $data);
             $parameters = [
                 'success' => 1,
             ];
@@ -94,24 +95,24 @@ trait ClientNoteTrait
          */
         $note_id = $body['note_id'] ?? '';
 
-        if (empty($note_id)) {
-            return $this->factory->createResponse(Json::encode([
-                'success' => 0,
-                'message' => 'Note ID is required',
-            ]));
-        }
+        //if (empty($note_id)) {
+        //    return $this->factory->createResponse(Json::encode([
+        //        'success' => 0,
+        //        'message' => 'Note ID is required',
+        //    ]));
+        //}
 
         $clientNote = $cnR->repoClientNotequery($note_id);
-        if ($clientNote) {
-            $cnS->deleteClientNote($clientNote);
+        //if ($clientNote) {
+        $cnS->deleteClientNote($clientNote);
             return $this->factory->createResponse(Json::encode([
-                'success' => 1,
-            ]));
-        } else {
-            return $this->factory->createResponse(Json::encode([
-                'success' => 0,
-                'message' => 'Note not found',
-            ]));
-        }
+            'success' => 1,
+        ]));
+        //} else {
+        //    return $this->factory->createResponse(Json::encode([
+        //        'success' => 0,
+        //        'message' => 'Note not found',
+        //    ]));
+        //}
     }
 }

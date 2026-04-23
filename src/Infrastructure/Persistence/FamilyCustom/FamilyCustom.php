@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\FamilyCustom;
 
-use App\Infrastructure\Persistence\Family\Family;
+use App\Infrastructure\Persistence\{CustomField\CustomField, Family\Family};
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -46,9 +46,23 @@ class FamilyCustom
         $this->custom_field = $custom_field;
     }
 
-    public function getId(): string
+    /**
+     * @throws \LogicException if the entity has not been persisted yet.
+     */
+    public function reqId(): int
     {
-        return (string) $this->id;
+        if ($this->id === null) {
+            throw new \LogicException(
+                'FamilyCustom has no ID (not persisted yet)'
+            );
+        }
+
+        return $this->id;
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void

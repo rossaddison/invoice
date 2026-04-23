@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\PostalAddress;
 
-use App\Invoice\Entity\PostalAddress;
+use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
 use Yiisoft\FormModel\FormModel;
-use Yiisoft\Translator\TranslatorInterface as Translator;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
 
@@ -33,47 +32,24 @@ final class PostalAddressForm extends FormModel
     #[Required]
     #[Length(min: 0, max: 50)]
     private ?string $country = '';
-
-    public function __construct(private readonly Translator $translator, PostalAddress $postalAddress, #[Required]
-        private readonly ?int $client_id)
+    private ?int $client_id = null;    
+    
+    public static function show(
+        PostalAddress $postalAddress,
+        ?int $client_id   
+    ): self
     {
-        $this->street_name = $postalAddress->getStreetName();
-        $this->additional_street_name = $postalAddress->getAdditionalStreetName();
-        $this->building_number = $postalAddress->getBuildingNumber();
-        $this->city_name = $postalAddress->getCityName();
-        $this->postalzone = $postalAddress->getPostalzone();
-        $this->countrysubentity = $postalAddress->getCountrysubentity();
-        $this->country = $postalAddress->getCountry();
-    }
-
-    #[\Override]
-    public function getPropertyLabels(): array
-    {
-        return [
-            'street_name' => $this->translator->translate('client.postaladdress.street.name'),
-            'additional_street_name' => $this->translator->translate('client.postaladdress.additional.street.name'),
-            'building_number' => $this->translator->translate('client.postaladdress.building.number'),
-            'city_name' => $this->translator->translate('client.postaladdress.city.name'),
-            'postalzone' => $this->translator->translate('client.postaladdress.postalzone'),
-            'countrysubentity' => $this->translator->translate('client.postaladdress.countrysubentity'),
-            'country' => $this->translator->translate('client.postaladdress.country'),
-        ];
-    }
-
-    #[\Override]
-    public function getPropertyHints(): array
-    {
-        $required = 'hint.this.field.is.required';
-        $not_required = 'hint.this.field.is.not.required';
-        return [
-            'street_name' => $this->translator->translate($required),
-            'additional_street_name' => $this->translator->translate($required),
-            'building_number' => $this->translator->translate($not_required),
-            'city_name' => $this->translator->translate($required),
-            'postalzone' => $this->translator->translate($required),
-            'countrysubentity' => $this->translator->translate($required),
-            'country' => $this->translator->translate($required),
-        ];
+        $form = new self();
+        $form->street_name = $postalAddress->getStreetName();
+        $form->additional_street_name = $postalAddress->getAdditionalStreetName();
+        $form->building_number = $postalAddress->getBuildingNumber();
+        $form->city_name = $postalAddress->getCityName();
+        $form->postalzone = $postalAddress->getPostalzone();
+        $form->countrysubentity = $postalAddress->getCountrysubentity();
+        $form->country = $postalAddress->getCountry();
+        $form->client_id = $postalAddress->getClientId() > 0 ?
+            $postalAddress->getClientId() : $client_id;
+        return $form;
     }
 
     public function getClientId(): ?int

@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Invoice\ClientCustom\ClientCustomForm;
-use App\Invoice\Entity\ClientCustom;
 use Yiisoft\Html\Html as H;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Input;
@@ -112,7 +111,7 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
          */
         'origin' => 'client',
         'origin_id' => $clientIdPostalAdd,
-        'action' => 'add',
+        'action' => 'view',
        ]
       )
     )
@@ -205,14 +204,14 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
       echo H::openTag('table', ['class' => 'table table-bordered no-margin']); //6
        $i = 1;
        /**
-        * @var App\Invoice\Entity\CustomField $custom_field
+        * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
         */
        foreach ($custom_fields as $custom_field) {
         if ($custom_field->getLocation() != 1) {
          continue;
         }
         $column = $custom_field->getLabel();
-        $value  = $cvH->formValue($clientCustomValues, $custom_field->getId());
+        $value  = $cvH->formValue($clientCustomValues, $custom_field->reqId());
         echo H::openTag('tr'); //7
          echo H::tag('th', H::encode($column), ['id' => 'cf-col' . $i]);
          echo H::tag('td', H::encode($value), ['id' => 'cf-val' . $i]);
@@ -308,14 +307,14 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
          echo H::closeTag('tr'); //8
         }
         /**
-         * @var App\Invoice\Entity\CustomField $custom_field
+         * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
          */
         foreach ($custom_fields as $custom_field) {
          if ($custom_field->getLocation() != 2) {
           continue;
          }
          $column = $custom_field->getLabel();
-         $value  = $cvH->formValue($clientCustomValues, $custom_field->getId());
+         $value  = $cvH->formValue($clientCustomValues, $custom_field->reqId());
          echo H::openTag('tr'); //8
           echo H::tag('th', H::encode($column));
           echo H::tag('td', H::encode($value));
@@ -345,14 +344,14 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
          echo H::closeTag('tr'); //8
         }
         /**
-         * @var App\Invoice\Entity\CustomField $custom_field
+         * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
          */
         foreach ($custom_fields as $custom_field) {
          if ($custom_field->getLocation() != 4) {
           continue;
          }
          $column = $custom_field->getLabel();
-         $value  = $cvH->formValue($clientCustomValues, $custom_field->getId());
+         $value  = $cvH->formValue($clientCustomValues, $custom_field->reqId());
          echo H::openTag('tr'); //8
           echo H::tag('th', H::encode($column));
           echo H::tag('td', H::encode($value));
@@ -386,7 +385,7 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
           echo H::tag('td', $clientHelper->formatGender($clientGender, $translator));
          echo H::closeTag('tr'); //8
          /**
-          * @var App\Invoice\Entity\CustomField $custom_field
+          * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
           */
          foreach ($custom_fields as $custom_field) {
           if ($custom_field->getLocation() !== 3) {
@@ -411,7 +410,7 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
         echo H::openTag('table', ['class' => 'table no-margin']); //7
          $i = 1;
          /**
-          * @var App\Invoice\Entity\CustomField $custom_field
+          * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
           */
          foreach ($custom_fields as $custom_field) {
           if ($custom_field->getLocation() !== 0) {
@@ -420,7 +419,7 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
           echo H::openTag('tr'); //8
            echo H::tag('th', '', ['id' => 'client-cf-' . $i]);
            echo H::openTag('td'); //9
-            $clientCustomForm = new ClientCustomForm(new ClientCustom());
+            $clientCustomForm = new ClientCustomForm();
             $cvH->printFieldForView($custom_field, $clientCustomForm, $clientCustomValues);
            echo H::closeTag('td'); //9
           echo H::closeTag('tr'); //8

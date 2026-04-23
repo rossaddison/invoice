@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Contract;
+use App\Infrastructure\Persistence\Contract\Contract;
 use App\Invoice\Entity\Inv;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -44,34 +44,30 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Contract $model) => Html::encode($model->getId()),
+        content: static fn (Contract $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'id',
         header: $translator->translate('contract.index.button.list'),
         content: static function (Contract $model) use ($urlGenerator, $iR): string {
-            $modelId = $model->getId();
-            if (null !== $modelId) {
-                $invoices = $iR->findAllWithContract($modelId);
-                $buttons = '';
-                /**
-                 * @var Inv $invoice
-                 */
-                foreach ($invoices as $invoice) {
-                    $button = (string) Html::a(
-                        $invoice->getNumber() ?? '#',
-                        $urlGenerator->generate('inv/view', ['id' => $invoice->getId()]),
-                        ['class' => 'btn btn-primary btn-sm',
-                            'data-bs-toggle' => 'tooltip',
-                            'title' => $model->getReference(),
-                        ],
-                    );
-                    $buttons .= $button . str_repeat("&nbsp;", 1);
-                }
-                return $buttons;
-            } else {
-                return '';
+            $modelId = $model->reqId();
+            $invoices = $iR->findAllWithContract($modelId);
+            $buttons = '';
+            /**
+             * @var Inv $invoice
+             */
+            foreach ($invoices as $invoice) {
+                $button = (string) Html::a(
+                    $invoice->getNumber() ?? '#',
+                    $urlGenerator->generate('inv/view', ['id' => $invoice->getId()]),
+                    ['class' => 'btn btn-primary btn-sm',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $model->getReference(),
+                    ],
+                );
+                $buttons .= $button . str_repeat("&nbsp;", 1);
             }
+            return $buttons;
         },
         encodeContent: false,
     ),
@@ -108,7 +104,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Contract $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('contract/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('contract/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -118,7 +114,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Contract $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('contract/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('contract/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -128,7 +124,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Contract $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('contract/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('contract/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

@@ -13,8 +13,8 @@ use Brick\Money\CurrencyConverter;
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
 use App\Invoice\Entity\Setting;
-use App\Invoice\Entity\Company;
-use App\Invoice\Entity\CompanyPrivate;
+use App\Infrastructure\Persistence\Company\Company;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository as compR;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository as compPR;
 use App\Invoice\Inv\InvRepository as IR;
@@ -701,7 +701,7 @@ final class SettingRepository extends Select\Repository
              * @var CompanyPrivate $private
              */
             foreach ($this->compPR->findAllPreloaded() as $private) {
-                if ($private->getCompanyId() == (string) $company->getId()) {
+                if ($private->getCompanyId() == (string) $company->reqId()) {
                     // site's logo: take the first logo where the current date
                     //  falls within the logo's start and end dates
                     if ($private->getStartDate()?->format('Y-m-d') 

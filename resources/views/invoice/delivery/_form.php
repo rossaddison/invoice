@@ -43,22 +43,7 @@ use Yiisoft\Html\Tag\Form;
 <?= $translator->translate('delivery.add'); ?>
 <?= Html::closeTag('h1'); ?>
 
-    <?= Field::buttonGroup()
-    ->addContainerClass('btn-group btn-toolbar float-end')
-    ->buttonsData([
-        [
-            $translator->translate('cancel'),
-            'type' => 'reset',
-            'class' => 'btn btn-sm btn-danger',
-            'name' => 'btn_cancel',
-        ],
-        [
-            $translator->translate('submit'),
-            'type' => 'submit',
-            'class' => 'btn btn-sm btn-primary',
-            'name' => 'btn_send',
-        ],
-    ]) ?>
+     <?= $button::backSave(); ?>
 
             <?= Html::openTag('div', ['class' => 'mb-3 form-group has-feedback']); ?>
                 <?= Field::errorSummary($form)
@@ -70,20 +55,20 @@ use Yiisoft\Html\Tag\Form;
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?php
-Field::hidden($form, 'date_created')
-->label($translator->translate('delivery.date.created')
-        . ' (' . $dateHelper->display() . ')')
-->addInputAttributes([
-    'placeholder' => $translator->translate('delivery.date.created')
-        . ' (' . $dateHelper->display() . ')',
-    'id' => 'date_created',
-    'role' => 'presentation',
-    'autocomplete' => 'off',
-])
-->value(!is_string($createdDate = $form->getDateCreated()) ?
-        $createdDate->format('Y-m-d') : '')
-->hint($translator->translate('hint.this.field.is.not.required'));
-?>
+             Field::hidden($form, 'date_created')
+             ->label($translator->translate('delivery.date.created')
+                     . ' (' . $dateHelper->display() . ')')
+             ->addInputAttributes([
+                 'placeholder' => $translator->translate('delivery.date.created')
+                     . ' (' . $dateHelper->display() . ')',
+                 'id' => 'date_created',
+                 'role' => 'presentation',
+                 'autocomplete' => 'off',
+             ])
+             ->value(!is_string($createdDate = $form->getDateCreated()) ?
+                     $createdDate->format('Y-m-d') : '')
+             ->hint($translator->translate('hint.this.field.is.not.required'));
+             ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?php
@@ -96,42 +81,49 @@ Field::hidden($form, 'date_created')
             'id' => 'date_modified',
             'role' => 'presentation',
             'autocomplete' => 'off',
+            'onclick' => 'this.showPicker()',
         ])
         ->value(!is_string($modifiedDate = $form->getDateModified()) ?
                 $modifiedDate->format('Y-m-d') : '')
         ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
+
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?php
+<?php
     echo Field::date($form, 'start_date')
     ->label($translator->translate('delivery.start.date')
             . ' (' . $dateHelper->display() . ')')
-    ->required(true)
+    ->addInputAttributes(['onclick' => 'this.showPicker()'])        
     ->value(!is_string($startDate = $form->getStartDate()) ?
             $startDate->format('Y-m-d') : '')
+    ->required(true) 
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
+
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?php
+<?php
     echo Field::date($form, 'actual_delivery_date')
     ->label($translator->translate('delivery.actual.delivery.date')
             . ' (' . $dateHelper->display() . ')')
-    ->required(true)
+    ->addInputAttributes(['onclick' => 'this.showPicker()'])
     ->value(!is_string($actualDeliveryDate = $form->getActualDeliveryDate())
             ? $actualDeliveryDate->format('Y-m-d') : '')
+    ->required(true)
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
+
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                <?php
+<?php
     echo Field::date($form, 'end_date')
     ->label($translator->translate('delivery.end.date')
             . ' (' . $dateHelper->display() . ')')
-    ->required(true)
+    ->addInputAttributes(['onclick' => 'this.showPicker()'])        
     ->value(!is_string($endDate = $form->getEndDate()) ?
             $endDate->format('Y-m-d') : '')
+    ->required(true)
     ->hint($translator->translate('hint.this.field.is.not.required'));
 ?>
             <?= Html::closeTag('div'); ?>
@@ -178,4 +170,4 @@ Field::hidden($form, 'date_created')
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
 <?= Html::closeTag('div'); ?>
-<?= Html::closeTag('form'); ?>
+<?=  new Form()->close() ?>

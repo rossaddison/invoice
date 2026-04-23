@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\CustomField;
 
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -34,28 +34,30 @@ final class CustomFieldForm extends FormModel
     private ?string $text_area_wrap = '';
     private ?int $number_min = null;
     private ?int $number_max = null;
-    public function __construct(CustomField $custom_field)
+    public static function show(CustomField $custom_field): self
     {
-        $this->table = $custom_field->getTable();
-        $this->label = $custom_field->getLabel();
-        $this->type = $custom_field->getType();
-        $this->location = $custom_field->getLocation();
-        $this->order = $custom_field->getOrder();
-        $this->required = $custom_field->getRequired();
-        $this->email_min_length = $custom_field->getEmailMinLength();
-        $this->email_max_length = $custom_field->getEmailMaxLength();
-        $this->email_multiple = $custom_field->getEmailMultiple();
-        $this->url_min_length = $custom_field->getUrlMinLength();
-        $this->url_max_length = $custom_field->getUrlMaxLength();
-        $this->text_min_length = $custom_field->getTextMinLength();
-        $this->text_max_length = $custom_field->getTextMaxLength();
-        $this->text_area_min_length = $custom_field->getTextAreaMinLength();
-        $this->text_area_max_length = $custom_field->getTextAreaMaxLength();
-        $this->text_area_cols = $custom_field->getTextAreaCols();
-        $this->text_area_rows = $custom_field->getTextAreaRows();
-        $this->text_area_wrap = $custom_field->getTextAreaWrap();
-        $this->number_min = $custom_field->getNumberMin();
-        $this->number_max = $custom_field->getNumberMax();
+        $form = new self();
+        $form->table = $custom_field->getTable();
+        $form->label = $custom_field->getLabel();
+        $form->type = $custom_field->getType();
+        $form->location = $custom_field->getLocation();
+        $form->order = $custom_field->getOrder();
+        $form->required = $custom_field->getRequired();
+        $form->email_min_length = $custom_field->getEmailMinLength();
+        $form->email_max_length = $custom_field->getEmailMaxLength();
+        $form->email_multiple = $custom_field->getEmailMultiple();
+        $form->url_min_length = $custom_field->getUrlMinLength();
+        $form->url_max_length = $custom_field->getUrlMaxLength();
+        $form->text_min_length = $custom_field->getTextMinLength();
+        $form->text_max_length = $custom_field->getTextMaxLength();
+        $form->text_area_min_length = $custom_field->getTextAreaMinLength();
+        $form->text_area_max_length = $custom_field->getTextAreaMaxLength();
+        $form->text_area_cols = $custom_field->getTextAreaCols();
+        $form->text_area_rows = $custom_field->getTextAreaRows();
+        $form->text_area_wrap = $custom_field->getTextAreaWrap();
+        $form->number_min = $custom_field->getNumberMin();
+        $form->number_max = $custom_field->getNumberMax();
+        return $form;
     }
 
     public function getTable(): ?string

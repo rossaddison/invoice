@@ -15,7 +15,7 @@ declare(strict_types=1);
 ?>
 <?php
 /**
- * @var App\Invoice\Entity\CustomField $custom_field
+ * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
  */ foreach ($custom_fields as $custom_field): ?>
     <?php if ($custom_field->getLocation() !== 1) {
         continue;

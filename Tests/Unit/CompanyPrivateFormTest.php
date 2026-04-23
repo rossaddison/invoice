@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\CompanyPrivate;
 
-use App\Invoice\Entity\CompanyPrivate;
-use App\Invoice\Entity\Company;
+use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
+use App\Infrastructure\Persistence\Company\Company;
 use App\Invoice\CompanyPrivate\CompanyPrivateForm;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Validator\Validator;
@@ -244,7 +244,7 @@ final class CompanyPrivateFormTest extends TestCase
      */
     public function testFormInitializationFromEntity(): void
     {
-        $form = new CompanyPrivateForm($this->companyPrivate);
+        $form = CompanyPrivateForm::show($this->companyPrivate);
         
         $this->assertEquals(1, $form->getCompanyId());
         $this->assertEquals('GB123456789', $form->getVatId());
@@ -318,7 +318,7 @@ final class CompanyPrivateFormTest extends TestCase
    {
        $companyPrivate = $this->createMockCompanyPrivate();
 
-       $form = new CompanyPrivateForm($companyPrivate);
+       $form = CompanyPrivateForm::show($companyPrivate);
 
        $reflection = new \ReflectionClass($form);
 

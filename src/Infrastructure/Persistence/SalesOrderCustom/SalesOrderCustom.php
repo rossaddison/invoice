@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\SalesOrderCustom;
 
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
-use App\Invoice\Entity\CustomField;
+use App\Infrastructure\Persistence\CustomField\CustomField;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;

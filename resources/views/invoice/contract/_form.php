@@ -30,57 +30,51 @@ use Yiisoft\Html\Tag\Form;
 <?= Html::closeTag('h1'); ?>
 <?=
      new Form()
-    ->post($urlGenerator->generate($actionName, $actionArguments))
-    ->enctypeMultipartFormData()
-    ->csrf($csrf)
-    ->id('ContractForm')
-    ->open()
-?>
-
+        ->post($urlGenerator->generate($actionName, $actionArguments))
+        ->enctypeMultipartFormData()
+        ->csrf($csrf)
+        ->id('ContractForm')
+        ->open()
+    ?>
     <?= Field::errorSummary($form)
         ->errors($errors)
         ->header($translator->translate('client.error.summary'))
         ->onlyCommonErrors()
-?>
+    ?>
     <?= Field::text($form, 'client_id')
-    ->readonly(true)
-    ->value(Html::encode($form->getClientId() ?? $client_id))
-?>
+        ->readonly(true)
+        ->value(Html::encode($form->getClientId() ?? $client_id))
+    ?>
     <?= Field::text($form, 'reference')
-   ->label($translator->translate('contract.reference'))
-   ->addInputAttributes([
-       'value' => Html::encode($form->getReference() ?? ''),
-   ])
-   ->required(true)
-   ->hint($translator->translate('hint.this.field.is.required'));
-?>
+       ->label($translator->translate('contract.reference'))
+       ->addInputAttributes([
+           'value' => Html::encode($form->getReference() ?? ''),
+       ])
+       ->required(true)
+       ->hint($translator->translate('hint.this.field.is.required'));
+    ?>
     <?= Field::text($form, 'name')
-    ->label($translator->translate('contract.name'))
-    ->addInputAttributes([
-        'value' => Html::encode($form->getName() ?? ''),
-    ])
-    ->required(true)
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+       ->label($translator->translate('contract.name'))
+       ->addInputAttributes([
+           'value' => Html::encode($form->getName() ?? ''),
+       ])
+       ->required(true)
+       ->hint($translator->translate('hint.this.field.is.required'));
+   ?>
     <?= Field::date($form, 'period_start')
-    ->label($translator->translate('contract.period.start'))
-    ->addInputAttributes([
-        'role' => 'presentation',
-        'autocomplete' => 'off',
-    ])
-    ->value(Html::encode(Html::encode($form->getPeriodStart()->format('Y-m-d'))))
-    ->required(true)
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+       ->label($translator->translate('contract.period.start'))
+       ->value(Html::encode(Html::encode($form->getPeriodStart())))
+       ->addInputAttributes(['onclick' => 'this.showPicker()'])     
+       ->required(true)
+       ->hint($translator->translate('hint.this.field.is.required'));
+   ?>
     <?= Field::date($form, 'period_end')
-    ->label($translator->translate('contract.period.end'))
-    ->addInputAttributes([
-        'autocomplete' => 'off',
-    ])
-    ->value(Html::encode(Html::encode($form->getPeriodEnd()->format('Y-m-d'))))
-    ->required(true)
-    ->hint($translator->translate('hint.this.field.is.required'));
-?>
+        ->label($translator->translate('contract.period.end'))
+        ->value(Html::encode(Html::encode($form->getPeriodEnd())))
+        ->addInputAttributes(['onclick' => 'this.showPicker()'])    
+        ->required(true)
+        ->hint($translator->translate('hint.this.field.is.required'));
+    ?>
 
 <?= Html::closeTag('h1'); ?>
 <?= $button::backSave(); ?>

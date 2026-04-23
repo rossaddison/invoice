@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\FamilyCustom;
 
-use App\Invoice\Entity\FamilyCustom;
+use App\Infrastructure\Persistence\FamilyCustom\FamilyCustom;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Required;
@@ -23,12 +23,13 @@ final class FamilyCustomForm extends FormModel
     #[StringValue()]
     #[Required]
     private ?string $value = '';
-
-    public function __construct(FamilyCustom $familyCustom)
+    public static function show(FamilyCustom $familyCustom): self
     {
-        $this->family_id = (int) $familyCustom->getFamilyId();
-        $this->custom_field_id = (int) $familyCustom->getCustomFieldId();
-        $this->value = (string) $familyCustom->getValue();
+        $form = new self();
+        $form->family_id = (int) $familyCustom->getFamilyId();
+        $form->custom_field_id = (int) $familyCustom->getCustomFieldId();
+        $form->value = (string) $familyCustom->getValue();
+        return $form;
     }
 
     public function getFamilyId(): ?int

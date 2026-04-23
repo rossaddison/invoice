@@ -46,11 +46,7 @@ use Yiisoft\Html\Tag\Form;
                     ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
 ?>
-            <?= Html::closeTag('div'); ?>
-            <?= Html::openTag('div'); ?>
-                <?= Field::hidden($form, 'id')
-    ->hideLabel(); ?>
-            <?= Html::closeTag('div'); ?>
+            <?= Html::closeTag('div'); ?>            
             <?= Html::openTag('div'); ?>
                 <?= Field::hidden($form, 'client_id')
     ->hideLabel(); ?>

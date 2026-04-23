@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\PostalAddress;
+use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
 use Codeception\Test\Unit;
 
 final class PostalAddressEntityTest extends Unit
@@ -23,8 +23,8 @@ final class PostalAddressEntityTest extends Unit
     {
         $postalAddress = new PostalAddress();
         
-        $this->assertSame('', $postalAddress->getId());
-        $this->assertSame('', $postalAddress->getClientId());
+        $this->assertFalse($postalAddress->isPersisted());
+        $this->assertNull($postalAddress->getClientId());
         $this->assertSame('', $postalAddress->getStreetName());
         $this->assertSame('', $postalAddress->getAdditionalStreetName());
         $this->assertSame('', $postalAddress->getBuildingNumber());
@@ -48,8 +48,8 @@ final class PostalAddressEntityTest extends Unit
             'USA'
         );
         
-        $this->assertSame('1', $postalAddress->getId());
-        $this->assertSame('123', $postalAddress->getClientId());
+        $this->assertSame(1, $postalAddress->reqId());
+        $this->assertSame(123, $postalAddress->getClientId());
         $this->assertSame($this->mainStreet, $postalAddress->getStreetName());
         $this->assertSame('Apt 2B', $postalAddress->getAdditionalStreetName());
         $this->assertSame('456', $postalAddress->getBuildingNumber());
@@ -64,7 +64,7 @@ final class PostalAddressEntityTest extends Unit
         $postalAddress = new PostalAddress();
         $postalAddress->setId(42);
         
-        $this->assertSame('42', $postalAddress->getId());
+        $this->assertSame(42, $postalAddress->reqId());
     }
 
     public function testClientIdSetterAndGetter(): void
@@ -72,7 +72,7 @@ final class PostalAddressEntityTest extends Unit
         $postalAddress = new PostalAddress();
         $postalAddress->setClientId(999);
         
-        $this->assertSame('999', $postalAddress->getClientId());
+        $this->assertSame(999, $postalAddress->getClientId());
     }
 
     public function testStreetNameSetterAndGetter(): void
@@ -187,8 +187,8 @@ final class PostalAddressEntityTest extends Unit
         $postalAddress->setCountrysubentity('Test State');
         $postalAddress->setCountry('Test Country');
         
-        $this->assertSame('1', $postalAddress->getId());
-        $this->assertSame('100', $postalAddress->getClientId());
+        $this->assertSame(1, $postalAddress->reqId());
+        $this->assertSame(100, $postalAddress->getClientId());
         $this->assertSame('Test Street', $postalAddress->getStreetName());
         $this->assertSame('Test Apt', $postalAddress->getAdditionalStreetName());
         $this->assertSame('100', $postalAddress->getBuildingNumber());
@@ -202,11 +202,10 @@ final class PostalAddressEntityTest extends Unit
     {
         $postalAddress = new PostalAddress(123, 456, 'Street', 'Apt', '789', 'City', $this->oneToFive, 'State', 'Country');
         
-        // Verify getters return strings even though setters accept ints for ID fields
-        $this->assertIsString($postalAddress->getId());
-        $this->assertIsString($postalAddress->getClientId());
-        $this->assertSame('123', $postalAddress->getId());
-        $this->assertSame('456', $postalAddress->getClientId());
+        $this->assertIsInt($postalAddress->reqId());
+        $this->assertIsInt($postalAddress->getClientId());
+        $this->assertSame(123, $postalAddress->reqId());
+        $this->assertSame(456, $postalAddress->getClientId());
     }
 
     public function testPublicIdProperty(): void
@@ -256,8 +255,8 @@ final class PostalAddressEntityTest extends Unit
         $postalAddress->setCountrysubentity('Complete State');
         $postalAddress->setCountry('Complete Country');
         
-        $this->assertSame('1000', $postalAddress->getId());
-        $this->assertSame('2000', $postalAddress->getClientId());
+        $this->assertSame(1000, $postalAddress->reqId());
+        $this->assertSame(2000, $postalAddress->getClientId());
         $this->assertSame('Complete Street', $postalAddress->getStreetName());
         $this->assertSame('Complete Apt', $postalAddress->getAdditionalStreetName());
         $this->assertSame('100', $postalAddress->getBuildingNumber());

@@ -174,7 +174,7 @@ use Yiisoft\Html\Tag\Form;
   ?>
   <?= $formFields->clientCountrySelect($form, $countryOptions, $selectedCountry); ?>
   <?php
-    /** @var App\Invoice\Entity\CustomField $customField */
+    /** @var App\Infrastructure\Persistence\CustomField\CustomField $customField */
     foreach ($customFields as $customField):
         if ($customField->getLocation() !== 1) { continue; }
         $cvH->printFieldForForm($customField, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
@@ -206,7 +206,7 @@ use Yiisoft\Html\Tag\Form;
    <?php endif; ?>
   <?= Html::closeTag('div'); ?>
   <?php
-    /** @var App\Invoice\Entity\CustomField $custom_field */
+    /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
     foreach ($customFields as $custom_field):
         if ($custom_field->getLocation() !== 2) { continue; }
         $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
@@ -244,7 +244,7 @@ use Yiisoft\Html\Tag\Form;
     ->required(false)
     ->step(1); ?>
   <?php
-    /** @var App\Invoice\Entity\CustomField $custom_field */
+    /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
     foreach ($customFields as $custom_field):
         if ($custom_field->getLocation() !== 3) { continue; }
         $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
@@ -257,7 +257,7 @@ use Yiisoft\Html\Tag\Form;
   <?= $formFields->clientTextField($form, 'client_vat_id', 'vat.id', false); ?>
   <?= $formFields->clientTextField($form, 'client_tax_code', 'tax.code', false); ?>
   <?php
-    /** @var App\Invoice\Entity\CustomField $custom_field */
+    /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
     foreach ($customFields as $custom_field):
         if ($custom_field->getLocation() !== 4) { continue; }
         $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);
@@ -270,7 +270,7 @@ use Yiisoft\Html\Tag\Form;
     <?= Html::closeTag('div'); ?>
     <?= Html::openTag('div', ['class' => 'card-body']); ?>
      <?php
-        /** @var App\Invoice\Entity\CustomField $custom_field */
+        /** @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field */
         foreach ($customFields as $custom_field):
             if ($custom_field->getLocation() !== 0) { continue; }
             $cvH->printFieldForForm($custom_field, $clientCustomForm, $translator, $urlGenerator, $clientCustomValues, $customValues);

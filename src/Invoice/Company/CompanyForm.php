@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Invoice\Company;
 
-use App\Invoice\Entity\Company;
+use App\Infrastructure\Persistence\Company\Company;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Rule\Length;
-use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\Url;
 
 final class CompanyForm extends FormModel
@@ -76,28 +75,30 @@ final class CompanyForm extends FormModel
     #[Length(min: 0, max: 200, skipOnEmpty: true)]
     private ?string $arbitration_jurisdiction = '';
 
-    public function __construct(Company $company)
+    public static function show(Company $company): self
     {
-        $this->current = $company->getCurrent();
-        $this->name = $company->getName();
-        $this->address_1 = $company->getAddress1();
-        $this->address_2 = $company->getAddress2();
-        $this->city = $company->getCity();
-        $this->state = $company->getState();
-        $this->zip = $company->getZip();
-        $this->country = $company->getCountry();
-        $this->phone = $company->getPhone();
-        $this->fax = $company->getFax();
-        $this->email = $company->getEmail();
-        $this->web = $company->getWeb();
-        $this->seo_description = $company->getSeoDescription();
-        $this->slack = $company->getSlack();
-        $this->facebook = $company->getFacebook();
-        $this->twitter = $company->getTwitter();
-        $this->linkedin = $company->getLinkedIn();
-        $this->whatsapp = $company->getWhatsapp();
-        $this->arbitration_body = $company->getArbitrationBody();
-        $this->arbitration_jurisdiction = $company->getArbitrationJurisdiction();
+        $form = new self();
+        $form->current = $company->getCurrent();
+        $form->name = $company->getName();
+        $form->address_1 = $company->getAddress1();
+        $form->address_2 = $company->getAddress2();
+        $form->city = $company->getCity();
+        $form->state = $company->getState();
+        $form->zip = $company->getZip();
+        $form->country = $company->getCountry();
+        $form->phone = $company->getPhone();
+        $form->fax = $company->getFax();
+        $form->email = $company->getEmail();
+        $form->web = $company->getWeb();
+        $form->seo_description = $company->getSeoDescription();
+        $form->slack = $company->getSlack();
+        $form->facebook = $company->getFacebook();
+        $form->twitter = $company->getTwitter();
+        $form->linkedin = $company->getLinkedIn();
+        $form->whatsapp = $company->getWhatsapp();
+        $form->arbitration_body = $company->getArbitrationBody();
+        $form->arbitration_jurisdiction = $company->getArbitrationJurisdiction();
+        return $form;
     }
 
     public function getCurrent(): ?int

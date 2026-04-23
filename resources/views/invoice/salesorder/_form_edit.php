@@ -185,7 +185,7 @@ echo H::openTag('div', ['class' => 'card-header']); //4
        echo Field::hidden($form, 'inv_id')->hideLabel();
       echo H::closeTag('div'); //9
       /**
-       * @var App\Invoice\Entity\CustomField $customField
+       * @var App\Infrastructure\Persistence\CustomField\CustomField $customField
        */
       foreach ($cfR->repoTablequery('sales_order_custom') as $customField) {
        $custom_values = $cvR->fixCfValueToCf($cfR->repoTablequery('salesorder_custom'));

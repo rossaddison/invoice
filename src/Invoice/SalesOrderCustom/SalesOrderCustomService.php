@@ -36,7 +36,7 @@ final readonly class SalesOrderCustomService
         if ($custom_field) {
             $model->setCustomField($custom_field);
             $model->setCustomFieldId(
-                (int) $custom_field->getId()
+                $custom_field->reqId()
             );
         }
     }

@@ -9,8 +9,10 @@ use App\Invoice\Helpers\TemplateHelper;
 
 use App\Invoice\Entity\
 {
-    Inv, InvSentLog, EmailTemplate
+    Inv, InvSentLog
 };
+
+use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
 
 use App\Invoice\{
     Client\ClientRepository as CR,
@@ -197,9 +199,7 @@ trait Email
         $data = [];
         /** @var EmailTemplate $email_template */
         foreach ($email_templates as $email_template) {
-            if (null !== $email_template->getEmailTemplateId()) {
-                $data[] = $email_template->getEmailTemplateTitle();
-            }
+            $data[] = $email_template->getEmailTemplateTitle();
         }
         return $data;
     }

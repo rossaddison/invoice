@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Invoice\FamilyCustom\FamilyCustomForm;
-use App\Invoice\Entity\FamilyCustom;
+use App\Infrastructure\Persistence\FamilyCustom\FamilyCustom;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Th;
@@ -119,7 +119,7 @@ use Yiisoft\Html\Tag\Form;
                 <?php
                 $i = 1;
                 /**
-                  * @var App\Invoice\Entity\CustomField $custom_field
+                  * @var App\Infrastructure\Persistence\CustomField\CustomField $custom_field
                   */
                 foreach ($custom_fields as $custom_field) : ?>
                     <?php if ($custom_field->getLocation() !== 0) {
@@ -129,7 +129,7 @@ use Yiisoft\Html\Tag\Form;
                         <?=  new Th()->addAttributes(['id' => 'family-cf-'. $i]); ?>
                         <?= Html::openTag('td'); ?>
                     <?php
-                        $familyCustomForm = new FamilyCustomForm(new FamilyCustom());
+                        $familyCustomForm = new FamilyCustomForm();
 $cvH->printFieldForView($custom_field, $familyCustomForm, $familyCustomValues);?>
                         <?= Html::closeTag('td'); ?>
                     <?= Html::closeTag('tr'); ?>
