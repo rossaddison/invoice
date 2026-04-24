@@ -16,6 +16,7 @@ $dotDotGeneral = '..General';
 return [
   'account.information' => 'Account Information',
   'active' => 'Active',
+  'active.not' => 'Inactive',
   'add' => 'Add',
   'add.invoice' => 'Add Invoice',
   'add.client' => 'Add Client',

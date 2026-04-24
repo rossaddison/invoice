@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Widget;
 
-use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\{Client\Client, Product\Product};
 use App\Invoice\Entity\Inv;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
@@ -153,6 +153,74 @@ final readonly class GridComponents
 
         return $html;
     }
+    
+    /**
+     * Purpose: List the clients that have ownership of this product?
+     * @param Product $model
+     * @param int $max_per_row
+     * @param Translator $translator
+     * @param UrlGenerator $urlGenerator
+     * @return string
+     */
+    public function gridMiniTableOfClientsForProduct(Product $model,
+            int $max_per_row, Translator $translator, UrlGenerator $urlGenerator): string
+    {
+        $productClients = $model->getProductClients()->toArray();
+        if (empty($productClients)) {
+            return '';
+        }
+
+        $itemCount = 0;
+
+        // Table with black border, collapsed borders, and black text inside
+        $html = Html::openTag('table', [
+            'style' => 'border:1px solid #000; border-collapse:collapse; color:#000;',
+            'class' => 'table table-sm mb-0',
+        ]);
+        $html .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
+
+        /** @var \App\Infrastructure\Persistence\ProductClient\ProductClient $productClient */
+        foreach ($productClients as $productClient) {
+            if ($itemCount === $max_per_row) {
+                $html .= Html::closeTag('tr');
+                $html .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
+                $itemCount = 0;
+            }
+            $clientFullName = $productClient->getClient()?->getClientFullName() ?? '⏳';
+            $active = $productClient->getClient()?->getClientActive();
+            $frequency = $productClient->getClient()?->getClientFrequency() ?? '⏳';
+            $clientId = $productClient->getClientId();
+
+            $anchorHtml =  new A()
+                ->addAttributes([
+                    // ensure link text is black and no underline
+                    'style' => 'color:#000; text-decoration:none;',
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => Html::encode($clientFullName
+                            . ' '
+                            . ($active ? $translator->translate('active') :
+                              $translator->translate('active.not'))
+                            . ' '
+                            . $frequency)
+                ])
+                ->href($urlGenerator->generate('client/view', ['id' => $clientId]))
+                ->content(Html::encode($clientFullName))
+                ->render();
+
+            // Each cell has a black border and black text
+            $html .= Html::openTag('td', [
+                'style' => 'border:1px solid #000; padding:0.25rem; color:#000;'])
+                    . $anchorHtml
+                    . Html::closeTag('td');
+
+            $itemCount++;
+        }
+
+        $html .= Html::closeTag('tr');
+        $html .= Html::closeTag('table');
+
+        return $html;
+    }
 
     /**
      * @param Inv $model
@@ -160,7 +228,8 @@ final readonly class GridComponents
      * @param UrlGenerator $urlGenerator
      * @return string
      */
-    public function gridMiniTableOfInvSentLogsForInv(Inv $model, int $max_per_row, UrlGenerator $urlGenerator): string
+    public function gridMiniTableOfInvSentLogsForInv(
+        Inv $model, int $max_per_row, UrlGenerator $urlGenerator): string
     {
         $invSentLogs = $model->getInvSentLogs()->toArray();
         if (empty($invSentLogs)) {

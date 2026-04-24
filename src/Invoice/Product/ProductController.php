@@ -37,6 +37,7 @@ use App\Invoice\InvItem\InvItemForm;
 use App\Invoice\InvItem\InvItemService;
 use App\Invoice\InvItemAmount\InvItemAmountService as iiaS;
 // Setting, TaxRate, Unit
+use App\Invoice\ProductClient\ProductClientRepository as productClientR;
 use App\Invoice\ProductProperty\ProductPropertyRepository as ppR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\TaxRate\TaxRateRepository as trR;
@@ -441,12 +442,15 @@ final class ProductController extends BaseController
     /**
      * @param FastRouteGenerator $urlFastRouteGenerator
      * @param Request $request
+     * @param productClientR $pcR
      * @param pR $pR
      * @param fR $fR
      * @param string $page
      * @return Response
      */
-    public function index(FastRouteGenerator $urlFastRouteGenerator, Request $request, pR $pR, fR $fR, #[RouteArgument('page')] string $page = '1'): Response
+    public function index(FastRouteGenerator $urlFastRouteGenerator,
+            Request $request, productClientR $pcR, pR $pR, fR $fR,
+            #[RouteArgument('page')] string $page = '1'): Response
     {
         $this->rbac();
         $this->flashMessage('info', $this->translator->translate('productimage.view'));
@@ -484,6 +488,7 @@ final class ProductController extends BaseController
         $parameters = [
             'alert' => $this->alert(),
             'page' => $currentPageNeverZero,
+            'productClientR' => $pcR,
             'defaultPageSizeOffsetPaginator' =>
                 (int) $this->sR->getSetting('default_list_limit'),
             'optionsDataProductsDropdownFilter' =>

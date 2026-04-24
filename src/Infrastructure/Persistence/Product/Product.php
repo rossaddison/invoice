@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Product;
 
-use App\Infrastructure\Persistence\Family\Family;
-use App\Infrastructure\Persistence\ProductClient\ProductClient;
-use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Infrastructure\Persistence\Unit\Unit;
+use App\Infrastructure\Persistence\{Client\Client, Family\Family,
+    ProductClient\ProductClient, TaxRate\TaxRate, Unit\Unit};
 use App\Invoice\Product\ProductRepository as PR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -333,5 +331,23 @@ class Product
     public function getUnitPeppolId(): string
     {
         return (string) $this->unit_peppol_id;
+    }
+    
+    // Step 1: Create an empty ArrayCollection
+    public function setProductClients(): void
+    {
+        $this->client_associations = new ArrayCollection();
+    }
+
+    // Step 2: Add a productClient to this collection
+    public function addProductClient(ProductClient $productClient): void
+    {
+        $this->client_associations[] = $productClient;
+    }
+    
+    // Step 3: Get all the productClients that are associated with this product
+    public function getProductClients(): ArrayCollection
+    {
+        return $this->client_associations;
     }
 }
