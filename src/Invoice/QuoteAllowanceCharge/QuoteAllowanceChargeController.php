@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\QuoteAllowanceCharge;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\QuoteAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as acqR;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -58,7 +58,7 @@ final class QuoteAllowanceChargeController extends BaseController
     ): Response {
         $quoteAllowanceCharge = new QuoteAllowanceCharge();
         $quote_id = $currentRoute->getArgument('quote_id');
-        $form = new QuoteAllowanceChargeForm($quoteAllowanceCharge,
+        $form = QuoteAllowanceChargeForm::show($quoteAllowanceCharge,
                 (int) $quote_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
@@ -77,10 +77,6 @@ final class QuoteAllowanceChargeController extends BaseController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     $this->qacService->saveQuoteAllowanceCharge(
                         $quoteAllowanceCharge, $body);
-                    // Redirect to the quote / view after adding an overall
-                    // allowance or charge
-                    // The quote view will automatically recalculate the totals
-                    // using NumberHelper calculate_quote
                     return $this->webService->getRedirectResponse('quote/view',
                         ['id' => $quote_id]);
                 }
@@ -110,7 +106,6 @@ final class QuoteAllowanceChargeController extends BaseController
         #[Query('filterReason')]
         ?string $queryFilterReason = null,
     ): Response {
-        // If the language dropdown changes
         $this->session->set('_language', $_language);
         $quoteAllowanceCharges = $acqR->findAllPreloaded();
         if (isset($queryFilterReasonCode) && !empty($queryFilterReasonCode)) {
@@ -147,9 +142,7 @@ final class QuoteAllowanceChargeController extends BaseController
     {
         $optionsDataQuoteNumbers = [];
         $acqs = $acqR->findAllPreloaded();
-        /**
-         * @var QuoteAllowanceCharge $quoteAllowanceCharge
-         */
+        /** @var QuoteAllowanceCharge $quoteAllowanceCharge */
         foreach ($acqs as $quoteAllowanceCharge) {
             $quoteNumber = $quoteAllowanceCharge->getQuote()?->getNumber();
             if (null !== $quoteNumber) {
@@ -174,7 +167,7 @@ final class QuoteAllowanceChargeController extends BaseController
             $quoteAllowanceCharge =
                 $this->quoteallowancecharge($currentRoute, $acqR);
             if ($quoteAllowanceCharge) {
-                $quoteId = $quoteAllowanceCharge->getId();
+                $quoteId = $quoteAllowanceCharge->getQuoteId();
                 $this->qacService->deleteQuoteAllowanceCharge(
                     $quoteAllowanceCharge);
                 $this->flashMessage('info', $this->translator->translate(
@@ -209,12 +202,12 @@ final class QuoteAllowanceChargeController extends BaseController
         $quoteAllowanceCharge = $this->quoteallowancecharge($currentRoute, $acqR);
         if ($quoteAllowanceCharge) {
             $quote_id = $quoteAllowanceCharge->getQuoteId();
-            $form = new QuoteAllowanceChargeForm($quoteAllowanceCharge,
-                (int) $quote_id);
+            $form = QuoteAllowanceChargeForm::show($quoteAllowanceCharge,
+                $quote_id);
             $parameters = [
                 'title' => $this->translator->translate('allowance.or.charge'),
                 'actionName' => 'quoteallowancecharge/edit',
-                'actionArguments' => ['id' => $quoteAllowanceCharge->getId()],
+                'actionArguments' => ['id' => $quoteAllowanceCharge->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'optionsDataAllowanceCharges' =>
@@ -283,12 +276,12 @@ final class QuoteAllowanceChargeController extends BaseController
             $currentRoute, $acqR);
         if ($quoteAllowanceCharge) {
             $quote_id = $quoteAllowanceCharge->getQuoteId();
-            $form = new QuoteAllowanceChargeForm($quoteAllowanceCharge,
-                (int) $quote_id);
+            $form = QuoteAllowanceChargeForm::show($quoteAllowanceCharge,
+                $quote_id);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'quoteallowancecharge/view',
-                'actionArguments' => ['id' => $quoteAllowanceCharge->getId()],
+                'actionArguments' => ['id' => $quoteAllowanceCharge->reqId()],
                 'form' => $form,
                 'optionsDataAllowanceCharges' =>
                     $allowanceChargeRepository->optionsDataAllowanceCharges(),

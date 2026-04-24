@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
+use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
 use App\Invoice\Entity\{
-    Quote, QuoteAllowanceCharge, QuoteCustom, QuoteItem,
+    Quote, QuoteCustom, QuoteItem,
     QuoteItemAllowanceCharge, QuoteTaxRate,
 };
 use App\Invoice\{
@@ -312,7 +313,7 @@ trait QuoteCopy
                 // vat_or_tax amount worked out by qac_Service
             ];
             $quoteAllowanceCharge = new QuoteAllowanceCharge();
-            $form = new QuoteAllowanceChargeForm($quoteAllowanceCharge,
+            $form = QuoteAllowanceChargeForm::show($quoteAllowanceCharge,
                 (int) $copy_id);
             if ($formHydrator->populateAndValidate($form,
                     $copy_quote_allowance_charge)) {

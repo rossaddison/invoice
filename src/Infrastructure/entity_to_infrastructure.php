@@ -382,6 +382,7 @@ use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
 use App\Infrastructure\Persistence\ProductCustom\ProductCustom;
 use App\Infrastructure\Persistence\ItemLookup\ItemLookup;
 use App\Infrastructure\Persistence\Qa\Qa;
+use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
 use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
 use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
 use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
@@ -1078,7 +1079,37 @@ return [
         'tests_updated'       => true,
     ],
     'Quote'                         => null,
-    'QuoteAllowanceCharge'          => null,
+    'QuoteAllowanceCharge'          => [
+        'class'               => QuoteAllowanceCharge::class,
+        'req_id'              => true,
+        'var_annotations'     => true,
+        'callers'             => [
+            'src/Invoice/Helpers/NumberHelper.php',
+            'src/Invoice/Quote/QuoteDeletionService.php',
+            'src/Invoice/Quote/Trait/QuoteCopy.php',
+            'src/Invoice/Quote/Trait/QuoteToInvoice.php',
+            'src/Invoice/Quote/Trait/QuoteToSo.php',
+            'src/Invoice/Quote/Trait/View.php',
+            'src/Invoice/QuoteAllowanceCharge/QuoteAllowanceChargeController.php',
+            'src/Invoice/QuoteAllowanceCharge/QuoteAllowanceChargeForm.php',
+            'src/Invoice/QuoteAllowanceCharge/QuoteAllowanceChargeRepository.php',
+            'src/Invoice/QuoteAllowanceCharge/QuoteAllowanceChargeService.php',
+            'resources/views/invoice/quoteallowancecharge/index.php',
+        ],
+        'callers_updated'     => true,
+        'form_created'        => true,
+        'form_show_pattern'   => true,
+        'null_guards_removed' => true,
+        'view_get_id_updated' => true,
+        'group_use'           => true,
+        'psalm'               => true,
+        'entity_removed'      => true,
+        'schema_cache_cleared' => false,
+        'tests'               => [
+            'Tests/Unit/Invoice/Entity/QuoteAllowanceChargeEntityTest.php',
+        ],
+        'tests_updated'       => true,
+    ],
     'QuoteAmount'                   => null,
     'QuoteCustom'                   => null,
     'QuoteItem'                     => null,

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteAllowanceCharge;
 
-use App\Invoice\Entity\QuoteAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteAllowanceCharge\{
+    QuoteAllowanceCharge,
+};
 use Yiisoft\Validator\Rule\GreaterThan;
 use Yiisoft\FormModel\FormModel;
 
@@ -15,13 +17,21 @@ final class QuoteAllowanceChargeForm extends FormModel
     #[GreaterThan(0)]
     private ?int $amount = null;
 
+    private ?int $quote_id = null;
+
     private ?int $vat_or_tax = null;
 
-    public function __construct(QuoteAllowanceCharge $quoteAllowanceCharge, private readonly ?int $quote_id)
+    public static function show(
+        QuoteAllowanceCharge $quoteAllowanceCharge,
+        ?int $quote_id): self
     {
-        $this->allowance_charge_id = (int) $quoteAllowanceCharge->getAllowanceChargeId();
-        $this->amount = (int) $quoteAllowanceCharge->getAmount();
-        $this->vat_or_tax = (int) $quoteAllowanceCharge->getVatOrTax();
+        $form = new self();
+        $form->allowance_charge_id =
+            (int) $quoteAllowanceCharge->getAllowanceChargeId();
+        $form->amount = (int) $quoteAllowanceCharge->getAmount();
+        $form->quote_id = $quote_id;
+        $form->vat_or_tax = (int) $quoteAllowanceCharge->getVatOrTax();
+        return $form;
     }
 
     public function getQuoteId(): ?int

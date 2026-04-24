@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteAllowanceCharge;
 
-use App\Invoice\Entity\QuoteAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
 use App\Invoice\Quote\QuoteRepository as QR;
 

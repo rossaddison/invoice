@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Quote;
 
 use App\Invoice\Entity\Quote;
-use App\Invoice\Entity\QuoteAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
 use App\Invoice\Entity\QuoteCustom;
 use App\Invoice\Entity\QuoteItem;
 use App\Invoice\Entity\QuoteItemAllowanceCharge;

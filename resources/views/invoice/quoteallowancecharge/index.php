@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\QuoteAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -55,7 +55,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (QuoteAllowanceCharge $model) => $model->getId(),
+        content: static fn (QuoteAllowanceCharge $model): int => $model->reqId(),
         withSorting: true,
     ),
     new DataColumn(
@@ -93,14 +93,14 @@ $columns = [
     new DataColumn(
         property: 'amount',
         header: $translator->translate('allowance.or.charge.amount'),
-        content: static fn (QuoteAllowanceCharge $model) => $model->getAmount(),
+        content: static fn (QuoteAllowanceCharge $model): string => (string) ($model->getAmount() ?? 0.00),
         withSorting: true,
     ),
     new DataColumn(
         property: 'vat_or_tax',
         header: $vat ? $translator->translate('vat')
                     : $translator->translate('tax'),
-        content: static fn (QuoteAllowanceCharge $model) => $model->getVatOrTax(),
+        content: static fn (QuoteAllowanceCharge $model): string => (string) ($model->getVatOrTax() ?? 0.00),
         withSorting: true,
     ),
     new ActionColumn(buttons: [
@@ -109,7 +109,7 @@ $columns = [
             url: static function (QuoteAllowanceCharge $model)
                 use ($urlGenerator): string {
                 return $urlGenerator->generate('quoteallowancecharge/view',
-                        ['id' => $model->getId()]);
+                        ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -121,7 +121,7 @@ $columns = [
             url: static function (QuoteAllowanceCharge $model)
                 use ($urlGenerator): string {
                 return $urlGenerator->generate('quoteallowancecharge/edit',
-                    ['id' => $model->getId()]);
+                    ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -133,7 +133,7 @@ $columns = [
             url: static function (QuoteAllowanceCharge $model)
                 use ($urlGenerator): string {
                 return $urlGenerator->generate('quoteallowancecharge/delete',
-                     ['id' => $model->getId()]);
+                     ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\Quote\Trait;
 
 use App\Auth\Permissions;
+use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
 use App\Invoice\Entity\{
-    Quote, QuoteAllowanceCharge, QuoteCustom, QuoteItem,
+    Quote, QuoteCustom, QuoteItem,
 };
 use App\Invoice\{
     AllowanceCharge\AllowanceChargeRepository as ACR,
@@ -81,7 +82,7 @@ trait View
         if (null !== $quote) {
             $quote_id = $quote->getId();
             $quoteAllowanceCharge = new QuoteAllowanceCharge();
-            $quoteAllowanceChargeForm = new QuoteAllowanceChargeForm(
+            $quoteAllowanceChargeForm = QuoteAllowanceChargeForm::show(
                 $quoteAllowanceCharge, (int) $quote_id);
             if (null !== $quote_id) {
                 $this->session->set('quote_id', $quote_id);

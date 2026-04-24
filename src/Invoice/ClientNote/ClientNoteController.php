@@ -16,7 +16,8 @@ use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Input\Http\Attribute\Parameter\Query;
+use Yiisoft\Router\HydratorAttribute\RouteArgument;
 use Yiisoft\Http\Method;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\Flash;
@@ -45,14 +46,28 @@ final class ClientNoteController extends BaseController
 
     /**
      * @param ClientNoteRepository $clientnoteRepository
+     * @param int $page
+     * @param int|null $queryPage
+     * @param string|null $querySort
      * @return Response
      */
-    public function index(ClientNoteRepository $clientnoteRepository): Response
-    {
-        $paginator = (new OffsetPaginator($clientnoteRepository->findAllPreloaded()));
+    public function index(
+        ClientNoteRepository $clientnoteRepository,
+        #[RouteArgument('page')]
+        int $page = 1,
+        #[Query('page')]
+        ?int $queryPage = null,
+        #[Query('sort')]
+        ?string $querySort = null,
+    ): Response {
+        $page = $queryPage ?? $page;
         $parameters = [
             'alert' => $this->alert(),
-            'paginator' => $paginator,
+            'clientNotes' => $clientnoteRepository->findAllPreloaded(),
+            'defaultPageSizeOffsetPaginator' =>
+                (int) $this->sR->getSetting('default_list_limit') ?: 1,
+            'page' => $page > 0 ? $page : 1,
+            'sortString' => $querySort ?? '-id',
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }

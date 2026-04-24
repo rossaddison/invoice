@@ -530,7 +530,7 @@ trait QuoteToSo
     {
         $quote_allowance_charges = $acqR->repoACQquery($quote_id);
         /**
-         * @var \App\Invoice\Entity\QuoteAllowanceCharge $quote_allowance_charge
+         * @var \App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge $quote_allowance_charge
          */
         foreach ($quote_allowance_charges as $quote_allowance_charge) {
             $new_so_ac = [
