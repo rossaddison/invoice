@@ -13,12 +13,15 @@ use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\H6;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Select;
 use Yiisoft\Html\Tag\Button as HtmlButton;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Bootstrap5\Breadcrumbs;
 use Yiisoft\Bootstrap5\BreadcrumbLink;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
@@ -45,6 +48,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
  * @var string $alert
  * @var string $csrf
  * @var string $groupBy
+ * @var string $salesOrderToolbar
  * @var string $sortString
  * @var bool $visible
  * @psalm-var positive-int $page
@@ -212,6 +216,25 @@ $statusBar
         ->render();
 
 $columns = [
+    new CheckboxColumn(
+        content: static function (Checkbox $input, DataContext $context): string {
+            $so = $context->data;
+            if ($so instanceof SalesOrder) {
+                $id = (string) $so->reqId();
+                return $input
+                    ->addAttributes([
+                        'id'             => $id,
+                        'name'           => 'checkbox[]',
+                        'data-bs-toggle' => 'tooltip',
+                        'title'          => '',
+                    ])
+                    ->value($id)
+                    ->render();
+            }
+            return '';
+        },
+        multiple: true,
+    ),
     new DataColumn(
         'id',
         header: $translator->translate('id'),
@@ -271,7 +294,7 @@ $columns = [
             return $quote
             ? Html::a($quote->getNumber() ?? '#',
                     $urlGenerator->generate('quote/view',
-                            ['id' => $quote->getId()]),
+                            ['id' => $quote->reqId()]),
                                     ['style' => 'text-decoration:none']) : '';
         },
         visible: $visible,
@@ -281,8 +304,9 @@ $columns = [
         header: $translator->translate('invoice'),
         content: static function (SalesOrder $model) use ($urlGenerator, $iR):
             string|A {
-            $invId = (string) $model->getInvId();
-            $inv = $iR->repoInvUnloadedquery($invId);
+            if (!$model->hasLinkedInvoice()) { return ''; }
+            $invId = $model->reqInvId();
+            $inv = $iR->repoInvUnloadedquery((string) $invId);
             return $inv ? Html::a($inv->getNumber() ?? '#',
                     $urlGenerator->generate(
                     'inv/view', ['id' => $invId]),
@@ -325,8 +349,8 @@ $columns = [
         content: function (SalesOrder $model) use ($s, $soaR): string {
             $so_id = $model->reqId();
             $so_amount = (($soaR->repoSalesOrderAmountCount(
-                (string) $so_id) > 0) ? $soaR->repoSalesOrderquery(
-                        (string) $so_id) : null);
+                $so_id) > 0) ? $soaR->repoSalesOrderquery(
+                        $so_id) : null);
             return $s->formatCurrency(null !== $so_amount ?
                                                 $so_amount->getTotal() : 0.00);
         },
@@ -376,8 +400,8 @@ if ($enableGrouping) {
         }
         $groupTotals[$groupValue]['count']++;
         $so_id = $salesorder->reqId();
-        $so_amount = (($soaR->repoSalesOrderAmountCount((string) $so_id) > 0) ?
-                            $soaR->repoSalesOrderquery((string) $so_id) : null);
+        $so_amount = (($soaR->repoSalesOrderAmountCount($so_id) > 0) ?
+                            $soaR->repoSalesOrderquery($so_id) : null);
         $groupTotals[$groupValue]['total'] += null !== $so_amount ?
                                         ($so_amount->getTotal() ?? 0.00) : 0.00;
     }
@@ -446,6 +470,7 @@ $toolbarString =  new Form()->post($urlGenerator->generate(
                 ->render() : ''
         )
     )->encode(false)->render()
+    . $salesOrderToolbar
     .  new Div()->addClass('clearfix')->content('')->render()
     .  new Form()->close();
 
@@ -475,8 +500,8 @@ if ($enableGrouping) {
             $groupData = $groupTotals[$currentGroupValue];
             $currencySymbol = $s->getSetting('currency_symbol');
 
-            // Get column count
-            $columnCount = 9;
+            // Get column count (CheckboxColumn + 9 data columns)
+            $columnCount = 10;
 
             return \Yiisoft\Html\Html::tr()
                 ->addClass(

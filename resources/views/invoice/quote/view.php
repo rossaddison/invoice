@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\I;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\Helpers\DateHelper $dateHelper

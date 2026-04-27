@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteTaxRate;
 
-use App\Invoice\Entity\QuoteTaxRate;
+use App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate;
 use App\Invoice\Quote\QuoteRepository;
 use App\Invoice\TaxRate\TaxRateRepository;
 
@@ -22,11 +22,11 @@ final readonly class QuoteTaxRateService
         array $array
     ): void {
         $quote = $this->quoteRepository->repoQuoteUnLoadedquery(
-            (string) $array['quote_id']
+            (int) $array['quote_id']
         );
         if ($quote) {
             $model->setQuote($quote);
-            $model->setQuoteId((int) $quote->getId());
+            $model->setQuoteId($quote->reqId());
         }
         $tax_rate = $this->taxRateRepository->repoTaxRatequery(
             (string) $array['tax_rate_id']

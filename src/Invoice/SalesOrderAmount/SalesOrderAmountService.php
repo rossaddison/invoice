@@ -26,8 +26,7 @@ final readonly class SalesOrderAmountService
         array $array
     ): void {
         $sales_order = $this->soR->repoSalesOrderUnLoadedquery(
-            (string) $array['sales_order_id']
-        );
+            (int) $array['sales_order_id']);
         if ($sales_order) {
             $model->setSalesOrder($sales_order);
             $model->setSalesOrderId($sales_order->reqId());
@@ -128,9 +127,7 @@ final readonly class SalesOrderAmountService
         SOTRR $sotrR,
         NumberHelper $numberHelper
     ): void {
-        $model = $this->repository->repoSalesOrderquery(
-            (string) $sales_order_id
-        );
+        $model = $this->repository->repoSalesOrderquery($sales_order_id);
         if (null !== $model) {
             $salesorder = $model->getSalesOrder();
             if (null !== $salesorder) {
@@ -150,8 +147,8 @@ final readonly class SalesOrderAmountService
                 foreach ($items as $item) {
                     $salesorderItemId = (string) $item->reqId();
                     $salesorderItemAmount =
-                        $soiaR->repoSalesOrderItemAmountquery(
-                            $salesorderItemId
+                        $soiaR->repoSalesOrderItemAmountquery( 
+                            (int) $salesorderItemId
                         );
                     if ($salesorderItemAmount) {
                         $subtotal +=
@@ -171,7 +168,7 @@ final readonly class SalesOrderAmountService
                 $model->setPackhandleshipTax($packHandleShipTax);
                 $additionalTaxTotal =
                     $numberHelper->calculateSalesorderTaxes(
-                        (string) $sales_order_id,
+                        $sales_order_id,
                         $sotrR,
                         $soaR
                     );

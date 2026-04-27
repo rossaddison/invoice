@@ -82,7 +82,7 @@ final class SalesOrderCustomRepository extends Select\Repository
         );
     }
 
-    public function repoSalesOrderCustomquery(string $id): ?SalesOrderCustom
+    public function repoSalesOrderCustomquery(int $id): ?SalesOrderCustom
     {
         $query = $this->select()
                       ->load('custom_field')
@@ -91,7 +91,7 @@ final class SalesOrderCustomRepository extends Select\Repository
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoFormValuequery(string $sales_order_id,
+    public function repoFormValuequery(int $sales_order_id,
             string $custom_field_id): ?SalesOrderCustom
     {
         $query = $this->select()
@@ -100,7 +100,7 @@ final class SalesOrderCustomRepository extends Select\Repository
         return  $query->fetchOne();
     }
 
-    public function repoSalesOrderCustomCount(string $sales_order_id,
+    public function repoSalesOrderCustomCount(int $sales_order_id,
             string $custom_field_id): int
     {
         $query = $this->select()
@@ -109,7 +109,7 @@ final class SalesOrderCustomRepository extends Select\Repository
         return $query->count();
     }
 
-    public function repoSalesOrderCount(string $sales_order_id): int
+    public function repoSalesOrderCount(int $sales_order_id): int
     {
         $query = $this->select()
                       ->where(['sales_order_id' => $sales_order_id]);
@@ -121,7 +121,7 @@ final class SalesOrderCustomRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoFields(string $sales_order_id): EntityReader
+    public function repoFields(int $sales_order_id): EntityReader
     {
         $query = $this->select()
                       ->where(['sales_order_id' => $sales_order_id]);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\QuoteItemAmount;
 
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;

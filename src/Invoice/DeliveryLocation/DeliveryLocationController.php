@@ -290,7 +290,7 @@ final class DeliveryLocationController extends BaseController
                 'actionArguments' => ['id' => $del->reqId()],
                 'form' => $form,
                 'del' =>
-                $delRepository->repoDeliveryLocationquery((string) $del->reqId()),
+                $delRepository->repoDeliveryLocationquery($del->reqId()),
                 'electronic_address_scheme' =>
                 PeppolArrays::electronicAddressScheme(),
             ];
@@ -336,7 +336,7 @@ final class DeliveryLocationController extends BaseController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            return $delRepository->repoDeliveryLocationquery($id);
+            return $delRepository->repoDeliveryLocationquery((int) $id);
         }
         return null;
     }

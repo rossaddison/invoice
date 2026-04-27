@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Infrastructure\Persistence\{        
-        CustomField\CustomField, 
+use App\Infrastructure\Persistence\{
+        CustomField\CustomField,
         InvAllowanceCharge\InvAllowanceCharge
 };
 use App\Invoice\Entity\{
     Inv, InvAmount, InvCustom, InvItem,
-    InvTaxRate, QuoteCustom, QuoteItem, QuoteTaxRate,
+    InvTaxRate
+};
+use App\Infrastructure\Persistence\{
+    QuoteCustom\QuoteCustom,
+    QuoteItem\QuoteItem,
+    QuoteTaxRate\QuoteTaxRate
 };
 use App\Invoice\{
     CustomField\CustomFieldRepository as CFR,
@@ -82,11 +87,11 @@ trait QuoteToInvoice
         UIR $uiR,
     ): Response {
         $body = $request->getQueryParams();
-        $quote_id = (string) $body['quote_id'];
+        $quote_id = (int) $body['quote_id'];
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         if ($quote) {
             // Check if quote has already been converted to an invoice
-            if ($quote->getInvId() !== '0' && $quote->getInvId() !== '') {
+            if ($quote->getInvId() !== 0) {
                 $parameters = [
                     'success' => 0,
                     'flash_message' => $this->translator->translate(
@@ -98,7 +103,7 @@ trait QuoteToInvoice
                 'client_id' => $body['client_id'],
                 'group_id' => $body['group_id'],
                 'status_id' => 1,
-                'quote_id' => $quote->getId(),
+                'quote_id' => $quote->reqId(),
                 'is_read_only' => 0,
                 'date_created' =>
                     (new \DateTimeImmutable('now'))->format('Y-m-d'),
@@ -150,11 +155,11 @@ trait QuoteToInvoice
                                 $this->quoteToInvoiceQuoteAllowanceCharges(
                                     $quote_id, $inv_id, $acqR, $formHydrator);
                                 // Update the quotes inv_id.
-                                $quote->setInvId($inv_id);
+                                $quote->setInvId((int) $inv_id);
                                 $qR->save($quote);
                                 // Update the quote amounts after conversion
                                 $this->quote_amount_service->updateQuoteAmount(
-                                    (int) $quote_id, $qaR, $qiaR, $qtrR,
+                                    $quote_id, $qaR, $qiaR, $qtrR,
                                     $this->numberHelper);
                                 $parameters = [
                                     'success' => 1,
@@ -183,7 +188,7 @@ trait QuoteToInvoice
         return $this->webService->getNotFoundResponse();
     }
 
-    private function quoteToInvoiceQuoteItems(string $quote_id,
+    private function quoteToInvoiceQuoteItems(int $quote_id,
         string $inv_id, ACQIR $acqiR, ACIIR $aciiR, IIAR $iiaR,
             InvItemAmountService $iiaS,
         PR $pR, TASKR $taskR, QIR $qiR, QIAR $qiaR, TRR $trR,
@@ -193,12 +198,17 @@ trait QuoteToInvoice
         $items = $qiR->repoQuoteItemIdquery($quote_id);
         /** @var QuoteItem $quote_item */
         foreach ($items as $quote_item) {
-            $origQuoteItemId = $quote_item->getId();
-            $product_id = $quote_item->getProductId() ?: null;
-            $task_id = $quote_item->getTaskId() ?: null;
+            $origQuoteItemId = $quote_item->reqId();
+            $product_id = $quote_item->getProduct()?->reqId();
+            $task_id = $quote_item->getTask()?->reqId();
+            $product_unit_id = null;
+            try {
+                $product_unit_id = $quote_item->getProductUnitId();
+            } catch (\LogicException) {
+            }
             $inv_item = [
                 'inv_id' => $inv_id,
-                'tax_rate_id' => $quote_item->getTaxRateId(),
+                'tax_rate_id' => $quote_item->getTaxRate()?->reqId(),
                 'product_id' => $product_id,
                 'task_id' => $task_id,
                 'name' => $quote_item->getName(),
@@ -209,7 +219,7 @@ trait QuoteToInvoice
                 'order' => $quote_item->getOrder(),
                 'is_recurring' => 0,
                 'product_unit' => $quote_item->getProductUnit(),
-                'product_unit_id' => $quote_item->getProductUnitId(),
+                'product_unit_id' => $product_unit_id,
                 // Recurring date
                 'date' => '',
             ];
@@ -217,7 +227,7 @@ trait QuoteToInvoice
             $invItem = new InvItem();
             $form = new InvItemForm($invItem, (int) $inv_id);
             if ($formHydrator->populateAndValidate($form, $inv_item)) {
-                null!== $product_id && null === $task_id ?
+                null !== $product_id && null === $task_id ?
                 $this->inv_item_service->addInvItemProduct($invItem, $inv_item,
                     $inv_id, $pR, $trR, $iiaS, $iiaR, $sR, $unR):
                 $this->inv_item_service->addInvItemTask($invItem, $inv_item,
@@ -243,14 +253,14 @@ trait QuoteToInvoice
                         }
                     }
                     $this->inv_item_service->addInvItemAllowanceChargesFromQuote(
-                        $inv_id, (int) $origQuoteItemId, $invItemId, $acqiR,
+                        $inv_id, $origQuoteItemId, $invItemId, $acqiR,
                         $aciiR);
                 }
             }
         } // items
     }
 
-    private function quoteToInvoiceQuoteTaxRates(string $quote_id,
+    private function quoteToInvoiceQuoteTaxRates(int $quote_id,
         ?string $inv_id, QTRR $qtrR, FormHydrator $formHydrator): void
     {
         // Get all tax rates that have been setup for the quote
@@ -259,7 +269,7 @@ trait QuoteToInvoice
         foreach ($quote_tax_rates as $quote_tax_rate) {
             $inv_tax_rate = [
                 'inv_id' => (string) $inv_id,
-                'tax_rate_id' => $quote_tax_rate->getTaxRateId(),
+                'tax_rate_id' => $quote_tax_rate->reqTaxRateId(),
                 'include_item_tax' => $quote_tax_rate->getIncludeItemTax(),
                 'inv_tax_rate_amount' =>
                     $quote_tax_rate->getQuoteTaxRateAmount(),
@@ -274,7 +284,7 @@ trait QuoteToInvoice
     }
 
     private function quoteToInvoiceQuoteCustom(
-        string $quote_id,
+        int $quote_id,
         ?string $inv_id,
         QCR $qcR,
         CFR $cfR,
@@ -322,7 +332,7 @@ trait QuoteToInvoice
         } // foreach
     }
 
-    private function quoteToInvoiceQuoteAmount(string $quote_id,
+    private function quoteToInvoiceQuoteAmount(int $quote_id,
         ?string $inv_id, QAR $qaR, FormHydrator $formHydrator): void
     {
         $quote_amount = $qaR->repoQuotequery($quote_id);
@@ -346,7 +356,7 @@ trait QuoteToInvoice
         }
     }
 
-    private function quoteToInvoiceQuoteAllowanceCharges(string $quote_id,
+    private function quoteToInvoiceQuoteAllowanceCharges(int $quote_id,
         string $copy_id, ACQR $acqR, FormHydrator $formHydrator): void
     {
         $quote_allowance_charges = $acqR->repoACQquery($quote_id);
@@ -357,7 +367,7 @@ trait QuoteToInvoice
             $copy_inv_ac = [
                 'inv_id' => $copy_id,
                 'allowance_charge_id' =>
-                    $quote_allowance_charge->getAllowanceChargeId(),
+                    $quote_allowance_charge->reqAllowanceChargeId(),
                 'amount' => $quote_allowance_charge->getAmount(),
                 'vat_or_tax' => $quote_allowance_charge->getVatOrTax(),
             ];

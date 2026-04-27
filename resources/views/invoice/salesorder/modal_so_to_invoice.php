@@ -34,7 +34,7 @@ echo H::openTag('div', ['id' => 'so-to-invoice', 'class' => 'modal', 'tabindex' 
      echo new Input()->type('hidden')->name('_csrf')->value($csrf);
      echo new Input()->type('hidden')->name('client_id')
                                      ->id('client_id')
-                                     ->value($so->getClientId());
+                                     ->value($so->reqClientId());
      echo new Input()->type('hidden')->name('so_id')
                                      ->id('so_id')
                                      ->value($so->reqId());

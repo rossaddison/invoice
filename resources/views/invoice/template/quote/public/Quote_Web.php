@@ -8,8 +8,8 @@ use Yiisoft\Html\Tag\Img;
 /**
  * Related logic: see QuoteController function urlKey
  * @var App\Infrastructure\Persistence\Client\Client $client
- * @var App\Invoice\Entity\Quote $quote
- * @var App\Invoice\Entity\QuoteAmount $quote_amount
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
+ * @var App\Infrastructure\Persistence\QuoteAmount\QuoteAmount $quote_amount
  * @var App\Invoice\Entity\UserInv $userInv
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
@@ -59,7 +59,7 @@ $vat = $s->getSetting('enable_vat_registration');
             <h2><?= $translator->translate('quote'); ?>&nbsp;<?= $quote->getNumber(); ?></h2>
             <div class="btn-group">
                 <?php
-                    if (in_array($quote->getStatusId(), [2, 3, 5]) && $quote->getSoId() === '0') : ?>
+                    if (in_array($quote->reqStatusId(), [2, 3, 5]) && $quote->getSoId() === 0) : ?>
                     <?=
 //  src/typescript/quote.ts#quote_with_purchase_order_number_confirm,
 //  .quote_with_purchase_order_number_confirm ...
@@ -75,24 +75,24 @@ $vat = $s->getSetting('enable_vat_registration');
                 <?php
                     // Only show the reject button if it was not previously approved ie there is no sales order id attached to this quote
                     // if there is a sales order id (ie approved previously) the client can reject the subsequent sales order only
-                    if ($quote->getStatusId() !== 4 && $quote->getStatusId() !== 5 && $quote->getSoId() === '0') { ?>
+                    if ($quote->reqStatusId() !== 4 && $quote->reqStatusId() !== 5 && $quote->getSoId() === 0) { ?>
                     <a href="<?= $urlGenerator->generate('quote/reject', ['url_key' => $quote->getUrlKey()]); ?>" class="btn btn-danger ajax-loader">
                         <i class="bi bi-check-lg"></i><?= $translator->translate('quote.reject'); ?>
                     </a>
                 <?php } ?>
                 <?php
                     // Show an approved message if the quote is approved
-                    if ($quote->getStatusId()  === 4) :  ?>
+                    if ($quote->reqStatusId() === 4) :  ?>
                     <label class="btn btn-success" disabled><?= $translator->translate('approved'); ?></label>
                 <?php endif; ?>
                 <?php
                     // Show a rejected message if the quote has been rejected by the client. A new quote will have to be issued
-                    if ($quote->getStatusId() === 5) :  ?>
+                    if ($quote->reqStatusId() === 5) :  ?>
                     <label class="btn btn-danger" disabled><?= $translator->translate('rejected'); ?></label>
                 <?php endif; ?>
                 <?php
                     // Show a canceled message if the quote has been canceled by the company
-                    if ($quote->getStatusId() === 6) :  ?>
+                    if ($quote->reqStatusId() === 6) :  ?>
                     <label class="btn btn-danger" disabled><?= $translator->translate('canceled'); ?></label>
                 <?php endif; ?>
             </div>
@@ -224,10 +224,10 @@ $vat = $s->getSetting('enable_vat_registration');
                             if (null !== $itemId) {
                             $quoteItemAllowanceCharges =
                                 $acqiR->repoQuoteItemquery(
-                                    (string)$itemId
+                                    $itemId
                                 );
                             /**
-                             * @var App\Invoice\Entity\QuoteItemAllowanceCharge $quoteItemAllowanceCharge
+                             * @var App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge $quoteItemAllowanceCharge
                              */
                             foreach (
                                 $quoteItemAllowanceCharges
@@ -309,7 +309,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                     $query =
                                         $qiaR
                                             ->repoQuoteItemAmountquery(
-                                                (string) $item->getId()
+                                                (int) $item->getId()
                                             );
                                 ?>
                                 <td class="amount">
@@ -384,7 +384,7 @@ $vat = $s->getSetting('enable_vat_registration');
                         <?php
                             if (!empty($quote_tax_rates) && $vat == '0') {
                                 /**
-                                 * @var App\Invoice\Entity\QuoteTaxRate $quote_tax_rate
+                                 * @var App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate $quote_tax_rate
                                  */
                                 foreach ($quote_tax_rates as $quote_tax_rate) : ?>
                                 <tr>

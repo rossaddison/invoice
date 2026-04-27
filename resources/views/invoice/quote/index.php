@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
@@ -14,7 +14,6 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Form;
 use Yiisoft\Html\Tag\H4;
 use Yiisoft\Html\Tag\I;
-use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Html\Tag\Label;
 use Yiisoft\Html\Tag\Select;
@@ -33,7 +32,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Quote\QuoteRepository $qR
  * @var App\Invoice\QuoteAmount\QuoteAmountRepository $qaR
@@ -143,10 +142,10 @@ $sortedAndPagedPaginator = (new OffsetPaginator($quotes))
 $totalAmount = 0.0;
 
 /**
- * @var Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  */
 foreach ($sortedAndPagedPaginator->read() as $quote) {
-    $totalAmount += null !== ($total = $quote->getQuoteAmount()->getTotal())
+    $totalAmount += null !== ($total = $quote->getQuoteAmount()?->getTotal())
             ? $total : 0.00;
 }
 $settingTabindex = 'setting/tabIndex';
@@ -264,17 +263,18 @@ $columns = [
         content: static function (Checkbox $input, DataContext $context)
             use ($translator): string {
             $quote = $context->data;
-            if (($quote instanceof Quote) && (null !== ($id = $quote->getId()))) {
+            if (($quote instanceof Quote) && $quote->isPersisted()) {
+                $id = $quote->reqId();
                 return  $input
                         ->addAttributes([
                            'id' => $id,
                            'name' => 'checkbox[]',
                            'data-bs-toggle' => 'tooltip',
-                           'title' => $quote->getQuoteAmount()->getTotal() == 0
+                           'title' => ($quote->getQuoteAmount()?->getTotal() ?? 0) == 0
                                ? $translator->translate(
                                'index.checkbox.add.some.items.to.enable') : ''])
                        ->value($id)
-                       ->disabled($quote->getQuoteAmount()->getTotal() > 0 ?
+                       ->disabled(($quote->getQuoteAmount()?->getTotal() ?? 0) > 0 ?
                                false : true)
                        ->render();
             }
@@ -286,7 +286,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (Quote $model): string {
-            return (string) $model->getId();
+            return (string) $model->reqId();
         },
         withSorting: true,
     ),
@@ -297,7 +297,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Quote $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('quote/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('quote/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -308,7 +308,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Quote $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('quote/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('quote/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -324,7 +324,7 @@ $columns = [
             },
             url: static function (Quote $model) use ($urlGenerator): string {
                 return ($model->getSoId() == 0) && ($model->getInvId() == 0)
-                ? $urlGenerator->generate('quote/delete', ['id' => $model->getId()])
+                ? $urlGenerator->generate('quote/delete', ['id' => $model->reqId()])
                 : '';
             },
             attributes: static function (Quote $model) use ($translator): array {
@@ -361,10 +361,7 @@ $columns = [
                 . $translator->translate('status') . '</span>',
         encodeHeader: false,
         content: static function (Quote $model) use ($qR): string {
-            $statusId = $model->getStatusId();
-            if ($statusId === null) {
-                return '<span class="badge text-bg-secondary">N/A</span>';
-            }
+            $statusId = $model->reqStatusId();
             $label = $qR->getSpecificStatusArrayLabel((string) $statusId);
             $class = $qR->getSpecificStatusArrayClass((string) $statusId);
 
@@ -387,7 +384,7 @@ $columns = [
         header: $translator->translate('salesorder.number.status'),
         content: static function (Quote $model) use ($urlGenerator, $soR): A {
             $so_id = $model->getSoId();
-            $so = $soR->repoSalesOrderUnloadedquery($so_id);
+            $so = $so_id > 0 ? $soR->repoSalesOrderUnloadedquery($so_id) : null;
             if (null !== $so) {
                 $number = $so->getNumber();
                 $statusId = $so->getStatusId();
@@ -403,7 +400,7 @@ $columns = [
                         ->href($urlGenerator->generate('salesorder/view',
                             ['id' => $so_id]));
                 }
-                if ($model->getSoId() === '0' && $model->getStatusId() === 7 && $statusId > 0) {
+                if ($model->getSoId() === 0 && $model->reqStatusId() === 7 && $statusId > 0) {
                     return  new A()
                     ->addAttributes(['class' => 'btn btn-warning'])
                            ->content($soR->getSpecificStatusArrayLabel((string) $statusId))
@@ -418,7 +415,7 @@ $columns = [
         property: 'filterQuoteNumber',
         header: $translator->translate('quote.number'),
         content: static function (Quote $model) use ($urlGenerator): A {
-            return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
+            return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->reqId()]), ['style' => 'text-decoration:none']);
         },
         encodeContent: false,
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
@@ -463,10 +460,10 @@ $columns = [
         property: 'filterQuoteAmountTotal',
         header: $translator->translate('total') . ' ➡️ ' . $s->getSetting('currency_symbol'),
         content: static function (Quote $model) use ($decimalPlaces): Label {
-            $quoteTotal = $model->getQuoteAmount()->getTotal();
+            $quoteTotal = $model->getQuoteAmount()?->getTotal();
             return
                  new Label()
-                    ->attributes(['class' => $model->getQuoteAmount()->getTotal() > 0.00 ? 'label label-success' : 'label label-warning'])
+                    ->attributes(['class' => ($model->getQuoteAmount()?->getTotal() ?? 0.00) > 0.00 ? 'label label-success' : 'label label-warning'])
                     ->content(Html::encode(null !== $quoteTotal ? number_format($quoteTotal, $decimalPlaces) : number_format(0, $decimalPlaces)));
         },
         encodeContent: false,
@@ -506,15 +503,15 @@ $previousGroupValue = '';
 $getGroupValue = static function (Quote $quote) use ($groupBy, $qR): string {
     return match ($groupBy) {
         'client' => $quote->getClient()?->getClientFullName() ?? 'Unknown Client',
-        'status' => $qR->getSpecificStatusArrayLabel((string) $quote->getStatusId()),
+        'status' => $qR->getSpecificStatusArrayLabel((string) $quote->reqStatusId()),
         'month' => $quote->getDateCreated()->format('Y-m'),
         'year' => $quote->getDateCreated()->format('Y'),
         'date' => $quote->getDateCreated()->format('Y-m-d'),
         'client_group' => $quote->getClient()?->getClientGroup() ?? 'No Group',
         'amount_range' => match (true) {
-            ($quote->getQuoteAmount()->getTotal() ?? 0) < 100 => '< $100',
-            ($quote->getQuoteAmount()->getTotal() ?? 0) < 500 => '$100 - $500',
-            ($quote->getQuoteAmount()->getTotal() ?? 0) < 1000 => '$500 - $1000',
+            ($quote->getQuoteAmount()?->getTotal() ?? 0) < 100 => '< $100',
+            ($quote->getQuoteAmount()?->getTotal() ?? 0) < 500 => '$100 - $500',
+            ($quote->getQuoteAmount()?->getTotal() ?? 0) < 1000 => '$500 - $1000',
             default => '> $1000'
         },
         default => 'No Group'
@@ -525,7 +522,7 @@ $getGroupValue = static function (Quote $quote) use ($groupBy, $qR): string {
 $groupTotals = [];
 if ($enableGrouping) {
     /**
-     * @var App\Invoice\Entity\Quote $quote
+     * @var App\Infrastructure\Persistence\Quote\Quote $quote
      */
     foreach ($sortedAndPagedPaginator->read() as $quote) {
         $groupValue = $getGroupValue($quote);
@@ -536,7 +533,7 @@ if ($enableGrouping) {
             ];
         }
         $groupTotals[$groupValue]['count']++;
-        $groupTotals[$groupValue]['total'] += $quote->getQuoteAmount()->getTotal() ?? 0.00;
+        $groupTotals[$groupValue]['total'] += $quote->getQuoteAmount()?->getTotal() ?? 0.00;
     }
 }
 

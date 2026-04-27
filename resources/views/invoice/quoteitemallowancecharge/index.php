@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\QuoteItemAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -49,7 +49,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (QuoteItemAllowanceCharge $model) => $model->getId(),
+        content: static fn (QuoteItemAllowanceCharge $model) => $model->reqId(),
     ),
     new DataColumn(
         header: $translator->translate('allowance.or.charge.reason.code'),
@@ -104,7 +104,7 @@ $columns = [
             return Html::a(
                 Html::tag('i', '', ['class' => 'bi bi-pencil']),
                     $urlGenerator->generate('quoteitemallowancecharge/edit',
-                        ['id' => $model->getId()]), []);
+                        ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
@@ -114,7 +114,7 @@ $columns = [
                 return Html::a(Html::tag('i', '',
                     ['class' => 'bi-eye']),
                         $urlGenerator->generate('quoteitemallowancecharge/view',
-                            ['id' => $model->getId()]), []);
+                            ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
@@ -134,7 +134,7 @@ $columns = [
                     ],
                 ),
                 $urlGenerator->generate('quoteitemallowancecharge/delete',
-                    ['id' => $model->getId()]),
+                    ['id' => $model->reqId()]),
                 [],
             );
         },

@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var Yiisoft\Translator\TranslatorInterface $translator
  */
 
 echo $translator->translate('quote') . ' ';
 $number = $quote->getNumber();
-$id = $quote->getId();
-if (null !== ($number) && null !== $id) {
+$id = $quote->reqId();
+if (null !== $number) {
     echo($number ? '#' . $number : $id);
 }
 ?>

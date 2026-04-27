@@ -74,8 +74,8 @@ trait Email
         }
         $quote_entity = $this->quote($id, $qR, true);
         if ($quote_entity) {
-            $quote_id = $quote_entity->getId();
-            $quote = $qR->repoQuoteUnLoadedquery((string) $quote_id);
+            $quote_id = $quote_entity->reqId();
+            $quote = $qR->repoQuoteUnLoadedquery($quote_id);
             if ($quote) {
                 // Get all custom fields
                 $custom_fields = [];
@@ -129,8 +129,8 @@ trait Email
                     'dropdownTitlesOfEmailTemplates' =>
                         $this->emailTemplates($etR),
                     'userInv' => $uiR->repoUserInvUserIdcount(
-                        $quote->getUserId()) > 0 ? $uiR->repoUserInvUserIdquery(
-                            $quote->getUserId()) : null,
+                        (string) $quote->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery(
+                            (string) $quote->reqUserId()) : null,
                     'quote' => $quote,
                     'pdfTemplates' => $this->emailGetQuoteTemplates('pdf'),
                     'templateTags' =>
@@ -195,7 +195,7 @@ trait Email
     }
 
     public function emailStage1(
-        ?string $quote_id,
+        int $quote_id,
         array $from,
         // $to can only have one email address
         string $to,
@@ -229,66 +229,63 @@ trait Email
         $template_helper = new TemplateHelper(
             $this->sR, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
         $mailer_helper = new MailerHelper(
-            $this->sR, $this->session, $this->translator, $this->logger,
-                $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
-        if (null !== $quote_id) {
-            $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ?
-                $qaR->repoQuotequery($quote_id) : null);
-            $quote_custom_values = $this->quoteCustomValues($quote_id, $qcR);
-            $quote_entity = $qR->repoCount($quote_id) > 0 ?
-                $qR->repoQuoteUnLoadedquery($quote_id) : null;
-            if ($quote_entity) {
-                $stream = false;
-                $pdf_template_target_path =
-                    $this->pdfHelper->generateQuotePdf(
-                        $quote_id, $quote_entity->getUserId(), $stream, true,
-                            $quote_amount, $quote_custom_values, $cR, $cvR,
-                                $cfR, $dlR, $qiR, $qiaR, $acqiR, $qR, $qtrR,
-                                    $uiR, $webViewRenderer);
-                if ($pdf_template_target_path) {
-                    $mail_message = $template_helper->parseTemplate(
-                        $quote_id, false, $email_body, $cvR, $iR, $iaR,
-                            $qR, $qaR, $soR, $uiR);
-                    $mail_subject = $template_helper->parseTemplate(
-                        $quote_id, false, $subject, $cvR, $iR, $iaR, $qR,
-                            $qaR, $soR, $uiR);
-                    $mail_cc = $template_helper->parseTemplate(
-                        $quote_id, false, $cc, $cvR, $iR, $iaR, $qR, $qaR,
-                            $soR, $uiR);
-                    $mail_bcc = $template_helper->parseTemplate($quote_id,
-                        false, $bcc, $cvR, $iR, $iaR, $qR, $qaR, $soR,
-                            $uiR);
-                    // from[0] is the from_email and from[1] is the from_name
-                    /**
-                     * @var string $from[0]
-                     * @var string $from[1]
-                     */
-                    $mail_from
-                        = [$template_helper->parseTemplate($quote_id, false,
-                            $from[0], $cvR, $iR, $iaR, $qR, $qaR, $soR,
-                                $uiR),
-                            $template_helper->parseTemplate($quote_id, false,
-                                $from[1], $cvR, $iR, $iaR, $qR, $qaR, $soR,
-                                    $uiR)];
-                    // mail_from[0] is the from_email and mail_from[1] is
-                    // the from_name
-                    return $mailer_helper->yiiMailerSend(
-                        $mail_from[0],
-                        $mail_from[1],
-                        $to,
-                        $mail_subject,
-                        $mail_message,
-                        $mail_cc,
-                        $mail_bcc,
-                        $attachFiles,
-                        $pdf_template_target_path,
-                        $uiR,
-                    );
-                } // pdf_template_target_path
-            } // quote_entity
-            return false;
-        } // quote_id
-        return false;
+        $this->sR, $this->session, $this->translator, $this->logger,
+            $this->mailer, $ccR, $qcR, $icR, $pcR, $socR, $cfR, $cvR);
+        $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ?
+            $qaR->repoQuotequery($quote_id) : null);
+        $quote_custom_values = $this->quoteCustomValues($quote_id, $qcR);
+        $quote_entity = $qR->repoCount($quote_id) > 0 ?
+            $qR->repoQuoteUnLoadedquery($quote_id) : null;
+        if ($quote_entity) {
+            $stream = false;
+            $pdf_template_target_path =
+                $this->pdfHelper->generateQuotePdf(
+                    $quote_id, $quote_entity->reqUserId(), $stream, true,
+                        $quote_amount, $quote_custom_values, $cR, $cvR,
+                            $cfR, $dlR, $qiR, $qiaR, $acqiR, $qR, $qtrR,
+                                $uiR, $webViewRenderer);
+            if (null !== $pdf_template_target_path) {
+                $mail_message = $template_helper->parseTemplate(
+                    (string) $quote_id, false, $email_body, $cvR, $iR, $iaR,
+                        $qR, $qaR, $soR, $uiR);
+                $mail_subject = $template_helper->parseTemplate(
+                    (string) $quote_id, false, $subject, $cvR, $iR, $iaR, $qR,
+                        $qaR, $soR, $uiR);
+                $mail_cc = $template_helper->parseTemplate(
+                    (string) $quote_id, false, $cc, $cvR, $iR, $iaR, $qR, $qaR,
+                        $soR, $uiR);
+                $mail_bcc = $template_helper->parseTemplate((string) $quote_id,
+                    false, $bcc, $cvR, $iR, $iaR, $qR, $qaR, $soR,
+                        $uiR);
+                // from[0] is the from_email and from[1] is the from_name
+                /**
+                 * @var string $from[0]
+                 * @var string $from[1]
+                 */
+                $mail_from
+                    = [$template_helper->parseTemplate((string) $quote_id, false,
+                        $from[0], $cvR, $iR, $iaR, $qR, $qaR, $soR,
+                            $uiR),
+                        $template_helper->parseTemplate((string) $quote_id, false,
+                            $from[1], $cvR, $iR, $iaR, $qR, $qaR, $soR,
+                                $uiR)];
+                // mail_from[0] is the from_email and mail_from[1] is
+                // the from_name
+                return $mailer_helper->yiiMailerSend(
+                    $mail_from[0],
+                    $mail_from[1],
+                    $to,
+                    $mail_subject,
+                    $mail_message,
+                    $mail_cc,
+                    $mail_bcc,
+                    $attachFiles,
+                    $pdf_template_target_path,
+                    $uiR,
+                );
+            } // pdf_template_target_path
+        } // quote_entity
+        return false;        
     }
 
     public function emailStage2(
@@ -383,15 +380,15 @@ trait Email
 
                 $attachFiles = $request->getUploadedFiles();
 
-                $this->generateQuoteNumberIfApplicable((string) $quote_id,
+                $this->generateQuoteNumberIfApplicable($quote_id,
                     $qR, $this->sR, $gR);
                 // Custom fields are automatically included on the quote
-                if ($this->emailStage1((string) $quote_id, $from, $to,
+                if ($this->emailStage1($quote_id, $from, $to,
                         $subject, $email_body, $cc, $bcc, $attachFiles, $cR,
                             $ccR, $cfR, $dlR, $cvR, $iaR, $icR, $qiaR, $acqiR,
                                 $qiR, $iR, $qtrR, $pcR, $socR, $qR, $qaR, $qcR,
                                     $soR, $uiR, $this->webViewRenderer)) {
-                    $this->sR->quoteMarkSent((string) $quote_id, $qR);
+                    $this->sR->quoteMarkSent($quote_id, $qR);
                     $this->flashMessage('success', $this->translator->translate(
                         'email.successfully.sent'));
                     return $this->webService->getRedirectResponse('quote/view',

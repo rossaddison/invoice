@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Quote;
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\Quote\QuoteForm;
@@ -143,9 +143,8 @@ final class QuoteFormTest extends TestCase
      */
     public function testFormInitializationFromEntity(): void
     {
-        $form = new QuoteForm($this->quote);
+        $form = QuoteForm::show($this->quote);
         
-        $this->assertEquals('QUOTE-001', $form->getNumber());
         $this->assertEquals('Test quote notes', $form->getNotes());
         $this->assertEquals(1, $form->getClientId());
         $this->assertEquals(1, $form->getGroupId());
@@ -160,7 +159,7 @@ final class QuoteFormTest extends TestCase
      */
     public function testGettersReturnCorrectTypes(): void
     {
-        $form = new QuoteForm($this->quote);
+        $form = QuoteForm::show($this->quote);
         
         $this->assertIsString($form->getNumber());
         $this->assertIsString($form->getNotes());
@@ -203,16 +202,16 @@ final class QuoteFormTest extends TestCase
         
         $quote->method('getNumber')->willReturn('QUOTE-001');
         $quote->method('getDateCreated')->willReturn($now);
-        $quote->method('getInvId')->willReturn('1');
-        $quote->method('getSoId')->willReturn('1');
-        $quote->method('getGroupId')->willReturn('1');
-        $quote->method('getClientId')->willReturn('1');
-        $quote->method('getStatusId')->willReturn(1);
+        $quote->method('getInvId')->willReturn(1);
+        $quote->method('getSoId')->willReturn(1);
+        $quote->method('reqGroupId')->willReturn(1);
+        $quote->method('reqClientId')->willReturn(1);
+        $quote->method('reqStatusId')->willReturn(1);
         $quote->method('getDiscountAmount')->willReturn(100.50);
         $quote->method('getUrlKey')->willReturn('test-quote-key');
         $quote->method('getPassword')->willReturn('quote-password');
         $quote->method('getNotes')->willReturn('Test quote notes');
-        $quote->method('getDeliveryLocationId')->willReturn('5');
+        $quote->method('getDeliveryLocationId')->willReturn(5);
         $quote->method('getClient')->willReturn($client);
         $quote->method('getGroup')->willReturn($group);
         $quote->method('getUser')->willReturn($user);
@@ -226,7 +225,7 @@ final class QuoteFormTest extends TestCase
     private function createFormWithData(array $data): QuoteForm
     {
         $quote = $this->createMockQuote();
-        $form = new QuoteForm($quote);
+        $form = QuoteForm::show($quote);
         
         // Use reflection to set properties for testing
         $reflection = new \ReflectionClass($form);

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\SalesOrderItem;
 
-use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Infrastructure\Persistence\Product\Product;
-use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
-use App\Infrastructure\Persistence\Task\Task;
+use App\Infrastructure\Persistence\{
+    TaxRate\TaxRate, Product\Product, SalesOrder\SalesOrder,
+    Task\Task, Trait\RequireId};
 use App\Invoice\SalesOrderItem\SalesOrderItemRepository as SOIR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -17,6 +16,8 @@ use DateTimeImmutable;
 #[Entity(repository: SOIR::class)]
 class SalesOrderItem
 {
+    use RequireId;
+     
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 
@@ -84,18 +85,10 @@ class SalesOrderItem
     ) {
         $this->date_added = new DateTimeImmutable();
     }
-
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
+    
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'SalesOrderItem has no ID (not persisted yet)'
-            );
-        }
-        return $this->id;
+        return $this->requireId($this->id, 'SalesOrderItem');
     }
 
     public function isPersisted(): bool
@@ -148,9 +141,9 @@ class SalesOrderItem
         $this->sales_order = $sales_order;
     }
 
-    public function getSalesOrderId(): ?int
+    public function reqSalesOrderId(): int
     {
-        return $this->sales_order_id;
+        return $this->requireId($this->sales_order_id, 'SalesOrder');
     }
 
     public function setSalesOrderId(int $sales_order_id): void
@@ -158,9 +151,9 @@ class SalesOrderItem
         $this->sales_order_id = $sales_order_id;
     }
 
-    public function getQuoteItemId(): ?int
+    public function reqQuoteItemId(): int
     {
-        return $this->quote_item_id;
+        return $this->requireId($this->quote_item_id, 'QuoteItem');
     }
 
     public function setQuoteItemId(int $quote_item_id): void
@@ -198,9 +191,9 @@ class SalesOrderItem
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getProductId(): ?int
+    public function reqProductId(): int
     {
-        return $this->product_id;
+        return $this->requireId($this->product_id, 'Product');
     }
 
     public function setProductId(int $product_id): void
@@ -208,9 +201,9 @@ class SalesOrderItem
         $this->product_id = $product_id;
     }
 
-    public function getTaskId(): ?int
+    public function reqTaskId(): int
     {
-        return $this->task_id;
+        return $this->requireId($this->task_id, 'Project');
     }
 
     public function setTaskId(int $task_id): void

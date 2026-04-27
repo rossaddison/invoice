@@ -20,7 +20,7 @@ final readonly class SalesOrderItemAmountService
         array $array
     ): void {
         $sales_order_item = $this->soiR->repoSalesOrderItemquery(
-            (string) $array['sales_order_item_id']
+            (int) $array['sales_order_item_id']
         );
         if ($sales_order_item) {
             $model->setSalesOrderItem($sales_order_item);

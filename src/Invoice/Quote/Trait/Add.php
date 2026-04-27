@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Invoice\Entity\{Quote, QuoteAmount};
+use App\Infrastructure\Persistence\Quote\Quote;
+use App\Infrastructure\Persistence\QuoteAmount\QuoteAmount;
 use App\Invoice\{
     Client\ClientRepository as CR,
     Group\GroupRepository as GR,
@@ -42,7 +43,7 @@ trait Add
     ): Response {
         $quote = new Quote();
         $errors = [];
-        $form = new QuoteForm($quote);
+        $form = new QuoteForm();
         $bootstrap5ModalQuote = new Bootstrap5ModalQuote(
             $this->translator,
             $this->webViewRenderer,
@@ -109,23 +110,21 @@ trait Add
                          * Related logic: see src\Invoice\Entity\Quote
                          * $this->quoteAmount = new QuoteAmount();
                          */
-                        $model_id = $saved_model->getId();
-                        if (null !== $model_id) {
-                            $this->defaultTaxes($quote, $trR, $formHydrator);
-                            // Inform the user of generated quote number for
-                            // draft setting
-                            $this->flashMessage('info',
-                                $this->sR->getSetting(
-                                    'generate_quote_number_for_draft') === '1'
-                            ? $this->translator->translate(
-                                'generate.quote.number.for.draft')
-                                    . '=>'
-                                    . $this->translator->translate('yes')
-                            : $this->translator->translate(
-                                'generate.quote.number.for.draft')
-                                    . '=>'
-                                    . $this->translator->translate('no'));
-                        } //$model_id
+                        $model_id = $saved_model->reqId();
+                        $this->defaultTaxes($quote, $trR, $formHydrator);
+                        // Inform the user of generated quote number for
+                        // draft setting
+                        $this->flashMessage('info',
+                            $this->sR->getSetting(
+                                'generate_quote_number_for_draft') === '1'
+                        ? $this->translator->translate(
+                            'generate.quote.number.for.draft')
+                                . '=>'
+                                . $this->translator->translate('yes')
+                        : $this->translator->translate(
+                            'generate.quote.number.for.draft')
+                                . '=>'
+                                . $this->translator->translate('no'));
                         $this->flashMessage('success',
                             $this->translator->translate(
                                 'record.successfully.created')
@@ -218,7 +217,7 @@ trait Add
         $unsuccessful =
             $this->translator->translate('quote.creation.unsuccessful');
         $quote = new Quote();
-        $ajax_content = new QuoteForm($quote);
+        $ajax_content = QuoteForm::show($quote);
         if ($formHydrator->populate($ajax_content, $ajax_body)
             && $ajax_content->isValid()) {
             $client_id = $ajax_body['client_id'];
@@ -242,32 +241,30 @@ trait Add
                     if (null !== $user_inv && $user_inv->getActive()) {
                         $saved_model = $this->quote_service->saveQuote(
                             $user, $quote, $ajax_body, $this->sR, $gR);
-                        $model_id = $saved_model->getId();
-                        if (null !== $model_id) {
-                            $this->quote_amount_service->initializeQuoteAmount(
-                                new QuoteAmount(), (int) $model_id);
-                            $this->defaultTaxes($quote, $trR, $formHydrator);
-                            $parameters = ['success' => 1];
-                            // Inform the user of generated invoice number for
-                            // draft setting
-                            $this->flashMessage(
-                                'info',
-                                $this->sR->getSetting(
-                                    'generate_quote_number_for_draft') === '1'
-                                  ? $this->translator->translate(
-                                        'generate.quote.number.for.draft')
-                                        . '=>'
-                                        . $this->translator->translate('yes')
-                                  : $this->translator->translate(
+                        $model_id = $saved_model->reqId();
+                        $this->quote_amount_service->initializeQuoteAmount(
+                            new QuoteAmount(), $model_id);
+                        $this->defaultTaxes($quote, $trR, $formHydrator);
+                        $parameters = ['success' => 1];
+                        // Inform the user of generated invoice number for
+                        // draft setting
+                        $this->flashMessage(
+                            'info',
+                            $this->sR->getSetting(
+                                'generate_quote_number_for_draft') === '1'
+                              ? $this->translator->translate(
                                     'generate.quote.number.for.draft')
                                     . '=>'
-                                    . $this->translator->translate('no'),
-                            );
-                            //return response to quote.js to reload page at
-                            //location
-                            return $this->factory->createResponse(
-                                Json::encode($parameters));
-                        }
+                                    . $this->translator->translate('yes')
+                              : $this->translator->translate(
+                                'generate.quote.number.for.draft')
+                                . '=>'
+                                . $this->translator->translate('no'),
+                        );
+                        //return response to quote.js to reload page at
+                        //location
+                        return $this->factory->createResponse(
+                            Json::encode($parameters));
                     } // null!==$user_inv && $user_inv->getActive()
                     return $this->factory->createResponse(
                         Json::encode([

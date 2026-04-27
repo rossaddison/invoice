@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use App\Widget\LabelSwitch;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var App\Invoice\Setting\SettingRepository $s

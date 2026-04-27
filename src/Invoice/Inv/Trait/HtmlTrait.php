@@ -40,7 +40,7 @@ trait HtmlTrait
             $inv = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
                 $so = ($inv->getSoId() ? $soR->repoSalesOrderLoadedquery(
-                    $inv->getSoId()) : null);
+                    (int) $inv->getSoId()) : null);
                 $html = $this->pdfHelper->generateInvHtml(
                     $inv_id,
                     $inv->getUserId(),

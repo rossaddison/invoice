@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -12,7 +12,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Quote\QuoteRepository $qR
  * @var App\Invoice\QuoteAmount\QuoteAmountRepository $qaR
@@ -105,7 +105,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (Quote $model): string {
-            return (string) $model->getId();
+            return (string) $model->reqId();
         },
         withSorting: true,
     ),
@@ -113,12 +113,9 @@ $columns = [
         'status_id',
         header: $translator->translate('status'),
         content: static function (Quote $model) use ($qR): Yiisoft\Html\Tag\CustomTag|string {
-            if (null !== $model->getStatusId()) {
-                $span = $qR->getSpecificStatusArrayLabel((string) $model->getStatusId());
-                $class = $qR->getSpecificStatusArrayClass((string) $model->getStatusId());
+            $span = $qR->getSpecificStatusArrayLabel((string) $model->reqStatusId());
+                $class = $qR->getSpecificStatusArrayClass((string) $model->reqStatusId());
                 return Html::tag('span', $span, ['id' => '#quote-guest','class' => 'badge text-bg-' . $class]);
-            }
-            return '';
         },
         encodeContent: false,
         withSorting: true,
@@ -127,7 +124,7 @@ $columns = [
         property: 'filterQuoteNumber',
         header: $translator->translate('quote.number'),
         content: static function (Quote $model) use ($urlGenerator): A {
-            return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->getId()]), ['style' => 'text-decoration:none']);
+            return Html::a($model->getNumber() ?? '#', $urlGenerator->generate('quote/view', ['id' => $model->reqId()]), ['style' => 'text-decoration:none']);
         },
         encodeContent: false,
         filter: \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::widget()
@@ -157,12 +154,9 @@ $columns = [
         'id',
         header: $translator->translate('total'),
         content: static function (Quote $model) use ($s, $qaR): string {
-            $quote_id = $model->getId();
-            if (null !== $quote_id) {
-                $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
-                return $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00);
-            }
-            return '';
+            $quote_id = $model->reqId();
+            $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ? $qaR->repoQuotequery($quote_id) : null);
+            return $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00);
         },
     ),
 ];

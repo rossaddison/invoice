@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\Quote\Trait;
 
 use App\Infrastructure\Persistence\{Contract\Contract, Group\Group};
-use App\Invoice\Entity\{Quote, QuoteCustom, QuoteTaxRate};
+use App\Infrastructure\Persistence\Quote\Quote;
+use App\Infrastructure\Persistence\QuoteCustom\QuoteCustom;
+use App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate;
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\{
     Client\ClientRepository as CR,
@@ -58,12 +60,11 @@ trait Edit
     ): Response {
         $quote = $this->quote($id, $quoteRepo, true);
         if (null !== $quote) {
-            $form = new QuoteForm($quote);
-            $quoteCustom = new QuoteCustom();
-            $quoteCustomForm = new QuoteCustomForm($quoteCustom);
-            $quote_id = $quote->getId();
-            $client_id = $quote->getClientId();
-            $dels = $delRepo->repoClientquery($quote->getClientId());
+            $form = QuoteForm::show($quote);
+            $quoteCustomForm = new QuoteCustomForm();
+            $quote_id = $quote->reqId();
+            $client_id = $quote->reqClientId();
+            $dels = $delRepo->repoClientquery((string) $quote->reqClientId());
             $parameters = [
                 'title' => '',
                 'alert' => $this->alert(),
@@ -73,7 +74,7 @@ trait Edit
                 'form' => $form,
                 'optionsData' => $this->editOptionsData(
                     $quote,
-                    (int) $client_id,
+                    $client_id,
                     $clientRepo,
                     $contractRepo,
                     $delRepo,
@@ -96,24 +97,23 @@ trait Edit
                     $cfR, $cvR, 'quote_custom')['customValues'],
                 // There will initially be no custom_values attached to this
                 // quote until they are filled in the field on the form
-                'quoteCustomValues' => null !== $quote_id ?
-                    $this->quoteCustomValues($quote_id, $qcR) : null,
+                'quoteCustomValues' => $this->quoteCustomValues($quote_id, $qcR),
                 'quote' => $quote,
                 'quoteCustomForm' => $quoteCustomForm,
-                'delCount' => $delRepo->repoClientCount($quote->getClientId()),
+                'delCount' => $delRepo->repoClientCount((string) $quote->reqClientId()),
                 'returnUrlAction' => 'edit',
                 'formFields' => $this->formFields,
             ];
-            $delRepo->repoClientCount($quote->getClientId()) > 0 ? '' :
+            $delRepo->repoClientCount((string) $quote->reqClientId()) > 0 ? '' :
                 $this->flashMessage('warning', $this->translator->translate(
                     'quote.delivery.location.none'));
             if ($request->getMethod() === Method::POST) {
                 $body = (array) $request->getParsedBody();
                 $quote = $this->quote($id, $quoteRepo, false);
                 if ($quote) {
-                    $form = new QuoteForm($quote);
-                    $client_id = $quote->getClientId();
-                    $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
+                    $form = QuoteForm::show($quote);
+                    $client_id = $quote->reqClientId();
+                    $user = $this->activeUser((string) $client_id, $uR, $ucR, $uiR);
                     if (null !== $user) {
                         if ($formHydrator->populateAndValidate($form, $body)) {
                             $this->quote_service->saveQuote($user, $quote,
@@ -152,7 +152,7 @@ trait Edit
             'quote_tax_rate_amount' => 0.00,
         ];
         $quoteTaxRate = new QuoteTaxRate();
-        $ajax_content = new QuoteTaxRateForm($quoteTaxRate);
+        $ajax_content = QuoteTaxRateForm::show($quoteTaxRate);
         if ($formHydrator->populateAndValidate($ajax_content, $ajax_body)) {
             $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate,
                 $ajax_body);
@@ -183,7 +183,7 @@ trait Edit
         QR $quoteRepo,
         UCR $ucR,
     ): array {
-        $contracts = $contractRepo->repoClient($quote->getClientId());
+        $contracts = $contractRepo->repoClient((string) $quote->reqClientId());
         $optionsDataContract = [];
         /**
          * @var Contract $contract

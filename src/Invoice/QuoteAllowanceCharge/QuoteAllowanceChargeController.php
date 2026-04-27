@@ -58,8 +58,7 @@ final class QuoteAllowanceChargeController extends BaseController
     ): Response {
         $quoteAllowanceCharge = new QuoteAllowanceCharge();
         $quote_id = $currentRoute->getArgument('quote_id');
-        $form = QuoteAllowanceChargeForm::show($quoteAllowanceCharge,
-                (int) $quote_id);
+        $form = new QuoteAllowanceChargeForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'quoteallowancecharge/add',
@@ -167,7 +166,7 @@ final class QuoteAllowanceChargeController extends BaseController
             $quoteAllowanceCharge =
                 $this->quoteallowancecharge($currentRoute, $acqR);
             if ($quoteAllowanceCharge) {
-                $quoteId = $quoteAllowanceCharge->getQuoteId();
+                $quoteId = $quoteAllowanceCharge->reqQuoteId();
                 $this->qacService->deleteQuoteAllowanceCharge(
                     $quoteAllowanceCharge);
                 $this->flashMessage('info', $this->translator->translate(
@@ -201,7 +200,7 @@ final class QuoteAllowanceChargeController extends BaseController
     ): Response {
         $quoteAllowanceCharge = $this->quoteallowancecharge($currentRoute, $acqR);
         if ($quoteAllowanceCharge) {
-            $quote_id = $quoteAllowanceCharge->getQuoteId();
+            $quote_id = $quoteAllowanceCharge->reqQuoteId();
             $form = QuoteAllowanceChargeForm::show($quoteAllowanceCharge,
                 $quote_id);
             $parameters = [
@@ -244,11 +243,9 @@ final class QuoteAllowanceChargeController extends BaseController
         QuoteAllowanceChargeRepository $qacRepository):
             ?QuoteAllowanceCharge
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $qacRepository->repoQuoteAllowanceChargeLoadedquery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $qacRepository->repoQuoteAllowanceChargeLoadedquery($id);
+        
     }
 
     /**
@@ -275,7 +272,7 @@ final class QuoteAllowanceChargeController extends BaseController
         $quoteAllowanceCharge = $this->quoteallowancecharge(
             $currentRoute, $acqR);
         if ($quoteAllowanceCharge) {
-            $quote_id = $quoteAllowanceCharge->getQuoteId();
+            $quote_id = $quoteAllowanceCharge->reqQuoteId();
             $form = QuoteAllowanceChargeForm::show($quoteAllowanceCharge,
                 $quote_id);
             $parameters = [

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItemAllowanceCharge;
 
-use App\Invoice\Entity\QuoteItemAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -17,15 +17,23 @@ final class QuoteItemAllowanceChargeForm extends FormModel
     private ?float $amount = null;
     #[Required]
     private ?float $vat_or_tax = null;
+    private ?int $quote_item_id = null;
 
-    public function __construct(
+    public static function show(
         QuoteItemAllowanceCharge $quoteItemAllowanceCharge,
-        private readonly ?int $quote_item_id)
-    {
-        $this->quote_id = (int) $quoteItemAllowanceCharge->getQuoteId();
-        $this->allowance_charge_id = (int) $quoteItemAllowanceCharge->getAllowanceChargeId();
-        $this->amount = (float) $quoteItemAllowanceCharge->getAmount();
-        $this->vat_or_tax = (float) $quoteItemAllowanceCharge->getVatOrTax();
+        ?int $quote_item_id
+    ): self {
+        $form = new self();
+        $form->quote_id = $quoteItemAllowanceCharge->isPersisted()
+            ? $quoteItemAllowanceCharge->reqQuoteId()
+            : null;
+        $form->allowance_charge_id = $quoteItemAllowanceCharge->isPersisted()
+            ? $quoteItemAllowanceCharge->reqAllowanceChargeId()
+            : null;
+        $form->amount = (float) $quoteItemAllowanceCharge->getAmount();
+        $form->vat_or_tax = (float) $quoteItemAllowanceCharge->getVatOrTax();
+        $form->quote_item_id = $quote_item_id;
+        return $form;
     }
 
     public function getQuoteId(): ?int

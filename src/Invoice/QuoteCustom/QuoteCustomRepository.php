@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteCustom;
 
-use App\Invoice\Entity\QuoteCustom;
+use App\Infrastructure\Persistence\QuoteCustom\QuoteCustom;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -81,7 +81,7 @@ final class QuoteCustomRepository extends Select\Repository
         );
     }
 
-    public function repoQuoteCustomquery(string $id): ?QuoteCustom
+    public function repoQuoteCustomquery(int $id): ?QuoteCustom
     {
         $query = $this->select()
                       ->load('custom_field')
@@ -90,7 +90,7 @@ final class QuoteCustomRepository extends Select\Repository
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoFormValuequery(string $quote_id, string $custom_field_id): ?QuoteCustom
+    public function repoFormValuequery(int $quote_id, int $custom_field_id): ?QuoteCustom
     {
         $query = $this->select()
                       ->where(['quote_id' => $quote_id])
@@ -98,7 +98,7 @@ final class QuoteCustomRepository extends Select\Repository
         return  $query->fetchOne();
     }
 
-    public function repoQuoteCustomCount(string $quote_id, string $custom_field_id): int
+    public function repoQuoteCustomCount(int $quote_id, int $custom_field_id): int
     {
         $query = $this->select()
                       ->where(['quote_id' => $quote_id])
@@ -106,7 +106,7 @@ final class QuoteCustomRepository extends Select\Repository
         return $query->count();
     }
 
-    public function repoQuoteCount(string $quote_id): int
+    public function repoQuoteCount(int $quote_id): int
     {
         $query = $this->select()
                       ->where(['quote_id' => $quote_id]);
@@ -118,7 +118,7 @@ final class QuoteCustomRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoFields(string $quote_id): EntityReader
+    public function repoFields(int $quote_id): EntityReader
     {
         $query = $this->select()
                       ->where(['quote_id' => $quote_id]);

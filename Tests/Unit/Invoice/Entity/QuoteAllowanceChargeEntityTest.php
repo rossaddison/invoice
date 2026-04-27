@@ -6,7 +6,7 @@ namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use PHPUnit\Framework\TestCase;
 
 class QuoteAllowanceChargeEntityTest extends TestCase
@@ -36,8 +36,8 @@ class QuoteAllowanceChargeEntityTest extends TestCase
 
         $this->assertSame(1, $qac->reqId());
         $this->assertTrue($qac->isPersisted());
-        $this->assertSame(5, $qac->getQuoteId());
-        $this->assertSame(3, $qac->getAllowanceChargeId());
+        $this->assertSame(5, $qac->reqQuoteId());
+        $this->assertSame(3, $qac->reqAllowanceChargeId());
         $this->assertSame(50.00, $qac->getAmount());
         $this->assertSame(10.00, $qac->getVatOrTax());
     }
@@ -45,8 +45,6 @@ class QuoteAllowanceChargeEntityTest extends TestCase
     public function testConstructorWithDefaults(): void
     {
         $qac = new QuoteAllowanceCharge();
-        $this->assertNull($qac->getQuoteId());
-        $this->assertNull($qac->getAllowanceChargeId());
         $this->assertNull($qac->getAmount());
         $this->assertNull($qac->getVatOrTax());
         $this->assertNull($qac->getAllowanceCharge());
@@ -72,14 +70,14 @@ class QuoteAllowanceChargeEntityTest extends TestCase
     {
         $qac = new QuoteAllowanceCharge();
         $qac->setQuoteId(10);
-        $this->assertSame(10, $qac->getQuoteId());
+        $this->assertSame(10, $qac->reqQuoteId());
     }
 
     public function testAllowanceChargeIdSetterAndGetter(): void
     {
         $qac = new QuoteAllowanceCharge();
         $qac->setAllowanceChargeId(7);
-        $this->assertSame(7, $qac->getAllowanceChargeId());
+        $this->assertSame(7, $qac->reqAllowanceChargeId());
     }
 
     public function testAmountSetterAndGetter(): void

@@ -135,14 +135,14 @@ if ($items) {
      * @var App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem $item
      */
     foreach ($items as $item) {
-        $salesorder_item_amount = $soiaR->repoSalesOrderItemAmountquery((string) $item->reqId());
+        $salesorder_item_amount = $soiaR->repoSalesOrderItemAmountquery($item->reqId());
         // Display item-level allowances/charges BEFORE the item
         // if Peppol is enabled
         if ($s->getSetting('enable_peppol') == '1') {
             $itemId = $item->reqId();
             $salesOrderItemAllowanceCharges =
                 $acsoiR->repoSalesOrderItemquery(
-                    (string)$itemId
+                    $itemId
                 );
             /**
              * @var App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge $salesOrderItemAllowanceCharge

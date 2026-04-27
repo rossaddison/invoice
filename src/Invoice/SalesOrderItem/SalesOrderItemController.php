@@ -74,7 +74,7 @@ final class SalesOrderItemController extends BaseController
             if (null!== $so && ($this->rbacObserver($so, $ucR, $uiR)
              || $this->rbacAccountant()
              || $this->rbacAdmin())) {
-                $so_id = (string) $so_item->getSalesOrderId();
+                $so_id = (string) $so_item->reqSalesOrderId();
                 $form = SalesOrderItemForm::show($so_item, $so_id);
                 $parameters = [
                     'title' => $this->translator->translate('edit'),
@@ -137,11 +137,11 @@ final class SalesOrderItemController extends BaseController
                 // in the observer user's guest index
                 && !($statusId === 1)
                 // the salesorder is intended for the current user
-                && ($so->getUserId() === $this->userService->getUser()?->getId())
+                && ((string) $so->getUserId() === $this->userService->getUser()?->getId())
                 // the salesorder client is associated with the above user
                 && ($ucR->repoUserClientqueryCount(
                     (string) $so->getUserId(),
-                    (string) $so->getClientId()) > 0)) {
+                    (string) $so->reqClientId()) > 0)) {
                 $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {
@@ -185,7 +185,7 @@ final class SalesOrderItemController extends BaseController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            return $salesorderitemRepository->repoSalesOrderItemquery($id);
+            return $salesorderitemRepository->repoSalesOrderItemquery((int)$id);
         }
         return null;
     }
@@ -233,12 +233,11 @@ final class SalesOrderItemController extends BaseController
             $soias_array['subtotal'] = $sub_total;
             $soias_array['taxtotal'] = $tax_total;
             $soias_array['total'] = $sub_total - $discount_total + $tax_total;
-            if ($soiar->repoCount((string) $so_item_id) === 0) {
+            if ($soiar->repoCount($so_item_id) === 0) {
                 $soias->saveSalesOrderItemAmountNoForm(
                                         new SalesOrderItemAmount(), $soias_array);
             } else {
-                $so_item_amount = $soiar->repoSalesOrderItemAmountquery(
-                                                            (string) $so_item_id);
+                $so_item_amount = $soiar->repoSalesOrderItemAmountquery($so_item_id);
                 if ($so_item_amount) {
                     $soias->saveSalesOrderItemAmountNoForm(
                                                     $so_item_amount, $soias_array);

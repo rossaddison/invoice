@@ -6,7 +6,7 @@ namespace App\Invoice\Quote;
 
 // Entities
 use App\User\User;
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 // Repositories
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Group\GroupRepository as GR;
@@ -80,7 +80,7 @@ final readonly class QuoteService
          * 2. Has no quote number
          * 3. Has a status of 'draft'
          */
-        if ((!$model->isNewRecord()) &&
+        if ($model->isPersisted() &&
             (strlen($model->getNumber() ?? '') == 0)  &&
             ($array['status_id'] == 1)) {
             $model->setNumber(
@@ -127,7 +127,7 @@ final readonly class QuoteService
             $model->setPassword((string) $array['password']) : '';
         isset($array['notes']) ?
             $model->setNotes((string) $array['notes']) : '';
-        if ($model->isNewRecord()) {
+        if (!$model->isPersisted()) {
             $model->setInvId(0);
             $model->setSoId(0);
             // if draft quotes must get quote numbers

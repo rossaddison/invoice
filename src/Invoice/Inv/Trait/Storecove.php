@@ -63,8 +63,7 @@ trait Storecove
             if ($invoice) {
                 $client_id = $invoice->getClient()?->reqId();
                 if (null !== $client_id) {
-                    $delivery_location = $dlR->repoDeliveryLocationquery(
-                        (string) $client_id);
+                    $delivery_location = $dlR->repoDeliveryLocationquery($client_id);
                     if (null !== $delivery_location) {
                         $storecovehelper = new StoreCoveHelper(
                             $this->sR,

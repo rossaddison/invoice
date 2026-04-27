@@ -78,14 +78,13 @@ final class DeliveryLocationRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return DeliveryLocation|null
      */
-    public function repoDeliveryLocationquery(string $id): ?DeliveryLocation
+    public function repoDeliveryLocationquery(int $id): ?DeliveryLocation
     {
-        // Delivery Location id defaults to 0 in the Entity Delivery Location
-        if (strlen($id) > 0) {
+        if ($id > 0) {
             $query = $this->select()->where(['id' => $id]);
             return  $query->fetchOne() ?: null;
         }

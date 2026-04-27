@@ -72,23 +72,21 @@ $columns = [
             $quotes = $qR->findAllWithDeliveryLocation($deliveryLocationId);
             $buttons = '';
             /**
-             * @var App\Invoice\Entity\Quote $quote
+             * @var App\Infrastructure\Persistence\Quote\Quote $quote
              */
             foreach ($quotes as $quote) {
-                $quoteId = $quote->getId();
-                if (null !== $quoteId) {
-                    $button = (string) Html::a(
-                        ($quote->getNumber() ?? '#') .
-                               ' ' .
-                               ($quote->getDateCreated())->format('Y-m-d'),
-                        $urlGenerator->generate('quote/view', ['id' => $quoteId]),
-                        ['class' => 'btn btn-primary btn-sm',
-                            'data-bs-toggle' => 'tooltip',
-                            'title' => $quoteId,
-                        ],
-                    );
-                    $buttons .= $button . str_repeat("&nbsp;", 1);
-                }
+                $quoteId = $quote->reqId();
+                $button = (string) Html::a(
+                    ($quote->getNumber() ?? '#') .
+                           ' ' .
+                           ($quote->getDateCreated())->format('Y-m-d'),
+                    $urlGenerator->generate('quote/view', ['id' => $quoteId]),
+                    ['class' => 'btn btn-primary btn-sm',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $quoteId,
+                    ],
+                );
+                $buttons .= $button . str_repeat("&nbsp;", 1);
             }
             return $buttons;
             
@@ -153,7 +151,7 @@ $columns = [
     ),
     new DataColumn(
         'date_modified',
-        header: $translator->translate('date.modified'),
+        header: $translator->translate('common.date.modified'),
         content: static function(DeliveryLocation $model) use ($s) : string {
             return $model->getDateModified()
                          ->setTimeZone(new DateTimeZone(

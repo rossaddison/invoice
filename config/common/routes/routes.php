@@ -1922,6 +1922,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SalesOrderController::class, 'soToInvoiceConfirm'])
                 ->name('salesorder/soToInvoiceConfirm'),
+            Route::methods([$mG, $mP], '/salesorder/changeStatus')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([SalesOrderController::class, 'changeStatus'])
+                ->name('salesorder/changeStatus'),
             Route::get('/setting/debug_index[/page{page:\d+}]')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SettingController::class, 'debugIndex'])

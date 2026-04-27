@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
@@ -39,7 +39,7 @@ $columns = [
  new DataColumn(
   header: $translator->translate('status'),
   content: static function (Quote $model) use ($qR): string {
-   $statusId = (string) $model->getStatusId();
+   $statusId = (string) $model->reqStatusId();
    return Html::openTag('span', ['class' => 'badge text-bg-'
        . $qR->getSpecificStatusArrayClass($statusId)])
     . Html::encode($qR->getSpecificStatusArrayLabel($statusId))
@@ -53,11 +53,11 @@ $columns = [
   content: static function (Quote $model) use ($urlGenerator, $session,
           $translator): string {
    $args = ['_language' => (string) ($session->get('_language') ?? ''),
-       'id' => $model->getId()];
+       'id' => $model->reqId()];
    return (string) Html::a(
     Html::encode(null !== $model->getNumber()
             ? $model->getNumber()
-            : (string) $model->getId()),
+            : (string) $model->reqId()),
     $urlGenerator->generate('quote/view', $args),
     ['title' => $translator->translate('edit'), 'style' => 'text-decoration:none'],
    );
@@ -82,7 +82,7 @@ $columns = [
   content: static function (Quote $model) use ($urlGenerator, $session,
           $clientHelper, $translator): string {
    $args = ['_language' => (string) ($session->get('_language') ?? ''),
-       'id' => $model->getClientId()];
+       'id' => $model->reqClientId()];
    return (string) Html::a(
     Html::encode($clientHelper->formatClient($model->getClient())),
     $urlGenerator->generate('client/view', $args),
@@ -96,7 +96,7 @@ $columns = [
  new DataColumn(
   header: $translator->translate('amount'),
   content: static function (Quote $model) use ($qaR, $s): string {
-   $quoteId = (string) $model->getId();
+   $quoteId = $model->reqId();
    $quote_amount = $qaR->repoQuoteAmountCount($quoteId) > 0
            ? $qaR->repoQuotequery($quoteId) : null;
    return (string) Html::span(
@@ -116,7 +116,7 @@ $columns = [
     url: static function (Quote $model) use ($urlGenerator, $session): string {
      return $urlGenerator->generate('quote/view',
              ['_language' => (string) ($session->get('_language') ?? ''),
-              'id' => $model->getId()]);
+              'id' => $model->reqId()]);
     },
     attributes: ['data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('edit'),
@@ -126,7 +126,7 @@ $columns = [
     content: (new I())->addClass('bi bi-printer'),
     url: static function (Quote $model) use ($urlGenerator): string {
      return $urlGenerator->generate('quote/pdfDashboardExcludeCf',
-             ['id' => $model->getId()]);
+             ['id' => $model->reqId()]);
     },
     attributes: ['data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('download.pdf'),
@@ -137,7 +137,7 @@ $columns = [
     url: static function (Quote $model) use ($urlGenerator, $session): string {
      return $urlGenerator->generate('quote/emailStage0',
              ['_language' => (string) ($session->get('_language') ?? ''),
-              'id' => $model->getId()]);
+              'id' => $model->reqId()]);
     },
     attributes: ['data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('send.email'),
@@ -146,16 +146,16 @@ $columns = [
    new ActionButton(
     content: (new I())->addClass('bi bi-trash'),
     url: static function (Quote $model) use ($urlGenerator, $session): string {
-     $deletable = $model->getSoId() === '0' && $model->getInvId() === '0';
+     $deletable = $model->getSoId() === 0 && $model->getInvId() === 0;
      if (!$deletable) {
       return '';
      }
      return $urlGenerator->generate('quote/delete',
              ['_language' => (string) ($session->get('_language') ?? ''),
-              'id' => $model->getId()]);
+              'id' => $model->reqId()]);
     },
     attributes: static function (Quote $model) use ($translator): array {
-     $deletable = $model->getSoId() === '0' && $model->getInvId() === '0';
+     $deletable = $model->getSoId() === 0 && $model->getInvId() === 0;
      if (!$deletable) {
       return ['class' => 'btn btn-secondary btn-sm disabled',
           'style' => 'pointer-events:none', 'aria-disabled' => 'true'];

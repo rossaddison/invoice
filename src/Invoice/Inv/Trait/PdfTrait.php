@@ -84,8 +84,8 @@ trait PdfTrait
                 }
                 $inv = $iR->repoInvUnloadedquery($inv_id);
                 if ($inv) {
-                    $so = !empty($inv->getSoId()) ?
-                        $soR->repoSalesOrderUnloadedquery($inv->getSoId()) :
+                    $so = !empty((int) $inv->getSoId()) ?
+                        $soR->repoSalesOrderUnloadedquery((int) $inv->getSoId()) :
                             null;
                     $pdfhelper->generateInvPdf($inv_id, $inv->getUserId(),
                             $stream, $custom, $so, $inv_amount,
@@ -152,8 +152,8 @@ trait PdfTrait
                 }
                 $inv = $iR->repoInvUnloadedquery((string) $inv_id);
                 if ($inv) {
-                    $so = (!empty($inv->getSoId()) ?
-                        $soR->repoSalesOrderLoadedquery($inv->getSoId()) : null);
+                    $so = (!empty((int) $inv->getSoId()) ?
+                        $soR->repoSalesOrderLoadedquery((int) $inv->getSoId()) : null);
                     $pdfhelper->generateInvPdf(
                         (string) $inv_id, $inv->getUserId(), $stream, true,
                             $so, $inv_amount, $inv_custom_values, $cR, $cvR,
@@ -195,8 +195,8 @@ trait PdfTrait
                 }
                 $inv = $iR->repoInvUnloadedquery((string) $inv_id);
                 if ($inv) {
-                    $so = (!empty($inv->getSoId()) ?
-                        $soR->repoSalesOrderLoadedquery($inv->getSoId()) : null);
+                    $so = (!empty((int) $inv->getSoId()) ?
+                        $soR->repoSalesOrderLoadedquery((int) $inv->getSoId()) : null);
                     $pdfhelper->generateInvPdf(
                         (string) $inv_id, $inv->getUserId(), $stream, false,
                             $so, $inv_amount, $inv_custom_values, $cR, $cvR,
@@ -249,7 +249,7 @@ trait PdfTrait
                     $inv = $iR->repoInvUnloadedquery((string) $inv_id);
                     if ($inv) {
                         $so = (!empty($inv->getSoId()) ?
-                            $soR->repoSalesOrderLoadedquery($inv->getSoId()) :
+                            $soR->repoSalesOrderLoadedquery((int) $inv->getSoId()) :
                             null);
                         // Because the invoice is not streamed an aliase of
                         // temporary folder file location is returned
@@ -343,7 +343,7 @@ trait PdfTrait
                     }
                     $inv = $iR->repoInvUnloadedquery((string) $inv_id);
                     if ($inv) {
-                        $so = $soR->repoSalesOrderLoadedquery($inv->getSoId());
+                        $so = $soR->repoSalesOrderLoadedquery((int) $inv->getSoId());
                         // Because the invoice is not streamed an aliase of
                         // temporary folder file location is returned
                         $temp_aliase = $pdfhelper->generateInvPdf(

@@ -35,8 +35,7 @@ final readonly class QuoteAllowanceChargeService
             }
         }
         if (isset($array['quote_id'])) {
-            $quote = $this->qR->repoQuoteUnLoadedquery(
-                (string) $array['quote_id']
+            $quote = $this->qR->repoQuoteUnLoadedquery((int) $array['quote_id']
             );
             if ($quote) {
                 $model->setQuote($quote);

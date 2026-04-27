@@ -7,9 +7,9 @@ use Yiisoft\Html\Html;
 /**
  * Related logic: see App\Invoice\Helpers\PdfHelper function generateQuotePdf
  *
- * @var App\Invoice\Entity\QuoteAmount $quote_amount
- * @var App\Invoice\Entity\Quote $quote
- * @var App\Invoice\Entity\QuoteTaxRate $quote_tax_rate
+ * @var App\Infrastructure\Persistence\QuoteAmount\QuoteAmount $quote_amount
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
+ * @var App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate $quote_tax_rate
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -138,16 +138,16 @@ if ($items) {
      * @var App\Invoice\Entity\InvItem $item
      */
     foreach ($items as $item) {
-        $quote_item_amount = $qiaR->repoQuoteItemAmountquery((string) $item->getId());
+        $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int) $item->getId());
         // Display item-level allowances/charges BEFORE the item
         // if Peppol is enabled
         if ($s->getSetting('enable_peppol') == '1') {
             $itemId = $item->getId();
             if (null !== $itemId) {
             $quoteItemAllowanceCharges =
-                $acqiR->repoQuoteItemquery((string)$itemId);
+                $acqiR->repoQuoteItemquery($itemId);
             /**
-             * @var App\Invoice\Entity\QuoteItemAllowanceCharge $quoteItemAllowanceCharge
+             * @var App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge $quoteItemAllowanceCharge
              */
             foreach (
                 $quoteItemAllowanceCharges
@@ -329,7 +329,7 @@ if ($items) {
         <?php if (!empty($quote_tax_rates) && ($vat === '0')) { ?>
         <?php
                         /**
-                         * @var App\Invoice\Entity\QuoteTaxRate $quote_tax_rate
+                         * @var App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate $quote_tax_rate
                          */
                         foreach ($quote_tax_rates as $quote_tax_rate) : ?>
             <tr>

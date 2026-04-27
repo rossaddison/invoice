@@ -36,7 +36,7 @@ class CategoryPrimaryEntityTest extends Unit
         $category = new CategoryPrimary();
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('CategoryPrimary has no ID (not persisted yet)');
+        $this->expectExceptionMessage('CategoryPrimary not persisted');
         $category->reqId();
     }
 

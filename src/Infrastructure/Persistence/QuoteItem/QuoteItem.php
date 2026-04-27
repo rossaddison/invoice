@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\QuoteItem;
 
-use App\Infrastructure\Persistence\Product\Product;
-use App\Infrastructure\Persistence\Task\Task;
-use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Infrastructure\Persistence\{Quote\Quote, Product\Product, Task\Task,
+TaxRate\TaxRate, Trait\RequireId};
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -17,6 +16,8 @@ use DateTimeImmutable;
 #[Entity(repository:QIR::class)]
 class QuoteItem
 {
+    use RequireId;
+ 
     #[Column(type: 'date', nullable: false)]
     private mixed $date_added;
 
@@ -110,9 +111,19 @@ class QuoteItem
         $this->task = $task;
     }
 
-    public function getId(): string
+    public function getId(): ?int
     {
-        return (string) $this->id;
+        return $this->id;
+    }
+
+    public function reqId(): int
+    {
+        return $this->requireId($this->id, 'QuoteItem');
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -120,9 +131,9 @@ class QuoteItem
         $this->id = $id;
     }
 
-    public function getQuoteId(): string
+    public function reqQuoteId(): int
     {
-        return (string) $this->quote_id;
+        return $this->requireId($this->quote_id, 'Quote');
     }
 
     public function setQuoteId(int $quote_id): void
@@ -130,9 +141,9 @@ class QuoteItem
         $this->quote_id = $quote_id;
     }
 
-    public function getTaxRateId(): string
+    public function reqTaxRateId(): int
     {
-        return (string) $this->tax_rate_id;
+        return $this->requireId($this->tax_rate_id, 'TaxRate');
     }
 
     public function setTaxRateId(int $tax_rate_id): void
@@ -140,9 +151,10 @@ class QuoteItem
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getProductId(): string
+    // product can be mutually excluded by task => possible null value
+    public function getProductId(): ?int
     {
-        return (string) $this->product_id;
+        return $this->product_id;
     }
 
     public function setProductId(int $product_id): void
@@ -231,9 +243,9 @@ class QuoteItem
         $this->product_unit = $product_unit;
     }
 
-    public function getProductUnitId(): string
+    public function getProductUnitId(): ?int
     {
-        return (string) $this->product_unit_id;
+        return $this->product_unit_id;
     }
 
     public function setProductUnitId(int $product_unit_id): void
@@ -241,9 +253,10 @@ class QuoteItem
         $this->product_unit_id = $product_unit_id;
     }
 
-    public function getTaskId(): string
+    // task can be mutually excluded by product => possible null value
+    public function getTaskId(): ?int
     {
-        return (string) $this->task_id;
+        return $this->task_id;
     }
 
     public function setTaskId(int $task_id): void

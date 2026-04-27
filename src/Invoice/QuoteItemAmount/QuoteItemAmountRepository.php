@@ -84,7 +84,7 @@ final class QuoteItemAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteItemAmountquery(string $quote_item_id): ?QuoteItemAmount
+    public function repoQuoteItemAmountquery(int $quote_item_id): ?QuoteItemAmount
     {
         $query = $this->select()
                       ->load(['quote_item'])
@@ -93,10 +93,10 @@ final class QuoteItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @param string $quote_item_id
+     * @param int $quote_item_id
      * @return int
      */
-    public function repoCount(string $quote_item_id): int
+    public function repoCount(int $quote_item_id): int
     {
         $query = $this->select()
                       ->where(['quote_item_id' => $quote_item_id]);

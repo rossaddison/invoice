@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\Quote\QuoteForm $form
  * @var App\Invoice\QuoteCustom\QuoteCustomForm $quoteCustomForm
@@ -95,7 +95,7 @@ $formControlLg = 'form-control form-control-lg';
                                         // Query Parameters
                                         [
                                             'origin' => 'quote',
-                                            'origin_id' => $quote->getId(),
+                                            'origin_id' => $quote->reqId(),
                                             'action' => 'edit',
                                         ],
                                     ); ?>"><i class="bi bi-pencil"></i><?php echo $translator->translate('delivery.location'); ?></a>
@@ -109,12 +109,12 @@ $formControlLg = 'form-control form-control-lg';
                                         'del/add',
                                         // Argument Parameters
                                         [
-                                            'client_id' => $quote->getClientId(),
+                                            'client_id' => $quote->reqClientId(),
                                         ],
                                         // Query Parameters
                                         [
                                             'origin' => 'quote',
-                                            'origin_id' => $quote->getId(),
+                                            'origin_id' => $quote->reqId(),
                                             'action' => $returnUrlAction,
                                         ],
                                     ),

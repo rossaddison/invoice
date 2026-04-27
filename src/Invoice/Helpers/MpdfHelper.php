@@ -8,7 +8,7 @@ use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Translator\TranslatorInterface as Translator;

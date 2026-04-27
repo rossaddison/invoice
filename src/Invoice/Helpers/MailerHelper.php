@@ -81,7 +81,7 @@ class MailerHelper
         if (!$this->mailerConfigured()) {
             return false;
         }
-        $quote = $qR->repoCount($quote_id) > 0 ? $qR->repoQuoteLoadedquery($quote_id) : null;
+        $quote = $qR->repoCount((int) $quote_id) > 0 ? $qR->repoQuoteLoadedquery((int) $quote_id) : null;
         if ($quote) {
             $url = $urlGenerator->generate('quote/view', ['id' => $quote_id]);
             $user_id = $quote->getUser()?->getId() ?? null;

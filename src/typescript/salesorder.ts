@@ -57,6 +57,16 @@ export class SalesOrderHandler {
     private handleClick(event: Event): void {
         const target = event.target as HTMLElement;
 
+        // Bulk status change via SalesOrderToolbar button
+        const statusBtn = target.closest('.so-status-btn') as HTMLElement | null;
+        if (statusBtn) {
+            const statusId = parseInt(statusBtn.dataset.statusId ?? '0', 10);
+            if (statusId > 0) {
+                this.handleChangeStatus(statusId);
+            }
+            return;
+        }
+
         // PDF Export with custom fields
         if (target.matches('#salesorder_to_pdf_confirm_with_custom_fields') ||
             target.closest('#salesorder_to_pdf_confirm_with_custom_fields')) {
@@ -224,6 +234,65 @@ export class SalesOrderHandler {
                 btn.innerHTML = '<h6 class="text-center"><i class="fa fa-check"></i></h6>';
             }
             alert('An error occurred during conversion. Please try again.');
+        }
+    }
+
+    /**
+     * Collect IDs of checked rows from #table-salesorder
+     */
+    private getCheckedSalesOrderIds(): string[] {
+        const selected: string[] = [];
+        const table = document.getElementById('table-salesorder');
+        if (!table) return selected;
+        const checkboxes = table.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        ) as NodeListOf<HTMLInputElement>;
+        checkboxes.forEach(cb => {
+            if (cb.id) selected.push(cb.id);
+        });
+        return selected;
+    }
+
+    /**
+     * Bulk-change the status of all checked sales orders.
+     * Called by SalesOrderToolbar button clicks.
+     */
+    private async handleChangeStatus(statusId: number): Promise<void> {
+        const selected = this.getCheckedSalesOrderIds();
+        if (selected.length === 0) {
+            alert('Please select at least one sales order.');
+            return;
+        }
+
+        const btn = document.getElementById(`btn-so-status-${statusId}`);
+        const originalHtml = btn?.innerHTML;
+        if (btn) {
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i>';
+            (btn as HTMLButtonElement).disabled = true;
+        }
+
+        try {
+            const url = `${location.origin}/invoice/salesorder/changeStatus`;
+            const response = await getJson<ApiResponse>(
+                url,
+                { keylist: selected, status_id: statusId }
+            );
+            const data = parsedata(response);
+            if (data.success === 1) {
+                window.location.reload();
+            } else {
+                if (btn && originalHtml) {
+                    btn.innerHTML = originalHtml;
+                    (btn as HTMLButtonElement).disabled = false;
+                }
+            }
+        } catch (error) {
+            console.error('changeStatus error', error);
+            if (btn && originalHtml) {
+                btn.innerHTML = originalHtml;
+                (btn as HTMLButtonElement).disabled = false;
+            }
+            alert('An error occurred. See console for details.');
         }
     }
 

@@ -66,11 +66,11 @@ $count = 1;
  * @var App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem $item
  */
 foreach ($soItems as $item) {
-    $productId = $item->getProductId();
-    $taskId = $item->getTaskId();
+    $productId = $item->getProduct()?->reqId();
+    $taskId = $item->getTask()?->reqId();
     $productRef = '';
     $taskRef = '';
-    if ($productId > 0) {
+    if ($productId !== null) {
         $productRef =  new A()
            ->href($urlGenerator->generate('product/view',
                 [
@@ -81,7 +81,7 @@ foreach ($soItems as $item) {
            ->content((string) $productId)
            ->render();
     }
-    if ($taskId > 0) {
+    if ($taskId !== null) {
         $taskRef =  new A()
            ->href($urlGenerator->generate('task/view',
                    [
@@ -100,12 +100,12 @@ foreach ($soItems as $item) {
                             <div class="input-group">
 <?php echo $count
         . '-'
-        . (string) $item->getSalesOrderId()
+        . (string) $item->reqSalesOrderId()
         . '-'
         . (string) $item->reqId()
         . '-'
-        . ((string) $productId > 0 ? $productRef : '')
-        . ((string) $taskId > 0 ? $taskRef : ''); ?>
+        . ($productId !== null ? $productRef : '')
+        . ($taskId !== null ? $taskRef : ''); ?>
 
                             </div>
                             <div class="input-group">
@@ -144,14 +144,14 @@ foreach ($soItems as $item) {
                         <div class="input-group">
                             <span class="input-group-text">
                                 <b>
-<?= $item->getProductId() > 0 ? $translator->translate('item') :
+<?= $productId !== null ? $translator->translate('item') :
         $translator->translate('tasks') ; ?>
                                 </b>
                             </span>
                             <select name="item_name"
                                     class="form-control form-control-lg"
                                     disabled>
-                            <?php if ($item->getProductId() > 0) { ?>
+                            <?php if ($productId !== null) { ?>
                                 <option value="0">
                                     <?= $translator->translate('none'); ?>
                                 </option>
@@ -162,13 +162,13 @@ foreach ($soItems as $item) {
                                 foreach ($products as $product) { ?>
                                     <option value="
                                         <?php echo $product->getProductId(); ?>"
-    <?php if ($item->getProductId() == $product->getProductId()) { ?>
+    <?php if ($productId == (int) $product->getProductId()) { ?>
                                         selected="selected"<?php } ?>>
 <?php echo $product->getProductName(); ?>
                                     </option>
                                 <?php } ?>
                             <?php } ?>
-                            <?php if ($item->getTaskId() > 0) { ?>
+                            <?php if ($taskId !== null) { ?>
                                 <option value="0">
                                 <?= $translator->translate('none'); ?></option>
                                 <?php
@@ -177,7 +177,7 @@ foreach ($soItems as $item) {
                                  */
                                 foreach ($tasks as $task) { ?>
                                     <option value="<?php echo $task->reqId(); ?>"
-    <?php if ($item->getTaskId() == $task->reqId()) { ?>
+    <?php if ($taskId == $task->reqId()) { ?>
                                             selected="selected"<?php } ?>>
                                         <?php echo $task->getName(); ?>
                                     </option>
@@ -288,13 +288,11 @@ foreach ($soItems as $item) {
 <?php // Buttons for line item start here?>
                     <td class="td-vert-middle btn-group">
                         <?php if ($invEdit === true) { ?>
-<?php if ($piR->repoCount((int) $item->getProductId()) > 0) { ?>
+<?php if ($productId !== null && $piR->repoCount($productId) > 0) { ?>
                             <span data-bs-toggle="tooltip"
                                   title="
     <?= $translator->translate('productimage.gallery') .
-            (($item->getProductId() > 0) ?
-                ($item->getProduct()?->getProductName() ?? '') :
-                    ($item->getTask()?->getName() ?? '')); ?>">
+            ($item->getProduct()?->getProductName() ?? ''); ?>">
                                 <a class="btn btn-info"
                                    data-bs-toggle="modal"
                                    href="#view-product-<?= $item->reqId(); ?>"
@@ -320,7 +318,7 @@ foreach ($soItems as $item) {
                                                            name="_csrf"
                                                            value="<?= $csrf ?>">
     <?php $productImages =
-        $piR->repoProductImageProductquery((int) $item->getProductId()); ?>
+        $piR->repoProductImageProductquery($productId); ?>
     <?php
     /**
      * @var App\Invoice\Entity\ProductImage $productImage
@@ -382,7 +380,7 @@ foreach ($soItems as $item) {
                     </td>
                     <td class="td-amount">
                         <div class="input-group">
-                        <?php if ($item->getProductId() > 0) { ?>
+                        <?php if ($productId !== null) { ?>
                             <span class="input-group-text">
                                 <b>
                                 <?= $translator->translate('product.unit');?>
@@ -393,7 +391,7 @@ foreach ($soItems as $item) {
                                     <?= $item->getProductUnit();?>
                             </span>
                         <?php } ?>
-                        <?php if ($item->getTaskId() > 0) { ?>
+                        <?php if ($taskId !== null) { ?>
                             <span class="input-group-text">
                                 <b>
                                     <?= $item->getTask()?->getName(); ?>
@@ -409,7 +407,7 @@ foreach ($soItems as $item) {
                         </div>
                     </td>
                     <td class="td-amount">
-                        <?php if ($item->getProductId() > 0) { ?>
+                        <?php if ($productId !== null) { ?>
                         <b>
   <?= $numberHelper->formatAmount(($item->getQuantity() ?? 0.00)
                                   * ($item->getPrice() ?? 0.00)); ?>
@@ -433,7 +431,7 @@ foreach ($soItems as $item) {
 /**
  * @var App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge $acsoi
  */
-foreach ($acsoiR->repoSalesOrderItemquery((string) $item->reqId()) as $acsoi) { ?>
+foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
     <?php $isCharge =
         ($acsoi->getAllowanceCharge()?->getIdentifier() == 1 ? true : false); ?>
                         <tr>
@@ -489,7 +487,7 @@ foreach ($acsoiR->repoSalesOrderItemquery((string) $item->reqId()) as $acsoi) { 
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount">
                         <?= $numberHelper->formatCurrency(
-                                $soiaR->repoSalesOrderItemAmountquery((string) 
+                                $soiaR->repoSalesOrderItemAmountquery(
                                         $item->reqId())?->getSubtotal()); ?>
                         </span>
                     </td>
@@ -506,7 +504,7 @@ foreach ($acsoiR->repoSalesOrderItemquery((string) $item->reqId()) as $acsoi) { 
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->discount">
                         (<?= $numberHelper->formatCurrency(
-                                $soiaR->repoSalesOrderItemAmountquery((string) 
+                                $soiaR->repoSalesOrderItemAmountquery(
                                         $item->reqId())?->getDiscount()); ?>)
                         </span>
                     </td>
@@ -524,7 +522,7 @@ foreach ($acsoiR->repoSalesOrderItemquery((string) $item->reqId()) as $acsoi) { 
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->tax_total">
                             <?= $numberHelper->formatCurrency(
-    $soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getTaxTotal()); ?>
+    $soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTaxTotal()); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle"
@@ -540,7 +538,7 @@ foreach ($acsoiR->repoSalesOrderItemquery((string) $item->reqId()) as $acsoi) { 
                               data-bs-toggle = "tooltip"
                               title="sales_order_item_amount->total">
                             <?= $numberHelper->formatCurrency(
-    $soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getTotal()); ?>
+    $soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTotal()); ?>
                         </span>
                     </td>
                 </tr>

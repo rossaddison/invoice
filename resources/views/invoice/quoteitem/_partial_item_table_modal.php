@@ -26,17 +26,17 @@ use Yiisoft\Html\Html;
         </tr>
         <?php
             /**
-             * @var App\Invoice\Entity\QuoteItem $quoteItem
+             * @var App\Infrastructure\Persistence\QuoteItem\QuoteItem $quoteItem
              */
             foreach ($quoteItems as $quoteItem) { ?>
             <tr class="product">
                 <td class="text-left">
-                    <input type="checkbox" name="item_ids[]" value="<?php echo $quoteItem->getId();?>">
+                    <input type="checkbox" name="item_ids[]" value="<?php echo $quoteItem->reqId();?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= Html::encode($quoteItem->getId()); ?></b>
+                    <b><?= Html::encode($quoteItem->reqId()); ?></b>
                 </td>
-                <?php if ($quoteItem->getProductId() > 0) { ?>
+                <?php if ($quoteItem->getProduct() !== null) { ?>
                     <td nowrap class="text-left">
                         <b><?= Html::encode($quoteItem->getProduct()?->getProductSku()); ?></b>
                     </td>
@@ -50,7 +50,7 @@ use Yiisoft\Html\Html;
                         <?= $numberHelper->formatCurrency($quoteItem->getProduct()?->getProductPrice()); ?>
                     </td>
                 <?php } ?>
-                <?php if ($quoteItem->getTaskId() > 0) {
+                <?php if ($quoteItem->getTask() !== null) {
                     $taskStatuses = $taskR->getTaskStatuses($translator);
                     $taskStatus = (array) $taskStatuses[(string) $quoteItem->getTask()?->getStatus()];
                     $taskStatusLabel = (string) $taskStatus['label'];

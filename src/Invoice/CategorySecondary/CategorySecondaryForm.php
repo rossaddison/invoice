@@ -19,7 +19,7 @@ final class CategorySecondaryForm extends FormModel
     {
         $form = new self();
         
-        $form->category_primary_id = $categorySecondary->getCategoryPrimaryId();
+        $form->category_primary_id = $categorySecondary->reqCategoryPrimaryId();
         
         $form->name = $categorySecondary->getName() ?? '';
         

@@ -2,9 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\Quote;
 
-use App\Infrastructure\Persistence\{Client\Client, Group\Group};
+use App\Infrastructure\Persistence\{
+    Client\Client, Group\Group, QuoteAmount\QuoteAmount, QuoteItem\QuoteItem,
+    Trait\RequireId
+};
+use App\Invoice\Quote\QuoteRepository;
+use App\Invoice\Setting\SettingRepository as sR;
+use App\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -12,32 +18,27 @@ use Cycle\Annotated\Annotation\Relation\HasMany;
 use Cycle\Annotated\Annotation\Relation\HasOne;
 use Cycle\ORM\Entity\Behavior;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\User\User;
-use App\Invoice\Setting\SettingRepository as sR;
 use DateTimeImmutable;
 
-#[Entity(repository: \App\Invoice\Quote\QuoteRepository::class)]
+#[Entity(repository: QuoteRepository::class)]
 #[Behavior\CreatedAt(field: 'date_created', column: 'date_created')]
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class Quote
 {
-    // Client
+    use RequireId;
+    
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
-    // Group
     #[BelongsTo(target: Group::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Group $group = null;
 
-    // User
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 
-    // QuoteAmount
     #[HasOne(target: QuoteAmount::class)]
-    private readonly QuoteAmount $quoteAmount;
+    private ?QuoteAmount $quoteAmount = null;
 
-    // QuoteItem
     /**
      * @var ArrayCollection<array-key, QuoteItem>
      */
@@ -94,6 +95,21 @@ class Quote
         $this->date_expires = new DateTimeImmutable();
         $this->date_required = new DateTimeImmutable();
     }
+    
+    public function reqId(): int
+    {
+        return $this->requireId($this->id, 'Quote');
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
 
     public function getClient(): ?Client
     {
@@ -125,27 +141,14 @@ class Quote
         $this->user = $user;
     }
 
-    public function getQuoteAmount(): QuoteAmount
+    public function getQuoteAmount(): ?QuoteAmount
     {
         return $this->quoteAmount;
     }
 
-    /**
-     * @return numeric-string|null
-     */
-    public function getId(): ?string
+    public function reqUserId(): int
     {
-        return $this->id === null ? null : (string) $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getUserId(): string
-    {
-        return (string) $this->user_id;
+        return $this->requireId($this->user_id, 'User');
     }
 
     public function setUserId(int $user_id): void
@@ -153,35 +156,31 @@ class Quote
         $this->user_id = $user_id;
     }
 
-    public function getSoId(): string
+    // copying a quote: so_id will be null
+    public function getSoId(): ?int
     {
-        return (string) $this->so_id;
+        return $this->so_id;
     }
 
-    /**
-     * @param int|string|null $so_id
-     */
-    public function setSoId(string|int|null $so_id): void
+    public function setSoId(int|null $so_id): void
     {
-        $so_id === null ? $this->so_id = null : $this->so_id = (int) $so_id ;
+        $this->so_id = $so_id;
     }
 
-    public function getInvId(): string
+    // copying a quote: inv_id will be null
+    public function getInvId(): ?int
     {
-        return (string) $this->inv_id;
+        return $this->inv_id;
     }
 
-    /**
-     * @param int|string|null $inv_id
-     */
-    public function setInvId(string|int|null $inv_id): void
+    public function setInvId(int|null $inv_id): void
     {
-        $inv_id === null ? $this->inv_id = null : $this->inv_id = (int) $inv_id ;
+        $this->inv_id = $inv_id;
     }
 
-    public function getClientId(): string
+    public function reqClientId(): int
     {
-        return (string) $this->client_id;
+        return $this->requireId($this->client_id, 'Client');
     }
 
     public function setClientId(int $client_id): void
@@ -189,9 +188,9 @@ class Quote
         $this->client_id = $client_id;
     }
 
-    public function getGroupId(): string
+    public function reqGroupId(): int
     {
-        return (string) $this->group_id;
+        return $this->requireId($this->group_id, 'Group');
     }
 
     public function setGroupId(int $group_id): void
@@ -199,9 +198,9 @@ class Quote
         $this->group_id = $group_id;
     }
 
-    public function getDeliveryLocationId(): string
+    public function getDeliveryLocationId(): ?int
     {
-        return (string) $this->delivery_location_id;
+        return $this->delivery_location_id;
     }
 
     public function setDeliveryLocationId(int $delivery_location_id): void
@@ -209,24 +208,23 @@ class Quote
         $this->delivery_location_id = $delivery_location_id;
     }
 
-    public function getContractId(): string
+    public function reqContractId(): int
     {
-        return (string) $this->contract_id;
+        return $this->requireId($this->contract_id, 'Contract');
     }
 
     public function setContractId(int $contract_id): void
     {
         $this->contract_id = $contract_id;
     }
-
-    public function getStatusId(): ?int
+    
+    public function reqStatusId(): int
     {
-        return $this->status_id;
+        return $this->requireId($this->status_id, 'Status');
     }
 
     public function getStatus(int $status_id): string
     {
-        $status = '';
         return match ($status_id) {
             1 => 'draft',
             2 => 'sent',
@@ -234,13 +232,15 @@ class Quote
             4 => 'approved',
             5 => 'rejected',
             6 => 'cancelled',
-            default => $status,
+            default => '',
         };
     }
 
     public function setStatusId(int $status_id): void
     {
-        !in_array($status_id, [1,2,3,4,5,6,7]) ? $this->status_id = 1 : $this->status_id = $status_id ;
+        !in_array($status_id, [1, 2, 3, 4, 5, 6, 7])
+            ? $this->status_id = 1
+            : $this->status_id = $status_id;
     }
 
     public function getDateCreated(): DateTimeImmutable
@@ -270,7 +270,7 @@ class Quote
             }
         }
         $this->date_expires = (new DateTimeImmutable('now'))
-                               ->add(new \DateInterval('P' . (string) $days . 'D'));
+            ->add(new \DateInterval('P' . (string) $days . 'D'));
     }
 
     public function getDateExpires(): DateTimeImmutable
@@ -341,10 +341,5 @@ class Quote
     public function getItems(): ArrayCollection
     {
         return $this->items;
-    }
-
-    public function isNewRecord(): bool
-    {
-        return null === $this->getId() ? true : false;
     }
 }

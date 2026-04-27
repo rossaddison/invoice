@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Invoice\Quote\Trait;
 
 use App\Auth\Permissions;
-use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
-use App\Invoice\Entity\{
-    Quote, QuoteCustom, QuoteItem,
+use App\Infrastructure\Persistence\{
+    QuoteAllowanceCharge\QuoteAllowanceCharge, 
+    Quote\Quote,
+    QuoteCustom\QuoteCustom,
+    QuoteItem\QuoteItem
 };
 use App\Invoice\{
     AllowanceCharge\AllowanceChargeRepository as ACR,
@@ -80,31 +82,24 @@ trait View
     ): Response {
         $quote = $this->quote($id, $qR, false);
         if (null !== $quote) {
-            $quote_id = $quote->getId();
-            $quoteAllowanceCharge = new QuoteAllowanceCharge();
-            $quoteAllowanceChargeForm = QuoteAllowanceChargeForm::show(
-                $quoteAllowanceCharge, (int) $quote_id);
-            if (null !== $quote_id) {
+            $quote_id = $quote->reqId();
+            $quoteAllowanceChargeForm = new QuoteAllowanceChargeForm();
+            if ($quote_id > 0) {
                 $this->session->set('quote_id', $quote_id);
-                $this->numberHelper->calculateQuote(
-                    (string) $this->session->get('quote_id'), $acqR, $qiR,
+                $this->numberHelper->calculateQuote($quote_id, $acqR, $qiR,
                         $qiaR, $qtrR, $qaR, $qR);
-                $quote_tax_rates = (($qtrR->repoCount(
-                    (string) $this->session->get('quote_id')) > 0) ?
-                        $qtrR->repoQuotequery(
-                            (string) $this->session->get('quote_id')) : null);
+                $quote_tax_rates = (($qtrR->repoCount($quote_id) > 0) ?
+                        $qtrR->repoQuotequery($quote_id) : null);
                 $sales_order_number = '';
-                if ($quote->getSoId()) {
-                    $so = $soR->repoSalesOrderUnloadedquery($quote->getSoId());
+                if (($soId = $quote->getSoId()) > 0) {
+                    $so = $soR->repoSalesOrderUnloadedquery($soId);
                     $sales_order_number = $so ? ($so->getNumber() ?? '') : '';
                 }
-                $quote_amount = (($qaR->repoQuoteAmountCount(
-                    (string) $this->session->get('quote_id')) > 0) ?
-                        $qaR->repoQuotequery(
-                            (string) $this->session->get('quote_id')) : null);
+                $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ?
+                    $qaR->repoQuotequery($quote_id) : null);
                 if ($quote_amount) {
-                    $quote_custom_values = $this->quoteCustomValues(
-                            (string) $this->session->get('quote_id'), $qcR);
+                    $quote_custom_values =
+                            $this->quoteCustomValues($quote_id, $qcR);
                     $quoteEdit = $this->userService->hasPermission(
                             Permissions::EDIT_INV) ? true : false;
                     $vat = $this->sR->getSetting('enable_vat_registration');
@@ -138,8 +133,7 @@ trait View
                                 'actionName' => 'quoteitem/addProduct',
                                 'actionArguments' => ['_language' => $_language],
                                 'errors' => [],
-                                'form' => new QuoteItemForm(
-                                    new QuoteItem(), $quote_id),
+                                'form' => new QuoteItemForm(),
                                 'quote_id' => $this->quote($id, $qR, true),
                                 'taxRates' => $trR->findAllPreloaded(),
                                 'products' => $pR->findAllPreloaded(),
@@ -152,8 +146,7 @@ trait View
                                 'actionName' => 'quoteitem/addTask',
                                 'actionArguments' => ['_language' => $_language],
                                 'errors' => [],
-                                'form' => new QuoteItemForm(
-                                    new QuoteItem(), $quote_id),
+                                'form' => new QuoteItemForm(),
                                 'quote_id' => $this->quote($id, $qR, true),
                                 'tasks' => $taskR->repoTaskStatusquery(1),
                                 'taxRates' => $trR->findAllPreloaded(),
@@ -183,7 +176,7 @@ trait View
                                 'quote' => $quote,
                                 'cvH' => new CVH($this->sR, $cvR),
                                 'cvR' => $cvR,
-                                'quoteForm' => new QuoteForm($quote),
+                                'quoteForm' => new QuoteForm(),
                                 'quoteCustomValues' => $quote_custom_values,
                                 'customValues' =>  $customValues,
                                 'customFields' => $cfR->repoTablequery(
@@ -209,13 +202,11 @@ trait View
                             'quote_custom_values' => $quote_custom_values,
                             'cvH' => new CVH($this->sR, $cvR),
                             'cvR' => $cvR,
-                            'quoteCustomForm' => new QuoteCustomForm(
-                                new QuoteCustom()),
+                            'quoteCustomForm' => new QuoteCustomForm(),
                         ]),
                         // Get all the fields that have been setup for this
                         // SPECIFIC quote in quote_custom.
-                        'fields' => $qcR->repoFields(
-                            (string) $this->session->get('quote_id')),
+                        'fields' => $qcR->repoFields((int) $this->session->get('quote_id')),
                         // Get the standard extra custom fields built for EVERY
                         // quote.
                         'customFields' => $cfR->repoTablequery('quote_custom'),
@@ -231,8 +222,7 @@ trait View
                             '//invoice/quote/partial_item_table', [
                             'acqiR' => $acqiR,
                             'packHandleShipTotal' =>
-                                $acqR->getPackHandleShipTotal(
-                                    (string) $quote->getId()),
+                                $acqR->getPackHandleShipTotal($quote->reqId()),
                             'included' => $this->translator->translate(
                                 'item.tax.included'),
                             'excluded' => $this->translator->translate(
@@ -242,7 +232,7 @@ trait View
                             'piR' => $piR,
                             'products' => $pR->findAllPreloaded(),
                             'quoteItems' => $qiR->repoQuotequery(
-                                (string) $this->session->get('quote_id')),
+                                    (int) $this->session->get('quote_id')),
                             'qiaR' => $qiaR,
                             'quoteTaxRates' => $quote_tax_rates,
                             'quoteAmount' => $quote_amount,
@@ -330,7 +320,7 @@ trait View
                             '//invoice/quote/modal_copy_quote', [
                                 's' => $this->sR,
                             'quote' => $qR->repoQuoteLoadedquery(
-                                (string) $this->session->get('quote_id')),
+                                (int) $this->session->get('quote_id')),
                             'clients' => $cR->findAllPreloaded(),
                             'groups' => $gR->findAllPreloaded(),
                         ]),
@@ -352,7 +342,7 @@ trait View
                                 '//invoice/quoteitem/_partial_item_table_modal',
                                 [
                                     'quoteItems' => $qiR->repoQuotequery(
-                                        (string) $this->session->get(
+                                        (int) $this->session->get(
                                             'quote_id')),
                                     'taskR' => $taskR,
                                     'numberHelper' => new NumberHelper(
@@ -390,7 +380,6 @@ trait View
                         return $this->webViewRenderer->render('view', $parameters);
                     }
                 } // quote_amount
-                $this->flashMessage('info', 'no quote tax');
             } // null!= $quote_id
         } //quote
         return $this->webService->getNotFoundResponse();
@@ -401,7 +390,7 @@ trait View
         return [
             'number' => $quote->getNumber(),
 
-            'id' => $quote->getId(),
+            'id' => $quote->reqId(),
             'inv_id' => $quote->getInvId(),
             'so_id' => $quote->getSoId(),
 
@@ -413,7 +402,7 @@ trait View
             'date_modified' => $quote->getDateModified(),
             'date_expires' => $quote->getDateExpires(),
 
-            'status_id' => $quote->getStatusId(),
+            'status_id' => $quote->reqStatusId(),
 
             'discount_amount' => $quote->getDiscountAmount(),
             'url_key' => $quote->getUrlKey(),

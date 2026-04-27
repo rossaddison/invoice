@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Task;
 
-use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Infrastructure\Persistence\Project\Project;
+use App\Infrastructure\Persistence\{
+    TaxRate\TaxRate, Project\Project, Trait\RequireId};
 use App\Invoice\Task\TaskRepository as TR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -16,6 +16,8 @@ use DateTimeImmutable;
 #[Entity(repository: TR::class)]
 class Task
 {
+    use RequireId;
+ 
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
@@ -84,9 +86,9 @@ class Task
         $this->project = $project;
     }
 
-    public function getProjectId(): ?int
+    public function reqProjectId(): int
     {
-        return $this->project_id;
+        return $this->requireId($this->project_id, 'Project');
     }
 
     public function setProjectId(int $project_id): void
@@ -145,9 +147,9 @@ class Task
         $this->status = $status;
     }
 
-    public function getTaxRateId(): ?int
+    public function reqTaxRateId(): int
     {
-        return $this->tax_rate_id;
+        return $this->requireId($this->tax_rate_id, 'TaxRate');
     }
 
     public function setTaxRateId(int $tax_rate_id): void

@@ -1071,10 +1071,10 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @param string $quote_id
+     * @param int $quote_id
      * @param QR $qR
      */
-    public function quoteMarkViewed(string $quote_id, QR $qR): void
+    public function quoteMarkViewed(int $quote_id, QR $qR): void
     {
         $quote = $qR->repoQuoteStatusquery($quote_id, 2);
         if ($quote) {
@@ -1114,10 +1114,10 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @param string|null $quote_id
+     * @param int|null $quote_id
      * @param QR $qR
      */
-    public function quoteMarkSent(?string $quote_id, QR $qR): void
+    public function quoteMarkSent(?int $quote_id, QR $qR): void
     {
         // Quote exists and has a status of 1 ie. draft
         if ($qR->repoQuoteStatuscount($quote_id, 1) > 0) {

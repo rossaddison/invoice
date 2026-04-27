@@ -93,10 +93,10 @@ final class SalesOrderItemAllowanceChargeRepository extends Select\Repository
 
     /**
      * All item allowances or charges for this invoice
-     * @param string $sales_order_id
+     * @param int $sales_order_id
      * @return EntityReader
      */
-    public function repoACSOquery(string $sales_order_id): EntityReader
+    public function repoACSOquery(int $sales_order_id): EntityReader
     {
         $query = $this->select()
                       ->where(['sales_order_id' => $sales_order_id]);
@@ -104,11 +104,11 @@ final class SalesOrderItemAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return SalesOrderItemAllowanceCharge|null
      */
-    public function repoSalesOrderItemAllowanceChargequery(string $id):
+    public function repoSalesOrderItemAllowanceChargequery(int $id):
         ?SalesOrderItemAllowanceCharge
     {
         $query = $this->select()
@@ -117,10 +117,10 @@ final class SalesOrderItemAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -128,10 +128,10 @@ final class SalesOrderItemAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $sales_order_id
+     * @param int $sales_order_id
      * @return int
      */
-    public function repoSalesOrderCount(string $sales_order_id): int
+    public function repoSalesOrderCount(int $sales_order_id): int
     {
         $query = $this->select()
                       ->where(['sales_order_id' => $sales_order_id]);
@@ -139,10 +139,10 @@ final class SalesOrderItemAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $sales_order_item_id
+     * @param int $sales_order_item_id
      * @return int
      */
-    public function repoSalesOrderItemCount(string $sales_order_item_id): int
+    public function repoSalesOrderItemCount(int $sales_order_item_id): int
     {
         $query = $this->select()
                       ->where(['sales_order_item_id' => $sales_order_item_id]);
@@ -151,10 +151,10 @@ final class SalesOrderItemAllowanceChargeRepository extends Select\Repository
 
     /**
      * All allowances and charges for this sales order item
-     * @param string $sales_order_item_id
+     * @param int $sales_order_item_id
      * @return EntityReader
      */
-    public function repoSalesOrderItemquery(string $sales_order_item_id): EntityReader
+    public function repoSalesOrderItemquery(int $sales_order_item_id): EntityReader
     {
         $query = $this->select()
                       ->load('allowance_charge')
@@ -168,7 +168,7 @@ final class SalesOrderItemAllowanceChargeRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderItemOriginalquery(string $sales_order_item_id):
+    public function repoSalesOrderItemOriginalquery(int $sales_order_item_id):
         ?SalesOrderItemAllowanceCharge
     {
         $query = $this->select()

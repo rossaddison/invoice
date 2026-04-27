@@ -20,9 +20,7 @@ final readonly class QuoteItemAmountService
         array $quoteitem
     ): void {
         $quote_item = $this->quoteItemRepository
-            ->repoQuoteItemquery(
-                (string) $quoteitem['quote_item_id']
-            );
+            ->repoQuoteItemquery((int) $quoteitem['quote_item_id']);
         if ($quote_item) {
             $model->setQuoteItem($quote_item);
         }

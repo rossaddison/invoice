@@ -39,8 +39,7 @@ final readonly class SalesOrderItemService
     ): void {
         if (isset($array['sales_order_id'])) {
             $sales_order = $this->soR
-                ->repoSalesOrderUnLoadedquery(
-                    (string) $array['sales_order_id']
+                ->repoSalesOrderUnLoadedquery((int) $array['sales_order_id']
                 );
             if ($sales_order) {
                 $model->setSalesOrder($sales_order);
@@ -343,8 +342,7 @@ final readonly class SalesOrderItemService
         // Fetch all allowance/charges for this item
         $all_charges = 0.00;
         $all_allowances = 0.00;
-        $acsois = $this->acsoiR->repoSalesOrderItemquery(
-                                                (string)$sales_order_item_id);
+        $acsois = $this->acsoiR->repoSalesOrderItemquery($sales_order_item_id);
         /** @var SalesOrderItemAllowanceCharge $acsoi */
         foreach ($acsois as $acsoi) {
             if ($acsoi->getAllowanceCharge()?->getIdentifier() == '1') {
@@ -365,16 +363,14 @@ final readonly class SalesOrderItemService
         $soias_array['subtotal'] = $sopInvAc;
         $soias_array['taxtotal'] = $tax_total;
         $soias_array['total'] = $sopInvAc - $discount_total + $tax_total;
-        if ($soiar->repoCount((string) $sales_order_item_id) === 0) {
+        if ($soiar->repoCount($sales_order_item_id) === 0) {
             $soias->saveSalesOrderItemAmountNoForm(
                 new SalesOrderItemAmount(),
                 $soias_array
             );
         } else {
             $sales_order_item_amount =
-                $soiar->repoSalesOrderItemAmountquery(
-                    (string) $sales_order_item_id
-                );
+                $soiar->repoSalesOrderItemAmountquery($sales_order_item_id);
             if ($sales_order_item_amount) {
                 $soias->saveSalesOrderItemAmountNoForm(
                     $sales_order_item_amount,

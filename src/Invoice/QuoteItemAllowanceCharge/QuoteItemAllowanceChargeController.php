@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\QuoteItemAllowanceCharge;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\QuoteItemAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Quote\QuoteRepository;
 use App\Invoice\QuoteAmount\QuoteAmountService;
@@ -76,12 +76,11 @@ final class QuoteItemAllowanceChargeController extends BaseController
         QuoteTaxRateRepository $qtrR,
     ): Response {
         $quote_item_id = $currentRoute->getArgument('quote_item_id');
-        $quote_item = $qiR->repoQuoteItemquery((string) $quote_item_id);
+        $quote_item = $qiR->repoQuoteItemquery((int) $quote_item_id);
         if ($quote_item) {
             $quote_item_ac = new QuoteItemAllowanceCharge();
-            $form = new QuoteItemAllowanceChargeForm($quote_item_ac,
-                (int) $quote_item_id);
-            $quote_id = $quote_item->getQuoteId();
+            $form = QuoteItemAllowanceChargeForm::show($quote_item_ac, (int) $quote_item_id);
+            $quote_id = $quote_item->reqQuoteId();
             $parameters = [
                 'title' => $this->translator->translate('add'),
                 'actionName' => 'quoteitemallowancecharge/add',
@@ -116,9 +115,9 @@ final class QuoteItemAllowanceChargeController extends BaseController
                             $all_allowances = 0.00;
                             $all_allowances_vat = 0.00;
                             $acqis = $acqiR->repoQuoteItemquery(
-                                (string) $quote_item_id);
+                                (int) $quote_item_id);
                             $quote_item_amount = $qiaR->repoQuoteItemAmountquery(
-                                (string) $quote_item_id);
+                                (int) $quote_item_id);
                             if (null !== $quote_item_amount) {
                                 /** @var QuoteItemAllowanceCharge $acqi */
                                 foreach ($acqis as $acqi) {
@@ -176,7 +175,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
                                 $qiaR->save($quote_item_amount);
                                 // update the quote amount
                                 $this->quoteAmountService->updateQuoteAmount(
-                                    (int) $quote_id, $qaR, $qiaR, $qtrR,
+                                    $quote_id, $qaR, $qiaR, $qtrR,
                                         $this->numberHelper);
                             }
                             return $this->webService->getRedirectResponse(
@@ -203,10 +202,8 @@ final class QuoteItemAllowanceChargeController extends BaseController
         QuoteItemAllowanceChargeRepository $qiacR): Response
     {
         $params = $request->getQueryParams();
-        /** @var string $params['quote_item_id'] */
-        $quote_item_id = $params['quote_item_id'] ?? '';
-        $this->flashMessage('info',
-            $this->translator->translate(
+        $quote_item_id = (int) ($params['quote_item_id']);
+        $this->flashMessage('info', $this->translator->translate(
                 'peppol.allowance.or.charge.inherit.quote'));
         // retrieve all the allowances or charges associated with
         // the quote_item_id
@@ -244,7 +241,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
     ): Response {
         $acqi = $this->acqi($currentRoute, $acqiR);
         if (null !== $acqi) {
-            $quote_id = $acqi->getQuoteId();
+            $quote_id = $acqi->reqQuoteId();
             // delete the quote item allowance/charge and update the related
             // quote item amount record
             $this->acqiService->deleteQuoteItemAllowanceCharge(
@@ -283,14 +280,14 @@ final class QuoteItemAllowanceChargeController extends BaseController
     ): Response {
         $acqi = $this->acqi($currentRoute, $acqiR);
         if ($acqi) {
-            $quote_item_id = $acqi->getQuoteItemId();
+            $quote_item_id = $acqi->reqQuoteItemId();
             $quote_item = $acqi->getQuoteItem();
-            $quote_id = $quote_item?->getQuoteId();
-            $form = new QuoteItemAllowanceChargeForm($acqi, (int) $quote_item_id);
+            $quote_id = $quote_item?->reqQuoteId();
+            $form = QuoteItemAllowanceChargeForm::show($acqi, $quote_item_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'quoteitemallowancecharge/edit',
-                'actionArguments' => ['id' => $acqi->getId()],
+                'actionArguments' => ['id' => $acqi->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'allowance_charges' => $acR->findAllPreloaded(),
@@ -323,11 +320,9 @@ final class QuoteItemAllowanceChargeController extends BaseController
                                 $all_allowances = 0.00;
                                 $all_allowances_vat = 0.00;
                                 $all_charges_vat = 0.00;
-                                $acqis = $acqiR->repoQuoteItemquery(
-                                    $quote_item_id);
+                                $acqis = $acqiR->repoQuoteItemquery($quote_item_id);
                                 $quote_item_amount =
-                                    $qiaR->repoQuoteItemAmountquery(
-                                        $quote_item_id);
+                                    $qiaR->repoQuoteItemAmountquery($quote_item_id);
                                 if (null !== $quote_item_amount) {
                                     /** @var QuoteItemAllowanceCharge $acqi */
                                     foreach ($acqis as $acqi) {
@@ -421,11 +416,9 @@ final class QuoteItemAllowanceChargeController extends BaseController
         QuoteItemAllowanceChargeRepository $acqiRepository):
             ?QuoteItemAllowanceCharge
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $acqiRepository->repoQuoteItemAllowanceChargequery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $acqiRepository->repoQuoteItemAllowanceChargequery($id);
+        
     }
 
     /**
@@ -441,12 +434,12 @@ final class QuoteItemAllowanceChargeController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $acqi = $this->acqi($currentRoute, $acqiRepository);
         if ($acqi) {
-            $quote_item_id = $acqi->getQuoteItemId();
-            $form = new QuoteItemAllowanceChargeForm($acqi, (int) $quote_item_id);
+            $quote_item_id = $acqi->reqQuoteItemId();
+            $form = QuoteItemAllowanceChargeForm::show($acqi, $quote_item_id);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'quoteitemallowancecharge/view',
-                'actionArguments' => ['id' => $acqi->getId()],
+                'actionArguments' => ['id' => $acqi->reqId()],
                 'allowance_charges' => $acR->findAllPreloaded(),
                 'form' => $form,
                 'acqi' => $acqi,

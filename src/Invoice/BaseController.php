@@ -264,15 +264,15 @@ abstract class BaseController
     /**
      * @param string $_language
      * @param DeliveryLocationRepository $dlr
-     * @param string $delivery_location_id
+     * @param int $delivery_location_id
      * @return string
      */
     protected function viewPartialDeliveryLocation(
             string $_language, 
             DeliveryLocationRepository $dlr, 
-            string $delivery_location_id): string
+            ?int $delivery_location_id): string
     {
-        if (!empty($delivery_location_id)) {
+        if ($delivery_location_id > 0) {
             $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
             if (null !== $del) {
                 return $this->webViewRenderer->renderPartialAsString(

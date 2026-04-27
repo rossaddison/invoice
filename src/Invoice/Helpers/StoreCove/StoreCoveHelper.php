@@ -321,7 +321,7 @@ final readonly class StoreCoveHelper
         if (null !== $invoice_id) {
             $sales_order_id = $invoice->getSoId();
             if ($sales_order_id) {
-                $sales_order = $soR->repoSalesOrderUnLoadedquery($sales_order_id);
+                $sales_order = $soR->repoSalesOrderUnLoadedquery((int) $sales_order_id);
                 if ($sales_order) {
                     $sales_order_number = ($sales_order->getNumber() ??
                         $this->t->translate(
@@ -340,7 +340,7 @@ final readonly class StoreCoveHelper
                      */
                     foreach ($inv_items as $item) {
                         $so_item_id = $item->getSoItemId();
-                        $so_item = $soiR->repoSalesOrderItemquery($so_item_id);
+                        $so_item = $soiR->repoSalesOrderItemquery((int) $so_item_id);
                         if (null !== $so_item) {
                             $po_itemid = $so_item->getPeppolPoItemid() ??
                                 $this->t->translate(
@@ -438,7 +438,7 @@ final readonly class StoreCoveHelper
         $sales_order_item_id = $item->getSoItemId();
         if ($sales_order_item_id) {
             $sales_order_item = $soiR->repoSalesOrderItemquery(
-                    $sales_order_item_id);
+                    (int) $sales_order_item_id);
             if (null !== $sales_order_item) {
                 $peppol_po_itemid = $sales_order_item->getPeppolPoItemid();
                 if (null !== $peppol_po_itemid) {
@@ -465,7 +465,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         $sales_order_item_id = $item->getSoItemId();
         if ($sales_order_item_id) {
             $sales_order_item = $soiR->repoSalesOrderItemquery(
-                $sales_order_item_id);
+                (int) $sales_order_item_id);
             if (null !== $sales_order_item) {
                 $peppol_po_lineid = $sales_order_item->getPeppolPoLineid();
                 if (null !== $peppol_po_lineid) {

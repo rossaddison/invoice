@@ -11,7 +11,7 @@ use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
 use App\Invoice\Entity\Inv;
 use App\Invoice\Inv\InvForm;
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 // Services
 use App\Service\WebControllerService;
 use App\Invoice\ClientCustom\ClientCustomService;
@@ -678,7 +678,7 @@ final class ClientController extends BaseController
         //  (could be 'quote','main','dashboard')
         $bootstrap5ModalQuote = new Bootstrap5ModalQuote(
             $this->translator, $this->webViewRenderer, $cR, $gR, $this->sR, $ucR,
-            new QuoteForm(new Quote()),
+            QuoteForm::show(new Quote()),
         );
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
             $this->translator, $this->webViewRenderer, $cR, $gR, $this->sR, $ucR,

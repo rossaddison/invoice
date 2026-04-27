@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\{
     Client\ClientRepository as CR,
     Group\GroupRepository as GR,
@@ -59,9 +59,7 @@ trait Index
         #[Query('filterStatus')]
         ?string $queryFilterStatus = null,
     ): Response {
-        // build the quote
-        $quote = new Quote();
-        $quoteForm = new QuoteForm($quote);
+        $quoteForm = new QuoteForm();
         $bootstrap5ModalQuote = new Bootstrap5ModalQuote(
             $this->translator,
             $this->webViewRenderer,

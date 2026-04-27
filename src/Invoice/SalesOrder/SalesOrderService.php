@@ -62,12 +62,10 @@ final readonly class SalesOrderService
             }
         }
         if (isset($array['quote_id'])) {
-            $quote = $this->quoteRepository->repoQuoteUnLoadedquery(
-                (string) $array['quote_id']
-            );
+            $quote = $this->quoteRepository->repoQuoteUnLoadedquery((int) $array['quote_id']);
             if ($quote) {
                 $model->setQuote($quote);
-                $model->setQuoteId((int) $quote->getId());
+                $model->setQuoteId($quote->reqId());
             }
         }
     }
@@ -212,7 +210,7 @@ final readonly class SalesOrderService
         SoAR $soaR,
         SoAS $soaS
     ): void {
-        $so_id = $model->isPersisted() ? (string) $model->reqId() : null;
+        $so_id = $model->isPersisted() ? $model->reqId() : null;
         // SalesOrders with no items: If there are no items
         // there will be no amount record so check if there is an
         // amount otherwise null error will occur.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\AllowanceCharge;
 
-use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Infrastructure\Persistence\{TaxRate\TaxRate, Trait\RequireId};
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -14,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 class AllowanceCharge
 {
+    use RequireId;
+    
     #[BelongsTo(target: TaxRate::class, nullable: false, fkAction: 'NO ACTION')]
     private ?TaxRate $tax_rate = null;
 
@@ -47,19 +49,9 @@ class AllowanceCharge
     {
     }
 
-    /**
-     * Returns the database identifier for this AllowanceCharge
-     *
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException('AllowanceCharge has no'
-                . ' ID (not persisted yet)');
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'AllowanceCharge');
     }
 
     public function isPersisted(): bool
@@ -154,7 +146,7 @@ class AllowanceCharge
 
     public function getTaxRateId(): int
     {
-        return $this->tax_rate_id;
+        return $this->requireId($this->tax_rate_id, 'TaxRate');
     }
 
     public function setTaxRateId(int $tax_rate_id): void

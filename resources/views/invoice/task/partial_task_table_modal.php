@@ -38,7 +38,7 @@ use Yiisoft\Html\Html;
                            id="task-id-<?= $task->reqId() ?>" value="<?= $task->reqId(); ?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?php echo ($projectR->count((string) $task->getProjectId()) > 0 ? $projectR->repoProjectquery((string) $task->getProjectId())?->getName() : '') ?></b>
+                    <b><?php echo ($p = $task->getProject()) !== null && $projectR->count((string) $p->reqId()) > 0 ? $projectR->repoProjectquery((string) $p->reqId())?->getName() ?? '' : '' ?></b>
                 </td>
                 <td>
                     <b><?php echo Html::encode($task->getName()); ?></b>

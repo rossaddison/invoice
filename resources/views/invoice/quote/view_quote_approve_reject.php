@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Option;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -56,7 +56,7 @@ echo H::openTag('div', ['class' => 'quote-properties']); //0
 echo H::closeTag('div'); //0
 
 // draft => show the url
-if ($quote->getStatusId() == 1) {
+if ($quote->reqStatusId() == 1) {
  echo H::openTag('div', ['class' => 'quote-properties']); //0
   echo H::openTag('label', ['for' => 'quote_guest_url', 'hidden' => true]); //1
    echo $translator->translate('guest.url');
@@ -81,10 +81,10 @@ if ($quote->getStatusId() == 1) {
 }
 
 // sent 2 or viewed 3 or rejected 5 AND no sales order => approve before transferring to sales order
-if (($quote->getStatusId() === 2 ||
-     $quote->getStatusId() === 3 ||
-     $quote->getStatusId() === 5) &&
-     !$invEdit && ($quote->getSoId() === '0' || empty($quote->getSoId()))) {
+if (($quote->reqStatusId() === 2 ||
+     $quote->reqStatusId() === 3 ||
+     $quote->reqStatusId() === 5) &&
+     !$invEdit && $quote->getSoId() === 0) {
  echo H::openTag('div'); //0
   echo H::tag('br', '');
   echo H::a(
@@ -96,10 +96,10 @@ if (($quote->getStatusId() === 2 ||
 }
 
 // sent 2 or viewed 3 or approved 4 AND user not permission to edit AND no sales order => can be rejected
-if (($quote->getStatusId() === 2 ||
-     $quote->getStatusId() === 3 ||
-     $quote->getStatusId() === 4) &&
-     !$invEdit && ($quote->getSoId() === '0' || empty($quote->getSoId()))) {
+if (($quote->reqStatusId() === 2 ||
+     $quote->reqStatusId() === 3 ||
+     $quote->reqStatusId() === 4) &&
+     !$invEdit && $quote->getSoId() === 0) {
  echo H::openTag('div'); //0
   echo H::tag('br', '');
   echo H::a(
@@ -120,7 +120,7 @@ echo H::tag('input', '', [
 ]);
 
 // the quote has already been approved because it has a sales order number associated with it => it can only be viewed
-if ($quote->getSoId()) {
+if ($quote->getSoId() > 0) {
  echo H::openTag('div'); //0
   echo H::openTag('label', ['for' => 'salesorder_to_url']); //1
    echo $translator->translate('salesorder');

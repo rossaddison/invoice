@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\QuoteCustom;
 
-use App\Infrastructure\Persistence\CustomField\CustomField;
+use App\Infrastructure\Persistence\{
+    Quote\Quote, CustomField\CustomField, Trait\RequireId
+};
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -12,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\QuoteCustom\QuoteCustomRepository::class)]
 class QuoteCustom
 {
+    use RequireId;
+    
     #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
@@ -53,9 +57,14 @@ class QuoteCustom
         $this->quote = $quote;
     }
 
-    public function getId(): string
+    public function reqId(): int
     {
-        return (string) $this->id;
+        return $this->requireId($this->id, 'QuoteCustom');
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -63,9 +72,9 @@ class QuoteCustom
         $this->id = $id;
     }
 
-    public function getQuoteId(): string
+    public function reqQuoteId(): int
     {
-        return (string) $this->quote_id;
+        return $this->requireId($this->quote_id, 'Quote');
     }
 
     public function setQuoteId(int $quote_id): void
@@ -77,6 +86,7 @@ class QuoteCustom
     {
         return (string) $this->custom_field_id;
     }
+
 
     public function setCustomFieldId(int $custom_field_id): void
     {

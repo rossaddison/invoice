@@ -7,7 +7,7 @@ namespace App\Invoice\InvItem;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvItemAmount;
 use App\Invoice\Entity\InvItemAllowanceCharge;
-use App\Invoice\Entity\QuoteItemAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge;
 use App\Infrastructure\Persistence\Task\Task;
 use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository
     as ACQIR;
@@ -251,7 +251,7 @@ final readonly class InvItemService
         int $originalId, int $newId, ACQIR $acqiR, ACIIR $aciiR): void
     {
         // Get all allowance charges associated with quote_item i.e. $originalId
-        $originalACs = $acqiR->repoQuoteItemquery((string) $originalId);
+        $originalACs = $acqiR->repoQuoteItemquery($originalId);
         /**
          * @var QuoteItemAllowanceCharge $originalAC
          */

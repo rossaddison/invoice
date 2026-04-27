@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Product;
 
 use App\Infrastructure\Persistence\{Client\Client, Family\Family,
-    ProductClient\ProductClient, TaxRate\TaxRate, Unit\Unit};
+    ProductClient\ProductClient, TaxRate\TaxRate, Unit\Unit, Trait\RequireId};
 use App\Invoice\Product\ProductRepository as PR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -16,6 +16,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[Entity(repository: PR::class)]
 class Product
 {
+    use RequireId;
+    
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -82,12 +84,7 @@ class Product
      */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'Product has no ID (not persisted yet)'
-            );
-        }
-        return $this->id;
+        return $this->requireId($this->id, 'Product');
     }
 
     public function isPersisted(): bool

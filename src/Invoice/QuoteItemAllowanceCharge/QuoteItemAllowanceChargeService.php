@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItemAllowanceCharge;
 
-use App\Invoice\Entity\QuoteItemAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
@@ -43,7 +43,7 @@ final readonly class QuoteItemAllowanceChargeService
         }
         if (isset($array['quote_id'])) {
             $quote = $this->qR->repoQuoteUnLoadedquery(
-                (string) $array['quote_id']
+                (int) $array['quote_id']
             );
             if ($quote) {
                 $model->setQuote($quote);
@@ -51,7 +51,7 @@ final readonly class QuoteItemAllowanceChargeService
         }
         if (isset($array['quote_item_id'])) {
             $quote_item = $this->qiR->repoQuoteItemquery(
-                (string) $array['quote_item_id']
+                (int) $array['quote_item_id']
             );
             if ($quote_item) {
                 $model->setQuoteItem($quote_item);
@@ -95,7 +95,7 @@ final readonly class QuoteItemAllowanceChargeService
         // before deleting the allowance/charge, record its
         // related quote_item_id so that we can update the
         // quote_item_amount record
-        $quote_item_id = $model->getQuoteItemId();
+        $quote_item_id = $model->reqQuoteItemId();
         // delete the allowance / charge
         $this->repository->delete($model);
         $quote_item_amount = $qiaR->repoQuoteItemAmountquery(

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\CategorySecondary;
 
-use App\Infrastructure\Persistence\CategoryPrimary\CategoryPrimary as CP;
+use App\Infrastructure\Persistence\{CategoryPrimary\CategoryPrimary as CP,
+    Trait\RequireId};
 use App\Invoice\CategorySecondary\CategorySecondaryRepository as CSR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -13,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: CSR::class)]
 class CategorySecondary
 {
+    use RequireId;
+    
     #[BelongsTo(target: CP::class, nullable: true, fkAction: 'NO ACTION')]
     private ?CP $category_primary = null;
 
@@ -25,12 +28,7 @@ class CategorySecondary
         private ?string $name = '',
     ) {
     }
-
-    /**
-     * Returns the database identifier for this CategorySecondary.
-     *
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -38,13 +36,7 @@ class CategorySecondary
 
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'CategorySecondary has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'CategorySecondary');
     }
 
     public function isPersisted(): bool
@@ -57,9 +49,9 @@ class CategorySecondary
         $this->id = $id;
     }
 
-    public function getCategoryPrimaryId(): ?int
+    public function reqCategoryPrimaryId(): int
     {
-        return $this->category_primary_id;
+        return $this->requireId($this->category_primary_id, 'CategoryPrimary');
     }
 
     public function setCategoryPrimaryId(int $category_primary_id): void

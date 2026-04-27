@@ -21,13 +21,12 @@ use App\Invoice\SalesOrderTaxRate\SalesOrderTaxRateRepository;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository as DLR;
 use App\Invoice\Entity\Inv;
-use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\QuoteAmount;
-use App\Invoice\Entity\QuoteItem;
-use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
-use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Invoice\Entity\InvItem;
+use App\Infrastructure\Persistence\{
+    InvAllowanceCharge\InvAllowanceCharge, QuoteAmount\QuoteAmount, 
+    QuoteItem\QuoteItem, SalesOrder\SalesOrder, SalesOrderItem\SalesOrderItem
+};
 use App\Invoice\Helpers\CustomValuesHelper as CVH;
 use App\Invoice\Setting\SettingRepository as SR;
 use Yiisoft\Session\SessionInterface as Session;
@@ -65,7 +64,7 @@ class PdfHelper
     {
         $locale_lang = $this->localeToLanguage();
         // Get the client language if set : otherwise use the locale as basis
-        if ($quote_or_inv instanceof \App\Invoice\Entity\Quote
+        if ($quote_or_inv instanceof \App\Infrastructure\Persistence\Quote\Quote
             || $quote_or_inv instanceof Inv) {
             return $quote_or_inv->getClient()?->getClientLanguage() ?? $locale_lang;
         }
@@ -73,8 +72,8 @@ class PdfHelper
     }
 
     /**
-     * @param string|null $quote_id
-     * @param string $user_id
+     * @param int $quote_id
+     * @param int $user_id
      * @param bool $stream
      * @param bool $custom
      * @param QuoteAmount|null $quote_amount
@@ -89,11 +88,11 @@ class PdfHelper
      * @param QuoteTaxRateRepository $qtrR
      * @param UserInvRepository $uiR
      * @param WebViewRenderer $webViewRenderer
-     * @return string
+     * @return string|null
      */
     public function generateQuotePdf(
-        ?string $quote_id,
-        string $user_id,
+        int $quote_id,
+        int $user_id,
         bool $stream,
         bool $custom,
         ?object $quote_amount,
@@ -110,92 +109,97 @@ class PdfHelper
         UserInvRepository $uiR,
         WebViewRenderer $webViewRenderer,
     ) {
-        if (null !== $quote_id) {
-            $quote = $qR->repoCount($quote_id) > 0 ? $qR->repoQuoteLoadedquery($quote_id) : null;
+        
+        $quote = $qR->repoCount($quote_id) > 0 ?
+                $qR->repoQuoteLoadedquery($quote_id) : null;
 
-            if (null !== $quote) {
-                // If userinv details have been filled, use these details
-                $userinv = ($uiR->repoUserInvcount($user_id) > 0 ? $uiR->repoUserInvquery($user_id) : null);
-                // If a template has been selected in the dropdown use it otherwise use the default 'quote' template under
-                // views/invoice/template/quote/pdf/quote.pdf
-                $quote_template = (!empty($this->s->getSetting('pdf_quote_template')) ? $this->s->getSetting('pdf_quote_template') : 'quote');
-                $_language = $this->session->get('_language');
-                // Determine if discounts should be displayed if there are items on the quote
-                $items = ($qiR->repoCount($quote_id) > 0 ? $qiR->repoQuoteItemIdquery($quote_id) : null);
+        if (null !== $quote) {
+            // If userinv details have been filled, use these details
+            $userinv = ($uiR->repoUserInvcount((string) $user_id) > 0 ?
+                    $uiR->repoUserInvquery((string) $user_id) : null);
+            // If a template has been selected in the dropdown use it otherwise use the default 'quote' template under
+            // views/invoice/template/quote/pdf/quote.pdf
+            $quote_template = (!empty($this->s->getSetting('pdf_quote_template')) ? $this->s->getSetting('pdf_quote_template') : 'quote');
+            $_language = $this->session->get('_language');
+            // Determine if discounts should be displayed if there are items on the quote
+            $items = ($qiR->repoCount($quote_id) > 0 ?
+                    $qiR->repoQuoteItemIdquery($quote_id) : null);
 
-                // e-invoicing requirement
-                /** @var string $client_number */
-                $client_number = $quote->getClient()?->getClientNumber();
-                $show_item_discounts = false;
-                // Determine if any of the items have a discount, if so then the discount amount row will have to be shown.
-                if (null !== $items) {
-                    /** @var QuoteItem $item */
-                    foreach ($items as $item) {
-                        if ($item->getDiscountAmount() !== 0.00) {
-                            $show_item_discounts = true;
-                        }
+            // e-invoicing requirement
+            /** @var string $client_number */
+            $client_number = $quote->getClient()?->getClientNumber();
+            $show_item_discounts = false;
+// Determine if any of the items have a discount, if so then the discount
+// amount row will have to be shown.
+            if (null !== $items) {
+                /** @var QuoteItem $item */
+                foreach ($items as $item) {
+                    if ($item->getDiscountAmount() !== 0.00) {
+                        $show_item_discounts = true;
                     }
                 }
-                // Get all data related to building the quote including custom fields
-                $data = [
-                    'quote' => $quote,
-                    'quote_tax_rates' => (($qtrR->repoCount((string) $this->session->get('quote_id')) > 0) ? $qtrR->repoQuotequery((string) $this->session->get('quote_id')) : null),
-                    'items' => $items,
-                    'qiaR' => $qiaR,
-                    'acqiR' => $acqiR,
-                    'output_type' => 'pdf',
-                    'show_item_discounts' => $show_item_discounts,
-                    // Show the custom fields if the user has answered yes on the modal ie $custom = true
-                    'show_custom_fields' => $custom,
-                    // Custom fields appearing near the top of the quote
+            }
+            // Get all data related to building the quote including custom fields
+            $data = [
+                'quote' => $quote,
+                'quote_tax_rates' => (($qtrR->repoCount(
+                    (int) $this->session->get('quote_id')) > 0) ?
+                    $qtrR->repoQuotequery(
+                        (int) $this->session->get('quote_id')) : null),
+                'items' => $items,
+                'qiaR' => $qiaR,
+                'acqiR' => $acqiR,
+                'output_type' => 'pdf',
+                'show_item_discounts' => $show_item_discounts,
+                // Show the custom fields if the user has answered yes on the modal ie $custom = true
+                'show_custom_fields' => $custom,
+                // Custom fields appearing near the top of the quote
+                'custom_fields' => $cfR->repoTablequery('quote_custom'),
+                'custom_values' => $cvR->fixCfValueToCf($cfR->repoTablequery('quote_custom')),
+                'cvH' => new CVH($this->s, $cvR),
+                'cvR' => $cvR,
+                'quote_custom_values' => $quote_custom_values,
+                'top_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/quote/pdf/top_custom_fields', [
                     'custom_fields' => $cfR->repoTablequery('quote_custom'),
-                    'custom_values' => $cvR->fixCfValueToCf($cfR->repoTablequery('quote_custom')),
-                    'cvH' => new CVH($this->s, $cvR),
                     'cvR' => $cvR,
                     'quote_custom_values' => $quote_custom_values,
-                    'top_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/quote/pdf/top_custom_fields', [
-                        'custom_fields' => $cfR->repoTablequery('quote_custom'),
-                        'cvR' => $cvR,
-                        'quote_custom_values' => $quote_custom_values,
-                        'cvH' => new CVH($this->s, $cvR),
-                    ]),
-                    // Custom fields appearing at the bottom of the quote
-                    'view_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/quote/pdf/view_custom_fields', [
-                        'custom_fields' => $cfR->repoTablequery('quote_custom'),
-                        'cvR' => $cvR,
-                        'quote_custom_values' => $quote_custom_values,
-                        'cvH' => new CVH($this->s, $cvR),
-                    ]),
-                    'company_logo_and_address' => $webViewRenderer->renderPartialAsString(
-                        '//invoice/setting/company_logo_and_address.php',
-                        ['company' => $company = $this->s->getConfigCompanyDetails(),
-                            'document_number' => $quote->getNumber(),
-                            'client_number' => $client_number,
-                            'isInvoice' => false,
-                            'isQuote' => true,
-                            'isSalesOrder' => false,
-                        ],
-                    ),
-                    'delivery_location' => $this->viewPartialDeliveryLocation((string) $_language, $dlR, $quote->getDeliveryLocationId(), $webViewRenderer),
-                    'userInv' => $userinv,
-                    'client' => $cR->repoClientqueryOrig($quote->getClient()?->reqId() ?? 0),
-                    'quote_amount' => $quote_amount,
-                    // Use the temporary print language to define cldr
-                    'cldr' => array_search($this->getPrintLanguage($quote), $this->s->localeLanguageArray()),
-                ];
-                // Quote Template will be either 'quote' or a custom designed quote in the folder.
-                $html = $webViewRenderer->renderPartialAsString('//invoice/template/quote/pdf/' . $quote_template, $data);
-                if ($this->s->getSetting('pdf_html_quote') === '1') {
-                    return $html;
-                }
-                // Set the print language to null for future use
-                $this->session->set('print_language', '');
-                $mpdfhelper = new MpdfHelper($this->translator);
-                $filename = $this->s->getSetting('quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string) random_int(0, 10));
-                return $mpdfhelper->pdfCreate($html, $filename, $stream, $quote->getPassword(), $this->s, null, null, false, false, [], $quote);
+                    'cvH' => new CVH($this->s, $cvR),
+                ]),
+                // Custom fields appearing at the bottom of the quote
+                'view_custom_fields' => $webViewRenderer->renderPartialAsString('//invoice/template/quote/pdf/view_custom_fields', [
+                    'custom_fields' => $cfR->repoTablequery('quote_custom'),
+                    'cvR' => $cvR,
+                    'quote_custom_values' => $quote_custom_values,
+                    'cvH' => new CVH($this->s, $cvR),
+                ]),
+                'company_logo_and_address' => $webViewRenderer->renderPartialAsString(
+                    '//invoice/setting/company_logo_and_address.php',
+                    ['company' => $company = $this->s->getConfigCompanyDetails(),
+                        'document_number' => $quote->getNumber(),
+                        'client_number' => $client_number,
+                        'isInvoice' => false,
+                        'isQuote' => true,
+                        'isSalesOrder' => false,
+                    ],
+                ),
+                'delivery_location' => $this->viewPartialDeliveryLocation((string) $_language, $dlR, $quote->getDeliveryLocationId(), $webViewRenderer),
+                'userInv' => $userinv,
+                'client' => $cR->repoClientqueryOrig($quote->getClient()?->reqId() ?? 0),
+                'quote_amount' => $quote_amount,
+                // Use the temporary print language to define cldr
+                'cldr' => array_search($this->getPrintLanguage($quote), $this->s->localeLanguageArray()),
+            ];
+            // Quote Template will be either 'quote' or a custom designed quote in the folder.
+            $html = $webViewRenderer->renderPartialAsString('//invoice/template/quote/pdf/' . $quote_template, $data);
+            if ($this->s->getSetting('pdf_html_quote') === '1') {
+                return $html;
             }
+            // Set the print language to null for future use
+            $this->session->set('print_language', '');
+            $mpdfhelper = new MpdfHelper($this->translator);
+            $filename = $this->s->getSetting('quote') . '_' . str_replace(['\\', '/'], '_', $quote->getNumber() ?? (string) random_int(0, 10));
+            return $mpdfhelper->pdfCreate($html, $filename, $stream, $quote->getPassword(), $this->s, null, null, false, false, [], $quote);
         }
-        return '';
     }   //generate_quote_pdf
 
     /**
@@ -239,7 +243,7 @@ class PdfHelper
         Translator $translator,
     ): string {
         if (null !== $so_id) {
-            $so = $soR->repoCount($so_id) > 0 ? $soR->repoSalesOrderLoadedquery($so_id) : null;
+            $so = $soR->repoCount((int) $so_id) > 0 ? $soR->repoSalesOrderLoadedquery((int) $so_id) : null;
 
             if (null !== $so) {
                 // If userinv details have been filled, use these details
@@ -249,7 +253,7 @@ class PdfHelper
                 $salesorder_template = (!empty($this->s->getSetting('pdf_salesorder_template')) ? $this->s->getSetting('pdf_salesorder_template') : 'salesorder');
                 $_language = $this->session->get('_language') ?? 'en';
                 // Determine if discounts should be displayed if there are items on the salesorder
-                $items = ($soiR->repoCount($so_id) > 0 ? $soiR->repoSalesOrderItemIdquery($so_id) : null);
+                $items = ($soiR->repoCount((int) $so_id) > 0 ? $soiR->repoSalesOrderItemIdquery((int) $so_id) : null);
                 // e-invoicing requirement
                 /** @var string $client_number */
                 $client_number = $so->getClient()?->getClientNumber();
@@ -266,7 +270,7 @@ class PdfHelper
                 // Get all data related to building the quote including custom fields
                 $data = [
                     'salesorder' => $so,
-                    'salesorder_tax_rates' => (($sotrR->repoCount((string) $this->session->get('so_id')) > 0) ? $sotrR->repoSalesOrderquery((string) $this->session->get('so_id')) : null),
+                    'salesorder_tax_rates' => (($sotrR->repoCount((int) $this->session->get('so_id')) > 0) ? $sotrR->repoSalesOrderquery((int) $this->session->get('so_id')) : null),
                     'items' => $items,
                     'soiaR' => $soiaR,
                     'acsoiR' => $acsoiR,
@@ -436,7 +440,7 @@ class PdfHelper
                     ],
                 ),
                 'inv_allowance_charges' => $this->viewPartialInvAllowanceCharges($inv_id, $vat, $aciR, $webViewRenderer),
-                'delivery_location' => $this->viewPartialDeliveryLocation((string) $_language, $dlR, $inv->getDeliveryLocationId(), $webViewRenderer),
+                'delivery_location' => $this->viewPartialDeliveryLocation((string) $_language, $dlR, (int) $inv->getDeliveryLocationId(), $webViewRenderer),
                 'client' => $cR->repoClientqueryOrig($inv->getClient()?->reqId() ?? 0),
                 'inv_amount' => $inv_amount,
                 'cldr' => array_search($this->getPrintLanguage($inv), $this->s->localeLanguageArray()),
@@ -581,9 +585,9 @@ class PdfHelper
         }
     }
 
-    private function viewPartialDeliveryLocation(string $_language, DLR $dlr, string $delivery_location_id, WebViewRenderer $webViewRenderer): string
+    private function viewPartialDeliveryLocation(string $_language, DLR $dlr, int|null $delivery_location_id, WebViewRenderer $webViewRenderer): string
     {
-        if (!empty($delivery_location_id)) {
+        if ($delivery_location_id > 0) {
             $del = $dlr->repoDeliveryLocationquery($delivery_location_id);
             if (null !== $del) {
                 return $webViewRenderer->renderPartialAsString('//invoice/inv/partial_inv_delivery_location', [

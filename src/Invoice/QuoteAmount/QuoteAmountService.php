@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteAmount;
 
-use App\Invoice\Entity\QuoteAmount;
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\QuoteAmount\QuoteAmount;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository as QIAR;
@@ -28,8 +28,7 @@ final readonly class QuoteAmountService
     private function persist(array $array, QuoteAmount $model): void
     {
         if (isset($array['quote_id'])) {
-            $quote = $this->qR->repoQuoteUnLoadedquery(
-                (string) $array['quote_id']
+            $quote = $this->qR->repoQuoteUnLoadedquery((int) $array['quote_id']
             );
             if ($quote) {
                 $model->setQuote($quote);
@@ -132,9 +131,7 @@ final readonly class QuoteAmountService
         QTRR $qtrR,
         NumberHelper $numberHelper
     ): void {
-        $model = $this->repository->repoQuotequery(
-            (string) $quote_id
-        );
+        $model = $this->repository->repoQuotequery($quote_id);
         if (null !== $model) {
             $quote = $model->getQuote();
             if (null !== $quote) {
@@ -152,7 +149,7 @@ final readonly class QuoteAmountService
                  * @var QuoteItem $item
                  */
                 foreach ($items as $item) {
-                    $quoteItemId = $item->getId();
+                    $quoteItemId = $item->reqId();
                     $quoteItemAmount = $qiaR->repoQuoteItemAmountquery(
                         $quoteItemId
                     );
@@ -169,7 +166,7 @@ final readonly class QuoteAmountService
                 $model->setPackhandleshipTax($packHandleShipTax);
                 $additionalTaxTotal =
                     $numberHelper->calculateQuoteTaxes(
-                        (string) $quote_id,
+                        $quote_id,
                         $qtrR,
                         $qaR
                     );

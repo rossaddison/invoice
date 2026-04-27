@@ -97,7 +97,7 @@ trait View
         if ($inv) {
             $sales_order_number = '';
             if ($inv->getSoId()) {
-                $so = $soR->repoSalesOrderUnloadedquery($inv->getSoId());
+                $so = $soR->repoSalesOrderUnloadedquery((int) $inv->getSoId());
                 if ($so) {
                     $sales_order_number = $so->getNumber();
                 }
@@ -330,7 +330,7 @@ trait View
                             $_language, $url_key, (int) $client_id, $upR),
                     'partial_inv_delivery_location' =>
                             $this->viewPartialDeliveryLocation(
-                                $_language, $dlR, $delivery_location_id),
+                                $_language, $dlR, (int) $delivery_location_id),
                     'modal_message_no_payment_method' =>
                         $bootstrap5ModalTranslatorMessageWithoutAction
                         ->renderPartialLayoutWithTranslatorMessageAsString(

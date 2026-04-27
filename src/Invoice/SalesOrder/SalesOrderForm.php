@@ -20,9 +20,9 @@ final class SalesOrderForm extends FormModel
     private mixed $date_created = '';
 
     #[Required]
-    private ?string $quote_id = null;
+    private ?int $quote_id = null;
 
-    private ?string $inv_id = null;
+    private ?int $inv_id = null;
 
     #[Required]
     #[Integer(min: 1)]
@@ -62,12 +62,10 @@ final class SalesOrderForm extends FormModel
         $form = new self();
         $form->number = $salesOrder->getNumber();
         $form->date_created = $salesOrder->getDateCreated();
-        $form->quote_id = $salesOrder->getQuoteId() !== null
-            ? (string) $salesOrder->getQuoteId() : null;
-        $form->inv_id = $salesOrder->getInvId() !== null
-            ? (string) $salesOrder->getInvId() : null;
-        $form->group_id = (int) $salesOrder->getGroupId();
-        $form->client_id = (int) $salesOrder->getClientId();
+        $form->quote_id = $salesOrder->reqQuoteId();
+        $form->inv_id = $salesOrder->reqInvId();
+        $form->group_id = $salesOrder->reqGroupId();
+        $form->client_id = $salesOrder->reqClientId();
         $form->client_po_number = $salesOrder->getClientPoNumber();
         $form->client_po_line_number = $salesOrder->getClientPoLineNumber();
         $form->client_po_person = $salesOrder->getClientPoPerson();
@@ -83,12 +81,12 @@ final class SalesOrderForm extends FormModel
     // The Entities ie. Entity/SalesOrder.php have return type string => return type strings in the form
     // get => string ;
 
-    public function getQuoteId(): ?string
+    public function getQuoteId(): ?int
     {
         return $this->quote_id;
     }
 
-    public function getInvId(): ?string
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItemAllowanceCharge;
 
-use App\Invoice\Entity\QuoteItemAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -90,71 +90,71 @@ final class QuoteItemAllowanceChargeRepository extends Select\Repository
 
     /**
      * All item allowances or charges for this invoice
-     * @param string $quote_id
+     * @param int $quote_id
      * @return EntityReader
      */
-    public function repoACQquery(string $quote_id): EntityReader
+    public function repoACQquery(int $quote_id): EntityReader
     {
         $query = $this->select()
-                      ->where(['quote_id' => $quote_id]);
+                      ->where(['quote_id' => (string) $quote_id]);
         return $this->prepareDataReader($query);
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return QuoteItemAllowanceCharge|null
      */
-    public function repoQuoteItemAllowanceChargequery(string $id): ?QuoteItemAllowanceCharge
+    public function repoQuoteItemAllowanceChargequery(int $id): ?QuoteItemAllowanceCharge
     {
         $query = $this->select()
-                      ->where(['id' => $id]);
+                      ->where(['id' => (string) $id]);
         return  $query->fetchOne() ?: null;
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
-                      ->where(['id' => $id]);
+                      ->where(['id' => (string) $id]);
         return $query->count();
     }
 
     /**
-     * @param string $quote_id
+     * @param int $quote_id
      * @return int
      */
-    public function repoQuoteCount(string $quote_id): int
+    public function repoQuoteCount(int $quote_id): int
     {
         $query = $this->select()
-                      ->where(['quote_id' => $quote_id]);
+                      ->where(['quote_id' => (string) $quote_id]);
         return $query->count();
     }
 
     /**
-     * @param string $quote_item_id
+     * @param int $quote_item_id
      * @return int
      */
-    public function repoQuoteItemCount(string $quote_item_id): int
+    public function repoQuoteItemCount(int $quote_item_id): int
     {
         $query = $this->select()
-                      ->where(['quote_item_id' => $quote_item_id]);
+                      ->where(['quote_item_id' => (string) $quote_item_id]);
         return $query->count();
     }
 
     /**
      * All allowances and charges for this quote item
-     * @param string $quote_item_id
+     * @param int $quote_item_id
      * @return EntityReader
      */
-    public function repoQuoteItemquery(string $quote_item_id): EntityReader
+    public function repoQuoteItemquery(int $quote_item_id): EntityReader
     {
         $query = $this->select()
                       ->load('allowance_charge')
-                      ->where(['quote_item_id' => $quote_item_id]);
+                      ->where(['quote_item_id' => (string) $quote_item_id]);
         return $this->prepareDataReader($query);
     }
 
@@ -164,11 +164,12 @@ final class QuoteItemAllowanceChargeRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteItemOriginalquery(string $quote_item_id): ?QuoteItemAllowanceCharge
+    public function repoQuoteItemOriginalquery(int $quote_item_id):
+        ?QuoteItemAllowanceCharge
     {
         $query = $this->select()
                       ->load('allowance_charge')
-                      ->where(['quote_item_id' => $quote_item_id]);
+                      ->where(['quote_item_id' => (string) $quote_item_id]);
         return  $query->fetchOne() ?: null;
     }
 }

@@ -179,7 +179,7 @@ $columns = [
         content: static function (SalesOrder $model) use ($urlGenerator): A {
             return Html::a($model->getQuote()?->getNumber() ?? '#',
                 $urlGenerator->generate('quote/view', [
-                    'id' => $model->getQuoteId()]), [
+                    'id' => $model->reqQuoteId()]), [
                         'style' => 'text-decoration:none']);
         },
         encodeContent: false,
@@ -214,8 +214,8 @@ $columns = [
         content: function (SalesOrder $model) use ($s, $soaR): string {
             $so_id = $model->reqId();
             $so_amount = (($soaR->repoSalesOrderAmountCount(
-                    (string) $so_id) > 0) ? $soaR->repoSalesOrderquery(
-                            (string) $so_id) : null);
+                    $so_id) > 0) ? $soaR->repoSalesOrderquery(
+                            $so_id) : null);
             return $s->formatCurrency(null !== $so_amount ?
                     $so_amount->getTotal() : 0.00);
         },

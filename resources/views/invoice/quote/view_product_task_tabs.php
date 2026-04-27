@@ -7,7 +7,7 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\I;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var bool $invEdit
  * @var string $add_quote_product
@@ -15,7 +15,7 @@ use Yiisoft\Html\Tag\I;
  */
 
 ?>
-<?php if ($invEdit && $quote->getStatusId() === 1) { ?>
+<?php if ($invEdit && $quote->reqStatusId() === 1) { ?>
 <?= Html::openTag('ul', ['id' => 'product-tabs', 'class' => 'nav nav-tabs nav-tabs-noborder']); ?>
     <?= Html::openTag('li', ['class' => 'active']); ?>
         <?=  new A()

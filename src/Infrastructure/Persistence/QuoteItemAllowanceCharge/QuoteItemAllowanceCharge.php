@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\QuoteItemAllowanceCharge;
 
-use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
+use App\Infrastructure\Persistence\{Quote\Quote, QuoteItem\QuoteItem,
+    AllowanceCharge\AllowanceCharge, Trait\RequireId};
 use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -13,8 +14,9 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: ACQIR::class)]
 class QuoteItemAllowanceCharge
 {
-    #[BelongsTo(target: AllowanceCharge::class,
-        nullable: false, fkAction: 'NO ACTION')]
+    use RequireId;
+    
+    #[BelongsTo(target: AllowanceCharge::class, nullable: false, fkAction: 'NO ACTION')]
     private ?AllowanceCharge $allowance_charge = null;
 
     #[BelongsTo(target: QuoteItem::class, nullable: false, fkAction: 'NO ACTION')]
@@ -73,10 +75,15 @@ class QuoteItemAllowanceCharge
     {
         $this->quote_item = $quote_item;
     }
-
-    public function getId(): string
+    
+    public function reqId(): int
     {
-        return (string) $this->id;
+        return $this->requireId($this->id, 'QuoteItemAllowanceCharge');
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -84,9 +91,9 @@ class QuoteItemAllowanceCharge
         $this->id = $id;
     }
 
-    public function getQuoteId(): string
+    public function reqQuoteId(): int
     {
-        return (string) $this->quote_id;
+        return $this->requireId($this->quote_id, 'Quote');
     }
 
     public function setQuoteId(int $quote_id): void
@@ -94,9 +101,9 @@ class QuoteItemAllowanceCharge
         $this->quote_id = $quote_id;
     }
 
-    public function getQuoteItemId(): string
+    public function reqQuoteItemId(): int
     {
-        return (string) $this->quote_item_id;
+        return $this->requireId($this->quote_item_id, 'Quote Item');
     }
 
     public function setQuoteItemId(int $quote_item_id): void
@@ -104,9 +111,9 @@ class QuoteItemAllowanceCharge
         $this->quote_item_id = $quote_item_id;
     }
 
-    public function getAllowanceChargeId(): string
+    public function reqAllowanceChargeId(): int
     {
-        return (string) $this->allowance_charge_id;
+        return $this->requireId($this->allowance_charge_id, 'AllowanceCharge');
     }
 
     public function setAllowanceChargeId(int $allowance_charge_id): void

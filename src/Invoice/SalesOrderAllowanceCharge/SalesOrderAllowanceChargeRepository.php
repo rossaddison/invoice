@@ -95,11 +95,11 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return SalesOrderAllowanceCharge|null
      */
-    public function repoSalesOrderAllowanceChargeLoadedquery(string $id):
+    public function repoSalesOrderAllowanceChargeLoadedquery(int $id):
         ?SalesOrderAllowanceCharge
     {
         $query = $this->select()
@@ -109,10 +109,10 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $salesorderNumber
+     * @param int $salesorderNumber
      * @psalm-return EntityReader
      */
-    public function repoSalesOrderNumberQuery(string $salesorderNumber):
+    public function repoSalesOrderNumberQuery(int $salesorderNumber):
         EntityReader
     {
         $query = $this->select()
@@ -121,7 +121,7 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function repoReasonCodeQuery(string $reasonCode): EntityReader
+    public function repoReasonCodeQuery(int $reasonCode): EntityReader
     {
         $query = $this->select()
                       ->load('allowance_charge')
@@ -129,7 +129,7 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function repoReasonQuery(string $reason): EntityReader
+    public function repoReasonQuery(int $reason): EntityReader
     {
         $query = $this->select()
                       ->load('allowance_charge')
@@ -138,10 +138,10 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $sales_order_id
+     * @param int $sales_order_id
      * @psalm-return EntityReader
      */
-    public function repoACSOquery(string $sales_order_id): EntityReader
+    public function repoACSOquery(int $sales_order_id): EntityReader
     {
         $query = $this->select()
                       ->load('allowance_charge')
@@ -149,7 +149,7 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function getPackHandleShipTotal(string $salesorder_id): array
+    public function getPackHandleShipTotal(int $salesorder_id): array
     {
         $all = $this->repoACSOquery($salesorder_id);
         $totalAmount = 0.00;
@@ -173,10 +173,10 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

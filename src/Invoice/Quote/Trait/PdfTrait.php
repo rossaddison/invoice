@@ -39,13 +39,12 @@ trait PdfTrait
         // include is a value of 0 or 1 passed from quote.js
         // function quoteToPdfWith(out)_custom_fields indicating whether
         // the user wants custom fields included on the quote or not.
-        $quote_id = (string) $this->session->get('quote_id');
+        $quote_id = (int) $this->session->get('quote_id');
         $quote_amount = (($qaR->repoQuoteAmountCount($quote_id) > 0) ?
             $qaR->repoQuotequery($quote_id) : null);
         if ($quote_amount) {
             $custom = (($include === 1) ? true : false);
-            $quote_custom_values = $this->quoteCustomValues(
-                (string) $this->session->get('quote_id'), $qcR);
+            $quote_custom_values = $this->quoteCustomValues($quote_id, $qcR);
             // session is passed to the pdfHelper and will be used for the
             // locale ie. $session->get('_language') or the print_language
             // ie $session->get('print_language')
@@ -61,7 +60,7 @@ trait PdfTrait
             $quote = $qR->repoQuoteUnloadedquery($quote_id);
             if ($quote) {
                 $pdfhelper->generateQuotePdf($quote_id,
-                    $quote->getUserId(), $stream, $custom, $quote_amount,
+                    $quote->reqUserId(), $stream, $custom, $quote_amount,
                         $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR,
                             $qiaR, $acqiR, $qR, $qtrR, $uiR,
                                 $this->webViewRenderer);
@@ -83,11 +82,11 @@ trait PdfTrait
     {
         if ($quote_id) {
             $quote_amount = (($qaR->repoQuoteAmountCount(
-                (string) $quote_id) > 0) ? $qaR->repoQuotequery(
-                    (string) $quote_id) : null);
+                $quote_id) > 0) ? $qaR->repoQuotequery(
+                    $quote_id) : null);
             if ($quote_amount) {
                 $quote_custom_values = $this->quoteCustomValues(
-                    (string) $quote_id, $qcR);
+                    $quote_id, $qcR);
                 // session is passed to the pdfHelper and will be used for the
                 // locale ie. $session->get('_language') or the print_language
                 // ie $session->get('print_language')
@@ -98,13 +97,13 @@ trait PdfTrait
                 // If we are required to mark quotes as 'sent' when sent.
                 if ($sR->getSetting('mark_quotes_sent_pdf') == 1) {
                     $this->generateQuoteNumberIfApplicable(
-                        (string) $quote_id, $qR, $sR, $gR);
-                    $sR->quoteMarkSent((string) $quote_id, $qR);
+                        $quote_id, $qR, $sR, $gR);
+                    $sR->quoteMarkSent($quote_id, $qR);
                 }
-                $quote = $qR->repoQuoteUnloadedquery((string) $quote_id);
+                $quote = $qR->repoQuoteUnloadedquery($quote_id);
                 if ($quote) {
                     $pdfhelper->generateQuotePdf(
-                        (string) $quote_id, $quote->getUserId(), $stream,
+                        $quote_id, $quote->reqUserId(), $stream,
                             true, $quote_amount, $quote_custom_values, $cR,
                                 $cvR, $cfR, $dlR, $qiR, $qiaR, $acqiR, $qR,
                                     $qtrR, $uiR, $this->webViewRenderer);
@@ -120,11 +119,11 @@ trait PdfTrait
     {
         if ($quote_id) {
             $quote_amount = (($qaR->repoQuoteAmountCount(
-                (string) $quote_id) > 0) ? $qaR->repoQuotequery(
-                    (string) $quote_id) : null);
+                $quote_id) > 0) ? $qaR->repoQuotequery(
+                    $quote_id) : null);
             if ($quote_amount) {
                 $quote_custom_values = $this->quoteCustomValues(
-                    (string) $quote_id, $qcR);
+                    $quote_id, $qcR);
                 // session is passed to the pdfHelper and will be used for the
                 // locale ie. $session->get('_language') or the
                 // print_language ie $session->get('print_language')
@@ -135,13 +134,13 @@ trait PdfTrait
                 // If we are required to mark quotes as 'sent' when sent.
                 if ($sR->getSetting('mark_quotes_sent_pdf') == 1) {
                     $this->generateQuoteNumberIfApplicable(
-                        (string) $quote_id, $qR, $sR, $gR);
-                    $sR->quoteMarkSent((string) $quote_id, $qR);
+                        $quote_id, $qR, $sR, $gR);
+                    $sR->quoteMarkSent($quote_id, $qR);
                 }
-                $quote = $qR->repoQuoteUnloadedquery((string) $quote_id);
+                $quote = $qR->repoQuoteUnloadedquery($quote_id);
                 if ($quote) {
-                    $pdfhelper->generateQuotePdf((string) $quote_id,
-                        $quote->getUserId(), $stream, false, $quote_amount,
+                    $pdfhelper->generateQuotePdf($quote_id,
+                        $quote->reqUserId(), $stream, false, $quote_amount,
                             $quote_custom_values, $cR, $cvR, $cfR, $dlR, $qiR,
                                 $qiaR, $acqiR, $qR, $qtrR, $uiR,
                                     $this->webViewRenderer);

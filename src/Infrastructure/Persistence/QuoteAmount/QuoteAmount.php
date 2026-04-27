@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\QuoteAmount;
 
+use App\Infrastructure\Persistence\{Quote\Quote, Trait\RequireId};
 use App\Invoice\QuoteAmount\QuoteAmountRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -12,6 +13,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: QuoteAmountRepository::class)]
 class QuoteAmount
 {
+    use RequireId;
+    
     #[BelongsTo(target: Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
 
@@ -51,10 +54,15 @@ class QuoteAmount
     {
         $this->quote = $quote;
     }
-
-    public function getId(): string
+    
+    public function reqId(): int
     {
-        return (string) $this->id;
+        return $this->requireId($this->id, 'Quote Amount');
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -62,9 +70,9 @@ class QuoteAmount
         $this->id = $id;
     }
 
-    public function getQuoteId(): string
+    public function reqQuoteId(): int
     {
-        return (string) $this->quote_id;
+        return $this->requireId($this->quote_id, 'Quote');
     }
 
     public function setQuoteId(int $quote_id): void

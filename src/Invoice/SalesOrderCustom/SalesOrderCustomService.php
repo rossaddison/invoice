@@ -23,7 +23,7 @@ final readonly class SalesOrderCustomService
     ): void {
         $sales_order =
             $this->salesOrderRepository->repoSalesOrderUnLoadedquery(
-                (string) $array['sales_order_id']
+                (int) $array['sales_order_id']
             );
         if ($sales_order) {
             $model->setSalesOrder($sales_order);

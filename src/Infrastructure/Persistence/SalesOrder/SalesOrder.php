@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\SalesOrder;
 
-use App\Infrastructure\Persistence\Client\Client;
-use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
-use App\Infrastructure\Persistence\Group\Group;
-use App\Invoice\Entity\Quote;
-use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
+use App\Infrastructure\Persistence\{
+    Client\Client, SalesOrderItem\SalesOrderItem, Group\Group,
+    Quote\Quote, SalesOrderAmount\SalesOrderAmount, Trait\RequireId};
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\User\User;
 use Cycle\Annotated\Annotation\Column;
@@ -25,6 +23,8 @@ use DateTimeImmutable;
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class SalesOrder
 {
+    use RequireId;
+ 
     #[BelongsTo(
         target: Client::class,
         nullable: false,
@@ -119,17 +119,9 @@ class SalesOrder
         $this->date_expires = new DateTimeImmutable();
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'SalesOrder has no ID (not persisted yet)'
-            );
-        }
-        return $this->id;
+        return $this->requireId($this->id, 'SalesOrder');
     }
 
     public function isPersisted(): bool
@@ -191,10 +183,10 @@ class SalesOrder
     {
         $this->user_id = $user_id;
     }
-
-    public function getQuoteId(): ?int
+    
+    public function reqQuoteId(): int
     {
-        return $this->quote_id;
+        return $this->requireId($this->quote_id, 'Quote');
     }
 
     public function setQuoteId(?int $quote_id): void
@@ -202,9 +194,14 @@ class SalesOrder
         $this->quote_id = $quote_id;
     }
 
-    public function getInvId(): ?int
+    public function reqInvId(): int
     {
-        return $this->inv_id;
+        return $this->requireId($this->inv_id, 'Inv');
+    }
+
+    public function hasLinkedInvoice(): bool
+    {
+        return null !== $this->inv_id && 0 !== $this->inv_id;
     }
 
     public function setInvId(?int $inv_id): void
@@ -212,9 +209,9 @@ class SalesOrder
         $this->inv_id = $inv_id;
     }
 
-    public function getClientId(): ?int
+    public function reqClientId(): int
     {
-        return $this->client_id;
+        return $this->requireId($this->client_id, 'Client');
     }
 
     public function setClientId(int $client_id): void
@@ -222,9 +219,9 @@ class SalesOrder
         $this->client_id = $client_id;
     }
 
-    public function getGroupId(): ?int
+    public function reqGroupId(): int
     {
-        return $this->group_id;
+        return $this->requireId($this->group_id, 'Group');
     }
 
     public function setGroupId(int $group_id): void

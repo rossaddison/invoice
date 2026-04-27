@@ -19,10 +19,10 @@ use App\Invoice\Entity\InvAmount;
 use App\Invoice\Entity\InvItem;
 use App\Invoice\Entity\InvTaxRate;
 use App\Invoice\Entity\Payment;
-use App\Invoice\Entity\QuoteAmount;
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\QuoteAmount\QuoteAmount;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
-use App\Invoice\Entity\QuoteTaxRate;
+use App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate;
 use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\QuoteItem\QuoteItemRepository as QIR;
 use App\Invoice\InvItem\InvItemRepository as IIR;
@@ -119,7 +119,7 @@ final readonly class NumberHelper
      * @param $quote_id
      */
     public function calculateQuote(
-        string $quote_id,
+        int $quote_id,
         ACQR $acqR, QIR $qiR, QIAR $qiaR, QTRR $qtrR, QAR $qaR, QR $qR): void
     {
         $quote_allowance_charge_amount_total = 0.00;
@@ -196,7 +196,7 @@ final readonly class NumberHelper
         if (($count > 0) && ($count_quote_amount > 0)) {
             $quote_amount = $qaR->repoQuotequery($quote_id);
             if ($quote_amount) {
-                $quote_amount->setQuoteId((int) $quote_id);
+                $quote_amount->setQuoteId($quote_id);
                 $quote_amount->setItemSubtotal(
                     $quote_item_subtotal_discount_inclusive ?: 0.00
                 );
@@ -221,7 +221,7 @@ final readonly class NumberHelper
         if (($count === 0) && ($count_quote_amount > 0)) {
             $quote_amount = $qaR->repoQuotequery($quote_id);
             if ($quote_amount) {
-                $quote_amount->setQuoteId((int) $quote_id);
+                $quote_amount->setQuoteId($quote_id);
                 $quote_amount->setItemSubtotal(0.00);
                 $quote_amount->setItemTaxTotal(0.00);
                 $quote_amount->setTaxTotal(0.00);
@@ -233,7 +233,7 @@ final readonly class NumberHelper
             // Create a Quote Amount Record for this quote if it does not exist
             // even if there are no items
             $quote_amount = new QuoteAmount();
-            $quote_amount->setQuoteId((int) $quote_id);
+            $quote_amount->setQuoteId($quote_id);
             $quote_amount->setItemSubtotal(0.00);
             $quote_amount->setItemTaxTotal(0.00);
             $quote_amount->setTaxTotal(0.00);
@@ -246,7 +246,7 @@ final readonly class NumberHelper
      * @param $salesorder_id
      */
     public function calculateSo(
-        string $salesorder_id,
+        int $salesorder_id,
         ACSOR $acsoR, SOIR $soiR, SOIAR $soiaR, SOTRR $sotrR, SOAR $soaR,
         SOR $soR): void
     {
@@ -326,7 +326,7 @@ final readonly class NumberHelper
         if (($count > 0) && ($count_salesorder_amount > 0)) {
             $salesorder_amount = $soaR->repoSalesOrderquery($salesorder_id);
             if ($salesorder_amount) {
-                $salesorder_amount->setSalesOrderId((int) $salesorder_id);
+                $salesorder_amount->setSalesOrderId($salesorder_id);
                 $salesorder_amount->setItemSubtotal(
                     $salesorder_item_subtotal_discount_inclusive ?: 0.00
                 );
@@ -349,7 +349,7 @@ final readonly class NumberHelper
         if (($count === 0) && ($count_salesorder_amount > 0)) {
             $salesorder_amount = $soaR->repoSalesOrderquery($salesorder_id);
             if ($salesorder_amount) {
-                $salesorder_amount->setSalesOrderId((int) $salesorder_id);
+                $salesorder_amount->setSalesOrderId($salesorder_id);
                 $salesorder_amount->setItemSubtotal(0.00);
                 $salesorder_amount->setItemTaxTotal(0.00);
                 $salesorder_amount->setTaxTotal(0.00);
@@ -359,7 +359,7 @@ final readonly class NumberHelper
         }
         if (($count === 0) && ($count_salesorder_amount === 0)) {
             $salesorder_amount = new SalesOrderAmount();
-            $salesorder_amount->setSalesOrderId((int) $salesorder_id);
+            $salesorder_amount->setSalesOrderId($salesorder_id);
             $salesorder_amount->setItemSubtotal(0.00);
             $salesorder_amount->setItemTaxTotal(0.00);
             $salesorder_amount->setTaxTotal(0.00);
@@ -512,7 +512,7 @@ final readonly class NumberHelper
                      allowance: float|mixed,
                      total: float|mixed}
      */
-    private function quoteCalculateTotalsofItemTotals(string $quote_id,
+    private function quoteCalculateTotalsofItemTotals(int $quote_id,
         QIR $qiR, QIAR $qiaR): array
     {
         $get_all_items_in_quote = $qiR->repoQuoteItemIdquery($quote_id);
@@ -545,7 +545,7 @@ final readonly class NumberHelper
                      * @psalm-suppress RedundantCastGivenDocblockType $value
                      */
                     $quote_item_amount = $qiaR->repoQuoteItemAmountquery(
-                        (string) $value);
+                        (int) $value);
                     $grand_sub_total = $grand_sub_total +
                             ($quote_item_amount->getSubTotal() ?? 0.00) ;
                     $grand_taxtotal = $grand_taxtotal +
@@ -583,7 +583,7 @@ final readonly class NumberHelper
                      charge: float|mixed,
                      allowance: float|mixed, total: float|mixed}
      */
-    private function salesorderCalculateTotalsofItemTotals(string $salesorder_id,
+    private function salesorderCalculateTotalsofItemTotals(int $salesorder_id,
         SOIR $soiR, SOIAR $soiaR): array
     {
         $get_all_items_in_salesorder = $soiR->repoSalesOrderItemIdquery(
@@ -617,7 +617,7 @@ final readonly class NumberHelper
                      * @psalm-suppress RedundantCastGivenDocblockType $value
                      */
                     $salesorder_item_amount =
-                        $soiaR->repoSalesOrderItemAmountquery((string) $value);
+                        $soiaR->repoSalesOrderItemAmountquery((int) $value);
                     $grand_sub_total = $grand_sub_total +
                         ($salesorder_item_amount->getSubTotal() ?? 0.00) ;
                     $grand_taxtotal = $grand_taxtotal +
@@ -724,13 +724,13 @@ final readonly class NumberHelper
     }
 
     /**
-     * @param string $quote_id
+     * @param int $quote_id
      * @param float $quote_total
      * @param QR $qR
      * @return float
      */
     public function quoteIncludeCustomerDiscountRequest(
-                            string $quote_id, float $quote_total, QR $qR): float
+                            int $quote_id, float $quote_total, QR $qR): float
     {
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
         $total = $quote_total;
@@ -747,13 +747,13 @@ final readonly class NumberHelper
     }
 
     /**
-     * @param string $salesorder_id
+     * @param int $salesorder_id
      * @param float $salesorder_total
      * @param SOR $soR
      * @return float
      */
     public function salesorderIncludeCustomerDiscountRequest(
-        string $salesorder_id, float $salesorder_total, SOR $soR): float
+        int $salesorder_id, float $salesorder_total, SOR $soR): float
     {
         $salesorder = $soR->repoSalesOrderUnloadedquery($salesorder_id);
         $total = $salesorder_total;
@@ -790,10 +790,10 @@ final readonly class NumberHelper
 
     /**
      * Related logic: see QuoteController function defaultTaxQuote
-     * @param string $quote_id
+     * @param int $quote_id
      */
     public function calculateQuoteTaxes(
-                                  string $quote_id, QTRR $qtrR, QAR $qaR): float
+                                  int $quote_id, QTRR $qtrR, QAR $qaR): float
     {
 // Quote amount Table fields:
 //  id->quote_id->item_subtotal->item_tax_total->tax_total*->total
@@ -842,10 +842,10 @@ final readonly class NumberHelper
 
     /**
      * Related logic: see SalesOrderController function defaultTaxSalesorder
-     * @param string $salesorder_id
+     * @param int $salesorder_id
      */
     public function calculateSalesorderTaxes(
-        string $salesorder_id, SOTRR $sotrR, SOAR $soaR): float
+        int $salesorder_id, SOTRR $sotrR, SOAR $soaR): float
     {
         $total_salesorder_tax_rate_amount = 0.00;
         $salesorder_tax_rates = $sotrR->repoSalesOrderquery($salesorder_id);

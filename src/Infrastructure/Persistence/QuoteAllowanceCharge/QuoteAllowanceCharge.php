@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\QuoteAllowanceCharge;
 
-use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\{
+    AllowanceCharge\AllowanceCharge, Quote\Quote, Trait\RequireId};
 use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as QACR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -14,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: QACR::class)]
 class QuoteAllowanceCharge
 {
+    use RequireId;
+    
     #[BelongsTo(
         target: AllowanceCharge::class,
         nullable: false,
@@ -41,19 +43,10 @@ class QuoteAllowanceCharge
         private ?float $vat_or_tax = null,
     ) {
     }
-
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
+    
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'QuoteAllowanceCharge has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'QuoteAllowanceCharge');
     }
 
     public function isPersisted(): bool
@@ -86,9 +79,9 @@ class QuoteAllowanceCharge
         $this->quote = $quote;
     }
 
-    public function getQuoteId(): ?int
+    public function reqQuoteId(): int
     {
-        return $this->quote_id;
+        return $this->requireId($this->quote_id, 'Quote');
     }
 
     public function setQuoteId(int $quote_id): void
@@ -96,9 +89,9 @@ class QuoteAllowanceCharge
         $this->quote_id = $quote_id;
     }
 
-    public function getAllowanceChargeId(): ?int
+    public function reqAllowanceChargeId(): int
     {
-        return $this->allowance_charge_id;
+        return $this->requireId($this->allowance_charge_id, 'AllowanceCharge');
     }
 
     public function setAllowanceChargeId(int $allowance_charge_id): void

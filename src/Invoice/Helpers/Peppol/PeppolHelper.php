@@ -269,7 +269,7 @@ class PeppolHelper
             /** @var float $totals_of_line_items_array['total'] */
             $payableAmount = $totals_of_line_items_array['total'];
 
-            $so = $soR->repoSalesOrderUnloadedquery($invoice->getSoId());
+            $so = $soR->repoSalesOrderUnloadedquery((int) $invoice->getSoId());
 // Order Reference https://docs.peppol.eu/poacc/billing/3.0/bis/#orderref
             $client_purchase_order_id = '';
             if ($so && null !== $so->getClientPoNumber()) {
@@ -393,7 +393,7 @@ class PeppolHelper
             }
             if ($invoice->getSoId()) {
                 $sales_order = $soR->repoSalesOrderUnLoadedquery(
-                                                            $invoice->getSoId());
+                                                            (int) $invoice->getSoId());
                 if (null !== $sales_order) {
                     $client_po_number = $sales_order->getClientPoNumber();
                     if (null !== $client_po_number && !empty($client_po_number)) {
@@ -851,7 +851,7 @@ class PeppolHelper
     {
         if ($this->s->getSetting('include_delivery_period') == '1'
                             && !empty($this->s->getSetting('stand_in_code'))) {
-            if ($invoice->getDeliveryLocationId() > 0) {
+            if ((int) $invoice->getDeliveryLocationId() > 0) {
                 $delivery = $delRepo->repoInvoicequery(
                         (string) $invoice->getId());
                 if ((null !== $delivery)
@@ -1631,7 +1631,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         $sales_order_item_id = $item->getSoItemId();
         if ($sales_order_item_id) {
             $sales_order_item = $soiR->repoSalesOrderItemquery(
-                                                            $sales_order_item_id);
+                                                            (int) $sales_order_item_id);
             if (null !== $sales_order_item) {
                 $peppol_po_itemid = $sales_order_item->getPeppolPoItemid();
                 if (null !== $peppol_po_itemid) {
@@ -1658,7 +1658,7 @@ $country_helper->getCountryIdentificationCodeWithLeague(
         $sales_order_item_id = $item->getSoItemId();
         if ($sales_order_item_id) {
             $sales_order_item = $soiR->repoSalesOrderItemquery(
-                    $sales_order_item_id);
+                    (int) $sales_order_item_id);
             if (null !== $sales_order_item) {
                 $peppol_po_lineid = $sales_order_item->getPeppolPoLineid();
                 if (null !== $peppol_po_lineid) {

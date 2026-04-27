@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @var App\Invoice\Entity\QuoteItem $quoteitem
+ * @var App\Infrastructure\Persistence\QuoteItem\QuoteItem $quoteitem
  * @var Yiisoft\View\View $this
  * @var Yiisoft\Translator\Translator $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
@@ -41,7 +41,7 @@ if (null !== $productName) {
  <div class="mb3 form-group">
    <label for="quote_id" class="form-label" style="background:lightblue"><?= $translator->translate('quote'); ?></label>
    <?php  $actionNameQuote = 'quote/view';
-$actionArgumentsQuote = ['id' => $quoteitem->getQuote()?->getId()];
+$actionArgumentsQuote = ['id' => $quoteitem->getQuote()?->reqId()];
 $quoteNumber = $quoteitem->getQuote()?->getNumber();
 if (null !== $quoteNumber) {
     echo Html::a($quoteNumber, $urlGenerator->generate($actionNameQuote, $actionArgumentsQuote))->render();

@@ -8,7 +8,7 @@ use Yiisoft\Html\Html;
  * Related logic: see id="quote-to-quote" triggered by <a href="#quote-to-quote" data-bs-toggle="modal"  style="text-decoration:none">
  * Related logic: see views/quote/view.php
  *
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $clients
  * @var array $taxRates
@@ -26,7 +26,7 @@ use Yiisoft\Html\Html;
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="user_id" id="user_id" value="<?= $quote->getUserId(); ?>">
+                    <input type="hidden" name="user_id" id="user_id" value="<?= $quote->reqUserId(); ?>">
                     <div class="form-group">
                         <label for="create_quote_client_id"><?= $translator->translate('client'); ?></label>
                         <select name="create_quote_client_id" id="create_quote_client_id" class="form-control form-control-lg">

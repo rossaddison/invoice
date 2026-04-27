@@ -11,7 +11,7 @@ use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\ProductCustom\ProductCustom;
 use App\Invoice\Entity\ProductImage;
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Unit\Unit;
 use App\Invoice\Entity\InvItem;
@@ -590,7 +590,7 @@ final class ProductController extends BaseController
             qiaR $qiaR, qiaS $qiaS, FormHydrator $formHydrator): void
     {
         $quoteItem = new QuoteItem();
-        $form = new QuoteItemForm($quoteItem, $quote_id);
+        $form = new QuoteItemForm();
         $ajax_content = [
             'name' => $product->getProductName(),
             'quote_id' => $quote_id,
@@ -713,7 +713,7 @@ final class ProductController extends BaseController
                     $pR, $trR, $uR, $qiaR, $qiaS, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateQuote((string) $this->session->get('quote_id'),
+        $numberHelper->calculateQuote((int) $quote_id,
                 $acqR, $qiR, $qiaR, $qtrR, $qaR, $qR);
         return $this->responseFactory->createResponse(Json::encode($products));
     }

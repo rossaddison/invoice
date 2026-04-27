@@ -266,7 +266,7 @@ trait Email
                 $stream = ($this->sR->getSetting('pdf_stream_inv') == '1' ?
                     true : false);
                 $so = ($inv->getSoId() ? $soR->repoSalesOrderLoadedquery(
-                    $inv->getSoId()) : null);
+                   (int) $inv->getSoId()) : null);
                 // true => invoice ie. not quote
                 // If $stream is false => pdfhelper->generate_inv_pdf =>
                 // mpdfhelper->pdf_Create => filename returned

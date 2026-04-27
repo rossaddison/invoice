@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteAmount;
 
-use App\Invoice\Entity\QuoteAmount;
+use App\Infrastructure\Persistence\QuoteAmount\QuoteAmount;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Quote\QuoteRepository as QR;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -84,9 +84,9 @@ final class QuoteAmountRepository extends Select\Repository
     }
 
     /**
-     * @param string $quote_id
+     * @param int $quote_id
      */
-    public function repoQuoteAmountCount(string $quote_id): int
+    public function repoQuoteAmountCount(int $quote_id): int
     {
         return $this->select()
                       ->where(['quote_id' => $quote_id])
@@ -98,7 +98,7 @@ final class QuoteAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteAmountqueryTest(string $quote_id): ?QuoteAmount
+    public function repoQuoteAmountqueryTest(int $quote_id): ?QuoteAmount
     {
         $query = $this->select()
                       ->load('quote')
@@ -107,13 +107,13 @@ final class QuoteAmountRepository extends Select\Repository
     }
 
     /**
-     * @param string $quote_id
+     * @param int $quote_id
      *
      * @return QuoteAmount|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuoteAmountquery(string $quote_id): ?QuoteAmount
+    public function repoQuoteAmountquery(int $quote_id): ?QuoteAmount
     {
         $query = $this->select()
                       ->load('quote')
@@ -122,13 +122,13 @@ final class QuoteAmountRepository extends Select\Repository
     }
 
     /**
-     * @param string $quote_id
+     * @param int $quote_id
      *
      * @return QuoteAmount|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoQuotequery(string $quote_id): ?QuoteAmount
+    public function repoQuotequery(int $quote_id): ?QuoteAmount
     {
         $query = $this->select()
                       ->load('quote')

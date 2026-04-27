@@ -268,53 +268,50 @@ use Yiisoft\Html\Html;
                         <tbody>
                         <?php
                             /**
-                             * @var App\Invoice\Entity\Quote $quote
+                             * @var App\Infrastructure\Persistence\Quote\Quote $quote
                              */
                             foreach ($quotes as $quote) { ?>
                             <tr>
                                 <td>
-                                <?php if (
-                                null !== $statusId = $quote->getStatusId()) { ?>
+                                <?php $statusId = $quote->reqStatusId(); ?>
                                     <span class="badge text-bg-<?= $qR->getSpecificStatusArrayClass(
                                             (string) $statusId); ?>">
                                         <?= $qR->getSpecificStatusArrayLabel(
                                                 (string) $statusId); ?>
                                     </span>
-                                <?php } ?>
                                 </td>
                                 <td>
                                     <?= $quote->getDateCreated()->format('Y-m-d'); ?>
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate('quote/view',
-                                            ['id' => $quote->getId()]); ?>"
+                                            ['id' => $quote->reqId()]); ?>"
                                        title="<?=  (($quote->getNumber() ?? '#') ?:
-                                                    ($quote->getId() ?? '#')); ?>"
+                                                    ($quote->reqId() ?: '#')); ?>"
                                        class="btn btn-default"
                                        style="text-decoration:none">
-                                            <?= (($quote->getNumber() ?? '#') ?:
-                                                    ($quote->getId() ?? '#')); ?>
+                                            <?= $quote->getNumber() ?? (string) $quote->reqId(); ?>
                                     </a>
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate('client/view',
-                                            ['id' => $quote->getClientId()]); ?>"
+                                            ['id' => $quote->reqClientId()]); ?>"
                                        title="<?=  (($quote->getNumber() ?? '#') ?:
-                                            ($quote->getId() ?? '#')); ?>"
+                                            ($quote->reqId() ?: '#')); ?>"
                                        class="btn btn-default"
                                        style="text-decoration:none">
             <?= Html::encode($clientHelper->formatClient($quote->getClient())); ?>
                                     </a>
                                 </td>
                                 <td class="amount">
-<?php $quote_amount = (($qaR->repoQuoteAmountCount((string) $quote->getId()) > 0) ?
-        $qaR->repoQuotequery((string) $quote->getId()) : null) ?>
+<?php $quote_amount = (($qaR->repoQuoteAmountCount($quote->reqId()) > 0) ?
+        $qaR->repoQuotequery($quote->reqId()) : null) ?>
 <?= $s->formatCurrency(null !== $quote_amount ? $quote_amount->getTotal() : 0.00) ?>
                                 </td>
                                 <td style="text-align: center;">
                                     <a href="<?= $urlGenerator->generate(
                                             'quote/pdfDashboardIncludeCf',
-                                            ['id' => $quote->getId()]); ?>"
+                                            ['id' => $quote->reqId()]); ?>"
                                        title="<?= $translator->translate('download.pdf'); ?>"
                                        class="btn btn-default"
                                        style="text-decoration:none">
@@ -324,7 +321,7 @@ use Yiisoft\Html\Html;
                                 <td style="text-align: center;">
                                     <a href="<?= $urlGenerator->generate(
                                             'quote/pdfDashboardExcludeCf',
-                                            ['id' => $quote->getId()]); ?>"
+                                            ['id' => $quote->reqId()]); ?>"
                                        title="<?= $translator->translate(
                                                'download.pdf'); ?>"
                                        class="btn btn-default"
@@ -590,10 +587,10 @@ use Yiisoft\Html\Html;
                                     </span>
                                     </td>
                                     <td>
-                                    <?php  if ($task->getProjectId() !== null) { ?>
+                                    <?php  if ($task->getProject() !== null) { ?>
                                             <a href="<?= $urlGenerator->generate(
                                                     'project/view',
-                                         ['id' => $task->getProjectId()]); ?>">
+                                         ['id' => $task->reqProjectId()]); ?>">
                                     <?= Html::encode($task->getName()); ?></a>
                                         <?php } ?>
                                     </td>

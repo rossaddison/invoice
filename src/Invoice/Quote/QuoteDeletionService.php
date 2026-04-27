@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote;
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
-use App\Invoice\Entity\QuoteCustom;
-use App\Invoice\Entity\QuoteItem;
-use App\Invoice\Entity\QuoteItemAllowanceCharge;
-use App\Invoice\Entity\QuoteTaxRate;
+use App\Infrastructure\Persistence\QuoteCustom\QuoteCustom;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
+use App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge;
+use App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate;
 use App\Invoice\QuoteAllowanceCharge\QuoteAllowanceChargeRepository as ACQR;
 use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository as ACQIR;
 use App\Invoice\QuoteAmount\QuoteAmountRepository as QAR;
@@ -40,11 +40,8 @@ final class QuoteDeletionService
 
     public function delete(Quote $quote): void
     {
-        $quoteId = $quote->getId();
-        if (null==$quoteId) {
-            return;
-        }
-        
+        $quoteId = $quote->reqId();
+
         $this->deleteItems($quoteId);
         $this->deleteQuoteAmount($quoteId);
         $this->deleteTaxes($quoteId);
@@ -52,11 +49,11 @@ final class QuoteDeletionService
         $this->deleteAllowances($quoteId);
     }
 
-    private function deleteItems(string $quoteId): void
+    private function deleteItems(int $quoteId): void
     {
         /** @var QuoteItem $item */
         foreach ($this->itemRepo->repoQuoteItemIdquery($quoteId) as $item) {
-            $itemId = $item->getId();
+            $itemId = $item->reqId();
             
             if (null!== ($amount = $this->itemAmountRepo->repoQuoteItemAmountquery($itemId))) {
                 $this->itemAmountRepo->delete($amount);
@@ -71,7 +68,7 @@ final class QuoteDeletionService
         }
     }
 
-    private function deleteQuoteAmount(string $quoteId): void
+    private function deleteQuoteAmount(int $quoteId): void
     {
         if ($this->amountRepo->repoQuoteAmountCount($quoteId) > 0) {
             $amount = $this->amountRepo->repoQuotequery($quoteId);
@@ -81,7 +78,7 @@ final class QuoteDeletionService
         }
     }
 
-    private function deleteTaxes(string $quoteId): void
+    private function deleteTaxes(int $quoteId): void
     {
         /** @var QuoteTaxRate $qtr */
         foreach ($this->taxRepo->repoQuotequery($quoteId) as $qtr) {
@@ -89,7 +86,7 @@ final class QuoteDeletionService
         }
     }
 
-    private function deleteCustomFields(string $quoteId): void
+    private function deleteCustomFields(int $quoteId): void
     {
         /** @var QuoteCustom $qc */
         foreach ($this->customRepo->repoFields($quoteId) as $qc) {
@@ -97,7 +94,7 @@ final class QuoteDeletionService
         }
     }
 
-    private function deleteAllowances(string $quoteId): void
+    private function deleteAllowances(int $quoteId): void
     {
         /** @var QuoteAllowanceCharge $qac */
         foreach ($this->allowanceRepo->repoACQquery($quoteId) as $qac) {

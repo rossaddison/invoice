@@ -34,13 +34,13 @@ final class TaskForm extends FormModel
     public static function show(Task $task): self
     {
         $form = new self();
-        $form->project_id = (int) $task->getProjectId();
+        $form->project_id = $task->reqProjectId();
         $form->name = $task->getName();
         $form->description = $task->getDescription();
         $form->price = $task->getPrice();
         $form->finish_date = $task->getFinishDate();
         $form->status = $task->getStatus();
-        $form->tax_rate_id = (int) $task->getTaxRateId();
+        $form->tax_rate_id = $task->reqTaxRateId();
         return $form;
     }
 

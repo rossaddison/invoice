@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote\Trait;
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use App\Invoice\Quote\QuoteRepository as QR;
 
 trait OptionsData
@@ -16,7 +16,7 @@ trait OptionsData
         // user accounts
         $quotes = $qR->findAllPreloaded();
         /**
-         * @var Quote $quote
+         * @var \App\Infrastructure\Persistence\Quote\Quote $quote
          */
         foreach ($quotes as $quote) {
             $client = $quote->getClient();
@@ -36,7 +36,7 @@ trait OptionsData
         $clientGroup = [];
         $quotes = $qR->findAllPreloaded();
         /**
-         * @var Quote $quote
+         * @var \App\Infrastructure\Persistence\Quote\Quote $quote
          */
         foreach ($quotes as $quote) {
             $client = $quote->getClient();
@@ -55,7 +55,7 @@ trait OptionsData
         $optionsDataQuoteNumbers = [];
         $quotes = $qR->findAllPreloaded();
         /**
-         * @var Quote $quote
+         * @var \App\Infrastructure\Persistence\Quote\Quote $quote
          */
         foreach ($quotes as $quote) {
             $quoteNumber = $quote->getNumber();

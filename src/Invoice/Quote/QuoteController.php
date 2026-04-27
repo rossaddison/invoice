@@ -8,7 +8,9 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Widget\FormFields;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Invoice\Entity\{Quote, QuoteItem, QuoteTaxRate};
+use App\Infrastructure\Persistence\Quote\Quote;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
+use App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate;
 use App\User\UserService;
 use App\User\User;
 use App\Invoice\{
@@ -152,9 +154,9 @@ final class QuoteController extends BaseController
             Quote $quote, FormHydrator $formHydrator): void
     {
         $quoteTaxRate = new QuoteTaxRate();
-        $quoteTaxRateForm = new QuoteTaxRateForm($quoteTaxRate);
+        $quoteTaxRateForm = new QuoteTaxRateForm();
         $quote_tax_rate = [];
-        $quote_tax_rate['quote_id'] = $quote->getId();
+        $quote_tax_rate['quote_id'] = $quote->reqId();
         if (null !== $taxRate) {
             $quote_tax_rate['tax_rate_id'] = $taxRate->reqId();
         } else {
@@ -209,16 +211,16 @@ final class QuoteController extends BaseController
     }
     
     public function generateQuoteNumberIfApplicable(
-        string $quote_id, QR $qR, SR $sR, GR $gR): void
+        int $quote_id, QR $qR, SR $sR, GR $gR): void
     {
         $quote = $qR->repoQuoteUnloadedquery($quote_id);
-        if (!empty($quote) && ($quote->getStatusId() == 1)
+        if (!empty($quote) && ($quote->reqStatusId() == 1)
             && ($quote->getNumber() == '')) {
             // Generate new quote number if applicable
             if ((int) $sR->getSetting(
                 'generate_quote_number_for_draft') === 0) {
                 $quote_number = (string) $qR->getQuoteNumber(
-                    $quote->getGroupId(), $gR);
+                    $quote->reqGroupId(), $gR);
                 // Set new quote number and save
                 $quote->setNumber($quote_number);
                 $qR->save($quote);
@@ -233,8 +235,8 @@ final class QuoteController extends BaseController
         bool $unloaded = false,
     ): ?Quote {
         if ($id) {
-            return $unloaded ? $quoteRepo->repoQuoteUnLoadedquery((string) $id)
-                : $quoteRepo->repoQuoteLoadedquery((string) $id);
+            return $unloaded ? $quoteRepo->repoQuoteUnLoadedquery($id)
+                : $quoteRepo->repoQuoteLoadedquery($id);
         }
         return null;
     }
@@ -250,7 +252,7 @@ final class QuoteController extends BaseController
         return $quoteRepo->findAllWithStatus($status);
     }
 
-    public function quoteCustomValues(string $quote_id, QCR $qcR): array
+    public function quoteCustomValues(int $quote_id, QCR $qcR): array
     {
         // Get all the custom fields that have been registered with this
         // quote on creation, retrieve existing values via repo, and populate
@@ -272,7 +274,7 @@ final class QuoteController extends BaseController
     private function quoteItem(int $id, QIR $quoteitemRepository): ?QuoteItem
     {
         if ($id) {
-            $quoteitem = $quoteitemRepository->repoQuoteItemquery((string) $id);
+            $quoteitem = $quoteitemRepository->repoQuoteItemquery($id);
             if (null !== $quoteitem) {
                 return $quoteitem;
             }
@@ -285,8 +287,7 @@ final class QuoteController extends BaseController
         ?QuoteTaxRate
     {
         if ($id) {
-            $quotetaxrate = $quotetaxrateRepository->repoQuoteTaxRatequery(
-                (string) $id);
+            $quotetaxrate = $quotetaxrateRepository->repoQuoteTaxRatequery($id);
             if (null !== $quotetaxrate) {
                 return $quotetaxrate;
             }
@@ -308,7 +309,7 @@ final class QuoteController extends BaseController
             'quote_tax_rate_amount' => 0.00,
         ];
         $quoteTaxRate = new QuoteTaxRate();
-        $ajax_content = new QuoteTaxRateForm($quoteTaxRate);
+        $ajax_content = new QuoteTaxRateForm();
         if ($formHydrator->populateAndValidate($ajax_content, $ajax_body)) {
             $this->quote_tax_rate_service->saveQuoteTaxRate($quoteTaxRate,
                 $ajax_body);
@@ -337,18 +338,18 @@ final class QuoteController extends BaseController
      * invoices.
      */
     private function rbacObserver(Quote $quote, UCR $ucR, UIR $uiR) : bool {
-        $statusId = $quote->getStatusId();
-        if (null!==$statusId) {
+        $statusId = $quote->reqStatusId();
+        if ($statusId > 0) {
             // has observer role
             if ($this->userService->hasPermission(Permissions::VIEW_INV)
                 && !($this->userService->hasPermission(Permissions::EDIT_INV))
                 // the quote  is not a draft i.e. has been sent
                 && !($statusId === 1)
                 // the quote is intended for the current user
-                && ($quote->getUserId() === $this->userService->getUser()?->getId())
+                && ((string) $quote->reqUserId() === $this->userService->getUser()?->getId())
                 // the quote client is associated with the above user
-                && ($ucR->repoUserClientqueryCount($quote->getUserId(), $quote->getClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery($quote->getUserId());
+                && ($ucR->repoUserClientqueryCount((string) $quote->reqUserId(), (string) $quote->reqClientId()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery((string) $quote->reqUserId());
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {
                     return true;

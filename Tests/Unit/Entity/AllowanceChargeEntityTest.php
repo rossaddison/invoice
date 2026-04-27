@@ -40,7 +40,7 @@ class AllowanceChargeEntityTest extends Unit
         $allowanceCharge = new AllowanceCharge();
         
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('AllowanceCharge has no ID (not persisted yet)');
+        $this->expectExceptionMessage('AllowanceCharge not persisted');
         $allowanceCharge->reqId();
     }
 

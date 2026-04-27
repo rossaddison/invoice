@@ -78,8 +78,8 @@ $vat = $s->getSetting('enable_vat_registration');
                 // 3=>Client Agreed to Terms
                 // 8=>Rejected
                 if (in_array($salesorder->getStatusId(),
-                    [2, 8]) && $salesorder->getQuoteId() !== 0
-                        && $salesorder->getInvId() === 0) : ?>
+                    [2, 8]) && $salesorder->reqQuoteId() !== 0
+                        && !$salesorder->hasLinkedInvoice()) : ?>
                 <a href="<?= $urlGenerator->generate('salesorder/agreeToTerms',
                     ['url_key' => $salesorder_url_key]); ?>"
                    class="btn btn-success"
@@ -91,8 +91,8 @@ $vat = $s->getSetting('enable_vat_registration');
                 </a>
             <?php endif; ?>
             <?php if (in_array($salesorder->getStatusId(), [2])
-                    && $salesorder->getQuoteId() !== 0
-                    && $salesorder->getInvId() === 0) :  ?>
+                    && $salesorder->reqQuoteId() !== 0
+                    && !$salesorder->hasLinkedInvoice()) :  ?>
                 <a href="<?= $urlGenerator->generate('salesorder/reject',
                         ['url_key' => $salesorder_url_key]); ?>"
                    class="btn btn-danger">
@@ -101,8 +101,8 @@ $vat = $s->getSetting('enable_vat_registration');
                 </a>
             <?php endif; ?>
             <?php if (in_array($salesorder->getStatusId(), [3])
-                    && $salesorder->getQuoteId() !== 0
-                    && $salesorder->getInvId() === 0) :  ?>
+                    && $salesorder->reqQuoteId() !== 0
+                    && !$salesorder->hasLinkedInvoice()) :  ?>
                 <label class="btn btn-success">
              <?= $translator->translate('salesorder.client.confirmed.terms'); ?>
                 </label>
@@ -346,7 +346,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                             $item->getDiscountAmount()); ?>
                                 </td>
 <?php
-    $query = $soiaR->repoSalesOrderItemAmountquery((string) 
+    $query = $soiaR->repoSalesOrderItemAmountquery(
         $item->reqId()
     );
 ?>
@@ -366,7 +366,7 @@ $vat = $s->getSetting('enable_vat_registration');
                              * @var SalesOrderItemAllowanceCharge $salesOrderItemAllowanceCharge
                              */
                             foreach (
-                                $acsoiR->repoSalesOrderItemquery((string) 
+                                $acsoiR->repoSalesOrderItemquery(
                                     $item->reqId()
                                 )
                                 as $salesOrderItemAllowanceCharge

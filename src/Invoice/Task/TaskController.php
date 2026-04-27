@@ -8,7 +8,7 @@ use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Task\Task;
 use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
 use App\Invoice\InvItemAmount\InvItemAmountService as iiaS;
@@ -250,7 +250,7 @@ final class TaskController extends BaseController
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
         $task_ids = ($select_items['task_ids'] ?: []);
-        $inv_id = (string) $select_items['inv_id'];
+        $inv_id = (int) $select_items['inv_id'];
         // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of tasks.
         $tasks = $taskR->findinTasks($task_ids);
         $numberHelper = new NumberHelper($this->sR);
@@ -259,17 +259,19 @@ final class TaskController extends BaseController
         /** @var Task $task */
         foreach ($tasks as $task) {
             $task->setPrice((float) $numberHelper->formatAmount($task->getPrice()));
-            $this->saveTaskLookupItemInv($order, $task, $inv_id, $taskR, $trR, $iiaR, $iiR, $formHydrator);
+            $this->saveTaskLookupItemInv($order, $task, $inv_id, $taskR, $trR,
+                $iiaR, $iiR, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateInv((string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+        $numberHelper->calculateInv((string) $this->session->get('inv_id'), $aciR,
+            $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
         return $this->factory->createResponse(Json::encode($tasks));
     }
 
     /**
      * @param int $order
      * @param Task $task
-     * @param string $inv_id
+     * @param int $inv_id
      * @param tR $taskR
      * @param trR $trR
      * @param iiaR $iiaR
@@ -277,15 +279,15 @@ final class TaskController extends BaseController
      * @param FormHydrator $formHydrator
      */
     private function saveTaskLookupItemInv(int $order, Task $task,
-            string $inv_id, tR $taskR, trR $trR, iiaR $iiaR, iiR $iiR,
+            int $inv_id, tR $taskR, trR $trR, iiaR $iiaR, iiR $iiR,
             FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
-        $form = new InvItemForm($invItem, (int) $inv_id);
+        $form = new InvItemForm($invItem, $inv_id);
         $ajax_content = [
             'name' => $task->getName(),
             'inv_id' => $inv_id,
-            'tax_rate_id' => $task->getTaxRateId(),
+            'tax_rate_id' => $task->reqTaxRateId(),
             'task_id' => $task->reqId(),
             'product_id' => null,
             'date_added' => new \DateTimeImmutable('now'),
@@ -299,7 +301,7 @@ final class TaskController extends BaseController
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->invitemService->addInvItemTask($invItem, $ajax_content,
-                    $inv_id, $taskR, $trR, new iiaS($iiaR, $iiR), $iiaR);
+                    (string) $inv_id, $taskR, $trR, new iiaS($iiaR, $iiR), $iiaR);
         }
     }
 
@@ -333,7 +335,7 @@ final class TaskController extends BaseController
         $select_items = $request->getQueryParams();
         /** @var array $task_ids */
         $task_ids = ($select_items['task_ids'] ?: []);
-        $quote_id = (string) $select_items['quote_id'];
+        $quote_id = (int) $select_items['quote_id'];
         // Use Spiral||Cycle\Database\Injection\Parameter to build 'IN' array of tasks.
         $tasks = $taskR->findinTasks($task_ids);
         $numberHelper = new NumberHelper($this->sR);
@@ -352,21 +354,23 @@ final class TaskController extends BaseController
     /**
      * @param int $order
      * @param Task $task
-     * @param string $quote_id
+     * @param int $quote_id
      * @param tR $taskR
      * @param trR $trR
      * @param qiaR $qiaR
      * @param qiaS $qiaS
      * @param FormHydrator $formHydrator
      */
-    private function saveTaskLookupItemQuote(int $order, Task $task, string $quote_id, tR $taskR, trR $trR, qiaR $qiaR, qiaS $qiaS, FormHydrator $formHydrator): void
+    private function saveTaskLookupItemQuote(int $order, Task $task, int $quote_id,
+            tR $taskR, trR $trR, qiaR $qiaR, qiaS $qiaS,
+            FormHydrator $formHydrator): void
     {
         $quoteItem = new QuoteItem();
-        $form = new QuoteItemForm($quoteItem, $quote_id);
+        $form = new QuoteItemForm();
         $ajax_content = [
             'name' => $task->getName(),
             'quote_id' => $quote_id,
-            'tax_rate_id' => $task->getTaxRateId(),
+            'tax_rate_id' => $task->reqTaxRateId(),
             'task_id' => $task->reqId(),
             'product_id' => null,
             'date_added' => new \DateTimeImmutable('now'),

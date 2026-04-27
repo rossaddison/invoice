@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\QuoteItem;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
 use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\Quote\QuoteRepository as QR;
@@ -76,7 +76,7 @@ final class QuoteItemController extends BaseController
         // This function is used
         $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = new QuoteItem();
-        $form = new QuoteItemForm($quoteItem, $quote_id);
+        $form = QuoteItemForm::show($quoteItem, (int) $this->session->get('quote_id'));
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'quoteitem/addProduct',
@@ -125,7 +125,7 @@ final class QuoteItemController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = new QuoteItem();
-        $form = new QuoteItemForm($quoteItem, $quote_id);
+        $form = QuoteItemForm::show($quoteItem, (int) $this->session->get('quote_id'));
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'quoteitem/addTask',
@@ -143,7 +143,7 @@ final class QuoteItemController extends BaseController
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                 $body = $request->getParsedBody() ?? '';
                 if (is_array($body)) {
-                    $this->quoteitemService->addQuoteItemTask($quoteItem, $body, $quote_id, $taskR, $qiar, $qias, $trR);
+                    $this->quoteitemService->addQuoteItemTask($quoteItem, $body, (int) $quote_id, $taskR, $qiar, $qias, $trR);
                     $this->flashMessage('success', $this->translator->translate('record.successfully.created'));
                     return $this->webService->getRedirectResponse('quote/view', ['id' => $quote_id]);
                 }
@@ -181,7 +181,7 @@ final class QuoteItemController extends BaseController
         $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = $this->quoteitem($currentRoute, $qiR);
         if (null !== $quoteItem) {
-            $form = new QuoteItemForm($quoteItem, $quote_id);
+            $form = QuoteItemForm::show($quoteItem, $quoteItem->reqQuoteId());
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'quoteitem/editProduct',
@@ -208,7 +208,7 @@ final class QuoteItemController extends BaseController
                             /**
                              * @psalm-suppress PossiblyNullReference getId
                              */
-                            $request_quote_item = (int) $this->quoteitem($currentRoute, $qiR)->getId();
+                            $request_quote_item = $this->quoteitem($currentRoute, $qiR)->reqId();
                             $this->quoteitemService->saveQuoteItemAmount(
                                 $request_quote_item,
                                 $quantity,
@@ -254,7 +254,7 @@ final class QuoteItemController extends BaseController
         $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = $this->quoteitem($currentRoute, $qiR);
         if (null !== $quoteItem) {
-            $form = new QuoteItemForm($quoteItem, $quote_id);
+            $form = QuoteItemForm::show($quoteItem, $quoteItem->reqQuoteId());
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'quoteitem/editTask',
@@ -279,7 +279,7 @@ final class QuoteItemController extends BaseController
                             /**
                              * @psalm-suppress PossiblyNullReference getId
                              */
-                            $request_quote_item = (int) $this->quoteitem($currentRoute, $qiR)->getId();
+                            $request_quote_item = $this->quoteitem($currentRoute, $qiR)->reqId();
                             $this->quoteitemService->saveQuoteItemAmount(
                                 $request_quote_item,
                                 $quantity,
@@ -324,7 +324,7 @@ final class QuoteItemController extends BaseController
     {
         $quote_item = $this->quoteitem($currentRoute, $qiR);
         if ($quote_item) {
-            if ($qiR->repoQuoteItemCount($quote_item->getId()) === 1) {
+            if ($qiR->repoQuoteItemCount($quote_item->reqId()) === 1) {
                 $this->quoteitemService->deleteQuoteItem($quote_item);
             }
             return $this->webViewRenderer->render('quote/index');
@@ -371,16 +371,16 @@ final class QuoteItemController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $quoteItem = $this->quoteitem($currentRoute, $qiR);
         if ($quoteItem) {
-            $form = new QuoteItemForm($quoteItem, $quoteItem->getQuoteId());
+            $form = QuoteItemForm::show($quoteItem, $quoteItem->reqQuoteId());
             $parameters = [
                 'title' => $this->translator->translate('view'),
-                'action' => ['quoteitem/edit', ['id' => $quoteItem->getId()]],
+                'action' => ['quoteitem/edit', ['id' => $quoteItem->reqId()]],
                 'errors' => [],
                 'form' => $form,
                 'tax_rates' => $trR->findAllPreloaded(),
                 'products' => $pR->findAllPreloaded(),
                 'units' => $uR->findAllPreloaded(),
-                'quoteitem' => $qiR->repoQuoteItemquery($quoteItem->getId()),
+                'quoteitem' => $qiR->repoQuoteItemquery($quoteItem->reqId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
@@ -396,7 +396,7 @@ final class QuoteItemController extends BaseController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            $quoteitem = $qiR->repoQuoteItemquery($id);
+            $quoteitem = $qiR->repoQuoteItemquery((int) $id);
             if ($quoteitem) {
                 return $quoteitem;
             }

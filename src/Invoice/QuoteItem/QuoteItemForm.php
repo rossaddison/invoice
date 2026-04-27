@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItem;
 
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\GreaterThan;
@@ -32,23 +32,27 @@ final class QuoteItemForm extends FormModel
     private ?int $order = null;
     private ?string $product_unit = '';
     private ?int $product_unit_id = null;
+    private ?int $quote_id = null;
 
-    public function __construct(QuoteItem $quoteItem, private readonly ?string $quote_id)
+    public static function show(QuoteItem $quoteItem, int $quoteId): self
     {
-        $this->tax_rate_id = $quoteItem->getTaxRateId();
-        $this->product_id = $quoteItem->getProductId();
-        $this->task_id = $quoteItem->getTaskId();
-        $this->name = $quoteItem->getName();
-        $this->description = $quoteItem->getDescription();
-        $this->quantity = $quoteItem->getQuantity();
-        $this->price = $quoteItem->getPrice();
-        $this->discount_amount = $quoteItem->getDiscountAmount();
-        $this->order = $quoteItem->getOrder();
-        $this->product_unit = $quoteItem->getProductUnit();
-        $this->product_unit_id = (int) $quoteItem->getProductUnitId();
+        $form = new self();
+        $form->tax_rate_id = (string) $quoteItem->reqTaxRateId();
+        $form->product_id = null !== ($product = $quoteItem->getProduct()) ? (string) $product->reqId() : null;
+        $form->task_id = null !== ($task = $quoteItem->getTask()) ? (string) $task->reqId() : null;
+        $form->name = $quoteItem->getName();
+        $form->description = $quoteItem->getDescription();
+        $form->quantity = $quoteItem->getQuantity();
+        $form->price = $quoteItem->getPrice();
+        $form->discount_amount = $quoteItem->getDiscountAmount();
+        $form->order = $quoteItem->getOrder();
+        $form->product_unit = $quoteItem->getProductUnit();
+        $form->product_unit_id = $quoteItem->getProductUnitId();
+        $form->quote_id = $quoteId;
+        return $form;
     }
     
-    public function getQuoteId(): ?string
+    public function getQuoteId(): ?int
     {
         return $this->quote_id;
     }

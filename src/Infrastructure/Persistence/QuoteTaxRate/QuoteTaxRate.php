@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Invoice\Entity;
+namespace App\Infrastructure\Persistence\QuoteTaxRate;
 
-use App\Infrastructure\Persistence\TaxRate\TaxRate;
+use App\Infrastructure\Persistence\{Quote\Quote, TaxRate\TaxRate, Trait\RequireId};
 use App\Invoice\QuoteTaxRate\QuoteTaxRateRepository as QTR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -14,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 class QuoteTaxRate
 {
+    use RequireId;
+    
     #[BelongsTo(target: Quote::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Quote $quote = null;
 
@@ -57,10 +59,15 @@ class QuoteTaxRate
     {
         $this->tax_rate = $tax_rate;
     }
-
-    public function getId(): string
+    
+    public function reqId(): int
     {
-        return (string) $this->id;
+        return $this->requireId($this->id, 'QuoteTaxRate');
+    }
+
+    public function isPersisted(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -68,9 +75,9 @@ class QuoteTaxRate
         $this->id = $id;
     }
 
-    public function getQuoteId(): string
+    public function reqQuoteId(): int
     {
-        return (string) $this->quote_id;
+        return $this->requireId($this->quote_id, 'Quote');
     }
 
     public function setQuoteId(int $quote_id): void
@@ -78,9 +85,9 @@ class QuoteTaxRate
         $this->quote_id = $quote_id;
     }
 
-    public function getTaxRateId(): string
+    public function reqTaxRateId(): int
     {
-        return (string) $this->tax_rate_id;
+        return $this->requireId($this->tax_rate_id, 'TaxRate');
     }
 
     public function setTaxRateId(int $tax_rate_id): void

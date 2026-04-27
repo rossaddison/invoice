@@ -70,9 +70,8 @@ trait Peppol
                 $client_id = $invoice->getClient()?->reqId();
                 $delLocId = $invoice->getDeliveryLocationId();
                 if (null !== $client_id) {
-                    if ($this->peppolClientFullySetup(
-                            (string) $client_id, $cpR)) {
-                        $delloc = $dlR->repoDeliveryLocationquery($delLocId);
+                    if ($this->peppolClientFullySetup((string) $client_id, $cpR)) {
+                        $delloc = $dlR->repoDeliveryLocationquery((int) $delLocId);
                         if (null !== $delloc) {
                             $inv_amount = $invoice->getInvAmount();
                             $peppolhelper = new PeppolHelper(

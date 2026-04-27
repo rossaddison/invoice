@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Command\Invoice;
 
-use App\Invoice\Entity\Quote;
-use App\Invoice\Entity\QuoteAmount;
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\Quote\Quote;
+use App\Infrastructure\Persistence\QuoteAmount\QuoteAmount;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
-use App\Invoice\Entity\QuoteTaxRate;
+use App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

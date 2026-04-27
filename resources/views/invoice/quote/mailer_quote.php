@@ -8,7 +8,7 @@ use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Entity\UserInv $userInv
  * @var App\Invoice\Quote\MailerQuoteForm $form
  * @var Yiisoft\View\View $this

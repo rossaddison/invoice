@@ -90,11 +90,11 @@ final class QuoteAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return QuoteAllowanceCharge|null
      */
-    public function repoQuoteAllowanceChargeLoadedquery(string $id): ?QuoteAllowanceCharge
+    public function repoQuoteAllowanceChargeLoadedquery(int $id): ?QuoteAllowanceCharge
     {
         $query = $this->select()
                       ->load('allowance_charge')
@@ -131,10 +131,10 @@ final class QuoteAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $quote_id
+     * @param int $quote_id
      * @psalm-return EntityReader
      */
-    public function repoACQquery(string $quote_id): EntityReader
+    public function repoACQquery(int $quote_id): EntityReader
     {
         $query = $this->select()
                       ->load('allowance_charge')
@@ -142,7 +142,7 @@ final class QuoteAllowanceChargeRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function getPackHandleShipTotal(string $quote_id): array
+    public function getPackHandleShipTotal(int $quote_id): array
     {
         $all = $this->repoACQquery($quote_id);
         $totalAmount = 0.00;
@@ -166,17 +166,17 @@ final class QuoteAllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);
         return $query->count();
     }
 
-    public function repoACQCount(string $quote_id): int
+    public function repoACQCount(int $quote_id): int
     {
         $query = $this->select()
                       ->where(['quote_id' => $quote_id]);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Quote;
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
@@ -13,8 +13,8 @@ final class QuoteForm extends FormModel
 {
     private ?string $number = '';
     private mixed $date_created = '';
-    private ?string $inv_id = null;
-    private ?string $so_id = null;
+    private ?int $inv_id = null;
+    private ?int $so_id = null;
 
     #[Required]
     private ?int $group_id = null;
@@ -29,20 +29,22 @@ final class QuoteForm extends FormModel
 
     private ?int $delivery_location_id = null;
 
-    public function __construct(Quote $quote)
+    public static function show(Quote $quote): self
     {
-        $this->number = $quote->getNumber();
-        $this->date_created = $quote->getDateCreated();
-        $this->inv_id = $quote->getInvId();
-        $this->so_id = $quote->getSoId();
-        $this->group_id = (int) $quote->getGroupId();
-        $this->client_id = (int) $quote->getClientId();
-        $this->status_id = $quote->getStatusId();
-        $this->discount_amount = $quote->getDiscountAmount();
-        $this->url_key = $quote->getUrlKey();
-        $this->password = $quote->getPassword();
-        $this->notes = $quote->getNotes();
-        $this->delivery_location_id = (int) $quote->getDeliveryLocationId();
+        $form = new self();
+        $form->number = $quote->getNumber();
+        $form->date_created = $quote->getDateCreated();
+        $form->inv_id = $quote->getInvId();
+        $form->so_id = $quote->getSoId();
+        $form->group_id = $quote->reqGroupId();
+        $form->client_id = $quote->reqClientId();
+        $form->status_id = $quote->reqStatusId();
+        $form->discount_amount = $quote->getDiscountAmount();
+        $form->url_key = $quote->getUrlKey();
+        $form->password = $quote->getPassword();
+        $form->notes = $quote->getNotes();
+        $form->delivery_location_id = $quote->getDeliveryLocationId();
+        return $form;
     }
 
     public function getDateCreated(): string|DateTimeImmutable|null
@@ -58,14 +60,12 @@ final class QuoteForm extends FormModel
         return $this->number;
     }
 
-    public function getInvId(): ?string
+    public function getInvId(): ?int
     {
         return $this->inv_id;
     }
 
-    // The Entities ie. Entity/Quote.php have return type string => return type strings in the form
-    // get => string ;
-    public function getSoId(): ?string
+    public function getSoId(): ?int
     {
         return $this->so_id;
     }

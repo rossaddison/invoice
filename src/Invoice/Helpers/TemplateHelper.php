@@ -306,56 +306,56 @@ final readonly class TemplateHelper
                         break;
                         // quote
                     case 'quote_item_subtotal':
-                        $quote_amount = $qaR->repoQuoteAmountCount($pk) > 0 ? $qaR->repoQuotequery($pk) : null;
+                        $quote_amount = $qaR->repoQuoteAmountCount((int) $pk) > 0 ? $qaR->repoQuotequery((int) $pk) : null;
                         if ($quote_amount) {
                             $replace = $this->n->formatCurrency($quote_amount->getItemSubtotal());
                         }
                         break;
                     case 'quote_tax_total':
-                        $quote_amount = $qaR->repoQuoteAmountCount($pk) > 0 ? $qaR->repoQuotequery($pk) : null;
+                        $quote_amount = $qaR->repoQuoteAmountCount((int) $pk) > 0 ? $qaR->repoQuotequery((int) $pk) : null;
                         if ($quote_amount) {
                             $replace = $this->n->formatCurrency($quote_amount->getTaxTotal());
                         }
                         break;
                     case 'quote_item_discount':
-                        $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteUnloadedquery($pk) : null;
+                        $quote = $qR->repoCount((int) $pk) > 0 ? $qR->repoQuoteUnloadedquery((int) $pk) : null;
                         if ($quote) {
                             $replace = $this->n->formatCurrency($quote->getDiscountAmount());
                         }
                         break;
                     case 'quote_total':
-                        $quote_amount = $qaR->repoQuoteAmountCount($pk) > 0 ? $qaR->repoQuotequery($pk) : null;
+                        $quote_amount = $qaR->repoQuoteAmountCount((int) $pk) > 0 ? $qaR->repoQuotequery((int) $pk) : null;
                         if ($quote_amount) {
                             $replace = $this->n->formatCurrency($quote_amount->getTotal());
                         }
                         break;
                     case 'quote_date_created':
-                        $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteUnloadedquery($pk) : null;
+                        $quote = $qR->repoCount((int) $pk) > 0 ? $qR->repoQuoteUnloadedquery((int) $pk) : null;
                         if ($quote) {
                             $replace = $quote->getDateCreated()->format($this->d->style());
                         }
                         break;
                     case 'quote_date_expires':
-                        $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteUnloadedquery($pk) : null;
+                        $quote = $qR->repoCount((int) $pk) > 0 ? $qR->repoQuoteUnloadedquery((int) $pk) : null;
                         if ($quote) {
                             $replace = $quote->getDateExpires()->format($this->d->style());
                         }
                         break;
                     case 'quote_guest_url':
-                        $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteUnloadedquery($pk) : null;
+                        $quote = $qR->repoCount((int) $pk) > 0 ? $qR->repoQuoteUnloadedquery((int) $pk) : null;
                         if ($quote) {
                             $replace = 'quote/url_key/' . $quote->getUrlKey();
                         }
                         break;
                     case 'quote_number':
-                        $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteUnloadedquery($pk) : null;
+                        $quote = $qR->repoCount((int) $pk) > 0 ? $qR->repoQuoteUnloadedquery((int) $pk) : null;
                         if ($quote) {
                             $replace = $quote->getNumber() ?? '';
                         }
                         break;
                         // salesorder
                     case 'salesorder_notes':
-                        $so = $soR->repoCount($pk) > 0 ? $soR->repoSalesOrderUnloadedquery($pk) : null;
+                        $so = $soR->repoCount((int) $pk) > 0 ? $soR->repoSalesOrderUnloadedquery((int) $pk) : null;
                         if ($so) {
                             $replace = $so->getNotes() ?? '';
                         }
@@ -434,16 +434,16 @@ final readonly class TemplateHelper
                             switch ($table) {
                                 case 'quote_custom':
                                     // $pk = quote id;
-                                    $quote = $qR->repoCount($pk) > 0 ? $qR->repoQuoteLoadedquery($pk) : null;
+                                    $quote = $qR->repoCount((int) $pk) > 0 ? $qR->repoQuoteLoadedquery((int) $pk) : null;
                                     if ($quote) {
-                                        $replace_custom = $this->qcR->repoFormValuequery((string) $quote->getId(), $cf_id[1]);
+                                        $replace_custom = $this->qcR->repoFormValuequery($quote->reqId(), (int) $cf_id[1]);
                                     }
                                     break;
                                 case 'salesorder_custom':
                                     // $pk = so id;
-                                    $so = $soR->repoCount($pk) > 0 ? $soR->repoSalesOrderLoadedquery($pk) : null;
+                                    $so = $soR->repoCount((int) $pk) > 0 ? $soR->repoSalesOrderLoadedquery((int) $pk) : null;
                                     if ($so) {
-                                        $replace_custom = $this->socR->repoFormValuequery((string) $so->reqId(), $cf_id[1]);
+                                        $replace_custom = $this->socR->repoFormValuequery($so->reqId(), $cf_id[1]);
                                     }
                                     break;
                                 case 'inv_custom':
@@ -456,14 +456,14 @@ final readonly class TemplateHelper
                                 case 'client_custom':
                                     // Client custom fields can be included on either an invoice or a quote
                                     $entity = $isInvoice ? ($iR->repoCount($pk) > 0 ? $iR->repoInvLoadedquery($pk) : null)
-                                                         : ($qR->repoCount($pk) > 0 ? $qR->repoQuoteLoadedquery($pk) : null);
+                                                         : ($qR->repoCount((int) $pk) > 0 ? $qR->repoQuoteLoadedquery((int) $pk) : null);
 
                                     if ($entity) {
 /**
  * @var \App\Infrastructure\Persistence\ClientCustom\ClientCustom $replace_custom
  */
                                         $replace_custom = $this->ccR->repoFormValuequery(
-                                            $entity->getClientId(), $cf_id[1]);
+                                            $entity instanceof Inv ? $entity->getClientId() : (string) $entity->reqClientId(), $cf_id[1]);
                                     }
                                     break;
                             }

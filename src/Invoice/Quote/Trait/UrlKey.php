@@ -51,16 +51,14 @@ trait UrlKey
         $quote = $qR->repoUrlKeyGuestLoaded($urlKey);
         $quote_tax_rates = null;
         if ($quote) {
-            $quote_id = $quote->getId();
-            if (null !== $quote_id) {
-                if ($qtrR->repoCount($quote_id) > 0) {
-                    $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
-                }
+            $quote_id = $quote->reqId();
+            if ($qtrR->repoCount($quote_id) > 0) {
+                $quote_tax_rates = $qtrR->repoQuotequery($quote_id);
             }
             // If the quote status is sent 2, viewed 3, or approved_with 4,
             // or approved_without 5 or rejected 6
-            if (in_array($quote->getStatusId(), [2,3,4,5,6])) {
-                $user_id = $quote->getUserId();
+            if (in_array($quote->reqStatusId(), [2,3,4,5,6])) {
+                $user_id = (string) $quote->reqUserId();
                 if ($uiR->repoUserInvUserIdcount($user_id) === 1) {
                     // After signup the user was included in the userinv using
                     // Settings...User Account...+
@@ -68,13 +66,13 @@ trait UrlKey
                     // The client has been assigned to the user id using
                     // Setting...User Account...Assigned Clients
                     $user_client = $ucR->repoUserClientqueryCount($user_id,
-                        $quote->getClientId()) === 1 ? true : false;
+                        (string) $quote->reqClientId()) === 1 ? true : false;
                     if ($user_inv && $user_client && $user_inv->getActive()) {
                         // If the userinv is a Guest => type = 1 ie. NOT an
                         // administrator =>type = 0
                         // So if the user has a type of 1 they are a guest.
                         if ($user_inv->getType() == 1) {
-                            if ($quote->getStatusId() === 2) {
+                            if ($quote->reqStatusId() === 2) {
                                 // The quote has just been sent so change its
                                 // status otherwise leave its status alone
                                 $quote->setStatusId(3);
@@ -84,62 +82,60 @@ trait UrlKey
                                 'invoice' => $cfR->repoTablequery('inv_custom'),
                                 'client' => $cfR->repoTablequery('client_custom'),
                             ];
-
-                            if (null !== $quote_id) {
-                                $quote_amount = (
-                                    ($qaR->repoQuoteAmountCount($quote_id) > 0)
-                                        ? $qaR->repoQuotequery($quote_id) : null);
-                                if ($quote_amount) {
-                                    $parameters = [
-                                        'renderTemplate' =>
+                            $quote_amount = (
+                                ($qaR->repoQuoteAmountCount($quote_id) > 0)
+                                    ? $qaR->repoQuotequery($quote_id) : null);
+                            if ($quote_amount) {
+                                $parameters = [
+                                    'renderTemplate' =>
+                                        $this->webViewRenderer
+                                             ->renderPartialAsString(
+                                        '//invoice/template/quote/public/'
+                                        . ($this->sR->getSetting(
+                                            'public_quote_template')
+                                        ?: 'Quote_Web'), [
+                                        'isGuest' => $currentUser->isGuest(),
+                                        'alert' => $this->alert(),
+                                        'quote' => $quote,
+                                        'qiaR' => $qiaR,
+                                        'acqiR' => $acqiR,
+                                        'quote_amount' => $quote_amount,
+                                        'items' => $qiR->repoQuotequery(
+                                            $quote_id),
+                                        // Get all the quote tax rates that
+                                        // have been setup for this quote
+                                        'quote_tax_rates' =>
+                                            $quote_tax_rates,
+                                        'quote_url_key' =>
+                                            $urlKey,
+                                        'flash_message' =>
+                                            $this->flashMessage('info', ''),
+                                        //'attachments' => $attachments,
+                                        'custom_fields' =>
+                                            $custom_fields,
+                                        'has_expired' =>
+                                            new \DateTimeImmutable('now')
+                                            > $quote->getDateExpires() ?
+                                                true : false,
+                                        'client' => $quote->getClient(),
+                                        // Get the details of the user
+                                        // of this quote
+                                        'userInv' =>
+                                            $uiR->repoUserInvUserIdcount(
+                                            $user_id) > 0 ?
+                                            $uiR->repoUserInvUserIdquery(
+                                                $user_id) : null,
+                                        'modal_purchase_order_number' =>
                                             $this->webViewRenderer
                                                  ->renderPartialAsString(
-                                            '//invoice/template/quote/public/'
-                                            . ($this->sR->getSetting(
-                                                'public_quote_template')
-                                            ?: 'Quote_Web'), [
-                                            'isGuest' => $currentUser->isGuest(),
-                                            'alert' => $this->alert(),
-                                            'quote' => $quote,
-                                            'qiaR' => $qiaR,
-                                            'acqiR' => $acqiR,
-                                            'quote_amount' => $quote_amount,
-                                            'items' => $qiR->repoQuotequery(
-                                                $quote_id),
-                                            // Get all the quote tax rates that
-                                            // have been setup for this quote
-                                            'quote_tax_rates' =>
-                                                $quote_tax_rates,
-                                            'quote_url_key' =>
-                                                $urlKey,
-                                            'flash_message' =>
-                                                $this->flashMessage('info', ''),
-                                            //'attachments' => $attachments,
-                                            'custom_fields' =>
-                                                $custom_fields,
-                                            'has_expired' =>
-                                                new \DateTimeImmutable('now')
-                                                > $quote->getDateExpires() ?
-                                                    true : false,
-                                            'client' => $quote->getClient(),
-                                            // Get the details of the user
-                                            // of this quote
-                                            'userInv' =>
-                                                $uiR->repoUserInvUserIdcount(
-                                                $user_id) > 0 ?
-                                                $uiR->repoUserInvUserIdquery(
-                                                    $user_id) : null,
-                                            'modal_purchase_order_number' =>
-                                                $this->webViewRenderer
-                                                     ->renderPartialAsString(
-                                '//invoice/quote/modal_purchase_order_number',
-                                                    ['urlKey' => $urlKey]),
-                                        ]),
-                                    ];
-                                    return $this->webViewRenderer->render(
-                                        'url_key', $parameters);
-                                } // if quote_amount
-                            } // if there is a quote id
+                            '//invoice/quote/modal_purchase_order_number',
+                                                ['urlKey' => $urlKey]),
+                                    ]),
+                                ];
+                                return $this->webViewRenderer->render(
+                                    'url_key', $parameters);
+                            } // if quote_amount
+                            
                         } // user_inv->getType
                     } // user_inv
                 } // $uiR

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Widget;
 
-use App\Invoice\Entity\Quote;
+use App\Infrastructure\Persistence\Quote\Quote;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Span;
@@ -21,11 +21,11 @@ final readonly class QuoteToolbar
 
     private function buildButtons(Quote $quote, bool $quoteEdit, string $vat, ?float $quoteAmountTotal): array
     {
-        $quoteId = $quote->getId();
+        $quoteId = $quote->reqId();
         $buttons = [];
 
         // View created invoice (if exists)
-        if ($quote->getInvId() !== '0' && !empty($quote->getInvId())) {
+        if ($quote->getInvId() !== 0) {
             $buttons[] = $this->createLinkButton(
                 'view-invoice',
                 $this->urlGenerator->generate('inv/view', ['id' => $quote->getInvId()]),
@@ -68,7 +68,7 @@ final readonly class QuoteToolbar
 
         // Email button (only if editing allowed, quote is draft, and has amount)
         if (null !== $quoteAmountTotal) {
-            if ($quoteEdit && ($quote->getStatusId() === 1) && ($quoteAmountTotal > 0)) {
+            if ($quoteEdit && ($quote->reqStatusId() === 1) && ($quoteAmountTotal > 0)) {
                 $buttons[] = $this->createLinkButton(
                     'send-email',
                     $this->urlGenerator->generate('quote/emailStage0', ['id' => $quoteId]),
@@ -80,8 +80,8 @@ final readonly class QuoteToolbar
         }
 
         // Quote to SO button - show enabled if approved, disabled if not approved
-        if ($quoteEdit && $quote->getSoId() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
-            if ($quote->getStatusId() === 4) {
+        if ($quoteEdit && $quote->getSoId() === 0 && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
+            if ($quote->reqStatusId() === 4) {
                 // Quote is approved - show enabled button
                 $buttons[] = $this->createModalButton(
                     'quote-to-so',
@@ -103,8 +103,8 @@ final readonly class QuoteToolbar
         }
 
         // Quote to Invoice button - show enabled if approved, disabled if not approved (but don't show if already converted)
-        if ($quoteEdit && $quote->getInvId() === '0' && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
-            if ($quote->getStatusId() === 4) {
+        if ($quoteEdit && $quote->getInvId() === 0 && null !== $quoteAmountTotal && $quoteAmountTotal > 0) {
+            if ($quote->reqStatusId() === 4) {
                 // Quote is approved - show enabled button
                 $buttons[] = [
                     'type' => 'modal',
@@ -173,7 +173,8 @@ final readonly class QuoteToolbar
         return $buttons;
     }
 
-    private function createLinkButton(string $id, string $href, string $icon, string $class, string $title): array
+    private function createLinkButton(string $id, string $href, string $icon,
+        string $class, string $title): array
     {
         return [
             'type' => 'link',
@@ -185,7 +186,8 @@ final readonly class QuoteToolbar
         ];
     }
 
-    private function createModalButton(string $id, string $href, string $icon, string $class, string $title): array
+    private function createModalButton(string $id, string $href, string $icon,
+        string $class, string $title): array
     {
         return [
             'type' => 'modal',
@@ -197,7 +199,8 @@ final readonly class QuoteToolbar
         ];
     }
 
-    private function createDisabledButton(string $id, string $icon, string $class, string $title, string $tooltip): array
+    private function createDisabledButton(string $id, string $icon,
+        string $class, string $title, string $tooltip): array
     {
         return [
             'type' => 'disabled',
@@ -274,7 +277,7 @@ final readonly class QuoteToolbar
         $badges = [];
 
         // Quote status indicator
-        $statusClass = match ($quote->getStatusId()) {
+        $statusClass = match ($quote->reqStatusId()) {
             1 => 'bg-secondary',    // Draft
             2 => 'bg-primary',      // Sent
             3 => 'bg-warning',      // Viewed
@@ -283,7 +286,7 @@ final readonly class QuoteToolbar
             default => 'bg-light',
         };
 
-        $statusText = match ($quote->getStatusId()) {
+        $statusText = match ($quote->reqStatusId()) {
             1 => $this->translator->translate('draft'),
             2 => $this->translator->translate('sent'),
             3 => $this->translator->translate('viewed'),
@@ -298,7 +301,7 @@ final readonly class QuoteToolbar
             ->render();
 
         // SO status indicator if quote has been converted
-        if ($quote->getSoId() !== '0' && !empty($quote->getSoId())) {
+        if ($quote->getSoId() !== 0) {
             $badges[] =  new Span()
                 ->addClass('badge bg-info me-2')
                 ->content($this->translator->translate('converted.to.so'))
@@ -306,7 +309,7 @@ final readonly class QuoteToolbar
         }
 
         // Invoice status indicator if quote has been converted
-        if ($quote->getInvId() !== '0' && !empty($quote->getInvId())) {
+        if ($quote->getInvId() !== 0) {
             $badges[] =  new Span()
                 ->addClass('badge bg-success me-2')
                 ->content($this->translator->translate('converted.to.invoice'))

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
-use App\Invoice\Entity\QuoteItem;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use PHPUnit\Framework\TestCase;
 
 class QuoteItemAmountEntityTest extends TestCase

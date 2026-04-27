@@ -85,7 +85,7 @@ final class SalesOrderItemAmountRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoSalesOrderItemAmountquery(string $sales_order_item_id): ?SalesOrderItemAmount
+    public function repoSalesOrderItemAmountquery(int $sales_order_item_id): ?SalesOrderItemAmount
     {
         $query = $this->select()
                       ->load(['sales_order_item'])
@@ -94,10 +94,10 @@ final class SalesOrderItemAmountRepository extends Select\Repository
     }
 
     /**
-     * @param string $sales_order_item_id
+     * @param int $sales_order_item_id
      * @return int
      */
-    public function repoCount(string $sales_order_item_id): int
+    public function repoCount(int $sales_order_item_id): int
     {
         $query = $this->select()
                       ->where(['sales_order_item_id' => $sales_order_item_id]);

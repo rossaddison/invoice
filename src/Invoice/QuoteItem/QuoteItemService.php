@@ -6,9 +6,9 @@ namespace App\Invoice\QuoteItem;
 
 use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
 use App\Infrastructure\Persistence\Task\Task;
+use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Invoice\
 {
-    Entity\QuoteItem,
     Product\ProductRepository as PR,
     Quote\QuoteRepository as QR,
     QuoteItemAmount\QuoteItemAmountRepository as QIAR,
@@ -44,7 +44,7 @@ final readonly class QuoteItemService
     {
         if (isset($array['quote_id'])) {
             $quote = $this->qR->repoQuoteUnLoadedquery(
-                (string) $array['quote_id']
+                (int) $array['quote_id']
             );
             if ($quote) {
                 $model->setQuote($quote);
@@ -309,7 +309,7 @@ final readonly class QuoteItemService
     /**
      * @param QuoteItem $model
      * @param array $array
-     * @param string $quote_id
+     * @param int $quote_id
      * @param TaskR $taskR
      * @param QIAR $qiar
      * @param QIAS $qias
@@ -319,7 +319,7 @@ final readonly class QuoteItemService
     public function addQuoteItemTask(
         QuoteItem $model,
         array $array,
-        string $quote_id,
+        int $quote_id,
         TaskR $taskR,
         QIAR $qiar,
         QIAS $qias,
@@ -337,7 +337,7 @@ final readonly class QuoteItemService
 
         $model->setTaskId((int) $task_id);
 
-        $model->setQuoteId((int) $quote_id);
+        $model->setQuoteId($quote_id);
 
         /** @var Task $task */
         $task = $taskR->repoTaskquery((string) $array['task_id']);
@@ -431,7 +431,7 @@ final readonly class QuoteItemService
             (int) $array['product_id'] : '');
         $model->setProductId((int) $product_id);
         $model->setQuote(
-            $model->getQuote()?->getId() == $quote_id ?
+            $model->getQuote()?->reqId() == $quote_id ?
                 $model->getQuote() : null
         );
         $model->setQuoteId((int) $quote_id);
@@ -599,8 +599,8 @@ final readonly class QuoteItemService
         $all_charges_vat_or_tax = 0.00;
         $all_allowances = 0.00;
         $all_allowances_vat_or_tax = 0.00;
-        $acqis = $this->acqiR->repoQuoteItemquery((string)$quote_item_id);
-        /** @var \App\Invoice\Entity\QuoteItemAllowanceCharge $acqi */
+        $acqis = $this->acqiR->repoQuoteItemquery($quote_item_id);
+        /** @var \App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge $acqi */
         foreach ($acqis as $acqi) {
             if ($acqi->getAllowanceCharge()?->getIdentifier() == '1') {
                 $all_charges += (float) $acqi->getAmount();
@@ -624,10 +624,10 @@ final readonly class QuoteItemService
         $qias_array['subtotal'] = $qpIncAc;
         $qias_array['taxtotal'] = $new_tax_total;
         $qias_array['total'] = $qpIncAc - $discount_total + $new_tax_total;
-        if ($qiar->repoCount((string) $quote_item_id) === 0) {
+        if ($qiar->repoCount($quote_item_id) === 0) {
             $qias->saveQuoteItemAmountNoForm(new QuoteItemAmount(), $qias_array);
         } else {
-            $quote_item_amount = $qiar->repoQuoteItemAmountquery((string) $quote_item_id);
+            $quote_item_amount = $qiar->repoQuoteItemAmountquery($quote_item_id);
             if ($quote_item_amount) {
                 $qias->saveQuoteItemAmountNoForm($quote_item_amount, $qias_array);
             }

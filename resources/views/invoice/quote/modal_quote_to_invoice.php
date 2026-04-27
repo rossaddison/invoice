@@ -11,7 +11,7 @@ use Yiisoft\Html\Tag\Option;
  *  <a href="#quote-to-invoice" data-bs-toggle="modal"
  *   style="text-decoration:none">
  * Related logic: see views/quote/view.php
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $groups
@@ -45,12 +45,12 @@ echo H::openTag('div', ['id' => 'quote-to-invoice',
           ->type('hidden')
           ->name('client_id')
           ->id('client_id')
-          ->value($quote->getClientId());
+          ->value($quote->reqClientId());
      echo new Input()
           ->type('hidden')
           ->name('user_id')
           ->id('user_id')
-          ->value($quote->getUserId());
+          ->value($quote->reqUserId());
      echo H::openTag('div', $formGroup); //5
       echo H::openTag('label', ['for' => 'invoice_password']); //6
        echo $translator->translate('password');

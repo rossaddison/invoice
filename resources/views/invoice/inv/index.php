@@ -1164,23 +1164,21 @@ $columns = [
         'quote_id',
         header: $translator->translate('quote.number.status'),
         content: static function (Inv $model) use ($urlGenerator, $qR): string|A {
-            $quote_id = $model->getQuoteId();
+            $quote_id = (int) $model->getQuoteId();
             $quote = $qR->repoQuoteUnloadedquery($quote_id);
             if (null !== $quote) {
-                $statusId = $quote->getStatusId();
-                if (null !== $statusId) {
-                    return Html::a(
-                        ($quote->getNumber() ?? '#')
-                        . ' '
-                        . $qR->getSpecificStatusArrayLabel((string) $statusId),
-                        $urlGenerator->generate('quote/view', ['id' => $quote_id]),
-                        [
-                            'style' => 'text-decoration:none',
-                            'class' => 'label '
-                            . $qR->getSpecificStatusArrayClass((string) $statusId),
-                        ],
-                    );
-                }
+                $statusId = $quote->reqStatusId();
+                return Html::a(
+                    ($quote->getNumber() ?? '#')
+                    . ' '
+                    . $qR->getSpecificStatusArrayLabel((string) $statusId),
+                    $urlGenerator->generate('quote/view', ['id' => $quote_id]),
+                    [
+                        'style' => 'text-decoration:none',
+                        'class' => 'label '
+                        . $qR->getSpecificStatusArrayClass((string) $statusId),
+                    ],
+                );
             }
             return '';
         },
@@ -1192,7 +1190,7 @@ $columns = [
         header: $translator->translate('salesorder.number.status'),
         content: static function (Inv $model) use ($urlGenerator, $soR): string|A {
             $so_id = $model->getSoId();
-            $so = $soR->repoSalesOrderUnloadedquery($so_id);
+            $so = $soR->repoSalesOrderUnloadedquery((int) $so_id);
             if (null !== $so) {
                 $statusId = $so->getStatusId();
                 if (null !== $statusId) {
@@ -1215,7 +1213,7 @@ $columns = [
         header: $translator->translate('delivery.location.global.location.number'),
         content: static function (Inv $model) use ($dlR): string {
             $delivery_location_id = $model->getDeliveryLocationId();
-            $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery($delivery_location_id) : null);
+            $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery((int) $delivery_location_id) : null);
             return null !== $delivery_location ? Html::encode($delivery_location->getGlobalLocationNumber()) : '';
         },
         encodeContent: false,

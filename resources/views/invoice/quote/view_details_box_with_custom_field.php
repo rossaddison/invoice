@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Yiisoft\Html\Html;
 
 /**
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Invoice\Quote\QuoteForm $quoteForm
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var Yiisoft\Translator\TranslatorInterface $translator

@@ -62,7 +62,7 @@ final readonly class DeliveryService
         if (isset($array[$delivery_location])) {
             $model->setDeliveryLocation(
                 $this->dlR->repoDeliveryLocationquery(
-                    (string) $array[$delivery_location]));
+                    (int) $array[$delivery_location]));
         }
     }
 

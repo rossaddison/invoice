@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * Related logic: see id="quote-to-pdf" triggered by <a href="#quote-to-pdf" data-bs-toggle="modal"  style="text-decoration:none">
  * Related logic: see views/quote/view.php
- * @var App\Invoice\Entity\Quote $quote
+ * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf
  */
@@ -25,7 +25,7 @@ declare(strict_types=1);
                     <div class="control-label">
                         <?= $translator->translate('custom.fields'); ?>?
                     </div>
-                    <input type="hidden" name="quote_id" id="quote_id" value="<?php $quote->getId(); ?>">
+                    <input type="hidden" name="quote_id" id="quote_id" value="<?php $quote->reqId(); ?>">
                 </form>
             </div>
             <div class="modal-footer">

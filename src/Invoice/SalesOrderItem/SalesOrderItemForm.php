@@ -61,9 +61,9 @@ final class SalesOrderItemForm extends FormModel
         $form->order = $salesOrderItem->getOrder();
         $form->product_unit = $salesOrderItem->getProductUnit();
         $form->tax_rate_id = (string) $salesOrderItem->getTaxRateId();
-        $form->product_id = (string) $salesOrderItem->getProductId();
-        $form->task_id = (string) $salesOrderItem->getTaskId();
-        $form->product_unit_id = (int) $salesOrderItem->getProductUnitId();
+        $form->product_id = (string) $salesOrderItem->getProduct()?->reqId();
+        $form->task_id = (string) $salesOrderItem->getTask()?->reqId();
+        $form->product_unit_id = $salesOrderItem->getProductUnitId();
         $form->date_added = $salesOrderItem->getDateAdded();
         return $form;
     }

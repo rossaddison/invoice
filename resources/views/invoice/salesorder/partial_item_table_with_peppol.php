@@ -165,7 +165,9 @@ $vat = $s->getSetting('enable_vat_registration');
  * @var App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem $item
  */
 
-foreach ($soItems as $item) { ?>
+foreach ($soItems as $item) {
+    $productId = $item->getProduct()?->reqId();
+    ?>
                 <tbody class="item">
                 <tr>
                     <td rowspan="2" class="td-icon" style="text-align: center; vertical-align: middle;">
@@ -174,9 +176,9 @@ foreach ($soItems as $item) { ?>
                     </td>
                     <td class="td-text">
                         <div class="input-group">
-                            <input type="text" disabled="true" maxlength="1" size="1" name="so_id" value="<?= $item->getSalesOrderId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->quote_id">
+                            <input type="text" disabled="true" maxlength="1" size="1" name="so_id" value="<?= $item->reqSalesOrderId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->quote_id">
                             <input type="text" disabled="true" maxlength="1" size="1" name="item_id" value="<?= (string) $item->reqId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->getId()">
-                            <input type="text" disabled="true" maxlength="1" size="1" name="item_product_id" value="<?= $item->getProductId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->product_id">
+                            <input type="text" disabled="true" maxlength="1" size="1" name="item_product_id" value="<?= $productId ?>" data-bs-toggle = "tooltip" title="salesorder_item->product_id">
                             <input type="text" disabled="true" placeholder="Peppol" maxlength="8" size="8" name="item_peppol_po_itemid" value="<?= $item->getPeppolPoItemid(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->peppol_po_itemid This value is editable if the client or customer is going to pay by Peppol. They have to supply their corresponding Purchase Order Item Id here. https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/cbc-ID/">
                             <input type="text" disabled="true" placeholder="Peppol" maxlength="8" size="8" name="item_peppol_po_lineid" value="<?= $item->getPeppolPoLineid(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->peppol_po_lineid This value is editable if the client or customer is going to pay by Peppol. They have to supply their corresponding Purchase Order Line Number here. https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/">
                         </div>
@@ -189,7 +191,7 @@ foreach ($soItems as $item) { ?>
                      */
                     foreach ($pR->findAllPreloaded() as $product) { ?>
                                     <option value="<?php echo $product->getProductId(); ?>"
-                                            <?php if ($item->getProductId() == $product->getProductId()) { ?>selected="selected"<?php } ?>>
+                                            <?php if ($productId !== null && $productId == (int) $product->getProductId()) { ?>selected="selected"<?php } ?>>
                                         <?php echo Html::encode($product->getProductName()); ?>
                                     </option>
                                 <?php } ?>
@@ -266,25 +268,25 @@ foreach ($soItems as $item) { ?>
                     <td class="td-amount td-vert-middle">
                         <span><?= $translator->translate('subtotal'); ?></span><br/>
                         <span name="subtotal" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->subtotal">
-                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getSubtotal() ?? 0.00); ?>
+                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getSubtotal() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span class="input-group-text"><?= $vat === '0' ? $translator->translate('item.discount') : $translator->translate('cash.discount'); ?></span>
                         <span name="item_discount_total" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->discount">
-                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getDiscount() ?? 0.00); ?>
+                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getDiscount() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $vat === '0' ? $translator->translate('tax') : $translator->translate('vat.abbreviation') ?></span><br/>
                         <span name="item_tax_total" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->tax_total">
-                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getTaxTotal() ?? 0.00); ?>
+                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTaxTotal() ?? 0.00); ?>
                         </span>
                     </td>
                     <td class="td-amount td-vert-middle">
                         <span><?= $translator->translate('total'); ?></span><br/>
                         <span name="item_total" class="amount" data-bs-toggle = "tooltip" title="salesorder_item_amount->total">
-                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery((string) $item->reqId())?->getTotal() ?? 0.00); ?>
+                            <?= $numberHelper->formatCurrency($soiaR->repoSalesOrderItemAmountquery($item->reqId())?->getTotal() ?? 0.00); ?>
                         </span>
                     </td>
                 </tr>

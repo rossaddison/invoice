@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteCustom;
 
-use App\Invoice\Entity\QuoteCustom;
+use App\Infrastructure\Persistence\QuoteCustom\QuoteCustom;
 use App\Invoice\CustomField\CustomFieldRepository as CFR;
 use App\Invoice\Quote\QuoteRepository as QR;
 
@@ -25,8 +25,7 @@ final readonly class QuoteCustomService
     private function persist(array $array, QuoteCustom $model): void
     {
         if (isset($array['quote_id'])) {
-            $quote = $this->qR->repoQuoteUnLoadedquery(
-                (string) $array['quote_id']
+            $quote = $this->qR->repoQuoteUnLoadedquery((int) $array['quote_id']
             );
             if ($quote) {
                 $model->setQuote($quote);

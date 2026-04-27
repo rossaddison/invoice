@@ -123,7 +123,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
       echo H::closeTag('a'); //6
      echo H::closeTag('li'); //5
      // only show SO→Invoice button if status is 6 (invoice generate stage) and no invoice yet
-     if (null === $so->getInvId() && !in_array($so->getStatusId(), [1,2,3,4,5])) {
+     if (!$so->hasLinkedInvoice() && !in_array($so->getStatusId(), [1,2,3,4,5])) {
       if ($invEdit) {
        echo H::openTag('li'); //5
         echo H::openTag('a', [
@@ -267,7 +267,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
            echo H::openTag('div', ['class' => 'input-group']); //10
             echo H::a(
              $quoteNumber,
-             $urlGenerator->generate('quote/view', ['id' => $so->getQuoteId()]),
+             $urlGenerator->generate('quote/view', ['id' => $so->reqQuoteId()]),
              ['class' => 'btn btn-info']
             );
            echo H::closeTag('div'); //10
@@ -281,7 +281,7 @@ echo H::openTag('div', ['class' => 'panel panel-default']); //0
            echo H::openTag('div', ['class' => 'input-group']); //10
             echo H::a(
              $invNumber,
-             $urlGenerator->generate('inv/view', ['id' => $so->getInvId()]),
+             $urlGenerator->generate('inv/view', ['id' => $so->reqInvId()]),
              ['class' => 'btn btn-success']
             );
            echo H::closeTag('div'); //10
