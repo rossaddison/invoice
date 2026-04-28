@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\ClientCustom;
 
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\CustomField\CustomField;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -13,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\ClientCustom\ClientCustomRepository::class)]
 class ClientCustom
 {
+    use RequireId;
+
     #[BelongsTo(target: Client::class, nullable: false)]
     private ?Client $client = null;
 
@@ -53,18 +56,9 @@ class ClientCustom
         $this->custom_field = $custom_field;
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'ClientCustom has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'ClientCustom');
     }
 
     public function isPersisted(): bool

@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\ProductClient;
 
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Product\Product;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\ProductClient\ProductClientRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -18,6 +19,8 @@ use DateTimeImmutable;
 #[Behavior\UpdatedAt(field: 'updated_at', column: 'updated_at')]
 class ProductClient
 {
+    use RequireId;
+
     #[BelongsTo(target: Product::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Product $product = null;
 
@@ -42,18 +45,9 @@ class ProductClient
         $this->updated_at = new DateTimeImmutable();
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'ProductClient has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'ProductClient');
     }
 
     public function isPersisted(): bool

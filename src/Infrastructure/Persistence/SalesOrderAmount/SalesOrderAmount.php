@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\SalesOrderAmount;
 
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\SalesOrderAmount\SalesOrderAmountRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -13,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: SalesOrderAmountRepository::class)]
 class SalesOrderAmount
 {
+    use RequireId;
+
     #[BelongsTo(target: SalesOrder::class, nullable: true, fkAction: 'NO ACTION')]
     private ?SalesOrder $sales_order = null;
 
@@ -36,18 +39,9 @@ class SalesOrderAmount
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'SalesOrderAmount has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'SalesOrderAmount');
     }
 
     public function isPersisted(): bool

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Family;
 
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\Family\FamilyRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -11,6 +12,8 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity(repository: FamilyRepository::class)]
 class Family
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -28,17 +31,9 @@ class Family
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'Family has no ID (not persisted yet)'
-            );
-        }
-        return $this->id;
+        return $this->requireId($this->id, 'Family');
     }
 
     public function isPersisted(): bool

@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\SalesOrderCustom;
 
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\CustomField\CustomField;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\SalesOrderCustom\SalesOrderCustomRepository as SOCR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -14,6 +15,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: SOCR::class)]
 class SalesOrderCustom
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -35,18 +38,9 @@ class SalesOrderCustom
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'SalesOrderCustom has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'SalesOrderCustom');
     }
 
     public function isPersisted(): bool

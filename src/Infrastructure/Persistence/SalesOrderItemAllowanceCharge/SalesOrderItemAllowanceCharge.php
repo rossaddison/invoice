@@ -7,6 +7,7 @@ namespace App\Infrastructure\Persistence\SalesOrderItemAllowanceCharge;
 use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceChargeRepository
     as SOIACR;
 use Cycle\Annotated\Annotation\Column;
@@ -16,6 +17,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: SOIACR::class)]
 class SalesOrderItemAllowanceCharge
 {
+    use RequireId;
+
     #[BelongsTo(
         target: AllowanceCharge::class,
         nullable: false,
@@ -53,20 +56,9 @@ class SalesOrderItemAllowanceCharge
     ) {
     }
 
-    /**
-     * Returns the database identifier for this SalesOrderItemAllowanceCharge.
-     *
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'SalesOrderItemAllowanceCharge has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'SalesOrderItemAllowanceCharge');
     }
 
     public function isPersisted(): bool

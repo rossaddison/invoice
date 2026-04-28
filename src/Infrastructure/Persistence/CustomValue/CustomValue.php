@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\CustomValue;
 
 use App\Infrastructure\Persistence\CustomField\CustomField;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -12,6 +13,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\CustomValue\CustomValueRepository::class)]
 class CustomValue
 {
+    use RequireId;
+
     #[BelongsTo(target: CustomField::class, nullable: false, fkAction: 'NO ACTION')]
     private ?CustomField $custom_field = null;
 
@@ -20,18 +23,9 @@ class CustomValue
         private ?int $custom_field_id = null, #[Column(type: 'text', nullable: false)]
         private string $value = '') {}
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'ClientNote has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'CustomValue');
     }
 
     public function isPersisted(): bool

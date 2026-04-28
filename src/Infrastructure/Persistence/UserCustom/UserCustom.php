@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\UserCustom;
 
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\UserCustom\UserCustomRepository;
 use App\User\User;
 use Cycle\Annotated\Annotation\Column;
@@ -13,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: UserCustomRepository::class)]
 class UserCustom
 {
+    use RequireId;
+
     #[BelongsTo(target: User::class, nullable: false)]
     private ?User $user = null;
 
@@ -28,20 +31,9 @@ class UserCustom
     ) {
     }
 
-    /**
-     * Returns the database identifier for this UserCustom.
-     *
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'UserCustom has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'UserCustom');
     }
 
     public function isPersisted(): bool

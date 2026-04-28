@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\FamilyCustom;
 
-use App\Infrastructure\Persistence\{CustomField\CustomField, Family\Family};
+use App\Infrastructure\Persistence\{CustomField\CustomField, Family\Family, Trait\RequireId};
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -12,6 +12,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: \App\Invoice\FamilyCustom\FamilyCustomRepository::class)]
 class FamilyCustom
 {
+    use RequireId;
+
     #[BelongsTo(target: Family::class, nullable: false)]
     private ?Family $family = null;
 
@@ -46,18 +48,9 @@ class FamilyCustom
         $this->custom_field = $custom_field;
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'FamilyCustom has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'FamilyCustom');
     }
 
     public function isPersisted(): bool

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\QuoteItemAmount;
 
 use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\QuoteItemAmount\QuoteItemAmountRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -13,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: QuoteItemAmountRepository::class)]
 class QuoteItemAmount
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -37,18 +40,9 @@ class QuoteItemAmount
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'QuoteItemAmount has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'QuoteItemAmount');
     }
 
     public function isPersisted(): bool

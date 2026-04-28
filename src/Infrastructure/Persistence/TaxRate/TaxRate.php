@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\TaxRate;
 
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -11,6 +12,8 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity(repository: TRR::class)]
 class TaxRate
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -35,18 +38,9 @@ class TaxRate
         $this->id = $tax_rate_id;
     }
 
-    /**
-     * Returns the database identifier for this TaxRate
-     *
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException('TaxRate has no ID (not persisted yet)');
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'TaxRate');
     }
 
     public function isPersisted(): bool

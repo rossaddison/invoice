@@ -109,7 +109,7 @@ class ClientEntityTest extends Unit
         $client = new Client();
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Client has no ID (not persisted yet)');
+        $this->expectExceptionMessage('Client not persisted');
         $client->reqId();
         $this->assertFalse($client->isPersisted());
     }

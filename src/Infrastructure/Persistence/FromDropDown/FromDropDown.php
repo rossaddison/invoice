@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\FromDropDown;
 
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
@@ -11,24 +12,17 @@ use Cycle\Annotated\Annotation\Entity;
 
 class FromDropDown
 {
+    use RequireId;
+
     public function __construct(#[Column(type: 'primary')]
         private ?int $id = null, #[Column(type: 'text)', nullable: false)]
         private string $email = '', #[Column(type: 'bool', default: false, nullable: false)]
         private bool $include = false, #[Column(type: 'bool', default: false, nullable: false)]
         private bool $default_email = false) {}
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'FromDropDown has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'FromDropDown');
     }
 
     public function isPersisted(): bool

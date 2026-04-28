@@ -8,6 +8,7 @@ use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Entity\Inv;
 use App\Infrastructure\Persistence\ProductClient\ProductClient;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasMany;
@@ -20,6 +21,8 @@ use DateTimeImmutable;
 #[Behavior\UpdatedAt(field: 'client_date_modified', column: 'client_date_modified')]
 class Client
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
  
@@ -127,11 +130,7 @@ class Client
 
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException('Client has no ID (not persisted yet)');
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'Client');
     }
 
     public function isPersisted(): bool

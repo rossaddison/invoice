@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Delivery;
 
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -16,6 +17,8 @@ use DateTimeImmutable;
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class Delivery
 {
+    use RequireId;
+
     #[Column(type: 'datetime', nullable: false)]
     private DateTimeImmutable $date_created;
 
@@ -54,18 +57,9 @@ class Delivery
         $this->end_date = new DateTimeImmutable(date('Y-m-t'));
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'Delivery has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'Delivery');
     }
 
     public function isPersisted(): bool

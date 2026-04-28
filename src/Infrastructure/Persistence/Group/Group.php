@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Group;
 
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\Group\GroupRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -11,6 +12,8 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity(repository: GroupRepository::class)]
 class Group
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -26,15 +29,9 @@ class Group
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException('Group has no ID (not persisted yet)');
-        }
-        return $this->id;
+        return $this->requireId($this->id, 'Group');
     }
 
     public function isPersisted(): bool

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\SalesOrderItemAmount;
 
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\SalesOrderItemAmount\SalesOrderItemAmountRepository as SOIAR;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -13,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: SOIAR::class)]
 class SalesOrderItemAmount
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -37,18 +40,9 @@ class SalesOrderItemAmount
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'SalesOrderItemAmount has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'SalesOrderItemAmount');
     }
 
     public function isPersisted(): bool

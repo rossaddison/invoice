@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\ClientNote;
 
 use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\ClientNote\ClientNoteRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -14,6 +15,8 @@ use DateTimeImmutable;
 #[Entity(repository: ClientNoteRepository::class)]
 class ClientNote
 {
+    use RequireId;
+
     #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Client $client = null;
 
@@ -42,18 +45,9 @@ class ClientNote
         $this->client = $client;
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'ClientNote has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'ClientNote');
     }
 
     public function isPersisted(): bool

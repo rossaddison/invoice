@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\ClientPeppol;
 
 use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\ClientPeppol\ClientPeppolRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -13,6 +14,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: ClientPeppolRepository::class)]
 class ClientPeppol
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -53,18 +56,9 @@ class ClientPeppol
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'ClientPeppol has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'ClientPeppol');
     }
 
     public function isPersisted(): bool

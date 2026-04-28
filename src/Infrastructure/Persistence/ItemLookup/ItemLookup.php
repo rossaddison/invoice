@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\ItemLookup;
 
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\ItemLookup\ItemLookupRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -11,6 +12,8 @@ use Cycle\Annotated\Annotation\Entity;
 #[Entity(repository: ItemLookupRepository::class)]
 class ItemLookup
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -24,18 +27,9 @@ class ItemLookup
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'ItemLookup has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'ItemLookup');
     }
 
     public function isPersisted(): bool

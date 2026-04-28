@@ -44,16 +44,9 @@ class Task
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException('Task has no ID (not persisted yet)');
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'Task');
     }
 
     public function isPersisted(): bool

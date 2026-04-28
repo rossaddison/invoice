@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\DeliveryParty;
 
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
@@ -11,6 +12,8 @@ use Cycle\Annotated\Annotation\Entity;
 
 class DeliveryParty
 {
+    use RequireId;
+
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
@@ -21,10 +24,7 @@ class DeliveryParty
 
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException('DeliveryParty has not been persisted yet.');
-        }
-        return $this->id;
+        return $this->requireId($this->id, 'DeliveryParty');
     }
 
     public function isPersisted(): bool

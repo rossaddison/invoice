@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\PostalAddress;
 
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
@@ -11,6 +12,8 @@ use Cycle\Annotated\Annotation\Entity;
 
 class PostalAddress
 {
+    use RequireId;
+
     public function __construct(
         #[Column(type: 'primary')]
         public ?int $id = null,
@@ -33,18 +36,9 @@ class PostalAddress
     {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'PostalAddress has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'PostalAddress');
     }
 
     public function isPersisted(): bool

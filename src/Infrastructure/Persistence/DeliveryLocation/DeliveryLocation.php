@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\DeliveryLocation;
 
 use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\DeliveryLocation\DeliveryLocationRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -17,6 +18,8 @@ use DateTimeImmutable;
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class DeliveryLocation
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -81,12 +84,7 @@ class DeliveryLocation
 
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException('DeliveryLocation'
-                . ' has no ID (not persisted yet)');
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'DeliveryLocation');
     }
 
     public function isPersisted(): bool

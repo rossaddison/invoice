@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\CustomField;
 
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
 #[Entity(repository: \App\Invoice\CustomField\CustomFieldRepository::class)]
 class CustomField
 {
+    use RequireId;
+
     public function __construct(
         #[Column(type: 'primary')]
         private ?int $id = null,
@@ -56,18 +59,9 @@ class CustomField
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'ClientNote has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'CustomField');
     }
 
     public function isPersisted(): bool

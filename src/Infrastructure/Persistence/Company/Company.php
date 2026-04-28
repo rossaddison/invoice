@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Company;
 
 use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\HasMany;
@@ -17,6 +18,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class Company
 {
+    use RequireId;
+
     #[Column(type: 'datetime')]
     private readonly DateTimeImmutable $date_created;
 
@@ -83,18 +86,9 @@ class Company
         return $this->companyPrivates;
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'ClientNote has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'Company');
     }
 
     public function isPersisted(): bool

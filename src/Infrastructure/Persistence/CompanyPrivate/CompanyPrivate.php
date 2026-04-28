@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\CompanyPrivate;
 
 use App\Infrastructure\Persistence\Company\Company;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\ORM\Entity\Behavior;
@@ -16,6 +17,8 @@ use DateTimeImmutable;
 #[Behavior\UpdatedAt(field: 'date_modified', column: 'date_modified')]
 class CompanyPrivate
 {
+    use RequireId;
+
     #[BelongsTo(target: Company::class, nullable: false, fkAction: 'NO ACTION')]
     private ?Company $company = null;
 
@@ -82,18 +85,9 @@ class CompanyPrivate
         $this->company = $company;
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'ClientNote has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'CompanyPrivate');
     }
 
     public function isPersisted(): bool

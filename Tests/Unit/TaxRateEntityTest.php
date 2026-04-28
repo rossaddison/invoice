@@ -47,7 +47,7 @@ class TaxRateEntityTest extends Unit
         $taxRate = new TaxRate();
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('TaxRate has no ID (not persisted yet)');
+        $this->expectExceptionMessage('TaxRate not persisted');
         $taxRate->reqId();
     }
 

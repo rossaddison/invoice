@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Contract;
 
 use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -13,6 +14,8 @@ use DateTimeImmutable;
 #[Entity(repository: \App\Invoice\Contract\ContractRepository::class)]
 class Contract
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     public ?int $id = null;
 
@@ -37,18 +40,9 @@ class Contract
         $this->period_end = new DateTimeImmutable();
     }
     
-   /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'Contract has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'Contract');
     }
 
     public function isPersisted(): bool

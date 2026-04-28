@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\ProductCustom;
 
 use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\CustomField\CustomField;
+use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\ProductCustom\ProductCustomRepository;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
@@ -14,6 +15,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 #[Entity(repository: ProductCustomRepository::class)]
 class ProductCustom
 {
+    use RequireId;
+
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -33,18 +36,9 @@ class ProductCustom
     ) {
     }
 
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
     public function reqId(): int
     {
-        if ($this->id === null) {
-            throw new \LogicException(
-                'ProductCustom has no ID (not persisted yet)'
-            );
-        }
-
-        return $this->id;
+        return $this->requireId($this->id, 'ProductCustom');
     }
 
     public function isPersisted(): bool
