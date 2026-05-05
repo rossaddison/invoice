@@ -29,7 +29,7 @@ class FromDropDownEntityTest extends TestCase
     {
         $fromDropDown = new FromDropDown();
         
-        $this->assertFalse($fromDropDown->isPersisted());
+        $this->assertFalse($fromDropDown->hasIdentity());
         $this->assertSame('', $fromDropDown->getEmail());
         $this->assertFalse($fromDropDown->getInclude());
         $this->assertFalse($fromDropDown->getDefaultEmail());
@@ -598,7 +598,7 @@ class FromDropDownEntityTest extends TestCase
         
         // Email and flags only
         $dropdown4 = new FromDropDown(email: $this->testExampleCom, include: true, default_email: true);
-        $this->assertFalse($dropdown4->isPersisted());
+        $this->assertFalse($dropdown4->hasIdentity());
         $this->assertSame($this->testExampleCom, $dropdown4->getEmail());
         $this->assertTrue($dropdown4->getInclude());
         $this->assertTrue($dropdown4->getDefaultEmail());

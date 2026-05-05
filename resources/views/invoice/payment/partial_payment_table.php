@@ -56,10 +56,10 @@ echo H::openTag('div', ['class' => 'table-responsive']);
   echo H::closeTag('thead');
   echo H::openTag('tbody');
    /**
-    * @var App\Invoice\Entity\Payment $payment
+    * @var App\Infrastructure\Persistence\Payment\Payment  $payment
     */
    foreach ($payments as $payment) {
-       if ($payment->getInv()?->getClientId() == $client->reqId()) {
+       if ($payment->getInv()?->reqClientId() == $client->reqId()) {
            echo H::openTag('tr');
             echo H::openTag('td');
              echo !is_string($paymentDate = $payment->getPaymentDate()) ?
@@ -71,7 +71,7 @@ echo H::openTag('div', ['class' => 'table-responsive']);
             echo H::openTag('td');
              echo H::openTag('a', [
                  'href' => $urlGenerator->generate('inv/view',
-                         ['id' => $payment->getInvId()])
+                         ['id' => $payment->reqInvId()])
              ]);
               echo H::encode($payment->getInv()?->getNumber() ?? '#');
              echo H::closeTag('a');
@@ -79,7 +79,7 @@ echo H::openTag('div', ['class' => 'table-responsive']);
             echo H::openTag('td');
              echo H::openTag('a', [
                  'href' => $urlGenerator->generate('client/view',
-                         ['id' => $payment->getInv()?->getClientId()]),
+                         ['id' => (string) $payment->getInv()?->reqClientId()]),
                  'title' => $translator->translate('view.client')
              ]);
               echo H::encode($clientHelper->formatClient(
@@ -111,7 +111,7 @@ echo H::openTag('div', ['class' => 'table-responsive']);
                 echo H::openTag('a', [
                     'class' => 'dropdown-item',
                     'href' => $urlGenerator->generate('client/view',
-                            ['id' => $payment->getInv()?->getClientId()]),
+                            ['id' => $payment->getInv()?->reqClientId()]),
                     'title' => $translator->translate('view.client')
                 ]);
                  echo H::encode($clientHelper->formatClient(
@@ -120,7 +120,7 @@ echo H::openTag('div', ['class' => 'table-responsive']);
                 echo H::openTag('a', [
                     'class' => 'dropdown-item',
                     'href' => $urlGenerator->generate('payment/edit',
-                            ['id' => $payment->getId()])
+                            ['id' => $payment->reqId()])
                 ]);
                  echo H::openTag('i', ['class' => 'bi bi-pencil-square']);
                  echo H::closeTag('i');
@@ -131,7 +131,7 @@ echo H::openTag('div', ['class' => 'table-responsive']);
                 echo H::openTag('form', [
                     'style' => 'display:contents',
                     'action' => $urlGenerator->generate('payment/delete',
-                            ['id' => $payment->getId()]),
+                            ['id' => $payment->reqId()]),
                     'method' => 'POST'
                 ]);
                  echo H::openTag('input', [

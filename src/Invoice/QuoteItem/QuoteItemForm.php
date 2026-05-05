@@ -38,8 +38,10 @@ final class QuoteItemForm extends FormModel
     {
         $form = new self();
         $form->tax_rate_id = (string) $quoteItem->reqTaxRateId();
-        $form->product_id = null !== ($product = $quoteItem->getProduct()) ? (string) $product->reqId() : null;
-        $form->task_id = null !== ($task = $quoteItem->getTask()) ? (string) $task->reqId() : null;
+        $form->product_id = null !== ($product = $quoteItem->getProduct()) ?
+                (string) $product->reqId() : null;
+        $form->task_id = null !== ($task = $quoteItem->getTask()) ?
+                (string) $task->reqId() : null;
         $form->name = $quoteItem->getName();
         $form->description = $quoteItem->getDescription();
         $form->quantity = $quoteItem->getQuantity();

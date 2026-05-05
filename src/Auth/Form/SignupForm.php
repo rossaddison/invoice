@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Auth\Form;
 
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;

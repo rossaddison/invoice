@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\User;
 
+use App\Infrastructure\Persistence\User\User;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -71,12 +72,13 @@ final class UserRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * $id has been checked for persistence => cannot be null
+     * @param int $id
      *
-     * @return User|null
-     * @psalm-return TEntity|null
+     * @return User
+     * @psalm-return TEntity
      */
-    public function findById(string $id): ?User
+    public function findById(int $id): User
     {
         return $this->findByPK($id);
     }

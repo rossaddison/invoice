@@ -60,7 +60,7 @@ class QuoteAmount
         return $this->requireId($this->id, 'Quote Amount');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

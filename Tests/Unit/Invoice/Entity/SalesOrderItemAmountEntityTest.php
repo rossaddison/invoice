@@ -13,7 +13,7 @@ class SalesOrderItemAmountEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $amount = new SalesOrderItemAmount();
-        $this->assertFalse($amount->isPersisted());
+        $this->assertFalse($amount->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -27,7 +27,7 @@ class SalesOrderItemAmountEntityTest extends TestCase
     {
         $amount = new SalesOrderItemAmount();
         $amount->setId(15);
-        $this->assertTrue($amount->isPersisted());
+        $this->assertTrue($amount->hasIdentity());
         $this->assertSame(15, $amount->reqId());
     }
 
@@ -41,7 +41,6 @@ class SalesOrderItemAmountEntityTest extends TestCase
     public function testConstructorWithDefaults(): void
     {
         $amount = new SalesOrderItemAmount();
-        $this->assertSame('', $amount->getSalesOrderItemId());
         $this->assertSame(0.00, $amount->getSubtotal());
         $this->assertSame(0.00, $amount->getTaxTotal());
         $this->assertSame(0.00, $amount->getDiscount());
@@ -63,7 +62,7 @@ class SalesOrderItemAmountEntityTest extends TestCase
             total: 233.00,
         );
 
-        $this->assertSame('8', $amount->getSalesOrderItemId());
+        $this->assertSame(8, $amount->reqSalesOrderItemId());
         $this->assertSame(200.00, $amount->getSubtotal());
         $this->assertSame(40.00, $amount->getTaxTotal());
         $this->assertSame(10.00, $amount->getDiscount());
@@ -76,14 +75,14 @@ class SalesOrderItemAmountEntityTest extends TestCase
     {
         $amount = new SalesOrderItemAmount();
         $amount->setSalesOrderItemId(77);
-        $this->assertSame('77', $amount->getSalesOrderItemId());
+        $this->assertSame(77, $amount->reqSalesOrderItemId());
     }
 
     public function testSalesOrderItemIdIsReturnedAsString(): void
     {
         $amount = new SalesOrderItemAmount(sales_order_item_id: 33);
-        $this->assertIsString($amount->getSalesOrderItemId());
-        $this->assertSame('33', $amount->getSalesOrderItemId());
+        $this->assertIsInt($amount->reqSalesOrderItemId());
+        $this->assertSame(33, $amount->reqSalesOrderItemId());
     }
 
     public function testSubtotalSetterAndGetter(): void

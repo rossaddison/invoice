@@ -41,7 +41,7 @@ class ProductCustom
         return $this->requireId($this->id, 'ProductCustom');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -71,9 +71,9 @@ class ProductCustom
         $this->custom_field = $custom_field;
     }
 
-    public function getProductId(): string
+    public function reqProductId(): int
     {
-        return (string) $this->product_id;
+        return $this->requireId($this->product_id, 'Product');
     }
 
     public function setProductId(int $product_id): void
@@ -81,9 +81,9 @@ class ProductCustom
         $this->product_id = $product_id;
     }
 
-    public function getCustomFieldId(): string
+    public function reqCustomFieldId(): int
     {
-        return (string) $this->custom_field_id;
+        return $this->requireId($this->custom_field_id, 'CustomField');
     }
 
     public function setCustomFieldId(int $custom_field_id): void

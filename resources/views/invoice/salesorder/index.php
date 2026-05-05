@@ -306,7 +306,7 @@ $columns = [
             string|A {
             if (!$model->hasLinkedInvoice()) { return ''; }
             $invId = $model->reqInvId();
-            $inv = $iR->repoInvUnloadedquery((string) $invId);
+            $inv = $iR->repoInvUnloadedquery($invId);
             return $inv ? Html::a($inv->getNumber() ?? '#',
                     $urlGenerator->generate(
                     'inv/view', ['id' => $invId]),

@@ -9,9 +9,9 @@ use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\CustomField\CustomFieldRepository;
 use App\Invoice\CustomValue\CustomValueRepository;
-use App\Invoice\Entity\Payment;
-use App\Invoice\Entity\PaymentCustom;
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Payment\Payment;
+use App\Infrastructure\Persistence\PaymentCustom\PaymentCustom;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Helpers\CustomValuesHelper;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\Inv\InvRepository;
@@ -28,7 +28,7 @@ use App\Invoice\PaymentCustom\PaymentCustomService;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository;
 use App\Invoice\UserInv\UserInvRepository;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserService;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -121,23 +121,23 @@ final class PaymentController extends BaseController
         $invoice_payment_methods = [];
         /** @var Inv $open_invoice */
         foreach ($open as $open_invoice) {
-            $open_invoice_id = $open_invoice->getId();
-            if (null !== $open_invoice_id) {
-                $inv_amount = $iaR->repoInvquery((int) $open_invoice_id);
-                if (null !== $inv_amount) {
-                    $amounts['invoice'
-                        . $open_invoice_id] =
-                            $this->sR->formatAmount($inv_amount->getBalance());
-                }
-                $invoice_payment_methods['invoice'
-                    . $open_invoice_id] = $open_invoice->getPaymentMethod();
-            }
+            $open_invoice_id = $open_invoice->reqId();
+            $inv_amount = $iaR->repoInvquery($open_invoice_id);
+             if (null !== $inv_amount) {
+              
+              
+                 $amounts['invoice'
+                     . $open_invoice_id] =
+                         $this->sR->formatAmount($inv_amount->getBalance());
+             }
+             $invoice_payment_methods['invoice'
+                 . $open_invoice_id] = $open_invoice->getPaymentMethod();
+            
         }
         $numberHelper = new NumberHelper($this->sR);
         $payment = new Payment();
-        $form = new PaymentForm($payment);
-        $paymentCustom = new PaymentCustom();
-        $pcForm = new PaymentCustomForm($paymentCustom);
+        $form = new PaymentForm();
+        $pcForm = new PaymentCustomForm();
         $params = [
             'actionName' => 'payment/add',
             'actionArguments' => [],
@@ -175,8 +175,8 @@ final class PaymentController extends BaseController
                 if (is_array($body)) {
                     $this->paymentService->savePayment($payment, $body);
 // Once the payment has been saved, retrieve the payment id for the custom fields
-                    $payment_id = $payment->getId();
-                    $inv_id = $payment->getInvId();
+                    $payment_id = $payment->reqId();
+                    $inv_id = $payment->reqInvId();
                     // Recalculate the invoice
                     $numberHelper->calculateInv($inv_id, $aciR, $iiR, $iiaR,
                                             $itrR, $iaR, $invRepository, $pmtR);
@@ -192,9 +192,9 @@ final class PaymentController extends BaseController
                          */
                         foreach ($custom as $custom_field_id => $value) {
                             $paymentCustom = new PaymentCustom();
-                            $pcForm = new PaymentCustomForm($paymentCustom);
+                            $pcForm = new PaymentCustomForm();
                             $paymentCustomInput = [
-                                'payment_id' => (int) $payment_id,
+                                'payment_id' => $payment_id,
                                 'custom_field_id' => $custom_field_id,
                                 'value' => is_array($value) ?
                                 serialize($value) : $value,
@@ -227,27 +227,27 @@ final class PaymentController extends BaseController
     // If the custom field already exists return false
 
     /**
-     * @param string $payment_id
+     * @param int $payment_id
      * @param int $custom_field_id
      * @param PaymentCustomRepository $pcR
      * @return bool
      */
-    public function addCustomField(string $payment_id, int $custom_field_id,
+    public function addCustomField(int $payment_id, int $custom_field_id,
                                             PaymentCustomRepository $pcR): bool
     {
-        return $pcR->repoPaymentCustomCount($payment_id,
-                                (string) $custom_field_id) > 0 ? false : true;
+        return $pcR->repoPaymentCustomCount($payment_id, $custom_field_id) > 0 ?
+            false : true;
     }
 
     /**
      * @param FormHydrator $fmHyd
      * @param (mixed|string)[] $array
-     * @param string $payment_id
+     * @param int $payment_id
      * @param PaymentCustomRepository $pcR
      * @psalm-param array{custom: ''|mixed} $array
      */
     public function customFields(FormHydrator $fmHyd, array $array,
-                        string $payment_id, PaymentCustomRepository $pcR): void
+                        int $payment_id, PaymentCustomRepository $pcR): void
     {
         if (is_array($array['custom'])) {
             $db_array = [];
@@ -281,16 +281,16 @@ final class PaymentController extends BaseController
             foreach ($db_array as $key => $value) {
                 if ($value !== '') {
                     $paymentCustom = new PaymentCustom();
-                    $from_custom = new PaymentCustomForm($paymentCustom);
+                    $from_custom = new PaymentCustomForm();
                     $payment_custom = [];
                     $payment_custom['payment_id'] = $payment_id;
                     $payment_custom['custom_field_id'] = $key;
                     $payment_custom['value'] = is_array($value) ?
                             serialize($value) : $value;
                     $model = ($pcR->repoPaymentCustomCount(
-                            $payment_id, $key) > 0 ?
-                                $pcR->repoFormValuequery($payment_id, $key) :
-                                    new PaymentCustom());
+                            $payment_id, (int) $key) > 0 ?
+                                $pcR->repoFormValuequery($payment_id, (int) $key) :
+                                    $paymentCustom);
                     if (null !== $model && $fmHyd->populate($from_custom,
                             $payment_custom) && $from_custom->isValid()) {
                         $this->paymentCustomService->savePaymentCustom($model,
@@ -326,9 +326,9 @@ final class PaymentController extends BaseController
             $number_helper = new NumberHelper($this->sR);
             $payment = $this->payment($currentRoute, $pmtR);
             if ($payment) {
-                $inv_id = $payment->getInv()?->getId();
+                $inv_id = $payment->getInv()?->reqId();
                 $this->paymentService->deletePayment($payment);
-                $number_helper->calculateInv((string) $inv_id, $aciR, $iiR,
+                $number_helper->calculateInv((int) $inv_id, $aciR, $iiR,
                                     $iiaR, $itrR, $iaR, $invRepository, $pmtR);
                 $this->flashMessage('success',
                                 $this->translator->translate('payment.deleted'));
@@ -379,11 +379,11 @@ final class PaymentController extends BaseController
     ): Response {
         $payment = $this->payment($currentRoute, $pmtR);
         if ($payment) {
-            $form = new PaymentForm($payment);
+            $form = PaymentForm::show($payment);
             $paymentCustom = new PaymentCustom();
-            $pcForm = new PaymentCustomForm($paymentCustom);
-            $payment_id = $payment->getId();
-            $inv_id = $payment->getId();
+            $pcForm = PaymentCustomForm::show($paymentCustom);
+            $payment_id = $payment->reqId();
+            $inv_id = $payment->reqId();
             $open = $invRepository->open();
             $number_helper = new NumberHelper($this->sR);
             $params = [
@@ -462,7 +462,7 @@ final class PaymentController extends BaseController
     ): ?PaymentForm {
         $payment = $this->payment($currentRoute, $pmtR);
         if (null !== $payment) {
-            $form = new PaymentForm($payment);
+            $form = new PaymentForm();
             if ($fmHyd->populateAndValidate($form, $body)) {
                 $this->paymentService->savePayment($payment, $body);
             } else {
@@ -511,11 +511,11 @@ final class PaymentController extends BaseController
         $user = $this->userService->getUser();
         // Set the page size limiter to 10 as default
         $userInvListLimit = 10;
-        if ($user instanceof User && null !== $user->getId()) {
+        if ($user instanceof User && $user->reqId() > 0) {
 // Use this user's id to see whether a user has been setup under UserInv ie.
 // yii-invoice's list of users
-            $userinv = ($uiR->repoUserInvUserIdcount((string) $user->getId()) > 0
-                     ? $uiR->repoUserInvUserIdquery((string) $user->getId())
+            $userinv = ($uiR->repoUserInvUserIdcount($user->reqId()) > 0
+                     ? $uiR->repoUserInvUserIdquery($user->reqId())
                      : null);
 // Determine what clients have been allocated to this user
 // (Related logic: see Settings...User Account) by looking at UserClient table
@@ -526,10 +526,10 @@ final class PaymentController extends BaseController
 // so that they can view their invoices and make payment
 // Return an array of client ids associated with the current user
             if (null !== $userinv
-                    && null !== $user->getId()
+                    && ($user->reqId() > 0)
                     && $userinv->getActive()) {
                 /** @psalm-suppress PossiblyNullArgument */
-                $client_id_array = $ucR->getAssignedToUser($user->getId());
+                $client_id_array = $ucR->getAssignedToUser($user->reqId());
                 // Use the users last preferred Page Size Limiter value
                 $userInvListLimit = $userinv->getListLimit();
             } else {
@@ -594,8 +594,8 @@ final class PaymentController extends BaseController
         // Retrieve the user from Yii-Demo's list of users in the User Table
         /** @var User $user */
         $user = $this->userService->getUser();
-        $user_id = $user->getId();
-        if (null !== $user_id) {
+        $user_id = $user->reqId();
+        if ($user_id > 0) {
 // Use this user's id to see whether a user has been setup under UserInv ie.
 // yii-invoice's list of users
             $userinv = ($uiR->repoUserInvUserIdcount($user_id) > 0
@@ -838,7 +838,7 @@ final class PaymentController extends BaseController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            return $payR->repoPaymentquery($id);
+            return $payR->repoPaymentquery((int) $id);
         }
         return null;
     }
@@ -854,11 +854,11 @@ final class PaymentController extends BaseController
     }
 
     /**
-     * @param string $payment_id
+     * @param int $payment_id
      * @param PaymentCustomRepository $pcR
      * @return array
      */
-    private function paymentCustomValues(string $payment_id,
+    private function paymentCustomValues(int $payment_id,
                                             PaymentCustomRepository $pcR): array
     {
         // Function edit: Get field's values for editing
@@ -892,7 +892,7 @@ final class PaymentController extends BaseController
         $custom_field_body = [
             'custom' => (array) $js_data['custom'] ?: '',
         ];
-        $this->customFields($fmHyd, $custom_field_body, $payment_id, $pcR);
+        $this->customFields($fmHyd, $custom_field_body, (int) $payment_id, $pcR);
         return $this->factory->createResponse(Json::encode(['success' => 1]));
     }
 
@@ -913,8 +913,8 @@ final class PaymentController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $payment = $this->payment($currentRoute, $payR);
         if ($payment) {
-            $paymentId = $payment->getId();
-            $form = new PaymentForm($payment);
+            $paymentId = $payment->reqId();
+            $form = PaymentForm::show($payment);
             $params = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'payment/edit',
@@ -950,7 +950,7 @@ final class PaymentController extends BaseController
                                         $cfR->repoTablequery('payment_custom')),
             'paymentCustomValues' => $payment_custom_values,
             'cvH' => new CustomValuesHelper($this->sR, $cvR),
-            'paymentCustomForm' => new PaymentCustomForm(new PaymentCustom()),
+            'paymentCustomForm' => new PaymentCustomForm(),
         ]);
     }
 }

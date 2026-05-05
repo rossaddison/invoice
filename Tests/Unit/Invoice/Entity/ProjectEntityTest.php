@@ -13,7 +13,7 @@ class ProjectEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $project = new Project();
-        $this->assertFalse($project->isPersisted());
+        $this->assertFalse($project->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -27,7 +27,7 @@ class ProjectEntityTest extends TestCase
     {
         $project = new Project();
         $project->setId(11);
-        $this->assertTrue($project->isPersisted());
+        $this->assertTrue($project->hasIdentity());
         $this->assertSame(11, $project->reqId());
     }
 

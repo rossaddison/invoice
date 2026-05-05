@@ -96,7 +96,7 @@ final class QuoteItemAllowanceChargeRepository extends Select\Repository
     public function repoACQquery(int $quote_id): EntityReader
     {
         $query = $this->select()
-                      ->where(['quote_id' => (string) $quote_id]);
+                      ->where(['quote_id' => $quote_id]);
         return $this->prepareDataReader($query);
     }
 
@@ -130,7 +130,7 @@ final class QuoteItemAllowanceChargeRepository extends Select\Repository
     public function repoQuoteCount(int $quote_id): int
     {
         $query = $this->select()
-                      ->where(['quote_id' => (string) $quote_id]);
+                      ->where(['quote_id' => $quote_id]);
         return $query->count();
     }
 

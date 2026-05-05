@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
 
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\Delivery\DeliveryRepository as delRepo;
 use DateTime;
@@ -375,7 +375,7 @@ class DateHelper
     {
         // If invoice's Delivery period setup => use it and not beginning and end of month values
         $deliveryId = $invoice->getDeliveryId();
-        if ($deliveryId) {
+        if ($deliveryId > 0) {
             $delivery = $delRepo->repoDeliveryquery($deliveryId);
             if (null !== $delivery) {
                 $deliveryStartDate = $delivery->getStartDate();

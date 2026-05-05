@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\PaymentInformation\Service;
 
 use Amazon\Pay\API\Client;
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\Setting\SettingRepository as sR;
@@ -98,7 +98,7 @@ class AmazonPayPaymentService
             $invoiceRepository->save($invoice);
 
             $invoiceAmountRecord =
-                $invoiceAmountRepository->repoInvquery((int) $invoice->getId());
+                $invoiceAmountRepository->repoInvquery($invoice->reqId());
             if ($invoiceAmountRecord) {
                 $balance = $invoiceAmountRecord->getBalance();
                 if (null !== $balance) {

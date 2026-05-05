@@ -120,15 +120,14 @@ echo H::openTag('div', $row); //1
         'id' =>
         $sdpm
        ]);
-        /**
-        * @var App\Invoice\Entity\PaymentMethod
-        *      $payment_method
-        */
+/**
+ * @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod $payment_method
+ */
         foreach ($payment_methods as $payment_method) {
         echo  new Option()
-         ->value($payment_method->getId())
+         ->value($payment_method->reqId())
          ->selected(
-          $payment_method->getId() ==
+          $payment_method->reqId() ==
           $body[$sdpm]
         )
          ->content(

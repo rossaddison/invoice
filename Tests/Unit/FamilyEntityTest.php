@@ -12,35 +12,33 @@ final class FamilyEntityTest extends Unit
     public function testConstructorWithDefaults(): void
     {
         $family = new Family();
-        
-        $this->assertNull($family->getFamilyId());
+
+        $this->assertFalse($family->hasIdentity());
         $this->assertSame('', $family->getFamilyName());
-        $this->assertSame('', $family->getCategoryPrimaryId());
-        $this->assertSame('', $family->getCategorySecondaryId());
     }
 
     public function testConstructorWithAllParameters(): void
     {
         $family = new Family('Electronics', 'comma,list', 'prefix', 1, 2);
-        
-        $this->assertNull($family->getFamilyId());
+
+        $this->assertFalse($family->hasIdentity());
         $this->assertSame('Electronics', $family->getFamilyName());
-        $this->assertSame('1', $family->getCategoryPrimaryId());
-        $this->assertSame('2', $family->getCategorySecondaryId());
+        $this->assertSame(1, $family->reqCategoryPrimaryId());
+        $this->assertSame(2, $family->reqCategorySecondaryId());
     }
 
     public function testFamilyIdGetter(): void
     {
         $family = new Family();
-        
-        $this->assertNull($family->getFamilyId());
+
+        $this->assertFalse($family->hasIdentity());
     }
 
     public function testFamilyNameSetterAndGetter(): void
     {
         $family = new Family();
         $family->setFamilyName('Books');
-        
+
         $this->assertSame('Books', $family->getFamilyName());
     }
 
@@ -48,43 +46,43 @@ final class FamilyEntityTest extends Unit
     {
         $family = new Family();
         $family->setCategoryPrimaryId(5);
-        
-        $this->assertSame('5', $family->getCategoryPrimaryId());
+
+        $this->assertSame(5, $family->reqCategoryPrimaryId());
     }
 
     public function testCategorySecondaryIdSetterAndGetter(): void
     {
         $family = new Family();
         $family->setCategorySecondaryId(10);
-        
-        $this->assertSame('10', $family->getCategorySecondaryId());
+
+        $this->assertSame(10, $family->reqCategorySecondaryId());
     }
 
     public function testCommonFamilyTypes(): void
     {
         $electronics = new Family('Electronics', '', '', 1, 10);
         $this->assertSame('Electronics', $electronics->getFamilyName());
-        $this->assertSame('1', $electronics->getCategoryPrimaryId());
-        $this->assertSame('10', $electronics->getCategorySecondaryId());
+        $this->assertSame(1, $electronics->reqCategoryPrimaryId());
+        $this->assertSame(10, $electronics->reqCategorySecondaryId());
 
         $clothing = new Family('Clothing', '', '', 2, 20);
         $this->assertSame('Clothing', $clothing->getFamilyName());
-        $this->assertSame('2', $clothing->getCategoryPrimaryId());
-        $this->assertSame('20', $clothing->getCategorySecondaryId());
+        $this->assertSame(2, $clothing->reqCategoryPrimaryId());
+        $this->assertSame(20, $clothing->reqCategorySecondaryId());
     }
 
     public function testLongFamilyNames(): void
     {
         $longName = 'Very Long Family Name That Could Potentially Exceed Normal Limits';
         $family = new Family($longName, '', '', 1, 2);
-        
+
         $this->assertSame($longName, $family->getFamilyName());
     }
 
     public function testSpecialCharactersInFamilyName(): void
     {
         $family = new Family('Books & Magazines', '', '', 3, 30);
-        
+
         $this->assertSame('Books & Magazines', $family->getFamilyName());
     }
 
@@ -94,16 +92,16 @@ final class FamilyEntityTest extends Unit
         $family->setFamilyName('Home Improvement');
         $family->setCategoryPrimaryId(5);
         $family->setCategorySecondaryId(50);
-        
+
         $this->assertSame('Home Improvement', $family->getFamilyName());
-        $this->assertSame('5', $family->getCategoryPrimaryId());
-        $this->assertSame('50', $family->getCategorySecondaryId());
+        $this->assertSame(5, $family->reqCategoryPrimaryId());
+        $this->assertSame(50, $family->reqCategorySecondaryId());
     }
 
     public function testPublicIdProperty(): void
     {
         $family = new Family();
-        $this->assertNull($family->getFamilyId());
+        $this->assertFalse($family->hasIdentity());
     }
 
     public function testPublicFamilyNameProperty(): void
@@ -115,17 +113,17 @@ final class FamilyEntityTest extends Unit
     public function testZeroCategoryIds(): void
     {
         $family = new Family('Zero Categories', '', '', 0, 0);
-        
-        $this->assertSame('0', $family->getCategoryPrimaryId());
-        $this->assertSame('0', $family->getCategorySecondaryId());
+
+        $this->assertSame(0, $family->reqCategoryPrimaryId());
+        $this->assertSame(0, $family->reqCategorySecondaryId());
     }
 
     public function testLargeCategoryIds(): void
     {
         $family = new Family('Large IDs', '', '', 999999, 888888);
-        
-        $this->assertSame('999999', $family->getCategoryPrimaryId());
-        $this->assertSame('888888', $family->getCategorySecondaryId());
+
+        $this->assertSame(999999, $family->reqCategoryPrimaryId());
+        $this->assertSame(888888, $family->reqCategorySecondaryId());
     }
 
     public function testChainedSetterCalls(): void
@@ -134,34 +132,33 @@ final class FamilyEntityTest extends Unit
         $family->setFamilyName('Chained');
         $family->setCategoryPrimaryId(100);
         $family->setCategorySecondaryId(200);
-        
+
         $this->assertSame('Chained', $family->getFamilyName());
-        $this->assertSame('100', $family->getCategoryPrimaryId());
-        $this->assertSame('200', $family->getCategorySecondaryId());
+        $this->assertSame(100, $family->reqCategoryPrimaryId());
+        $this->assertSame(200, $family->reqCategorySecondaryId());
     }
 
     public function testNullFamilyNameHandling(): void
     {
         $family = new Family(null, '', '', 1, 2);
-        
+
         $this->assertNull($family->getFamilyName());
     }
 
     public function testUnicodeInFamilyName(): void
     {
         $family = new Family('Téchnology & Gadgéts 科技', '', '', 1, 2);
-        
+
         $this->assertSame('Téchnology & Gadgéts 科技', $family->getFamilyName());
     }
 
-    public function testCategoryIdStringConversion(): void
+    public function testCategoryIdIntType(): void
     {
         $family = new Family('Test', '', '', 123, 456);
-        
-        // Verify getters return strings even though setters accept ints
-        $this->assertIsString($family->getCategoryPrimaryId());
-        $this->assertIsString($family->getCategorySecondaryId());
-        $this->assertSame('123', $family->getCategoryPrimaryId());
-        $this->assertSame('456', $family->getCategorySecondaryId());
+
+        $this->assertIsInt($family->reqCategoryPrimaryId());
+        $this->assertIsInt($family->reqCategorySecondaryId());
+        $this->assertSame(123, $family->reqCategoryPrimaryId());
+        $this->assertSame(456, $family->reqCategorySecondaryId());
     }
 }

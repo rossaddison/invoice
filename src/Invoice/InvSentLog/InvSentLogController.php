@@ -6,14 +6,14 @@ namespace App\Invoice\InvSentLog;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvSentLog;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvSentLog\InvSentLog;
 use App\Invoice\InvSentLog\InvSentLogRepository as ISLR;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
 use App\User\UserService;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\Service\WebControllerService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Yiisoft\Data\Paginator\PageToken;
@@ -50,7 +50,7 @@ final class InvSentLogController extends BaseController
      * @param string $page
      * @param string $queryPage
      * @param string $queryFilterInvNumber
-     * @param string $queryFilterClient
+     * @param int $queryFilterClientId
      * @return Response
      */
     public function guest(
@@ -63,16 +63,15 @@ final class InvSentLogController extends BaseController
         #[Query('filterInvNumber')]
         ?string $queryFilterInvNumber = null,
         #[Query('filterClient')]
-        ?string $queryFilterClient = null,
+        ?int $queryFilterClientId = null,
     ): Response {
         $user = $this->userService->getUser();
-        if ($user instanceof User && null !== $user->getId()) {
-            $userId = $user->getId();
+        if ($user instanceof User && (($userId = $user->reqId()) > 0)) {
             // Use this user's id to see whether a user has been setup under
             //  UserInv ie. yii-invoice's list of users
-            $userinv = ($uiR->repoUserInvUserIdcount((string) $userId) > 0 ?
-                    $uiR->repoUserInvUserIdquery((string) $userId) : null);
-            if (null !== $userinv && null !== $userId && $userinv->getActive()) {
+            $userinv = ($uiR->repoUserInvUserIdcount($userId) > 0 ?
+                    $uiR->repoUserInvUserIdquery($userId) : null);
+            if (null!==$userinv && $userinv->getActive()) {
                 $userInvListLimit = $userinv->getListLimit();
                 $invsentlogs = $islR->withUser($userId);
                 $finalPage = $queryPage ?? $page;
@@ -81,13 +80,13 @@ final class InvSentLogController extends BaseController
                 if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
                     $invsentlogs = $islR->filterInvNumber($queryFilterInvNumber);
                 }
-                if (isset($queryFilterClient) && !empty($queryFilterClient)) {
-                    $invsentlogs = $islR->filterClient($queryFilterClient);
+                if (isset($queryFilterClientId) && ($queryFilterClientId > 0)) {
+                    $invsentlogs = $islR->filterClient($queryFilterClientId);
                 }
                 if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
-                && (isset($queryFilterClient) && !empty($queryFilterClient))) {
+                && (isset($queryFilterClientId) && ($queryFilterClientId > 0))) {
                     $invsentlogs = $islR->filterInvNumberWithClient(
-                                    $queryFilterInvNumber, $queryFilterClient);
+                                    $queryFilterInvNumber, $queryFilterClientId);
                 }
                 $paginator = (new OffsetPaginator($invsentlogs))
                 ->withPageSize($userInvListLimit > 0 ? $userInvListLimit : 10)
@@ -102,10 +101,10 @@ final class InvSentLogController extends BaseController
                     'defaultPageSizeOffsetPaginator' =>
                                                 $userinv->getListLimit() ?? 10,
                     'optionsDataGuestInvNumberDropDownFilter' =>
-                    $this->optionsDataGuestInvNumberFilter($islR, (int) $userId),
+                    $this->optionsDataGuestInvNumberFilter($islR, $userId),
                     // Get all the clients that have been assigned to this user
                     'optionsDataGuestClientDropDownFilter' =>
-                            $this->optionsDataGuestClientsFilter($islR, $userId),
+                        $this->optionsDataGuestClientsFilter($islR, $userId),
                 ];
                 return $this->webViewRenderer->render('guest', $parameters);
             }
@@ -121,7 +120,7 @@ final class InvSentLogController extends BaseController
      * @param string $page
      * @param string $queryPage
      * @param string $queryFilterInvNumber
-     * @param string $queryFilterClientId
+     * @param int $queryFilterClientId
      * @return Response
      */
     public function index(
@@ -133,7 +132,7 @@ final class InvSentLogController extends BaseController
         #[Query('filterInvNumber')]
         ?string $queryFilterInvNumber = null,
         #[Query('filterClient')]
-        ?string $queryFilterClientId = null,
+        ?int $queryFilterClientId = null,
     ): Response {
         $invsentlogs = $islR->findAllPreloaded();
         $finalPage = $queryPage ?? $page;
@@ -142,11 +141,11 @@ final class InvSentLogController extends BaseController
         if (isset($queryFilterInvNumber) && !empty($queryFilterInvNumber)) {
             $invsentlogs = $islR->filterInvNumber($queryFilterInvNumber);
         }
-        if (isset($queryFilterClientId) && !empty($queryFilterClientId)) {
+        if (isset($queryFilterClientId) && ($queryFilterClientId > 0)) {
             $invsentlogs = $islR->filterClient($queryFilterClientId);
         }
         if ((isset($queryFilterInvNumber) && !empty($queryFilterInvNumber))
-        && (isset($queryFilterClientId) && !empty($queryFilterClientId))) {
+        && (isset($queryFilterClientId) && ($queryFilterClientId > 0))) {
             $invsentlogs =
             $islR->filterInvNumberWithClient(
                                     $queryFilterInvNumber, $queryFilterClientId);
@@ -180,7 +179,7 @@ final class InvSentLogController extends BaseController
             /**
              * @var InvSentLog $invsentlog
              */
-            return $islR->repoInvSentLogLoadedquery((string) $id);
+            return $islR->repoInvSentLogLoadedquery($id);
         }
         return null;
     }
@@ -197,7 +196,7 @@ final class InvSentLogController extends BaseController
     {
         $invsentlog = $this->invsentlog($islR, $id);
         if ($invsentlog) {
-            $form = new InvSentLogForm($invsentlog);
+            $form = InvSentLogForm::show($invsentlog);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'invsentlog/view',
@@ -253,24 +252,22 @@ final class InvSentLogController extends BaseController
      * @return bool
      */
     private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
-        $statusId = $inv->getStatusId();
-        if (null!==$statusId) {
-            // has observer role
-            if ($this->userService->hasPermission(Permissions::VIEW_INV)
-                && !($this->userService->hasPermission(Permissions::EDIT_INV))
-                // the invoice  is not a draft i.e. has been sent
-                && !($statusId === 1)
-                // the invoice is intended for the current user
-                && ($inv->getUserId() === $this->userService->getUser()?->getId())
-                // the invoice client is associated with the above user
-                // the observer user may be paying for more than one client
-                && ($ucR->repoUserClientqueryCount($inv->getUserId(),
-                                                $inv->getClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
-                // the current observer user is active
-                if (null !== $userInv && $userInv->getActive()) {
-                    return true;
-                }
+        $statusId = $inv->reqStatusId();
+        // has observer role
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && !($this->userService->hasPermission(Permissions::EDIT_INV))
+            // the invoice  is not a draft i.e. has been sent
+            && !($statusId === 1)
+            // the invoice is intended for the current user
+            && ($inv->reqUserId() === $this->userService->getUser()?->reqId())
+            // the invoice client is associated with the above user
+            // the observer user may be paying for more than one client
+            && ($ucR->repoUserClientqueryCount($inv->reqUserId(),
+                                            $inv->reqClientId()) > 0)) {
+            $userInv = $uiR->repoUserInvUserIdquery($statusId);
+            // the current observer user is active
+            if (null !== $userInv && $userInv->getActive()) {
+                return true;
             }
         }
         return false;
@@ -342,12 +339,10 @@ final class InvSentLogController extends BaseController
         foreach ($invsentlogs as $invSentLog) {
             $invNumber = $invSentLog->getInv()?->getNumber();
             if (null !== $invNumber) {
-                $invUserId = $invSentLog->getInv()?->getUser()->getId();
-                if (null !== $invUserId) {
-                    if ($user_id == (int) $invUserId) {
-                        if (!in_array($invNumber, $optionsDataGuestInvNumbers)) {
-                            $optionsDataGuestInvNumbers[$invNumber] = $invNumber;
-                        }
+                $invUserId = $invSentLog->getInv()?->getUser()->reqId();
+                if ($user_id == $invUserId) {
+                    if (!in_array($invNumber, $optionsDataGuestInvNumbers)) {
+                        $optionsDataGuestInvNumbers[$invNumber] = $invNumber;
                     }
                 }
             }
@@ -357,10 +352,10 @@ final class InvSentLogController extends BaseController
 
     /**
      * @param ISLR $islR
-     * @param string $userId
+     * @param int $userId
      * @return array
      */
-    public function optionsDataGuestClientsFilter(ISLR $islR, string $userId): array
+    private function optionsDataGuestClientsFilter(ISLR $islR, int $userId): array
     {
         $optionsDataGuestClientsOfUser = [];
         // Get all the invoices sent to this user
@@ -373,10 +368,10 @@ final class InvSentLogController extends BaseController
             $invClientFullName =
                     $invSentLog->getInv()?->getClient()?->getClientFullName();
             $invClientId = $invSentLog->getInv()?->getClient()?->reqId();
-            $invUserId = $invSentLog->getInv()?->getUser()?->getId();
+            $invUserId = $invSentLog->getInv()?->getUser()?->reqId();
             if (null !== $invUserId && null !== $invClientId) {
                 if ((null !== $invClientFullName)
-                        && ($userId == (int) $invUserId)) {
+                        && ($userId == $invUserId)) {
                     if (!in_array($invClientFullName,
                             $optionsDataGuestClientsOfUser)) {
                         $optionsDataGuestClientsOfUser[$invClientId] =

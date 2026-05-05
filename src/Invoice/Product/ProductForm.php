@@ -60,15 +60,15 @@ final class ProductForm extends FormModel
     public ?string $provider_name = null;
 
     #[Required]
-    public ?string $family_id = '';
+    public ?int $family_id = null;
 
     #[Required]
-    public ?string $tax_rate_id = '';
+    public ?int $tax_rate_id = null;
 
     #[Required]
-    public ?string $unit_id = '';
+    public ?int $unit_id = null;
 
-    public ?string $unit_peppol_id = '';
+    public ?int $unit_peppol_id = null;
 
     public static function show(Product $product): self
     {
@@ -92,10 +92,10 @@ final class ProductForm extends FormModel
             $product->getProductAdditionalItemPropertyName();
         $form->product_additional_item_property_value =
             $product->getProductAdditionalItemPropertyValue();
-        $form->tax_rate_id = $product->getTaxRateId();
-        $form->unit_id = $product->getUnitId();
+        $form->tax_rate_id = $product->reqTaxRateId();
+        $form->unit_id = $product->reqUnitId();
         $form->unit_peppol_id = $product->getUnitPeppolId();
-        $form->family_id = $product->getFamilyId();
+        $form->family_id = $product->reqId();
         return $form;
     }
 
@@ -174,22 +174,22 @@ final class ProductForm extends FormModel
         return $this->product_additional_item_property_value;
     }
 
-    public function getFamilyId(): ?string
+    public function getId(): ?int
     {
         return $this->family_id;
     }
 
-    public function getTaxRateId(): ?string
+    public function getTaxRateId(): ?int
     {
         return $this->tax_rate_id;
     }
 
-    public function getUnitId(): ?string
+    public function getUnitId(): ?int
     {
         return $this->unit_id;
     }
 
-    public function getUnitPeppolId(): ?string
+    public function getUnitPeppolId(): ?int
     {
         return $this->unit_peppol_id;
     }

@@ -14,7 +14,7 @@ class FamilyCustomEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $fc = new FamilyCustom();
-        $this->assertFalse($fc->isPersisted());
+        $this->assertFalse($fc->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -28,7 +28,7 @@ class FamilyCustomEntityTest extends TestCase
     {
         $fc = new FamilyCustom();
         $fc->setId(3);
-        $this->assertTrue($fc->isPersisted());
+        $this->assertTrue($fc->hasIdentity());
         $this->assertSame(3, $fc->reqId());
     }
 
@@ -39,30 +39,33 @@ class FamilyCustomEntityTest extends TestCase
         $this->assertIsInt($fc->reqId());
     }
 
-    public function testFamilyIdReturnsEmptyStringByDefault(): void
-    {
-        $fc = new FamilyCustom();
-        $this->assertSame('', $fc->getFamilyId());
-    }
-
-    public function testFamilyIdSetterAndGetter(): void
+    public function testFamilyIdDoesNotAffectReqId(): void
     {
         $fc = new FamilyCustom();
         $fc->setFamilyId(5);
-        $this->assertSame('5', $fc->getFamilyId());
+        $this->assertFalse($fc->hasIdentity());
     }
 
-    public function testCustomFieldIdReturnsEmptyStringByDefault(): void
+    public function testFamilyIdSetterDoesNotSetPrimaryId(): void
     {
         $fc = new FamilyCustom();
-        $this->assertSame('', $fc->getCustomFieldId());
+        $fc->setFamilyId(5);
+        $this->expectException(\LogicException::class);
+        $fc->reqId();
+    }
+
+    public function testCustomFieldIdThrowsWhenNotSet(): void
+    {
+        $fc = new FamilyCustom();
+        $this->expectException(\LogicException::class);
+        $fc->reqCustomFieldId();
     }
 
     public function testCustomFieldIdSetterAndGetter(): void
     {
         $fc = new FamilyCustom();
         $fc->setCustomFieldId(12);
-        $this->assertSame('12', $fc->getCustomFieldId());
+        $this->assertSame(12, $fc->reqCustomFieldId());
     }
 
     public function testValueIsNullByDefault(): void

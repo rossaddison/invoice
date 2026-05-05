@@ -6,8 +6,8 @@ namespace App\Invoice\PaymentPeppol;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\PaymentPeppol;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\PaymentPeppol\PaymentPeppol;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\UserClient\UserClientRepository as UCR;
 use App\Invoice\UserInv\UserInvRepository as UIR;
@@ -62,8 +62,8 @@ final class PaymentPeppolController extends BaseController
         FormHydrator $formHydrator,
     ): Response {
         $paymentPeppol = new PaymentPeppol();
-        $inv = $iR->repoInvUnLoadedquery($inv_id);
-        $form = new PaymentPeppolForm($paymentPeppol);
+        $inv = $iR->repoInvUnLoadedquery((int) $inv_id);
+        $form = new PaymentPeppolForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'paymentpeppol/add',
@@ -162,11 +162,11 @@ final class PaymentPeppolController extends BaseController
     ): Response {
         $paymentPeppol = $this->paymentpeppol($currentRoute, $paymentpeppolRepository);
         if ($paymentPeppol) {
-            $form = new PaymentPeppolForm($paymentPeppol);
+            $form = PaymentPeppolForm::show($paymentPeppol);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'paymentpeppol/edit',
-                'actionArguments' => ['id' => $paymentPeppol->getId()],
+                'actionArguments' => ['id' => $paymentPeppol->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'response' => $this->webViewRenderer->renderPartial(
@@ -205,11 +205,8 @@ final class PaymentPeppolController extends BaseController
             CurrentRoute $currentRoute,
             PaymentPeppolRepository $paymentpeppolRepository): ?PaymentPeppol
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $paymentpeppolRepository->repoPaymentPeppolLoadedquery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $paymentpeppolRepository->repoPaymentPeppolLoadedquery($id);
     }
 
     /**
@@ -241,11 +238,11 @@ final class PaymentPeppolController extends BaseController
         $paymentPeppol = $this->paymentpeppol(
                                         $currentRoute, $paymentpeppolRepository);
         if ($paymentPeppol) {
-            $form = new PaymentPeppolForm($paymentPeppol);
+            $form = PaymentPeppolForm::show($paymentPeppol);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'paymentpeppol/view',
-                'actionArguments' => ['id' => $paymentPeppol->getId()],
+                'actionArguments' => ['id' => $paymentPeppol->reqId()],
                 'form' => $form,
                 'paymentpeppol' => $paymentPeppol,
                 'response' => $this->webViewRenderer->renderPartial(
@@ -284,27 +281,24 @@ final class PaymentPeppolController extends BaseController
      * @return bool
      */
     private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
-        $statusId = $inv->getStatusId();
-        if (null!==$statusId) {
-            // has observer role
-            if ($this->userService->hasPermission(Permissions::VIEW_INV)
-                && !($this->userService->hasPermission(Permissions::EDIT_INV))
-                // the invoice  is not a draft i.e. has been sent
-                && !($statusId === 1)
-                // the invoice is intended for the current user
-                && ($inv->getUserId() ===
-                                        $this->userService->getUser()?->getId())
-                // the invoice client is associated with the above user
-                // the observer user may be paying for more than one client
-                && ($ucR->repoUserClientqueryCount($inv->getUserId(),
-                                                $inv->getClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
-                // the current observer user is active
-                if (null !== $userInv && $userInv->getActive()) {
-                    return true;
-                }
+        $statusId = $inv->reqStatusId();
+        // has observer role
+        if ($this->userService->hasPermission(Permissions::VIEW_INV)
+            && !($this->userService->hasPermission(Permissions::EDIT_INV))
+            // the invoice  is not a draft i.e. has been sent
+            && !($statusId === 1)
+            // the invoice is intended for the current user
+            && ($inv->reqUserId() === (int) $this->userService->getUser()?->reqId())
+            // the invoice client is associated with the above user
+            // the observer user may be paying for more than one client
+            && ($ucR->repoUserClientqueryCount($inv->reqUserId(),
+                $inv->reqClientId()) > 0)) {
+            $userInv = $uiR->repoUserInvUserIdquery($statusId);
+            // the current observer user is active
+            if (null !== $userInv && $userInv->getActive()) {
+                return true;
             }
-        }
+        }        
         return false;
     }
 

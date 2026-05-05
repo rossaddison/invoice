@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvSentLog;
 
-use App\Invoice\Entity\InvSentLog;
+use App\Infrastructure\Persistence\InvSentLog\InvSentLog;
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Inv\InvRepository as IR;
 use DateTimeImmutable;
@@ -51,7 +51,7 @@ final readonly class InvSentLogService
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (string) $array[$inv]);
+                (int) $array[$inv]);
             if ($invEntity) {
                 $model->setInv($invEntity);
             }

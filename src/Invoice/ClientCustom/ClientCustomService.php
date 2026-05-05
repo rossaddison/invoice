@@ -45,8 +45,7 @@ final readonly class ClientCustomService
         $custom_field = 'custom_field_id';
         if (isset($array[$custom_field])) {
             $model->setCustomField(
-                $this->cfR->repoCustomFieldquery(
-                    (string) $array[$custom_field]));
+                $this->cfR->repoCustomFieldquery((int) $array[$custom_field]));
         }
     }
 

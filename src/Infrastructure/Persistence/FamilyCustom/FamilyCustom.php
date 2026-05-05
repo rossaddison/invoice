@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\FamilyCustom;
 
-use App\Infrastructure\Persistence\{CustomField\CustomField, Family\Family, Trait\RequireId};
+use App\Infrastructure\Persistence\{
+    CustomField\CustomField,
+    Family\Family,
+    Trait\RequireId
+};
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -20,10 +24,14 @@ class FamilyCustom
     #[BelongsTo(target: CustomField::class, nullable: false)]
     private ?CustomField $custom_field = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $family_id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $custom_field_id = null, #[Column(type: 'text', nullable: true)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $family_id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $custom_field_id = null,
+        #[Column(type: 'text', nullable: true)]
         private ?string $value = null)
     {
     }
@@ -53,7 +61,7 @@ class FamilyCustom
         return $this->requireId($this->id, 'FamilyCustom');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -62,10 +70,10 @@ class FamilyCustom
     {
         $this->id = $id;
     }
-
-    public function getFamilyId(): string
+    
+    public function reqFamilyId(): int
     {
-        return (string) $this->family_id;
+        return $this->requireId($this->family_id, 'Family');
     }
 
     public function setFamilyId(int $family_id): void
@@ -73,9 +81,9 @@ class FamilyCustom
         $this->family_id = $family_id;
     }
 
-    public function getCustomFieldId(): string
+    public function reqCustomFieldId(): int
     {
-        return (string) $this->custom_field_id;
+        return $this->requireId($this->custom_field_id, 'Custom Field');
     }
 
     public function setCustomFieldId(int $custom_field_id): void

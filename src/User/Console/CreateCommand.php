@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\User\Console;
 
 use App\Auth\Form\SignupForm;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -79,10 +79,7 @@ final class CreateCommand extends Command
         }
 
         if ($isAdmin) {
-            $userId = $user->getId();
-            if ($userId === null) {
-                throw new LogicException('User Id is NULL');
-            }
+            $userId = $user->reqId();
             $this->manager->assign('admin', $userId);
         }
         $io->success('User created');

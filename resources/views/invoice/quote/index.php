@@ -263,7 +263,7 @@ $columns = [
         content: static function (Checkbox $input, DataContext $context)
             use ($translator): string {
             $quote = $context->data;
-            if (($quote instanceof Quote) && $quote->isPersisted()) {
+            if ($quote instanceof Quote) {
                 $id = $quote->reqId();
                 return  $input
                         ->addAttributes([
@@ -596,6 +596,47 @@ if ($enableGrouping) {
     });
 }
 
+$changeStatusDropdown = Html::openTag('div', ['class' => 'btn-group me-2', 'role' => 'group'])
+    . Html::openTag('div', ['class' => 'btn-group', 'role' => 'group'])
+    . Html::openTag('button', [
+        'type' => 'button',
+        'class' => 'btn btn-success dropdown-toggle',
+        'data-bs-toggle' => 'dropdown',
+        'aria-expanded' => 'false',
+        'id' => 'btn-quote-change-status',
+        'data-bs-auto-close' => 'true',
+    ])
+    . '☑️ ' . Html::encode($translator->translate('status'))
+    . Html::closeTag('button')
+    . Html::openTag('ul', ['class' => 'dropdown-menu', 'aria-labelledby' => 'btn-quote-change-status'])
+    . Html::openTag('li')
+    . Html::tag('a', '🗋 ' . Html::encode($translator->translate('draft')),
+        ['class' => 'dropdown-item quote-status-item', 'data-status-id' => '1', 'href' => '#'])
+    . Html::closeTag('li')
+    . Html::openTag('li')
+    . Html::tag('a', '📨 ' . Html::encode($translator->translate('sent')),
+        ['class' => 'dropdown-item quote-status-item', 'data-status-id' => '2', 'href' => '#'])
+    . Html::closeTag('li')
+    . Html::openTag('li')
+    . Html::tag('a', '👀 ' . Html::encode($translator->translate('viewed')),
+        ['class' => 'dropdown-item quote-status-item', 'data-status-id' => '3', 'href' => '#'])
+    . Html::closeTag('li')
+    . Html::openTag('li')
+    . Html::tag('a', '✅ ' . Html::encode($translator->translate('approved')),
+        ['class' => 'dropdown-item quote-status-item', 'data-status-id' => '4', 'href' => '#'])
+    . Html::closeTag('li')
+    . Html::openTag('li')
+    . Html::tag('a', '❌ ' . Html::encode($translator->translate('rejected')),
+        ['class' => 'dropdown-item quote-status-item', 'data-status-id' => '5', 'href' => '#'])
+    . Html::closeTag('li')
+    . Html::openTag('li')
+    . Html::tag('a', '🚫 ' . Html::encode($translator->translate('canceled')),
+        ['class' => 'dropdown-item quote-status-item', 'data-status-id' => '6', 'href' => '#'])
+    . Html::closeTag('li')
+    . Html::closeTag('ul')
+    . Html::closeTag('div')
+    . Html::closeTag('div');
+
 $toolbarString
     =  new Form()->post($urlGenerator->generate($quoteIndex))->csrf($csrf)->open()
     .  new Div()->addClass('float-start')->content(
@@ -607,6 +648,7 @@ $toolbarString
         . $toolbarReset
         . ($clientCount == 0 ? $disabledAddQuoteButton : $enabledAddQuoteButton)
         . Html::closeTag('div')
+        . $changeStatusDropdown
         .  new Div()
             ->addClass('btn-group ms-3')
             ->addAttributes(['role' => 'group'])

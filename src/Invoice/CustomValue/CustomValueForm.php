@@ -27,7 +27,7 @@ final class CustomValueForm extends FormModel
     public static function show(CustomValue $custom_value): self
     {
         $form = new self();
-        $form->custom_field_id = $custom_value->getCustomFieldId();
+        $form->custom_field_id = $custom_value->reqCustomFieldId();
         $form->value = $custom_value->getValue();
         $form->customfield = $custom_value->getCustomField();
         return $form;

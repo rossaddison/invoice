@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
@@ -47,8 +47,8 @@ const LABEL_WARNING = 'label label-warning';
 
 /**
  * @var App\Invoice\DeliveryLocation\DeliveryLocationRepository $dlR
- * @var App\Invoice\Entity\Inv $inv
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvRecurring\InvRecurringRepository $irR
@@ -389,7 +389,8 @@ $columns = [
         content: static function (Checkbox $input, DataContext $context)
             use ($translator): string {
             $inv = $context->data;
-            if (($inv instanceof Inv) && (null !== ($id = $inv->getId()))) {
+            if ($inv instanceof Inv) {
+                $id = $inv->reqId();
                 return  $input
                        ->addAttributes([
                            'id' => $id,
@@ -420,7 +421,7 @@ $columns = [
                 content: static function (Inv $inv) use ($s): string {
                     $iRO = $inv->getIsReadOnly();
                     $dRO = $s->getSetting('disable_read_only');
-                    $status = $inv->getStatusId();
+                    $status = $inv->reqStatusId();
                     $iconMap = [
                         /** editable draft */
                         'false' => [
@@ -461,7 +462,7 @@ $columns = [
                 url: static function (Inv $inv) use ($s, $urlGenerator): string {
                     $iRO = $inv->getIsReadOnly();
                     $dRO = $s->getSetting('disable_read_only');
-                    $status = $inv->getStatusId();
+                    $status = $inv->reqStatusId();
                     $urlMap = [
                         /** editable draft **/
                         'false' => [
@@ -469,7 +470,7 @@ $columns = [
                             '0' => [
                                 '1' => $urlGenerator->generate(
                                     INV_ROUTE_EDIT,
-                                    ['id' => $inv->getId()],
+                                    ['id' => $inv->reqId()],
                                 ),
                             ],
                             /** protection is off */
@@ -477,7 +478,7 @@ $columns = [
                     /** Allow editing of draft, even though protection is off */
                                 '1' => $urlGenerator->generate(
                                     INV_ROUTE_EDIT,
-                                    ['id' => $inv->getId()],
+                                    ['id' => $inv->reqId()],
                                 ),
                             ],
                         ],
@@ -493,7 +494,7 @@ $columns = [
                     /** Allow the editing of invoice whilst protection is off */
                                 '2' => $urlGenerator->generate(
                                     INV_ROUTE_EDIT,
-                                    ['id' => $inv->getId()],
+                                    ['id' => $inv->reqId()],
                                 ),
                             ],
                         ],
@@ -510,7 +511,7 @@ $columns = [
                 attributes: static function (Inv $inv) use ($s, $translator): array {
                     $iRO = $inv->getIsReadOnly();
                     $dRO = $s->getSetting('disable_read_only');
-                    $status = $inv->getStatusId();
+                    $status = $inv->reqStatusId();
                     $attributesMap = [
                         /** editable draft **/
                         'false' => [
@@ -590,7 +591,7 @@ $columns = [
                 url: static function (Inv $inv)
                                     use ($urlGenerator): string {
                     return $urlGenerator->generate('inv/pdfDashboardExcludeCf',
-                            ['id' => $inv->getId()]);
+                            ['id' => $inv->reqId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -604,7 +605,7 @@ $columns = [
                 url: static function (Inv $inv) use ($urlGenerator):
                 string {
                     return $urlGenerator->generate('inv/pdfDashboardIncludeCf',
-                            ['id' => $inv->getId()]);
+                            ['id' => $inv->reqId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -619,9 +620,9 @@ $columns = [
                 content: '📨',
                 url: static function (Inv $inv) use ($urlGenerator): string {
                     // draft invoices cannot be emailed
-                    if ($inv->getStatusId() !== 1) {
+                    if ($inv->reqStatusId() !== 1) {
                         return $urlGenerator->generate('inv/emailStage0',
-                                                        ['id' => $inv->getId()]);
+                                                        ['id' => $inv->reqId()]);
                     }
                     return '';
                 },
@@ -649,7 +650,7 @@ $columns = [
                             // List the first item on the invoice as a reminder
                             . $model->getFirstItemFamilyProductName())
                     ->href($urlGenerator->generate('inv/view',
-                                                    ['id' => $model->getId()]));
+                                                    ['id' => $model->reqId()]));
         },
         encodeContent: false,
         filter: DropdownFilter::widget()
@@ -729,10 +730,7 @@ $columns = [
         encodeHeader: false,
         content: static function (Inv $model) use ($iR, $s, $irR, $translator):
                                                                         string {
-            $statusId = $model->getStatusId();
-            if ($statusId === null) {
-                return '<span class="badge text-bg-default">N/A</span>';
-            }
+            $statusId = $model->reqStatusId();
             $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
             
@@ -742,7 +740,7 @@ $columns = [
                 $label .= ' 🚫';
             }
             // Add recurring indicator
-            if ($irR->repoCount((string) $model->getId()) > 0) {
+            if ($irR->repoCount($model->reqId()) > 0) {
                 $label .= ' ' . $translator->translate('recurring') . ' 🔄';
             }
             
@@ -795,15 +793,17 @@ $columns = [
         encodeHeader: false,
         property: 'filterCreditInvNumber',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
-            $visible = $iR->repoInvUnLoadedquery(
-                                        $model->getCreditinvoiceParentId());
-            if (null !== $visible) {
-                $url = ($visible->getNumber() ?? '#') . '💳';
-                return   new A()
-                        ->addAttributes(['style' => 'text-decoration:none'])
-                        ->content($url)
-                        ->href($urlGenerator->generate('inv/view',
-                                ['id' => $model->getCreditinvoiceParentId()]));
+            $parentId = $model->getCreditinvoiceParentId();
+            if ($parentId !== null) {
+                $visible = $iR->repoInvUnLoadedquery($parentId);
+                if (null !== $visible) {
+                    $url = ($visible->getNumber() ?? '#') . '💳';
+                    return   new A()
+                            ->addAttributes(['style' => 'text-decoration:none'])
+                            ->content($url)
+                            ->href($urlGenerator->generate('inv/view',
+                                    ['id' => $parentId]));
+                }
             }
             return  new A()->content('')->href('');
         },
@@ -833,16 +833,13 @@ $columns = [
         encodeHeader: false,
         content: static function (Inv $model)
     use ($islR, $toggleColumnInvSentLog ): string|A {
-            $modelId = $model->getId();
-            if (null !== $modelId) {
-             $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
-                if ($count > 0) {
-                    return $toggleColumnInvSentLog;
-                } else {
-                    return '0 📧';
-                }
+            $modelId = $model->reqId();
+            $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
+            if ($count > 0) {
+                return $toggleColumnInvSentLog;
+            } else {
+                return '0 📧';
             }
-            return '';
         },
         encodeContent: false,
     ),
@@ -857,23 +854,21 @@ $columns = [
         encodeHeader: false,
         content: static function (Inv $model) use
         ($islR, $urlGenerator, $translator): string|A {
-            $modelId = $model->getId();
-            if (null !== $modelId) {
-                $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
-                if ($count > 0) {
-                    return (new A())
-                    ->addAttributes([
-                        'type' => 'reset',
-                        'data-bs-toggle' => 'tooltip',
-                        'title' => $translator->translate('email.logs')])
-                    ->addClass(BTN_SUCCESS . ' me-1')
-                    ->content((string) $count)
-                    ->href($urlGenerator->generate(
-                            'invsentlog/index',
-                            [],
-                            ['filterInvNumber' => $model->getNumber()]))
-                    ->id('btn-all-visible');
-                }
+            $modelId = $model->reqId();
+            $count = $islR->repoInvSentLogEmailedCountForEachInvoice($modelId);
+            if ($count > 0) {
+                return (new A())
+                ->addAttributes([
+                    'type' => 'reset',
+                    'data-bs-toggle' => 'tooltip',
+                    'title' => $translator->translate('email.logs')])
+                ->addClass(BTN_SUCCESS . ' me-1')
+                ->content((string) $count)
+                ->href($urlGenerator->generate(
+                        'invsentlog/index',
+                        [],
+                        ['filterInvNumber' => $model->getNumber()]))
+                ->id('btn-all-visible');
             }
             return '0 📧';
         },
@@ -890,26 +885,23 @@ $columns = [
         encodeHeader: false,
         content: static function (Inv $model)
                             use ($islR, $urlGenerator, $gridComponents): string {
-            $modelId = $model->getId();
-            if (null !== $modelId) {
-                $invSentLogs = $islR->repoInvSentLogForEachInvoice($modelId);
-                /**
-                 * Related logic: see Initialize an ArrayCollection
-                 */
-                $model->setInvSentLogs();
-                /**
-                 * @var App\Invoice\Entity\InvSentLog $invSentLog
-                 */
-                foreach ($invSentLogs as $invSentLog) {
-                    $model->addInvSentLog($invSentLog);
-                }
-                return $gridComponents->gridMiniTableOfInvSentLogsForInv(
-                    $model,
-                    4,
-                    $urlGenerator,
-                );
+            $modelId = $model->reqId();
+            $invSentLogs = $islR->repoInvSentLogForEachInvoice($modelId);
+            /**
+             * Related logic: see Initialize an ArrayCollection
+             */
+            $model->setInvSentLogs();
+            /**
+             * @var App\Infrastructure\Persistence\InvSentLog\InvSentLog $invSentLog
+             */
+            foreach ($invSentLogs as $invSentLog) {
+                $model->addInvSentLog($invSentLog);
             }
-            return '0 📧';
+            return $gridComponents->gridMiniTableOfInvSentLogsForInv(
+                $model,
+                4,
+                $urlGenerator,
+            );
         },
         visible: $visibleToggleInvSentLogColumn,
         encodeContent: false,
@@ -1147,11 +1139,11 @@ $columns = [
  * Related logic: see config/common/routes/routes.php Route::methods([Method::GET,
  *  Method::POST], '/del/add/{client_id}[/{origin}/{origin_id}/{action}]')
  */
-                    'client_id' => $model->getClientId(),
+                    'client_id' => $model->reqClientId(),
                 ],
                 [
                     'origin' => 'inv',
-                    'origin_id' => $model->getId(),
+                    'origin_id' => $model->reqId(),
                     'action' => 'index',
                 ],
             ));
@@ -1213,7 +1205,10 @@ $columns = [
         header: $translator->translate('delivery.location.global.location.number'),
         content: static function (Inv $model) use ($dlR): string {
             $delivery_location_id = $model->getDeliveryLocationId();
-            $delivery_location = (($dlR->repoCount($delivery_location_id) > 0) ? $dlR->repoDeliveryLocationquery((int) $delivery_location_id) : null);
+            $delivery_location = ($delivery_location_id !== null
+                    && $dlR->repoCount($delivery_location_id) > 0)
+                ? $dlR->repoDeliveryLocationquery($delivery_location_id)
+                : null;
             return null !== $delivery_location ? Html::encode($delivery_location->getGlobalLocationNumber()) : '';
         },
         encodeContent: false,
@@ -1231,18 +1226,18 @@ $columns = [
                     return $model->getIsReadOnly() === false
                             && $s->getSetting('disable_read_only')
                             === (string) 0
-                            && $model->getSoId() === '0'
-                            && $model->getQuoteId() === '0'
+                            && $model->getSoId() === null
+                            && $model->getQuoteId() === null
                         ? $urlGenerator->generate('inv/delete', [
-                            'id' => $model->getId()])
+                            'id' => $model->reqId()])
                         : '';
                 },
                 attributes: static function (Inv $model)
                                                     use ($s, $translator): array {
                     if ($model->getIsReadOnly() === false
                             && $s->getSetting('disable_read_only') === (string) 0
-                            && $model->getSoId() === '0'
-                            && $model->getQuoteId() === '0') {
+                            && $model->getSoId() === null
+                            && $model->getQuoteId() === null) {
                         return [
                             'data-bs-toggle' => 'tooltip',
                             'title' => $translator->translate('delete'),
@@ -1374,7 +1369,7 @@ $getGroupValue = static function (Inv $invoice) use ($groupBy, $iR): string {
         'client' => $invoice->getClient()?->getClientFullName()
                                                             ?? 'Unknown Client',
         'status' => $iR->getSpecificStatusArrayLabel(
-                                             (string) $invoice->getStatusId()),
+                                             (string) $invoice->reqStatusId()),
         'month' => $invoice->getDateCreated()->format('Y-m'),
         'year' => $invoice->getDateCreated()->format('Y'),
         'date' => $invoice->getDateCreated()->format('Y-m-d'),
@@ -1397,7 +1392,7 @@ $columnCount = count(array_filter($columns,
 $groupTotals = [];
 if ($enableGrouping) {
     /**
-     * @var App\Invoice\Entity\Inv $invoice
+     * @var App\Infrastructure\Persistence\Inv\Inv $invoice
      */
     foreach ($sortedAndPagedPaginator->read() as $invoice) {
         $groupValue = $getGroupValue($invoice);

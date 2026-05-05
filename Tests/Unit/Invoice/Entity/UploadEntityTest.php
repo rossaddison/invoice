@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\Upload\Upload;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
@@ -15,8 +15,7 @@ class UploadEntityTest extends TestCase
     {
         $upload = new Upload();
         
-        $this->assertSame('', $upload->getId());
-        $this->assertSame('', $upload->getClientId());
+        $this->assertFalse($upload->hasIdentity());
         $this->assertSame('', $upload->getUrlKey());
         $this->assertSame('', $upload->getFileNameOriginal());
         $this->assertSame('', $upload->getFileNameNew());
@@ -36,8 +35,8 @@ class UploadEntityTest extends TestCase
             description: 'Important client document'
         );
         
-        $this->assertSame('1', $upload->getId());
-        $this->assertSame('100', $upload->getClientId());
+        $this->assertSame(1, $upload->reqId());
+        $this->assertSame(100, $upload->reqClientId());
         $this->assertSame('abc123def456', $upload->getUrlKey());
         $this->assertSame('document.pdf', $upload->getFileNameOriginal());
         $this->assertSame('hashed_document_12345.pdf', $upload->getFileNameNew());
@@ -50,7 +49,7 @@ class UploadEntityTest extends TestCase
         $upload = new Upload();
         $upload->setId(50);
         
-        $this->assertSame('50', $upload->getId());
+        $this->assertSame(50, $upload->reqId());
     }
 
     public function testClientIdSetterAndGetter(): void
@@ -58,7 +57,7 @@ class UploadEntityTest extends TestCase
         $upload = new Upload();
         $upload->setClientId(200);
         
-        $this->assertSame('200', $upload->getClientId());
+        $this->assertSame(200, $upload->reqClientId());
     }
 
     public function testUrlKeySetterAndGetter(): void
@@ -120,8 +119,8 @@ class UploadEntityTest extends TestCase
         $upload = new Upload();
         $upload->setId(999);
         
-        $this->assertIsString($upload->getId());
-        $this->assertSame('999', $upload->getId());
+        $this->assertIsInt($upload->reqId());
+        $this->assertSame(999, $upload->reqId());
     }
 
     public function testClientIdTypeConversion(): void
@@ -129,8 +128,8 @@ class UploadEntityTest extends TestCase
         $upload = new Upload();
         $upload->setClientId(777);
         
-        $this->assertIsString($upload->getClientId());
-        $this->assertSame('777', $upload->getClientId());
+        $this->assertIsInt($upload->reqClientId());
+        $this->assertSame(777, $upload->reqClientId());
     }
 
     public function testZeroIds(): void
@@ -139,8 +138,8 @@ class UploadEntityTest extends TestCase
         $upload->setId(0);
         $upload->setClientId(0);
         
-        $this->assertSame('0', $upload->getId());
-        $this->assertSame('0', $upload->getClientId());
+        $this->assertSame(0, $upload->reqId());
+        $this->assertSame(0, $upload->reqClientId());
     }
 
     public function testNegativeIds(): void
@@ -149,8 +148,8 @@ class UploadEntityTest extends TestCase
         $upload->setId(-1);
         $upload->setClientId(-5);
         
-        $this->assertSame('-1', $upload->getId());
-        $this->assertSame('-5', $upload->getClientId());
+        $this->assertSame(-1, $upload->reqId());
+        $this->assertSame(-5, $upload->reqClientId());
     }
 
     public function testLargeIds(): void
@@ -161,8 +160,8 @@ class UploadEntityTest extends TestCase
         $upload->setId($largeId);
         $upload->setClientId($largeId - 1);
         
-        $this->assertSame((string)$largeId, $upload->getId());
-        $this->assertSame((string)($largeId - 1), $upload->getClientId());
+        $this->assertSame($largeId, $upload->reqId());
+        $this->assertSame($largeId - 1, $upload->reqClientId());
     }
 
     public function testEmptyStrings(): void
@@ -290,8 +289,8 @@ class UploadEntityTest extends TestCase
         $upload->setDescription('Complete upload setup with all properties');
         $upload->setUploadedDate($uploadDate);
         
-        $this->assertSame('1', $upload->getId());
-        $this->assertSame('100', $upload->getClientId());
+        $this->assertSame(1, $upload->reqId());
+        $this->assertSame(100, $upload->reqClientId());
         $this->assertSame($client, $upload->getClient());
         $this->assertSame('complete_key_123', $upload->getUrlKey());
         $this->assertSame('complete_document.pdf', $upload->getFileNameOriginal());
@@ -311,8 +310,8 @@ class UploadEntityTest extends TestCase
             description: 'Test description'
         );
         
-        $this->assertIsString($upload->getId());
-        $this->assertIsString($upload->getClientId());
+        $this->assertIsInt($upload->reqId());
+        $this->assertIsInt($upload->reqClientId());
         $this->assertIsString($upload->getUrlKey());
         $this->assertIsString($upload->getFileNameOriginal());
         $this->assertIsString($upload->getFileNameNew());
@@ -410,8 +409,8 @@ class UploadEntityTest extends TestCase
         );
         
         // Verify initial state
-        $this->assertSame('999', $upload->getId());
-        $this->assertSame('888', $upload->getClientId());
+        $this->assertSame(999, $upload->reqId());
+        $this->assertSame(888, $upload->reqClientId());
         $this->assertSame('initial_key', $upload->getUrlKey());
         $this->assertSame('initial.pdf', $upload->getFileNameOriginal());
         $this->assertSame('initial_hash.pdf', $upload->getFileNameNew());
@@ -425,8 +424,8 @@ class UploadEntityTest extends TestCase
         $upload->setFileNameNew('modified_hash.pdf');
         $upload->setDescription('Modified description');
         
-        $this->assertSame('111', $upload->getId());
-        $this->assertSame('222', $upload->getClientId());
+        $this->assertSame(111, $upload->reqId());
+        $this->assertSame(222, $upload->reqClientId());
         $this->assertSame('modified_key', $upload->getUrlKey());
         $this->assertSame('modified.pdf', $upload->getFileNameOriginal());
         $this->assertSame('modified_hash.pdf', $upload->getFileNameNew());

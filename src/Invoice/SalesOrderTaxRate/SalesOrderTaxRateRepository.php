@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderTaxRate;
 
-use App\Invoice\Entity\SalesOrderTaxRate;
+use App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -85,9 +85,9 @@ final class SalesOrderTaxRateRepository extends Select\Repository
     //used in salesorder/view to determine if a 'one-off'  salesorder tax rate acquired from tax rates is to be applied to the salesorder
     //salesorder tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
     /**
-     * @param int|null $sales_order_id
+     * @param int $sales_order_id
      */
-    public function repoCount(?int $sales_order_id): int
+    public function repoCount(int $sales_order_id): int
     {
         return $this->select()
                       ->where(['sales_order_id' => $sales_order_id])

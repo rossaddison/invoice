@@ -30,7 +30,7 @@ if ($invEdit && $invView) {
         <div class='row'>
             <?php
                /**
-                * @var App\Invoice\Entity\ProductImage $productImage
+                * @var App\Infrastructure\Persistence\ProductImage\ProductImage $productImage
                 */
                foreach ($productImages as $productImage) { ?>
                 <a data-bs-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">

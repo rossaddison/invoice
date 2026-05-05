@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\ProductProperty;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\ProductProperty;
+use App\Infrastructure\Persistence\ProductProperty\ProductProperty;
 use App\Invoice\Product\ProductRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
@@ -56,7 +56,7 @@ final class ProductPropertyController extends BaseController
     ): Response {
         $product_id = $currentRoute->getArgument('product_id');
         $productProperty = new ProductProperty();
-        $form = new ProductPropertyForm($productProperty, (int) $product_id);
+        $form = ProductPropertyForm::show($productProperty, (int) $product_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'productproperty/add',
@@ -130,7 +130,7 @@ final class ProductPropertyController extends BaseController
      * @param Request $request
      * @param CurrentRoute $currentRoute
      * @param FormHydrator $formHydrator
-     * @param ProductPropertyRepository $productpropertyRepository
+     * @param ProductPropertyRepository $ppR
      * @param ProductRepository $productRepository
      * @return Response
      */
@@ -138,16 +138,17 @@ final class ProductPropertyController extends BaseController
         Request $request,
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
-        ProductPropertyRepository $productpropertyRepository,
+        ProductPropertyRepository $ppR,
         ProductRepository $productRepository,
     ): Response {
-        $productProperty = $this->productproperty($currentRoute, $productpropertyRepository);
+        $productProperty = $this->productproperty($currentRoute, $ppR);
         if ($productProperty) {
-            $form = new ProductPropertyForm($productProperty, (int) $productProperty->getProductId());
+            $form = ProductPropertyForm::show($productProperty,
+                $productProperty->reqProductId());
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'productproperty/edit',
-                'actionArguments' => ['id' => $productProperty->getPropertyId()],
+                'actionArguments' => ['id' => $productProperty->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'products' => $productRepository->findAllPreloaded(),
@@ -172,16 +173,15 @@ final class ProductPropertyController extends BaseController
 
     /**
      * @param CurrentRoute $currentRoute
-     * @param ProductPropertyRepository $productpropertyRepository
+     * @param ProductPropertyRepository $ppR
      * @return ProductProperty|null
      */
-    private function productproperty(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): ?ProductProperty
+    private function productproperty(
+        CurrentRoute $currentRoute,
+        ProductPropertyRepository $ppR): ?ProductProperty
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $productpropertyRepository->repoProductPropertyLoadedquery($id);
-        }
-        return null;
+        return $ppR->repoProductPropertyLoadedquery(
+            (int) $currentRoute->getArgument('id'));
     }
 
     /**
@@ -201,13 +201,15 @@ final class ProductPropertyController extends BaseController
      */
     public function view(CurrentRoute $currentRoute, ProductPropertyRepository $productpropertyRepository): \Psr\Http\Message\ResponseInterface
     {
-        $productProperty = $this->productproperty($currentRoute, $productpropertyRepository);
+        $productProperty = $this->productproperty($currentRoute,
+            $productpropertyRepository);
         if ($productProperty) {
-            $form = new ProductPropertyForm($productProperty, (int) $productProperty->getProductId());
+            $form = ProductPropertyForm::show($productProperty,
+                $productProperty->reqProductId());
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'productproperty/view',
-                'actionArguments' => ['id' => $productProperty->getPropertyId()],
+                'actionArguments' => ['id' => $productProperty->reqId()],
                 'form' => $form,
                 'productproperty' => $productProperty,
             ];

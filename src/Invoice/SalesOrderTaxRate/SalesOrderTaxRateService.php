@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderTaxRate;
 
-use App\Invoice\Entity\SalesOrderTaxRate;
+use App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate;
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 
@@ -28,8 +28,7 @@ final readonly class SalesOrderTaxRateService
             $model->setSalesOrder($sales_order);
             $model->setSalesOrderId($sales_order->reqId());
         }
-        $tax_rate = $this->trR->repoTaxRatequery(
-            (string) $array['tax_rate_id']
+        $tax_rate = $this->trR->repoTaxRatequery((int) $array['tax_rate_id']
         );
         if ($tax_rate) {
             $model->setTaxRate($tax_rate);

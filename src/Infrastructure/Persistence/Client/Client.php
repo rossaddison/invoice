@@ -6,7 +6,7 @@ namespace App\Infrastructure\Persistence\Client;
 
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
 use App\Invoice\Client\ClientRepository;
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\ProductClient\ProductClient;
 use App\Infrastructure\Persistence\Trait\RequireId;
 use Cycle\Annotated\Annotation\Column;
@@ -133,7 +133,7 @@ class Client
         return $this->requireId($this->id, 'Client');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

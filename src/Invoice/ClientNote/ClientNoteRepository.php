@@ -84,7 +84,7 @@ final class ClientNoteRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoClientNotequery(string $id): ?ClientNote
+    public function repoClientNotequery(int $id): ?ClientNote
     {
         $query = $this->select()->load('client')->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
@@ -93,7 +93,7 @@ final class ClientNoteRepository extends Select\Repository
     /**
      * @psalm-return EntityReader
      */
-    public function repoClientquery(string $client_id): EntityReader
+    public function repoClientquery(int $client_id): EntityReader
     {
         $query = $this->select()->load('client')->where(['client_id' => $client_id]);
         return $this->prepareDataReader($query);

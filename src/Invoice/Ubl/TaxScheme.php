@@ -16,7 +16,7 @@ class TaxScheme implements XmlSerializable
     /**
      * @return string
      */
-    public function getId(): string
+    public function reqId(): string
     {
         return $this->id;
     }
@@ -31,7 +31,7 @@ class TaxScheme implements XmlSerializable
             'name' => Schema::CAC . 'TaxScheme',
             'value' => [
                 'name' => Schema::CBC . 'ID',
-                'value' => $this->getId(),
+                'value' => $this->reqId(),
             ]]);
     }
 }

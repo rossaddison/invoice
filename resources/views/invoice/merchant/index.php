@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Merchant;
+use App\Infrastructure\Persistence\Merchant\Merchant;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -40,7 +40,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Merchant $model) => Html::encode($model->getId()),
+        content: static fn (Merchant $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'inv',
@@ -71,7 +71,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Merchant $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('merchant/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('merchant/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -81,7 +81,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Merchant $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('merchant/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('merchant/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -91,7 +91,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Merchant $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('merchant/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('merchant/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

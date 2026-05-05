@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Auth\Permissions;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 
 use App\Invoice\{
-    Entity\Inv, 
     Inv\InvRepository as IR,
     InvAmount\InvAmountRepository as IAR,
     InvRecurring\InvRecurringRepository as IRR,
@@ -69,13 +68,12 @@ trait Guest
         // 'line of defense' to support role based admin control. Retrieve the
         // user from Yii-Demo's list of users in the User Table
         $user = $this->userService->getUser();
-        if ($user instanceof User && null !== $user->getId()) {
-            $user_id = $user->getId();
+        if ($user instanceof User && (($user_id = $user->reqId()) > 0)) {
             // Use this user's id to see whether a user has been setup under
             // UserInv ie. yii-invoice's list of users
-            $userInv = ($uiR->repoUserInvUserIdcount((string) $user_id) > 0 ?
-                $uiR->repoUserInvUserIdquery((string) $user_id) : null);
-            if (null !== $userInv && null !== $user_id && $userInv->getActive()) {
+            $userInv = ($uiR->repoUserInvUserIdcount($user_id) > 0 ?
+                $uiR->repoUserInvUserIdquery($user_id) : null);
+            if (null !== $userInv && $user_id > 0 && $userInv->getActive()) {
                 $userInvListLimit = $userInv->getListLimit();
                 // Determine what clients have been allocated to this user
                 // (Related logic: see Settings...User Account) by looking at
@@ -105,15 +103,17 @@ trait Guest
                     if (isset($queryFilterInvAmountTotal)
                             && !empty($queryFilterInvAmountTotal)) {
                         $invs = $iR->filterInvAmountTotal(
-                            $queryFilterInvAmountTotal);
+                            (float) $queryFilterInvAmountTotal);
                     }
                     if (isset($queryFilterInvAmountPaid)
                             && !empty($queryFilterInvAmountPaid)) {
-                        $invs = $iR->filterInvAmountPaid($queryFilterInvAmountPaid);
+                        $invs = $iR->filterInvAmountPaid(
+                            (float) $queryFilterInvAmountPaid);
                     }
                     if (isset($queryFilterInvAmountBalance)
                             && !empty($queryFilterInvAmountBalance)) {
-                        $invs = $iR->filterInvAmountBalance($queryFilterInvAmountBalance);
+                        $invs = $iR->filterInvAmountBalance(
+                                (float) $queryFilterInvAmountBalance);
                     }
                     if ((isset($queryFilterInvNumber)
                             && !empty($queryFilterInvNumber))
@@ -181,7 +181,7 @@ trait Guest
      * @param array $user_clients
      * @return DRI&SDI
      *
-     * @psalm-return SDI&DRI<int, Inv>
+     * @psalm-return SDI&DRI<int, \App\Infrastructure\Persistence\Inv\Inv>
      */
     private function invsStatusGuest(IR $iR, mixed $status,
         array $user_clients): SDI

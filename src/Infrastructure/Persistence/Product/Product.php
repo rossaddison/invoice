@@ -78,16 +78,13 @@ class Product
     ) {
         $this->client_associations = new ArrayCollection();
     }
-
-    /**
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
+    
     public function reqId(): int
     {
         return $this->requireId($this->id, 'Product');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -96,12 +93,7 @@ class Product
     {
         $this->id = $id;
     }
-
-    public function getProductId(): string
-    {
-        return (string) $this->id;
-    }
-
+    
     public function getFamily(): ?Family
     {
         return $this->family;
@@ -130,11 +122,6 @@ class Product
     public function setUnit(?Unit $unit): void
     {
         $this->unit = $unit;
-    }
-
-    public function getFamilyId(): string
-    {
-        return (string) $this->family_id;
     }
 
     public function setFamilyId(int $family_id): void
@@ -305,9 +292,9 @@ class Product
         $this->tax_rate_id = $tax_rate_id;
     }
 
-    public function getTaxRateId(): string
+    public function reqTaxRateId(): int
     {
-        return (string) $this->tax_rate_id;
+        return $this->requireId($this->tax_rate_id, 'TaxRate');
     }
 
     public function setUnitId(int $unit_id): void
@@ -315,9 +302,9 @@ class Product
         $this->unit_id = $unit_id;
     }
 
-    public function getUnitId(): string
+    public function reqUnitId(): int
     {
-        return (string) $this->unit_id;
+        return $this->requireId($this->unit_id, 'Unit');
     }
 
     public function setUnitPeppolId(int $unit_peppol_id): void
@@ -325,9 +312,9 @@ class Product
         $this->unit_peppol_id = $unit_peppol_id;
     }
 
-    public function getUnitPeppolId(): string
+    public function getUnitPeppolId(): ?int
     {
-        return (string) $this->unit_peppol_id;
+        return $this->unit_peppol_id;
     }
     
     // Step 1: Create an empty ArrayCollection

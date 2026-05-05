@@ -61,7 +61,7 @@ class SalesOrderItemAllowanceCharge
         return $this->requireId($this->id, 'SalesOrderItemAllowanceCharge');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

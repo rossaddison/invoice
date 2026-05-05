@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Invoice\Entity;
 
-use App\Invoice\Entity\PaymentMethod;
+use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
 use PHPUnit\Framework\TestCase;
 
 class PaymentMethodEntityTest extends TestCase
@@ -19,7 +19,7 @@ class PaymentMethodEntityTest extends TestCase
     {
         $paymentMethod = new PaymentMethod();
         
-        $this->assertSame('', $paymentMethod->getId());
+        $this->assertFalse($paymentMethod->hasIdentity());
         $this->assertSame('', $paymentMethod->getName());
         $this->assertTrue($paymentMethod->getActive());
     }
@@ -32,7 +32,7 @@ class PaymentMethodEntityTest extends TestCase
             active: true
         );
         
-        $this->assertSame('1', $paymentMethod->getId());
+        $this->assertSame(1, $paymentMethod->reqId());
         $this->assertSame($this->creditCard, $paymentMethod->getName());
         $this->assertTrue($paymentMethod->getActive());
     }
@@ -45,7 +45,7 @@ class PaymentMethodEntityTest extends TestCase
             active: false
         );
         
-        $this->assertSame('2', $paymentMethod->getId());
+        $this->assertSame(2, $paymentMethod->reqId());
         $this->assertSame('Deprecated Method', $paymentMethod->getName());
         $this->assertFalse($paymentMethod->getActive());
     }
@@ -55,7 +55,7 @@ class PaymentMethodEntityTest extends TestCase
         $paymentMethod = new PaymentMethod();
         $paymentMethod->setId(50);
         
-        $this->assertSame('50', $paymentMethod->getId());
+        $this->assertSame(50, $paymentMethod->reqId());
     }
 
     public function testNameSetterAndGetter(): void
@@ -82,8 +82,8 @@ class PaymentMethodEntityTest extends TestCase
         $paymentMethod = new PaymentMethod();
         $paymentMethod->setId(999);
         
-        $this->assertIsString($paymentMethod->getId());
-        $this->assertSame('999', $paymentMethod->getId());
+        $this->assertIsInt($paymentMethod->reqId());
+        $this->assertSame(999, $paymentMethod->reqId());
     }
 
     public function testZeroId(): void
@@ -91,7 +91,7 @@ class PaymentMethodEntityTest extends TestCase
         $paymentMethod = new PaymentMethod();
         $paymentMethod->setId(0);
         
-        $this->assertSame('0', $paymentMethod->getId());
+        $this->assertSame(0, $paymentMethod->reqId());
     }
 
     public function testNegativeId(): void
@@ -99,7 +99,7 @@ class PaymentMethodEntityTest extends TestCase
         $paymentMethod = new PaymentMethod();
         $paymentMethod->setId(-1);
         
-        $this->assertSame('-1', $paymentMethod->getId());
+        $this->assertSame(-1, $paymentMethod->reqId());
     }
 
     public function testLargeId(): void
@@ -108,7 +108,7 @@ class PaymentMethodEntityTest extends TestCase
         $largeId = PHP_INT_MAX;
         
         $paymentMethod->setId($largeId);
-        $this->assertSame((string)$largeId, $paymentMethod->getId());
+        $this->assertSame($largeId, $paymentMethod->reqId());
     }
 
     public function testEmptyStringName(): void
@@ -309,7 +309,7 @@ class PaymentMethodEntityTest extends TestCase
         $paymentMethod->setName('Credit Card Processing');
         $paymentMethod->setActive(true);
         
-        $this->assertSame('1', $paymentMethod->getId());
+        $this->assertSame(1, $paymentMethod->reqId());
         $this->assertSame('Credit Card Processing', $paymentMethod->getName());
         $this->assertTrue($paymentMethod->getActive());
     }
@@ -322,7 +322,7 @@ class PaymentMethodEntityTest extends TestCase
         $paymentMethod->setName('Deprecated Payment Gateway');
         $paymentMethod->setActive(false);
         
-        $this->assertSame('99', $paymentMethod->getId());
+        $this->assertSame(99, $paymentMethod->reqId());
         $this->assertSame('Deprecated Payment Gateway', $paymentMethod->getName());
         $this->assertFalse($paymentMethod->getActive());
     }
@@ -335,7 +335,7 @@ class PaymentMethodEntityTest extends TestCase
             active: true
         );
         
-        $this->assertIsString($paymentMethod->getId());
+        $this->assertIsInt($paymentMethod->reqId());
         $this->assertIsString($paymentMethod->getName());
         $this->assertIsBool($paymentMethod->getActive());
     }
@@ -378,7 +378,7 @@ class PaymentMethodEntityTest extends TestCase
         );
         
         // Verify initial state
-        $this->assertSame('999', $paymentMethod->getId());
+        $this->assertSame(999, $paymentMethod->reqId());
         $this->assertSame('Initial Method', $paymentMethod->getName());
         $this->assertFalse($paymentMethod->getActive());
         
@@ -388,7 +388,7 @@ class PaymentMethodEntityTest extends TestCase
         $paymentMethod->setActive(true);
         
         // Verify changes
-        $this->assertSame('111', $paymentMethod->getId());
+        $this->assertSame(111, $paymentMethod->reqId());
         $this->assertSame('Modified Method', $paymentMethod->getName());
         $this->assertTrue($paymentMethod->getActive());
     }
@@ -578,25 +578,25 @@ class PaymentMethodEntityTest extends TestCase
     {
         // Only ID
         $method1 = new PaymentMethod(id: 1);
-        $this->assertSame('1', $method1->getId());
+        $this->assertSame(1, $method1->reqId());
         $this->assertSame('', $method1->getName());
         $this->assertTrue($method1->getActive());
-        
+
         // ID and name
         $method2 = new PaymentMethod(id: 2, name: 'Test');
-        $this->assertSame('2', $method2->getId());
+        $this->assertSame(2, $method2->reqId());
         $this->assertSame('Test', $method2->getName());
         $this->assertTrue($method2->getActive());
-        
+
         // ID and active status
         $method3 = new PaymentMethod(id: 3, active: false);
-        $this->assertSame('3', $method3->getId());
+        $this->assertSame(3, $method3->reqId());
         $this->assertSame('', $method3->getName());
         $this->assertFalse($method3->getActive());
-        
+
         // Name and active status
         $method4 = new PaymentMethod(name: $this->testMethod, active: false);
-        $this->assertSame('', $method4->getId());
+        $this->assertFalse($method4->hasIdentity());
         $this->assertSame($this->testMethod, $method4->getName());
         $this->assertFalse($method4->getActive());
     }

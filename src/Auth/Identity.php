@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
-use App\User\User;
+use App\Infrastructure\Persistence\{
+    Trait\RequireId, User\User
+};
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -14,6 +16,8 @@ use Yiisoft\User\Login\Cookie\CookieLoginIdentityInterface;
 #[Entity(repository: IdentityRepository::class)]
 class Identity implements CookieLoginIdentityInterface
 {
+    use RequireId;
+ 
     #[Column(type: 'primary')]
     private ?int $id = null;
 
@@ -35,13 +39,14 @@ class Identity implements CookieLoginIdentityInterface
     #[\Override]
     public function getId(): ?string
     {
-        return (string) $this->id;
+        return ((string) $this->requireId($this->id, 'Identity')) ?: null;
     }
 
-    public function getUserId(): ?string
+    public function getUserId(): ?int
     {
         if ($this->user) {
-            return $this->user->getId();
+            // raise an exception if the user is not persisted
+            return $this->user->reqId();
         }
         return null;
     }

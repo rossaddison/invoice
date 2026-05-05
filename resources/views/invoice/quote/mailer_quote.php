@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Form;
 
 /**
  * @var App\Infrastructure\Persistence\Quote\Quote $quote
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\Quote\MailerQuoteForm $form
  * @var Yiisoft\View\View $this
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator

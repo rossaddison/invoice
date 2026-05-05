@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserClient;
 
-use App\Invoice\Entity\UserClient;
+use App\Infrastructure\Persistence\UserClient\UserClient;
 use Yiisoft\FormModel\FormModel;
 
 final class UserClientForm extends FormModel
@@ -13,11 +13,13 @@ final class UserClientForm extends FormModel
     private ?int $client_id = null;
     private ?string $user_all_clients = '';
 
-    public function __construct(UserClient $user_client)
+    public static function show(UserClient $user_client): self
     {
-        $this->user_id = (int) $user_client->getUserId();
-        $this->client_id = (int) $user_client->getClientId();
-        $this->user_all_clients = '0';
+        $form = new self();
+        $form->user_id = $user_client->reqUserId();
+        $form->client_id = $user_client->reqClientId();
+        $form->user_all_clients = '0';
+        return $form;
     }
 
     public function getUserId(): ?int

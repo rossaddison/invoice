@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\InvItemAllowanceCharge;
+use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
 use Yiisoft\Html\Html;
 
 /**
  * Related logic: see App\Invoice\Helpers\PdfHelper function generateInvHtml
  *
- * @var App\Invoice\Entity\InvAmount $inv_amount
- * @var App\Invoice\Entity\Inv $inv
- * @var App\Invoice\Entity\InvTaxRate $inv_tax_rate
+ * @var App\Infrastructure\Persistence\InvAmount\InvAmount $inv_amount
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
+ * @var App\Infrastructure\Persistence\InvTaxRate\InvTaxRate $inv_tax_rate
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository $aciiR
@@ -190,13 +190,13 @@ if (strlen($inv->getClient()?->getClientPhone() ?? '') > 0) {
         <?php
         if ($items) {
             /**
-             * @var App\Invoice\Entity\InvItem $item
+             * @var App\Infrastructure\Persistence\InvItem\InvItem $item
              */
             foreach ($items as $item) {
                 $inv_item_amount = $iiaR->repoInvItemAmountquery(
-                        (string) $item->getId());
+                        $item->reqId());
                 $invItemAllowanceCharges =
-        $aciiR->repoInvItemquery((string) $item->getId());
+        $aciiR->repoInvItemquery($item->reqId());
         /**
          * @var InvItemAllowanceCharge $invItemAllowanceCharge
          */
@@ -391,7 +391,7 @@ $invItemAllowanceCharge->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent
         <?php if ($vat == '0') { ?>
         <?php
 /**
- * @var App\Invoice\Entity\InvTaxRate $inv_tax_rate
+ * @var App\Infrastructure\Persistence\InvTaxRate\InvTaxRate $inv_tax_rate
  */
                         foreach ($inv_tax_rates as $inv_tax_rate) : ?>
             <tr>

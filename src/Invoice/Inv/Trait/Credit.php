@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Invoice\Inv\Trait;
 
 use App\Infrastructure\Persistence\{
-    Group\Group
+    Group\Group, Inv\Inv, InvAmount\InvAmount
 };
-use App\Invoice\Entity\{Inv, InvAmount};
 
 use App\Invoice\{
     Client\ClientRepository as CR,
@@ -42,7 +41,7 @@ trait Credit
         UIR $uiR,
     ): Response {
         $inv = new Inv();
-        $form = new InvForm($inv);
+        $form = new InvForm();
         $invAmount = new InvAmount();
         $defaultGroupId = (int) $this->sR->getSetting('default_invoice_group');
         $optionsGroupData = [];
@@ -76,7 +75,7 @@ trait Credit
                     /**
                      * @var string $body['client_id']
                      */
-                    $client_id = $body['client_id'];
+                    $client_id = (int) $body['client_id'];
                     $user_client = $ucR->repoUserquery($client_id);
                     if (null !== $user_client
                             && null !== $user_client->getClient()) {
@@ -104,8 +103,8 @@ trait Credit
                     if (null !== $user) {
                         $saved_model = $this->inv_service->saveInv($user,
                                 $inv, $body, $this->sR, $gR);
-                        $model_id = $saved_model->getId();
-                        if (null !== $model_id) {
+                        $model_id = $saved_model->reqId();
+                        if ($model_id > 0) {
                             $this->inv_amount_service->initializeInvAmount(
                                     $invAmount, $model_id);
                             $this->defaultTaxes($inv, $trR, $formHydrator);
@@ -148,9 +147,9 @@ trait Credit
                 UCR $ucR, UIR $uiR, UR $uR): Response
     {
         $body = $request->getQueryParams();
-        $basis_inv = $iR->repoInvLoadedquery((string) $body['inv_id']);
+        $basis_inv = $iR->repoInvLoadedquery((int) $body['inv_id']);
         if (null !== $basis_inv) {
-            $basis_inv_id = (string) $body['inv_id'];
+            $basis_inv_id = (int) $body['inv_id'];
             // Set the basis_inv to read-only;
             $basis_inv->setIsReadOnly(true);
             // Credit Note's details
@@ -158,7 +157,7 @@ trait Credit
                 'client_id' => $body['client_id'],
                 'group_id' => 4,
                 'user_id' => $body['user_id'],
-                'status_id' => $basis_inv->getStatusId(),
+                'status_id' => $basis_inv->reqStatusId(),
                 'is_read_only' => true,
                 'number' => $gR->generateNumber(4, true),
                 'discount_amount' => $basis_inv->getDiscountAmount(),
@@ -170,24 +169,25 @@ trait Credit
             ];
             // Save the basis invoice as soon as we have the new credit note's id
             $new_inv = new Inv();
-            $form = new InvForm($new_inv);
+            $form = new InvForm();
             if ($formHydrator->populateAndValidate($form, $ajax_body)) {
                 /**
                  * @var string $ajax_body['client_id']
                  */
-                $client_id = $ajax_body['client_id'];
+                $client_id = (int) $ajax_body['client_id'];
                 $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                 if (null !== $user) {
                     $saved_inv = $this->inv_service->saveInv($user, $new_inv,
                         $ajax_body, $this->sR, $gR);
-                    $saved_inv_id = $saved_inv->getId();
-                    if (null !== $saved_inv_id) {
+                    $saved_inv_id = $saved_inv->reqId();
+                    if ($saved_inv_id > 0) {
+                        $savedInvId = (string) $saved_inv_id;
                         $this->inv_item_service->initializeCreditInvItems(
-                            (int) $basis_inv_id, $saved_inv_id, $iiR, $iiaR);
+                            $basis_inv_id, $savedInvId, $iiR, $iiaR);
                         $this->inv_amount_service->initializeCreditInvAmount(
-                            new InvAmount(), (int) $basis_inv_id, $saved_inv_id);
+                            new InvAmount(), $basis_inv_id, $savedInvId);
                         $this->inv_tax_rate_service->initializeCreditInvTaxRate(
-                            (int) $basis_inv_id, $saved_inv_id);
+                            $basis_inv_id, $savedInvId);
                         $parameters = [
                             'success' => 1,
                             'flash_message' => $this->translator->translate(
@@ -195,8 +195,7 @@ trait Credit
                         ];
                         // Record the new Credit Note's $saved_inv_id in the
                         // basis invoice
-                        $basis_inv->setCreditinvoiceParentId(
-                            (int) $saved_inv_id);
+                        $basis_inv->setCreditinvoiceParentId($saved_inv_id);
                         $iR->save($basis_inv);
                         //return response to inv.js to reload page at location
                         return $this->factory->createResponse(

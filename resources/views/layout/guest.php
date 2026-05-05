@@ -37,7 +37,7 @@ use Yiisoft\Bootstrap5\NavStyle;
 /**
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
- * @var App\User\User|null $user
+ * @var App\Infrastructure\Persistence\User\User|null $user
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
  * @var Yiisoft\Assets\AssetManager $assetManager
@@ -107,7 +107,7 @@ $this->addJsFiles($assetManager->getJsFiles());
 $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
 $t = $translator;
-$isGuest = $user === null || $user->getId() === null;
+$isGuest = $user === null || !($user->hasIdentity());
 $itemFontArray = [
     'style' => 'font-size: ' . $bootstrap5LayoutGuestNavbarFontSize . 'px;'
     . ' color: black;'];

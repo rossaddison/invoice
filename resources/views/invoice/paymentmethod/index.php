@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\PaymentMethod;
+use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -46,7 +46,7 @@ $columns = [
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn (PaymentMethod $model) => Html::encode($model->getId()),
+        content: static fn (PaymentMethod $model) => Html::encode($model->reqId()),
         withSorting: true,
     ),
     new DataColumn(
@@ -65,7 +65,7 @@ $columns = [
             content: '🔎',
             url: static function (PaymentMethod $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('paymentmethod/view',
-                    ['id' => $model->getId()]);
+                    ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -76,7 +76,7 @@ $columns = [
             content: '✎',
             url: static function (PaymentMethod $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('paymentmethod/edit',
-                    ['id' => $model->getId()]);
+                    ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -87,7 +87,7 @@ $columns = [
             content: '❌',
             url: static function (PaymentMethod $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('paymentmethod/delete',
-                    ['id' => $model->getId()]);
+                    ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

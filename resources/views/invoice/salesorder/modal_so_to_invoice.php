@@ -40,7 +40,7 @@ echo H::openTag('div', ['id' => 'so-to-invoice', 'class' => 'modal', 'tabindex' 
                                      ->value($so->reqId());
      echo new Input()->type('hidden')->name('user_id')
                                      ->id('user_id')
-                                     ->value($so->getUserId());
+                                     ->value($so->reqUserId());
      echo H::openTag('div', $formGroup); //5
       echo H::openTag('label', ['for' => 'invoice_password']); //6
        echo $translator->translate('password');

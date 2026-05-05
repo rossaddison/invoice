@@ -66,7 +66,7 @@ trait QuoteCopy
         UR $uR,
         UCR $ucR,
         UIR $uiR,
-        UNR $unR,
+        UNR $unR
     ): Response {
         $data_quote_js = $request->getQueryParams();
         $quote_id = (int) $data_quote_js['quote_id'];
@@ -90,47 +90,46 @@ trait QuoteCopy
                 /**
                  * @var string $quote_body['client_id']
                  */
-                $client_id = $quote_body['client_id'];
+                $client_id = (int) $quote_body['client_id'];
                 $user_client = $ucR->repoUserquery($client_id);
                 $user_client_count = $ucR->repoUserquerycount($client_id);
                 if (null !== $user_client && $user_client_count == 1) {
                     // Only one user account per client
-                    $user_id = $user_client->getUserId();
+                    $user_id = $user_client->reqUserId();
                     $user = $uR->findById($user_id);
-                    if (null !== $user) {
-                        $user_inv = $uiR->repoUserInvUserIdquery($user_id);
-                        if (null !== $user_inv && $user_inv->getActive()) {
-                            $this->quote_service->saveQuote($user, $copy,
-                                $quote_body, $this->sR, $gR);
-                            // Transfer each quote_item to quote_item and the
-                            // corresponding quote_item_amount to
-                            // quote_item_amount for each item
-                            $copy_id = $copy->reqId();
-                            $this->quoteToQuoteQuoteItems($quote_id,
-                                    $copy_id, $acqiR, $qiaR, $qiaS, $pR,
-                                    $taskR, $qiR, $trR, $unR, $formHydrator);
-                            $this->quoteToQuoteQuoteTaxRates($quote_id,
-                                $copy_id, $qtrR, $formHydrator);
-                            $this->quoteToQuoteQuoteCustom($quote_id,
-                                $copy_id, $qcR, $formHydrator);
-                            $this->quoteToQuoteQuoteAmount(
-                                $quote_id, $copy_id, $qaR);
-                            $this->quoteToQuoteQuoteAllowanceCharges(
-                                $quote_id, $copy_id, $acqR,
-                                $formHydrator);
-                            $qR->save($copy);
-                            $parameters = [
-                                'success' => 1,
-                                'flash_message' =>
-                                    $this->translator->translate(
-                                        'quote.copied.to.quote'),
-                            ];
-                            //return response to quote.js to reload page at
-                            //location
-                            return $this->factory->createResponse(
-                                Json::encode($parameters));
-                        } // null!==$user_inv && $user_inv->getActive()
-                    } // null!== $user
+                    $user_inv = $uiR->repoUserInvUserIdquery($user_id);
+                    if (null !== $user_inv && $user_inv->getActive()) {
+                        $this->quote_service->saveQuote($user, $copy,
+                            $quote_body, $this->sR, $gR);
+                        // Transfer each quote_item to quote_item and the
+                        // corresponding quote_item_amount to
+                        // quote_item_amount for each item
+                        $copy_id = $copy->reqId();
+                        $this->quoteToQuoteQuoteItems($quote_id,
+                                $copy_id, $acqiR, $qiaR, $qiaS, $pR,
+                                $taskR, $qiR, $trR, $unR, $formHydrator);
+                        $this->quoteToQuoteQuoteTaxRates($quote_id,
+                            $copy_id, $qtrR, $formHydrator);
+                        $this->quoteToQuoteQuoteCustom($quote_id,
+                            $copy_id, $qcR, $formHydrator);
+                        $this->quoteToQuoteQuoteAmount(
+                            $quote_id, $copy_id, $qaR);
+                        $this->quoteToQuoteQuoteAllowanceCharges(
+                            $quote_id, $copy_id, $acqR,
+                            $formHydrator);
+                        $qR->save($copy);
+                        $parameters = [
+                            'success' => 1,
+                            'flash_message' =>
+                                $this->translator->translate(
+                                    'quote.copied.to.quote'),
+                        ];
+                        //return response to quote.js to reload page at
+                        //location
+                        return $this->factory->createResponse(
+                            Json::encode($parameters));
+                    } // null!==$user_inv && $user_inv->getActive()
+                    
                 } // null!==$user_client && $user_client_count==1
             } // $formHydrator->populateAndValidate($form, $body)
         } else {
@@ -179,7 +178,7 @@ trait QuoteCopy
         foreach ($quote_customs as $quote_custom) {
             $copy_custom = [
                 'quote_id' => $copy_id,
-                'custom_field_id' => $quote_custom->getCustomFieldId(),
+                'custom_field_id' => $quote_custom->reqCustomFieldId(),
                 'value' => $quote_custom->getValue(),
             ];
             $entity = new QuoteCustom();

@@ -37,8 +37,8 @@ use Yiisoft\Html\Tag\Button;
                                          * @var App\Infrastructure\Persistence\Family\Family $family
                                          */
                                         foreach ($families as $family) { ?>
-                                        <option value="<?= $family->getFamilyId(); ?>"
-                                            <?php if (isset($filter_family) && $family->getFamilyId() == $filter_family) {
+                                        <option value="<?= $family->reqId(); ?>"
+                                            <?php if (isset($filter_family) && $family->reqId() == $filter_family) {
                                                 echo ' selected="selected"';
                                             } ?>>
                                             <?= $family->getFamilyName() ?? ''; ?>

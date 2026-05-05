@@ -178,12 +178,8 @@ final class ItemLookupController extends BaseController
     private function itemlookup(CurrentRoute $currentRoute,
                         ItemLookupRepository $itemlookupRepository): ?ItemLookup
     {
-        $itemlookup = new ItemLookup();
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $itemlookupRepository->repoItemLookupquery($id);
-        }
-        return $itemlookup;
+        $id = (int) $currentRoute->getArgument('id');
+        return $itemlookupRepository->repoItemLookupquery($id);
     }
 
     /**

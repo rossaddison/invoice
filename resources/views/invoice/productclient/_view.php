@@ -57,7 +57,7 @@ use Yiisoft\Html\Tag\A;
                                 <?= Html::closeTag('strong'); ?>
                             <?= Html::closeTag('td'); ?>
                             <?= Html::openTag('td'); ?>
-                                <?= Html::encode($product->getProductId()); ?>
+                                <?= Html::encode($product->reqId()); ?>
                             <?= Html::closeTag('td'); ?>
                         <?= Html::closeTag('tr'); ?>
                         <?= Html::openTag('tr'); ?>
@@ -247,7 +247,7 @@ use Yiisoft\Html\Tag\A;
                 ->addAttributes(['class' => 'btn btn-info me-2'])
                 ->content($translator->translate('view.product'))
                 ->href($urlGenerator->generate(
-                    'product/view', ['id' => $product->getProductId()]))
+                    'product/view', ['id' => $product->reqId()]))
                 ->render()
             ?>
 

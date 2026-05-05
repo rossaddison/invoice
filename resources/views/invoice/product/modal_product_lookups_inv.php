@@ -60,9 +60,9 @@ echo H::openTag('div', [
           * @var App\Infrastructure\Persistence\Family\Family $family
           */
          foreach ($families as $family) {
-             $attributes = ['value' => $family->getFamilyId()];
+             $attributes = ['value' => $family->reqId()];
              if (isset($filter_family)
-                     && $family->getFamilyId() == $filter_family) {
+                     && $family->reqId() == $filter_family) {
                  $attributes['selected'] = 'selected';
              }
              echo H::openTag('option', $attributes);

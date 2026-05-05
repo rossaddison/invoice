@@ -6,8 +6,8 @@ use App\Invoice\Helpers\ClientHelper;
 use Yiisoft\Html\Html;
 
 /**
- * @var App\Invoice\Entity\UserClient $userClient
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\UserClient\UserClient $userClient
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\UserClient\UserClientRepository $ucR
@@ -34,7 +34,7 @@ $client_helper = new ClientHelper($s);
                                                                      'back'); ?>
             </a>
             <a class="btn btn-primary" href="<?= $urlGenerator->generate(
-                   'userclient/new', ['user_id' => $userInv->getUserId()]); ?>">
+                   'userclient/new', ['user_id' => $userInv->reqUserId()]); ?>">
                 <i class="bi bi-plus-lg"></i> <?= $translator->translate('new'); ?>
             </a>
         </div>
@@ -62,19 +62,19 @@ $client_helper = new ClientHelper($s);
                         <tbody>
 <?php
     /**
-     * @var App\Invoice\Entity\UserClient $userClient
+     * @var App\Infrastructure\Persistence\UserClient\UserClient $userClient
      */
-    foreach ($ucR->repoClientquery($userInv->getUserId()) as $userClient) { ?>
+    foreach ($ucR->repoClientquery($userInv->reqUserId()) as $userClient) { ?>
                             <tr>
                                 <td>
                                     <a href="<?=
                                         $urlGenerator->generate(
                                         'client/view',
-                                        ['id' => $userClient->getClientId()]); ?>"
+                                        ['id' => $userClient->reqClientId()]); ?>"
                                        style="text-decoration:none">
                                         <?php
-                                            $client = $cR->repoClientquery((int) 
-                                                    $userClient->getClientId());
+                                            $client = $cR->repoClientquery( 
+                                                    $userClient->reqClientId());
                                     echo $client_helper->formatClient($client);
                                 ?>
                                     </a>
@@ -84,7 +84,7 @@ $client_helper = new ClientHelper($s);
                                         action="<?=
                                                     $urlGenerator->generate(
                                                     'userclient/delete',
-                                                ['id' => $userClient->getId()]); ?>"
+                                                ['id' => $userClient->reqId()]); ?>"
                                         method="POST"
                                         enctype="multipart/form-data"
                                         data-bs-toggle="tooltip"

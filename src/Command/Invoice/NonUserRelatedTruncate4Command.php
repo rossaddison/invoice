@@ -4,34 +4,18 @@ declare(strict_types=1);
 
 namespace App\Command\Invoice;
 
-use App\Infrastructure\Persistence\Client\Client;
-use App\Infrastructure\Persistence\ClientCustom\ClientCustom;
-use App\Infrastructure\Persistence\ClientNote\ClientNote;
-use App\Infrastructure\Persistence\ClientPeppol\ClientPeppol;
-use App\Infrastructure\Persistence\Company\Company;
-use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
-use App\Infrastructure\Persistence\Contract\Contract;
-use App\Infrastructure\Persistence\CustomField\CustomField;
-use App\Infrastructure\Persistence\CustomValue\CustomValue;
-use App\Infrastructure\Persistence\Delivery\Delivery;
-use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation;
-use App\Infrastructure\Persistence\DeliveryParty\DeliveryParty;
-use App\Infrastructure\Persistence\EmailTemplate\EmailTemplate;
-use App\Infrastructure\Persistence\Family\Family;
-use App\Infrastructure\Persistence\FromDropDown\FromDropDown;
-use App\Infrastructure\Persistence\Group\Group;
-use App\Infrastructure\Persistence\PostalAddress\PostalAddress;
-use App\Infrastructure\Persistence\ProductCustom\ProductCustom;
-use App\Infrastructure\Persistence\Product\Product;
-use App\Invoice\Entity\ProductImage;
-use App\Invoice\Entity\ProductProperty;
-use App\Invoice\Entity\Profile;
-use App\Infrastructure\Persistence\Project\Project;
-use App\Infrastructure\Persistence\Task\Task;
-use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Infrastructure\Persistence\Unit\Unit;
-use App\Invoice\Entity\UnitPeppol;
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\{
+   Client\Client, ClientCustom\ClientCustom, ClientNote\ClientNote,
+   ClientPeppol\ClientPeppol, Company\Company, CompanyPrivate\CompanyPrivate,
+   Contract\Contract, CustomField\CustomField, CustomValue\CustomValue,
+   Delivery\Delivery, DeliveryLocation\DeliveryLocation,
+   DeliveryParty\DeliveryParty, EmailTemplate\EmailTemplate,
+   Family\Family, FromDropDown\FromDropDown, Group\Group,
+   PostalAddress\PostalAddress, ProductCustom\ProductCustom,
+   Product\Product, ProductImage\ProductImage, ProductProperty\ProductProperty,
+   Profile\Profile, Project\Project, Task\Task, TaxRate\TaxRate, Unit\Unit,
+   UnitPeppol\UnitPeppol, Upload\Upload
+};
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

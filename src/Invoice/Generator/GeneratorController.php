@@ -6,7 +6,7 @@ namespace App\Invoice\Generator;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Gentor;
+use App\Infrastructure\Persistence\Gentor\Gentor;
 use App\Invoice\GeneratorRelation\GeneratorRelationRepository;
 use App\Invoice\Helpers\CaCertFileNotFoundException;
 use App\Invoice\Helpers\GoogleTranslateDiffEmptyException;
@@ -572,7 +572,7 @@ class GeneratorController extends BaseController
     public function add(Request $request, FormHydrator $formHydrator, DatabaseManager $dbal): Response
     {
         $gentor = new Gentor();
-        $form = new GeneratorForm($gentor);
+        $form = new GeneratorForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'generator/add',
@@ -608,11 +608,11 @@ class GeneratorController extends BaseController
     {
         $generator = $this->generator($currentRoute, $generatorRepository);
         if ($generator) {
-            $form = new GeneratorForm($generator);
+            $form = GeneratorForm::show($generator);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'generator/edit',
-                'actionArguments' => ['id' => $generator->getGentorId()],
+                'actionArguments' => ['id' => $generator->reqGentorId()],
                 'errors' => [],
                 'form' => $form,
                 'tables' => $dbal->database('default')->getTables(),
@@ -667,11 +667,11 @@ class GeneratorController extends BaseController
     ): Response {
         $generator = $this->generator($currentRoute, $generatorRepository);
         if ($generator) {
-            $form = new GeneratorForm($generator);
+            $form = GeneratorForm::show($generator);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'generator/view',
-                'actionArguments' => ['id' => $generator->getGentorId()],
+                'actionArguments' => ['id' => $generator->reqGentorId()],
                 'generator' => $generator,
                 'form' => $form,
             ];
@@ -694,17 +694,13 @@ class GeneratorController extends BaseController
     }
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param GeneratorRepository $generatorRepository
+     * @param CurrentRoute $curR
+     * @param GeneratorRepository $gR
      * @return Gentor|null
      */
-    private function generator(CurrentRoute $currentRoute, GeneratorRepository $generatorRepository): ?Gentor
+    private function generator(CurrentRoute $curR, GeneratorRepository $gR): ?Gentor
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $generatorRepository->repoGentorQuery($id);
-        }
-        return null;
+        return $gR->repoGentorQuery((int) $curR->getArgument('id'));
     }
 
     /**
@@ -740,7 +736,7 @@ class GeneratorController extends BaseController
         if (null == $table_name) {
             return $this->webService->getRedirectResponse('generator/index');
         }
-        $id = $g->getGentorId();
+        $id = $g->reqGentorId();
         $relations = $grr->findRelations($id);
         $orm = $dbal->database('default')
                     ->table($table_name);
@@ -784,7 +780,7 @@ class GeneratorController extends BaseController
         if (null == $table_name) {
             return $this->webService->getRedirectResponse('generator/index');
         }
-        $id = $g->getGentorId();
+        $id = $g->reqGentorId();
         $relations = $grr->findRelations($id);
         $orm = $dbal->database('default')
                     ->table($table_name);
@@ -828,7 +824,7 @@ class GeneratorController extends BaseController
         if (null == $table_name) {
             return $this->webService->getRedirectResponse('generator/index');
         }
-        $id = $g->getGentorId();
+        $id = $g->reqGentorId();
         $relations = $grr->findRelations($id);
         $orm = $dbal->database('default')
                     ->table($table_name);
@@ -872,7 +868,7 @@ class GeneratorController extends BaseController
         if (null == $table_name) {
             return $this->webService->getRedirectResponse('generator/index');
         }
-        $id = $g->getGentorId();
+        $id = $g->reqGentorId();
         $relations = $grr->findRelations($id);
         /** @psalm-suppress ArgumentTypeCoercion $g->getPreEntityTable() */
         $orm = $dbal->database('default')
@@ -917,7 +913,7 @@ class GeneratorController extends BaseController
         if (null == $table_name) {
             return $this->webService->getRedirectResponse('generator/index');
         }
-        $id = $g->getGentorId();
+        $id = $g->reqGentorId();
         $relations = $grr->findRelations($id);
         /** @psalm-suppress ArgumentTypeCoercion $g->getPreEntityTable() */
         $orm = $dbal->database('default')
@@ -960,7 +956,7 @@ class GeneratorController extends BaseController
         if (null == $table_name) {
             return $this->webService->getRedirectResponse('generator/index');
         }
-        $id = $g->getGentorId();
+        $id = $g->reqGentorId();
         $relations = $grr->findRelations($id);
         /** @psalm-suppress ArgumentTypeCoercion $g->getPreEntityTable() */
         $orm = $dbal->database('default')
@@ -1004,7 +1000,7 @@ class GeneratorController extends BaseController
         if (null == $table_name) {
             return $this->webService->getRedirectResponse('generator/index');
         }
-        $id = $g->getGentorId();
+        $id = $g->reqGentorId();
         $relations = $grr->findRelations($id);
         $orm = $dbal->database('default')
                     ->table($table_name);
@@ -1047,7 +1043,7 @@ class GeneratorController extends BaseController
         if (null == $table_name) {
             return $this->webService->getRedirectResponse('generator/index');
         }
-        $id = $g->getGentorId();
+        $id = $g->reqGentorId();
         $relations = $grr->findRelations($id);
         $orm = $dbal->database('default')
                     ->table($table_name);
@@ -1093,7 +1089,7 @@ class GeneratorController extends BaseController
         if (null == $table_name) {
             return $this->webService->getRedirectResponse('generator/index');
         }
-        $id = $g->getGentorId();
+        $id = $g->reqGentorId();
         $relations = $grr->findRelations($id);
         $orm = $dbal->database('default')
                     ->table($table_name);

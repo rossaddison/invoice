@@ -93,10 +93,10 @@ final class DeliveryLocationRepository extends Select\Repository
 
     /**
      * Get all delivery locations associated with a Client
-     * @param string $client_id
+     * @param int $client_id
      * @return EntityReader
      */
-    public function repoClientquery(string $client_id): EntityReader
+    public function repoClientquery(int $client_id): EntityReader
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
@@ -104,10 +104,10 @@ final class DeliveryLocationRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
+     * @param int $client_id
      * @return int
      */
-    public function repoClientCount(string $client_id): int
+    public function repoClientCount(int $client_id): int
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
@@ -115,10 +115,10 @@ final class DeliveryLocationRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return int
      */
-    public function repoInvoiceCount(string $inv_id): int
+    public function repoInvoiceCount(int $inv_id): int
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
@@ -126,10 +126,10 @@ final class DeliveryLocationRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

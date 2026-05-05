@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Widget\Button;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -27,8 +27,8 @@ const NATIVE_RESET_INV_FILTER = 'native-reset inv-filter';
 const NATIVE_RESET_INV_AMOUNT_FILTER = 'native-reset inv-amount-filter';
 
 /**
- * @var App\Invoice\Entity\Inv $inv
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
@@ -87,7 +87,7 @@ $columns = [
                     ->addAttributes(['style' => 'text-decoration:none'])
                     ->content(($model->getNumber() ?? '#') . ' 🔍')
                     ->href($urlGenerator->generate(
-                                        'inv/view', ['id' => $model->getId()]));
+                                        'inv/view', ['id' => $model->reqId()]));
         },
         encodeContent: false,
         filter: DropdownFilter::widget()
@@ -118,7 +118,7 @@ $columns = [
             $labelClass = $isPaid ? 'text-success' : 'text-danger';
             $html = '<span class="' . $labelClass . '">' . $paidFormatted . '</span>';
             if (!$isPaid && !empty($enabledGateways)) {
-                $dropdownId = 'pay-drop-' . Html::encode((string) $model->getId());
+                $dropdownId = 'pay-drop-' . Html::encode((string) $model->reqId());
                 $items = '';
                 foreach ($enabledGateways as $gateway) {
                     $displayName = str_replace('_', ' ', (string) $gateway);
@@ -174,7 +174,7 @@ $columns = [
             new ActionButton(
                 url: static function (Inv $inv) use ($urlGenerator): string {
                     return $urlGenerator->generate('inv/pdfDashboardExcludeCf',
-                            ['id' => $inv->getId()]);
+                            ['id' => $inv->reqId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -188,7 +188,7 @@ $columns = [
                 url: static function (Inv $inv) use ($urlGenerator):
                 string {
                     return $urlGenerator->generate('inv/pdfDashboardIncludeCf',
-                            ['id' => $inv->getId()]);
+                            ['id' => $inv->reqId()]);
                 },
                 attributes: [
                     'data-bs-toggle' => 'tooltip',
@@ -207,7 +207,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Inv $model) => (string) $model->getId(),
+        content: static fn (Inv $model) => (string) $model->reqId(),
         withSorting: true,
         visible: false,
     ),
@@ -233,10 +233,7 @@ $columns = [
         encodeHeader: false,
         content: static function (Inv $model) use ($iR, $s, $irR, $translator):
                                                                         string {
-            $statusId = $model->getStatusId();
-            if ($statusId === null) {
-                return '<span class="badge text-bg-default">N/A</span>';
-            }
+            $statusId = $model->reqStatusId();
             $emoji = $iR->getSpecificStatusArrayEmoji($statusId);
             $label = $iR->getSpecificStatusArrayLabel((string) $statusId);
             
@@ -246,7 +243,7 @@ $columns = [
                 $label .= ' 🚫';
             }
             // Add recurring indicator
-            if ($irR->repoCount((string) $model->getId()) > 0) {
+            if ($irR->repoCount($model->reqId()) > 0) {
                 $label .= ' ' . $translator->translate('recurring') . ' 🔄';
             }
             
@@ -278,16 +275,17 @@ $columns = [
         encodeHeader: false,
         property: 'filterCreditInvNumber',
         content: static function (Inv $model) use ($urlGenerator, $iR): A {
-            $visible = $iR->repoInvUnLoadedquery(
-                                        $model->getCreditinvoiceParentId());
-            if (null !== $visible) {
-                $url = ($visible->getNumber() ?? '#') . '💳';
-                return   new A()
-                        ->addAttributes(['style' => 'text-decoration:none'])
-                        ->content($url)
-                        ->href($urlGenerator->generate('inv/view',
-                                ['id' => $model->getCreditinvoiceParentId()]));
-            }
+            if (null!== ($cipId = $model->getCreditinvoiceParentId())) {
+                $visible = $iR->repoInvUnLoadedquery($cipId);
+                if (null !== $visible) {
+                    $url = ($visible->getNumber() ?? '#') . '💳';
+                    return   new A()
+                            ->addAttributes(['style' => 'text-decoration:none'])
+                            ->content($url)
+                            ->href($urlGenerator->generate('inv/view',
+                                    ['id' => $cipId]));
+                }
+            }            
             return  new A()->content('')->href('');
         },
         encodeContent: false,

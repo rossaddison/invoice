@@ -88,7 +88,7 @@ final class CategorySecondaryRepository extends Select\Repository
         );
     }
 
-    public function repoCategoryPrimaryIdQuery(string $category_primary_id): EntityReader
+    public function repoCategoryPrimaryIdQuery(int $category_primary_id): EntityReader
     {
         $select = $this->select();
         $query = $select
@@ -97,11 +97,11 @@ final class CategorySecondaryRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return CategorySecondary|null
      */
-    public function repoCategorySecondaryQuery(string $id): ?CategorySecondary
+    public function repoCategorySecondaryQuery(int $id): ?CategorySecondary
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -109,11 +109,11 @@ final class CategorySecondaryRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return CategorySecondary|null
      */
-    public function repoCategorySecondaryLoadedQuery(string $id): ?CategorySecondary
+    public function repoCategorySecondaryLoadedQuery(int $id): ?CategorySecondary
     {
         $query = $this->select()
                       ->load('category_primary')
@@ -143,7 +143,7 @@ final class CategorySecondaryRepository extends Select\Repository
      * @return array
      */
     public function optionsDataCategorySecondariesWithCategoryPrimaryId(
-        string $category_primary_id
+        int $category_primary_id
     ): array {
         $categorySecondaries = $this->repoCategoryPrimaryIdQuery(
             $category_primary_id
@@ -161,10 +161,10 @@ final class CategorySecondaryRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

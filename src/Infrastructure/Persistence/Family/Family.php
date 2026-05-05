@@ -36,7 +36,7 @@ class Family
         return $this->requireId($this->id, 'Family');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -44,11 +44,6 @@ class Family
     public function setId(int $id): void
     {
         $this->id = $id;
-    }
-
-    public function getFamilyId(): ?int
-    {
-        return $this->id;
     }
 
     public function getFamilyName(): ?string
@@ -82,9 +77,9 @@ class Family
         $this->family_productprefix = $family_productprefix;
     }
 
-    public function getCategoryPrimaryId(): string
+    public function reqCategoryPrimaryId(): int
     {
-        return (string) $this->category_primary_id;
+        return $this->requireId($this->category_primary_id, 'CategoryPrimary');
     }
 
     public function setCategoryPrimaryId(int $category_primary_id): void
@@ -92,9 +87,9 @@ class Family
         $this->category_primary_id = $category_primary_id;
     }
 
-    public function getCategorySecondaryId(): string
+    public function reqCategorySecondaryId(): int
     {
-        return (string) $this->category_secondary_id;
+        return $this->requireId($this->category_secondary_id, 'CategorySecondary');
     }
 
     public function setCategorySecondaryId(

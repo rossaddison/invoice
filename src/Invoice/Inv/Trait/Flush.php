@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
-use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
-
-use App\Invoice\Entity\
-{
-    Inv, InvItemAllowanceCharge, InvItem, InvItemAmount,
-    InvAmount, InvCustom, InvRecurring, InvSentLog, InvTaxRate, Payment,
-    PaymentCustom};
+use App\Infrastructure\Persistence\{
+    InvAllowanceCharge\InvAllowanceCharge,
+    Inv\Inv, InvItemAllowanceCharge\InvItemAllowanceCharge,
+    InvItem\InvItem, InvItemAmount\InvItemAmount, InvAmount\InvAmount,
+    InvCustom\InvCustom, InvRecurring\InvRecurring, InvSentLog\InvSentLog,
+    InvTaxRate\InvTaxRate, Payment\Payment, PaymentCustom\PaymentCustom
+};
 
 use App\Invoice\{
     Inv\InvRepository as IR,

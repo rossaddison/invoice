@@ -16,14 +16,14 @@ use Yiisoft\Translator\TranslatorInterface as Translator;
 // Entities
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Infrastructure\Persistence\DeliveryLocation\DeliveryLocation as DL;
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvItemAllowanceCharge;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvItemAmount;
-use App\Invoice\Entity\PaymentPeppol;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
+use App\Infrastructure\Persistence\PaymentPeppol\PaymentPeppol;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\Upload\Upload;
 // Helpers
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Helpers\DateHelper;
@@ -116,8 +116,7 @@ final readonly class StoreCoveHelper
     {
         $client = $invoice->getClient();
         if (null !== $client) {
-            $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                (string) $client->reqId());
+            $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
             if (null === $client_peppol) {
                 throw new PeppolClientNotFoundException($this->t);
             }
@@ -141,9 +140,9 @@ final readonly class StoreCoveHelper
     private function buildAttachmentsArray(Inv $invoice, upR $upR): array
     {
         $url_key = $invoice->getUrlKey();
-        $invoice_id = $invoice->getId();
+        $invoice_id = $invoice->reqId();
         $inv_attachments = $upR->repoUploadUrlClientquery(
-            $url_key, (int) $invoice->getClientId());
+            $url_key, $invoice->reqClientId());
         $aliases = $this->s->getCustomerFilesFolderAliases();
         $targetPath = $aliases->get('@customer_files');
         $attachments = [];
@@ -163,7 +162,7 @@ final readonly class StoreCoveHelper
                     $documentId = $invoice->getNumber();
                 } elseif (null !== $invoice_id) {
                     $documentId = 'id' . $invoice_id . 'uploadid'
-                        . $inv_attachment->getId();
+                        . $inv_attachment->reqId();
                 } else {
                     $documentId = '';
                 }
@@ -176,7 +175,7 @@ final readonly class StoreCoveHelper
                                         $upR->getContentTypeDefaultOctetStream();
                 // https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/
                 //  cac-AdditionalDocumentReference/
-                // $inv_attachment->getId() => upload repository id
+                // $inv_attachment->reqId() => upload repository id
                 $attachments[$incrementor] = [
                     'filename' => $inv_attachment->getFileNameOriginal(),
                     'document'
@@ -317,84 +316,85 @@ final readonly class StoreCoveHelper
     public function buildReferencesArray(Inv $invoice,
             ContractRepo $contractRepo, cpR $cpR, SOIR $soiR, SOR $soR): array
     {
-        $invoice_id = $invoice->getId();
-        if (null !== $invoice_id) {
-            $sales_order_id = $invoice->getSoId();
-            if ($sales_order_id) {
-                $sales_order = $soR->repoSalesOrderUnLoadedquery((int) $sales_order_id);
-                if ($sales_order) {
-                    $sales_order_number = ($sales_order->getNumber() ??
-                        $this->t->translate(
-                            'storecove.salesorder.number.not.exist')) ;
-                    $inv_items = $invoice->getItems();
-                    $contract_id = $invoice->getContractId();
+        $invoice_id = $invoice->reqId();
+        $sales_order_id = $invoice->getSoId();
+        if ($sales_order_id > 0) {
+            $sales_order = $soR->repoSalesOrderUnLoadedquery($sales_order_id);
+            if ($sales_order) {
+                $sales_order_number = ($sales_order->getNumber() ??
+                    $this->t->translate(
+                        'storecove.salesorder.number.not.exist')) ;
+                $inv_items = $invoice->getItems();
+                $contract_id = $invoice->getContractId();
+                $contract_reference = '';
+                if (null!== $contract_id) {
                     $contract = $contractRepo->repoContractquery($contract_id);
                     $contract_reference = $contract?->getReference() ??
                         $this->t->translate(
                             'storecove.no.contract.exists');
-                    $incrementor = 0;
-                    $line_number = 1;
-                    $references = [];
-                    /**
-                     * @var \\App\Invoice\Entity\InvItem $item
-                     */
-                    foreach ($inv_items as $item) {
-                        $so_item_id = $item->getSoItemId();
-                        $so_item = $soiR->repoSalesOrderItemquery((int) $so_item_id);
-                        if (null !== $so_item) {
-                            $po_itemid = $so_item->getPeppolPoItemid() ??
-                                $this->t->translate(
-                                    'storecove.purchase.order.item.id.null');
-                            $references[$incrementor] = [
-                                'documentType' => 'purchase_order',
-                                'documentId' => 'So_item_id/Po_item_id - '
-                                            . $so_item_id . '/' . $po_itemid,
-                                'lineId' => 'Seller Inv Line - '
-                                            . (string) $line_number,
-                                'issueDate' => $invoice->getDateCreated(),
-                            ];
-                            $incrementor += 1;
-                            $line_number += 1;
-                        } // null!== $so_item
-                    }
-                    // build the client buyer reference
-                    $references[$incrementor] = [
-                        'documentType' => 'buyer_reference',
-                        'documentId' => $this->BuyerReference($invoice, $cpR),
-                    ];
-                    $incrementor += 1;
-                    // build the sales order reference
-                    $references[$incrementor] = [
-                        'documentType' => 'sales_order',
-                        'documentId' => $sales_order_number,
-                    ];
-                    $incrementor += 1;
-                    $references[$incrementor] = [
-                        'documentType' => 'billing',
-                        'documentId' => 'refers to a previous invoice',
-                    ];
-                    $incrementor += 1;
-                    $references[$incrementor] = [
-                        'documentType' => 'contract',
-                        'documentId' => $contract_reference,
-                    ];
-                    if (null !== $invoice->getNumber()) {
-                        $ref = $invoice->getNumber();
-                    } else {
-                        $ref = $this->t->translate(
-                                'number.missing.therefore.use.invoice.id')
-                                . $invoice_id;
-                    }
-                    $incrementor += 1;
-                    $references[$incrementor] = [
-                        'documentType' => 'originator',
-                        'documentId' => null !== $ref ? $this->t->translate(
-                                'storecove.invoice') . $ref : '',
-                    ];
-                    return $references;
-                } // null!== $sales_order
-            } // null !== $sales_order_id
-        } // null !== $invoice->getId()
+                }    
+                $incrementor = 0;
+                $line_number = 1;
+                $references = [];
+                /**
+                 * @var \App\Infrastructure\Persistence\InvItem\InvItem $item
+                 */
+                foreach ($inv_items as $item) {
+                    $so_item_id = $item->getSoItemId();
+                    $so_item = $soiR->repoSalesOrderItemquery((int) $so_item_id);
+                    if (null !== $so_item) {
+                        $po_itemid = $so_item->getPeppolPoItemid() ??
+                            $this->t->translate(
+                                'storecove.purchase.order.item.id.null');
+                        $references[$incrementor] = [
+                            'documentType' => 'purchase_order',
+                            'documentId' => 'So_item_id/Po_item_id - '
+                                        . (string) $so_item_id . '/' . $po_itemid,
+                            'lineId' => 'Seller Inv Line - '
+                                        . (string) $line_number,
+                            'issueDate' => $invoice->getDateCreated(),
+                        ];
+                        $incrementor += 1;
+                        $line_number += 1;
+                    } // null!== $so_item
+                }
+                // build the client buyer reference
+                $references[$incrementor] = [
+                    'documentType' => 'buyer_reference',
+                    'documentId' => $this->BuyerReference($invoice, $cpR),
+                ];
+                $incrementor += 1;
+                // build the sales order reference
+                $references[$incrementor] = [
+                    'documentType' => 'sales_order',
+                    'documentId' => $sales_order_number,
+                ];
+                $incrementor += 1;
+                $references[$incrementor] = [
+                    'documentType' => 'billing',
+                    'documentId' => 'refers to a previous invoice',
+                ];
+                $incrementor += 1;
+                $references[$incrementor] = [
+                    'documentType' => 'contract',
+                    'documentId' => $contract_reference,
+                ];
+                if (null !== $invoice->getNumber()) {
+                    $ref = $invoice->getNumber();
+                } else {
+                    $ref = $this->t->translate(
+                            'number.missing.therefore.use.invoice.id')
+                            . $invoice_id;
+                }
+                $incrementor += 1;
+                $references[$incrementor] = [
+                    'documentType' => 'originator',
+                    'documentId' => null !== $ref ? $this->t->translate(
+                            'storecove.invoice') . $ref : '',
+                ];
+                return $references;
+            } // null!== $sales_order
+        } // null !== $sales_order_id
         return [];
     }
 
@@ -436,9 +436,8 @@ final readonly class StoreCoveHelper
     private function peppolPoItemid(InvItem $item, SOIR $soiR): ?string
     {
         $sales_order_item_id = $item->getSoItemId();
-        if ($sales_order_item_id) {
-            $sales_order_item = $soiR->repoSalesOrderItemquery(
-                    (int) $sales_order_item_id);
+        if ($sales_order_item_id > 0) {
+            $sales_order_item = $soiR->repoSalesOrderItemquery($sales_order_item_id);
             if (null !== $sales_order_item) {
                 $peppol_po_itemid = $sales_order_item->getPeppolPoItemid();
                 if (null !== $peppol_po_itemid) {
@@ -463,15 +462,15 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
     private function peppolPoLineid(InvItem $item, SOIR $soiR): ?string
     {
         $sales_order_item_id = $item->getSoItemId();
-        if ($sales_order_item_id) {
-            $sales_order_item = $soiR->repoSalesOrderItemquery(
-                (int) $sales_order_item_id);
+        if ($sales_order_item_id > 0) {
+            $sales_order_item = $soiR->repoSalesOrderItemquery($sales_order_item_id);
             if (null !== $sales_order_item) {
                 $peppol_po_lineid = $sales_order_item->getPeppolPoLineid();
                 if (null !== $peppol_po_lineid) {
                     return $peppol_po_lineid;
                 }
-                throw new PeppolSalesOrderItemPurchaseOrderLineNumberNotExistException($this->t);
+                throw new PeppolSalesOrderItemPurchaseOrderLineNumberNotExistException(
+                        $this->t);
             } else {
                 throw new PeppolSalesOrderItemNotExistException($this->t);
             }
@@ -482,37 +481,34 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
     /**
      * @param Inv $invoice
      * @param DelRepo $delRepo
-     * @return DateTime|null
+     * @return DateTime
      */
     public function actualDeliveryDate(Inv $invoice, DelRepo $delRepo): ?DateTime
     {
-        $invoice_id = $invoice->getId();
-        if (null !== $invoice_id) {
-            $delivery = $delRepo->repoInvoicequery($invoice_id);
-            if (null !== $delivery) {
-                $actual_delivery_date = $delivery->getActualDeliveryDate();
-                if (null !== $actual_delivery_date) {
-                    return DateTime::createFromImmutable($actual_delivery_date);
-                }
-                return DateTime::createFromImmutable($invoice->getDateSupplied());
+        $invoice_id = $invoice->reqId();
+        $dateSupplied = DateTime::createFromImmutable($invoice->getDateSupplied());
+        $delivery = $delRepo->repoInvoicequery($invoice_id);
+        if (null !== $delivery) {
+            $actual_delivery_date = $delivery->getActualDeliveryDate();
+            if (null !== $actual_delivery_date) {
+                return DateTime::createFromImmutable($actual_delivery_date);
             }
-            return DateTime::createFromImmutable($invoice->getDateSupplied());
         }
-        return null;
+        return $dateSupplied;
     }
 
     /**
-     * @param string $product_id
+     * @param int $product_id
      * @param ppR $ppR
      * @return array
      */
-    private function buildProductPropertyArray(string $product_id, ppR $ppR): array
+    private function buildProductPropertyArray(int $product_id, ppR $ppR): array
     {
         $product_propertys = $ppR->findAllProduct($product_id);
         $product_property_array = [];
         $i = 1;
         /**
-         * @var \\App\Invoice\Entity\ProductProperty $product_property
+         * @var \\App\Infrastructure\Persistence\ProductProperty\ProductProperty $product_property
          */
         foreach ($product_propertys as $product_property) {
             $product_property_array[$i] = [
@@ -531,51 +527,48 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
      */
     public function documentLevelAllowanceCharges(Inv $invoice, ACIR $aciR): array
     {
-        $invoice_id = $invoice->getId();
-        if (null !== $invoice_id) {
-            // Get the Document Level Invoice's allowance/charges
-            // ie. NOT invoice line allowance/charges
-            $allowances_or_charges = $aciR->repoACIquery($invoice_id);
-            $allowanceCharges = [];
-            if ($aciR->repoACICount($invoice_id)) {
-                /**
-                 * @var InvAllowanceCharge $ac
-                 */
-                foreach ($allowances_or_charges as $ac) {
-                    //https://www.storecove.com/docs/#_openapi_allowancecharge
-                    $allowanceCharges[] = [
+        $invoice_id = $invoice->reqId();
+        // Get the Document Level Invoice's allowance/charges
+        // ie. NOT invoice line allowance/charges
+        $allowances_or_charges = $aciR->repoACIquery($invoice_id);
+        $allowanceCharges = [];
+        if ($aciR->repoACICount($invoice_id)) {
+            /**
+             * @var InvAllowanceCharge $ac
+             */
+            foreach ($allowances_or_charges as $ac) {
+                //https://www.storecove.com/docs/#_openapi_allowancecharge
+                $allowanceCharges[] = [
 // The dropdown reason in free text determines if it is an allowance or charge
 //  eg. "Agreed settlement" =>
-                        'reason' => $ac->getAllowanceCharge()?->getReason(),
-                        'amountExcludingTax' => $ac->getAmount(),
-                        // optional 'amountIncludingTax' => 3,
-                        'baseAmountExcludingTax' =>
-                            $ac->getAllowanceCharge()?->getBaseAmount(),
-                        // optional 'baseAmountIncludingTax' => 4,
-                        //5.2.83 Tax https://www.storecove.com/docs/#_openapi_tax
-                        'tax' => [
-                            // The percentage Tax.
-                            // This should be a valid
-                            // Tax percentage in the
-                            // country at the time of
-                            // the issueDate of this
-                            // invoice. Mandatory if
-                            // taxSystem == 'tax_line_percentages'
-                            'percentage' =>
-                $ac->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent(),
-                            // sender country code
-                            'country' =>
-                                    $this->s->getSetting('currency_code_from'),
-                            // stored in snake_case format eg. zero_rated
-                            'category' =>
-                $ac->getAllowanceCharge()?->getTaxRate()?->getStorecoveTaxType(),
-                        ], // tax
-                    ]; // allowancecharges[]
-                } // foreach
-            }
-            return $allowanceCharges;
+                    'reason' => $ac->getAllowanceCharge()?->getReason(),
+                    'amountExcludingTax' => $ac->getAmount(),
+                    // optional 'amountIncludingTax' => 3,
+                    'baseAmountExcludingTax' =>
+                        $ac->getAllowanceCharge()?->getBaseAmount(),
+                    // optional 'baseAmountIncludingTax' => 4,
+                    //5.2.83 Tax https://www.storecove.com/docs/#_openapi_tax
+                    'tax' => [
+                        // The percentage Tax.
+                        // This should be a valid
+                        // Tax percentage in the
+                        // country at the time of
+                        // the issueDate of this
+                        // invoice. Mandatory if
+                        // taxSystem == 'tax_line_percentages'
+                        'percentage' =>
+            $ac->getAllowanceCharge()?->getTaxRate()?->getTaxRatePercent(),
+                        // sender country code
+                        'country' =>
+                                $this->s->getSetting('currency_code_from'),
+                        // stored in snake_case format eg. zero_rated
+                        'category' =>
+            $ac->getAllowanceCharge()?->getTaxRate()?->getStorecoveTaxType(),
+                    ], // tax
+                ]; // allowancecharges[]
+            } // foreach
         }
-        return [];
+        return $allowanceCharges;
     }
 
     /**
@@ -596,8 +589,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
     {
         $client = $invoice->getClient();
         if ($client) {
-            $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                (string) $client->reqId());
+            $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
             if ($client_peppol) {
                 $invoiceLines = [];
                 /**
@@ -607,90 +599,86 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
                     $price = ($item->getPrice() ?? 0.00);
                     $peppol_po_itemid = $this->PeppolPoItemid($item, $soiR);
                     $peppol_po_lineid = $this->PeppolPoLineid($item, $soiR);
-                    $item_id = $item->getId();
-                    if (null !== $item_id) {
-                        // if the additionalitemproperty field has been used,
-                        //  use the product property name value pairs to build
-                        //   an array
-                        $product_properties_array =
-                                $this->buildProductPropertyArray(
-                                                        (string) $item_id, $ppR);
-                        $inv_item_amount = $this->getInvItemAmount(
-                                                        (string) $item_id, $iiaR);
-                        if (isset($inv_item_amount)) {
+                    $item_id = $item->reqId();
+                    // if the additionalitemproperty field has been used,
+                    //  use the product property name value pairs to build
+                    //   an array
+                    $product_properties_array =
+                            $this->buildProductPropertyArray($item_id, $ppR);
+                    $inv_item_amount = $this->getInvItemAmount($item_id, $iiaR);
+                    if (isset($inv_item_amount)) {
 
-            // using Array Format 2
-            // ..\vendor\sabre\xml\lib\Writer.php
-            // https://kinsta.com/blog/php-8-2/#deprecate--string-interpolation
-            // Note: The following string interpolation confirms with php 8.2
-                            $invoiceLines[$item_id] = [
-                                'lineId' => $item_id,
-                                // storecove.com/docs 5.2.50. PaymentMeans Netherlands
-                                'amountExcludingVat' => '',
-                                'itemPrice' => $this->s->currencyConverter($price),
-                                // baseQuantity: number of sub-items included in the price of the item
-                                'baseQuantity' =>
-                        $item->getProduct()?->getProductPriceBaseQuantity(),
-                                'quantity' => $item->getQuantity(),
-                                'quantityUnitCode' =>
-                        $this->UnitCode(
-                (string) ($item->getProduct()?->getUnit()?->isPersisted() ? $item->getProduct()?->getUnit()?->reqId() : ''), $unpR),
-                                'tax' => [
-                                    'percentage' =>
-                       $item->getProduct()?->getTaxRate()?->getTaxRatePercent(),
-                                    'country' =>
-                      $item->getProduct()?->getProductCountryOfOriginCode(),
-                                    'category' =>
-                     $item->getProduct()?->getTaxRate()?->getStoreCoveTaxType(),
-                                ],
+        // using Array Format 2
+        // ..\vendor\sabre\xml\lib\Writer.php
+        // https://kinsta.com/blog/php-8-2/#deprecate--string-interpolation
+        // Note: The following string interpolation confirms with php 8.2
+                        $invoiceLines[$item_id] = [
+                            'lineId' => $item_id,
+// storecove.com/docs 5.2.50. PaymentMeans Netherlands
+                            'amountExcludingVat' => '',
+                            'itemPrice' => $this->s->currencyConverter($price),
+// baseQuantity: number of sub-items included in the price of the item
+                            'baseQuantity' =>
+                    $item->getProduct()?->getProductPriceBaseQuantity(),
+                            'quantity' => $item->getQuantity(),
+                            'quantityUnitCode' => $this->unitCode(
+                                $item->getProduct()?->getUnit()?->reqId(),
+                                $unpR),
+                            'tax' => [
+                                'percentage' =>
+                   $item->getProduct()?->getTaxRate()?->getTaxRatePercent(),
+                                'country' =>
+                  $item->getProduct()?->getProductCountryOfOriginCode(),
+                                'category' =>
+                 $item->getProduct()?->getTaxRate()?->getStoreCoveTaxType(),
+                            ],
 //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/
 // cac-OrderLineReference/cbc-LineID/
-                                'orderLineReferenceLineId' =>
-                            $peppol_po_lineid ?? $this->t->translate('client.'),
-                                'accountingCost' =>
-                            $client_peppol->getAccountingCost(),
-                                'name' => $item->getName(),
-                                'description' => $item->getDescription(),
-                                'invoicePeriod' =>
-                            $invoice_period->getStartDate()
-                                    . ' - ' . $invoice_period->getEndDate(),
-                                'note' => $item->getNote(),
-                                'references' => [
+                            'orderLineReferenceLineId' =>
+                        $peppol_po_lineid ?? $this->t->translate('client.'),
+                            'accountingCost' =>
+                        $client_peppol->getAccountingCost(),
+                            'name' => $item->getName(),
+                            'description' => $item->getDescription(),
+                            'invoicePeriod' =>
+                        $invoice_period->getStartDate()
+                                . ' - ' . $invoice_period->getEndDate(),
+                            'note' => $item->getNote(),
+                            'references' => [
+                            ],
+                            //https://www.storecove.com/docs
+                            // buyersItemIdentification
+                            'buyersItemIdentification' => $peppol_po_itemid,
+                            'sellersItemIdentification' =>
+                                $item->getProduct()?->getProductSku(),
+                            'standardItemIdentification' =>
+                                $item->getProduct()?->getProductSiiId(),
+                            'standardItemIdentificationSchemeId' =>
+                             $item->getProduct()?->getProductSiiSchemeid(),
+                            'additionalItemProperties' => [
+                                0 => [
+                                    'name' =>
+           $item->getProduct()?->getProductAdditionalItemPropertyName(),
+                                    'value' =>
+          $item->getProduct()?->getProductAdditionalItemPropertyValue(),
                                 ],
-                                //https://www.storecove.com/docs
-                                // buyersItemIdentification
-                                'buyersItemIdentification' => $peppol_po_itemid,
-                                'sellersItemIdentification' =>
-                                    $item->getProduct()?->getProductSku(),
-                                'standardItemIdentification' =>
-                                    $item->getProduct()?->getProductSiiId(),
-                                'standardItemIdentificationSchemeId' =>
-                                 $item->getProduct()?->getProductSiiSchemeid(),
-                                'additionalItemProperties' => [
-                                    0 => [
-                                        'name' =>
-               $item->getProduct()?->getProductAdditionalItemPropertyName(),
-                                        'value' =>
-              $item->getProduct()?->getProductAdditionalItemPropertyValue(),
-                                    ],
-                                    $product_properties_array,
-                                ],
+                                $product_properties_array,
+                            ],
+                        ];
+                        $inv_item_allowance_charges =
+                                $aciiR->repoInvItemquery($item_id);
+                        /**
+                         * @var InvItemAllowanceCharge $acii
+                         */
+                        foreach ($inv_item_allowance_charges as $acii) {
+                            $invoiceLines[$item_id]['allowanceCharges'][] = [
+                                'reason' =>
+                                   $acii->getAllowanceCharge()?->getReason(),
+                                'amountExcludingTax' =>
+                                $acii->getAllowanceCharge()?->getBaseAmount(),
                             ];
-                            $inv_item_allowance_charges =
-                                    $aciiR->repoInvItemquery((string) $item_id);
-                            /**
-                             * @var InvItemAllowanceCharge $acii
-                             */
-                            foreach ($inv_item_allowance_charges as $acii) {
-                                $invoiceLines[$item_id]['allowanceCharges'][] = [
-                                    'reason' =>
-                                       $acii->getAllowanceCharge()?->getReason(),
-                                    'amountExcludingTax' =>
-                                    $acii->getAllowanceCharge()?->getBaseAmount(),
-                                ];
-                            }
-                        } // isset inv_item_amount
-                    } // null!== $item
+                        }
+                    } // isset inv_item_amount
                 } // foreach
                 return $invoiceLines;
             }
@@ -714,13 +702,12 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         $client = $invoice->getClient();
         if ($client) {
             $postaladdress_id = $client->getPostaladdressId();
-            $client_peppol = $cpR->repoClientPeppolLoadedquery(
-                                               (string) $client->reqId());
+            $client_peppol = $cpR->repoClientPeppolLoadedquery($client->reqId());
             if (null == $postaladdress_id) {
                 throw new PeppolBuyerPostalAddressNotFoundException();
             }
             if ($postaladdress_id) {
-                $postaladdress = $paR->repoClient((string) $postaladdress_id);
+                $postaladdress = $paR->repoClient($postaladdress_id);
                 $accounting_customer_party = [];
                 $country_helper = new CountryHelper();
                 if ($postaladdress && $client_peppol) {
@@ -1187,19 +1174,17 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
              * @var InvItem $item
              */
             foreach ($items as $item) {
-                $item_id = $item->getId();
-                if (null !== $item_id) {
-                    if ($id === $item->getTaxRate()?->reqId()) {
-                        $item_amount = $iiaR->repoInvItemAmountquery((string) $item_id);
-                        if (null !== $item_amount) {
-                            $item_sub_total = $item_amount->getSubtotal();
-                            if (null !== $item_sub_total) {
-                                $taxable_amount_total += $item_sub_total;
-                            }
-                            $item_tax_total = $item_amount->getTaxTotal();
-                            if (null !== $item_tax_total) {
-                                $tax_amount_total += $item_tax_total;
-                            }
+                $item_id = $item->reqId();
+                if ($id === $item->getTaxRate()?->reqId()) {
+                    $item_amount = $iiaR->repoInvItemAmountquery($item_id);
+                    if (null !== $item_amount) {
+                        $item_sub_total = $item_amount->getSubtotal();
+                        if (null !== $item_sub_total) {
+                            $taxable_amount_total += $item_sub_total;
+                        }
+                        $item_tax_total = $item_amount->getTaxTotal();
+                        if (null !== $item_tax_total) {
+                            $tax_amount_total += $item_tax_total;
                         }
                     }
                 }
@@ -1250,7 +1235,7 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         $client = $invoice->getClient();
         if (null !== $client) {
             $client_id = $client->reqId();
-            $client_peppol = $cpR->repoClientPeppolLoadedquery((string) $client_id);
+            $client_peppol = $cpR->repoClientPeppolLoadedquery($client_id);
             if (null !== $client_peppol) {
                 return $client_peppol->getBuyerReference();
             }
@@ -1290,17 +1275,15 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
     public function deliveryParty(Inv $invoice, DelRepo $delRepo,
             DelPartyRepo $delpartyRepo): ?Party
     {
-        $invoice_id = $invoice->getId();
-        if (null !== $invoice_id) {
-            $inv = $delRepo->repoPartyquery($invoice_id);
-            if ($inv) {
-                $delivery_party_id = $inv->getDeliveryPartyId();
-                $delparty = $delpartyRepo->repoDeliveryPartyquery($delivery_party_id);
-                $partyName = (null !== $delparty ? $delparty->getPartyName() :
-                    null);
-                return null !== $partyName ? new Party($this->t, $partyName,
-                    null, null, null, null, null, null, null, null, null) : null;
-            }
+        $invoice_id = $invoice->reqId();
+        $inv = $delRepo->repoPartyquery($invoice_id);
+        if ($inv) {
+            $delivery_party_id = $inv->hasDeliveryPartyId() ? $inv->reqDeliveryPartyId() : null;
+            $delparty = $delpartyRepo->repoDeliveryPartyquery((int) $delivery_party_id);
+            $partyName = (null !== $delparty ? $delparty->getPartyName() :
+                null);
+            return null !== $partyName ? new Party($this->t, $partyName,
+                null, null, null, null, null, null, null, null, null) : null;
         }
         return null;
     }
@@ -1391,14 +1374,14 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
     }
 
     /**
-     * @param string $unit_id
+     * @param int|null $unit_id
      * @param unpR $unpR
      * @return string|null
      */
-    private function unitCode(string $unit_id, unpR $unpR): ?string
+    private function unitCode(?int $unit_id, unpR $unpR): ?string
     {
         // If the unit has an extension in unitpeppol
-        if ($unpR->repoUnitCount($unit_id) == 1) {
+        if (null!==$unit_id && ($unpR->repoUnitCount($unit_id) == 1)) {
             $unit_peppol = $unpR->repoUnit($unit_id);
             return $unit_peppol?->getCode();
         }
@@ -1406,11 +1389,11 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
     }
 
     /**
-     * @param string $item_id
+     * @param int $item_id
      * @param IIAR $iiaR
      * @return InvItemAmount|null
      */
-    public function getInvItemAmount(string $item_id, IIAR $iiaR): ?InvItemAmount
+    public function getInvItemAmount(int $item_id, IIAR $iiaR): ?InvItemAmount
     {
         $inv_item_amount = $iiaR->repoInvItemAmountquery($item_id);
         if (null !== $inv_item_amount) {
@@ -1498,272 +1481,268 @@ throw new PeppolSalesOrderItemNotExistException($this->t);
         SOIR $soiR,
         TRR $trR,
     ): array {
-        $invoice_id = $invoice->getId();
-        if (null !== $invoice_id) {
-            $references = $this->buildReferencesArray($invoice, $contractRepo,
-                                                            $cpR, $soiR, $soR);
-            $config_peppol = $this->s->getConfigPeppol();
-            /**
-             * @var array $config_peppol['PartyLegalEntity']
-             */
-            $legal_entity = $config_peppol['PartyLegalEntity'] ?? '';
-            /**
-             * @var string $legal_entity['CompanyID']
-             */
-            $legal_entity_id = $legal_entity['CompanyID'] ?? '';
-            if (empty($legal_entity_id)) {
-                throw new LegalEntityCompanyIdNotFoundException($this->t);
-            }
-            /**
-             * @var array $config_peppol['PartyTaxScheme']
-             */
-            $tax_scheme = $config_peppol['PartyTaxScheme'] ?? [];
-            /**
-             * @var string $tax_scheme['CompanyID']
-             */
-            $tax_scheme_id = $tax_scheme['CompanyID'] ?? '';
-            if (empty($tax_scheme_id)) {
-                throw new TaxSchemeCompanyIdNotFoundException($this->t);
-            }
-            // Currently a key number as an integer
-            /**
-             * Related logic:
-                http://yii3-i-4.myhost/invoice/setting/tab_index
-                                                            6.2 Sender identifier
-             */
-            $identifier = (int) $this->s->getSetting(
-                                                 'storecove_sender_identifier');
-            // Get the complete array
-            $store_cove_sender_array =
-                          StoreCoveArrays::storeCoveSenderIdentifierArray();
-            /**
-             * Related logic: http://yii3-i/invoice/setting/tab_index
-             *                                       6.2 sender identifier basis
-             */
-            $identifier_basis = $this->s->getSetting(
-                                            'storecove_sender_identifier_basis');
-            $routing_scheme_identifier = '';
-            /**
-             * Search the array for the identifier to retrieve the sub array
-             * @var int $key
-             * @var string $value
-             */
-            foreach ($store_cove_sender_array as $key => $value) {
-                if ($key == $identifier) {
-    // Use the identifier basis to retrieve either the legal or tax identifier
-                    if ($identifier_basis === $this->t->translate(
-                                                            'storecove.tax')) {
-                        /**
-                         * @var string $value[$identifier_basis]
-                         */
-                        $routing_scheme_identifier = $value[$identifier_basis];
-                        continue;
-                    }
-                    if ($identifier_basis === $this->t->translate(
-                                                            'storecove.legal')) {
-                        /**
-                         * @var string $value[$identifier_basis]
-                         */
-                        $routing_scheme_identifier = $value[$identifier_basis];
-                    }
+        $invoice_id = $invoice->reqId();
+        $references = $this->buildReferencesArray($invoice, $contractRepo,
+                                                        $cpR, $soiR, $soR);
+        $config_peppol = $this->s->getConfigPeppol();
+        /**
+         * @var array $config_peppol['PartyLegalEntity']
+         */
+        $legal_entity = $config_peppol['PartyLegalEntity'] ?? '';
+        /**
+         * @var string $legal_entity['CompanyID']
+         */
+        $legal_entity_id = $legal_entity['CompanyID'] ?? '';
+        if (empty($legal_entity_id)) {
+            throw new LegalEntityCompanyIdNotFoundException($this->t);
+        }
+        /**
+         * @var array $config_peppol['PartyTaxScheme']
+         */
+        $tax_scheme = $config_peppol['PartyTaxScheme'] ?? [];
+        /**
+         * @var string $tax_scheme['CompanyID']
+         */
+        $tax_scheme_id = $tax_scheme['CompanyID'] ?? '';
+        if (empty($tax_scheme_id)) {
+            throw new TaxSchemeCompanyIdNotFoundException($this->t);
+        }
+        // Currently a key number as an integer
+        /**
+         * Related logic:
+            http://yii3-i-4.myhost/invoice/setting/tab_index
+                                                        6.2 Sender identifier
+         */
+        $identifier = (int) $this->s->getSetting(
+                                             'storecove_sender_identifier');
+        // Get the complete array
+        $store_cove_sender_array =
+                      StoreCoveArrays::storeCoveSenderIdentifierArray();
+        /**
+         * Related logic: http://yii3-i/invoice/setting/tab_index
+         *                                       6.2 sender identifier basis
+         */
+        $identifier_basis = $this->s->getSetting(
+                                        'storecove_sender_identifier_basis');
+        $routing_scheme_identifier = '';
+        /**
+         * Search the array for the identifier to retrieve the sub array
+         * @var int $key
+         * @var string $value
+         */
+        foreach ($store_cove_sender_array as $key => $value) {
+            if ($key == $identifier) {
+// Use the identifier basis to retrieve either the legal or tax identifier
+                if ($identifier_basis === $this->t->translate(
+                                                        'storecove.tax')) {
+                    /**
+                     * @var string $value[$identifier_basis]
+                     */
+                    $routing_scheme_identifier = $value[$identifier_basis];
+                    continue;
+                }
+                if ($identifier_basis === $this->t->translate(
+                                                        'storecove.legal')) {
+                    /**
+                     * @var string $value[$identifier_basis]
+                     */
+                    $routing_scheme_identifier = $value[$identifier_basis];
                 }
             }
-            $contact = $this->supplierContact();
-            $this->validateSupplierContact($contact);
-            $acp = $this->buildPeppolAccountingCustomerPartyArray(
-                                                            $invoice, $paR, $cpR);
-            $customer_partyTaxScheme = $this->buildCustomerPartyTaxScheme($acp);
-            $customer_partyLegalEntity = $this->buildCustomerLegalEntity($acp);
-            $customer_tax_scheme = $customer_partyTaxScheme->getTaxScheme();
-            $customer_tax_id = $customer_partyTaxScheme->getCompanyId();
-            $customer_legal_scheme =
-                    $customer_partyLegalEntity->getCompanyIdAttributeSchemeId();
-            $customer_legal_id = $customer_partyLegalEntity->getCompanyId();
-            $customer_physical = $this->buildCustomerPhysicalLocation($acp);
-            $c_contact = $this->buildCustomerContact($acp);
-            $c_del_loc_address = $this->buildDeliveryLocationAddress();
-            $c_actual_del_datetime = $this->ActualDeliveryDate($invoice, $delRepo);
-            $c_del_party = $this->deliveryParty($invoice, $delRepo, $delPartyRepo);
-            $payment_means_array = $this->buildPeppolPaymentMeansArray();
-            /**
-             * @var array $payment_means_array['PayeeFinancialAccount']
-             */
-            $payeeFinancialAccount = $payment_means_array['PayeeFinancialAccount'];
-            /**
-             * @var string $payeeFinancialAccount['ID']
-             */
-            $pm_id = $payeeFinancialAccount['ID'];
-            $payment_id = $this->buildPeppolPaymentForReference('storecove',
-                                                              (int) $invoice_id);
-            $invoice_period = $this->ublInvoicePeriod($invoice, $this->s);
-            $invoice_lines = $this->buildInvoiceLinesArray($invoice,
-                       $invoice_period, $iiaR, $cpR, $soiR, $aciiR, $unpR, $ppR);
-            $allowance_charges = $this->documentLevelAllowanceCharges($invoice,
-                                                                          $aciR);
-            $taxSubtotal = $this->buildTaxSubtotalArray($invoice, $iiaR, $trR);
-            /**
-             * @var float $taxSubtotal['TaxableAmounts']
-             */
-            $taxable_amount = $taxSubtotal['TaxableAmounts'] ?? 0.00;
-            /**
-             * @var float $taxSubtotal['TaxAmount']
-             */
-            $tax_amount = $taxSubtotal['TaxAmount'] ?? 0.00;
-            /**
-             * @var float $taxSubtotal['TaxCategoryPercent']
-             */
-            $percentage = $taxSubtotal['TaxCategoryPercent'] ?? 0.00;
-            $amount_including_vat = $taxable_amount + $tax_amount;
-            return [
-                'legalEntityId' =>
-                              $this->s->getSetting('storecove_legal_entity_id'),
-                'idempotencyGuid' => '61b37456-5f9e-4d56-b63b-3b1a23fa5c73',
-                'routing' => [
-                    'eIdentifiers' => [
-                        0 => [
-                    /**
-                     * Related logic:
-                     * https://www.storecove.com/docs/#_sender_identifiers_list
-                     */
-                            'scheme' => $routing_scheme_identifier,
-                            'id' => $routing_scheme_identifier ===
-                                    $this->t->translate('storecove.legal') ?
-                                    $legal_entity_id :
-                                    $tax_scheme_id,
-                        ],
+        }
+        $contact = $this->supplierContact();
+        $this->validateSupplierContact($contact);
+        $acp = $this->buildPeppolAccountingCustomerPartyArray(
+                                                        $invoice, $paR, $cpR);
+        $customer_partyTaxScheme = $this->buildCustomerPartyTaxScheme($acp);
+        $customer_partyLegalEntity = $this->buildCustomerLegalEntity($acp);
+        $customer_tax_scheme = $customer_partyTaxScheme->getTaxScheme();
+        $customer_tax_id = $customer_partyTaxScheme->getCompanyId();
+        $customer_legal_scheme =
+                $customer_partyLegalEntity->getCompanyIdAttributeSchemeId();
+        $customer_legal_id = $customer_partyLegalEntity->getCompanyId();
+        $customer_physical = $this->buildCustomerPhysicalLocation($acp);
+        $c_contact = $this->buildCustomerContact($acp);
+        $c_del_loc_address = $this->buildDeliveryLocationAddress();
+        $c_actual_del_datetime = $this->ActualDeliveryDate($invoice, $delRepo);
+        $c_del_party = $this->deliveryParty($invoice, $delRepo, $delPartyRepo);
+        $payment_means_array = $this->buildPeppolPaymentMeansArray();
+        /**
+         * @var array $payment_means_array['PayeeFinancialAccount']
+         */
+        $payeeFinancialAccount = $payment_means_array['PayeeFinancialAccount'];
+        /**
+         * @var string $payeeFinancialAccount['ID']
+         */
+        $pm_id = $payeeFinancialAccount['ID'];
+        $payment_id = $this->buildPeppolPaymentForReference('storecove',
+                                                          $invoice_id);
+        $invoice_period = $this->ublInvoicePeriod($invoice, $this->s);
+        $invoice_lines = $this->buildInvoiceLinesArray($invoice,
+                   $invoice_period, $iiaR, $cpR, $soiR, $aciiR, $unpR, $ppR);
+        $allowance_charges = $this->documentLevelAllowanceCharges($invoice,
+                                                                      $aciR);
+        $taxSubtotal = $this->buildTaxSubtotalArray($invoice, $iiaR, $trR);
+        /**
+         * @var float $taxSubtotal['TaxableAmounts']
+         */
+        $taxable_amount = $taxSubtotal['TaxableAmounts'] ?? 0.00;
+        /**
+         * @var float $taxSubtotal['TaxAmount']
+         */
+        $tax_amount = $taxSubtotal['TaxAmount'] ?? 0.00;
+        /**
+         * @var float $taxSubtotal['TaxCategoryPercent']
+         */
+        $percentage = $taxSubtotal['TaxCategoryPercent'] ?? 0.00;
+        $amount_including_vat = $taxable_amount + $tax_amount;
+        return [
+            'legalEntityId' =>
+                          $this->s->getSetting('storecove_legal_entity_id'),
+            'idempotencyGuid' => '61b37456-5f9e-4d56-b63b-3b1a23fa5c73',
+            'routing' => [
+                'eIdentifiers' => [
+                    0 => [
+                /**
+                 * Related logic:
+                 * https://www.storecove.com/docs/#_sender_identifiers_list
+                 */
+                        'scheme' => $routing_scheme_identifier,
+                        'id' => $routing_scheme_identifier ===
+                                $this->t->translate('storecove.legal') ?
+                                $legal_entity_id :
+                                $tax_scheme_id,
                     ],
-                    'emails' => [
-                        0 => $invoice->getClient()?->getClientEmail(),
-                    ],
-                    'workflow' => 'full',
                 ],
-                'attachments' => $this->buildAttachmentsArray($invoice, $upR),
-                'document' => [
-                    'documentType' => 'invoice',
-                    'invoice' => [
-                        'taxSystem' => 'tax_line_percentages',
-                        'documentCurrency' =>
-                                    $this->s->getSetting('currency_code_to'),
-                        'invoiceNumber' => $invoice->getNumber(),
-                        'issueDate' => $invoice->getDateCreated(),
-                        'taxPointDate' => $invoice->getDateTaxPoint(),
-                        'dueDate' => $invoice->getDateDue(),
-                        'invoicePeriod' =>
-                                    $this->invoicePeriod($invoice, $this->s),
-                        'references' => $references,
-                        'accountingCost' =>
-                                    $this->AccountingCost($invoice, $cpR),
-                        'note' => $invoice->getNote() ??
-           $this->t->translate('storecove.advisory.to.developer.easily.missed'),
-                        'accountingSupplierParty' => [
-                            'party' => [
-                                'contact' => [
-                                    'email' => $contact->getElectronicMail(),
-                                    'firstName' => $contact->getFirstName(),
-                                    'lastName' => $contact->getLastName(),
-                                    'phone' => $contact->getTelephone(),
-                                ],
+                'emails' => [
+                    0 => $invoice->getClient()?->getClientEmail(),
+                ],
+                'workflow' => 'full',
+            ],
+            'attachments' => $this->buildAttachmentsArray($invoice, $upR),
+            'document' => [
+                'documentType' => 'invoice',
+                'invoice' => [
+                    'taxSystem' => 'tax_line_percentages',
+                    'documentCurrency' =>
+                                $this->s->getSetting('currency_code_to'),
+                    'invoiceNumber' => $invoice->getNumber(),
+                    'issueDate' => $invoice->getDateCreated(),
+                    'taxPointDate' => $invoice->getDateTaxPoint(),
+                    'dueDate' => $invoice->getDateDue(),
+                    'invoicePeriod' =>
+                                $this->invoicePeriod($invoice, $this->s),
+                    'references' => $references,
+                    'accountingCost' =>
+                                $this->AccountingCost($invoice, $cpR),
+                    'note' => $invoice->getNote() ??
+       $this->t->translate('storecove.advisory.to.developer.easily.missed'),
+                    'accountingSupplierParty' => [
+                        'party' => [
+                            'contact' => [
+                                'email' => $contact->getElectronicMail(),
+                                'firstName' => $contact->getFirstName(),
+                                'lastName' => $contact->getLastName(),
+                                'phone' => $contact->getTelephone(),
                             ],
                         ],
-                        'accountingCustomerParty' => [
-                            'publicIdentifiers' => [
-                                // Legal Identifier
-                                0 => [
-                                    'scheme' => $customer_legal_scheme,
-                                    'id' => $customer_legal_id,
-                                ],
-                                // Tax Identifier
-                                1 => [
-                                    'scheme' => $customer_tax_scheme,
-                                    // vat id
-                                    'id' => $customer_tax_id,
-                                ],
-                            ],
-                            'party' => [
-                                'companyName' => 'Receiver Company',
-                                'address' => [
-                                    'street1' =>
-                                            $customer_physical->getStreetName(),
-                                    'street2' =>
-                                    $customer_physical->getAdditionalStreetName(),
-                                    'city' => $customer_physical->getCityName(),
-                                    'zip' => $customer_physical->getPostalZone(),
-                                    'county' =>
-                                       $customer_physical->getCountrySubEntity(),
-                                    'country' =>
-                      $customer_physical->getCountry()?->getIdentificationCode(),
-                                ],
-                                'contact' => [
-                                    'email' => $c_contact->getElectronicMail(),
-                                    'firstName' => $c_contact->getFirstName(),
-                                    'lastName' => $c_contact->getLastName(),
-                                    'phone' => $c_contact->getTelephone(),
-                                ],
-                            ],
-                        ],
-                        'delivery' => [
-                            'deliveryPartyName' =>
-                                null !== $c_del_party ?
-                                $c_del_party->getPartyName() :
-                                $this->t->translate('storecove.not.available'),
-                            'actualDeliveryDate' =>
-                                        $c_actual_del_datetime?->format('Y-m-d'),
-                            'deliveryLocation' => [
-                                'id' =>
-                          $this->delivery_location->getGlobalLocationNumber(),
-                                'schemeId' =>
-                          $this->delivery_location->getElectronicAddressScheme(),
-                                'address' => [
-                                    'street1' =>
-                                    $c_del_loc_address->getStreetName(),
-                                    'street2' =>
-                                   $c_del_loc_address->getAdditionalStreetName(),
-                                    'city' => $c_del_loc_address->getCityName(),
-                                    'zip' => $c_del_loc_address->getPostalZone(),
-                                    'county' =>
-                                       $c_del_loc_address->getCountrySubEntity(),
-                                    'country' =>
-                      $c_del_loc_address->getCountry()?->getIdentificationCode(),
-                                ],
-                            ],
-                        ],
-                        'paymentTerms' => [
-                            'note' => $invoice->getTerms(),
-                        ],
-                        'paymentMeansArray' => [
+                    ],
+                    'accountingCustomerParty' => [
+                        'publicIdentifiers' => [
+                            // Legal Identifier
                             0 => [
+                                'scheme' => $customer_legal_scheme,
+                                'id' => $customer_legal_id,
+                            ],
+                            // Tax Identifier
+                            1 => [
+                                'scheme' => $customer_tax_scheme,
+                                // vat id
+                                'id' => $customer_tax_id,
+                            ],
+                        ],
+                        'party' => [
+                            'companyName' => 'Receiver Company',
+                            'address' => [
+                                'street1' =>
+                                        $customer_physical->getStreetName(),
+                                'street2' =>
+                                $customer_physical->getAdditionalStreetName(),
+                                'city' => $customer_physical->getCityName(),
+                                'zip' => $customer_physical->getPostalZone(),
+                                'county' =>
+                                   $customer_physical->getCountrySubEntity(),
+                                'country' =>
+                  $customer_physical->getCountry()?->getIdentificationCode(),
+                            ],
+                            'contact' => [
+                                'email' => $c_contact->getElectronicMail(),
+                                'firstName' => $c_contact->getFirstName(),
+                                'lastName' => $c_contact->getLastName(),
+                                'phone' => $c_contact->getTelephone(),
+                            ],
+                        ],
+                    ],
+                    'delivery' => [
+                        'deliveryPartyName' =>
+                            null !== $c_del_party ?
+                            $c_del_party->getPartyName() :
+                            $this->t->translate('storecove.not.available'),
+                        'actualDeliveryDate' =>
+                                    $c_actual_del_datetime?->format('Y-m-d'),
+                        'deliveryLocation' => [
+                            'id' =>
+                      $this->delivery_location->getGlobalLocationNumber(),
+                            'schemeId' =>
+                      $this->delivery_location->getElectronicAddressScheme(),
+                            'address' => [
+                                'street1' =>
+                                $c_del_loc_address->getStreetName(),
+                                'street2' =>
+                               $c_del_loc_address->getAdditionalStreetName(),
+                                'city' => $c_del_loc_address->getCityName(),
+                                'zip' => $c_del_loc_address->getPostalZone(),
+                                'county' =>
+                                   $c_del_loc_address->getCountrySubEntity(),
+                                'country' =>
+                  $c_del_loc_address->getCountry()?->getIdentificationCode(),
+                            ],
+                        ],
+                    ],
+                    'paymentTerms' => [
+                        'note' => $invoice->getTerms(),
+                    ],
+                    'paymentMeansArray' => [
+                        0 => [
 //https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-PaymentMeans/
 //                                                          cbc-PaymentMeansCode/
 //https://www.storecove.com/docs#_openapi_paymentmeans
-                                'code' => 'credit_transfer',
-            /**
-             * @var array $payment_means_array['PayeeFinancialAccount']
-             * @var string $payment_means_array['PayeeFinancialAccount']['ID']
-             */
-                                'account' => $pm_id,
+                            'code' => 'credit_transfer',
+        /**
+         * @var array $payment_means_array['PayeeFinancialAccount']
+         * @var string $payment_means_array['PayeeFinancialAccount']['ID']
+         */
+                            'account' => $pm_id,
 // Use Entity PaymentPeppol to generate a DateTimeImmutable integer expressed
 //  as a string
-                                'paymentId' => $payment_id,
-                            ],
+                            'paymentId' => $payment_id,
                         ],
-                        'invoiceLines' => $invoice_lines,
-                        'allowanceCharges' => $allowance_charges,
-                        'taxSubtotals' => [
-                            0 => [
-                                'taxableAmount' => $taxable_amount,
-                                'taxAmount' => $tax_amount,
-                                'percentage' => $percentage,
-                                'country' =>
-                                    $this->s->getSetting('currency_code_from'),                      ],
-                        ],
-                        'amountIncludingVat' => $amount_including_vat,
-                        'prepaidAmount' => 1,
                     ],
+                    'invoiceLines' => $invoice_lines,
+                    'allowanceCharges' => $allowance_charges,
+                    'taxSubtotals' => [
+                        0 => [
+                            'taxableAmount' => $taxable_amount,
+                            'taxAmount' => $tax_amount,
+                            'percentage' => $percentage,
+                            'country' =>
+                                $this->s->getSetting('currency_code_from'),                      ],
+                    ],
+                    'amountIncludingVat' => $amount_including_vat,
+                    'prepaidAmount' => 1,
                 ],
-            ];
-        } // null!==$invoice->getId()
-
-        return [];
+            ],
+        ];
     }
 
     public function storeCoveCallApiGetLegalEntityId(): bool|string

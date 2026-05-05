@@ -76,7 +76,7 @@ final class QuoteItemController extends BaseController
         // This function is used
         $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = new QuoteItem();
-        $form = QuoteItemForm::show($quoteItem, (int) $this->session->get('quote_id'));
+        $form = new QuoteItemForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'quoteitem/addProduct',
@@ -125,7 +125,7 @@ final class QuoteItemController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $quote_id = (string) $this->session->get('quote_id');
         $quoteItem = new QuoteItem();
-        $form = QuoteItemForm::show($quoteItem, (int) $this->session->get('quote_id'));
+        $form = new QuoteItemForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'quoteitem/addTask',
@@ -309,7 +309,7 @@ final class QuoteItemController extends BaseController
      */
     public function taxratePercentage(int $id, TRR $trr): ?float
     {
-        $taxrate = $trr->repoTaxRatequery((string) $id);
+        $taxrate = $trr->repoTaxRatequery($id);
         if ($taxrate) {
             return $taxrate->getTaxRatePercent();
         }

@@ -6,7 +6,7 @@ use Yiisoft\Html\Html;
 
 /**
  * Related logic: see InvController function viewModalCreateCredit
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -26,13 +26,13 @@ use Yiisoft\Html\Html;
             <div class="modal-body">
                 <form>
                     <input type="hidden" name="_csrf" value="<?= $csrf ?>">
-                    <input type="hidden" name="user_id" id="user_id" class="form-control form-control-lg" value="<?= $inv->getUserId(); ?>">
+                    <input type="hidden" name="user_id" id="user_id" class="form-control form-control-lg" value="<?= $inv->reqUserId(); ?>">
 
                     <input type="hidden" name="parent_id" id="parent_id"
-                           value="<?= $inv->getId(); ?>">
+                           value="<?= $inv->reqId(); ?>">
 
                     <input type="hidden" name="client_id" id="client_id" class="hidden"
-                           value="<?= $inv->getClientId(); ?>">
+                           value="<?= $inv->reqClientId(); ?>">
 
                     <input type="hidden" name="inv_date_created" id="inv_date_created"
                            value="<?=

@@ -111,7 +111,7 @@ final class ProductClientController extends BaseController
         }
 
         $currentProductId = $productIds[$currentIndex];
-        $product = $productRepository->repoProductQuery((string) $currentProductId);
+        $product = $productRepository->repoProductQuery($currentProductId);
 
         if (!$product) {
             $this->flash->add(

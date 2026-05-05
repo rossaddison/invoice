@@ -6,7 +6,7 @@ namespace App\Auth\Trait;
 
 use App\Auth\Token;
 use App\Auth\TokenRepository;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use Yiisoft\Yii\AuthClient\Widget\AuthChoice;
 
 trait Oauth2

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Profile;
 
-use App\Invoice\Entity\Profile;
+use App\Infrastructure\Persistence\Profile\Profile;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -84,7 +84,7 @@ final class ProfileRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoProfilequery(string $id): ?Profile
+    public function repoProfilequery(int $id): ?Profile
     {
         $query = $this->select()->load('company')->where(['id' => $id]);
         return  $query->fetchOne() ?: null;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvCustom;
 
-use App\Invoice\Entity\InvCustom;
+use App\Infrastructure\Persistence\InvCustom\InvCustom;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\CustomField\CustomFieldRepository as CFR;
 
@@ -43,7 +43,7 @@ final readonly class InvCustomService
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (string) $array[$inv]);
+                (int) $array[$inv]);
             if ($invEntity) {
                 $model->setInv($invEntity);
             }
@@ -51,8 +51,7 @@ final readonly class InvCustomService
         $custom_field = 'custom_field_id';
         if (isset($array[$custom_field])) {
             $model->setCustomField(
-                $this->cfR->repoCustomFieldquery(
-                    (string) $array[$custom_field]));
+                $this->cfR->repoCustomFieldquery((int) $array[$custom_field]));
         }
     }
 

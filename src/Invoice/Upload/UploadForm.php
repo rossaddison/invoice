@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Upload;
 
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\Upload\Upload;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
@@ -26,14 +26,16 @@ final class UploadForm extends FormModel
 
     private mixed $uploaded_date = '';
 
-    public function __construct(Upload $upload)
+    public static function show(Upload $upload): self
     {
-        $this->client_id = (int) $upload->getClientId();
-        $this->url_key = $upload->getUrlKey();
-        $this->file_name_original = $upload->getFileNameOriginal();
-        $this->file_name_new = $upload->getFileNameNew();
-        $this->description = $upload->getDescription();
-        $this->uploaded_date = $upload->getUploadedDate();
+        $form = new self();
+        $form->client_id = $upload->reqClientId();
+        $form->url_key = $upload->getUrlKey();
+        $form->file_name_original = $upload->getFileNameOriginal();
+        $form->file_name_new = $upload->getFileNameNew();
+        $form->description = $upload->getDescription();
+        $form->uploaded_date = $upload->getUploadedDate();
+        return $form;
     }
 
     public function getClientId(): ?int

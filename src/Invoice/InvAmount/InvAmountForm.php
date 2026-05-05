@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAmount;
 
-use App\Invoice\Entity\InvAmount;
+use App\Infrastructure\Persistence\{
+    InvAmount\InvAmount
+};
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -38,18 +40,20 @@ final class InvAmountForm extends FormModel
     #[Required]
     private ?float $balance = null;
 
-    public function __construct(InvAmount $invAmount)
+    public static function show(InvAmount $invAmount): self
     {
-        $this->inv_id = (int) $invAmount->getInvId();
-        $this->sign = $invAmount->getSign();
-        $this->item_subtotal = $invAmount->getItemSubtotal();
-        $this->item_tax_total = $invAmount->getItemTaxTotal();
-        $this->packhandleship_total = $invAmount->getPackhandleshipTotal();
-        $this->packhandleship_tax = $invAmount->getPackhandleshipTax();
-        $this->tax_total = $invAmount->getTaxTotal();
-        $this->total = $invAmount->getTotal();
-        $this->paid = $invAmount->getPaid();
-        $this->balance = $invAmount->getBalance();
+        $form = new self();
+        $form->inv_id = $invAmount->reqInvId();
+        $form->sign = $invAmount->getSign();
+        $form->item_subtotal = $invAmount->getItemSubtotal();
+        $form->item_tax_total = $invAmount->getItemTaxTotal();
+        $form->packhandleship_total = $invAmount->getPackhandleshipTotal();
+        $form->packhandleship_tax = $invAmount->getPackhandleshipTax();
+        $form->tax_total = $invAmount->getTaxTotal();
+        $form->total = $invAmount->getTotal();
+        $form->paid = $invAmount->getPaid();
+        $form->balance = $invAmount->getBalance();
+        return $form;
     }
 
     public function getInvId(): ?int

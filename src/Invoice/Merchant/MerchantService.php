@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Merchant;
 
-use App\Invoice\Entity\Merchant;
+use App\Infrastructure\Persistence\Merchant\Merchant;
 use App\Invoice\Inv\InvRepository as IR;
 
 final readonly class MerchantService
@@ -52,8 +52,7 @@ final readonly class MerchantService
     ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
-            $invEntity = $this->iR->repoInvUnLoadedquery(
-                (string) $array[$inv]);
+            $invEntity = $this->iR->repoInvUnLoadedquery((int) $array[$inv]);
             if ($invEntity) {
                 $model->setInv($invEntity);
             }

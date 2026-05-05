@@ -82,10 +82,10 @@ final class FamilyCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return FamilyCustom|null
      */
-    public function repoFamilyCustomquery(string $id): ?FamilyCustom
+    public function repoFamilyCustomquery(int $id): ?FamilyCustom
     {
         $query = $this->select()
                       ->load('family')
@@ -95,10 +95,10 @@ final class FamilyCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $family_id
+     * @param int $family_id
      * @return int
      */
-    public function repoFamilyCount(string $family_id): int
+    public function repoFamilyCount(int $family_id): int
     {
         $query = $this->select()
                       ->where(['family_id' => $family_id]);
@@ -106,11 +106,11 @@ final class FamilyCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $family_id
-     * @param string $custom_field_id
+     * @param int $family_id
+     * @param int $custom_field_id
      * @return FamilyCustom|null
      */
-    public function repoFormValuequery(string $family_id, string $custom_field_id): ?FamilyCustom
+    public function repoFormValuequery(int $family_id, int $custom_field_id): ?FamilyCustom
     {
         $query = $this->select()
                       ->where(['family_id' => $family_id])
@@ -119,11 +119,11 @@ final class FamilyCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $family_id
-     * @param string $custom_field_id
+     * @param int $family_id
+     * @param int $custom_field_id
      * @return int
      */
-    public function repoFamilyCustomCount(string $family_id, string $custom_field_id): int
+    public function repoFamilyCustomCount(int $family_id, int $custom_field_id): int
     {
         $query = $this->select()
                       ->where(['family_id' => $family_id])
@@ -136,7 +136,7 @@ final class FamilyCustomRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoFields(string $family_id): EntityReader
+    public function repoFields(int $family_id): EntityReader
     {
         $query = $this->select()->where(['family_id' => $family_id]);
         return $this->prepareDataReader($query);

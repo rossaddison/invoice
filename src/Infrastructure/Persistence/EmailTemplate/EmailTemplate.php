@@ -40,7 +40,7 @@ class EmailTemplate
         return $this->id;
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

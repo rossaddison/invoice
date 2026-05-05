@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\{
     Client\ClientRepository as CR,
     DeliveryLocation\DeliveryLocationRepository as DLR,
@@ -80,8 +80,7 @@ public function index(
         $visible = $this->sR->getSetting('columns_all_visible');
         $visibleToggleInvSentLogColumn =
             $this->sR->getSetting('column_inv_sent_log_visible');
-        $inv = new Inv();
-        $invForm = new InvForm($inv);
+        $invForm = new InvForm();
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
             $this->translator,
             $this->webViewRenderer,
@@ -123,15 +122,18 @@ public function index(
             }
             if (isset($queryFilterInvAmountTotal)
                     && !empty($queryFilterInvAmountTotal)) {
-                $invs = $invRepo->filterInvAmountTotal($queryFilterInvAmountTotal);
+                $invs = $invRepo->filterInvAmountTotal(
+                        (float) $queryFilterInvAmountTotal);
             }
             if (isset($queryFilterInvAmountPaid)
                     && !empty($queryFilterInvAmountPaid)) {
-                $invs = $invRepo->filterInvAmountPaid($queryFilterInvAmountPaid);
+                $invs = $invRepo->filterInvAmountPaid(
+                        (float) $queryFilterInvAmountPaid);
             }
             if (isset($queryFilterInvAmountBalance)
                     && !empty($queryFilterInvAmountBalance)) {
-                $invs = $invRepo->filterInvAmountBalance($queryFilterInvAmountBalance);
+                $invs = $invRepo->filterInvAmountBalance(
+                        (float)$queryFilterInvAmountBalance);
             }
             if ((isset($queryFilterInvNumber)
                     && !empty($queryFilterInvNumber))
@@ -171,7 +173,7 @@ public function index(
                 'defaultInvoiceGroup' =>
                     null !==
                         ($gR = $groupRepo->repoGroupquery(
-                                $this->sR->getSetting('default_invoice_group'))
+                            (int) $this->sR->getSetting('default_invoice_group'))
                         )   ? (strlen($groupName = $gR->getName() ?? '') > 0
                             ? $groupName
                             : $this->sR->getSetting('not.set'))
@@ -179,7 +181,7 @@ public function index(
                 'defaultInvoicePaymentMethod' =>
                     null !==
                         ($pmR = $pmR->repoPaymentMethodquery(
-                        $this->sR->getSetting('invoice_default_payment_method')))
+                        (int) $this->sR->getSetting('invoice_default_payment_method')))
                         ? (strlen($paymentMethodName = $pmR->getName() ?? '') > 0
                         ? $paymentMethodName : $this->sR->getSetting('not.set'))
                         : $this->sR->getSetting('not.set'),
@@ -281,7 +283,7 @@ public function index(
         $setting = $this->sR->withKey('generate_invoice_number_for_draft');
         $setting_url = '';
         if (null !== $setting) {
-            $setting_id = $setting->getSettingId();
+            $setting_id = $setting->reqSettingId();
             // The route name has been simplified and differs from the action
             // 'setting/inv_draft_has_number_switch'
             $setting_url = $this->url_generator->generate(

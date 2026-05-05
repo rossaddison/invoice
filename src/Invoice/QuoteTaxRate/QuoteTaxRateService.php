@@ -29,7 +29,7 @@ final readonly class QuoteTaxRateService
             $model->setQuoteId($quote->reqId());
         }
         $tax_rate = $this->taxRateRepository->repoTaxRatequery(
-            (string) $array['tax_rate_id']
+            (int) $array['tax_rate_id']
         );
         if ($tax_rate) {
             $model->setTaxRate($tax_rate);

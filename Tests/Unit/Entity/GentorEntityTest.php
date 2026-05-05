@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Entity;
 
-use App\Invoice\Entity\Gentor;
+use App\Infrastructure\Persistence\Gentor\Gentor;
 use Codeception\Test\Unit;
 
 class GentorEntityTest extends Unit
@@ -69,9 +69,8 @@ class GentorEntityTest extends Unit
     public function testGentorIdGetter(): void
     {
         $gentor = new Gentor();
-        
-        // ID should be null initially, converted to empty string
-        $this->assertSame('', $gentor->getGentorId());
+
+        $this->assertFalse($gentor->hasIdentity());
     }
 
     public function testRoutePrefixSetterAndGetter(): void

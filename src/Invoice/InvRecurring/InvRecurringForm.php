@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvRecurring;
 
-use App\Invoice\Entity\InvRecurring;
+use App\Infrastructure\Persistence\InvRecurring\InvRecurring;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
@@ -20,12 +20,18 @@ final class InvRecurringForm extends FormModel
 
     private mixed $end = '';
 
-    public function __construct(InvRecurring $invRecurring, private readonly ?int $inv_id)
+    private ?int $inv_id = null;
+    
+    public static function show(InvRecurring $invRecurring,
+        ?int $inv_id): self
     {
-        $this->frequency = $invRecurring->getFrequency();
-        $this->start = $invRecurring->getStart();
-        $this->next = $invRecurring->getNext();
-        $this->end = $invRecurring->getEnd();
+        $form = new self();
+        $form->frequency = $invRecurring->getFrequency();
+        $form->start = $invRecurring->getStart();
+        $form->next = $invRecurring->getNext();
+        $form->end = $invRecurring->getEnd();
+        $form->inv_id = $inv_id;
+        return $form; 
     }
 
     public function getInvId(): ?int

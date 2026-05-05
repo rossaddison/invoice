@@ -6,7 +6,7 @@ namespace App\Invoice\GeneratorRelation;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\GentorRelation;
+use App\Infrastructure\Persistence\GentorRelation\GentorRelation;
 use App\Invoice\Generator\GeneratorRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Service\WebControllerService;
@@ -64,7 +64,7 @@ final class GeneratorRelationController extends BaseController
     public function add(Request $request, GeneratorRepository $generatorRepository, FormHydrator $formHydrator): Response
     {
         $generatorrelation = new GentorRelation();
-        $form = new GeneratorRelationForm($generatorrelation);
+        $form = new GeneratorRelationForm();
         $parameters = [
             'title' => $this->translator->translate('generator.relation.form'),
             'actionName' => 'generatorrelation/add',
@@ -105,11 +105,11 @@ final class GeneratorRelationController extends BaseController
     ): Response {
         $generatorrelation = $this->generatorrelation($currentRoute, $generatorrelationRepository);
         if ($generatorrelation) {
-            $form = new GeneratorRelationForm($generatorrelation);
+            $form = GeneratorRelationForm::show($generatorrelation);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'generatorrelation/edit',
-                'actionArguments' => ['id' => $generatorrelation->getRelationId()],
+                'actionArguments' => ['id' => $generatorrelation->reqRelationId()],
                 'errors' => [],
                 'form' => $form,
                 //relation generator
@@ -159,16 +159,16 @@ final class GeneratorRelationController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $generatorrelation = $this->generatorrelation($currentRoute, $generatorrelationRepository);
         if ($generatorrelation) {
-            $form = new GeneratorRelationForm($generatorrelation);
+            $form = GeneratorRelationForm::show($generatorrelation);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'generatorrelation/view',
-                'actionArguments' => ['id' => $generatorrelation->getRelationId()],
+                'actionArguments' => ['id' => $generatorrelation->reqRelationId()],
                 'errors' => [],
                 'form' => $form,
                 'generatorrelation' => $generatorrelation,
                 'generators' => $generatorRepository->findAllPreloaded(),
-                'egrs' => $generatorrelationRepository->repoGeneratorRelationquery($generatorrelation->getRelationId()),
+                'egrs' => $generatorrelationRepository->repoGeneratorRelationquery($generatorrelation->reqRelationId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
@@ -190,17 +190,15 @@ final class GeneratorRelationController extends BaseController
     }
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param GeneratorRelationRepository $generatorrelationRepository
+     * @param CurrentRoute $curR
+     * @param GeneratorRelationRepository $grR
      * @return GentorRelation|null
      */
-    private function generatorrelation(CurrentRoute $currentRoute, GeneratorRelationRepository $generatorrelationRepository): ?GentorRelation
+    private function generatorrelation(
+        CurrentRoute $curR,
+        GeneratorRelationRepository $grR): ?GentorRelation
     {
-        $generatorrelation_id = $currentRoute->getArgument('id');
-        if (null !== $generatorrelation_id) {
-            return $generatorrelationRepository->repoGeneratorRelationquery($generatorrelation_id);
-        }
-        return null;
+        return $grR->repoGeneratorRelationquery((int) $curR->getArgument('id'));
     }
 
     /**

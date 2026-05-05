@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\UserInv;
 
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\User\UserRepository as UR;
 
 final readonly class UserInvService
@@ -18,12 +18,10 @@ final readonly class UserInvService
     private function persist(UserInv $model, array $array): void
     {
         $user = $this->userR->findById(
-            (string) $array['user_id']
+            (int) $array['user_id']
         );
-        if ($user) {
-            $model->setUser($user);
-            $model->setUserId((int) $user->getId());
-        }
+        $model->setUser($user);
+        $model->setUserId($user->reqId());
     }
 
     /**

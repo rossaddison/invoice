@@ -41,7 +41,7 @@ echo H::openTag('div', ['class' => 'table-responsive']); //1
      echo H::openTag('input', [
          'type' => 'checkbox',
          'name' => 'product_ids[]',
-         'value' => (int) $product->getProductId()
+         'value' => $product->reqId()
      ]);
     echo H::closeTag('td'); //4
     echo H::openTag('td', ['nowrap' => true, 'class' => 'text-left']); //4

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentInformation\Service;
 
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\Setting\SettingRepository;
 use Braintree\Gateway;
 use Braintree\CustomerGateway;
@@ -47,11 +47,11 @@ class BraintreePaymentService
     {
         $gateway = $this->createGateway();
         $customerGateway = new CustomerGateway($gateway);
-        $clientId = $invoice->getClientId();
+        $clientId = $invoice->reqClientId();
 
         try {
             // Try to find existing customer
-            $customerGateway->find($clientId);
+            $customerGateway->find((string) $clientId);
             $this->logger->info('Braintree customer found', ['client_id' => $clientId]);
             return true;
         } catch (\Braintree\Exception\NotFound $e) {

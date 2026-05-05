@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItem;
 
-use App\Invoice\Entity\InvItem;
+use App\Infrastructure\Persistence\{
+    InvItem\InvItem
+};
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\GreaterThan;
@@ -36,7 +38,7 @@ final class InvItemForm extends FormModel
 
     private ?float $discount_amount = null;
 
-    private ?string $order = null;
+    private ?int $order = null;
     private ?string $product_unit = '';
 
     /**
@@ -46,34 +48,38 @@ final class InvItemForm extends FormModel
      */
     private ?int $product_unit_id = null;
 
-    #[Required]
-    private readonly DateTimeImmutable $date;
+    private ?string $date = null;
 
     private ?int $belongs_to_vat_invoice = null;
-    private ?string $delivery_id = '';
-
-    public function __construct(InvItem $invitem, int $inv_id)
+    private ?int $delivery_id = null;
+    
+    public static function show(InvItem $invitem, int $inv_id): self
     {
-        $this->inv_id = (string) $inv_id;
-        $this->so_item_id = $invitem->getSoItemId();
-        $this->tax_rate_id = $invitem->getTaxRateId();
-        $this->product_id = $invitem->getProductId();
-        $this->task_id = $invitem->getTaskId();
-        $this->name = $invitem->getName();
-        $this->description = $invitem->getDescription();
-        $this->note = $invitem->getNote();
-        $this->quantity = $invitem->getQuantity();
-        $this->price = $invitem->getPrice();
-        $this->discount_amount = $invitem->getDiscountAmount();
-        $this->order = (string) $invitem->getOrder();
-        $this->product_unit = $invitem->getProductUnit();
-        $this->product_unit_id = (int) $invitem->getProductUnitId();
-        $this->date = $invitem->getDate();
-        $this->belongs_to_vat_invoice = (int) $invitem->getBelongsToVatInvoice();
-        $this->delivery_id = $invitem->getDeliveryId();
+        $form = new self();
+        $form->inv_id = (string) $inv_id;
+        $form->so_item_id = (string) $invitem->getSoItemId();
+        $form->tax_rate_id = (string) $invitem->reqTaxRateId();
+        $form->product_id = null !== ($product = $invitem->getProduct()) ?
+            (string) $product->reqId() : null;
+        $form->task_id = null !== ($task = $invitem->getTask()) ?
+            (string) $task->reqId() : null;
+        $form->name = $invitem->getName();
+        $form->description = $invitem->getDescription();
+        $form->note = $invitem->getNote();
+        $form->quantity = $invitem->getQuantity();
+        $form->price = $invitem->getPrice();
+        $form->discount_amount = $invitem->getDiscountAmount();
+        $form->order = $invitem->getOrder();
+        $form->product_unit = $invitem->getProductUnit();
+        $form->product_unit_id = $invitem->getProductUnitId();
+        $form->date = $invitem->getDate() instanceof DateTimeImmutable ?
+                $invitem->getDate()->format('Y-m-d') : null;
+        $form->belongs_to_vat_invoice = (int) $invitem->getBelongsToVatInvoice();
+        $form->delivery_id = $invitem->getDeliveryId();
+        return $form;
     }
 
-    public function getDate(): DateTimeImmutable
+    public function getDate(): ?string
     {
         return $this->date;
     }
@@ -133,7 +139,7 @@ final class InvItemForm extends FormModel
         return $this->discount_amount;
     }
 
-    public function getOrder(): ?string
+    public function getOrder(): ?int
     {
         return $this->order;
     }
@@ -153,7 +159,7 @@ final class InvItemForm extends FormModel
         return $this->belongs_to_vat_invoice;
     }
 
-    public function getDeliveryId(): ?string
+    public function getDeliveryId(): ?int
     {
         return $this->delivery_id;
     }

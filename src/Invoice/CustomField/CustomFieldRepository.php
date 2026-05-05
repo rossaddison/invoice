@@ -80,10 +80,10 @@ final class CustomFieldRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return CustomField|null
      */
-    public function repoCustomFieldquery(string $id): ?CustomField
+    public function repoCustomFieldquery(int $id): ?CustomField
     {
         $query = $this->select()
                       ->where(['id' => $id]);

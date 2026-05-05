@@ -41,7 +41,7 @@ class PostalAddress
         return $this->requireId($this->id, 'PostalAddress');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

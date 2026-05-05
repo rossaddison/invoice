@@ -27,8 +27,8 @@ final class ClientCustomForm extends FormModel
     public static function show(ClientCustom $clientCustom): self
     {
         $form = new self();
-        $form->client_id = (int) $clientCustom->getClientId();
-        $form->custom_field_id = (int) $clientCustom->getCustomFieldId();
+        $form->client_id = $clientCustom->reqClientId();
+        $form->custom_field_id = $clientCustom->reqCustomFieldId();
         $form->value = (string) $clientCustom->getValue();
         return $form;
     }

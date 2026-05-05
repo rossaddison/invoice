@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItem;
 
-use App\Invoice\Entity\InvItem;
+use App\Infrastructure\Persistence\InvItem\InvItem;
 use Cycle\ORM\Select;
 use Cycle\Database\Injection\Parameter;
 use Yiisoft\Data\Reader\Sort;
@@ -82,11 +82,11 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return InvItem|null
      * @psalm-return TEntity|null
      */
-    public function repoInvItemquery(string $id): ?InvItem
+    public function repoInvItemquery(int $id): ?InvItem
     {
         $query = $this->select()
                       ->load(['tax_rate','product', 'task', 'inv'])
@@ -95,10 +95,10 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return EntityReader
      */
-    public function repoInvItemIdquery(string $inv_id): EntityReader
+    public function repoInvItemIdquery(int $inv_id): EntityReader
     {
         $query = $this->select()
                      // ->load(['tax_rate','product', 'task', 'inv'])
@@ -107,10 +107,10 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return EntityReader
      */
-    public function repoInvquery(string $inv_id): EntityReader
+    public function repoInvquery(int $inv_id): EntityReader
     {
         $query = $this->select()
                       ->load(['tax_rate','product', 'task', 'inv'])
@@ -119,10 +119,10 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return int
      */
-    public function repoCount(string $inv_id): int
+    public function repoCount(int $inv_id): int
     {
         return $this->select()
                       ->where(['inv_id' => $inv_id])
@@ -130,10 +130,10 @@ final class InvItemRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoInvItemCount(string $id): int
+    public function repoInvItemCount(int $id): int
     {
         return $this->select()
                       ->where(['id' => $id])

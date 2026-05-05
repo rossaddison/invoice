@@ -16,7 +16,7 @@ class ClientEntityTest extends Unit
     {
         $client = new Client();
 
-        $this->assertFalse($client->isPersisted());
+        $this->assertFalse($client->hasIdentity());
         $this->assertSame('', $client->getClientEmail());
         $this->assertSame('', $client->getClientMobile());
         $this->assertSame('', $client->getClientTitle());
@@ -76,7 +76,7 @@ class ClientEntityTest extends Unit
             null,
         );
 
-        $this->assertFalse($client->isPersisted());
+        $this->assertFalse($client->hasIdentity());
         $this->assertSame('john@example.com', $client->getClientEmail());
         $this->assertSame('07700900000', $client->getClientMobile());
         $this->assertSame('Mr', $client->getClientTitle());
@@ -111,7 +111,7 @@ class ClientEntityTest extends Unit
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Client not persisted');
         $client->reqId();
-        $this->assertFalse($client->isPersisted());
+        $this->assertFalse($client->hasIdentity());
     }
 
     public function testIsPersistedReturnsTrueWhenIdSet(): void
@@ -119,7 +119,7 @@ class ClientEntityTest extends Unit
         $client = new Client();
         $client->setId(1);
 
-        $this->assertTrue($client->isPersisted());
+        $this->assertTrue($client->hasIdentity());
     }
 
     public function testReqIdReturnsIntWhenPersisted(): void
@@ -491,7 +491,7 @@ class ClientEntityTest extends Unit
         $client->setClientCountry('GB');
         $client->setClientAge(40);
 
-        $this->assertTrue($client->isPersisted());
+        $this->assertTrue($client->hasIdentity());
         $this->assertSame(1, $client->reqId());
         $this->assertSame('john.doe@example.com', $client->getClientEmail());
         $this->assertSame('John', $client->getClientName());

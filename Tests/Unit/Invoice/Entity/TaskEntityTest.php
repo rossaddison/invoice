@@ -15,7 +15,7 @@ class TaskEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $task = new Task();
-        $this->assertFalse($task->isPersisted());
+        $this->assertFalse($task->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -29,7 +29,7 @@ class TaskEntityTest extends TestCase
     {
         $task = new Task();
         $task->setId(9);
-        $this->assertTrue($task->isPersisted());
+        $this->assertTrue($task->hasIdentity());
         $this->assertSame(9, $task->reqId());
     }
 

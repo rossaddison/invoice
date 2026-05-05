@@ -13,11 +13,9 @@ class InvAllowanceChargeEntityTest extends TestCase
     public function testConstructorWithDefaults(): void
     {
         $iac = new InvAllowanceCharge();
-        $this->assertSame('', $iac->getId());
-        $this->assertSame('', $iac->getInvId());
-        $this->assertSame('', $iac->getAllowanceChargeId());
-        $this->assertSame('', $iac->getAmount());
-        $this->assertSame('', $iac->getVatOrTax());
+        $this->assertFalse($iac->hasIdentity());
+        $this->assertNull($iac->getAmount());
+        $this->assertNull($iac->getVatOrTax());
         $this->assertNull($iac->getAllowanceCharge());
     }
 
@@ -31,78 +29,78 @@ class InvAllowanceChargeEntityTest extends TestCase
             vat_or_tax: 15.00,
         );
 
-        $this->assertSame('1', $iac->getId());
-        $this->assertSame('10', $iac->getInvId());
-        $this->assertSame('3', $iac->getAllowanceChargeId());
-        $this->assertSame('75', $iac->getAmount());
-        $this->assertSame('15', $iac->getVatOrTax());
+        $this->assertSame(1, $iac->reqId());
+        $this->assertSame(10, $iac->reqInvId());
+        $this->assertSame(3, $iac->reqAllowanceChargeId());
+        $this->assertSame(75.0, $iac->getAmount());
+        $this->assertSame(15.0, $iac->getVatOrTax());
     }
 
     public function testSetIdAndGetId(): void
     {
         $iac = new InvAllowanceCharge();
         $iac->setId(50);
-        $this->assertSame('50', $iac->getId());
+        $this->assertSame(50, $iac->reqId());
     }
 
-    public function testGetIdReturnsStringType(): void
+    public function testGetIdReturnsIntType(): void
     {
         $iac = new InvAllowanceCharge(id: 42);
-        $this->assertIsString($iac->getId());
+        $this->assertIsInt($iac->reqId());
     }
 
     public function testInvIdSetterAndGetter(): void
     {
         $iac = new InvAllowanceCharge();
         $iac->setInvId(99);
-        $this->assertSame('99', $iac->getInvId());
+        $this->assertSame(99, $iac->reqInvId());
     }
 
-    public function testInvIdIsReturnedAsString(): void
+    public function testInvIdIsReturnedAsInt(): void
     {
         $iac = new InvAllowanceCharge(inv_id: 7);
-        $this->assertIsString($iac->getInvId());
-        $this->assertSame('7', $iac->getInvId());
+        $this->assertIsInt($iac->reqInvId());
+        $this->assertSame(7, $iac->reqInvId());
     }
 
     public function testAllowanceChargeIdSetterAndGetter(): void
     {
         $iac = new InvAllowanceCharge();
         $iac->setAllowanceChargeId(5);
-        $this->assertSame('5', $iac->getAllowanceChargeId());
+        $this->assertSame(5, $iac->reqAllowanceChargeId());
     }
 
-    public function testAllowanceChargeIdIsReturnedAsString(): void
+    public function testAllowanceChargeIdIsReturnedAsInt(): void
     {
         $iac = new InvAllowanceCharge(allowance_charge_id: 12);
-        $this->assertIsString($iac->getAllowanceChargeId());
-        $this->assertSame('12', $iac->getAllowanceChargeId());
+        $this->assertIsInt($iac->reqAllowanceChargeId());
+        $this->assertSame(12, $iac->reqAllowanceChargeId());
     }
 
     public function testAmountSetterAndGetter(): void
     {
         $iac = new InvAllowanceCharge();
         $iac->setAmount(250.75);
-        $this->assertSame('250.75', $iac->getAmount());
+        $this->assertSame(250.75, $iac->getAmount());
     }
 
-    public function testAmountIsReturnedAsString(): void
+    public function testAmountIsReturnedAsFloat(): void
     {
         $iac = new InvAllowanceCharge(amount: 100.00);
-        $this->assertIsString($iac->getAmount());
+        $this->assertIsFloat($iac->getAmount());
     }
 
     public function testVatOrTaxSetterAndGetter(): void
     {
         $iac = new InvAllowanceCharge();
         $iac->setVatOrTax(20.00);
-        $this->assertSame('20', $iac->getVatOrTax());
+        $this->assertSame(20.0, $iac->getVatOrTax());
     }
 
-    public function testVatOrTaxIsReturnedAsString(): void
+    public function testVatOrTaxIsReturnedAsFloat(): void
     {
         $iac = new InvAllowanceCharge(vat_or_tax: 5.00);
-        $this->assertIsString($iac->getVatOrTax());
+        $this->assertIsFloat($iac->getVatOrTax());
     }
 
     public function testAllowanceChargeRelationSetterAndGetter(): void
@@ -127,8 +125,8 @@ class InvAllowanceChargeEntityTest extends TestCase
             vat_or_tax: 0.00,
         );
 
-        $this->assertSame('0', $iac->getAmount());
-        $this->assertSame('0', $iac->getVatOrTax());
+        $this->assertSame(0.0, $iac->getAmount());
+        $this->assertSame(0.0, $iac->getVatOrTax());
     }
 
     public function testMultipleSetIdCalls(): void
@@ -136,6 +134,6 @@ class InvAllowanceChargeEntityTest extends TestCase
         $iac = new InvAllowanceCharge();
         $iac->setId(1);
         $iac->setId(99);
-        $this->assertSame('99', $iac->getId());
+        $this->assertSame(99, $iac->reqId());
     }
 }

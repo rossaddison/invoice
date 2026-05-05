@@ -190,16 +190,14 @@ final class ProjectController extends BaseController
 
     /**
      * @param CurrentRoute $currentRoute
-     * @param ProjectRepository $projectRepository
+     * @param ProjectRepository $pjtR
      * @return Project|null
      */
-    private function project(CurrentRoute $currentRoute, ProjectRepository $projectRepository): ?Project
+    private function project(
+        CurrentRoute $currentRoute,
+        ProjectRepository $pjtR): ?Project
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $projectRepository->repoProjectquery($id);
-        }
-        return null;
+        return $pjtR->repoProjectquery((int) $currentRoute->getArgument('id'));
     }
 
     /**

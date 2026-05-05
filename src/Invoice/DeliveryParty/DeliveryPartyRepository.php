@@ -89,11 +89,11 @@ final class DeliveryPartyRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return DeliveryParty|null
      */
-    public function repoDeliveryPartyquery(string $id): ?DeliveryParty
+    public function repoDeliveryPartyquery(int $id): ?DeliveryParty
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -101,10 +101,10 @@ final class DeliveryPartyRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

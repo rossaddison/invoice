@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\PaymentPeppol;
+use App\Infrastructure\Persistence\PaymentPeppol\PaymentPeppol;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -12,7 +12,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\PaymentPeppol $paymentpeppol
+ * @var App\Infrastructure\Persistence\PaymentPeppol\PaymentPeppol $paymentpeppol
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -30,18 +30,18 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (PaymentPeppol $model) => $model->getId(),
+        content: static fn (PaymentPeppol $model) => $model->reqId(),
     ),
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (PaymentPeppol $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('paymentpeppol/view', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('paymentpeppol/view', ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (PaymentPeppol $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil']), $urlGenerator->generate('paymentpeppol/edit', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil']), $urlGenerator->generate('paymentpeppol/edit', ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
@@ -57,7 +57,7 @@ $columns = [
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('paymentpeppol/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('paymentpeppol/delete', ['id' => $model->reqId()]),
                 [],
             );
         },

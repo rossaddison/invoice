@@ -69,7 +69,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompanyId() == (string) $company->reqId()) {
+                    if ($private->reqCompanyId() === $company->reqId()) {
 // site's logo: take the first logo where the current date falls within
 //  the logo's start and end dates
                         if (($private->getStartDate()?->format('Y-m-d') <

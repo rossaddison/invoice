@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see id="inv-to-pdf" triggered by <a href="#inv-to-pdf" data-bs-toggle="modal"  style="text-decoration:none"> views/inv/view.php
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var string $csrf
@@ -25,9 +25,9 @@ declare(strict_types=1);
                         <?= $translator->translate('custom.fields'); ?>?
                     </div>
                     <input type="hidden"
-                           name="inv_id-<?php $inv->getId(); ?>"
-                           id="inv_id-<?php $inv->getId(); ?>"
-                           value="<?php $inv->getId(); ?>">
+                           name="inv_id-<?php $inv->reqId(); ?>"
+                           id="inv_id-<?php $inv->reqId(); ?>"
+                           value="<?php $inv->reqId(); ?>">
                 </form>
             </div>
             <div class="modal-footer">

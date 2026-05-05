@@ -13,7 +13,7 @@ class CategoryPrimaryEntityTest extends Unit
     {
         $category = new CategoryPrimary();
 
-        $this->assertFalse($category->isPersisted());
+        $this->assertFalse($category->hasIdentity());
         $this->assertSame('', $category->getName());
     }
 
@@ -44,7 +44,7 @@ class CategoryPrimaryEntityTest extends Unit
     {
         $category = new CategoryPrimary();
 
-        $this->assertFalse($category->isPersisted());
+        $this->assertFalse($category->hasIdentity());
     }
 
     public function testNameSetterAndGetter(): void
@@ -131,7 +131,7 @@ class CategoryPrimaryEntityTest extends Unit
     {
         $category = new CategoryPrimary('Initial');
 
-        $this->assertFalse($category->isPersisted());
+        $this->assertFalse($category->hasIdentity());
         $this->assertSame('Initial', $category->getName());
 
         $category->setName('Updated Category');

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
 
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAmount;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Invoice\Libraries\ZugferdXml;
 use App\Invoice\Setting\SettingRepository as SRepo;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as IIAR;

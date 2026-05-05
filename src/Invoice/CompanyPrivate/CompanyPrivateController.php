@@ -228,7 +228,9 @@ final class CompanyPrivateController extends BaseController
                     $this->companyPrivateService->saveCompanyPrivate($company_private, $body);
 
                     // Prepare the after save for the logo_filename field
-                    $after_save = $companyprivateRepository->repoCompanyPrivatequery((string) $company_private->reqId());
+                    $after_save =
+                        $companyprivateRepository->repoCompanyPrivatequery(
+                            $company_private->reqId());
                     if ($after_save) {
                         // A new file upload must replace the previous one or keep existing file
                         /**
@@ -335,13 +337,11 @@ final class CompanyPrivateController extends BaseController
      * @param CompanyPrivateRepository $companyprivateRepository
      * @return CompanyPrivate|null
      */
-    private function companyprivate(CurrentRoute $currentRoute, CompanyPrivateRepository $companyprivateRepository): ?CompanyPrivate
+    private function companyprivate(CurrentRoute $currentRoute,
+        CompanyPrivateRepository $companyprivateRepository): ?CompanyPrivate
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $companyprivateRepository->repoCompanyPrivatequery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $companyprivateRepository->repoCompanyPrivatequery($id);
     }
 
     /**

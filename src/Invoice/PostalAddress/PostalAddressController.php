@@ -244,15 +244,12 @@ final class PostalAddressController extends BaseController
      * @param PostalAddressRepository $paR
      * @return PostalAddress|null
      */
-    private function postaladdress(CurrentRoute $currentRoute,
-                                    PostalAddressRepository $paR): ?PostalAddress
+    private function postaladdress(
+        CurrentRoute $currentRoute,
+        PostalAddressRepository $paR): ?PostalAddress
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            /* @var PostalAddress $postaladdress */
-            return $paR->repoPostalAddressLoadedquery($id);
-        }
-        return null;
+        return $paR->repoPostalAddressLoadedquery(
+            (int) $currentRoute->getArgument('id'));
     }
 
     /**

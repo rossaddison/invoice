@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 // Entities
-use App\Invoice\Entity\Inv;
-use App\User\User;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\User\User;
 // Repositories
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Group\GroupRepository as GR;
@@ -47,7 +47,7 @@ final readonly class InvService
          * 2. Has no invoice number
          * 3. Has a status of 'sent'
          */
-        if ((!$model->isNewRecord()) && (strlen($model->getNumber() ?? '') == 0)
+        if (($model->hasIdentity()) && (strlen($model->getNumber() ?? '') == 0)
                 && ($array['status_id'] == 2)) {
             $model->setNumber(
                 (string) $gR->generateNumber(
@@ -139,7 +139,7 @@ final readonly class InvService
         isset($array['contract_id']) ?
             $model->setContractId((int) $array['contract_id']) : '';
 
-        if ($model->isNewRecord()) {
+        if (!$model->hasIdentity()) {
             if ($s->getSetting('mark_invoices_sent_copy') === '1') {
 // mark the copy as sent and make it read-only
                 $model->setStatusId(2);
@@ -156,7 +156,7 @@ final readonly class InvService
             } else {
                 $model->setNumber('');
             }
-            $model->setUserId((int) $user->getId());
+            $model->setUserId($user->reqId());
             $model->setTimeCreated(
                                 (new DateTimeImmutable('now'))->format('H:i:s'));
             $model->setPaymentMethod(
@@ -178,16 +178,12 @@ final readonly class InvService
         $group = 'group_id';
         if (isset($array[$group])) {
             $model->setGroup(
-                $this->gR->repoGroupQuery(
-                    (string) $array[$group]));
+                $this->gR->repoGroupQuery((int) $array[$group]));
         }
         $user = 'user_id';
         if (isset($array[$user])) {
-            $userEntity = $this->uR->findById(
-                (string) $array[$user]);
-            if ($userEntity) {
-                $model->setUser($userEntity);
-            }
+            $userEntity = $this->uR->findById((int) $array[$user]);
+            $model->setUser($userEntity);
         }
     }
 
@@ -200,7 +196,7 @@ final readonly class InvService
         $model->setGroupId((int) $array['group_id']);
         $model->setSoId((int) $array['so_id']);
         $model->setQuoteId((int) $array['quote_id']);
-        $model->setUserId((int) $user->getId());
+        $model->setUserId($user->reqId());
         $model->setStatusId((int) $array['status_id']);
         $model->setIsReadOnly((bool) $array['is_read_only']);
         $model->setPassword((string) $array['password']);
@@ -325,7 +321,7 @@ final readonly class InvService
         $model->setDeliveryLocationId((int) $details['delivery_location_id'] ?: 0);
         $model->setPostalAddressId((int) $details['postal_address_id'] ?: 0);
         $model->setContractId((int) $details['contract_id'] ?: 0);
-        if ($model->isNewRecord()) {
+        if (!$model->hasIdentity()) {
             $model->setStatusId(1);
             $model->setNumber((string) $details['number']);
             $random = new Random();

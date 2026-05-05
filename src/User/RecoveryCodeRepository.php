@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\User;
 
+use App\Infrastructure\Persistence\User\User;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -59,7 +60,7 @@ final class RecoveryCodeRepository extends Select\Repository
      */
     public function findByUser(User $user): EntityReader
     {
-        $userId = $user->getId();
+        $userId = $user->reqId();
         $query = $this->select()
                 ->where(['user_id' => $userId]);
         return $this->prepareDataReader($query);
@@ -71,7 +72,7 @@ final class RecoveryCodeRepository extends Select\Repository
      */
     public function findByUserCount(User $user): int
     {
-        $userId = $user->getId();
+        $userId = $user->reqId();
         return $this->select()
                     ->where(['user_id' => $userId])
                     ->count();

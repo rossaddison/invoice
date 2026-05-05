@@ -13,7 +13,7 @@ final class GroupEntityTest extends Unit
     {
         $group = new Group();
 
-        $this->assertFalse($group->isPersisted());
+        $this->assertFalse($group->hasIdentity());
         $this->assertSame('', $group->getName());
         $this->assertSame('', $group->getIdentifierFormat());
         $this->assertNull($group->getNextId());
@@ -44,7 +44,7 @@ final class GroupEntityTest extends Unit
     {
         $group = new Group();
 
-        $this->assertFalse($group->isPersisted());
+        $this->assertFalse($group->hasIdentity());
     }
 
     public function testIsPersistedReturnsTrueAfterSetId(): void
@@ -52,7 +52,7 @@ final class GroupEntityTest extends Unit
         $group = new Group();
         $group->setId(1);
 
-        $this->assertTrue($group->isPersisted());
+        $this->assertTrue($group->hasIdentity());
     }
 
     public function testNameSetterAndGetter(): void

@@ -137,12 +137,12 @@ final class SalesOrderItemController extends BaseController
                 // in the observer user's guest index
                 && !($statusId === 1)
                 // the salesorder is intended for the current user
-                && ((string) $so->getUserId() === $this->userService->getUser()?->getId())
+                && ($so->reqUserId() === $this->userService->getUser()?->reqId())
                 // the salesorder client is associated with the above user
                 && ($ucR->repoUserClientqueryCount(
-                    (string) $so->getUserId(),
-                    (string) $so->reqClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery((string) $statusId);
+                    $so->reqUserId(),
+                    $so->reqClientId()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery($so->reqUserId());
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {
                     return true;
@@ -192,7 +192,7 @@ final class SalesOrderItemController extends BaseController
 
     public function taxratePercentage(int $id, TRR $trr): ?float
     {
-        $taxrate = $trr->repoTaxRatequery((string) $id);
+        $taxrate = $trr->repoTaxRatequery($id);
         if ($taxrate) {
             return $taxrate->getTaxRatePercent();
         }

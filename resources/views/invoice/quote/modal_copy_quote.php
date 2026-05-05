@@ -30,7 +30,7 @@ use Yiisoft\Html\Html;
                     <div class="form-group">
                         <label for="create_quote_client_id"><?= $translator->translate('client'); ?></label>
                         <select name="create_quote_client_id" id="create_quote_client_id" class="form-control form-control-lg">
-                            <option value="<?= $quote->getClient()?->reqId(); ?>"><?= $quote->getClient()?->getClientName() ?? '#'; ?></option>
+                            <option value="">⏳</option>
                                 <?php
                                     /**
                                      * @var App\Infrastructure\Persistence\Client\Client $client

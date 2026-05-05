@@ -11,16 +11,12 @@ use App\Infrastructure\Persistence\{
     SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge,
     SalesOrderItem\SalesOrderItem as SoItem
 };
-use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\{
-    SalesOrderAllowanceCharge,
-};
-use App\Invoice\Entity\{
-    SalesOrderTaxRate as SoTaxRate,
-};
 use App\Infrastructure\Persistence\{
     QuoteCustom\QuoteCustom,
     QuoteItemAllowanceCharge\QuoteItemAllowanceCharge,
-    QuoteTaxRate\QuoteTaxRate
+    QuoteTaxRate\QuoteTaxRate, 
+    SalesOrderAllowanceCharge\SalesOrderAllowanceCharge,
+    SalesOrderTaxRate\SalesOrderTaxRate as SoTaxRate
 };
 use App\Invoice\{
     CustomField\CustomFieldRepository as CFR,
@@ -129,7 +125,7 @@ trait QuoteToSo
                         $form = new SoForm();
                         if ($formHydrator->populateAndValidate($form, $so_body)
                             && $quote->getSoId() === 0) {
-                            $client_id = (string) $so_body['client_id'];
+                            $client_id = $so_body['client_id'];
                             $user = $this->activeUser(
                                 $client_id, $uR, $ucR, $uiR);
                             if (null !== $user) {
@@ -272,56 +268,54 @@ trait QuoteToSo
                 /**
                  * @var string $so_body['client_id']
                  */
-                $client_id = $so_body['client_id'];
+                $client_id = (int) $so_body['client_id'];
                 $user_client = $ucR->repoUserquery($client_id);
                 $user_client_count = $ucR->repoUserquerycount($client_id);
                 if (null !== $user_client && $user_client_count == 1) {
                     // Only one user account per client
-                    $user_id = $user_client->getUserId();
+                    $user_id = $user_client->reqUserId();
                     $user = $uR->findById($user_id);
-                    if (null !== $user) {
-                        // Generate number only after validation passes
-                        $so_body['number'] =
-                                (string) $gR->generateNumber(
-                                    (int) $body['group_id'], true);
-                        $so = $this->so_service->addSo($user, $new_so, $so_body);
-                        $new_so_id = $so->reqId();
-                        // Ensure that the quote has a specific po and therefore
-                        // cannot be copied again.
-                        // Transfer each quote_item to so_item and the
-                        // corresponding so_item_amount to so_item_amount
-                        // for each item
-                        $this->quoteToSoQuoteItems($quote_id,
-                            $new_so_id, $acqiR, $acsoiR, $soiaR, $soiaS, $pR,
-                                $taskR, $qiR, $trR, $unR, $formHydrator);
-                        $this->quoteToSoQuoteTaxRates($quote_id,
-                            $new_so_id, $qtrR, $formHydrator);
-                        $this->quoteToSoQuoteCustom($quote_id,
-                            $new_so_id, $qcR, $cfR, $formHydrator);
-                        $this->quoteToSoQuoteAmount($quote_id,
-                            $new_so_id, $qaR, $soR);
-                        $this->quoteToSoQuoteAllowanceCharges($quote_id,
-                            $new_so_id, $acqR, $formHydrator);
-                        // Set the quote's sales order id so that it
-                        // cannot be copied in the future
-                        $quote->setSoId($new_so_id);
-                        $qR->save($quote);
-                        $parameters = [
-                            'success' => 1,
-                            'flash_message' => $this->translator->translate(
-                                'quote.sales.order.created.from.quote'),
-                            'redirect_url' => $this->url_generator->generate(
-                                'salesorder/view',
-                                    ['_language' =>
-                                        (string) $this->session->get(
-                                                '_language'),
-                                        'id' => $new_so_id]),
-                        ];
-                        //return response to quote.js to reload page at
-                        //location
-                        return $this->factory->createResponse(
-                            Json::encode($parameters));
-                    }  // null!==$user
+                    // Generate number only after validation passes
+                    $so_body['number'] =
+                            (string) $gR->generateNumber(
+                                (int) $body['group_id'], true);
+                    $so = $this->so_service->addSo($user, $new_so, $so_body);
+                    $new_so_id = $so->reqId();
+                    // Ensure that the quote has a specific po and therefore
+                    // cannot be copied again.
+                    // Transfer each quote_item to so_item and the
+                    // corresponding so_item_amount to so_item_amount
+                    // for each item
+                    $this->quoteToSoQuoteItems($quote_id,
+                        $new_so_id, $acqiR, $acsoiR, $soiaR, $soiaS, $pR,
+                            $taskR, $qiR, $trR, $unR, $formHydrator);
+                    $this->quoteToSoQuoteTaxRates($quote_id,
+                        $new_so_id, $qtrR, $formHydrator);
+                    $this->quoteToSoQuoteCustom($quote_id,
+                        $new_so_id, $qcR, $cfR, $formHydrator);
+                    $this->quoteToSoQuoteAmount($quote_id,
+                        $new_so_id, $qaR, $soR);
+                    $this->quoteToSoQuoteAllowanceCharges($quote_id,
+                        $new_so_id, $acqR, $formHydrator);
+                    // Set the quote's sales order id so that it
+                    // cannot be copied in the future
+                    $quote->setSoId($new_so_id);
+                    $qR->save($quote);
+                    $parameters = [
+                        'success' => 1,
+                        'flash_message' => $this->translator->translate(
+                            'quote.sales.order.created.from.quote'),
+                        'redirect_url' => $this->url_generator->generate(
+                            'salesorder/view',
+                                ['_language' =>
+                                    (string) $this->session->get(
+                                            '_language'),
+                                    'id' => $new_so_id]),
+                    ];
+                    //return response to quote.js to reload page at
+                    //location
+                    return $this->factory->createResponse(
+                        Json::encode($parameters));
                 } // null!==$user_client && $user_client_count==1
             } else {
                 $parameters = [
@@ -354,7 +348,7 @@ trait QuoteToSo
                     $quote_tax_rate->getQuoteTaxRateAmount(),
             ];
             $entity = new SoTaxRate();
-            $form = new SoTaxRateForm($entity);
+            $form = new SoTaxRateForm();
             if ($formHydrator->populateAndValidate($form, $so_tax_rate)) {
                 $this->so_tax_rate_service->saveSoTaxRate(
                     $entity, $so_tax_rate);
@@ -379,7 +373,7 @@ trait QuoteToSo
             // using the custom_field_id to find details
             /** @var CustomField $existing_custom_field */
             $existing_custom_field = $cfR->repoCustomFieldquery(
-                $quote_custom->getCustomFieldId());
+                $quote_custom->reqCustomFieldId());
             if ($cfR->repoTableAndLabelCountquery(
                 'inv_custom', (string) $existing_custom_field->getLabel()
                 ) !== 0) {

@@ -72,7 +72,7 @@ use Yiisoft\Html\Tag\Form;
                 <?= $translator->translate('product.name'); ?>:
             <?= Html::closeTag('strong'); ?>
             <?= Html::encode(($productRepository->repoProductquery(
-                    (string) $productId))?->getProductName() ??
+                    $productId))?->getProductName() ??
                     $translator->translate('product.name'));
             ?>
             <?php if ($remainingProducts): ?>

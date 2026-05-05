@@ -9,12 +9,12 @@ use chillerlan\QRCode\QROptions;
 use App\Auth\{AuthService, Form\LoginForm, Form\TwoFactorAuthenticationSetupForm,
     Form\TwoFactorAuthenticationVerifyLoginForm, Trait\Callback, Trait\ClassList,
     Trait\Oauth2, Client\OpenBanking, Permissions, TokenRepository};
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\UserInv\UserInvRepository;
 use App\Service\WebControllerService;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository;
 use App\User\RecoveryCodeService;
 use OTPHP\TOTP;
@@ -236,7 +236,7 @@ final class AuthController
             $identity = $this->authService->getIdentity();
             $userId = $identity->getId();
             if (null !== $userId) {
-                $userInv = $uiR->repoUserInvUserIdquery($userId);
+                $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
                 if (null !== $userInv) {
                     $user = $userInv->getUser();
                     if (null !== $user) {
@@ -371,8 +371,8 @@ final class AuthController
         UserRepository $userRepository,
     ): ResponseInterface {
         $userId = (int) $this->session->get('pending_2fa_user_id');
-        $user = $userRepository->findById((string) $userId);
-        if (null !== $user) {
+        $user = $userRepository->findById($userId);
+        if ($user->hasIdentity()) {
             $email = $user->getEmail();
             if (strlen($email) > 0) {
                 $totp = TOTP::create();
@@ -448,8 +448,8 @@ final class AuthController
             $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
             if ($inputCode !== null) {
                 if ($pendingUserId > 0) {
-                    $user = $userRepository->findById((string) $pendingUserId);
-                    if (null !== $user) {
+                    $user = $userRepository->findById($pendingUserId);
+                    if ($user->hasIdentity()) {
                         /** @var mixed $tempSecretRaw */
                         $tempSecretRaw = $this->session->get('2fa_temp_secret');
                         $tempSecret = (\is_string($tempSecretRaw)
@@ -538,8 +538,8 @@ final class AuthController
         $vuid = (int) $this->session->get('verified_2fa_user_id');
         $form = new TwoFactorAuthenticationVerifyLoginForm($translator);
         $codes = [];
-        $user = $userRepository->findById((string) $vuid);
-        if (null !== $user) {
+        $user = $userRepository->findById($vuid);
+        if ($user->hasIdentity()) {
         // Only display the recovery codes once i.e. if the user does not have any
             if (!$this->recoveryCodeService->userHasBackupCodes($user)) {
                 $codes = $this->generateBackupRecoveryCodes($user);
@@ -582,8 +582,8 @@ final class AuthController
                 $inputCode = $this->sanitizeAndValidateCode($body['code'] ?? '');
                 if (null !== $inputCode) {
                     if ($vuid > 0) {
-                        $user = $userRepository->findById((string) $vuid);
-                        if (null !== $user) {
+                        $user = $userRepository->findById($vuid);
+                        if ($user->hasIdentity()) {
                             $totpSecretRaw = $user->getTotpSecret();
                             $totpSec = (\is_string($totpSecretRaw)
                                     && $totpSecretRaw !== '')
@@ -676,14 +676,14 @@ final class AuthController
         return $verifiedUserId === $userId;
     }
 
-    public function disableToken(
+    private function disableToken(
         TokenRepository $tR,
         ?string $userId = null,
         string $identityProvider = '',
     ): void {
         if (null !== $userId) {
             $getTTIP = $this->getTokenType($identityProvider);
-            $token = $tR->findTokenByIdentityIdAndType($userId, $getTTIP);
+            $token = $tR->findTokenByIdentityIdAndType((int) $userId, $getTTIP);
             if (null !== $token) {
                 $token->setToken('already_used_token_' . (string) time());
                 $tR->save($token);
@@ -772,37 +772,35 @@ final class AuthController
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
         $ipas = 'identity.provider.authentication.successful';
-        if (null !== ($userId = $user->getId())) {
-            $userInv->setUserId((int) $userId);
-            // if the user is administrator assign 0 => 'Administrator',
-            // 1 => Not Administrator
-            $userInv->setType($user->getId() == 1 ? 0 : 1);
-            // when the user clicks on the button, make the user active in the
-            // userinv extension table. Initially keep the user inactive.
-            $userInv->setActive(false);
-            $userInv->setLanguage($language);
-            $uiR->save($userInv);
-            return  new A()
-            // When the url is clicked by the user, return to userinv/$provider
-            // to activate the user and assign a client to the user
-            // depending on whether 'Assign a client to user on signup' has been
-            // chosen under View ... Settings...General. The user will be able to
-            // edit their userinv details on the client side as well as the
-            // client record.
-                ->href($this->urlGenerator->generateAbsolute(
-                    'userinv/signup',
-                    [
-                        '_language' => $_language,
-                        'language' => $language,
-                        'token' => $tokenWithMask,
-                        'tokenType' => $tokenType,
-                    ],
-                ))
-                ->addClass('btn btn-success')
-                ->content($translator->translate($ipas))
-                ->render();
-        }
-        return '';
+        $userId = $user->reqId();
+        $userInv->setUserId($userId);
+        // if the user is administrator assign 0 => 'Administrator',
+        // 1 => Not Administrator
+        $userInv->setType($userId == 1 ? 0 : 1);
+        // when the user clicks on the button, make the user active in the
+        // userinv extension table. Initially keep the user inactive.
+        $userInv->setActive(false);
+        $userInv->setLanguage($language);
+        $uiR->save($userInv);
+        return new A()
+        // When the url is clicked by the user, return to userinv/$provider
+        // to activate the user and assign a client to the user
+        // depending on whether 'Assign a client to user on signup' has been
+        // chosen under View ... Settings...General. The user will be able to
+        // edit their userinv details on the client side as well as the
+        // client record.
+            ->href($this->urlGenerator->generateAbsolute(
+                'userinv/signup',
+                [
+                    '_language' => $_language,
+                    'language' => $language,
+                    'token' => $tokenWithMask,
+                    'tokenType' => $tokenType,
+                ],
+            ))
+            ->addClass('btn btn-success')
+            ->content($translator->translate($ipas))
+            ->render();
     }
 
     /** @psalm-suppress PossiblyUnusedReturnValue */
@@ -818,7 +816,7 @@ final class AuthController
         if (($this->sR->getSetting('enable_tfa_with_disabling') == '1')
                 && $this->sR->getSetting('enable_tfa') == '1') {
             if (null !== $userId) {
-                $userInv = $uiR->repoUserInvUserIdquery($userId);
+                $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
                 if (null !== $userInv) {
                     $user = $userInv->getUser();
                     if (null !== $user) {

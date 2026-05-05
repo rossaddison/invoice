@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvTaxRate;
 
-use App\Invoice\Entity\InvTaxRate;
+use App\Infrastructure\Persistence\InvTaxRate\InvTaxRate;
 use Cycle\ORM\Select;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
@@ -92,9 +92,9 @@ final class InvTaxRateRepository extends Select\Repository
     //inv tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
 
     /**
-     * @param string|null $inv_id
+     * @param int $inv_id
      */
-    public function repoCount(?string $inv_id): int
+    public function repoCount(int $inv_id): int
     {
         return $this->select()
                       ->where(['inv_id' => $inv_id])
@@ -102,10 +102,10 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return TEntity|null
      */
-    public function repoInvTaxRatequery(string $id): ?InvTaxRate
+    public function repoInvTaxRatequery(int $id): ?InvTaxRate
     {
         $query = $this->select()
                       ->load('inv')
@@ -119,27 +119,27 @@ final class InvTaxRateRepository extends Select\Repository
     // load 'tax rate' so that we can use tax_rate_id through the BelongTo relation in the Entity
     // to access the parent tax rate table's percent name and percentage
     // which we will use in inv/view
-    public function repoInvquery(string $inv_id): EntityReader
+    public function repoInvquery(int $inv_id): EntityReader
     {
         $query = $this->select()->load('tax_rate')->where(['inv_id' => $inv_id]);
         return $this->prepareDataReader($query);
     }
 
     /**
-     * @param string $tax_rate_id
+     * @param int $tax_rate_id
      * @return TEntity|null
      */
-    public function repoTaxRatequery(string $tax_rate_id): ?InvTaxRate
+    public function repoTaxRatequery(int $tax_rate_id): ?InvTaxRate
     {
         $query = $this->select()->load('tax_rate')->where(['tax_rate_id' => $tax_rate_id]);
         return  $query->fetchOne();
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return EntityReader
      */
-    public function repoGetInvTaxRateAmounts(string $inv_id): EntityReader
+    public function repoGetInvTaxRateAmounts(int $inv_id): EntityReader
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
@@ -147,10 +147,10 @@ final class InvTaxRateRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return float
      */
-    public function repoUpdateInvTaxTotal(string $inv_id): float
+    public function repoUpdateInvTaxTotal(int $inv_id): float
     {
         $getTaxRateAmounts = $this->repoGetInvTaxRateAmounts($inv_id);
         $total = 0.00;

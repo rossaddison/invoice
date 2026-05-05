@@ -20,13 +20,13 @@ final class FamilyCustomFieldProcessor implements CustomFieldProcessor
     }
 
     #[\Override]
-    public function exists(string $entityId, string $customFieldId): bool
+    public function exists(int $entityId, int $customFieldId): bool
     {
         return $this->familyCustomRepository->repoFamilyCustomCount($entityId, $customFieldId) > 0;
     }
 
     #[\Override]
-    public function findExisting(string $entityId, string $customFieldId): ?\App\Infrastructure\Persistence\FamilyCustom\FamilyCustom
+    public function findExisting(int $entityId, int $customFieldId): ?\App\Infrastructure\Persistence\FamilyCustom\FamilyCustom
     {
         return $this->familyCustomRepository->repoFormValuequery($entityId, $customFieldId);
     }

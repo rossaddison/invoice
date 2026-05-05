@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentCustom;
 
-use App\Invoice\Entity\PaymentCustom;
+use App\Infrastructure\Persistence\PaymentCustom\PaymentCustom;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -17,11 +17,13 @@ final class PaymentCustomForm extends FormModel
     #[Required]
     private ?string $value = '';
 
-    public function __construct(PaymentCustom $paymentCustom)
+    public static function show(PaymentCustom $paymentCustom): self
     {
-        $this->payment_id = (int) $paymentCustom->getPaymentId();
-        $this->custom_field_id = (int) $paymentCustom->getCustomFieldId();
-        $this->value = $paymentCustom->getValue();
+        $form = new self();
+        $form->payment_id = $paymentCustom->reqPaymentId();
+        $form->custom_field_id = $paymentCustom->reqCustomFieldId();
+        $form->value = $paymentCustom->getValue();
+        return $form;
     }
 
     public function getPaymentId(): ?int

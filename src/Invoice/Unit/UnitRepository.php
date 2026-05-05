@@ -70,10 +70,10 @@ final class UnitRepository extends Select\Repository
     }
 
     /**
-     * @param string $unit_id
+     * @param int $unit_id
      * @return int
      */
-    public function repoCount(string $unit_id): int
+    public function repoCount(int $unit_id): int
     {
         return $this->select()
                       ->where(['id' => $unit_id])
@@ -85,7 +85,7 @@ final class UnitRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoUnitquery(string $unit_id): ?Unit
+    public function repoUnitquery(int $unit_id): ?Unit
     {
         $query = $this
             ->select()
@@ -109,13 +109,13 @@ final class UnitRepository extends Select\Repository
      * Return either the singular unit name or the plural unit name,
      * depending on the quantity
      *
-     * @param string $unit_id
+     * @param int $unit_id
      * @param int $quantity
      * @return string|Unit|null
      */
-    public function singularOrPluralName(string $unit_id, int $quantity): string|Unit|null
+    public function singularOrPluralName(int $unit_id, int $quantity): string|Unit|null
     {
-        if ((int) $unit_id === 0) {
+        if ($unit_id === 0) {
             return '';
         }
         $unit = $this->repoUnitquery($unit_id);

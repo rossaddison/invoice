@@ -1,0 +1,83 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure\Persistence\ProductProperty;
+
+use App\Infrastructure\Persistence\{
+    Product\Product, Trait\RequireId};
+use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
+use Cycle\Annotated\Annotation\Relation\BelongsTo;
+
+#[Entity(repository: \App\Invoice\ProductProperty\ProductPropertyRepository::class)]
+class ProductProperty
+{
+    use RequireId;
+    
+    #[Column(type: 'primary')]
+    public ?int $id = null;
+
+    #[BelongsTo(target: Product::class, nullable: false, fkAction: 'NO ACTION')]
+    private ?Product $product = null;
+
+    public function __construct(
+        #[Column(type: 'integer(11)', nullable: true)]
+        private ?int $product_id = null,
+        #[Column(type: 'text', nullable: true)]
+        public ?string $name = '',
+        #[Column(type: 'text', nullable: true)]
+        public ?string $value = '')
+    {
+    }
+    
+    public function reqId(): int
+    {
+        return $this->requireId($this->id, 'ProductProperty');
+    }
+
+    public function hasIdentity(): bool
+    {
+        return $this->id !== null;
+    }
+
+    public function reqProductId(): int
+    {
+        return $this->requireId($this->product_id, 'Product');
+    }
+
+    public function setProductId(int $product_id): void
+    {
+        $this->product_id = $product_id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    public function setValue(string $value): void
+    {
+        $this->value = $value;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): void
+    {
+        $this->product = $product;
+    }
+}

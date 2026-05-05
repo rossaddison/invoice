@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\UserClient;
 
 use App\Invoice\Client\ClientRepository as CR;
-use App\Invoice\Entity\UserClient;
+use App\Infrastructure\Persistence\UserClient\UserClient;
 use App\User\UserRepository as UR;
 
 final readonly class UserClientService
@@ -20,12 +20,10 @@ final readonly class UserClientService
     private function persist(UserClient $model, array $array): void
     {
         $user = $this->userR->findById(
-            (string) $array['user_id']
+            (int) $array['user_id']
         );
-        if ($user) {
-            $model->setUser($user);
-            $model->setUserId((int) $user->getId());
-        }
+        $model->setUser($user);
+        $model->setUserId($user->reqId());
         $client = $this->cR->repoClientquery((int) $array['client_id']);
         $model->setClient($client);
         $model->setClientId($client->reqId());

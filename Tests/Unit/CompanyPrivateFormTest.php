@@ -294,7 +294,7 @@ final class CompanyPrivateFormTest extends TestCase
         
         $company->method('getName')->willReturn('Test Company');
         
-        $companyPrivate->method('getCompanyId')->willReturn('1');
+        $companyPrivate->method('reqCompanyId')->willReturn(1);
         $companyPrivate->method('getCompany')->willReturn($company);
         $companyPrivate->method('getVatId')->willReturn('GB123456789');
         $companyPrivate->method('getTaxCode')->willReturn('TC12345');

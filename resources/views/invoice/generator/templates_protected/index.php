@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  */
 
 echo "<?php\n";
@@ -12,7 +12,7 @@ $random =  new DateTimeImmutable()->getTimestamp();
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\<?= $generator->getCamelcaseCapitalName(); ?>;
+use App\Infrastructure\Persistence\<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?>;
 
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
@@ -31,7 +31,8 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 /**
- * @var App\Invoice\Entity\<?= $generator->getCamelcaseCapitalName(); ?> $<?= $generator->getSmallSingularName() . "\n"; ?>
+ * @var App\Infrastructure\Persistence\
+<?= $generator->getCamelcaseCapitalName(); ?>\<?= $generator->getCamelcaseCapitalName(); ?> $<?= $generator->getSmallSingularName() . "\n"; ?>
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Data\Paginator\OffsetPaginator $paginator
  * @var Yiisoft\Router\CurrentRoute $currentRoute
@@ -60,7 +61,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(<?= $generator->getCamelcaseCapitalName(); ?> $model) => $model->getId()
+        content: static fn(<?= $generator->getCamelcaseCapitalName(); ?> $model) => $model->reqId()
     ),
     new ActionColumn(buttons: [
         new ActionButton(
@@ -70,7 +71,7 @@ $columns = [
                 /** @psalm-suppress InvalidArgument */
                 return $urlGenerator->generate(
                     '<?= $generator->getSmallSingularName(); ?>/view',
-                        ['id' => $model->getId()]);
+                        ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -84,7 +85,7 @@ $columns = [
                 /** @psalm-suppress InvalidArgument */
                 return $urlGenerator->generate(
                     '<?= $generator->getSmallSingularName(); ?>/edit',
-                        ['id' => $model->getId()]);
+                        ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -98,7 +99,7 @@ $columns = [
                 /** @psalm-suppress InvalidArgument */
                 return $urlGenerator->generate(
                     '<?= $generator->getSmallSingularName(); ?>/delete',
-                        ['id' => $model->getId()]);
+                        ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

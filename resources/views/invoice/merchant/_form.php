@@ -50,26 +50,25 @@ use Yiisoft\Html\Tag\Form;
 ?>
             <?= Html::closeTag('div'); ?>
             <?php
-    /**
-     * @var App\Invoice\Entity\Inv $inv
-     */
-    foreach ($invs as $inv) {
-        $invId = $inv->getId();
-        if (null !== $invId) {
-            $optionsDataInv[$invId] = $inv->getNumber() ?? $translator->translate('number.no');
-        }
-    }
-echo Field::select($form, 'inv_id')
-->label($translator->translate('invoice'))
-->optionsData($optionsDataInv)
-->hint($translator->translate('hint.this.field.is.required'));
-?>
+            /**
+             * @var App\Infrastructure\Persistence\Inv\Inv $inv
+             */
+            foreach ($invs as $inv) {
+                $invId = $inv->reqId();
+                $optionsDataInv[$invId] =
+                    $inv->getNumber() ?? $translator->translate('number.no');        
+            }
+            echo Field::select($form, 'inv_id')
+            ->label($translator->translate('invoice'))
+            ->optionsData($optionsDataInv)
+            ->hint($translator->translate('hint.this.field.is.required'));
+            ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
             <?= Field::checkbox($form, 'successful')
-    ->inputLabelAttributes(['class' => 'form-check-label'])
-    ->inputClass('form-check-input')
-    ->ariaDescribedBy($translator->translate('successful'))
-?>
+                ->inputLabelAttributes(['class' => 'form-check-label'])
+                ->inputClass('form-check-input')
+                ->ariaDescribedBy($translator->translate('successful'))
+           ?>
             <?= Html::closeTag('div'); ?>
             <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                 <?= Field::date($form, 'date')

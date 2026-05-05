@@ -17,7 +17,7 @@ use App\Invoice\Helpers\CountryHelper;
  * @var App\Invoice\Unit\UnitRepository $uR
  * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount $so_amount
- * @var App\Invoice\Entity\SalesOrderTaxRate $soTaxRates
+ * @var App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate $soTaxRates
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\Setting\SettingRepository $s

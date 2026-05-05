@@ -7,7 +7,7 @@ namespace App\Invoice\Setting;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 // App
-use App\Invoice\Entity\Setting;
+use App\Infrastructure\Persistence\Setting\Setting;
 use App\Invoice\EmailTemplate\EmailTemplateRepository as ER;
 use App\Invoice\Group\GroupRepository as GR;
 use App\Invoice\PaymentMethod\PaymentMethodRepository as PM;
@@ -397,7 +397,7 @@ final class SettingController extends BaseController
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
         $setting = new Setting();
-        $form = new SettingForm($setting);
+        $form = new SettingForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'setting/add',
@@ -590,11 +590,11 @@ final class SettingController extends BaseController
     ): Response {
         $setting = $this->setting($currentRoute);
         if ($setting) {
-            $form = new SettingForm($setting);
+            $form = SettingForm::show($setting);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'setting/edit',
-                'actionArguments' => ['setting_id' => $setting->getSettingId()],
+                'actionArguments' => ['setting_id' => $setting->reqSettingId()],
                 'alert' => $this->alert(),
                 'form' => $form,
                 'errors' => [],
@@ -656,12 +656,12 @@ final class SettingController extends BaseController
     public function view(CurrentRoute $currentRoute): \Psr\Http\Message\ResponseInterface
     {
         $setting = $this->setting($currentRoute);
-        if ($setting) {
-            $form = new SettingForm($setting);
+        if (null!==$setting) {
+            $form = SettingForm::show($setting);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'setting/view',
-                'actionArguments' => ['setting_id' => $setting->getSettingId()],
+                'actionArguments' => ['setting_id' => $setting->reqSettingId()],
                 'setting' => $setting,
                 'form' => $form,
             ];
@@ -671,17 +671,13 @@ final class SettingController extends BaseController
     }
 
     /**
-     * @param CurrentRoute $currentRoute
+     * @param CurrentRoute $currR
      * @return Setting|null
      */
     private function setting(
-        CurrentRoute $currentRoute,
+        CurrentRoute $currR,
     ): ?Setting {
-        $setting_id = $currentRoute->getArgument('setting_id');
-        if (null !== $setting_id) {
-            return $this->sR->repoSettingquery($setting_id);
-        }
-        return null;
+        return $this->sR->repoSettingquery((int) $currR->getArgument('setting_id'));
     }
 
     /**

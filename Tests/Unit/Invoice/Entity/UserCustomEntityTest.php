@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Invoice\Entity;
 
 use App\Infrastructure\Persistence\UserCustom\UserCustom;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use PHPUnit\Framework\TestCase;
 
 class UserCustomEntityTest extends TestCase
@@ -13,7 +13,7 @@ class UserCustomEntityTest extends TestCase
     public function testIsPersistedReturnsFalseWhenIdIsNull(): void
     {
         $userCustom = new UserCustom();
-        $this->assertFalse($userCustom->isPersisted());
+        $this->assertFalse($userCustom->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -33,8 +33,8 @@ class UserCustomEntityTest extends TestCase
         );
 
         $this->assertSame(1, $userCustom->reqId());
-        $this->assertTrue($userCustom->isPersisted());
-        $this->assertSame(10, $userCustom->getUserId());
+        $this->assertTrue($userCustom->hasIdentity());
+        $this->assertSame(10, $userCustom->reqUserId());
         $this->assertSame(5, $userCustom->getFieldid());
         $this->assertSame('custom value', $userCustom->getFieldvalue());
     }
@@ -42,7 +42,6 @@ class UserCustomEntityTest extends TestCase
     public function testConstructorWithDefaults(): void
     {
         $userCustom = new UserCustom();
-        $this->assertNull($userCustom->getUserId());
         $this->assertNull($userCustom->getFieldid());
         $this->assertSame('', $userCustom->getFieldvalue());
         $this->assertNull($userCustom->getUser());
@@ -51,9 +50,9 @@ class UserCustomEntityTest extends TestCase
     public function testSetIdUpdatesPersistedState(): void
     {
         $userCustom = new UserCustom();
-        $this->assertFalse($userCustom->isPersisted());
+        $this->assertFalse($userCustom->hasIdentity());
         $userCustom->setId(50);
-        $this->assertTrue($userCustom->isPersisted());
+        $this->assertTrue($userCustom->hasIdentity());
         $this->assertSame(50, $userCustom->reqId());
     }
 
@@ -61,7 +60,7 @@ class UserCustomEntityTest extends TestCase
     {
         $userCustom = new UserCustom();
         $userCustom->setUserId(99);
-        $this->assertSame(99, $userCustom->getUserId());
+        $this->assertSame(99, $userCustom->reqUserId());
     }
 
     public function testFieldidSetterAndGetter(): void

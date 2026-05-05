@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvCustom;
 
-use App\Invoice\Entity\InvCustom;
+use App\Infrastructure\Persistence\{
+    InvCustom\InvCustom
+};
 use Yiisoft\FormModel\FormModel;
 
 final class InvCustomForm extends FormModel
@@ -13,11 +15,13 @@ final class InvCustomForm extends FormModel
     private ?int $custom_field_id = null;
     private ?string $value = '';
 
-    public function __construct(InvCustom $invCustom)
+    public static function show(InvCustom $invCustom, int $inv_id): self
     {
-        $this->inv_id = (int) $invCustom->getInvId();
-        $this->custom_field_id = (int) $invCustom->getCustomFieldId();
-        $this->value = $invCustom->getValue();
+        $form = new self();
+        $form->inv_id = $inv_id;
+        $form->custom_field_id = $invCustom->reqCustomFieldId();
+        $form->value = $invCustom->getValue();
+        return $form;
     }
 
     public function getInvId(): ?int

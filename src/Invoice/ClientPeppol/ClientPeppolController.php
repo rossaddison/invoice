@@ -234,7 +234,7 @@ final class ClientPeppolController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'clientpeppol/edit',
-                'actionArguments' => ['client_id' => $clientpeppol->getClientId()],
+                'actionArguments' => ['client_id' => $clientpeppol->reqClientId()],
                 'buttons' => $this->webViewRenderer->renderPartialAsString(
                     '//invoice/layout/header_buttons',
                     ['hide_submit_button' => false, 'hide_cancel_button' => false],
@@ -247,7 +247,7 @@ final class ClientPeppolController extends BaseController
                 'defaults' =>
                     $this->sR->getSetting('enable_client_peppol_defaults') == '1'
                         ? true : false,
-                'client_id' => $clientpeppol->getClientId(),
+                'client_id' => $clientpeppol->reqClientId(),
                 'receiver_identifier_array' =>
                     StoreCoveArrays::storeCoveReceiverIdentifierArray(),
                 'electronic_address_scheme' =>
@@ -305,12 +305,8 @@ final class ClientPeppolController extends BaseController
     private function clientpeppol(CurrentRoute $currentRoute,
             ClientPeppolRepository $clientpeppolRepository): ?ClientPeppol
     {
-        $client_id = $currentRoute->getArgument('client_id');
-        if (null !== $client_id) {
-            return $clientpeppolRepository->repoClientPeppolLoadedquery(
-                $client_id);
-        }
-        return null;
+        $client_id = (int) $currentRoute->getArgument('client_id');
+        return $clientpeppolRepository->repoClientPeppolLoadedquery($client_id);
     }
 
     /**

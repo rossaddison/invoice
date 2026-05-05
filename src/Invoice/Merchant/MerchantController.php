@@ -6,7 +6,7 @@ namespace App\Invoice\Merchant;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\Merchant;
+use App\Infrastructure\Persistence\Merchant\Merchant;
 use App\Invoice\Inv\InvRepository;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
@@ -69,7 +69,7 @@ final class MerchantController extends BaseController
         InvRepository $invRepository,
     ): Response {
         $merchant = new Merchant();
-        $form = new MerchantForm($merchant);
+        $form = new MerchantForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'merchant/add',
@@ -110,11 +110,11 @@ final class MerchantController extends BaseController
     ): Response {
         $merchant = $this->merchant($currentRoute, $merchantRepository);
         if ($merchant) {
-            $form = new MerchantForm($merchant);
+            $form = MerchantForm::show($merchant);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'merchant/edit',
-                'actionArguments' => ['id' => $merchant->getId()],
+                'actionArguments' => ['id' => $merchant->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'invs' => $invRepository->findAllPreloaded(),
@@ -164,11 +164,11 @@ final class MerchantController extends BaseController
     ): \Psr\Http\Message\ResponseInterface {
         $merchant = $this->merchant($currentRoute, $merchantRepository);
         if ($merchant) {
-            $form = new MerchantForm($merchant);
+            $form = MerchantForm::show($merchant);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'merchant/view',
-                'actionArguments' => ['id' => $merchant->getId()],
+                'actionArguments' => ['id' => $merchant->reqId()],
                 'form' => $form,
                 'invs' => $invRepository->findAllPreloaded(),
             ];
@@ -208,11 +208,8 @@ final class MerchantController extends BaseController
      */
     private function merchant(CurrentRoute $currentRoute, MerchantRepository $merchantRepository): ?Merchant
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $merchantRepository->repoMerchantquery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $merchantRepository->repoMerchantquery($id);
     }
 
     /**

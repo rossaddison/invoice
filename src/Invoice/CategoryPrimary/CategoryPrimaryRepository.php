@@ -73,7 +73,7 @@ final class CategoryPrimaryRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoCategoryPrimaryQuery(string $id): ?CategoryPrimary
+    public function repoCategoryPrimaryQuery(int $id): ?CategoryPrimary
     {
         $query = $this->select()
                       ->where(['id' => $id]);

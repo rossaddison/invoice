@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\User;
 
+use App\Infrastructure\Persistence\User\User;
+
 final class RecoveryCodeService
 {
     public function __construct(private RecoveryCodeRepository $repository)

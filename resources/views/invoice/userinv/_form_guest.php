@@ -10,7 +10,7 @@ use Yiisoft\Html\Tag\Form;
 /**
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\UserInv\UserInvForm $form
- * @var App\User\User $user
+ * @var App\Infrastructure\Persistence\User\User $user
  * @var App\User\UserRepository $uR
  * @var App\Widget\Button $button
  * @var Yiisoft\Aliases\Aliases $aliases

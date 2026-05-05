@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see id="modal-change-client" triggered by <a href="#modal-change-client"> inv\view
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $clients
@@ -48,7 +48,7 @@ declare(strict_types=1);
                                 <?php } ?>
                         </select>
                     </div>
-                    <input class="hidden" id="inv_id" value="<?= $inv->getId(); ?>">
+                    <input class="hidden" id="inv_id" value="<?= $inv->reqId(); ?>">
                 </form>
             </div>
             <div class="modal-footer">

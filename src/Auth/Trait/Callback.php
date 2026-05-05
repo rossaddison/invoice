@@ -7,7 +7,7 @@ namespace App\Auth\Trait;
 use App\Auth\Permissions;
 use App\Auth\TokenRepository;
 use App\Invoice\UserInv\UserInvRepository;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -139,7 +139,7 @@ trait Callback
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
-            $userId = $user->getId();
+            $userId = $user->reqId();
             if ($userId > 0) {
                 $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
@@ -284,7 +284,7 @@ trait Callback
                 }
                 $user = new User($login, $email, $password);
                 $uR->save($user);
-                $userId = $user->getId();
+                $userId = $user->reqId();
                 if ($userId > 0) {
                     $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
                     if (!$this->assignRoleAndVerify($userId, $role)) {
@@ -431,7 +431,7 @@ trait Callback
                 }
                 $user = new User($login, $email, $password);
                 $uR->save($user);
-                $userId = $user->getId();
+                $userId = $user->reqId();
                 if ($userId > 0) {
                     $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
                     if (!$this->assignRoleAndVerify($userId, $role)) {
@@ -554,7 +554,7 @@ trait Callback
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
-            $userId = $user->getId();
+            $userId = $user->reqId();
             if ($userId > 0) {
                 $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
                 if (!$this->assignRoleAndVerify($userId, $role)) {
@@ -658,7 +658,7 @@ trait Callback
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
-            $userId = $user->getId();
+            $userId = $user->reqId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user id
                 //  of 1 ... and assign the first signed-up user
@@ -781,7 +781,7 @@ trait Callback
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
-            $userId = $user->getId();
+            $userId = $user->reqId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user id
                 //  of 1 ... and assign the first signed-up user
@@ -908,7 +908,7 @@ trait Callback
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
-            $userId = $user->getId();
+            $userId = $user->reqId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user id of 1
                 //  ... and assign the first signed-up user ... admin rights
@@ -1101,7 +1101,7 @@ trait Callback
                 }
                 $user = new User($login, $email, $password);
                 $uR->save($user);
-                $userId = $user->getId();
+                $userId = $user->reqId();
                 if ($userId > 0) {
                     $role = $uR->repoCount() == 1 ? 'admin' : 'observer';
                     if (!$this->assignRoleAndVerify($userId, $role)) {
@@ -1281,7 +1281,7 @@ trait Callback
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
-            $userId = $user->getId();
+            $userId = $user->reqId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user id
                 //  of 1 ... and assign the first signed-up user ... admin rights
@@ -1416,7 +1416,7 @@ trait Callback
             }
             $user = new User($login, $email, $password);
             $uR->save($user);
-            $userId = $user->getId();
+            $userId = $user->reqId();
             if ($userId > 0) {
                 // avoid autoincrement issues and using predefined user
                 //  id of 1 ... and assign the first signed-up user ...
@@ -1489,7 +1489,7 @@ public function tfaCheckBeforeRedirects(
         . ' userId: ' . var_export($userId, true));
 
     if (null !== $userId) {
-        $userInv = $uiR->repoUserInvUserIdquery($userId);
+        $userInv = $uiR->repoUserInvUserIdquery((int) $userId);
 
         $this->logger->log(LogLevel::DEBUG,
             'tfaCheck — userInv found: ' . var_export($userInv !== null, true));
@@ -1540,22 +1540,22 @@ public function tfaCheckBeforeRedirects(
      * allowing the user to proceed into the application with no role assigned,
      * which would result in a 403 on every subsequent request.
      *
-     * @param string $userId
+     * @param int $userId
      * @param string $role e.g. 'admin' or 'observer'
      * @return bool True if assignment persisted, false if it failed silently
      */
     private function assignRoleAndVerify(
-        string $userId,
+        int $userId,
         string $role,
     ): bool {
-        $this->manager->revokeAll($userId);
-        $this->manager->assign($role, $userId); 
+        $this->manager->revokeAll((string) $userId);
+        $this->manager->assign($role, (string) $userId); 
  
-        $roles = $this->manager->getRolesByUserId($userId);
+        $roles = $this->manager->getRolesByUserId((string) $userId);
         if (empty($roles)) {
             $this->logger->log(
                 LogLevel::ERROR,
-                'RBAC assignment failed to persist for userId: ' . $userId
+                'RBAC assignment failed to persist for userId: ' . (string) $userId
                     . ' role: ' . $role
                     . ' — check file ownership of resources/rbac/assignments.php'
             );

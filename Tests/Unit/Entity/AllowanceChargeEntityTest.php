@@ -23,7 +23,7 @@ class AllowanceChargeEntityTest extends Unit
     {
         $allowanceCharge = new AllowanceCharge();
         
-        $this->assertFalse($allowanceCharge->isPersisted());
+        $this->assertFalse($allowanceCharge->hasIdentity());
         $this->assertFalse($allowanceCharge->getIdentifier());
         $this->assertSame(0, $allowanceCharge->getLevel());
         $this->assertSame('', $allowanceCharge->getReasonCode());
@@ -58,7 +58,7 @@ class AllowanceChargeEntityTest extends Unit
             2
         );
         
-        $this->assertTrue($allowanceCharge->isPersisted());
+        $this->assertTrue($allowanceCharge->hasIdentity());
         $this->assertSame(1, $allowanceCharge->reqId());
         $this->assertTrue($allowanceCharge->getIdentifier());
         $this->assertSame(1, $allowanceCharge->getLevel());
@@ -75,7 +75,7 @@ class AllowanceChargeEntityTest extends Unit
         $allowanceCharge = new AllowanceCharge();
         
         $allowanceCharge->setId(123);
-        $this->assertTrue($allowanceCharge->isPersisted());
+        $this->assertTrue($allowanceCharge->hasIdentity());
         $this->assertSame(123, $allowanceCharge->reqId());
         
         $allowanceCharge->setId(456);
@@ -184,14 +184,14 @@ class AllowanceChargeEntityTest extends Unit
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $allowanceCharge = new AllowanceCharge();
-        $this->assertFalse($allowanceCharge->isPersisted());
+        $this->assertFalse($allowanceCharge->hasIdentity());
     }
 
     public function testIsPersistedReturnsTrueAfterSetId(): void
     {
         $allowanceCharge = new AllowanceCharge();
         $allowanceCharge->setId(1);
-        $this->assertTrue($allowanceCharge->isPersisted());
+        $this->assertTrue($allowanceCharge->hasIdentity());
     }
 
     public function testReasonCodeFormats(): void
@@ -288,7 +288,7 @@ class AllowanceChargeEntityTest extends Unit
         $allowanceCharge->setTaxRateId(1);
         $allowanceCharge->setTaxrate($this->taxRate);
         
-        $this->assertTrue($allowanceCharge->isPersisted());
+        $this->assertTrue($allowanceCharge->hasIdentity());
         $this->assertSame(1, $allowanceCharge->reqId());
         $this->assertTrue($allowanceCharge->getIdentifier());
         $this->assertSame(0, $allowanceCharge->getLevel());

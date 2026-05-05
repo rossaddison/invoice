@@ -7,7 +7,7 @@ namespace App\Invoice\Task;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Infrastructure\Persistence\Task\Task;
-use App\Invoice\Entity\InvItem;
+use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
@@ -263,7 +263,7 @@ final class TaskController extends BaseController
                 $iiaR, $iiR, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateInv((string) $this->session->get('inv_id'), $aciR,
+        $numberHelper->calculateInv((int) $this->session->get('inv_id'), $aciR,
             $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
         return $this->factory->createResponse(Json::encode($tasks));
     }
@@ -283,7 +283,7 @@ final class TaskController extends BaseController
             FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
-        $form = new InvItemForm($invItem, $inv_id);
+        $form = new InvItemForm();
         $ajax_content = [
             'name' => $task->getName(),
             'inv_id' => $inv_id,
@@ -409,7 +409,7 @@ final class TaskController extends BaseController
                 'actionArguments' => ['id' => $task->reqId()],
                 'errors' => [],
                 'form' => $taskForm,
-                'task' => $tR->repoTaskquery((string) $task->reqId()),
+                'task' => $tR->repoTaskquery($task->reqId()),
                 'taxRates' => $trR->optionsDataTaxRates(),
                 'projects' => $pR->optionsDataProjects(),
             ];
@@ -438,11 +438,7 @@ final class TaskController extends BaseController
      */
     private function task(CurrentRoute $currentRoute, tR $tR): ?Task
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $tR->repoTaskquery($id);
-        }
-        return null;
+        return $tR->repoTaskquery((int) $currentRoute->getArgument('id'));
     }
 
     /**

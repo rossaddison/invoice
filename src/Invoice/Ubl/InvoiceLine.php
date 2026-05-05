@@ -38,7 +38,7 @@ class InvoiceLine implements XmlSerializable
     /**
      * @return string
      */
-    public function getId(): string
+    public function reqId(): string
     {
         return $this->id;
     }

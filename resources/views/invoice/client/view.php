@@ -53,7 +53,7 @@ use Yiisoft\Html\Tag\Input;
  * @var string $title
  */
 
-$clientId = (string) $client->reqId();
+$clientId = $client->reqId();
 
 echo H::tag('h1', H::encode($title));
 
@@ -73,30 +73,30 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
     ->encode(false)
     ->addAttributes(['class' => 'btn btn-outline-success', 'data-bs-toggle' => 'modal', 'style' => 'text-decoration:none'])
     ->render();
-   if ($cpR->repoClientCount($clientId) === 0 && strlen($clientId) > 0) {
+   if ($cpR->repoClientCount($clientId) === 0 && ($clientId > 0)) {
     echo (new A())
      ->content(H::tag('i', '', ['class' => 'bi bi-plus']) . ' ' . $translator->translate('client.peppol.add'))
-     ->href($urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $client->reqId()]))
+     ->href($urlGenerator->generate('clientpeppol/add', ['_language' => 'en', 'client_id' => $clientId]))
      ->encode(false)
      ->addAttributes(['class' => 'btn btn-outline-info', 'style' => 'text-decoration:none'])
      ->render();
    }
-   if ($cpR->repoClientCount($clientId) > 0 && strlen($clientId) > 0) {
+   if ($cpR->repoClientCount($clientId) > 0 && ($clientId > 0)) {
     echo (new A())
      ->content(H::tag('i', '', ['class' => 'bi bi-pencil-square']) . ' ' . $translator->translate('client.peppol.edit'))
-     ->href($urlGenerator->generate('clientpeppol/edit', ['client_id' => $client->reqId()]))
+     ->href($urlGenerator->generate('clientpeppol/edit', ['client_id' => $clientId]))
      ->encode(false)
      ->addAttributes(['class' => 'btn btn-outline-warning', 'style' => 'text-decoration:none'])
      ->render();
    }
-   $clientIdEdit = $client->reqId();
+   $clientIdEdit = $clientId;
    echo (new A())
     ->content(H::tag('i', '', ['class' => 'bi bi-pencil-square']) . $translator->translate('edit'))
     ->href($urlGenerator->generate('client/edit', ['id' => $clientIdEdit, 'origin' => 'edit']))
     ->encode(false)
     ->addAttributes(['class' => 'btn btn-outline-warning', 'style' => 'text-decoration:none'])
     ->render();
-   $clientIdPostalAdd = $client->reqId();
+   $clientIdPostalAdd = $clientId;
    echo (new A())
     ->content(H::tag('i', '', ['class' => 'bi bi-plus']) . $translator->translate('client.postaladdress.add'))
     ->href($urlGenerator->generate(
@@ -118,7 +118,7 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
     ->encode(false)
     ->addAttributes(['class' => 'btn btn-outline-primary', 'style' => 'text-decoration:none'])
     ->render();
-   $clientIdDelAdd = $client->reqId();
+   $clientIdDelAdd = $clientId;
    echo (new A())
     ->content(H::tag('i', '', ['class' => 'bi bi-plus']) . $translator->translate('delivery.location.add'))
     ->href($urlGenerator->generate(
@@ -132,7 +132,7 @@ echo H::openTag('div', ['id' => 'headerbar']); //0
     ->render();
    echo (new A())
     ->content(H::tag('i', '', ['class' => 'bi bi-trash']) . ' ' . $translator->translate('delete'))
-    ->href($urlGenerator->generate('client/delete', ['id' => $client->reqId()]))
+    ->href($urlGenerator->generate('client/delete', ['id' => $clientId]))
     ->encode(false)
     ->addAttributes([
      'class' => 'btn btn-outline-danger',
@@ -229,21 +229,21 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
       echo H::closeTag('tr'); //6
       echo H::openTag('tr'); //6
        echo H::tag('th', $translator->translate('total.billed'), ['id' => 'total-billed']);
-       $clientIdTotal = $client->reqId();
+       $clientIdTotal = $clientId;
        echo H::tag('td', $s->formatCurrency($iR->withTotal($clientIdTotal, $iaR)),
         ['class' => 'td-amount']
        );
       echo H::closeTag('tr'); //6
       echo H::openTag('tr'); //6
        echo H::tag('th', $translator->translate('total.paid'), ['id' => 'total-paid']);
-       $clientIdPaid = $client->reqId();
+       $clientIdPaid = $clientId;
        echo H::tag('td', $s->formatCurrency($iR->withTotalPaid($clientIdPaid, $iaR)),
         ['class' => 'td-amount']
        );
       echo H::closeTag('tr'); //6
       echo H::openTag('tr'); //6
        echo H::tag('th', $translator->translate('total.balance'), ['id' => 'total-balance']);
-       $clientIdBalance = $client->reqId();
+       $clientIdBalance = $clientId;
        echo H::tag('td', $s->formatCurrency($iR->withTotalBalance($clientIdBalance, $iaR)),
         ['class' => 'td-amount']
        );
@@ -442,7 +442,7 @@ echo H::openTag('div', ['id' => 'content', 'class' => 'tabbable tabs-below no-pa
        echo H::openTag('div', ['id' => 'notes_list']); //7
         echo $partial_notes;
        echo H::closeTag('div'); //7
-       echo new Input()->type('hidden')->name('client_id')->id('client_id')->value((string) $client->reqId());
+       echo new Input()->type('hidden')->name('client_id')->id('client_id')->value((string) $clientId);
        echo H::openTag('div', ['class' => 'input-group']); //7
         echo H::openTag('textarea', [
          'id' => 'client_note',
@@ -516,7 +516,7 @@ echo H::closeTag('div'); //0
  * Related logic: see ClientController/view function 'client_modal_layout_quote' => [ .... ]
  * Related logic: see views\invoice\quote\modal_layout.php
  * Related logic: see views\invoice\quote\modal_add_quote_form.php contained in above file.
- * Note: 'action' is equivalent to $urlGenerator->generate('quote/add', [], ['origin' => $client->reqId() or 'quote' or 'main'])
+ * Note: 'action' is equivalent to $urlGenerator->generate('quote/add', [], ['origin' => $clientId or 'quote' or 'main'])
  * Note: If origin is a client number, quote/add/{origin} route will return to url client/view/{origin}
  * Note: If origin is 'quote', quote/add/{origin} route will return to url quote/index
  * Note: If origin is 'main', quote/add/{origin} route will return to url invoice/

@@ -55,7 +55,7 @@ final class DeliveryLocationForm extends FormModel
         $form = new self();
         $form->date_created = $del->getDateCreated();
         $form->date_modified = $del->getDateModified();
-        $form->client_id = (string) $del->getClientId();
+        $form->client_id = (string) $del->reqClientId();
         $form->name = $del->getName();
         $form->building_number = $del->getBuildingNumber();
         $form->address_1 = $del->getAddress1();

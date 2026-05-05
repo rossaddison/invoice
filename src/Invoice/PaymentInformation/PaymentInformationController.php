@@ -12,11 +12,11 @@ use App\Invoice\Company\CompanyRepository as compR;
 use App\Invoice\CompanyPrivate\CompanyPrivateRepository as cPR;
 use App\Infrastructure\Persistence\Company\Company;
 use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\Merchant;
-use App\Invoice\Entity\Payment;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\Merchant\Merchant;
+use App\Infrastructure\Persistence\Payment\Payment;
 // Libraries
 use App\Invoice\Helpers\DateHelper;
 // Psr
@@ -178,7 +178,7 @@ final class PaymentInformationController
             'balance'                => $balance,
             'client_chosen_gateway'  => $client_chosen_gateway,
             'client_on_invoice'      =>
-                                 $cR->repoClientquery((int) $invoice->getClientId()),
+                                 $cR->repoClientquery($invoice->reqClientId()),
             'disable_form'           => $disable_form,
             'invoice'                => $invoice,
             'inv_url_key'            => $url_key,
@@ -188,7 +188,7 @@ final class PaymentInformationController
             'partial_client_address' =>
                                      $this->webViewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address',
-                ['client' => $cR->repoClientquery((int) $invoice->getClientId())],
+                ['client' => $cR->repoClientquery($invoice->reqClientId())],
             ),
             'payment_method' => $payment_method_for_this_invoice,
             'provider'       => $provider,
@@ -469,28 +469,28 @@ final class PaymentInformationController
                 $d                 = strtolower($client_chosen_gateway);
                 // initialize disable_form variable
                 $disable_form = false;
-                $invoice      = $this->iR->repoUrlKeyGuestLoaded($url_key);
+                $invoice = $this->iR->repoUrlKeyGuestLoaded($url_key);
                 if (null == $invoice) {
                     return $this->webService->getNotFoundResponse();
                 }
-                $invoice_id = $invoice->getId();
+                $invoice_id = $invoice->reqId();
                 // Json encode items
                 /** @psalm-suppress PossiblyNullArgument $invoice_id */
                 $items       = $iiR->repoInvquery($invoice_id);
                 $items_array = [];
                 /** @var InvItem $item */
                 foreach ($items as $item) {
-                    $items_array[] = (string) $item->getId()
+                    $items_array[] = (string) $item->reqId()
                                                 . ' ' . ($item->getName() ?? '');
                 }
-                $invoice_amount_record = $this->iaR->repoInvquery((int) $invoice_id);
+                $invoice_amount_record = $this->iaR->repoInvquery($invoice_id);
                 if (null !== $invoice_amount_record) {
                     $balance = $invoice_amount_record->getBalance();
                     $total   = $invoice_amount_record->getTotal();
                     $yii_invoice_array = [
                         'id'          => $invoice_id,
                         'balance'     => $balance,
-                        'customer_id' => $invoice->getClientId(),
+                        'customer_id' => $invoice->reqClientId(),
                         'customer'    =>
                         ($invoice->getClient()?->getClientName() ?? '')
                         . ' ' . ($invoice->getClient()?->getClientSurname() ?? ''),
@@ -519,8 +519,7 @@ final class PaymentInformationController
                     // it is only used to display the prior payment method in
                     // the form — fall back to '' when absent.
                     $payment_method_for_this_invoice =
-                        $pmR->repoPaymentMethodquery(
-                                        (string) $invoice->getPaymentMethod());
+                        $pmR->repoPaymentMethodquery((int) $invoice->getPaymentMethod());
                     $is_overdue = ($balance > 0.00
                             && strtotime(
                                     $invoice->getDateDue()->format('Y-m-d'))
@@ -537,7 +536,7 @@ final class PaymentInformationController
                             $balance,
                             $cR,
                             $invoice,
-                            (int) $invoice_id,
+                            $invoice_id,
                             $items_array,
                             $yii_invoice_array,
                             $disable_form,
@@ -705,7 +704,7 @@ final class PaymentInformationController
             'amazonPayButton'        => $amazonPayButton,
             'balance'                => $balance,
             'client_chosen_gateway'  => $client_chosen_gateway,
-            'client_on_invoice'      => $cR->repoClientquery((int) $invoice->getClientId()),
+            'client_on_invoice'      => $cR->repoClientquery($invoice->reqClientId()),
             'crypt'                  => $this->sR,
             'disable_form'           => $disable_form,
             'invoice'                => $invoice,
@@ -716,7 +715,7 @@ final class PaymentInformationController
             'partial_client_address' => $this->webViewRenderer
                 ->renderPartialAsString(
                     '//invoice/client/partial_client_address',
-                    ['client' => $cR->repoClientquery((int) $invoice->getClientId())],
+                    ['client' => $cR->repoClientquery($invoice->reqClientId())],
                 ),
             'payment_method' => $payment_method_for_this_invoice,
             'return_url'     => ['paymentinformation/amazonComplete',
@@ -775,7 +774,7 @@ final class PaymentInformationController
             'return_url'             => ['paymentinformation/braintree_complete', ['url_key' => $url_key]],
             'balance'                => $balance,
             'body'                   => $request->getParsedBody() ?? [],
-            'client_on_invoice'      => $cR->repoClientquery((int) $invoice->getClientId()),
+            'client_on_invoice'      => $cR->repoClientquery($invoice->reqClientId()),
             'json_encoded_items'     => Json::encode($items_array),
             'client_token'           => $clientToken,
             'disable_form'           => $disable_form,
@@ -786,7 +785,7 @@ final class PaymentInformationController
             'partial_client_address' => $this->webViewRenderer
                 ->renderPartialAsString(
                     '//invoice/client/partial_client_address',
-                    ['client' => $cR->repoClientquery((int) $invoice->getClientId())],
+                    ['client' => $cR->repoClientquery($invoice->reqClientId())],
                 ),
             'payment_method' => $payment_method_for_this_invoice,
             'total'          => $total,
@@ -815,7 +814,7 @@ final class PaymentInformationController
 
                 /** @var InvAmount $invoice_amount_record */
                 $invoice_amount_record =
-                        $this->iaR->repoInvquery((int) $invoice->getId());
+                        $this->iaR->repoInvquery($invoice->reqId());
                 if (null !== $invoice_amount_record->getTotal()) {
                     // The invoice amount has been paid => balance on the
                     //  invoice is zero and the paid amount is full
@@ -968,7 +967,7 @@ final class PaymentInformationController
             'return_url'                 => ['inv/urlKey', ['url_key' => $url_key]],
             'balance'                    => $balance,
             'client_on_invoice'          =>
-                $cR->repoClientquery((int) $invoice->getClientId()),
+                $cR->repoClientquery($invoice->reqClientId()),
             'pci_client_publishable_key' =>
                 $this->sR->decode($this->sR->getSetting(
                         'gateway_mollie_publishableKey')),
@@ -983,7 +982,7 @@ final class PaymentInformationController
                 $this->webViewRenderer->renderPartialAsString(
                 '//invoice/client/partial_client_address',
                 [
-                    'client' => $cR->repoClientquery((int) $invoice->getClientId()),
+                    'client' => $cR->repoClientquery($invoice->reqClientId()),
                 ],
             ),
             'payment_methods'        => $mollieClient->methods->allEnabled(),
@@ -1128,9 +1127,9 @@ final class PaymentInformationController
                             'online.payment.payment.successful'),
                                 (string) $invoiceNumber);
                     $this->iR->save($invoice);
-                    /** @var int $invoice->getId() */
+                    /** @var int $invoice->reqId() */
                     $invoice_amount_record = $this->iaR->repoInvquery(
-                                                        (int) $invoice->getId());
+                                                        $invoice->reqId());
                     /** @var InvAmount $invoice_amount_record */
                     $balance = $invoice_amount_record->getBalance();
                     if (null !== $balance) {
@@ -1143,7 +1142,7 @@ final class PaymentInformationController
                         $this->recordOnlinePaymentsAndMerchant(
                             // Reference
                             (string) $invoiceNumber . '-' . $lastPayment->status,
-                            $invoice_amount_record->getInvId(),
+                            (string) $invoice_amount_record->reqInvId(),
                             $balance > 0.00 ? $balance : 0.00,
                             // Card / Direct Debit - Customer Ready => 6
                             $payment_method,
@@ -1250,7 +1249,7 @@ final class PaymentInformationController
                 ['paymentinformation/stripe_complete', ['url_key' => $url_key]],
             'balance'                    => $balance,
             'client_on_invoice'          =>
-                $cR->repoClientquery((int) $invoice->getClientId()),
+                $cR->repoClientquery($invoice->reqClientId()),
             'pci_client_publishable_key' => $publishableKey,
             'json_encoded_items'         => Json::encode($items_array),
             'client_secret'              => $clientSecret,
@@ -1262,7 +1261,7 @@ final class PaymentInformationController
             'partial_client_address'     => $this->webViewRenderer
                 ->renderPartialAsString(
                     '//invoice/client/partial_client_address',
-                    ['client' => $cR->repoClientquery((int) $invoice->getClientId())],
+                    ['client' => $cR->repoClientquery($invoice->reqClientId())],
                 ),
             'payment_method' => $payment_method_for_this_invoice ?: 'None',
             'total'          => $total,
@@ -1297,8 +1296,8 @@ final class PaymentInformationController
             $invoice->setStatusId((int) $result['status_id']);
             $invoice->setPaymentMethod(4);
             $this->iR->save($invoice);
-            /** @var int $invoice->getId() */
-            $invoice_amount_record = $this->iaR->repoInvquery((int) $invoice->getId());
+            /** @var int $invoice->reqId() */
+            $invoice_amount_record = $this->iaR->repoInvquery($invoice->reqId());
             /** @var InvAmount $invoice_amount_record */
             $balance = $invoice_amount_record->getBalance();
             if (null !== $balance) {
@@ -1311,7 +1310,7 @@ final class PaymentInformationController
                 $this->recordOnlinePaymentsAndMerchant(
                     // Reference
                     (string) $invoiceNumber . '-' . $redirect_status_from_stripe,
-                    $invoice_amount_record->getInvId(),
+                    (string) $invoice_amount_record->reqInvId(),
                     $balance ?: 0.00,
                     // Card / Direct Debit - Customer Ready => 6
                     (int) $result['payment_method'],
@@ -1510,7 +1509,7 @@ final class PaymentInformationController
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompanyId() == (string) $company->reqId()) {
+                    if ($private->reqCompanyId() === $company->reqId()) {
                         $companyLogoFileName = $private->getLogoFilename();
                         $companyLogoWidth = $private->getLogoWidth() ?? 0;
                         $companyLogoHeight = $private->getLogoHeight() ?? 0;

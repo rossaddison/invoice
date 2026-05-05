@@ -39,7 +39,7 @@ class TaxCategory implements XmlSerializable
     /**
      * @return string|null
      */
-    public function getId(): ?string
+    public function reqId(): ?string
     {
         if (null !== $this->id) {
             return $this->id;
@@ -61,7 +61,7 @@ class TaxCategory implements XmlSerializable
      */
     public function validate(): void
     {
-        if ($this->getId() === null) {
+        if ($this->reqId() === null) {
             throw new InvalidArgumentException('Missing taxcategory id');
         }
 
@@ -81,7 +81,7 @@ class TaxCategory implements XmlSerializable
         $writer->write([
             [
                 'name' => Schema::CBC . 'ID',
-                'value' => $this->getId(),
+                'value' => $this->reqId(),
                 'attributes' => $this->idAttributes,
             ],
         ]);

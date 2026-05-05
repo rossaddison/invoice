@@ -28,8 +28,8 @@ final class DeliveryForm extends FormModel
         $form->start_date = $delivery->getStartDate();
         $form->actual_delivery_date = $delivery->getActualDeliveryDate();
         $form->end_date = $delivery->getEndDate();
-        $form->delivery_location_id = (int) $delivery->getDeliveryLocationId();
-        $form->delivery_party_id = (int) $delivery->getDeliveryPartyId();
+        $form->delivery_location_id = $delivery->hasDeliveryLocationId() ? $delivery->reqDeliveryLocationId() : null;
+        $form->delivery_party_id = $delivery->hasDeliveryPartyId() ? $delivery->reqDeliveryPartyId() : null;
         $form->inv_id = $delivery->getInvId();
         $form->inv_item_id = $delivery->getInvItemId();
         return $form;

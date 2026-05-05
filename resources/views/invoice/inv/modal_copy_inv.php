@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 /**
  * Related logic: see id="inv-to-inv" triggered by <a href="#inv-to-inv" data-bs-toggle="modal"  style="text-decoration:none">
  * Related logic: see InvController view function
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var array $clients
@@ -34,7 +34,7 @@ use Yiisoft\Html\Html;
                     <input type="hidden"
                            name="user_id"
                            id="user_id"
-                           value="<?= $inv->getUserId(); ?>">
+                           value="<?= $inv->reqUserId(); ?>">
                     <div class="form-group">
                         <label for="create_inv_client_id">
                             <?= $translator->translate('client'); ?>
@@ -42,8 +42,7 @@ use Yiisoft\Html\Html;
                         <select name="create_inv_client_id"
                                 id="create_inv_client_id"
                                 class="form-control form-control-lg">
-                            <option value="<?= $inv->getClient()?->reqId(); ?>">
-                        <?= $inv->getClient()?->getClientName() ?? '#'; ?></option>
+                            <option value="">⏳</option>
                                 <?php
 /**
 * @var App\Infrastructure\Persistence\Client\Client $client

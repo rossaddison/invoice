@@ -82,8 +82,7 @@ $columns = [
          */
         content: static function (Checkbox $input, DataContext $context): string {
             $family = $context->data;
-            if (($family instanceof Family)
-                    && (null !== ($id = $family->getFamilyId()))) {
+            if (($family instanceof Family) && (($id = $family->reqId()) > 0)) {
                 return  new Input()
                        ->type('checkbox')
                        ->addAttributes([
@@ -104,7 +103,7 @@ $columns = [
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn (Family $model) => Html::encode($model->getFamilyId()),
+        content: static fn (Family $model) => Html::encode($model->reqId()),
         withSorting: true,
     ),
     new DataColumn(
@@ -135,7 +134,7 @@ $columns = [
         'category_primary_id',
         header: $translator->translate('category.primary'),
         content: static function (Family $model) use ($cpR, $translator): string {
-            $categoryPrimaryId = $model->getCategoryPrimaryId();
+            $categoryPrimaryId = $model->reqCategoryPrimaryId();
             $categoryPrimary = $cpR->repoCategoryPrimaryQuery($categoryPrimaryId);
             return null !== $categoryPrimary ?
                     $categoryPrimary->getName() ?? $translator->translate('not.set')
@@ -146,7 +145,7 @@ $columns = [
         'category_secondary_id',
         header: $translator->translate('category.secondary'),
         content: static function (Family $model) use ($csR, $translator): string {
-            $categorySecondaryId = $model->getCategorySecondaryId();
+            $categorySecondaryId = $model->reqCategorySecondaryId();
             $categorySecondary = $csR->repoCategorySecondaryQuery($categorySecondaryId);
             return null !== $categorySecondary ?
                     $categorySecondary->getName() ?? $translator->translate('not.set')
@@ -158,7 +157,7 @@ $columns = [
             content: '🔎',
             url: static function (Family $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('family/view',
-                    ['id' => $model->getFamilyId()]);
+                    ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -169,7 +168,7 @@ $columns = [
             content: '✎',
             url: static function (Family $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('family/edit',
-                    ['id' => $model->getFamilyId()]);
+                    ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -180,7 +179,7 @@ $columns = [
             content: '❌',
             url: static function (Family $model) use ($urlGenerator): string {
                 return $urlGenerator->generate('family/delete',
-                    ['id' => $model->getFamilyId()]);
+                    ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

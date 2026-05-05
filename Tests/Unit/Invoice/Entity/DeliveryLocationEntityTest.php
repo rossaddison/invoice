@@ -27,8 +27,8 @@ class DeliveryLocationEntityTest extends TestCase
     {
         $deliveryLocation = new DeliveryLocation();
         
-        $this->assertNull($deliveryLocation->getId());
-        $this->assertSame(0, $deliveryLocation->getClientId());
+        $this->assertFalse($deliveryLocation->hasIdentity());
+        $this->assertSame(0, $deliveryLocation->reqClientId());
         $this->assertSame('', $deliveryLocation->getName());
         $this->assertSame('', $deliveryLocation->getBuildingNumber());
         $this->assertSame('', $deliveryLocation->getAddress1());
@@ -60,8 +60,8 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation->setGlobalLocationNumber($this->seqNumbers);
         $deliveryLocation->setElectronicAddressScheme('GLN');
         
-        $this->assertSame(1, $deliveryLocation->getId());
-        $this->assertSame(123, $deliveryLocation->getClientId());
+        $this->assertSame(1, $deliveryLocation->reqId());
+        $this->assertSame(123, $deliveryLocation->reqClientId());
         $this->assertSame($this->mainWarehouse, $deliveryLocation->getName());
         $this->assertSame('10A', $deliveryLocation->getBuildingNumber());
         $this->assertSame('123 Industrial Drive', $deliveryLocation->getAddress1());
@@ -79,7 +79,7 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         $deliveryLocation->setId(100);
         
-        $this->assertSame(100, $deliveryLocation->getId());
+        $this->assertSame(100, $deliveryLocation->reqId());
     }
 
     public function testClientIdSetterAndGetter(): void
@@ -87,7 +87,7 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         $deliveryLocation->setClientId(456);
         
-        $this->assertSame(456, $deliveryLocation->getClientId());
+        $this->assertSame(456, $deliveryLocation->reqClientId());
     }
 
     public function testNameSetterAndGetter(): void
@@ -179,13 +179,13 @@ class DeliveryLocationEntityTest extends TestCase
         $this->assertSame($client, $deliveryLocation->getClient());
     }
 
-    public function testIsPersisted(): void
+    public function testhasIdentity(): void
     {
         $deliveryLocation = new DeliveryLocation();
-        $this->assertFalse($deliveryLocation->isPersisted());
+        $this->assertFalse($deliveryLocation->hasIdentity());
         
         $deliveryLocation->setId(1);
-        $this->assertTrue($deliveryLocation->isPersisted());
+        $this->assertTrue($deliveryLocation->hasIdentity());
     }
 
     public function testDateTimeImmutableProperties(): void
@@ -293,16 +293,16 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         
         $deliveryLocation->setId(0);
-        $this->assertSame(0, $deliveryLocation->getId());
+        $this->assertSame(0, $deliveryLocation->reqId());
         
         $deliveryLocation->setId(999999);
-        $this->assertSame(999999, $deliveryLocation->getId());
+        $this->assertSame(999999, $deliveryLocation->reqId());
         
         $deliveryLocation->setClientId(0);
-        $this->assertSame(0, $deliveryLocation->getClientId());
+        $this->assertSame(0, $deliveryLocation->reqClientId());
 
         $deliveryLocation->setClientId(999999);
-        $this->assertSame(999999, $deliveryLocation->getClientId());
+        $this->assertSame(999999, $deliveryLocation->reqClientId());
     }
 
     public function testCompleteDeliveryLocationSetup(): void
@@ -324,8 +324,8 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation->setGlobalLocationNumber($this->seqNumbers);
         $deliveryLocation->setElectronicAddressScheme('GLN');
         
-        $this->assertSame(1, $deliveryLocation->getId());
-        $this->assertSame(123, $deliveryLocation->getClientId());
+        $this->assertSame(1, $deliveryLocation->reqId());
+        $this->assertSame(123, $deliveryLocation->reqClientId());
         $this->assertSame($client, $deliveryLocation->getClient());
         $this->assertSame('Complete Test Location', $deliveryLocation->getName());
         $this->assertSame('100', $deliveryLocation->getBuildingNumber());
@@ -337,7 +337,7 @@ class DeliveryLocationEntityTest extends TestCase
         $this->assertSame($this->testCountry, $deliveryLocation->getCountry());
         $this->assertSame($this->seqNumbers, $deliveryLocation->getGlobalLocationNumber());
         $this->assertSame('GLN', $deliveryLocation->getElectronicAddressScheme());
-        $this->assertTrue($deliveryLocation->isPersisted());
+        $this->assertTrue($deliveryLocation->hasIdentity());
     }
 
     public function testGetterMethodsConsistency(): void
@@ -356,8 +356,8 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation->setGlobalLocationNumber($this->seqNumbers);
         $deliveryLocation->setElectronicAddressScheme('GLN');
 
-        $this->assertIsInt($deliveryLocation->getId());
-        $this->assertIsInt($deliveryLocation->getClientId());
+        $this->assertIsInt($deliveryLocation->reqId());
+        $this->assertIsInt($deliveryLocation->reqClientId());
         $this->assertIsString($deliveryLocation->getName());
         $this->assertIsString($deliveryLocation->getBuildingNumber());
         $this->assertIsString($deliveryLocation->getAddress1());
@@ -405,8 +405,8 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation->setId(1);
         $deliveryLocation->setClientId(123);
 
-        $this->assertIsInt($deliveryLocation->getId());
-        $this->assertIsInt($deliveryLocation->getClientId());
+        $this->assertIsInt($deliveryLocation->reqId());
+        $this->assertIsInt($deliveryLocation->reqClientId());
         $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateCreated());
         $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateModified());
     }
@@ -416,17 +416,17 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation = new DeliveryLocation();
         
         $deliveryLocation->setId(-1);
-        $this->assertSame(-1, $deliveryLocation->getId());
+        $this->assertSame(-1, $deliveryLocation->reqId());
         
         $deliveryLocation->setClientId(-100);
-        $this->assertSame(-100, $deliveryLocation->getClientId());
+        $this->assertSame(-100, $deliveryLocation->reqClientId());
     }
 
     public function testDeliveryLocationWorkflow(): void
     {
         // Create new delivery location
         $deliveryLocation = new DeliveryLocation();
-        $this->assertFalse($deliveryLocation->isPersisted());
+        $this->assertFalse($deliveryLocation->hasIdentity());
         
         // Set basic information
         $deliveryLocation->setName('New Delivery Location');
@@ -435,16 +435,16 @@ class DeliveryLocationEntityTest extends TestCase
         $deliveryLocation->setZip($this->oneToFive);
         
         // Still new until ID is set
-        $this->assertFalse($deliveryLocation->isPersisted());
+        $this->assertFalse($deliveryLocation->hasIdentity());
         
         // Assign ID (simulating database save)
         $deliveryLocation->setId(1);
-        $this->assertTrue($deliveryLocation->isPersisted());
+        $this->assertTrue($deliveryLocation->hasIdentity());
         
         // Update location
         $deliveryLocation->setAddress1('456 Updated Street');
         $this->assertSame('456 Updated Street', $deliveryLocation->getAddress1());
-        $this->assertTrue($deliveryLocation->isPersisted());
+        $this->assertTrue($deliveryLocation->hasIdentity());
     }
 
     public function testTimezoneHandling(): void
@@ -462,7 +462,7 @@ class DeliveryLocationEntityTest extends TestCase
     {
         $deliveryLocation = new DeliveryLocation();
         
-        $this->assertFalse($deliveryLocation->isPersisted());
+        $this->assertFalse($deliveryLocation->hasIdentity());
         $this->assertNull($deliveryLocation->getClient());
         $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateCreated());
         $this->assertInstanceOf(DateTimeImmutable::class, $deliveryLocation->getDateModified());

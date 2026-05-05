@@ -79,16 +79,16 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return CustomValue|null
      */
-    public function repoCustomValuequery(string $id): ?CustomValue
+    public function repoCustomValuequery(int $id): ?CustomValue
     {
         $query = $this->select()->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoCustomValueDropDown(string $id, string $customFieldId): ?CustomValue
+    public function repoCustomValueDropDown(int $id, int $customFieldId): ?CustomValue
     {
         $query = $this->select()
                       ->where(['id' => $id])
@@ -97,10 +97,10 @@ final class CustomValueRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         return $this->select()
                       ->where(['id' => $id])

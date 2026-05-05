@@ -14,7 +14,7 @@ class QuoteAllowanceChargeEntityTest extends TestCase
     public function testIsPersistedReturnsFalseWhenIdIsNull(): void
     {
         $qac = new QuoteAllowanceCharge();
-        $this->assertFalse($qac->isPersisted());
+        $this->assertFalse($qac->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -35,7 +35,7 @@ class QuoteAllowanceChargeEntityTest extends TestCase
         );
 
         $this->assertSame(1, $qac->reqId());
-        $this->assertTrue($qac->isPersisted());
+        $this->assertTrue($qac->hasIdentity());
         $this->assertSame(5, $qac->reqQuoteId());
         $this->assertSame(3, $qac->reqAllowanceChargeId());
         $this->assertSame(50.00, $qac->getAmount());
@@ -54,9 +54,9 @@ class QuoteAllowanceChargeEntityTest extends TestCase
     public function testSetIdUpdatesPersistedState(): void
     {
         $qac = new QuoteAllowanceCharge();
-        $this->assertFalse($qac->isPersisted());
+        $this->assertFalse($qac->hasIdentity());
         $qac->setId(25);
-        $this->assertTrue($qac->isPersisted());
+        $this->assertTrue($qac->hasIdentity());
         $this->assertSame(25, $qac->reqId());
     }
 

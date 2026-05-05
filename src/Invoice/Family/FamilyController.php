@@ -165,7 +165,8 @@ final class FamilyController extends BaseController
                 if (is_array($body)) {
                     $family = new Family();
                     $this->familyService->saveFamily($family, $body);
-                    if (null !== $family_id = $family->getFamilyId()) {
+                    if ($family->hasIdentity()) {
+                        $family_id = $family->reqId();
                         if (isset($body['custom'])) {
                             // Retrieve the custom array
                             /** @var array $custom */
@@ -184,8 +185,8 @@ final class FamilyController extends BaseController
                                 if ($formHydrator->populateAndValidate($familyCustomForm, $family_custom)) {
                                     $this->familyCustomService->saveFamilyCustom($familyCustom, $family_custom);
                                 }
-// These two can be used to create customised labels for custom field error validation on the form
-// Currently not used.
+    // These two can be used to create customised labels for custom field error validation on the form
+    // Currently not used.
                                 $parameters['familyCustomForm'] = $familyCustomForm;
                                 $parameters['errorsCustom'] = $familyCustomForm->getValidationResult()->getErrorMessagesIndexedByProperty();
                             }
@@ -211,9 +212,9 @@ final class FamilyController extends BaseController
     {
         $queryParams = $request->getQueryParams();
 
-        $categorySecondaryId = (string) $queryParams['category_secondary_id'];
+        $categorySecondaryId = (int) $queryParams['category_secondary_id'];
 
-        if ($categorySecondaryId) {
+        if ($categorySecondaryId > 0) {
             $familyNames = $fR->optionsDataFamilyNamesWithCategorySecondaryId($categorySecondaryId);
 
             $parameters = [
@@ -240,7 +241,7 @@ final class FamilyController extends BaseController
     {
         $queryParams = $request->getQueryParams();
 
-        $categoryPrimaryId = (string) $queryParams['category_primary_id'];
+        $categoryPrimaryId = (int) $queryParams['category_primary_id'];
 
         if ($categoryPrimaryId) {
             $secondaryCategories = $csR->optionsDataCategorySecondariesWithCategoryPrimaryId($categoryPrimaryId);
@@ -284,7 +285,7 @@ final class FamilyController extends BaseController
         FormHydrator $formHydrator
     ): Response
     {
-        $family = $this->family($id, $familyRepository);
+        $family = $this->family((int) $id, $familyRepository);
         if ($family) {
             $form = FamilyForm::show($family);
             $familyCustom = new FamilyCustom();
@@ -292,7 +293,7 @@ final class FamilyController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'family/edit',
-                'actionArguments' => ['id' => $familyId = $family->getFamilyId()],
+                'actionArguments' => ['id' => $familyId = $family->reqId()],
                 'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
                 'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
                 'errors' => [],
@@ -301,7 +302,7 @@ final class FamilyController extends BaseController
                 'form' => $form,
                 'customFields' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom')['customFields'],
                 'customValues' => $this->fetchCustomFieldsAndValues($cfR, $cvR, 'family_custom')['customValues'],
-                'familyCustomValues' => $this->familyCustomValues((string) $familyId, $fcR),
+                'familyCustomValues' => $this->familyCustomValues($familyId, $fcR),
                 'familyCustomForm' => $familyCustomForm,
             ];
             if ($request->getMethod() === Method::POST) {
@@ -320,7 +321,7 @@ final class FamilyController extends BaseController
                         $body,
                         $formHydrator,
                         $this->familyCustomFieldProcessor,
-                        (string) $familyId
+                        $familyId
                     );
                 } // is_array
                 $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
@@ -357,11 +358,11 @@ final class FamilyController extends BaseController
     }
 
     /**
-     * @param string $family_id
+     * @param int $family_id
      * @param fcR $fcR
      * @return array
      */
-    public function familyCustomValues(string $family_id, fcR $fcR): array
+    public function familyCustomValues(int $family_id, fcR $fcR): array
     {
         $custom_field_form_values = [];
         if ($fcR->repoFamilyCount($family_id) > 0) {
@@ -385,7 +386,7 @@ final class FamilyController extends BaseController
     public function delete(#[RouteArgument('id')] string $id, fR $familyRepository): Response
     {
         try {
-            $family = $this->family($id, $familyRepository);
+            $family = $this->family((int) $id, $familyRepository);
             if ($family) {
                 $this->familyService->deleteFamily($family);
                 return $this->webService->getRedirectResponse('family/index');
@@ -409,7 +410,7 @@ final class FamilyController extends BaseController
      */
     public function view(#[RouteArgument('id')] string $id, fR $familyRepository, fcR $fcR, cfR $cfR, cvR $cvR, cpR $cpR, csR $csR): Response
     {
-        $family = $this->family($id, $familyRepository);
+        $family = $this->family((int) $id, $familyRepository);
         if ($family) {
             $form = FamilyForm::show($family);
             $familyCustom = new FamilyCustom();
@@ -421,8 +422,8 @@ final class FamilyController extends BaseController
                 'customValues' => $cvR->fixCfValueToCf($cfR->repoTablequery('family_custom')),
                 'cpR' => $cpR,
                 'actionName' => 'family/view',
-                'actionArguments' => ['id' => $familyId = $family->getFamilyId()],
-                'familyCustomValues' => $this->familyCustomValues((string) $familyId, $fcR),
+                'actionArguments' => ['id' => $familyId = $family->reqId()],
+                'familyCustomValues' => $this->familyCustomValues($familyId, $fcR),
                 'categoryPrimaries' => $cpR->optionsDataCategoryPrimaries(),
                 'categorySecondaries' => $csR->optionsDataCategorySecondaries(),
                 'errors' => [],
@@ -435,11 +436,11 @@ final class FamilyController extends BaseController
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @param FamilyRepository $familyRepository
      * @return Family|null
      */
-    private function family(#[RouteArgument('id')] string $id, fR $familyRepository): ?Family
+    private function family(#[RouteArgument('id')] int $id, fR $familyRepository): ?Family
     {
         return $familyRepository->repoFamilyquery($id);
     }
@@ -475,7 +476,7 @@ final class FamilyController extends BaseController
             $newProductIds  = [];
 
             try {
-                /** @var string $familyId */
+                /** @var int $familyId */
                 foreach ($familyIds as $familyId) {
                     $family = $familyRepository->repoFamilyquery($familyId);
                     if (!$family) {
@@ -511,7 +512,7 @@ final class FamilyController extends BaseController
                             ],
                         ]);
 
-                        if ($newProduct->isPersisted()) {
+                        if ($newProduct->hasIdentity()) {
                             $newProductIds[] = (string) $newProduct->reqId();
                         }
                         $generatedCount++;

@@ -75,7 +75,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Product $model) => Html::encode($model->getProductId()),
+        content: static fn (Product $model) => Html::encode($model->reqId()),
         withSorting: true,
     ),
     new DataColumn(
@@ -216,7 +216,7 @@ $columns = [
         content: static function (Product $model) use ($urlGenerator): A {
             return Html::a(
                 Html::tag('i', '', ['class' => 'bi-plus dropdown-button text-decoration-none']),
-                $urlGenerator->generate('productproperty/add', ['product_id' => $model->getProductId()]),
+                $urlGenerator->generate('productproperty/add', ['product_id' => $model->reqId()]),
                 [],
             );
         },
@@ -231,7 +231,7 @@ $columns = [
             content: '🔎',
             url: function (Product $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/view', ['id' => $model->getProductId()]);
+                return $urlGenerator->generate('product/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -243,7 +243,7 @@ $columns = [
             content: '✎',
             url: function (Product $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/edit', ['id' => $model->getProductId()]);
+                return $urlGenerator->generate('product/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -255,7 +255,7 @@ $columns = [
             content: '❌',
             url: function (Product $model) use ($urlGenerator): string {
                 /** @psalm-suppress InvalidArgument */
-                return $urlGenerator->generate('product/delete', ['id' => $model->getProductId()]);
+                return $urlGenerator->generate('product/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

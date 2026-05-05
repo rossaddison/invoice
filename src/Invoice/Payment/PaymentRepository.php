@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Payment;
 
-use App\Invoice\Entity\Payment;
+use App\Infrastructure\Persistence\Payment\Payment;
 // Cycle
 use Cycle\Database\Injection\Parameter;
 use Cycle\ORM\Select;
@@ -24,7 +24,8 @@ final class PaymentRepository extends Select\Repository
     * @param Select<TEntity> $select
     * @param EntityWriter $entityWriter
     */
-    public function __construct(Select $select, private readonly EntityWriter $entityWriter)
+    public function __construct(Select $select,
+        private readonly EntityWriter $entityWriter)
     {
         parent::__construct($select);
     }
@@ -134,7 +135,8 @@ final class PaymentRepository extends Select\Repository
     /**
      * @psalm-return EntityReader
      */
-    public function repoPaymentAmountWithDateFilter(string $paymentAmount, string $paymentDate)
+    public function repoPaymentAmountWithDateFilter(
+        string $paymentAmount, string $paymentDate)
     {
         $query = $this->select()
                       ->where(['payment_date' => $paymentDate])
@@ -147,7 +149,7 @@ final class PaymentRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoPaymentquery(string $id): ?Payment
+    public function repoPaymentquery(int $id): ?Payment
     {
         $query = $this->select()
                       ->load('inv')
@@ -181,7 +183,7 @@ final class PaymentRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoInvquery(string $inv_id): EntityReader
+    public function repoInvquery(int $inv_id): EntityReader
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
@@ -189,13 +191,13 @@ final class PaymentRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return int
      */
-    public function repoCount(string $inv_id): int
+    public function repoCount(int $inv_id): int
     {
         return $this->select()
-                      ->where(['inv_id' => $inv_id])
-                      ->count();
+                    ->where(['inv_id' => $inv_id])
+                    ->count();
     }
 }

@@ -183,7 +183,7 @@ final class SalesOrderAllowanceChargeRepository extends Select\Repository
         return $query->count();
     }
 
-    public function repoACQCount(string $sales_order_id): int
+    public function repoACQCount(int $sales_order_id): int
     {
         $query = $this->select()
                       ->where(['sales_order_id' => $sales_order_id]);

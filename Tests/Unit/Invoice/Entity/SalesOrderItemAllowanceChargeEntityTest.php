@@ -15,7 +15,7 @@ class SalesOrderItemAllowanceChargeEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $soiac = new SalesOrderItemAllowanceCharge();
-        $this->assertFalse($soiac->isPersisted());
+        $this->assertFalse($soiac->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -29,7 +29,7 @@ class SalesOrderItemAllowanceChargeEntityTest extends TestCase
     {
         $soiac = new SalesOrderItemAllowanceCharge();
         $soiac->setId(20);
-        $this->assertTrue($soiac->isPersisted());
+        $this->assertTrue($soiac->hasIdentity());
         $this->assertSame(20, $soiac->reqId());
     }
 

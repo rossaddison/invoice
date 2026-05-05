@@ -84,17 +84,17 @@ final class ProjectRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoProjectquery(string $id): ?Project
+    public function repoProjectquery(int $id): ?Project
     {
         $query = $this->select()->load('client')->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
     /**
-     * @param string $project_id
+     * @param int $project_id
      * @return int
      */
-    public function count(string $project_id): int
+    public function count(int $project_id): int
     {
         return $this->select()
                       ->where(['id' => $project_id])

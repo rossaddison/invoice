@@ -6,7 +6,7 @@ namespace App\Infrastructure\Persistence\UserCustom;
 
 use App\Infrastructure\Persistence\Trait\RequireId;
 use App\Invoice\UserCustom\UserCustomRepository;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -36,7 +36,7 @@ class UserCustom
         return $this->requireId($this->id, 'UserCustom');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -56,9 +56,9 @@ class UserCustom
         $this->user = $user;
     }
 
-    public function getUserId(): ?int
+    public function reqUserId(): ?int
     {
-        return $this->user_id;
+        return $this->requireId($this->user_id, 'User');
     }
 
     public function setUserId(int $user_id): void

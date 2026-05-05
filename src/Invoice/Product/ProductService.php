@@ -99,8 +99,7 @@ final readonly class ProductService
     ): void {
         $family = 'family_id';
         if (isset($array[$family])) {
-            $familyEntity = $this->fR->repoFamilyquery(
-                (string) $array[$family]);
+            $familyEntity = $this->fR->repoFamilyquery((int) $array[$family]);
             if ($familyEntity) {
                 $model->setFamily($familyEntity);
             }
@@ -109,12 +108,12 @@ final readonly class ProductService
         if (isset($array[$tax_rate])) {
             $model->setTaxrate(
                 $this->trR->repoTaxRatequery(
-                    (string) $array[$tax_rate]));
+                    (int) $array[$tax_rate]));
         }
         $unit = 'unit_id';
         if (isset($array[$unit])) {
             $unitEntity = $this->uR->repoUnitquery(
-                (string) $array[$unit]);
+                (int) $array[$unit]);
             if ($unitEntity) {
                 $model->setUnit($unitEntity);
             }

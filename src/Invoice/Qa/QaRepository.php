@@ -75,7 +75,7 @@ final class QaRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoQaQuery(string $id): ?Qa
+    public function repoQaQuery(int $id): ?Qa
     {
         $query = $this
             ->select()

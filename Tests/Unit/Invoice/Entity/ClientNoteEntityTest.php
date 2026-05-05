@@ -15,8 +15,7 @@ class ClientNoteEntityTest extends TestCase
     {
         $clientNote = new ClientNote();
 
-        $this->assertFalse($clientNote->isPersisted());
-        $this->assertSame('', $clientNote->getClientId());
+        $this->assertFalse($clientNote->hasIdentity());
         $this->assertSame('', $clientNote->getNote());
         $this->assertNull($clientNote->getDateNote());
         $this->assertNull($clientNote->getClient());
@@ -29,7 +28,7 @@ class ClientNoteEntityTest extends TestCase
             note: 'Important client note'
         );
 
-        $this->assertSame('100', $clientNote->getClientId());
+        $this->assertSame(100, $clientNote->reqClientId());
         $this->assertSame('Important client note', $clientNote->getNote());
     }
 
@@ -39,7 +38,7 @@ class ClientNoteEntityTest extends TestCase
         $clientNote->setId(50);
 
         $this->assertSame(50, $clientNote->reqId());
-        $this->assertTrue($clientNote->isPersisted());
+        $this->assertTrue($clientNote->hasIdentity());
     }
 
     public function testClientIdSetterAndGetter(): void
@@ -47,7 +46,7 @@ class ClientNoteEntityTest extends TestCase
         $clientNote = new ClientNote();
         $clientNote->setClientId(200);
 
-        $this->assertSame('200', $clientNote->getClientId());
+        $this->assertSame(200, $clientNote->reqClientId());
     }
 
     public function testNoteSetterAndGetter(): void
@@ -79,18 +78,18 @@ class ClientNoteEntityTest extends TestCase
         $this->assertNull($clientNote->getClient());
     }
 
-    public function testIsPersisted(): void
+    public function testhasIdentity(): void
     {
         $clientNote = new ClientNote();
-        $this->assertFalse($clientNote->isPersisted());
+        $this->assertFalse($clientNote->hasIdentity());
 
         $clientNote->setId(1);
-        $this->assertTrue($clientNote->isPersisted());
+        $this->assertTrue($clientNote->hasIdentity());
 
         // Edge case with ID 0 — persisted since id !== null
         $clientNote->setId(0);
         $this->assertSame(0, $clientNote->reqId());
-        $this->assertTrue($clientNote->isPersisted());
+        $this->assertTrue($clientNote->hasIdentity());
     }
 
     public function testIdTypeConversion(): void
@@ -107,8 +106,8 @@ class ClientNoteEntityTest extends TestCase
         $clientNote = new ClientNote();
         $clientNote->setClientId(777);
 
-        $this->assertIsString($clientNote->getClientId());
-        $this->assertSame('777', $clientNote->getClientId());
+        $this->assertIsInt($clientNote->reqClientId());
+        $this->assertSame(777, $clientNote->reqClientId());
     }
 
     public function testEmptyNote(): void
@@ -180,7 +179,7 @@ class ClientNoteEntityTest extends TestCase
         $clientNote->setClientId(0);
 
         $this->assertSame(0, $clientNote->reqId());
-        $this->assertSame('0', $clientNote->getClientId());
+        $this->assertSame(0, $clientNote->reqClientId());
     }
 
     public function testNegativeIds(): void
@@ -190,7 +189,7 @@ class ClientNoteEntityTest extends TestCase
         $clientNote->setClientId(-5);
 
         $this->assertSame(-1, $clientNote->reqId());
-        $this->assertSame('-5', $clientNote->getClientId());
+        $this->assertSame(-5, $clientNote->reqClientId());
     }
 
     public function testLargeIds(): void
@@ -202,7 +201,7 @@ class ClientNoteEntityTest extends TestCase
         $clientNote->setClientId($largeId - 1);
 
         $this->assertSame($largeId, $clientNote->reqId());
-        $this->assertSame((string)($largeId - 1), $clientNote->getClientId());
+        $this->assertSame($largeId - 1, $clientNote->reqClientId());
     }
 
     public function testDateNoteWithDifferentFormats(): void
@@ -236,10 +235,10 @@ class ClientNoteEntityTest extends TestCase
         $clientNote->setDateNote($dateNote);
 
         $this->assertSame(1, $clientNote->reqId());
-        $this->assertSame('100', $clientNote->getClientId());
+        $this->assertSame(100, $clientNote->reqClientId());
         $this->assertSame($client, $clientNote->getClient());
         $this->assertSame('Complete setup note with all properties', $clientNote->getNote());
-        $this->assertTrue($clientNote->isPersisted());
+        $this->assertTrue($clientNote->hasIdentity());
     }
 
     public function testMethodReturnTypes(): void
@@ -251,9 +250,9 @@ class ClientNoteEntityTest extends TestCase
         $clientNote->setId(1);
 
         $this->assertIsInt($clientNote->reqId());
-        $this->assertIsString($clientNote->getClientId());
+        $this->assertIsInt($clientNote->reqClientId());
         $this->assertIsString($clientNote->getNote());
-        $this->assertIsBool($clientNote->isPersisted());
+        $this->assertIsBool($clientNote->hasIdentity());
         $this->assertNull($clientNote->getClient());
     }
 
@@ -337,9 +336,9 @@ class ClientNoteEntityTest extends TestCase
             date_note: new DateTimeImmutable('2024-01-01')
         );
 
-        $this->assertSame('999', $clientNote->getClientId());
+        $this->assertSame(999, $clientNote->reqClientId());
         $this->assertSame('Initial note', $clientNote->getNote());
-        $this->assertFalse($clientNote->isPersisted());
+        $this->assertFalse($clientNote->hasIdentity());
 
         $clientNote->setId(1);
         $clientNote->setClientId(888);
@@ -347,9 +346,9 @@ class ClientNoteEntityTest extends TestCase
         $clientNote->setDateNote(new DateTimeImmutable('2024-12-31'));
 
         $this->assertSame(1, $clientNote->reqId());
-        $this->assertSame('888', $clientNote->getClientId());
+        $this->assertSame(888, $clientNote->reqClientId());
         $this->assertSame('Modified note', $clientNote->getNote());
-        $this->assertTrue($clientNote->isPersisted());
+        $this->assertTrue($clientNote->hasIdentity());
     }
 
     public function testClientRelationshipWorkflow(): void
@@ -391,22 +390,21 @@ class ClientNoteEntityTest extends TestCase
     {
         $clientNote = new ClientNote();
 
-        $this->assertFalse($clientNote->isPersisted());
+        $this->assertFalse($clientNote->hasIdentity());
 
         $clientNote->setId(1);
         $this->assertSame(1, $clientNote->reqId());
-        $this->assertTrue($clientNote->isPersisted());
+        $this->assertTrue($clientNote->hasIdentity());
     }
 
     public function testConstructorParameterDefaults(): void
     {
         $clientNote = new ClientNote(client_id: 123);
-        $this->assertSame('123', $clientNote->getClientId());
+        $this->assertSame(123, $clientNote->reqClientId());
         $this->assertSame('', $clientNote->getNote());
         $this->assertNull($clientNote->getDateNote());
 
         $clientNote2 = new ClientNote(note: 'Only note provided');
-        $this->assertSame('', $clientNote2->getClientId());
         $this->assertSame('Only note provided', $clientNote2->getNote());
     }
 }

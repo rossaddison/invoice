@@ -50,15 +50,13 @@ use Yiisoft\Html\Tag\Form;
             <?php
                 $optionsDataUser = [];
 /**
- * @var App\User\User $user
+ * @var App\Infrastructure\Persistence\User\User $user
  */
 foreach ($uR->findAllPreloaded() as $user) {
-    if (null !== $user->getId()) {
-        /**
-         * @psalm-suppress PossiblyNullArrayOffset $user->getId()
-         */
-        $optionsDataUser[$user->getId()] = ucfirst($user->getLogin());
-    }
+    /**
+     * @psalm-suppress PossiblyNullArrayOffset $user->reqId()
+     */
+    $optionsDataUser[$user->reqId()] = ucfirst($user->getLogin());    
 }
 echo Field::select($form, 'user_id')
 ->label($translator->translate('users'))

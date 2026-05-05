@@ -6,8 +6,8 @@ namespace App\Invoice\UserClient;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\UserClient;
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserClient\UserClient;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Quote\QuoteRepository as QR;
@@ -67,13 +67,13 @@ final class UserClientController extends BaseController
     ): Response {
         $user_client = $this->userclient($currentRoute, $userclientRepository);
         if (null !== $user_client) {
-            $user_id = (int) $user_client->getUserId();
-            $client_id = (int) $user_client->getClientId();
+            $user_id = $user_client->reqUserId();
+            $client_id = $user_client->reqClientId();
             if (($iR->countAllWithUserClient($user_id, $client_id) === 0)
              && ($qR->countAllWithUserClient($user_id, $client_id) === 0)
              && ($soR->countAllWithUserClient($user_id, $client_id) === 0)){
                 $this->userclientService->deleteUserClient($user_client);
-                $user_inv = $uiR->repoUserInvUserIdquery((string) $user_id);
+                $user_inv = $uiR->repoUserInvUserIdquery($user_id);
                 if (null !== $user_inv) {
                     $this->flashMessage('info', $this->translator->translate(
                                                     'record.successfully.deleted'));
@@ -84,7 +84,7 @@ final class UserClientController extends BaseController
                                 'heading' => $this->translator->translate('client'),
                                 'message' => $this->translator->translate(
                                                     'record.successfully.deleted'),
-                                'url' => 'userinv/client','id' => $user_inv->getId(),
+                                'url' => 'userinv/client','id' => $user_inv->reqId(),
                             ],
                         ),
                     );
@@ -121,12 +121,12 @@ final class UserClientController extends BaseController
         UserClientService $ucS,
         UIR $uiR,
     ): Response {
-        $user_id = $currentRoute->getArgument('user_id');
-        if (null !== $user_id) {
+        $user_id = (int) $currentRoute->getArgument('user_id');
+        if ($user_id > 0) {
         // Get possible client ids as an array that can be presented to this user
             $availableClientIdList = $ucR->getNotAssignedToUser($user_id, $cR);
             $user_client = new UserClient();
-            $form = new UserClientForm($user_client);
+            $form = new UserClientForm();
             $parameters = [
                 'errors' => [],
                 'userinv' => $this->user($currentRoute, $uiR),
@@ -163,7 +163,7 @@ final class UserClientController extends BaseController
                             if ($formHydrator->populateAndValidate($form, $form_array)
                                 // Check that the user client does not exist
                                 && !($ucR->repoUserClientqueryCount(
-                                        $user_id, $value) > 0)) {
+                                        $user_id, (int) $value) > 0)) {
                                 $this->userclientService->saveUserClient(
                                         $user_client, $form_array);
                                 $this->flashMessage('info',
@@ -173,7 +173,7 @@ final class UserClientController extends BaseController
                                                                 'userinv/index');
                             }
 
-                            if ($ucR->repoUserClientqueryCount($user_id, $value) > 0) {
+                            if ($ucR->repoUserClientqueryCount($user_id, (int) $value) > 0) {
                                 $this->flashMessage('info',
                                         $this->translator->translate(
                                                       'client.already.exists'));
@@ -202,7 +202,7 @@ final class UserClientController extends BaseController
     {
         $user_id = $currentRoute->getArgument('user_id');
         if (null !== $user_id) {
-            return $uiR->repoUserInvUserIdquery($user_id);
+            return $uiR->repoUserInvUserIdquery((int) $user_id);
         }
         return null;
     }
@@ -217,7 +217,7 @@ final class UserClientController extends BaseController
     {
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            return $ucR->repoUserClientquery($id);
+            return $ucR->repoUserClientquery((int) $id);
         }
         return null;
     }

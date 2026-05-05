@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
@@ -96,7 +96,7 @@ echo new Div();
         new DataColumn(
             'id',
             content: static function (User $data): string {
-                return (string) $data->getId();
+                return (string) $data->reqId();
             },
         ),
         new DataColumn(

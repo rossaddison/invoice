@@ -160,7 +160,7 @@ trait Index
                     $this->sR->getSetting('default_list_limit')
                     ? (int) $this->sR->getSetting('default_list_limit') : 1,
                 'defaultQuoteGroup' => null !==
-                    ($gR = $groupRepo->repoGroupquery(
+                    ($gR = $groupRepo->repoGroupquery((int)
                         $this->sR->getSetting('default_quote_group')))
                         ? (strlen(
                             $groupName = $gR->getName() ?? '') > 0 ? $groupName

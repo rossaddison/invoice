@@ -80,8 +80,8 @@ class QuoteItemAllowanceCharge
     {
         return $this->requireId($this->id, 'QuoteItemAllowanceCharge');
     }
-
-    public function isPersisted(): bool
+    
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

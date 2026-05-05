@@ -25,7 +25,7 @@ final readonly class InvAllowanceChargeService
         isset($array['allowance_charge_id']) ?
             $model->setAllowanceChargeId((int) $array['allowance_charge_id']) : '';
         isset($array['amount']) ? $model->setAmount((float) $array['amount']) : 0.00;
-        $allowance_charge = $this->acR->repoAllowanceChargequery((string) $array['allowance_charge_id']);
+        $allowance_charge = $this->acR->repoAllowanceChargequery((int) $array['allowance_charge_id']);
         if (null !== $allowance_charge && null !== $allowance_charge->getTaxRate()) {
             $allowanceChargeTaxRate = $allowance_charge->getTaxRate();
             if (null !== $allowanceChargeTaxRate) {

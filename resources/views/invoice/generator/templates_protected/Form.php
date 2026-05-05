@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Related logic: see abstract type e.g. doctrine/cycle appearing IN annotation
  * Related logic: see type e.g. doctrine/cycle appearing BELOW annotation
  *
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  * @var Cycle\Database\Table $orm_schema
  * @var array $relations
  */
@@ -20,7 +20,8 @@ declare(strict_types=1);
 
 namespace <?= $generator->getNamespacePath() . DIRECTORY_SEPARATOR . $generator->getCamelcaseCapitalName(); ?>;
 
-use App\Invoice\Entity\<?= $generator->getCamelcaseCapitalName();?>;
+use App\Infrastructure\Persistence\<?= $generator->getCamelcaseCapitalName();?>
+\<?= $generator->getCamelcaseCapitalName();?>;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 <?php

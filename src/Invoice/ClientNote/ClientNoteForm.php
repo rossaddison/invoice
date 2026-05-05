@@ -22,7 +22,7 @@ final class ClientNoteForm extends FormModel
     public static function show(ClientNote $clientNote): self
     {
         $form = new self();
-        $form->client_id = (int) $clientNote->getClientId();
+        $form->client_id = $clientNote->reqClientId();
         $dateNote = $clientNote->getDateNote();
         $form->date_note = $dateNote instanceof DateTimeImmutable
             ? $dateNote->format('Y-m-d')

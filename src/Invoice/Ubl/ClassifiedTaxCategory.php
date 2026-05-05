@@ -28,7 +28,7 @@ class ClassifiedTaxCategory implements XmlSerializable
     /**
      * @return string|null
      */
-    public function getId(): ?string
+    public function reqId(): ?string
     {
         if (null !== $this->id) {
             return $this->id;

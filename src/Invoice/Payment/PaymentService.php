@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Payment;
 
-use App\Invoice\Entity\Payment;
+use App\Infrastructure\Persistence\Payment\Payment;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\PaymentMethod\PaymentMethodRepository as PMR;
 
@@ -49,20 +49,19 @@ final readonly class PaymentService
 
     private function persist(
         Payment $model,
-        array $array
+        array $ray
     ): void {
         $inv = 'inv_id';
-        if (isset($array[$inv])) {
+        if (isset($ray[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (string) $array[$inv]);
+                (int) $ray[$inv]);
             if ($invEntity) {
                 $model->setInv($invEntity);
             }
         }
         $payment_method = 'payment_method_id';
-        if (isset($array[$payment_method])) {
-            $pmEntity = $this->pmR->repoPaymentMethodquery(
-                (string) $array[$payment_method]);
+        if (isset($ray[$payment_method])) {
+            $pmEntity = $this->pmR->repoPaymentMethodquery((int) $ray[$payment_method]);
             if ($pmEntity) {
                 $model->setPaymentMethod($pmEntity);
             }

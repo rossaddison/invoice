@@ -8,7 +8,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\UserInv\UserInvForm $form
  * @var App\Invoice\UserInv\UserInvRepository $uiR
  * @var App\Invoice\Setting\SettingRepository $s
@@ -63,23 +63,21 @@ use Yiisoft\Html\Tag\Form;
                 // build an array of userinv ids
                 $userInvIds = [];
 /**
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  */
 foreach ($uiR->findAllPreloaded() as $userInv) {
-    $userInvIds[] = $userInv->getId();
+    $userInvIds[] = $userInv->reqId();
 }
 
 // build an array of newly signed up users not in userinv
 $optionsDataSignedUpUsersNotInUserInv = [];
 /**
- * @var App\User\User $user
+ * @var App\Infrastructure\Persistence\User\User $user
  */
 foreach ($uR->findAllPreloaded() as $user) {
-    $userId = $user->getId();
-    if (null !== $userId) {
-        if (!in_array($userId, $userInvIds)) {
-            $optionsDataSignedUpUsersNotInUserInv[$userId] = $user->getLogin();
-        }
+    $userId = $user->reqId();
+    if (!in_array($userId, $userInvIds)) {
+        $optionsDataSignedUpUsersNotInUserInv[$userId] = $user->getLogin();
     }
 }
 ?>

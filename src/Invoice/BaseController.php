@@ -28,6 +28,10 @@ abstract class BaseController
     protected string $controllerName = 'base';
     
     private string $spinner = '@views/invoice/layout/fullpage-loader.php';
+    
+    private string $created = 'record.successfully.created';
+    
+    private string $createdNot = 'record.successfully.created.not';
 
     public function __construct(
         protected WebControllerService $webService,
@@ -39,6 +43,36 @@ abstract class BaseController
         protected Flash $flash,
     ) {
         $this->initializeViewRenderer();
+    }
+    
+    protected function m(string $m): ?Flash {
+        $rs = 'record.successfully';
+        $rsc = $rs . '.created';
+        $rsd = $rs . '.deleted';
+        $array = match ($m) {
+            // created successfully
+            'CS' => [
+                'level' => 'info',
+                'message' => $this->translator->translate($rsc)
+            ],
+            // created successfully not
+            'CN' => [
+                'level' => 'warning',
+                'message' => $this->translator->translate($rsc. '.not')
+            ],
+            // deleted successfully
+            'DS' => [
+                'level' => 'info',
+                'message' => $this->translator->translate($rsd)
+            ],
+            // deleted successfully not
+            'DN' => [
+                'level' => 'warning',
+                'message' => $this->translator->translate($rsd. '.not')
+            ],
+            default => ['level' => 'info', 'message' => ''],
+        };
+        return $this->flashMessage($array['level'], $array['message']);
     }
 
     /**
@@ -137,14 +171,14 @@ abstract class BaseController
  * @param array|object|null $requestData
  * @param \Yiisoft\FormModel\FormHydrator $formHydrator
  * @param CustomFieldProcessor $processor
- * @param string|int $entityId
+ * @param int $entityId
  * @return void
  */
     protected function processCustomFields(
         array|object|null $requestData,
         \Yiisoft\FormModel\FormHydrator $formHydrator,
         CustomFieldProcessor $processor,
-        string|int $entityId,
+        int $entityId,
     ): void {
         if (!is_array($requestData)) {
             return;
@@ -157,21 +191,19 @@ abstract class BaseController
         $processedCustom = $this->normalizeCustomFieldData($custom);
 
 /**
- * @var string|int $custom_field_id (PHP may auto-convert numeric strings to int)
+ * @var int $cfId (PHP may auto-convert numeric strings to int)
  * @var mixed $value
  */
-        foreach ($processedCustom as $custom_field_id => $value) {
+        foreach ($processedCustom as $cfId => $value) {
             // Check if custom field record already exists
-            $entityIdStr = (string) $entityId;
-            $customFieldIdStr = (string) $custom_field_id;
-
-            if ($processor->exists($entityIdStr, $customFieldIdStr)) {
+            if ($processor->exists($entityId, $cfId)) {
                 // Update existing record
                 $existingRecord =
-                     $processor->findExisting($entityIdStr, $customFieldIdStr);
+                     $processor->findExisting($entityId, $cfId);
                 if ($existingRecord) {
                     $form = $processor->createForm($existingRecord);
-                    $inputData = $processor->prepareInputData((int) $entityId, (int)                                                                    $customFieldIdStr, $value);
+                    $inputData =
+                        $processor->prepareInputData($entityId, $cfId, $value);
 
                     if ($formHydrator->populateAndValidate($form, $inputData)) {
                         $processor->save($existingRecord, $inputData);
@@ -181,7 +213,8 @@ abstract class BaseController
                 // Create new record
                 $newRecord = $processor->createEntity();
                 $form = $processor->createForm($newRecord);
-                $inputData = $processor->prepareInputData((int) $entityId, (int)                                                                        $customFieldIdStr, $value);
+                $inputData =
+                        $processor->prepareInputData($entityId, $cfId, $value);
 
                 if ($formHydrator->populateAndValidate($form, $inputData)) {
                     $processor->save($newRecord, $inputData);

@@ -10,11 +10,11 @@ use App\Widget\FormFields;
 use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\ProductCustom\ProductCustom;
-use App\Invoice\Entity\ProductImage;
+use App\Infrastructure\Persistence\ProductImage\ProductImage;
 use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Unit\Unit;
-use App\Invoice\Entity\InvItem;
+use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Invoice\Family\FamilyRepository as fR;
 use App\Invoice\CustomValue\CustomValueRepository as cvR;
 use App\Invoice\CustomField\CustomFieldRepository as cfR;
@@ -162,7 +162,7 @@ final class ProductController extends BaseController
                 if (is_array($body)) {
                     $product = new Product();
                     $this->productService->saveProduct($product, $body);
-                    if ($product->isPersisted()) {
+                    if ($product->hasIdentity()) {
                         if (isset($body['custom'])) {
                             // Retrieve the custom array
                             /** @var array $custom */
@@ -175,7 +175,7 @@ final class ProductController extends BaseController
                                 $productCustom = new ProductCustom();
                                 $formProductCustom = new ProductCustomForm();
                                 $product_custom = [];
-                                $product_custom['product_id'] = (string) $product->reqId();
+                                $product_custom['product_id'] = $product->reqId();
                                 $product_custom['custom_field_id'] = $custom_field_id;
                                 $product_custom['value'] = is_array($value) ? serialize($value) : $value;
                                 if ($formHydrator->populateAndValidate(
@@ -205,7 +205,7 @@ final class ProductController extends BaseController
 
     /**
      * @param Request $request
-     * @param string $id
+     * @param int $id
      * @param FormHydrator $formHydrator
      * @param pR $pR
      * @param fR $fR
@@ -220,7 +220,7 @@ final class ProductController extends BaseController
     public function edit(
         Request $request,
         #[RouteArgument('id')]
-        string $id,
+        int $id,
         FormHydrator $formHydrator,
         pR $pR,
         fR $fR,
@@ -235,7 +235,7 @@ final class ProductController extends BaseController
         $peppolarrays = new PeppolArrays();
         $product = $this->product($id, $pR);
         if ($product) {
-            $product_id = $product->getProductId();
+            $product_id = $product->reqId();
             $form = ProductForm::show($product);
             $productCustomForm = new ProductCustomForm();
             if ($product_id) {
@@ -285,7 +285,7 @@ final class ProductController extends BaseController
                                 foreach ($custom as $custom_field_id => $value) {
                                     $product_custom =
                                         $pcR->repoFormValuequery(
-                                            $product_id, (string) $custom_field_id);
+                                            $product_id, (int) $custom_field_id);
 
                                     // If product_custom doesn't exist, create a new one
                                     if (null === $product_custom) {
@@ -335,7 +335,7 @@ final class ProductController extends BaseController
     public function delete(pR $pR, #[RouteArgument('id')] string $id): Response
     {
         try {
-            $product = $this->product($id, $pR);
+            $product = $this->product((int) $id, $pR);
             if ($product) {
                 $this->productService->deleteProduct($product);
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
@@ -360,10 +360,8 @@ final class ProductController extends BaseController
          * @var Family $family
          */
         foreach ($families as $family) {
-            $family_id = $family->getFamilyId();
-            if (null !== $family_id) {
-                $array[$family_id] = $family->getFamilyName();
-            }
+            $family_id = $family->reqId();
+            $array[$family_id] = $family->getFamilyName();
         }
         return $array;
     }
@@ -394,10 +392,10 @@ final class ProductController extends BaseController
     {
         $array = [];
         /**
-         * @var \\App\Invoice\Entity\UnitPeppol $unit_peppol
+         * @var \\App\Infrastructure\Persistence\UnitPeppol\UnitPeppol $unit_peppol
          */
         foreach ($unit_peppols as $unit_peppol) {
-            $array[$unit_peppol->getId()] = $unit_peppol->getCode()
+            $array[$unit_peppol->reqId()] = $unit_peppol->getCode()
                     . ' --- '
                     . $unit_peppol->getName()
                     . ' --- '
@@ -465,7 +463,7 @@ final class ProductController extends BaseController
         $products = $pR->findAllPreloaded();
         if (isset($query_params['family_id'])
                 && !empty($query_params['family_id'])) {
-            $products = $pR->filterFamilyId((string) $query_params['family_id']);
+            $products = $pR->filterFamilyId((int) $query_params['family_id']);
         }
         if (isset($query_params['product_sku'])
                 && !empty($query_params['product_sku'])) {
@@ -577,7 +575,7 @@ final class ProductController extends BaseController
     /**
      * @param int $order
      * @param Product $product
-     * @param string $quote_id
+     * @param int $quote_id
      * @param pR $pR
      * @param trR $trR
      * @param uR $unR
@@ -586,7 +584,7 @@ final class ProductController extends BaseController
      * @param FormHydrator $formHydrator
      */
     private function saveProductLookupItemQuote(int $order,
-            Product $product, string $quote_id, pR $pR, trR $trR, uR $unR,
+            Product $product, int $quote_id, pR $pR, trR $trR, uR $unR,
             qiaR $qiaR, qiaS $qiaS, FormHydrator $formHydrator): void
     {
         $quoteItem = new QuoteItem();
@@ -594,8 +592,8 @@ final class ProductController extends BaseController
         $ajax_content = [
             'name' => $product->getProductName(),
             'quote_id' => $quote_id,
-            'tax_rate_id' => $product->getTaxRateId(),
-            'product_id' => $product->getProductId(),
+            'tax_rate_id' => $product->reqTaxRateId(),
+            'product_id' => $product->reqId(),
             'date_added' => new \DateTimeImmutable(),
             'description' => $product->getProductDescription(),
 // A default quantity of 1 is used to initialize the item if there is no
@@ -606,12 +604,12 @@ final class ProductController extends BaseController
             'discount_amount' => (float) 0,
             'order' => $order,
 // The default quantity is 1 so the singular name will be used.
-            'product_unit' => $unR->singularOrPluralName($product->getUnitId(), 1),
-            'product_unit_id' => $product->getUnitId(),
+            'product_unit' => $unR->singularOrPluralName($product->reqUnitId(), 1),
+            'product_unit_id' => $product->reqUnitId(),
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->quoteitemService->addQuoteItemProduct(
-                    $quoteItem, $ajax_content, $quote_id, $pR, $qiaR, $qiaS,
+                    $quoteItem, $ajax_content, (string) $quote_id, $pR, $qiaR, $qiaS,
                     $unR, $trR, $this->translator);
         }
     }
@@ -619,7 +617,7 @@ final class ProductController extends BaseController
     /**
      * @param int $order
      * @param Product $product
-     * @param string $inv_id
+     * @param int $inv_id
      * @param pR $pR
      * @param trR $trR
      * @param uR $unR
@@ -629,16 +627,16 @@ final class ProductController extends BaseController
      * @param FormHydrator $formHydrator
      */
     private function saveProductLookupItemInv(int $order, Product $product,
-            string $inv_id, pR $pR, trR $trR, uR $unR, iiaR $iiaR, iiR $iiR,
+            int $inv_id, pR $pR, trR $trR, uR $unR, iiaR $iiaR, iiR $iiR,
                 uR $uR, FormHydrator $formHydrator): void
     {
         $invItem = new InvItem();
-        $form = new InvItemForm($invItem, (int) $inv_id);
+        $form = new InvItemForm();
         $ajax_content = [
             'name' => $product->getProductName(),
             'inv_id' => $inv_id,
-            'tax_rate_id' => $product->getTaxRateId(),
-            'product_id' => $product->getProductId(),
+            'tax_rate_id' => $product->reqTaxRateId(),
+            'product_id' => $product->reqId(),
             'task_id' => null,
             'description' => $product->getProductDescription(),
 // A default quantity of 1 is used to initialize the item if there is no
@@ -652,12 +650,12 @@ final class ProductController extends BaseController
             'order' => $order,
 // The default quantity is 1 so the singular name will be used.
             'product_unit' =>
-                $unR->singularOrPluralName($product->getUnitId(), 1),
-            'product_unit_id' => $product->getUnitId(),
+                $unR->singularOrPluralName($product->reqUnitId(), 1),
+            'product_unit_id' => $product->reqUnitId(),
         ];
         if ($formHydrator->populateAndValidate($form, $ajax_content)) {
             $this->invitemService->addInvItemProduct(
-                    $invItem, $ajax_content, $inv_id, $pR, $trR,
+                    $invItem, $ajax_content, (string) $inv_id, $pR, $trR,
                     new iiaS($iiaR, $iiR), $iiaR, $this->sR, $uR);
         }
     }
@@ -709,7 +707,7 @@ final class ProductController extends BaseController
         foreach ($products as $product) {
             $product->setProductPrice((float) $numberHelper->formatAmount(
                 $product->getProductPrice()));
-            $this->saveProductLookupItemQuote($order, $product, $quote_id,
+            $this->saveProductLookupItemQuote($order, $product, (int) $quote_id,
                     $pR, $trR, $uR, $qiaR, $qiaS, $formHydrator);
             $order++;
         }
@@ -753,32 +751,31 @@ final class ProductController extends BaseController
             $product->setProductPrice(
                     (float) $numberHelper->formatAmount($product->getProductPrice()));
             $this->saveProductLookupItemInv(
-                    $order, $product, $inv_id, $pR, $trR, $uR, $iiaR, $iiR, $uR, $formHydrator);
+                    $order, $product, (int) $inv_id, $pR, $trR, $uR, $iiaR, $iiR,
+                    $uR, $formHydrator);
             $order++;
         }
-        $numberHelper->calculateInv((string) $this->session->get('inv_id'), $aciR, $iiR, $iiaR, $itrR, $iaR, $iR, $pymR);
+        $numberHelper->calculateInv((int) $inv_id, $aciR, $iiR, $iiaR,
+                $itrR, $iaR, $iR, $pymR);
         return $this->responseFactory->createResponse(Json::encode($products));
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @param pR $pR
      * @return Product|null
      */
-    private function product(string $id, pR $pR): ?Product
+    private function product(int $id, pR $pR): ?Product
     {
-        if ($id) {
-            return $pR->repoProductquery($id);
-        }
-        return null;
+        return $pR->repoProductquery($id);
     }
 
     /**
-     * @param string $product_id
+     * @param int $product_id
      * @param pcR $pcR
      * @return array
      */
-    public function productCustomValues(string $product_id, pcR $pcR): array
+    public function productCustomValues(int $product_id, pcR $pcR): array
     {
 // Get all the custom fields that have been registered with this product on
 // creation, retrieve existing values via repo, and populate
@@ -838,14 +835,14 @@ final class ProductController extends BaseController
         #[RouteArgument('id')]
         string $id,
     ): Response {
-        $product = $this->product($id, $pR);
+        $product = $this->product((int) $id, $pR);
         $language = (string) $this->session->get('_language');
         $peppolarrays = new PeppolArrays();
         if ($product) {
             $productForm = ProductForm::show($product);
             $productCustomForm = new ProductCustomForm();
-            $product_id = $product->getProductId();
-            $product_images = $piR->repoProductImageProductquery((int) $product_id);
+            $product_id = $product->reqId();
+            $product_images = $piR->repoProductImageProductquery($product_id);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'product/view',
@@ -885,7 +882,7 @@ final class ProductController extends BaseController
                     ],
                 ),
                 'partial_product_images' =>
-                    $this->viewPartialProductImage($language, (int) $product_id, $piR),
+                    $this->viewPartialProductImage($language, $product_id, $piR),
                 'partial_product_gallery' =>
                     $this->webViewRenderer->renderPartialAsString(
                             '//invoice/product/views/partial_product_gallery', [
@@ -960,9 +957,9 @@ final class ProductController extends BaseController
                 return $this->responseFactory->createResponse(
                     $this->imageAttachmentNotWritable((int) $product_id));
             }
-            $product = $pR->repoProductquery($product_id) ?: null;
+            $product = $pR->repoProductquery((int) $product_id) ?: null;
             if ($product instanceof Product) {
-                $product_id = $product->getProductId();
+                $product_id = $product->reqId();
                 if ($product_id) {
                     if (!empty($_FILES)) {
                         // Related logic: see https://github.com/vimeo/psalm/issues/5458
@@ -974,17 +971,17 @@ final class ProductController extends BaseController
                         if (null !== $original_file_name) {
                             $target_path_with_filename = $targetPath . '/' . $original_file_name;
                             if ($this->imageAttachmentMoveTo($temporary_file,
-                                    $target_path_with_filename, (int) $product_id,
+                                    $target_path_with_filename, $product_id,
                                     $original_file_name, $piR)) {
                                 return $this->responseFactory->createResponse(
                                         $this->imageAttachmentSuccessfullyCreated(
-                                                (int) $product_id));
+                                                $product_id));
                             }
-                            return $this->responseFactory->createResponse($this->imageAttachmentNoFileUploaded((int) $product_id));
+                            return $this->responseFactory->createResponse($this->imageAttachmentNoFileUploaded($product_id));
                         }
                     } else {
                         return $this->responseFactory->createResponse(
-                            $this->imageAttachmentNoFileUploaded((int) $product_id));
+                            $this->imageAttachmentNoFileUploaded($product_id));
                     }
                 } // $product_id
             } // $product
@@ -1078,7 +1075,7 @@ final class ProductController extends BaseController
         sR $sR,
     ): void {
         if ($product_image_id) {
-            $product_image = $piR->repoProductImagequery($product_image_id);
+            $product_image = $piR->repoProductImagequery((int) $product_image_id);
             if (null !== $product_image) {
                 $aliases = $sR->getProductimagesFilesFolderAliases();
                 $targetPath = $aliases->get('@productimages_files');
@@ -1152,10 +1149,10 @@ final class ProductController extends BaseController
          * @var Family $family
          */
         foreach ($families as $family) {
-            $familyId = $family->getFamilyId();
+            $familyId = $family->reqId();
             // Remove repeats
-            if (!in_array($family->getFamilyId(), $optionsDataFamilies)) {
-                if (null !== $familyId) {
+            if (!in_array($family->reqId(), $optionsDataFamilies)) {
+                if ($familyId > 0) {
                     $optionsDataFamilies[(string) $familyId] = (string) $family->getFamilyName();
                 }
             }

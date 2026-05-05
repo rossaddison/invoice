@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\Profile;
 
 use App\Auth\Permissions;
+use App\Infrastructure\Persistence\Profile\Profile;
 use App\Invoice\BaseController;
 use App\Invoice\Company\CompanyRepository;
-use App\Invoice\Entity\Profile;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -73,7 +73,7 @@ final class ProfileController extends BaseController
         FormHydrator $formHydrator,
         CompanyRepository $companyRepository,
     ): Response {
-        $form = new ProfileForm(new Profile(), $this->translator);
+        $form = new ProfileForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'profile/add',
@@ -114,11 +114,11 @@ final class ProfileController extends BaseController
     ): Response {
         $profile = $this->profile($currentRoute, $profileRepository);
         if ($profile) {
-            $form = new ProfileForm($profile, $this->translator);
+            $form = ProfileForm::show($profile);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'profile/edit',
-                'actionArguments' => ['id' => $profile->getId()],
+                'actionArguments' => ['id' => $profile->reqId()],
                 'form' => $form,
                 'errors' => [],
                 'companies' => $companyRepository->findAllPreloaded(),
@@ -174,15 +174,15 @@ final class ProfileController extends BaseController
     {
         $profile = $this->profile($currentRoute, $profileRepository);
         if ($profile) {
-            $form = new ProfileForm($profile, $this->translator);
+            $form = ProfileForm::show($profile);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'profile/view',
-                'actionArguments' => ['id' => $profile->getId()],
+                'actionArguments' => ['id' => $profile->reqId()],
                 'companies' => $companyRepository->findAllPreloaded(),
                 'form' => $form,
                 'errors' => [],
-                'profile' => $profileRepository->repoProfilequery((string) $profile->getId()),
+                'profile' => $profileRepository->repoProfilequery($profile->reqId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
@@ -207,13 +207,13 @@ final class ProfileController extends BaseController
      * @param ProfileRepository $profileRepository
      * @return Profile|null
      */
-    private function profile(CurrentRoute $currentRoute, ProfileRepository $profileRepository): ?Profile
+    private function profile(
+        CurrentRoute $currentRoute,
+        ProfileRepository $profileRepository): ?Profile
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $profileRepository->repoProfilequery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $profileRepository->repoProfilequery($id);
+        
     }
 
     /**

@@ -359,8 +359,8 @@ class CustomValuesHelper
                 break;
 
             case 'SINGLE-CHOICE':
-                $customValue = $this->cvR->repoCustomValueDropDown(
-                        (string) $fieldValue, (string) $customFieldId);
+                $customValue = $this->cvR->repoCustomValueDropDown((int) 
+                        $fieldValue, $customFieldId);
                 if (null !== $customValue) {
                     echo Field::text($formModel, 'custom_field_id')
                     ->addInputAttributes([
@@ -381,8 +381,8 @@ class CustomValuesHelper
                  * @var string $value
                  */
                 foreach ($selChoices as $value) {
-                    $printValue = $this->cvR->repoCustomValueDropDown(
-                            $value, (string) $customFieldId);
+                    $printValue = $this->cvR->repoCustomValueDropDown((int)
+                            $value, $customFieldId);
                     if (null !== $printValue) {
                         $fieldValues .= ($printValue->getValue()) . ', ';
                     }
@@ -532,7 +532,7 @@ class CustomValuesHelper
                      * @var string $value
                      */
                     foreach ($array as $value) {
-                        $custom_value = $cvR->repoCustomValuequery($value);
+                        $custom_value = $cvR->repoCustomValuequery((int) $value);
                         if (null !== $custom_value) {
                             $customValue = $custom_value->getValue();
                             echo  new Label()
@@ -646,7 +646,7 @@ class CustomValuesHelper
     {
         /** @var CustomValue $entity_custom_value */
         foreach ($entity_custom_values as $entity_custom_value) {
-            if ($entity_custom_value->getCustomFieldId() == $custom_field_id) {
+            if ($entity_custom_value->reqCustomFieldId() == $custom_field_id) {
                 return $entity_custom_value->getValue();
             }
         }
@@ -662,8 +662,8 @@ class CustomValuesHelper
     public function selectedValue(array $entity_custom_values, int $custom_field_id, cvR $cvR): string|int|null
     {
         $form_custom_value = $this->formValue($entity_custom_values, $custom_field_id);
-        if (($form_custom_value !== '') && (null !== $form_custom_value)) {
-            $custom_value = $cvR->repoCustomValuequery((string) $form_custom_value);
+        if (($form_custom_value !== '') && ($form_custom_value > 0)) {
+            $custom_value = $cvR->repoCustomValuequery((int) $form_custom_value);
             /** @var CustomValue $custom_value */
             return $custom_value->getValue();
         }

@@ -93,12 +93,15 @@ final class AllowanceChargeController extends BaseController
         }
         if ($request->getMethod() === Method::POST) {
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
-                $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
-                return $this->webService->getRedirectResponse('allowancecharge/index');
+                $ac = $this->allowanceChargeService->saveAllowanceCharge(
+                    $allowanceCharge, $body);
+                $ac->hasIdentity() ? $this->m('CS') : $this->m('CN');
+                return $this->webService->getRedirectResponse(
+                    'allowancecharge/index');
             }
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $this->webViewRenderer->render('_form_allowance', $parameters);
     }
@@ -155,12 +158,15 @@ final class AllowanceChargeController extends BaseController
         if ($request->getMethod() === Method::POST) {
             $form = new AllowanceChargeForm();
             if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
-                $this->flashMessage('info', $this->translator->translate('record.successfully.created'));
-                return $this->webService->getRedirectResponse('allowancecharge/index');
+                $ac = $this->allowanceChargeService->saveAllowanceCharge(
+                    $allowanceCharge, $body);
+                $ac->hasIdentity() ? $this->m('CS') : $this->m('CN');
+                return $this->webService->getRedirectResponse(
+                    'allowancecharge/index');
             }
             $parameters['form'] = $form;
-            $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+            $parameters['errors'] =
+                $form->getValidationResult()->getErrorMessagesIndexedByProperty();
         }
         return $this->webViewRenderer->render('_form_charge', $parameters);
     }
@@ -174,12 +180,14 @@ final class AllowanceChargeController extends BaseController
         $allowanceCharges = $allowanceChargeRepository->findAllPreloaded();
         $paginator = (new OffsetPaginator($allowanceCharges));
         $parameters = [
-            'canEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ? true : false,
+            'canEdit' => $this->userService->hasPermission(Permissions::EDIT_INV) ?
+                true : false,
             'allowanceCharges' => $this->allowanceCharges($allowanceChargeRepository),
             'alert' => $this->alert(),
             'paginator' => $paginator,
-            'defaultPageSizeOffsetPaginator' => $this->sR->getSetting('default_list_limit')
-                                                          ? (int) $this->sR->getSetting('default_list_limit') : 1,
+            'defaultPageSizeOffsetPaginator' =>
+                $this->sR->getSetting('default_list_limit') ?
+                (int) $this->sR->getSetting('default_list_limit') : 1,
         ];
         return $this->webViewRenderer->render('index', $parameters);
     }
@@ -196,8 +204,9 @@ final class AllowanceChargeController extends BaseController
         try {
             $allowanceCharge = $this->allowanceCharge($currentRoute, $allowanceChargeRepository);
             if ($allowanceCharge) {
-                $this->allowanceChargeService->deleteAllowanceCharge($allowanceCharge);
-                $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
+                $ac = $this->allowanceChargeService->deleteAllowanceCharge(
+                    $allowanceCharge);
+                $ac->hasIdentity() ? $this->m('DS') : $this->m('DN');
                 return $this->webService->getRedirectResponse('allowancecharge/index');
             }
             return $this->webService->getRedirectResponse('allowancecharge/index');
@@ -230,7 +239,8 @@ final class AllowanceChargeController extends BaseController
                 $peppolArrays = new PeppolArrays();
                 $allowances = $peppolArrays->getAllowancesSubsetArray();
                 $parameters = [
-                    'title' => $this->translator->translate('allowance.or.charge.edit.allowance'),
+                    'title' => $this->translator->translate(
+                        'allowance.or.charge.edit.allowance'),
                     'actionName' => 'allowancecharge/editAllowance',
                     'actionArguments' => ['id' => $allowanceCharge->reqId()],
                     'errors' => [],
@@ -241,9 +251,11 @@ final class AllowanceChargeController extends BaseController
                 if ($request->getMethod() === Method::POST) {
                     if (is_array($body)) {
                         if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                            $this->allowanceChargeService->saveAllowanceCharge($allowanceCharge, $body);
-                            $this->flashMessage('info', $this->translator->translate('record.successfully.updated'));
-                            return $this->webService->getRedirectResponse('allowancecharge/index');
+                            $ac = $this->allowanceChargeService->saveAllowanceCharge(
+                                $allowanceCharge, $body);
+                            $ac->hasIdentity() ? $this->m('US') : $this->m('UN');
+                            return $this->webService
+                                        ->getRedirectResponse('allowancecharge/index');
                         }
                         $parameters['form'] = $form;
                         $parameters['errors'] =
@@ -309,16 +321,13 @@ final class AllowanceChargeController extends BaseController
 
     /**
      * @param CurrentRoute $currentRoute
-     * @param AllowanceChargeRepository $allowanceChargeRepository
+     * @param AllowanceChargeRepository $acR
      * @return AllowanceCharge|null
      */
-    private function allowanceCharge(CurrentRoute $currentRoute, AllowanceChargeRepository $allowanceChargeRepository): ?AllowanceCharge
+    private function allowanceCharge(CurrentRoute $currentRoute, AllowanceChargeRepository $acR): ?AllowanceCharge
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $allowanceChargeRepository->repoAllowanceChargequery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $acR->repoAllowanceChargequery($id);
     }
 
     /**

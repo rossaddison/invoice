@@ -238,7 +238,7 @@ final class ContractController extends BaseController
                 'errors' => [],
                 'form' => $form,
             ];
-            if ($this->rbacObserver($contract->getClientId(),
+            if ($this->rbacObserver($contract->reqClientId(),
                                                                 $ucR, $uiR)) {
                 return $this->webViewRenderer->render('_view', $parameters);
             }
@@ -246,11 +246,10 @@ final class ContractController extends BaseController
         return $this->webService->getRedirectResponse('contract/index');
     }
 
-    private function rbacObserver(
-                                    string $clientId, UCR $ucR, UIR $uiR): bool {
+    private function rbacObserver(int $clientId, UCR $ucR, UIR $uiR): bool {
         $userClient = $ucR->repoUserquery($clientId);
         if (null!==$userClient) {
-            $userId = $userClient->getUserId();
+            $userId = $userClient->reqUserId();
             $userInv = $uiR->repoUserInvUserIdquery($userId);
             if (null !== $userInv && $userInv->getActive()) {
                 return true;
@@ -264,16 +263,13 @@ final class ContractController extends BaseController
     /**
      * @param CurrentRoute $currentRoute
      * @param contractR $contractRepository
-     * @return Contract|null
+     * @return Contract
      */
-    private function contract(CurrentRoute $currentRoute,
-                                    contractR $contractRepository): ?Contract
+    private function contract(CurrentRoute $currentRoute, contractR $contractRepository):
+        ?Contract
     {
         $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $contractRepository->repoContractquery($id);
-        }
-        return null;
+        return $contractRepository->repoContractquery((int) $id);
     }
 
     /**

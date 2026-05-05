@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see GeneratorController function controller
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  * @var Cycle\Database\Table $orm_schema
  * @var array $relations
  */
@@ -43,7 +43,7 @@ use App\Invoice\Setting\SettingRepository as sR;
 
 <?php
   /**
-   * @var App\Invoice\Entity\GentorRelation $relation
+   * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
    */
   foreach ($relations as $relation) {
       echo 'use '
@@ -104,7 +104,7 @@ final class <?= $generator->getCamelcaseCapitalName(); ?>
                         $rel = '';
 echo "\n";
 /**
- * @var App\Invoice\Entity\GentorRelation $relation
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
 foreach ($relations as $relation) {
     $rel .= '                        '
@@ -132,7 +132,7 @@ echo rtrim($rel, ",\n") . "\n";
             <?php echo "\n";
 
 /**
- * @var App\Invoice\Entity\GentorRelation $relation
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
 foreach ($relations as $relation) {
     echo "            '"
@@ -239,7 +239,7 @@ foreach ($relations as $relation) {
 $rel = '';
 echo "\n";
 /**
- * @var App\Invoice\Entity\GentorRelation $relation
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
 foreach ($relations as $relation) {
     $rel .= '                        '
@@ -266,7 +266,7 @@ echo rtrim($rel, ",\n") . ",";
                 <?php
             $rel = '';
 /**
- * @var App\Invoice\Entity\GentorRelation $relation
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
 foreach ($relations as $relation) {
     $rel .= "            '"

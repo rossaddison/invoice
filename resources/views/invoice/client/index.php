@@ -72,7 +72,7 @@ $columns = [
         'id',
         header: 'Peppol',
         content: static function (Client $model) use ($cpR, $button, $translator): Span {
-            return ($cpR->repoClientCount((string) $model->reqId()) !== 0)
+            return ($cpR->repoClientCount($model->reqId()) !== 0)
                     ? $button::activeLabel($translator)
                     : $button::inactiveLabel($translator);
         },
@@ -84,7 +84,7 @@ $columns = [
         header: $translator->translate('client.has.user.account'),
         content: static function (Client $model) use ($canEdit, $ucR, $button,
                 $translator, $urlGenerator): Span {
-            return ($ucR->repoUserqueryCount((string) $model->reqId()) !== 0
+            return ($ucR->repoUserqueryCount($model->reqId()) !== 0
                     && $canEdit)
                    ? $button::activeLabel($translator)
                    : $button::inactiveWithAddUserAccount($urlGenerator, $translator);
@@ -142,11 +142,11 @@ $columns = [
             // Initialize a new empty ArrayCollection without the need to create a new entity
             $model->setInvs();
             /**
-             * @var App\Invoice\Entity\Inv $invoice
+             * @var App\Infrastructure\Persistence\Inv\Inv $invoice
              */
             foreach ($invoices as $invoice) {
-                $invoice_amount = ($iaR->repoInvAmountCount((int) $invoice->getId())
-                        > 0 ? $iaR->repoInvquery((int) $invoice->getId()) : null);
+                $invoice_amount = ($iaR->repoInvAmountCount($invoice->reqId())
+                        > 0 ? $iaR->repoInvquery($invoice->reqId()) : null);
                 if (null !== $invoice_amount
                         && null !== $invoice_amount->getBalance()
                         && $invoice_amount->getBalance() > 0) {
@@ -294,8 +294,7 @@ $columns = [
                     ['client_id' => $model->reqId()]);
             $editUrl = $urlGenerator->generate('clientpeppol/edit',
                     ['client_id' => $model->reqId(), 'origin' => 'edit']);
-            $equal = ($cpR->repoClientCount(
-                    (string) $model->reqId()) === 0 ? true : false);
+            $equal = ($cpR->repoClientCount($model->reqId()) === 0 ? true : false);
             $heading = ($equal ? $translator->translate('client.peppol.add') :
                 $translator->translate('client.peppol.edit'));
             return Html::a(

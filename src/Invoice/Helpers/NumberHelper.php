@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Helpers;
 
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
 use App\Infrastructure\Persistence\QuoteAllowanceCharge\QuoteAllowanceCharge;
@@ -14,11 +14,11 @@ use App\Infrastructure\Persistence\SalesOrderAllowanceCharge\{
 use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
-use App\Invoice\Entity\SalesOrderTaxRate;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvTaxRate;
-use App\Invoice\Entity\Payment;
+use App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\InvTaxRate\InvTaxRate;
+use App\Infrastructure\Persistence\Payment\Payment;
 use App\Infrastructure\Persistence\QuoteAmount\QuoteAmount;
 use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
 use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
@@ -368,7 +368,7 @@ final readonly class NumberHelper
         }
     }
 
-    public function calculateInv(string $inv_id, ACIR $aciR, IIR $iiR,
+    public function calculateInv(int $inv_id, ACIR $aciR, IIR $iiR,
                     IIAR $iiaR, ITRR $itrR, IAR $iaR, IR $iR, PYMR $pymR): void
     {
         $inv_allowance_charge_amount_total = 0.00;
@@ -435,13 +435,13 @@ final readonly class NumberHelper
         // Give the Invoice its summary of amounts at the bottom of the invoice
         //---------------------------------------------------------------------
         $count = $iiR->repoCount($inv_id);
-        $count_inv_amount = $iaR->repoInvAmountCount((int) $inv_id);
+        $count_inv_amount = $iaR->repoInvAmountCount($inv_id);
         //At least one item and a preexisting invoice amount record exists =>
         //Update the Invoice Amount Record
         if (($count > 0) && ($count_inv_amount > 0)) {
-            $inv_amount = $iaR->repoInvquery((int) $inv_id);
+            $inv_amount = $iaR->repoInvquery($inv_id);
             if ($inv_amount) {
-                $inv_amount->setInvId((int) $inv_id);
+                $inv_amount->setInvId($inv_id);
                 $inv_amount->setItemSubtotal(
                                            $inv_item_subtotal_discount ?: 0.00);
                 $inv_amount->setItemTaxTotal(
@@ -477,9 +477,9 @@ final readonly class NumberHelper
         // There are no longer any items on the invoice so initialize the
         // Invoice Amount Record to zero
         if (($count === 0) && ($count_inv_amount > 0)) {
-            $inv_amount = $iaR->repoInvquery((int) $inv_id);
+            $inv_amount = $iaR->repoInvquery($inv_id);
             if ($inv_amount) {
-                $inv_amount->setInvId((int) $inv_id);
+                $inv_amount->setInvId($inv_id);
                 $inv_amount->setItemSubtotal(0.00);
                 $inv_amount->setItemTaxTotal(0.00);
                 $inv_amount->setTaxTotal(0.00);
@@ -491,7 +491,7 @@ final readonly class NumberHelper
             // Create an Invoice  Amount Record for this invoice if it does not
             // exist even if there are no items
             $inv_amount = new InvAmount();
-            $inv_amount->setInvId((int) $inv_id);
+            $inv_amount->setInvId($inv_id);
             $inv_amount->setItemSubtotal(0.00);
             $inv_amount->setItemTaxTotal(0.00);
             $inv_amount->setTaxTotal(0.00);
@@ -671,13 +671,13 @@ final readonly class NumberHelper
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @param IIR $iiR
      * @param IIAR $iiaR
      * @return array
      */
     public function invCalculateTotalsofItemTotals(
-                                    string $inv_id, IIR $iiR, IIAR $iiaR): array
+                                    int $inv_id, IIR $iiR, IIAR $iiaR): array
     {
         $get_all_items_in_inv = $iiR->repoInvItemIdquery($inv_id);
         $grand_sub_total = 0.00;
@@ -696,7 +696,7 @@ final readonly class NumberHelper
         ];
         /** @var InvItem $item */
         foreach ($get_all_items_in_inv as $item) {
-            $inv_item_amount = $iiaR->repoInvItemAmountquery((string) $item->getId());
+            $inv_item_amount = $iiaR->repoInvItemAmountquery($item->reqId());
             if (null !== $inv_item_amount) {
                 $grand_sub_total = $grand_sub_total
                         + ($inv_item_amount->getSubtotal() ?? 0.00);
@@ -765,13 +765,13 @@ final readonly class NumberHelper
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @param $inv_total
      * @param IR $iR
      * @return float
      */
     public function invIncludeCustomerDiscountRequest(
-                                string $inv_id, float $inv_total, IR $iR): float
+                                int $inv_id, float $inv_total, IR $iR): float
     {
         $inv = $iR->repoInvUnloadedquery($inv_id);
         $discount_amount = 0.00;
@@ -883,8 +883,7 @@ final readonly class NumberHelper
      * Related logic: see InvController function defaultTaxInv
      * @param $inv_id
      */
-    public function calculateInvTaxes(
-                                    string $inv_id, ITRR $itrR, IAR $iaR): float
+    public function calculateInvTaxes(int $inv_id, ITRR $itrR, IAR $iaR): float
     {
 // Invoice amount Table fields:
 //  id->inv_id->item_subtotal->item_tax_total->tax_total*->total
@@ -899,9 +898,9 @@ final readonly class NumberHelper
         $inv_tax_rates_count = $itrR->repoCount($inv_id);
 // At least one invoice tax rate has been set and the invoice has amounts that
 //  invoice tax rates can be applied to
-        if (($inv_tax_rates_count > 0) && $iaR->repoInvAmountCount((int) $inv_id) > 0) {
+        if (($inv_tax_rates_count > 0) && $iaR->repoInvAmountCount($inv_id) > 0) {
             // There are invoice taxes applied
-            $inv_amount = $iaR->repoInvquery((int) $inv_id);
+            $inv_amount = $iaR->repoInvquery($inv_id);
             if ($inv_amount) {
 // Loop through the invoice taxes and update inv_tax_rate_amount for each of
 //  the applied inv taxes

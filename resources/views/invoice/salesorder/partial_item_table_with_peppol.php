@@ -12,7 +12,7 @@ use Yiisoft\Html\Html;
  * @var App\Invoice\Unit\UnitRepository $uR
  * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $so
  * @var App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount $so_amount
- * @var App\Invoice\Entity\SalesOrderTaxRate $soTaxRates
+ * @var App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate $soTaxRates
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator
@@ -177,7 +177,7 @@ foreach ($soItems as $item) {
                     <td class="td-text">
                         <div class="input-group">
                             <input type="text" disabled="true" maxlength="1" size="1" name="so_id" value="<?= $item->reqSalesOrderId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->quote_id">
-                            <input type="text" disabled="true" maxlength="1" size="1" name="item_id" value="<?= (string) $item->reqId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->getId()">
+                            <input type="text" disabled="true" maxlength="1" size="1" name="item_id" value="<?= (string) $item->reqId(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->reqId()">
                             <input type="text" disabled="true" maxlength="1" size="1" name="item_product_id" value="<?= $productId ?>" data-bs-toggle = "tooltip" title="salesorder_item->product_id">
                             <input type="text" disabled="true" placeholder="Peppol" maxlength="8" size="8" name="item_peppol_po_itemid" value="<?= $item->getPeppolPoItemid(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->peppol_po_itemid This value is editable if the client or customer is going to pay by Peppol. They have to supply their corresponding Purchase Order Item Id here. https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-Item/cac-BuyersItemIdentification/cbc-ID/">
                             <input type="text" disabled="true" placeholder="Peppol" maxlength="8" size="8" name="item_peppol_po_lineid" value="<?= $item->getPeppolPoLineid(); ?>" data-bs-toggle = "tooltip" title="salesorder_item->peppol_po_lineid This value is editable if the client or customer is going to pay by Peppol. They have to supply their corresponding Purchase Order Line Number here. https://docs.peppol.eu/poacc/billing/3.0/syntax/ubl-invoice/cac-InvoiceLine/cac-OrderLineReference/cbc-LineID/">
@@ -190,8 +190,8 @@ foreach ($soItems as $item) {
                      * @var App\Infrastructure\Persistence\Product\Product $product
                      */
                     foreach ($pR->findAllPreloaded() as $product) { ?>
-                                    <option value="<?php echo $product->getProductId(); ?>"
-                                            <?php if ($productId !== null && $productId == (int) $product->getProductId()) { ?>selected="selected"<?php } ?>>
+                                    <option value="<?php echo $product->reqId(); ?>"
+                                            <?php if ($productId !== null && $productId == $product->reqId()) { ?>selected="selected"<?php } ?>>
                                         <?php echo Html::encode($product->getProductName()); ?>
                                     </option>
                                 <?php } ?>

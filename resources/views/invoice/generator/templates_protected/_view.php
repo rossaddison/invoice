@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see GeneratorController function form
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  * @var Cycle\Database\Table $orm_schema
  * @var array $relations
  */
@@ -62,7 +62,7 @@ echo '        <?= Html::encode($title); ?>' . "\n";
 echo "    <?= Html::closeTag('h5'); ?>" . "\n";
 
 /**
- * @var App\Invoice\Entity\GentorRelation $relation
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
 foreach ($relations as $relation) {
     echo "    <?= Html::openTag('div'); ?>" . "\n";

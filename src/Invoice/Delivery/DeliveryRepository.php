@@ -89,11 +89,11 @@ final class DeliveryRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return Delivery|null
      */
-    public function repoDeliveryquery(string $id): ?Delivery
+    public function repoDeliveryquery(int $id): ?Delivery
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -101,10 +101,10 @@ final class DeliveryRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return Delivery|null
      */
-    public function repoPartyquery(string $inv_id): ?Delivery
+    public function repoPartyquery(int $inv_id): ?Delivery
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
@@ -112,10 +112,10 @@ final class DeliveryRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return Delivery|null
      */
-    public function repoInvoicequery(string $inv_id): ?Delivery
+    public function repoInvoicequery(int $inv_id): ?Delivery
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
@@ -123,10 +123,10 @@ final class DeliveryRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return int
      */
-    public function repoCountInvoice(string $inv_id): int
+    public function repoCountInvoice(int $inv_id): int
     {
         $query = $this->select()
                       ->where(['inv_id' => $inv_id]);
@@ -134,10 +134,10 @@ final class DeliveryRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

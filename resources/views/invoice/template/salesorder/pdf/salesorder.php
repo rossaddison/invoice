@@ -9,7 +9,7 @@ use Yiisoft\Html\Html;
  *
  * @var App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount $so_amount
  * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $salesorder
- * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
+ * @var App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate $salesorder_tax_rate
  * @var App\Invoice\Helpers\CountryHelper $countryHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -326,7 +326,7 @@ if ($items) {
 
         <?php
                         /**
-                         * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
+                         * @var App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate $salesorder_tax_rate
                          */
                         foreach ($so_tax_rates as $salesorder_tax_rate) : ?>
             <tr>

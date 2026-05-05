@@ -93,7 +93,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
  * @var App\Infrastructure\Persistence\Product\Product $product
  */
 foreach ($products as $product) {
-    $productId = $product->getProductId();
+    $productId = $product->reqId();
     $productName = $product->getProductName() ?? '';
     if (!empty($productId) && strlen($productName) > 0) {
         $optionsDataProduct[$productId] = $productName;

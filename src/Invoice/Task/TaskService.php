@@ -21,7 +21,7 @@ final readonly class TaskService
     {
         if (isset($array['project_id'])) {
             $project = $this->pR->repoProjectquery(
-                (string) $array['project_id']
+                (int) $array['project_id']
             );
             if ($project) {
                 $model->setProject($project);
@@ -29,9 +29,7 @@ final readonly class TaskService
             }
         }
         if (isset($array['tax_rate_id'])) {
-            $tax_rate = $this->trR->repoTaxRatequery(
-                (string) $array['tax_rate_id']
-            );
+            $tax_rate = $this->trR->repoTaxRatequery((int) $array['tax_rate_id']);
             if ($tax_rate) {
                 $model->setTaxRate($tax_rate);
                 $model->setTaxRateId($tax_rate->reqId());

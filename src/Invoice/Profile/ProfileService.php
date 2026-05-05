@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Profile;
 
-use App\Invoice\Entity\Profile;
+use App\Infrastructure\Persistence\Profile\Profile;
 use App\Invoice\Company\CompanyRepository as CR;
 
 final readonly class ProfileService
@@ -46,8 +46,7 @@ final readonly class ProfileService
         $company = 'company_id';
         if (isset($array[$company])) {
             $model->setCompany(
-                $this->cR->repoCompanyquery(
-                    (string) $array[$company]));
+                $this->cR->repoCompanyquery((int) $array[$company]));
         }
     }
 

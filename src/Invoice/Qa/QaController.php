@@ -159,7 +159,7 @@ final class QaController extends BaseController
     private function qa(QaRepository $qaRepository, int $id): Qa|null
     {
         if ($id) {
-            $qa = $qaRepository->repoQaQuery((string)$id);
+            $qa = $qaRepository->repoQaQuery($id);
             return $qa;
         }
         return null;

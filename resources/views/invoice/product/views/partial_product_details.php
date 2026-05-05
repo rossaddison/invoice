@@ -87,7 +87,7 @@ use Yiisoft\Html\Tag\Form;
         ->addInputAttributes([
             'class' => 'form-control  alert alert-warning',
         ])
-        ->value($form->getFamilyId())
+        ->value($form->getId())
         ->prompt($translator->translate('none'))
         ->optionsData($families)
         ->disabled(true)

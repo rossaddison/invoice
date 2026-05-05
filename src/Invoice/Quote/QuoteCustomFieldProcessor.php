@@ -25,15 +25,15 @@ final class QuoteCustomFieldProcessor implements CustomFieldProcessor
     }
 
     #[\Override]
-    public function exists(string $entityId, string $customFieldId): bool
+    public function exists(int $entityId, int $customFieldId): bool
     {
-        return $this->repository->repoQuoteCustomCount((int) $entityId, (int) $customFieldId) > 0;
+        return $this->repository->repoQuoteCustomCount($entityId, $customFieldId) > 0;
     }
 
     #[\Override]
-    public function findExisting(string $entityId, string $customFieldId): ?\App\Infrastructure\Persistence\QuoteCustom\QuoteCustom
+    public function findExisting(int $entityId, int $customFieldId): ?\App\Infrastructure\Persistence\QuoteCustom\QuoteCustom
     {
-        return $this->repository->repoFormValuequery((int) $entityId, (int) $customFieldId);
+        return $this->repository->repoFormValuequery($entityId, $customFieldId);
     }
 
     #[\Override]

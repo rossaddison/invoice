@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\UnitPeppol;
 
-use App\Invoice\Entity\UnitPeppol;
+use App\Infrastructure\Persistence\UnitPeppol\UnitPeppol;
 use App\Invoice\Unit\UnitRepository as UR;
 
 final readonly class UnitPeppolService
@@ -18,7 +18,7 @@ final readonly class UnitPeppolService
     private function persist(UnitPeppol $model, array $array): void
     {
         $unit = $this->uR->repoUnitquery(
-            (string) $array['unit_id']
+            (int) $array['unit_id']
         );
         if ($unit) {
             $model->setUnit($unit);

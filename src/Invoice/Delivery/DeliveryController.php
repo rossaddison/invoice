@@ -60,21 +60,21 @@ final class DeliveryController extends BaseController
         InvRepository $iR,
         DLR $delRepo,
     ): Response {
-        $inv_id = $currentRoute->getArgument('inv_id');
-        $inv = $iR->repoInvLoadedquery((string) $inv_id);
+        $inv_id = (int) $currentRoute->getArgument('inv_id');
+        $inv = $iR->repoInvLoadedquery($inv_id);
         if (null !== $inv) {
-            $dels = $delRepo->repoClientquery($inv->getClientId());
+            $dels = $delRepo->repoClientquery($inv->reqClientId());
             $delivery = new Delivery();
             // inv_id is a hidden field and is static
-            $delivery->setInvId((int) $inv_id);
+            $delivery->setInvId($inv_id);
             $form = new DeliveryForm();
             $parameters = [
                 'title' => $this->translator->translate('delivery.add'),
                 'actionName' => 'delivery/add',
-                'actionArguments' => ['inv_id' => $inv->getId()],
+                'actionArguments' => ['inv_id' => $inv->reqId()],
                 'errors' => [],
                 'form' => $form,
-                'del_count' => $delRepo->repoClientCount($inv->getClientId()),
+                'del_count' => $delRepo->repoClientCount($inv->reqClientId()),
                 'dels' => $dels,
                 'inv' => $inv,
             ];
@@ -188,32 +188,34 @@ final class DeliveryController extends BaseController
         if ($delivery) {
             $form = new DeliveryForm();
             $inv_id = $delivery->getInvId();
-            $inv = $iR->repoInvLoadedquery((string) $inv_id);
-            if (null !== $inv) {
-                $dels = $delRepo->repoClientquery($inv->getClientId());
-                $parameters = [
-                    'title' => $this->translator->translate('edit'),
-                    'actionName' => 'delivery/edit',
-                    'actionArguments' => ['id' => $delivery->reqId()],
-                    'errors' => [],
-                    'form' => $form,
-                    'inv' => $inv,
-                    'del_count' => $delRepo->repoClientCount($inv->getClientId()),
-                    'dels' => $dels,
-                ];
-                if ($request->getMethod() === Method::POST) {
-                    $body = $request->getParsedBody() ?? [];
-                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                        if (is_array($body)) {
-                            $this->deliveryService->saveDelivery($delivery, $body);
-                            return $this->webService->getRedirectResponse('delivery/index');
+            if ($inv_id > 0) {
+                $inv = $iR->repoInvLoadedquery($inv_id);
+                if (null !== $inv) {
+                    $dels = $delRepo->repoClientquery($inv->reqClientId());
+                    $parameters = [
+                        'title' => $this->translator->translate('edit'),
+                        'actionName' => 'delivery/edit',
+                        'actionArguments' => ['id' => $delivery->reqId()],
+                        'errors' => [],
+                        'form' => $form,
+                        'inv' => $inv,
+                        'del_count' => $delRepo->repoClientCount($inv->reqClientId()),
+                        'dels' => $dels,
+                    ];
+                    if ($request->getMethod() === Method::POST) {
+                        $body = $request->getParsedBody() ?? [];
+                        if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                            if (is_array($body)) {
+                                $this->deliveryService->saveDelivery($delivery, $body);
+                                return $this->webService->getRedirectResponse('delivery/index');
+                            }
                         }
+                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                        $parameters['form'] = $form;
                     }
-                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                    $parameters['form'] = $form;
-                }
-                return $this->webViewRenderer->render('_form', $parameters);
-            } // null!==$inv
+                    return $this->webViewRenderer->render('_form', $parameters);
+                } // null!==$inv
+            }     
         }
         return $this->webService->getRedirectResponse('delivery/index');
     }
@@ -227,13 +229,9 @@ final class DeliveryController extends BaseController
      */
     private function delivery(CurrentRoute $currentRoute, DeliveryRepository $deliveryRepository): ?Delivery
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $deliveryRepository->repoDeliveryquery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $deliveryRepository->repoDeliveryquery($id);
     }
-
     /**
      * @return \Yiisoft\Data\Cycle\Reader\EntityReader
      *

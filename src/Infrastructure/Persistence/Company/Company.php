@@ -91,7 +91,7 @@ class Company
         return $this->requireId($this->id, 'Company');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

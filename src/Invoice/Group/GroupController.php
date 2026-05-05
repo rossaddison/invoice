@@ -177,7 +177,7 @@ final class GroupController extends BaseController
                 'actionArguments' => ['id' => $group->reqId()],
                 'errors' => [],
                 'form' => $form,
-                'group' => $groupRepository->repoGroupquery((string) $group->reqId()),
+                'group' => $groupRepository->repoGroupquery($group->reqId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
@@ -192,24 +192,21 @@ final class GroupController extends BaseController
     {
         $canEdit = $this->userService->hasPermission(Permissions::EDIT_INV);
         if (!$canEdit) {
-            $this->flashMessage('warning', $this->translator->translate('permission'));
+            $this->flashMessage('warning',
+                $this->translator->translate('permission'));
             return $this->webService->getRedirectResponse('group/index');
         }
         return $canEdit;
     }
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param GroupRepository $groupRepository
+     * @param CurrentRoute $curR
+     * @param GroupRepository $gR
      * @return Group|null
      */
-    private function group(CurrentRoute $currentRoute, GroupRepository $groupRepository): ?Group
+    private function group(CurrentRoute $curR, GroupRepository $gR): ?Group
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $groupRepository->repoGroupquery($id);
-        }
-        return null;
+        return $gR->repoGroupquery((int) $curR->getArgument('id'));        
     }
 
     /**

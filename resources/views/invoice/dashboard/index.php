@@ -381,7 +381,7 @@ use Yiisoft\Html\Html;
 
                         <?php
                             /**
-                             * @var App\Invoice\Entity\Inv $invoice
+                             * @var App\Infrastructure\Persistence\Inv\Inv $invoice
                              */
                             foreach ($invoices as $invoice) {
                                 if ($s->getSetting('disable_read_only') == '1') {
@@ -389,21 +389,20 @@ use Yiisoft\Html\Html;
                                 } ?>
                             <tr>
                                 <td>
-                 <?php if (null !== ($statusId = $invoice->getStatusId())) { ?>
+                 <?php $statusId = $invoice->reqStatusId(); ?>
                                     <span class="badge text-bg-<?=
                                 $iR->getSpecificStatusArrayClass($statusId); ?>">
                         <?= $iR->getSpecificStatusArrayLabel((string) $statusId);
-    if (null !== $iaR->repoCreditInvoicequery((string) $invoice->getId())) {
+    if (null !== $iaR->repoCreditInvoicequery($invoice->reqId())) {
         $translator->translate('credit.invoice'); }
     if ($invoice->getIsReadOnly()) { $translator->translate('read.only'); } ?>
-               <?php if (($irR->repoCount((string) $invoice->getId()) > 0)) { ?>
+               <?php if (($irR->repoCount($invoice->reqId()) > 0)) { ?>
                                         &nbsp;
                                         <i class="bi bi-arrow-clockwise"
                                            title="<?php $translator->translate(
                                                    'recurring') ?>"></i>
                                             <?php } ?>
                                     </span>
-                                    <?php } ?>
                                 </td>
                                 <td>
                                     <span class="<?= $invoice->isOverdue() ?
@@ -413,31 +412,31 @@ use Yiisoft\Html\Html;
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate('inv/view',
-                                            ['id' => $invoice->getId()]); ?>"
+                                            ['id' => $invoice->reqId()]); ?>"
                                        class="btn btn-default"
                                        style="text-decoration:none">
                                         <?= ($invoice->getNumber() ?? '#'
-                                               . ($invoice->getId() ?? '#')); ?>
+                                               . ($invoice->reqId() ?: '#')); ?>
                                     </a>
                                 </td>
                                 <td>
                                     <a href="<?= $urlGenerator->generate(
                                             'client/view',
-                                            ['id' => $invoice->getClientId()]); ?>"
+                                            ['id' => $invoice->reqClientId()]); ?>"
                                         class="btn btn-default"
                                         style="text-decoration:none">
      <?= (Html::encode($clientHelper->formatClient($invoice->getClient()))); ?>
                                     </a>
                                 </td>
                                 <td class="amount">
-    <?php $inv_amount = (($iaR->repoInvAmountCount((int) $invoice->getId()) > 0)
-                        ? $iaR->repoInvquery((int) $invoice->getId()) : null) ?>
+    <?php $inv_amount = (($iaR->repoInvAmountCount($invoice->reqId()) > 0)
+                        ? $iaR->repoInvquery($invoice->reqId()) : null) ?>
 <?= $s->formatCurrency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00) ?>
                                 </td>
                                 <td style="text-align: center;">
                                     <a href="<?= $urlGenerator->generate(
                                             'inv/pdfDashboardIncludeCf',
-                                            ['id' => $invoice->getId()]); ?>"
+                                            ['id' => $invoice->reqId()]); ?>"
                                        title="<?= $translator->translate(
                                                'download.pdf'); ?>"
                                        class="btn btn-default"
@@ -448,7 +447,7 @@ use Yiisoft\Html\Html;
                                 <td style="text-align: center;">
                                     <a href="<?= $urlGenerator->generate(
                                             'quote/pdfDashboardExcludeCf',
-                                            ['id' => $invoice->getId()]); ?>"
+                                            ['id' => $invoice->reqId()]); ?>"
                                        title="<?= $translator->translate(
                                                'download.pdf'); ?>"
                                        class="btn btn-default"

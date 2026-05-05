@@ -21,7 +21,7 @@ class CustomFieldEntityTest extends Unit
     {
         $defaultCustomField = new CustomField();
         
-        $this->assertFalse($defaultCustomField->isPersisted());
+        $this->assertFalse($defaultCustomField->hasIdentity());
         $this->assertEquals('', $defaultCustomField->getTable());
         $this->assertEquals('', $defaultCustomField->getLabel());
         $this->assertEquals('', $defaultCustomField->getType());
@@ -53,7 +53,7 @@ class CustomFieldEntityTest extends Unit
 
     public function testIdSetterAndGetter(): void
     {
-        $this->assertFalse($this->customField->isPersisted());
+        $this->assertFalse($this->customField->hasIdentity());
         
         $this->customField->setId(42);
         $this->assertSame(42, $this->customField->reqId());

@@ -160,11 +160,11 @@ final class SalesOrderRepository extends Select\Repository
     }
 
     /**
-     * @param int|null $salesorder_id
+     * @param int $salesorder_id
      * @param int $status_id
      * @return SalesOrder|null
      */
-    public function repoSalesOrderStatusquery(?int $salesorder_id,
+    public function repoSalesOrderStatusquery(int $salesorder_id,
             int $status_id): ?SalesOrder
     {
         $query = $this->select()->where(['id' => $salesorder_id])
@@ -175,9 +175,9 @@ final class SalesOrderRepository extends Select\Repository
     /**
      * @psalm-param 1 $status_id
      *
-     * @param int|null $salesorder_id
+     * @param int $salesorder_id
      */
-    public function repoSalesOrderStatuscount(?int $salesorder_id,
+    public function repoSalesOrderStatuscount(int $salesorder_id,
             int $status_id): int
     {
         return $this->select()->where(['id' => $salesorder_id])
@@ -425,9 +425,9 @@ final class SalesOrderRepository extends Select\Repository
     }
 
     /**
-     * @param int|null $salesorder_id
+     * @param int $salesorder_id
      */
-    public function repoCount(?int $salesorder_id): int
+    public function repoCount(int $salesorder_id): int
     {
         return $this->select()
                       ->where(['id' => $salesorder_id])

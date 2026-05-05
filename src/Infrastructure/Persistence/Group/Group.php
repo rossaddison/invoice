@@ -34,7 +34,7 @@ class Group
         return $this->requireId($this->id, 'Group');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

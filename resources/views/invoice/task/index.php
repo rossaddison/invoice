@@ -76,7 +76,10 @@ $columns = [
         'project_id',
         header: $translator->translate('project'),
         content: static function (Task $model) use ($prjctR): string {
-            return Html::encode(($p = $model->getProject()) !== null && $prjctR->count((string) $p->reqId()) > 0 ? $prjctR->repoProjectquery((string) $p->reqId())?->getName() ?? '' : '');
+            return Html::encode(
+                    ($p = $model->getProject()) !== null
+                    && $prjctR->count($p->reqId()) > 0 ?
+                    $prjctR->repoProjectquery($p->reqId())?->getName() ?? '' : '');
         },
     ),
     new DataColumn(

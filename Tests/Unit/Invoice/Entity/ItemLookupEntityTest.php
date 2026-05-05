@@ -16,7 +16,7 @@ class ItemLookupEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $itemLookup = new ItemLookup();
-        $this->assertFalse($itemLookup->isPersisted());
+        $this->assertFalse($itemLookup->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -30,7 +30,7 @@ class ItemLookupEntityTest extends TestCase
     {
         $itemLookup = new ItemLookup();
 
-        $this->assertFalse($itemLookup->isPersisted());
+        $this->assertFalse($itemLookup->hasIdentity());
         $this->assertSame('', $itemLookup->getName());
         $this->assertSame('', $itemLookup->getDescription());
         $this->assertNull($itemLookup->getPrice());

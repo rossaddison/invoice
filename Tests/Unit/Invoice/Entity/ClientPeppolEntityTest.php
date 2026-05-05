@@ -19,7 +19,7 @@ class ClientPeppolEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $clientPeppol = new ClientPeppol();
-        $this->assertFalse($clientPeppol->isPersisted());
+        $this->assertFalse($clientPeppol->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -33,8 +33,7 @@ class ClientPeppolEntityTest extends TestCase
     {
         $clientPeppol = new ClientPeppol();
 
-        $this->assertFalse($clientPeppol->isPersisted());
-        $this->assertSame('', $clientPeppol->getClientId());
+        $this->assertFalse($clientPeppol->hasIdentity());
         $this->assertSame('', $clientPeppol->getEndpointid());
         $this->assertSame('', $clientPeppol->getEndpointidSchemeid());
         $this->assertSame('', $clientPeppol->getIdentificationid());
@@ -74,7 +73,7 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol->setId(1);
 
         $this->assertSame(1, $clientPeppol->reqId());
-        $this->assertSame('100', $clientPeppol->getClientId());
+        $this->assertSame(100, $clientPeppol->reqClientId());
         $this->assertSame($this->sequenceOfNumbers, $clientPeppol->getEndpointid());
         $this->assertSame('0088', $clientPeppol->getEndpointidSchemeid());
         $this->assertSame('COMPANY123', $clientPeppol->getIdentificationid());
@@ -104,7 +103,7 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol = new ClientPeppol();
         $clientPeppol->setClientId(200);
 
-        $this->assertSame('200', $clientPeppol->getClientId());
+        $this->assertSame(200, $clientPeppol->reqClientId());
     }
 
     public function testEndpointidSetterAndGetter(): void
@@ -245,8 +244,8 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol = new ClientPeppol();
         $clientPeppol->setClientId(777);
 
-        $this->assertIsString($clientPeppol->getClientId());
-        $this->assertSame('777', $clientPeppol->getClientId());
+        $this->assertIsInt($clientPeppol->reqClientId());
+        $this->assertSame(777, $clientPeppol->reqClientId());
     }
 
     public function testZeroIds(): void
@@ -256,7 +255,7 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol->setClientId(0);
 
         $this->assertSame(0, $clientPeppol->reqId());
-        $this->assertSame('0', $clientPeppol->getClientId());
+        $this->assertSame(0, $clientPeppol->reqClientId());
     }
 
     public function testNegativeIds(): void
@@ -266,7 +265,7 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol->setClientId(-5);
 
         $this->assertSame(-1, $clientPeppol->reqId());
-        $this->assertSame('-5', $clientPeppol->getClientId());
+        $this->assertSame(-5, $clientPeppol->reqClientId());
     }
 
     public function testLargeIds(): void
@@ -278,7 +277,7 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol->setClientId($largeId - 1);
 
         $this->assertSame($largeId, $clientPeppol->reqId());
-        $this->assertSame((string)($largeId - 1), $clientPeppol->getClientId());
+        $this->assertSame($largeId - 1, $clientPeppol->reqClientId());
     }
 
     public function testEmptyStringFields(): void
@@ -462,7 +461,7 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol->setBuyerReference('REF001');
 
         $this->assertSame(1, $clientPeppol->reqId());
-        $this->assertSame('100', $clientPeppol->getClientId());
+        $this->assertSame(100, $clientPeppol->reqClientId());
         $this->assertSame($client, $clientPeppol->getClient());
         $this->assertSame($this->sequenceOfNumbers, $clientPeppol->getEndpointid());
         $this->assertSame('0088', $clientPeppol->getEndpointidSchemeid());
@@ -502,7 +501,7 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol->setId(1);
 
         $this->assertIsInt($clientPeppol->reqId());
-        $this->assertIsString($clientPeppol->getClientId());
+        $this->assertIsInt($clientPeppol->reqClientId());
         $this->assertIsString($clientPeppol->getEndpointid());
         $this->assertIsString($clientPeppol->getEndpointidSchemeid());
         $this->assertIsString($clientPeppol->getIdentificationid());
@@ -553,7 +552,7 @@ class ClientPeppolEntityTest extends TestCase
 
         // Verify initial state
         $this->assertSame(999, $clientPeppol->reqId());
-        $this->assertSame('888', $clientPeppol->getClientId());
+        $this->assertSame(888, $clientPeppol->reqClientId());
         $this->assertSame('initial_endpoint', $clientPeppol->getEndpointid());
         $this->assertSame('0001', $clientPeppol->getEndpointidSchemeid());
 
@@ -564,7 +563,7 @@ class ClientPeppolEntityTest extends TestCase
         $clientPeppol->setEndpointidSchemeid('0002');
 
         $this->assertSame(111, $clientPeppol->reqId());
-        $this->assertSame('222', $clientPeppol->getClientId());
+        $this->assertSame(222, $clientPeppol->reqClientId());
         $this->assertSame('modified_endpoint', $clientPeppol->getEndpointid());
         $this->assertSame('0002', $clientPeppol->getEndpointidSchemeid());
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\InvItemAllowanceCharge;
+use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -48,7 +48,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (InvItemAllowanceCharge $model) => $model->getId(),
+        content: static fn (InvItemAllowanceCharge $model) => $model->reqId(),
     ),
     new DataColumn(
         header: $translator->translate('allowance.or.charge.reason.code'),
@@ -92,13 +92,13 @@ $columns = [
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil']), $urlGenerator->generate('invitemallowancecharge/edit', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil']), $urlGenerator->generate('invitemallowancecharge/edit', ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (InvItemAllowanceCharge $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('invitemallowancecharge/view', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('invitemallowancecharge/view', ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
@@ -114,7 +114,7 @@ $columns = [
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('invitemallowancecharge/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('invitemallowancecharge/delete', ['id' => $model->reqId()]),
                 [],
             );
         },

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Entity;
 
-use App\Invoice\Entity\GentorRelation;
-use App\Invoice\Entity\Gentor;
+use App\Infrastructure\Persistence\GentorRelation\GentorRelation;
+use App\Infrastructure\Persistence\Gentor\Gentor;
 use Codeception\Test\Unit;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -23,11 +23,11 @@ class GentorRelationEntityTest extends Unit
     {
         $gentorRelation = new GentorRelation();
         
-        $this->assertSame('', $gentorRelation->getRelationId());
+        $this->assertFalse($gentorRelation->hasIdentity());
         $this->assertSame('', $gentorRelation->getLowercaseName());
         $this->assertSame('', $gentorRelation->getCamelcaseName());
         $this->assertSame('', $gentorRelation->getViewFieldName());
-        $this->assertNull($gentorRelation->getGentorId());
+        $this->assertNull($gentorRelation->reqGentorId());
         $this->assertNull($gentorRelation->getGentor());
     }
 
@@ -40,11 +40,11 @@ class GentorRelationEntityTest extends Unit
             5                   // gentor_id
         );
         
-        $this->assertSame('', $gentorRelation->getRelationId()); // ID is set by database
+        $this->assertFalse($gentorRelation->hasIdentity()); // ID is set by database
         $this->assertSame('client', $gentorRelation->getLowercaseName());
         $this->assertSame('Client', $gentorRelation->getCamelcaseName());
         $this->assertSame('client_name', $gentorRelation->getViewFieldName());
-        $this->assertSame(5, $gentorRelation->getGentorId());
+        $this->assertSame(5, $gentorRelation->reqGentorId());
         $this->assertNull($gentorRelation->getGentor()); // Relationship is set by ORM
     }
 
@@ -52,11 +52,11 @@ class GentorRelationEntityTest extends Unit
     {
         $gentorRelation = new GentorRelation(null, null, null, null);
         
-        $this->assertSame('', $gentorRelation->getRelationId());
+        $this->assertFalse($gentorRelation->hasIdentity());
         $this->assertNull($gentorRelation->getLowercaseName());
         $this->assertNull($gentorRelation->getCamelcaseName());
         $this->assertNull($gentorRelation->getViewFieldName());
-        $this->assertNull($gentorRelation->getGentorId());
+        $this->assertNull($gentorRelation->reqGentorId());
         $this->assertNull($gentorRelation->getGentor());
     }
 
@@ -98,10 +98,10 @@ class GentorRelationEntityTest extends Unit
         $gentorRelation = new GentorRelation();
         
         $gentorRelation->setGentorId(10);
-        $this->assertSame(10, $gentorRelation->getGentorId());
+        $this->assertSame(10, $gentorRelation->reqGentorId());
         
         $gentorRelation->setGentorId(25);
-        $this->assertSame(25, $gentorRelation->getGentorId());
+        $this->assertSame(25, $gentorRelation->reqGentorId());
     }
 
     public function testGetGentor(): void
@@ -112,13 +112,11 @@ class GentorRelationEntityTest extends Unit
         $this->assertNull($gentorRelation->getGentor());
     }
 
-    public function testRelationIdReturnsString(): void
+    public function testRelationIdNotPersistedByDefault(): void
     {
         $gentorRelation = new GentorRelation();
-        
-        // Should return string representation of ID (empty string when null)
-        $this->assertIsString($gentorRelation->getRelationId());
-        $this->assertSame('', $gentorRelation->getRelationId());
+
+        $this->assertFalse($gentorRelation->hasIdentity());
     }
 
     public function testCommonEntityNames(): void
@@ -204,11 +202,11 @@ class GentorRelationEntityTest extends Unit
         
         // Zero ID
         $gentorRelation->setGentorId(0);
-        $this->assertSame(0, $gentorRelation->getGentorId());
+        $this->assertSame(0, $gentorRelation->reqGentorId());
         
         // Large ID
         $gentorRelation->setGentorId(999999999);
-        $this->assertSame(999999999, $gentorRelation->getGentorId());
+        $this->assertSame(999999999, $gentorRelation->reqGentorId());
     }
 
     public function testEmptyStringHandling(): void
@@ -237,9 +235,9 @@ class GentorRelationEntityTest extends Unit
         $this->assertSame('client', $gentorRelation->getLowercaseName());
         $this->assertSame('Client', $gentorRelation->getCamelcaseName());
         $this->assertSame('client_display_name', $gentorRelation->getViewFieldName());
-        $this->assertSame(1, $gentorRelation->getGentorId());
+        $this->assertSame(1, $gentorRelation->reqGentorId());
         $this->assertNull($gentorRelation->getGentor()); // Relationship set by ORM
-        $this->assertSame('', $gentorRelation->getRelationId()); // ID set by database
+        $this->assertFalse($gentorRelation->hasIdentity()); // ID set by database
     }
 
     public function testEntityRelationScenarios(): void
@@ -282,7 +280,7 @@ class GentorRelationEntityTest extends Unit
             $this->assertSame($scenario['lowercase'], $gentorRelation->getLowercaseName());
             $this->assertSame($scenario['camelcase'], $gentorRelation->getCamelcaseName());
             $this->assertSame($scenario['view_field'], $gentorRelation->getViewFieldName());
-            $this->assertSame($scenario['gentor_id'], $gentorRelation->getGentorId());
+            $this->assertSame($scenario['gentor_id'], $gentorRelation->reqGentorId());
         }
     }
 
@@ -294,9 +292,9 @@ class GentorRelationEntityTest extends Unit
         $this->assertSame($gentorRelation->getLowercaseName(), $gentorRelation->getLowercaseName());
         $this->assertSame($gentorRelation->getCamelcaseName(), $gentorRelation->getCamelcaseName());
         $this->assertSame($gentorRelation->getViewFieldName(), $gentorRelation->getViewFieldName());
-        $this->assertSame($gentorRelation->getGentorId(), $gentorRelation->getGentorId());
+        $this->assertSame($gentorRelation->reqGentorId(), $gentorRelation->reqGentorId());
         $this->assertSame($gentorRelation->getGentor(), $gentorRelation->getGentor());
-        $this->assertSame($gentorRelation->getRelationId(), $gentorRelation->getRelationId());
+        $this->assertSame($gentorRelation->hasIdentity(), $gentorRelation->hasIdentity());
     }
 
     public function testCamelCaseVsLowercaseConsistency(): void
@@ -357,7 +355,7 @@ class GentorRelationEntityTest extends Unit
         
         // Test that gentor_id can be set independently
         $gentorRelation->setGentorId(42);
-        $this->assertSame(42, $gentorRelation->getGentorId());
+        $this->assertSame(42, $gentorRelation->reqGentorId());
         $this->assertNull($gentorRelation->getGentor()); // Still null until set by ORM
     }
 
@@ -366,11 +364,10 @@ class GentorRelationEntityTest extends Unit
         $gentorRelation = new GentorRelation('test', 'Test', 'test_field', 123);
         
         // Test return types
-        $this->assertIsString($gentorRelation->getRelationId());
         $this->assertIsString($gentorRelation->getLowercaseName());
         $this->assertIsString($gentorRelation->getCamelcaseName());
         $this->assertIsString($gentorRelation->getViewFieldName());
-        $this->assertIsInt($gentorRelation->getGentorId());
+        $this->assertIsInt($gentorRelation->reqGentorId());
         $this->assertNull($gentorRelation->getGentor());
     }
 
@@ -380,10 +377,10 @@ class GentorRelationEntityTest extends Unit
         
         // Test negative ID (though probably not used in practice)
         $gentorRelation->setGentorId(-1);
-        $this->assertSame(-1, $gentorRelation->getGentorId());
+        $this->assertSame(-1, $gentorRelation->reqGentorId());
         
         $gentorRelation->setGentorId(-999);
-        $this->assertSame(-999, $gentorRelation->getGentorId());
+        $this->assertSame(-999, $gentorRelation->reqGentorId());
     }
 
     public function testEntityRelationWorkflow(): void
@@ -391,11 +388,11 @@ class GentorRelationEntityTest extends Unit
         $gentorRelation = new GentorRelation();
         
         // Initial state
-        $this->assertSame('', $gentorRelation->getRelationId());
+        $this->assertFalse($gentorRelation->hasIdentity());
         $this->assertSame('', $gentorRelation->getLowercaseName());
         $this->assertSame('', $gentorRelation->getCamelcaseName());
         $this->assertSame('', $gentorRelation->getViewFieldName());
-        $this->assertNull($gentorRelation->getGentorId());
+        $this->assertNull($gentorRelation->reqGentorId());
         $this->assertNull($gentorRelation->getGentor());
         
         // Setup relation
@@ -408,7 +405,7 @@ class GentorRelationEntityTest extends Unit
         $this->assertSame('invoice', $gentorRelation->getLowercaseName());
         $this->assertSame('Invoice', $gentorRelation->getCamelcaseName());
         $this->assertSame('invoice_display', $gentorRelation->getViewFieldName());
-        $this->assertSame(5, $gentorRelation->getGentorId());
+        $this->assertSame(5, $gentorRelation->reqGentorId());
         
         // Modify relation
         $gentorRelation->setLowercaseName('quote');
@@ -420,7 +417,7 @@ class GentorRelationEntityTest extends Unit
         $this->assertSame('quote', $gentorRelation->getLowercaseName());
         $this->assertSame('Quote', $gentorRelation->getCamelcaseName());
         $this->assertSame('quote_display', $gentorRelation->getViewFieldName());
-        $this->assertSame(10, $gentorRelation->getGentorId());
+        $this->assertSame(10, $gentorRelation->reqGentorId());
     }
 
     public function testConstructorParameterOrder(): void
@@ -431,7 +428,7 @@ class GentorRelationEntityTest extends Unit
         $this->assertSame('param1', $gentorRelation->getLowercaseName());
         $this->assertSame('param2', $gentorRelation->getCamelcaseName());
         $this->assertSame('param3', $gentorRelation->getViewFieldName());
-        $this->assertSame(42, $gentorRelation->getGentorId());
+        $this->assertSame(42, $gentorRelation->reqGentorId());
     }
 
     public function testNullPropertyHandling(): void
@@ -442,7 +439,7 @@ class GentorRelationEntityTest extends Unit
         $this->assertNull($gentorRelation->getLowercaseName());
         $this->assertNull($gentorRelation->getCamelcaseName());
         $this->assertNull($gentorRelation->getViewFieldName());
-        $this->assertNull($gentorRelation->getGentorId());
+        $this->assertNull($gentorRelation->reqGentorId());
         
         // Set non-null values
         $gentorRelation->setLowercaseName('test');
@@ -453,6 +450,6 @@ class GentorRelationEntityTest extends Unit
         $this->assertSame('test', $gentorRelation->getLowercaseName());
         $this->assertSame('Test', $gentorRelation->getCamelcaseName());
         $this->assertSame('test_field', $gentorRelation->getViewFieldName());
-        $this->assertSame(1, $gentorRelation->getGentorId());
+        $this->assertSame(1, $gentorRelation->reqGentorId());
     }
 }

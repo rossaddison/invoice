@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Payment;
+use App\Infrastructure\Persistence\Payment\Payment;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -51,14 +51,13 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Payment $model): string => $model->getId(),
+        content: static fn (Payment $model): int => $model->reqId(),
     ),
     new DataColumn(
         property: 'paymentDateFilter',
         header: $translator->translate('payment.date'),
-        content: static fn (Payment $model): string|DateTimeImmutable => !is_string($date = $model->getPaymentDate())
-                                                                         ? $date->format('Y-m-d')
-                                                                         : '',
+        content: static fn (Payment $model): string|DateTimeImmutable => !is_string(
+                $date = $model->getPaymentDate()) ? $date->format('Y-m-d') : '',
         filter: true,
     ),
     new DataColumn(
@@ -79,7 +78,10 @@ $columns = [
         'inv_id',
         header: $translator->translate('invoice'),
         content: static function (Payment $model) use ($urlGenerator): A {
-            return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->getInvId()]), ['style' => 'text-decoration:none']);
+            return Html::a($model->getInv()?->getNumber() ?? '',
+                    $urlGenerator->generate('inv/view',
+                            ['id' => $model->reqInvId()]),
+                    ['style' => 'text-decoration:none']);
         },
         encodeContent: false,
     ),
@@ -87,14 +89,17 @@ $columns = [
         'inv_id',
         header: $translator->translate('total'),
         content: static function (Payment $model) use ($s, $iaR): string {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInvId()) > 0) ? $iaR->repoInvquery((int) $model->getInvId()) : null);
-            return $s->formatCurrency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00);
+            $inv_amount = (($iaR->repoInvAmountCount($model->reqInvId()) > 0) ?
+                    $iaR->repoInvquery($model->reqInvId()) : null);
+            return $s->formatCurrency(null !== $inv_amount ?
+                    $inv_amount->getTotal() : 0.00);
         },
     ),
     new DataColumn(
         header: $translator->translate('paid'),
         content: static function (Payment $model) use ($s, $iaR): string {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInvId()) > 0) ? $iaR->repoInvquery((int) $model->getInvId()) : null);
+            $inv_amount = (($iaR->repoInvAmountCount($model->reqInvId()) > 0) ?
+                    $iaR->repoInvquery($model->reqInvId()) : null);
             return $s->formatCurrency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00);
         },
     ),
@@ -102,7 +107,8 @@ $columns = [
         'id',
         header: $translator->translate('balance'),
         content: static function (Payment $model) use ($s, $iaR): string {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInvId()) > 0) ? $iaR->repoInvquery((int) $model->getInvId()) : null);
+            $inv_amount = (($iaR->repoInvAmountCount($model->reqInvId()) > 0) ?
+                    $iaR->repoInvquery($model->reqInvId()) : null);
             return $s->formatCurrency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00);
         },
     ),
@@ -121,7 +127,7 @@ $columns = [
                 Html::tag('i', '', ['class' => 'bi-eye']),
                 $urlGenerator->generate(
                     'payment/view',
-                    ['id' => $model->getId()],
+                    ['id' => $model->reqId()],
                 ),
                 [],
             );
@@ -142,7 +148,7 @@ $columns = [
                        ),
                        $urlGenerator->generate(
                            'payment/edit',
-                           ['id' => $model->getId()],
+                           ['id' => $model->reqId()],
                        ),
                        [],
                    ) : '';
@@ -153,17 +159,22 @@ $columns = [
         header: $translator->translate('delete'),
         visible: $canEdit,
         content: static function (Payment $model) use ($translator, $s, $urlGenerator): string|A {
-            return $model->getInv()?->getIsReadOnly() === false && $s->getSetting('disable_read_only') === (string) 0 ? Html::a(
+            return $model->getInv()?->getIsReadOnly() === false
+                    && $s->getSetting('disable_read_only') === (string) 0 ?
+                    Html::a(
                 Html::tag(
                     'button',
                     Html::tag('i', '', ['class' => 'bi-trash']),
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        'onclick' => "return confirm("
+                        . "'"
+                        . $translator->translate('delete.record.warning')
+                        . "');",
                     ],
                 ),
-                $urlGenerator->generate('payment/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('payment/delete', ['id' => $model->reqId()]),
                 [],
             ) : '';
         },
@@ -182,7 +193,9 @@ $toolbarString =  new Form()->post($urlGenerator->generate('payment/index'))->cs
 
 echo GridView::widget()
 ->bodyRowAttributes(['class' => 'align-middle'])
-->tableAttributes(['class' => 'table table-striped text-center h-75','id' => 'table-payment-index'])
+->tableAttributes([
+    'class' => 'table table-striped text-center h-75',
+    'id' => 'table-payment-index'])
 ->columns(...$columns)
 ->dataReader($paginator)
 ->headerRowAttributes(['class' => 'card-header bg-info text-black'])

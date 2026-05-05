@@ -91,7 +91,7 @@ class SalesOrderItem
         return $this->requireId($this->id, 'SalesOrderItem');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

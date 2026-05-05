@@ -161,8 +161,8 @@ foreach ($soItems as $item) {
                                  */
                                 foreach ($products as $product) { ?>
                                     <option value="
-                                        <?php echo $product->getProductId(); ?>"
-    <?php if ($productId == (int) $product->getProductId()) { ?>
+                                        <?php echo $product->reqId(); ?>"
+    <?php if ($productId == $product->reqId()) { ?>
                                         selected="selected"<?php } ?>>
 <?php echo $product->getProductName(); ?>
                                     </option>
@@ -321,7 +321,7 @@ foreach ($soItems as $item) {
         $piR->repoProductImageProductquery($productId); ?>
     <?php
     /**
-     * @var App\Invoice\Entity\ProductImage $productImage
+     * @var App\Infrastructure\Persistence\ProductImage\ProductImage $productImage
      */
     foreach ($productImages as $productImage) { ?>
         <?php if (!empty($productImage->getFileNameOriginal())) { ?>
@@ -652,7 +652,7 @@ foreach ($acsoiR->repoSalesOrderItemquery($item->reqId()) as $acsoi) { ?>
                     <td>
                     <?php if ($soTaxRates) {
                         /**
-                         * @var App\Invoice\Entity\SalesOrderTaxRate $soTaxRate
+                         * @var App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate $soTaxRate
                          */
                         foreach ($soTaxRates as $soTaxRate) { ?>
                             <div data-bs-toggle="tooltip"

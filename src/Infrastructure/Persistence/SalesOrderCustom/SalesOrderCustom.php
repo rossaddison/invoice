@@ -43,7 +43,7 @@ class SalesOrderCustom
         return $this->requireId($this->id, 'SalesOrderCustom');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -73,9 +73,9 @@ class SalesOrderCustom
         $this->sales_order = $sales_order;
     }
 
-    public function getSalesOrderId(): string
+    public function reqSalesOrderId(): int
     {
-        return (string) $this->sales_order_id;
+        return $this->requireId($this->sales_order_id, 'SalesOrder');
     }
 
     public function setSalesOrderId(int $sales_order_id): void
@@ -83,9 +83,9 @@ class SalesOrderCustom
         $this->sales_order_id = $sales_order_id;
     }
 
-    public function getCustomFieldId(): string
+    public function reqCustomFieldId(): int
     {
-        return (string) $this->custom_field_id;
+        return $this->requireId($this->custom_field_id, 'Custom Field');
     }
 
     public function setCustomFieldId(int $custom_field_id): void

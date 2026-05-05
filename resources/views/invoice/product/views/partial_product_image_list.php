@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Invoice\Entity\ProductImage;
+use App\Infrastructure\Persistence\ProductImage\ProductImage;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\GridView\GridView;
@@ -47,7 +47,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                         ),
                         // route action => product/download_image_file
                         // route name => /image
-                        $urlGenerator->generate('product/downloadImageFile', ['product_image_id' => $model->getId(), '_language' => 'en']),
+                        $urlGenerator->generate('product/downloadImageFile', ['product_image_id' => $model->reqId(), '_language' => 'en']),
                         [],
                     );
                 },
@@ -65,7 +65,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                                 'class' => 'dropdown-button',
                             ],
                         ),
-                        $urlGenerator->generate('productimage/edit', ['id' => $model->getId(), '_language' => 'en']),
+                        $urlGenerator->generate('productimage/edit', ['id' => $model->reqId(), '_language' => 'en']),
                         [],
                     );
                 },
@@ -84,7 +84,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
                                 'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                             ],
                         ),
-                        $urlGenerator->generate('productimage/delete', ['id' => $model->getId(), '_language' => 'en']),
+                        $urlGenerator->generate('productimage/delete', ['id' => $model->reqId(), '_language' => 'en']),
                         [],
                     );
                 },

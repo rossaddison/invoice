@@ -76,10 +76,10 @@ final class ItemLookupRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return TEntity|null
      */
-    public function repoItemLookupquery(string $id): ?ItemLookup
+    public function repoItemLookupquery(int $id): ?ItemLookup
     {
         $query = $this->select()->where(['id' => $id]);
         return  $query->fetchOne();

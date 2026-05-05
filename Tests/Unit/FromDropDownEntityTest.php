@@ -15,7 +15,7 @@ final class FromDropDownEntityTest extends Unit
     {
         $fromDropDown = new FromDropDown();
         
-        $this->assertFalse($fromDropDown->isPersisted());
+        $this->assertFalse($fromDropDown->hasIdentity());
         $this->assertSame('', $fromDropDown->getEmail());
         $this->assertFalse($fromDropDown->getInclude());
         $this->assertFalse($fromDropDown->getDefaultEmail());

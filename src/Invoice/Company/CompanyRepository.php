@@ -86,7 +86,7 @@ final class CompanyRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoCompanyquery(string $id): ?Company
+    public function repoCompanyquery(int $id): ?Company
     {
         $query = $this->select()->where(['id' => $id]);
         return  $query->fetchOne() ?: null;

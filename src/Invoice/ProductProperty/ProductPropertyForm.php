@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\ProductProperty;
 
 use App\Infrastructure\Persistence\Product\Product;
-use App\Invoice\Entity\ProductProperty;
+use App\Infrastructure\Persistence\ProductProperty\ProductProperty;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -19,11 +19,18 @@ final class ProductPropertyForm extends FormModel
 
     private ?Product $product = null;
 
-    public function __construct(ProductProperty $productProperty, private readonly ?int $product_id)
+    private ?int $product_id = null;
+    
+    public static function show(
+        ProductProperty $productProperty,
+        ?int $product_id): self
     {
-        $this->name = $productProperty->getName();
-        $this->value = $productProperty->getValue();
-        $this->product = $productProperty->getProduct();
+        $form = new self();
+        $form->name = $productProperty->getName();
+        $form->value = $productProperty->getValue();
+        $form->product = $productProperty->getProduct();
+        $form->product_id = $product_id;
+        return $form;
     }
 
     public function getProduct(): ?Product

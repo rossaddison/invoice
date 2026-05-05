@@ -6,13 +6,13 @@ namespace App\Auth\Controller;
 
 use App\Auth\Token;
 use App\Auth\TokenRepository as tR;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository as uR;
 use App\Auth\AuthService;
 use App\Auth\Form\SignupForm;
 use App\Auth\Trait\ClassList;
 use App\Auth\Trait\Oauth2;
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Setting\Trait\OpenBankingProviders;
 use App\Invoice\UserInv\UserInvRepository as uiR;
@@ -155,7 +155,7 @@ final class SignupController
 
         if ($formHydrator->populateFromPostAndValidate($signupForm, $request)) {
             $user = $signupForm->signup();
-            $userId = $user->getId();
+            $userId = $user->reqId();
             if ($userId > 0) {
                 // Avoid autoincrement issues and using predefined user id of
                 // 1 ... and assign the first signed-up user ... admin rights.
@@ -251,22 +251,22 @@ final class SignupController
      * allowing the user to proceed with no role assigned, which would result
      * in a 403 on every subsequent request.
      *
-     * @param string $userId
+     * @param int $userId
      * @param string $role e.g. 'admin' or 'observer'
      * @return bool True if assignment persisted, false if it failed silently
      */
     private function assignRoleAndVerify(
-        string $userId,
+        int $userId,
         string $role,
     ): bool {
-        $this->manager->revokeAll($userId);
-        $this->manager->assign($role, $userId);
+        $this->manager->revokeAll((string) $userId);
+        $this->manager->assign($role, (string) $userId);
 
-        $roles = $this->manager->getRolesByUserId($userId);
+        $roles = $this->manager->getRolesByUserId((string) $userId);
         if (empty($roles)) {
             $this->logger->log(
                 LogLevel::ERROR,
-                'RBAC assignment failed to persist for userId: ' . $userId
+                'RBAC assignment failed to persist for userId: ' . (string) $userId
                     . ' role: ' . $role
                     . ' — check file ownership of'
                     . ' resources/rbac/assignments.php'
@@ -293,12 +293,13 @@ final class SignupController
     {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
         $userInv = new UserInv();
-        if (null !== ($userId = $user->getId())) {
+        if ($user->hasIdentity()) {
+            $userId = $user->reqId();
             $elcc = $this->translator->translate('email.link.click.confirm');
-            $userInv->setUserId((int) $userId);
+            $userInv->setUserId($userId);
             // if the user is administrator assign 0 => 'Administrator',
             // 1 => Not Administrator
-            $userInv->setType($user->getId() == 1 ? 0 : 1);
+            $userInv->setType($userId == 1 ? 0 : 1);
             // when the user clicks on the link click confirm url, make the
             // user active in the userinv extension table. Initially keep the
             // user inactive.
@@ -337,8 +338,8 @@ final class SignupController
     private function getEmailVerificationToken(User $user, tR $tR): string
     {
         $identity = $user->getIdentity();
-        $identityId = (int) $identity->getId();
-        $token = new Token($identityId, self::EMAIL_VERIFICATION_TOKEN);
+        $identityId = $identity->getId();
+        $token = new Token((int) $identityId, self::EMAIL_VERIFICATION_TOKEN);
         // store the token amongst all the other types of tokens e.g.
         // password_reset_token, email_verification_token etc
         $tR->save($token);

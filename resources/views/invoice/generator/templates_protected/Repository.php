@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  * @var array $relations
  */
 
@@ -48,7 +48,7 @@ private EntityWriter $entityWriter;
         <?php if (!empty($relations)) {
             $echo = '$query = $this->select()';
             /**
-             * @var App\Invoice\Entity\GentorRelation $relation
+             * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
              */
             foreach ($relations as $relation) {
                 $echo .= "->load('" . ($relation->getLowercaseName() ?? '#') . "')";
@@ -123,7 +123,7 @@ private EntityWriter $entityWriter;
         <?php if (!empty($relations)) {
             echo '$query = $this->select()';
             /**
-             * @var App\Invoice\Entity\GentorRelation $relation
+             * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
              */
             foreach ($relations as $relation) {
                 echo "->load('" . ($relation->getLowercaseName() ?? '#') . "')" . "\n";

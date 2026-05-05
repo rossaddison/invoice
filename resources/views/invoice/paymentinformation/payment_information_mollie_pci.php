@@ -10,7 +10,7 @@ use Yiisoft\Html\Tag\Label;
 /**
  * Related logic: see PaymentInformationController function mollieInForm
  * @var App\Infrastructure\Persistence\Client\Client $client_on_invoice
- * @var App\Invoice\Entity\Inv $invoice
+ * @var App\Infrastructure\Persistence\Inv\Inv $invoice
  *
  * Related logic: see config\common\params 'yiisoft/view'
  *  => ['parameters' => ['clientHelper' => Reference::to(ClientHelper::class)]]

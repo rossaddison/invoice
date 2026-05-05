@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAmount;
 
-use App\Invoice\Entity\InvAmount;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\Setting\SettingRepository as SR;
@@ -92,10 +92,10 @@ final class InvAmountRepository extends Select\Repository
     }
 
     /**
-     * @param string $inv_id
+     * @param int $inv_id
      * @return InvAmount|null
      */
-    public function repoCreditInvoicequery(string $inv_id): ?InvAmount
+    public function repoCreditInvoicequery(int $inv_id): ?InvAmount
     {
         $query = $this->select()
                       ->load('inv')

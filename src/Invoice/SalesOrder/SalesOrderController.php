@@ -8,7 +8,11 @@ use App\Auth\Permissions;
 use App\Infrastructure\Persistence\{
         CustomField\CustomField,
         DeliveryLocation\DeliveryLocation,
-        Group\Group,
+        Group\Group, Inv\Inv,
+        InvAmount\InvAmount,
+        InvCustom\InvCustom, InvItem\InvItem,
+        InvItemAllowanceCharge\InvItemAllowanceCharge,
+        InvTaxRate\InvTaxRate,
         InvAllowanceCharge\InvAllowanceCharge,
         SalesOrder\SalesOrder,
         SalesOrderAllowanceCharge\SalesOrderAllowanceCharge,
@@ -16,15 +20,14 @@ use App\Infrastructure\Persistence\{
         SalesOrderCustom\SalesOrderCustom,
         SalesOrderItem\SalesOrderItem,
         SalesOrderItemAllowanceCharge\SalesOrderItemAllowanceCharge,
+        SalesOrderTaxRate\SalesOrderTaxRate,
+        User\User
 };
 use App\Invoice\{
 BaseController, Client\ClientRepository as CR,
 CustomField\CustomFieldRepository as CFR,
 CustomValue\CustomValueRepository as CVR,
 DeliveryLocation\DeliveryLocationRepository as DR,
-Entity\Inv, Entity\InvAmount, Entity\InvCustom,
-Entity\InvItem,Entity\InvItemAllowanceCharge,
-Entity\InvTaxRate, Entity\SalesOrderTaxRate,
 Group\GroupRepository as GR,
 Helpers\CustomValuesHelper as CVH, Helpers\PdfHelper, Inv\InvForm,
 Inv\InvRepository as InvRepo, Inv\InvService, InvAllowanceCharge\InvAllowanceChargeForm,
@@ -155,10 +158,11 @@ final class SalesOrderController extends BaseController
         // Retrieve the user from Yii-Demo's list of users in the User Table
         $user = $this->userService->getUser();
         if ($user) {
+            $userId = $user->reqId();
             // Use this user's id to see whether a user has been setup under
             // UserInv ie. yii-invoice's list of users
-            $userinv = ($uiR->repoUserInvUserIdcount((string) $user->getId()) > 0
-                     ? $uiR->repoUserInvUserIdquery((string) $user->getId())
+            $userinv = ($uiR->repoUserInvUserIdcount($userId) > 0
+                     ? $uiR->repoUserInvUserIdquery($userId)
                      : null);
             if ($userinv) {
                 // Determine what clients have been allocated to this user
@@ -170,7 +174,7 @@ final class SalesOrderController extends BaseController
                 // allocated a series of clients. A user-guest-client will be
                 // allocated their client number by the administrator so that
                 // they can view their salesorders when they log in
-                $user_clients = $ucR->getAssignedToUser((string) $user->getId());
+                $user_clients = $ucR->getAssignedToUser($userId);
                 if (!empty($user_clients)) {
                     $salesOrders = $this->salesordersStatusWithSortGuest(
                         $soR, $status, $user_clients, $sort);
@@ -566,10 +570,10 @@ final class SalesOrderController extends BaseController
         if ($so && ($this->rbacObserver($so, $ucR, $uiR) || $this->rbacAdmin()
                                                 || $this->rbacAccountant())) {
             $form = SalesOrderForm::show($so);
-            $dels = $delRepo->repoClientquery((string) $so->reqClientId());
+            $dels = $delRepo->repoClientquery($so->reqClientId());
             $so_id = $so->reqId();
             $inv_id = $so->reqInvId();
-            $inv = $inv_id > 0 ? $invRepo->repoInvUnloadedquery((string) $inv_id) : null;
+            $inv = $inv_id > 0 ? $invRepo->repoInvUnloadedquery($inv_id) : null;
             $inv_number = null !== $inv ? (string) $inv->getNumber() : '';
             $parameters = [
                 'title' => $this->translator->translate('edit'),
@@ -595,7 +599,7 @@ final class SalesOrderController extends BaseController
                 'invNumber' => $inv_number,
                 // if the delivery location is zero present the link to delivery
                 // locations add
-                'delCount' => $delRepo->repoClientCount((string) $so->reqClientId()),
+                'delCount' => $delRepo->repoClientCount($so->reqClientId()),
                 'dels' => $dels,
                 'terms_and_conditions_file' =>
                     $this->webViewRenderer->renderPartialAsString(
@@ -603,7 +607,7 @@ final class SalesOrderController extends BaseController
                 'terms_and_conditions' =>
                     $settingRepository->getTermsAndConditions(),
                 // if there are no delivery locations add a flash message
-                'no_delivery_locations' => $delRepo->repoClientCount((string) 
+                'no_delivery_locations' => $delRepo->repoClientCount( 
                     $so->reqClientId()) > 0 ? '' :
                         $this->flashMessage(
                                 'warning', $this->translator->translate(
@@ -726,8 +730,8 @@ final class SalesOrderController extends BaseController
             // not archived
             $stream = true;
             $so = $soR->repoSalesOrderUnloadedquery($so_id);
-            if ($so) {
-                $pdfhelper->generateSalesorderPdf((string)$so_id, (string) $so->getUserId(),
+            if ($so && (($userId = $so->reqUserId()) > 0)) {
+                $pdfhelper->generateSalesorderPdf((string)$so_id, $userId,
                     $stream, $custom, $salesorder_amount,
                         $salesorder_custom_values, $cR, $cvR, $cfR,
                             $soiR, $soiaR, $acsoiR, $soR, $sotrR, $uiR,
@@ -807,7 +811,7 @@ final class SalesOrderController extends BaseController
             $so_tax_rates = (($sotrR->repoCount($so_id) > 0) ?
                 $sotrR->repoSalesOrderquery($so_id) : null);
             $inv_id = $so->reqInvId();
-            $inv = $invRepo->repoInvUnloadedquery((string) $inv_id);
+            $inv = $invRepo->repoInvUnloadedquery($inv_id);
             $invNumber = ($inv ? $inv->getNumber() : '');
             $quote_id = $so->reqQuoteId();
             $quote = $qR->repoQuoteUnLoadedQuery($quote_id);
@@ -936,12 +940,12 @@ final class SalesOrderController extends BaseController
                 // the salesorder has passed the 'draft' stage i.e sent / appears
                 // in the observer user's guest index
                 && !($statusId === 1)
+                && (($soUserId = $so->reqUserId()) > 0)
                 // the salesorder is intended for the current user
-                && ((string) $so->getUserId() === $this->userService->getUser()?->getId())
+                && ($soUserId === $this->userService->getUser()?->reqId())
                 // the salesorder client is associated with the above user
-                && ($ucR->repoUserClientqueryCount((string) $so->getUserId(),
-                                                (string) $so->reqClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery((string) $so->getUserId());
+                && ($ucR->repoUserClientqueryCount($soUserId, $so->reqClientId()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery($soUserId);
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {
                     return true;
@@ -1012,8 +1016,11 @@ final class SalesOrderController extends BaseController
      * 'invoice generate' status
      * The Sales Order will have the status 'invoice generated' against it
      * The Invoice will have the status 'sent' against it
+     * @param string $id
      * @param Request $request
      * @param FormHydrator $formHydrator
+     * @param ACIIR $aciiR
+     * @param ACSOR $acsoR
      * @param ACSOIR $acsoiR
      * @param CFR $cfR
      * @param GR $gR
@@ -1021,10 +1028,12 @@ final class SalesOrderController extends BaseController
      * @param IIAR $iiaR
      * @param IIAS $iiaS
      * @param PR $pR
-     * @param SOCR $socR
-     * @param SOIR $soiR
-     * @param SOR $soR
-     * @param SOTRR $sotrR
+     * @param SoCR $socR
+     * @param SoIAR $soiaR
+     * @param SoIR $soiR
+     * @param SoR $soR
+     * @param SoTRR $sotrR
+     * @param TASKR $taskR
      * @param TRR $trR
      * @param UNR $unR
      * @param SettingRepository $sR
@@ -1057,7 +1066,7 @@ final class SalesOrderController extends BaseController
         SettingRepository $sR,
         UR $uR,
         UCR $ucR,
-        UIR $uiR,
+        UIR $uiR
     ): \Psr\Http\Message\ResponseInterface {
         $body = $request->getQueryParams();
         $so_id = $id !== '' ? (int) $id : (int) ($body['so_id'] ?? '');
@@ -1083,7 +1092,7 @@ final class SalesOrderController extends BaseController
                 'creditinvoice_parent_id' => '',
             ];
             $inv = new Inv();
-            $form = new InvForm($inv);
+            $form = new InvForm();
             if ($formHydrator->populateAndValidate($form, $inv_body)
                   // Salesorder has not been copied before:  inv_id = 0
                   && ($so->reqInvId() === 0)
@@ -1091,67 +1100,64 @@ final class SalesOrderController extends BaseController
                 /**
                  * @var string $inv_body['client_id']
                  */
-                $client_id = $inv_body['client_id'];
+                $client_id = (int) $inv_body['client_id'];
                 $user_client = $ucR->repoUserquery($client_id);
                 $user_client_count = $ucR->repoUserquerycount($client_id);
                 if (null !== $user_client && $user_client_count == 1) {
                     // Only one user account per client
-                    $user_id = $user_client->getUserId();
+                    $user_id = $user_client->reqUserId();
                     $user = $uR->findById($user_id);
-                    if (null !== $user) {
-                        $user_inv = $uiR->repoUserInvUserIdquery($user_id);
-                        if (null !== $user_inv && $user_inv->getActive()) {
-                            $this->invService->saveInv($user, $inv, $inv_body,
-                                                                    $sR, $gR);
-                            $inv_id = $inv->getId();
-                            if (null !== $inv_id) {
-                                // Transfer each so_item to inv_item and the
-                                // corresponding so_item_amount to
-                                // inv_item_amount for each item
-                                $this->soToInvoiceSoItems($so_id, $inv_id,
-                                        $aciiR, $acsoiR, $iiaR, $iiaS, $pR,
-                                        $taskR, $soiaR, $soiR, $trR,
-                                        $formHydrator, $sR, $unR);
-                                $this->soToInvoiceSoTaxRates(
-                                    $so_id, $inv_id, $sotrR, $formHydrator);
-                                $this->soToInvoiceSoCustom(
-                                    $so_id, $inv_id, $socR, $cfR, $formHydrator);
-                                $this->soToInvoiceSoAmount($so, $inv, $iR);
-                                $this->soToInvoiceSoAllowanceCharges(
-                                    $so_id, $inv_id, $acsoR, $formHydrator);
-                                // Update the sos inv_id.
-                                $so->setInvId((int) $inv_id);
-                                // Set salesorder's status to invoice generated
-                                $so->setStatusId(8);
-                                $this->flashMessage('info',
+                    $user_inv = $uiR->repoUserInvUserIdquery($user_id);
+                    if (null !== $user_inv && $user_inv->getActive()) {
+                        $this->invService->saveInv($user, $inv, $inv_body,
+                                                                $sR, $gR);
+                        $inv_id = $inv->reqId();
+                        // Transfer each so_item to inv_item and the
+                        // corresponding so_item_amount to
+                        // inv_item_amount for each item
+                        $this->soToInvoiceSoItems($so_id, $inv_id,
+                                $aciiR, $acsoiR, $iiaR, $iiaS, $pR,
+                                $taskR, $soiaR, $soiR, $trR,
+                                $formHydrator, $sR, $unR);
+                        $this->soToInvoiceSoTaxRates(
+                            $so_id, $inv_id, $sotrR, $formHydrator);
+                        $this->soToInvoiceSoCustom(
+                            $so_id, $inv_id, $socR, $cfR, $formHydrator);
+                        $this->soToInvoiceSoAmount($so, $inv, $iR);
+                        $this->soToInvoiceSoAllowanceCharges(
+                            $so_id, $inv_id, $acsoR, $formHydrator);
+                        // Update the sos inv_id.
+                        $so->setInvId($inv_id);
+                        // Set salesorder's status to invoice generated
+                        $so->setStatusId(8);
+                        $this->flashMessage('info',
+                            $this->translator->translate(
+                                'salesorder.invoice.generated'));
+                        $soR->save($so);
+
+                        // Check if this is an AJAX request
+                        $isAjax = $request->getHeaderLine(
+                            'X-Requested-With') === 'XMLHttpRequest';
+
+                        if ($isAjax) {
+                            // Return JSON for AJAX requests
+                            $parameters = [
+                                'success' => 1,
+                                'flash_message' =>
                                     $this->translator->translate(
-                                        'salesorder.invoice.generated'));
-                                $soR->save($so);
-
-                                // Check if this is an AJAX request
-                                $isAjax = $request->getHeaderLine(
-                                    'X-Requested-With') === 'XMLHttpRequest';
-
-                                if ($isAjax) {
-                                    // Return JSON for AJAX requests
-                                    $parameters = [
-                                        'success' => 1,
-                                        'flash_message' =>
-                                            $this->translator->translate(
-                                                'salesorder.copied.to.invoice'),
-                                        'inv_id' => $inv_id,
-                                    ];
-                                    return $this->factory->createResponse(
-                                        Json::encode($parameters));
-                                } else {
-                                    // Direct browser request - redirect to
-                                    // invoice view
-                                    return $this->webService->getRedirectResponse(
-                                        'inv/view', ['id' => $inv_id]);
-                                }
-                            } // null!==$inv_id
-                        } // null!==$user_inv && $user_inv->getActive()
-                    } // null!==$user
+                                        'salesorder.copied.to.invoice'),
+                                'inv_id' => $inv_id,
+                            ];
+                            return $this->factory->createResponse(
+                                Json::encode($parameters));
+                        } else {
+                            // Direct browser request - redirect to
+                            // invoice view
+                            return $this->webService->getRedirectResponse(
+                                'inv/view', ['id' => $inv_id]);
+                        }
+                    } // null!==$user_inv && $user_inv->getActive()
+                    
                 }
             } else {
                 // Check if this is an AJAX request
@@ -1180,7 +1186,7 @@ final class SalesOrderController extends BaseController
         return $this->webService->getNotFoundResponse();
     }
 
-    private function soToInvoiceSoItems(int $so_id, string $new_inv_id,
+    private function soToInvoiceSoItems(int $so_id, int $new_inv_id,
         ACIIR $aciiR, ACSOIR $acsoiR, IIAR $iiaR, IIAS $iiaS, PR $pR, TASKR $taskR,
             SoIAR $soiaR, SoIR $soiR, TRR $trR, FormHydrator $formHydrator,
                 SettingRepository $sR, UNR $unR): void
@@ -1211,10 +1217,10 @@ final class SalesOrderController extends BaseController
                 // Recurring date
                 'date' => '',
             ];
-            $form = new InvItemForm($newInvItem, (int) $new_inv_id);
+            $form = InvItemForm::show($newInvItem, $new_inv_id);
             if ($formHydrator->populateAndValidate($form, $inv_item)) {
                 $savedInvItem = $this->invItemService->addInvItemProductTask(
-                    $newInvItem, $inv_item, $new_inv_id, $pR, $taskR, $unR,
+                    $newInvItem, $inv_item, (string) $new_inv_id, $pR, $taskR, $unR,
                     $this->translator);
                 $this->copySoItemAllowanceChargesToInv(
                         $origSoItemId, $acsoiR, $new_inv_id,
@@ -1233,7 +1239,7 @@ final class SalesOrderController extends BaseController
                     * is inherited from the so_item_service constructor
                     */
                     $this->invItemService->saveInvItemAmount(
-                        (int) $savedInvItem->getId(),
+                        $savedInvItem->reqId(),
                         $inv_item['quantity'],
                         $inv_item['price'],
                         $inv_item['discount_amount'],
@@ -1246,9 +1252,8 @@ final class SalesOrderController extends BaseController
         } // items
     }
 
-
     private function copySoItemAllowanceChargesToInv(
-        int $origSoItemId, ACSOIR $acsoiR, string $new_inv_id,
+        int $origSoItemId, ACSOIR $acsoiR, int $new_inv_id,
             InvItem $newInvItem, ACIIR $aciiR): void {
 
         $all = $acsoiR->repoSalesOrderItemquery($origSoItemId);
@@ -1263,8 +1268,8 @@ final class SalesOrderController extends BaseController
                             $salesOrderItemAllowanceCharge->getAllowanceCharge());
 
             // Also set FK IDs for consistency
-            $acInvItem->setInvId((int) $new_inv_id);
-            $acInvItem->setInvItemId((int) $newInvItem->getId());
+            $acInvItem->setInvId($new_inv_id);
+            $acInvItem->setInvItemId($newInvItem->reqId());
             $acInvItem->setAllowanceChargeId(
             (int) $salesOrderItemAllowanceCharge->getAllowanceCharge()?->reqId()
             );
@@ -1280,11 +1285,11 @@ final class SalesOrderController extends BaseController
 
     /**
      * @param int $so_id
-     * @param string|null $inv_id
+     * @param int $inv_id
      * @param SOTRR $sotrR
      * @param FormHydrator $formHydrator
      */
-    private function soToInvoiceSoTaxRates(int $so_id, ?string $inv_id,
+    private function soToInvoiceSoTaxRates(int $so_id, int $inv_id,
         SoTRR $sotrR, FormHydrator $formHydrator): void
     {
         // Get all tax rates that have been setup for the salesorder
@@ -1292,14 +1297,14 @@ final class SalesOrderController extends BaseController
         /** @var SalesOrderTaxRate $so_tax_rate */
         foreach ($so_tax_rates as $so_tax_rate) {
             $inv_tax_rate = [
-                'inv_id' => (string) $inv_id,
-                'tax_rate_id' => $so_tax_rate->getTaxRateId(),
+                'inv_id' => $inv_id,
+                'tax_rate_id' => $so_tax_rate->reqTaxRateId(),
                 'include_item_tax' => $so_tax_rate->getIncludeItemTax(),
                 'inv_tax_rate_amount' =>
                     $so_tax_rate->getSalesOrderTaxRateAmount(),
             ];
             $entity = new InvTaxRate();
-            $form = new InvTaxRateForm($entity);
+            $form = new InvTaxRateForm();
             if ($formHydrator->populateAndValidate($form, $inv_tax_rate)) {
                 $this->invTaxRateService->saveInvTaxRate($entity, $inv_tax_rate);
             }
@@ -1308,14 +1313,14 @@ final class SalesOrderController extends BaseController
 
     /**
      * @param int $so_id
-     * @param string|null $inv_id
+     * @param int $inv_id
      * @param SOCR $socR
      * @param CFR $cfR
      * @param FormHydrator $formHydrator
      */
     private function soToInvoiceSoCustom(
         int $so_id,
-        ?string $inv_id,
+        int $inv_id,
         SoCR $socR,
         CFR $cfR,
         FormHydrator $formHydrator,
@@ -1330,7 +1335,7 @@ final class SalesOrderController extends BaseController
             // using the custom_field_id to find details
             /** @var CustomField $existing_custom_field */
             $existing_custom_field = $cfR->repoCustomFieldquery(
-                $so_custom->getCustomFieldId());
+                $so_custom->reqCustomFieldId());
             if ($cfR->repoTableAndLabelCountquery('inv_custom',
                 (string) $existing_custom_field->getLabel()) !== 0) {
                 // Build an identitcal custom field for the invoice
@@ -1352,7 +1357,7 @@ final class SalesOrderController extends BaseController
                     'value' => $so_custom->getValue(),
                 ];
                 $entity = new InvCustom();
-                $form = new InvCustomForm($entity);
+                $form = new InvCustomForm();
                 if ($formHydrator->populateAndValidate($form, $inv_custom)) {
                     $this->inv_custom_service->saveInvCustom(
                         $entity, $inv_custom);
@@ -1373,7 +1378,7 @@ final class SalesOrderController extends BaseController
         $soA = $so->getSalesOrderAmount();
         $iA = $inv->getInvAmount();
         // hydrate
-        $iA->setInvId((int) $inv->getId());
+        $iA->setInvId($inv->reqId());
         $iA->setItemSubtotal(
             $soA->getItemSubtotal() ?? 0.00);
         $iA->setItemTaxTotal(
@@ -1389,7 +1394,7 @@ final class SalesOrderController extends BaseController
 
     private function soToInvoiceSoAllowanceCharges(
         int $so_id,
-        string $new_inv_id,
+        int $new_inv_id,
         ACSOR $acsoR,
         FormHydrator $formHydrator
     ): void {
@@ -1405,8 +1410,7 @@ final class SalesOrderController extends BaseController
                 'amount' => $so_allowance_charge->getAmount(),
             ];
             $invAllowanceCharge = new InvAllowanceCharge();
-            $form = InvAllowanceChargeForm::show($invAllowanceCharge,
-                (int) $new_inv_id);
+            $form = InvAllowanceChargeForm::show($invAllowanceCharge, $new_inv_id);
             if ($formHydrator->populateAndValidate($form, $new_inv_ac)) {
                 $this->inv_allowance_charge_service->saveInvAllowanceCharge(
                     $invAllowanceCharge, $new_inv_ac
@@ -1456,19 +1460,19 @@ final class SalesOrderController extends BaseController
             if (in_array($salesorder->getStatusId(), [2,3,4,5,6,7,8,9,10])) {
 // If the user exists
 /**
- * @psalm-suppress PossiblyNullArgument $this->userService->getUser()?->getId()
+ * @psalm-suppress PossiblyNullArgument $this->userService->getUser()?->reqId()
  */
-                if ($uiR->repoUserInvUserIdcount(
-                        $this->userService->getUser()?->getId()) === 1) {
+                if ($uiR->repoUserInvUserIdcount((int)
+                        $this->userService->getUser()?->reqId()) === 1) {
                     // After signup the user was included in the userinv using
                     // Settings...User Account...+
-                    $user_inv = $uiR->repoUserInvUserIdquery(
-                        $this->userService->getUser()?->getId());
+                    $user_inv = $uiR->repoUserInvUserIdquery((int)
+                        $this->userService->getUser()?->reqId());
                     // The client has been assigned to the user id using Setting
                     // ...User Account...Assigned Clients
                     $user_client = $ucR->repoUserClientqueryCount(
-                        $this->userService->getUser()?->getId(),
-                            (string) $salesorder->reqClientId()) === 1 ? true : false;
+                        $this->userService->getUser()?->reqId(),
+                            $salesorder->reqClientId()) === 1 ? true : false;
                     if ($user_inv && $user_client && $user_inv->getActive()) {
                         // If the userinv is a Guest => type = 1 ie. NOT an
                         // administrator =>type = 0 and they are active
@@ -1517,10 +1521,10 @@ final class SalesOrderController extends BaseController
                                         // Get the details of the user of
                                         // this quote
                                         'userInv' =>
-                                            $uiR->repoUserInvUserIdcount((string)
-                                                $salesorder->getUserId())
-                                        > 0 ? $uiR->repoUserInvUserIdquery((string)
-                                          $salesorder->getUserId()) : null,
+                                            $uiR->repoUserInvUserIdcount(
+                                                $salesorder->reqUserId())
+                                        > 0 ? $uiR->repoUserInvUserIdquery(
+                                          $salesorder->reqUserId()) : null,
                                     ]),
                                 ];
                                 return $this->webViewRenderer->render('url_key',
@@ -1542,7 +1546,7 @@ final class SalesOrderController extends BaseController
         SoR $salesOrderRepo,
         UCR $ucR,
     ): array {
-        $dLocs = $delRepo->repoClientquery((string) $client_id);
+        $dLocs = $delRepo->repoClientquery($client_id);
         $optionsDataDeliveryLocations = [];
         /**
          * @var DeliveryLocation $dLoc

@@ -22,7 +22,7 @@ class AllowanceChargeEntityTest extends TestCase
     {
         $allowanceCharge = new AllowanceCharge();
         
-        $this->assertFalse($allowanceCharge->isPersisted());
+        $this->assertFalse($allowanceCharge->hasIdentity());
         $this->assertFalse($allowanceCharge->getIdentifier());
         $this->assertSame(0, $allowanceCharge->getLevel());
         $this->assertSame('', $allowanceCharge->getReasonCode());
@@ -48,7 +48,7 @@ class AllowanceChargeEntityTest extends TestCase
             tax_rate_id: 100
         );
         
-        $this->assertTrue($allowanceCharge->isPersisted());
+        $this->assertTrue($allowanceCharge->hasIdentity());
         $this->assertSame(1, $allowanceCharge->reqId());
         $this->assertTrue($allowanceCharge->getIdentifier());
         $this->assertSame(1, $allowanceCharge->getLevel());

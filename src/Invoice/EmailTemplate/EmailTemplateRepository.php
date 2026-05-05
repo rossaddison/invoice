@@ -67,10 +67,10 @@ final class EmailTemplateRepository extends Select\Repository
     }
 
     /**
-     * @param string $email_template_id
+     * @param int $email_template_id
      * @return int
      */
-    public function repoEmailTemplateCount(string $email_template_id): int
+    public function repoEmailTemplateCount(int $email_template_id): int
     {
         return $this
             ->select()
@@ -83,7 +83,7 @@ final class EmailTemplateRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoEmailTemplatequery(string $email_template_id): ?EmailTemplate
+    public function repoEmailTemplatequery(int $email_template_id): ?EmailTemplate
     {
         $query = $this
             ->select()

@@ -61,7 +61,7 @@ class ClientCustom
         return $this->requireId($this->id, 'ClientCustom');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -71,9 +71,9 @@ class ClientCustom
         $this->id = $id;
     }
 
-    public function getClientId(): string
+    public function reqClientId(): int
     {
-        return (string) $this->client_id;
+        return $this->requireId($this->client_id, 'Client');
     }
 
     public function setClientId(int $client_id): void
@@ -81,9 +81,9 @@ class ClientCustom
         $this->client_id = $client_id;
     }
 
-    public function getCustomFieldId(): string
+    public function reqCustomFieldId(): int
     {
-        return (string) $this->custom_field_id;
+        return $this->requireId($this->custom_field_id, 'Custom Field');
     }
 
     public function setCustomFieldId(int $custom_field_id): void

@@ -26,13 +26,13 @@ final class FamilyCustomForm extends FormModel
     public static function show(FamilyCustom $familyCustom): self
     {
         $form = new self();
-        $form->family_id = (int) $familyCustom->getFamilyId();
-        $form->custom_field_id = (int) $familyCustom->getCustomFieldId();
+        $form->family_id = $familyCustom->reqId();
+        $form->custom_field_id = $familyCustom->reqCustomFieldId();
         $form->value = (string) $familyCustom->getValue();
         return $form;
     }
 
-    public function getFamilyId(): ?int
+    public function reqId(): ?int
     {
         return $this->family_id;
     }

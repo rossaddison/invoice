@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Widget;
 
 use App\Infrastructure\Persistence\{Client\Client, Product\Product};
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -95,7 +95,7 @@ final readonly class GridComponents
         ]);
         $html .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
 
-        /** @var \App\Invoice\Entity\Inv $invoice */
+        /** @var \App\Infrastructure\Persistence\Inv\Inv $invoice */
         foreach ($invoices as $invoice) {
             if ($itemCount === $max_per_row) {
                 $html .= Html::closeTag('tr');
@@ -103,11 +103,11 @@ final readonly class GridComponents
                 $itemCount = 0;
             }
 
-            $invId = $invoice->getId();
+            $invId = $invoice->reqId();
             $invNumberRaw = $invoice->getNumber();
-            $invNumberLabel = (null !== $invNumberRaw && null !== $invId)
+            $invNumberLabel = (null !== $invNumberRaw)
                 ? $invNumberRaw
-                : $this->translator->translate('number.missing.therefore.use.invoice.id') . ($invId ?? '');
+                : $this->translator->translate('number.missing.therefore.use.invoice.id') . ($invId ?: '');
 
             // Format amount: round to 2 decimals then trim trailing zeros (at most 2 decimals)
             $invBalance = $invoice->getInvAmount()->getBalance();
@@ -245,7 +245,7 @@ final readonly class GridComponents
         ]);
         $html .= Html::openTag('tr', ['class' => 'card-header bg-info text-black']);
 
-        /** @var \App\Invoice\Entity\InvSentLog $invSentLog */
+        /** @var \App\Infrastructure\Persistence\InvSentLog\InvSentLog $invSentLog */
         foreach ($invSentLogs as $invSentLog) {
             if ($itemCount === $max_per_row) {
                 $html .= Html::closeTag('tr');
@@ -253,7 +253,7 @@ final readonly class GridComponents
                 $itemCount = 0;
             }
 
-            $invSentLogId = $invSentLog->getId();
+            $invSentLogId = $invSentLog->reqId();
 
             // Tooltip date (safe)
             $dateObj = $invSentLog->getDateSent();

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
-use App\Invoice\Entity\{Inv, InvItem};
+use App\Infrastructure\Persistence\{Inv\Inv, InvItem\InvItem};
 use App\Invoice\{
     CustomField\CustomFieldRepository as CFR,
     Inv\InvRepository as IR,
@@ -62,41 +62,41 @@ trait UrlKey
         }
         $inv = $iR->repoUrlKeyGuestLoaded($urlKey);
         if ($inv instanceof Inv) {
-            $inv_id = $inv->getId();
+            $inv_id = $inv->reqId();
             $this->session->set('inv_id', $inv_id);
             if ($itrR->repoCount($inv_id) == 0) {
                 $this->flashMessage('warning',
                     $this->translator->translate('tax.rate.active.not'));
             }
-            $client_id = $inv->getClientId();
+            $client_id = $inv->reqClientId();
             $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
             if ($user) {
-                $user_id = $user->getId();
-                if (null !== $user_id) {
+                $user_id = $user->reqId();
+                if ($user_id > 0) {
                     $user_inv = $uiR->repoUserInvUserIdquery($user_id);
                     // If the user is not an administrator and the status is
                     // sent 2, now mark it as viewed
                     if (null !== $user_inv && $user_inv->getActive()) {
                         if ($uiR->repoUserInvUserIdcount($user_id) === 1
-                                && $user_inv->getType() !== 1 && $inv->getStatusId() === 2) {
+                                && $user_inv->getType() !== 1 && $inv->reqStatusId() === 2) {
                             // Mark the invoice as viewed and check whether
                             // it should be marked as read only according to the
                             // read only toggle setting.
-                            $this->sR->invoiceMarkViewed((string) $inv_id, $iR);
+                            $this->sR->invoiceMarkViewed($inv_id, $iR);
                         }
                         $iR->save($inv);
                         $payment_method = $inv->getPaymentMethod() !== 0 ?
                             $pmR->repoPaymentMethodquery(
-                                (string) $inv->getPaymentMethod()) : null;
+                                (int) $inv->getPaymentMethod()) : null;
                         $custom_fields = [
                             'invoice' => $cfR->repoTablequery('inv_custom'),
                             'client' => $cfR->repoTablequery('client_custom'),
                         ];
                         $attachments = $this->viewPartialInvAttachments(
-                            $_language, $urlKey, (int) $client_id, $upR);
+                            $_language, $urlKey, $client_id, $upR);
                         $inv_amount = ((
-                            $iaR->repoInvAmountCount((int) $inv_id) > 0) ?
-                                $iaR->repoInvquery((int) $inv_id) : null);
+                            $iaR->repoInvAmountCount($inv_id) > 0) ?
+                                $iaR->repoInvquery($inv_id) : null);
                         if ($inv_amount) {
                             $is_overdue = (
                                 $inv_amount->getBalance() > 0
@@ -141,7 +141,7 @@ trait UrlKey
                                     'userInv' =>
                                         $uiR->repoUserInvUserIdcount($user_id)
                                             > 0 ? $uiR->repoUserInvUserIdquery(
-                                                $user_id) : null,
+                                            $user_id) : null,
                                 ]),
                             ];
                             return $this->webViewRenderer->render('url_key',

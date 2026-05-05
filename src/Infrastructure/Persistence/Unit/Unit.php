@@ -30,7 +30,7 @@ class Unit
         return $this->requireId($this->id, 'Unit');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

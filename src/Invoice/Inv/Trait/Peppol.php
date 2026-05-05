@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
-use App\Invoice\Entity\Setting;
+use App\Infrastructure\Persistence\Setting\Setting;
 
 use App\Invoice\{
     ClientPeppol\ClientPeppolRepository as cpR,
@@ -65,12 +65,12 @@ trait Peppol
         }
         // Load the inv's HASONE relation 'invAmount'
         if ($id) {
-            $invoice = $invRepo->repoInvLoadInvAmountquery((string) $id);
+            $invoice = $invRepo->repoInvLoadInvAmountquery($id);
             if ($invoice) {
                 $client_id = $invoice->getClient()?->reqId();
                 $delLocId = $invoice->getDeliveryLocationId();
-                if (null !== $client_id) {
-                    if ($this->peppolClientFullySetup((string) $client_id, $cpR)) {
+                if ($client_id > 0) {
+                    if ($this->peppolClientFullySetup($client_id, $cpR)) {
                         $delloc = $dlR->repoDeliveryLocationquery((int) $delLocId);
                         if (null !== $delloc) {
                             $inv_amount = $invoice->getInvAmount();
@@ -257,7 +257,7 @@ trait Peppol
         return $this->webService->getRedirectResponse('inv/view', ['id' => $id]);
     } // peppol stream toggle
     
-    private function peppolClientFullySetup(string $client_id, cpR $cpR): bool
+    private function peppolClientFullySetup(int $client_id, cpR $cpR): bool
     {
         $passed = false;
         if ($cpR->repoClientCount($client_id) == 1) {

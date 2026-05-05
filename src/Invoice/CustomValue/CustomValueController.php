@@ -49,8 +49,8 @@ final class CustomValueController extends BaseController
     public function index(CustomValueRepository $customvalueRepository, CustomFieldRepository $customfieldRepository): Response
     {
         $this->rbac();
-        $custom_field_id = (string) $this->session->get('custom_field_id');
-        $custom_values = $customvalueRepository->repoCustomFieldquery((int) $custom_field_id);
+        $custom_field_id = (int) $this->session->get('custom_field_id');
+        $custom_values = $customvalueRepository->repoCustomFieldquery($custom_field_id);
         $parameters = [
             'custom_field' => $customfieldRepository->repoCustomFieldquery($custom_field_id),
             'custom_field_id' => $custom_field_id,
@@ -73,8 +73,9 @@ final class CustomValueController extends BaseController
         $this->rbac();
         $id = $currentRoute->getArgument('id');
         if (null !== $id) {
-            null !== ($this->session->get('custom_field_id')) ?: $this->session->set('custom_field_id', $id);
-            $custom_field = $customfieldRepository->repoCustomFieldquery($id);
+            null !== ($this->session->get('custom_field_id')) ?:
+                $this->session->set('custom_field_id', $id);
+            $custom_field = $customfieldRepository->repoCustomFieldquery((int) $id);
             $customvalues = $customvalueRepository->repoCustomFieldquery((int) $id);
             if ($custom_field) {
                 $field_form = new CustomFieldForm();
@@ -106,7 +107,8 @@ final class CustomValueController extends BaseController
         $field_id = $currentRoute->getArgument('id');
         if (null !== $field_id) {
             $this->session->set('custom_field_id', $field_id);
-            $custom_field = $custom_fieldRepository->repoCustomFieldquery($field_id);
+            $custom_field = 
+                $custom_fieldRepository->repoCustomFieldquery((int) $field_id);
             $custom_value = new CustomValue();
             if ($custom_field) {
                 $form = new CustomValueForm();
@@ -123,8 +125,11 @@ final class CustomValueController extends BaseController
                     $body = $request->getParsedBody() ?? [];
                     if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                         if (is_array($body)) {
-                            $this->customValueService->saveCustomValue($custom_value, $body);
-                            return $this->webService->getRedirectResponse('customvalue/field', ['id' => $field_id]);
+                            $this->customValueService->saveCustomValue(
+                                $custom_value, $body);
+                            return 
+                                $this->webService->getRedirectResponse(
+                                    'customvalue/field', ['id' => $field_id]);
                         }
                     }
                     $parameters['form'] = $form;
@@ -151,7 +156,7 @@ final class CustomValueController extends BaseController
         CustomValueRepository $customvalueRepository,
         CustomFieldRepository $custom_fieldRepository,
     ): Response {
-        $custom_field_id = (string) $this->session->get('custom_field_id');
+        $custom_field_id = (int) $this->session->get('custom_field_id');
         $custom_field = $custom_fieldRepository->repoCustomFieldquery($custom_field_id);
         $custom_value = $this->customvalue($currentRoute, $customvalueRepository);
         if ($custom_field && $custom_value) {
@@ -169,7 +174,8 @@ final class CustomValueController extends BaseController
                 if ($formHydrator->populateFromPostAndValidate($form, $request)) {
                     if (is_array($body)) {
                         $this->customValueService->saveCustomValue($custom_value, $body);
-                        return $this->webService->getRedirectResponse('customvalue/field', ['id' => $custom_field_id]);
+                        return $this->webService->getRedirectResponse(
+                            'customvalue/field', ['id' => $custom_field_id]);
                     }
                 }
                 $parameters['form'] = $form;
@@ -238,13 +244,12 @@ final class CustomValueController extends BaseController
      * @param CustomValueRepository $customvalueRepository
      * @return CustomValue|null
      */
-    private function customvalue(CurrentRoute $currentRoute, CustomValueRepository $customvalueRepository): ?CustomValue
+    private function customvalue(
+        CurrentRoute $currentRoute,
+        CustomValueRepository $customvalueRepository): ?CustomValue
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $customvalueRepository->repoCustomValuequery($id);
-        }
-        return null;
+        return $customvalueRepository->repoCustomValuequery(
+            (int) $currentRoute->getArgument('id'));
     }
 
     /**

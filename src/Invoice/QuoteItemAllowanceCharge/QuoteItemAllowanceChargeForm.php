@@ -15,7 +15,6 @@ final class QuoteItemAllowanceChargeForm extends FormModel
     private ?int $allowance_charge_id = null;
     #[Required]
     private ?float $amount = null;
-    #[Required]
     private ?float $vat_or_tax = null;
     private ?int $quote_item_id = null;
 
@@ -24,12 +23,8 @@ final class QuoteItemAllowanceChargeForm extends FormModel
         ?int $quote_item_id
     ): self {
         $form = new self();
-        $form->quote_id = $quoteItemAllowanceCharge->isPersisted()
-            ? $quoteItemAllowanceCharge->reqQuoteId()
-            : null;
-        $form->allowance_charge_id = $quoteItemAllowanceCharge->isPersisted()
-            ? $quoteItemAllowanceCharge->reqAllowanceChargeId()
-            : null;
+        $form->quote_id = $quoteItemAllowanceCharge->reqQuoteId();
+        $form->allowance_charge_id = $quoteItemAllowanceCharge->reqAllowanceChargeId();
         $form->amount = (float) $quoteItemAllowanceCharge->getAmount();
         $form->vat_or_tax = (float) $quoteItemAllowanceCharge->getVatOrTax();
         $form->quote_item_id = $quote_item_id;

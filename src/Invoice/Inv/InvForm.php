@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv;
 
-use App\Invoice\Entity\Inv;
-use App\Infrastructure\Persistence\Client\Client;
+use App\Infrastructure\Persistence\{
+    Client\Client, Inv\Inv
+};
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Length;
 use Yiisoft\Validator\Rule\Required;
@@ -25,16 +26,16 @@ final class InvForm extends FormModel
     // stand_in_code/description_code
     #[Length(min: 0, max: 3, skipOnEmpty: true)]
     private ?string $stand_in_code = '';
-    private ?string $quote_id = '';
+    private ?int $quote_id = null;
     private ?Client $client = null;
 
     #[Required]
-    private ?string $group_id = '';
+    private ?int $group_id = null;
 
     #[Required]
-    private ?string $client_id = '';
+    private ?int $client_id = null;
 
-    private ?string $so_id = '';
+    private ?int $so_id = null;
     private ?int $creditinvoice_parent_id = null;
     private ?int $delivery_id = null;
     private ?int $delivery_location_id = null;
@@ -52,43 +53,45 @@ final class InvForm extends FormModel
     private ?string $note = '';
     #[Length(min: 0, max: 32, skipOnEmpty: true)]
     private ?string $document_description = '';
-    private readonly bool $is_read_only;
+    private bool $is_read_only = false;
     private mixed $time_created = '';
 
-    public function __construct(Inv $inv)
+    public static function show(Inv $inv): self
     {
-        $this->date_created = $inv->getDateCreated();
-        $this->date_modified = $inv->getDateModified();
-        $this->client_id = $inv->getClientId();
-        $this->group_id = $inv->getGroupId();
-        $this->status_id = $inv->getStatusId();
-        $this->contract_id = (int) $inv->getContractId();
-        $this->delivery_id = (int) $inv->getDeliveryId();
-        $this->delivery_location_id = (int) $inv->getDeliveryLocationId();
-        $this->postal_address_id = (int) $inv->getPostalAddressId();
-        $this->so_id = $inv->getSoId();
-        $this->quote_id = $inv->getQuoteId();
-        $this->is_read_only = $inv->getIsReadOnly();
-        $this->password = $inv->getPassword();
-        $this->time_created = $inv->getTimeCreated();
-        $this->date_tax_point = $inv->getDateTaxPoint();
-        $this->stand_in_code = $inv->getStandInCode();
-        $this->date_supplied = $inv->getDateSupplied();
-        $this->date_due = $inv->getDateDue();
-        $this->number = $inv->getNumber();
-        $this->discount_amount = $inv->getDiscountAmount();
-        $this->terms = $inv->getTerms();
-        $this->note = $inv->getNote();
-        $this->document_description = $inv->getDocumentDescription();
-        $this->url_key = $inv->getUrlKey();
-        $this->payment_method = $inv->getPaymentMethod();
-        $this->creditinvoice_parent_id = (int) $inv->getCreditinvoiceParentId();
+        $form = new self();
+        $form->date_created = $inv->getDateCreated();
+        $form->date_modified = $inv->getDateModified();
+        $form->client_id = $inv->reqClientId();
+        $form->group_id = $inv->reqGroupId();
+        $form->status_id = $inv->reqStatusId();
+        $form->contract_id = $inv->getContractId();
+        $form->delivery_id = (int) $inv->getDeliveryId();
+        $form->delivery_location_id = (int) $inv->getDeliveryLocationId();
+        $form->postal_address_id = (int) $inv->getPostalAddressId();
+        $form->so_id = $inv->getSoId();
+        $form->quote_id = $inv->getQuoteId();
+        $form->is_read_only = $inv->getIsReadOnly();
+        $form->password = $inv->getPassword();
+        $form->time_created = $inv->getTimeCreated();
+        $form->date_tax_point = $inv->getDateTaxPoint();
+        $form->stand_in_code = $inv->getStandInCode();
+        $form->date_supplied = $inv->getDateSupplied();
+        $form->date_due = $inv->getDateDue();
+        $form->number = $inv->getNumber();
+        $form->discount_amount = $inv->getDiscountAmount();
+        $form->terms = $inv->getTerms();
+        $form->note = $inv->getNote();
+        $form->document_description = $inv->getDocumentDescription();
+        $form->url_key = $inv->getUrlKey();
+        $form->payment_method = $inv->getPaymentMethod();
+        $form->creditinvoice_parent_id = (int) $inv->getCreditinvoiceParentId();
         /**
          * Related logic: see 
                 #[BelongsTo(target: Client::class, nullable: false, fkAction: 'NO ACTION')]
                 private ?Client $client = null;
          */
-        $this->client = $inv->getClient();
+        $form->client = $inv->getClient();
+        return $form;
     }
 
     public function getClient(): ?Client
@@ -157,22 +160,22 @@ final class InvForm extends FormModel
         return $this->stand_in_code;
     }
 
-    public function getQuoteId(): ?string
+    public function getQuoteId(): ?int
     {
         return $this->quote_id;
     }
 
-    public function getClientId(): ?string
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }
 
-    public function getSoId(): ?string
+    public function getSoId(): ?int
     {
         return $this->so_id;
     }
 
-    public function getGroupId(): ?string
+    public function getGroupId(): ?int
     {
         return $this->group_id;
     }

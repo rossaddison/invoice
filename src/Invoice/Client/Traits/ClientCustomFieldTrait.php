@@ -25,11 +25,11 @@ trait ClientCustomFieldTrait
     /**
      * Collect existing custom-field values stored against a client.
      *
-     * @param string $cId
+     * @param int $cId
      * @param ccR $ccR
      * @return array<string, mixed>
      */
-    public function clientCustomValues(string $cId, ccR $ccR): array
+    public function clientCustomValues(int $cId, ccR $ccR): array
     {
         $custom_field_form_values = [];
         if ($ccR->repoClientCount($cId) > 0) {
@@ -50,12 +50,12 @@ trait ClientCustomFieldTrait
      *
      * @param FormHydrator $formHydrator
      * @param array<string, mixed> $body
-     * @param string $cId
+     * @param int $cId
      * @param ccR $ccR
      * @return Response
      */
     public function customFields(FormHydrator $formHydrator, array $body,
-            string $cId, ccR $ccR): Response
+            int $cId, ccR $ccR): Response
     {
         if (empty($body['custom'])) {
             return $this->factory->createResponse(Json::encode(['success' => 0]));
@@ -86,7 +86,7 @@ trait ClientCustomFieldTrait
         }
         /** @var array<array-key, array<string, string>> $raw */
         $raw = (array) $body['custom'];
-        $cId = (string) $this->session->get('client_id');
+        $cId = (int) $this->session->get('client_id');
         $this->persistCustomFieldEntries(
             $this->buildCustomFieldDbArray($raw),
             $cId, $ccR, $formHydrator
@@ -128,13 +128,13 @@ trait ClientCustomFieldTrait
      * Upsert each custom field entry for the given client.
      *
      * @param array<string, string|list<string>> $dbArray  field-id => value map
-     * @param string $cId
+     * @param int $cId
      * @param ccR $ccR
      * @param FormHydrator $formHydrator
      * @return void
      */
     private function persistCustomFieldEntries(
-        array $dbArray, string $cId, ccR $ccR, FormHydrator $formHydrator
+        array $dbArray, int $cId, ccR $ccR, FormHydrator $formHydrator
     ): void {
         foreach ($dbArray as $key => $value) {
             $clientCustom = [
@@ -142,8 +142,8 @@ trait ClientCustomFieldTrait
                 'custom_field_id' => $key,
                 'value'           => $value,
             ];
-            $model = $ccR->repoClientCustomCount($cId, $key) == 1
-                ? $ccR->repoFormValuequery($cId, $key)
+            $model = $ccR->repoClientCustomCount($cId, (int) $key) == 1
+                ? $ccR->repoFormValuequery($cId, (int) $key)
                 : new ClientCustom();
             if ($model instanceof ClientCustom) {
                 $form = new ClientCustomForm();

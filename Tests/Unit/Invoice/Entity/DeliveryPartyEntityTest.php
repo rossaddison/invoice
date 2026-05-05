@@ -12,7 +12,7 @@ class DeliveryPartyEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $dp = new DeliveryParty();
-        $this->assertFalse($dp->isPersisted());
+        $this->assertFalse($dp->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -26,7 +26,7 @@ class DeliveryPartyEntityTest extends TestCase
     {
         $dp = new DeliveryParty();
         $dp->setId(7);
-        $this->assertTrue($dp->isPersisted());
+        $this->assertTrue($dp->hasIdentity());
         $this->assertSame(7, $dp->reqId());
     }
 

@@ -19,8 +19,8 @@ final class SalesOrderCustomForm extends FormModel
     public static function show(SalesOrderCustom $salesOrderCustom): self
     {
         $form = new self();
-        $form->sales_order_id = (int) $salesOrderCustom->getSalesOrderId();
-        $form->custom_field_id = (int) $salesOrderCustom->getCustomFieldId();
+        $form->sales_order_id = $salesOrderCustom->reqSalesOrderId();
+        $form->custom_field_id = $salesOrderCustom->reqCustomFieldId();
         $form->value = $salesOrderCustom->getValue();
         return $form;
     }

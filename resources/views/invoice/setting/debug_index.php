@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Setting;
+use App\Infrastructure\Persistence\Setting\Setting;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -41,6 +41,14 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
 
+echo Html::openTag('div', ['class' => 'mb-3']);
+echo (new \Yiisoft\Html\Tag\A())
+    ->href($urlGenerator->generate('commonerrors/index'))
+    ->addClass('btn btn-warning')
+    ->content('⚙ Common Errors Check')
+    ->render();
+echo Html::closeTag('div');
+
 $toolbarReset =  new A()
     ->addAttributes(['type' => 'reset'])
     ->addClass('btn btn-danger me-1 ajax-loader')
@@ -62,7 +70,7 @@ $columns = [
     new DataColumn(
         property: 'id',
         header: $translator->translate('id'),
-        content: static fn (Setting $model) => Html::encode($model->getSettingId()),
+        content: static fn (Setting $model) => Html::encode($model->reqSettingId()),
         withSorting: true,
     ),
     new DataColumn(
@@ -83,7 +91,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Setting $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('setting/view', ['setting_id' => $model->getSettingId()]);
+                return $urlGenerator->generate('setting/view', ['setting_id' => $model->reqSettingId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -93,7 +101,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Setting $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('setting/edit', ['setting_id' => $model->getSettingId()]);
+                return $urlGenerator->generate('setting/edit', ['setting_id' => $model->reqSettingId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -103,7 +111,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Setting $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('setting/delete', ['setting_id' => $model->getSettingId()]);
+                return $urlGenerator->generate('setting/delete', ['setting_id' => $model->reqSettingId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

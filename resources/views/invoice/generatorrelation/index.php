@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\GentorRelation;
+use App\Infrastructure\Persistence\GentorRelation\GentorRelation;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -38,7 +38,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn(GentorRelation $model) => Html::encode($model->getRelationId()),
+        content: static fn(GentorRelation $model) => Html::encode($model->reqRelationId()),
     ),
     new DataColumn(
         'lowercasename',
@@ -54,7 +54,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (GentorRelation $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generatorrelation/view', ['id' => $model->getRelationId()]);
+                return $urlGenerator->generate('generatorrelation/view', ['id' => $model->reqRelationId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -64,7 +64,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (GentorRelation $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generatorrelation/edit', ['id' => $model->getRelationId()]);
+                return $urlGenerator->generate('generatorrelation/edit', ['id' => $model->reqRelationId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -74,7 +74,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (GentorRelation $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generatorrelation/delete', ['id' => $model->getRelationId()]);
+                return $urlGenerator->generate('generatorrelation/delete', ['id' => $model->reqRelationId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

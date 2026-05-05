@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 /**
  * A list of clients that the guest user has
  * @var App\Infrastructure\Persistence\Client\Client $client
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\ClientPeppol\ClientPeppolRepository $cpR
  * @var App\Invoice\Inv\InvRepository $iR
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
@@ -117,12 +117,12 @@ $columns = [
              */
             $model->setInvs();
             /**
-             * @var App\Invoice\Entity\Inv $invoice
+             * @var App\Infrastructure\Persistence\Inv\Inv $invoice
              */
             foreach ($invoices as $invoice) {
                 $invoice_amount = ($iaR->repoInvAmountCount(
-                        (int) $invoice->getId()) > 0 ?
-                        $iaR->repoInvquery((int) $invoice->getId()) : null);
+                        $invoice->reqId()) > 0 ?
+                        $iaR->repoInvquery($invoice->reqId()) : null);
                 if (null !== $invoice_amount
                         && null !== $invoice_amount->getBalance()
                         && $invoice_amount->getBalance() > 0) {
@@ -149,12 +149,12 @@ $columns = [
             // create a new entity
             $model->setInvs();
             /**
-             * @var App\Invoice\Entity\Inv $invoice
+             * @var App\Infrastructure\Persistence\Inv\Inv $invoice
              */
             foreach ($invoices as $invoice) {
                 $invoice_amount = ($iaR->repoInvAmountCount(
-                        (int) $invoice->getId()) > 0 ?
-                        $iaR->repoInvquery((int) $invoice->getId()) : null);
+                        $invoice->reqId()) > 0 ?
+                        $iaR->repoInvquery($invoice->reqId()) : null);
                 if (null !== $invoice_amount
                         && null !== $invoice_amount->getBalance()
                         && $invoice_amount->getBalance() > 0) {

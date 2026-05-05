@@ -45,7 +45,7 @@ use Yiisoft\Yii\AuthClient\Asset\AuthChoiceAsset;
  *              //'layout' => '@views/layout/main.php',
  *              'layout' => '@views/layout/templates/soletrader/main.php'
  *          ],
- * @var App\User\User|null $user
+ * @var App\Infrastructure\Persistence\User\User|null $user
  * @var bool $appCdnNotNodeModule
  * @var bool $invCdnNotNodeModule
  * @var bool $bootstrap5CdnNotNodeModule
@@ -124,7 +124,7 @@ $this->addJsFiles($assetManager->getJsFiles());
 $this->addJsStrings($assetManager->getJsStrings());
 $this->addJsVars($assetManager->getJsVars());
 $t = $translator;
-$isGuest = $user === null || $user->getId() === null;
+$isGuest = $user === null || !($user->hasIdentity());
 $session->set('_language', $currentRoute->getArgument('_language'));
 $this->beginPage();
 /**

@@ -33,7 +33,7 @@ final readonly class QuoteCustomService
         }
         if (isset($array['custom_field_id'])) {
             $custom_field = $this->cfR->repoCustomFieldquery(
-                (string) $array['custom_field_id']
+                (int) $array['custom_field_id']
             );
             if ($custom_field) {
                 $model->setCustomField($custom_field);

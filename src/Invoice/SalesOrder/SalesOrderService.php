@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Invoice\SalesOrder;
 
 // Entities
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\Infrastructure\Persistence\SalesOrderCustom\SalesOrderCustom;
 use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
-use App\Invoice\Entity\SalesOrderTaxRate;
+use App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate;
 // Repositories
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Group\GroupRepository;
@@ -46,7 +46,7 @@ final readonly class SalesOrderService
         $model->setClient($client);
         $model->setClientId($client->reqId());
         $group = $this->groupRepository->repoGroupquery(
-            (string) $array['group_id']
+            (int) $array['group_id']
         );
         if ($group) {
             $model->setGroup($group);
@@ -54,11 +54,11 @@ final readonly class SalesOrderService
         }
         if (isset($array['user_id'])) {
             $user = $this->userRepository->findById(
-                (string) $array['user_id']
+                (int) $array['user_id']
             );
-            if ($user) {
+            if ($user->hasIdentity()) {
                 $model->setUser($user);
-                $model->setUserId((int) $user->getId());
+                $model->setUserId($user->reqId());
             }
         }
         if (isset($array['quote_id'])) {
@@ -81,7 +81,7 @@ final readonly class SalesOrderService
         SalesOrder $model,
         array $array
     ): SalesOrder {
-        $array['user_id'] = $user->getId();
+        $array['user_id'] = $user->reqId();
         $this->persist($model, $array);
         // Not every SalesOrder BelongsTo an Invoice. They can be rejected.
         isset($array['inv_id'])
@@ -118,7 +118,7 @@ final readonly class SalesOrderService
             ? $model->setPaymentTerm((string) $array['payment_term'])
             : '';
         $model->setNumber((string) $array['number']);
-        if (!$model->isPersisted()) {
+        if (!$model->hasIdentity()) {
             $model->setStatusId(1);
             $model->setDateCreated(new \DateTimeImmutable('now'));
         }
@@ -210,7 +210,7 @@ final readonly class SalesOrderService
         SoAR $soaR,
         SoAS $soaS
     ): void {
-        $so_id = $model->isPersisted() ? $model->reqId() : null;
+        $so_id = $model->hasIdentity() ? $model->reqId() : null;
         // SalesOrders with no items: If there are no items
         // there will be no amount record so check if there is an
         // amount otherwise null error will occur.

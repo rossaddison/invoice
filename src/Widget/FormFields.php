@@ -203,7 +203,7 @@ final readonly class FormFields
         return Field::select($form, 'family_id')
             ->label($this->translator->translate('family'))
             ->addInputAttributes(['class' => $cssClass])
-            ->value($form->getFamilyId())
+            ->value($form->getId())
             ->prompt($this->translator->translate('none'))
             ->optionsData($familiesData)
             ->hint($this->translator->translate($hintKey))

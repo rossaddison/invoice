@@ -10,7 +10,7 @@ use Yiisoft\Html\Tag\Img;
  * @var App\Infrastructure\Persistence\Client\Client $client
  * @var App\Infrastructure\Persistence\Quote\Quote $quote
  * @var App\Infrastructure\Persistence\QuoteAmount\QuoteAmount $quote_amount
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -214,14 +214,13 @@ $vat = $s->getSetting('enable_vat_registration');
                         <?php
 
                             /**
-                             * @var App\Invoice\Entity\InvItem $item
+                             * @var App\Infrastructure\Persistence\InvItem\InvItem $item
                              */
                             foreach ($items as $item) :
                         // Display item-level allowances/charges BEFORE the item
                         // if Peppol is enabled
                         if ($s->getSetting('enable_peppol') == '1') {
-                            $itemId = $item->getId();
-                            if (null !== $itemId) {
+                            $itemId = $item->reqId();
                             $quoteItemAllowanceCharges =
                                 $acqiR->repoQuoteItemquery(
                                     $itemId
@@ -290,7 +289,6 @@ $vat = $s->getSetting('enable_vat_registration');
                             </tr>
                         <?php
                             }
-                            }
                         }
                         ?>
                             <tr>
@@ -306,11 +304,7 @@ $vat = $s->getSetting('enable_vat_registration');
                                 <td class="amount"><?= $numberHelper->formatCurrency($item->getPrice()); ?></td>
                                 <td class="amount"><?= $numberHelper->formatCurrency($item->getDiscountAmount()); ?></td>
                                 <?php
-                                    $query =
-                                        $qiaR
-                                            ->repoQuoteItemAmountquery(
-                                                (int) $item->getId()
-                                            );
+                                    $query = $qiaR->repoQuoteItemAmountquery($item->reqId());
                                 ?>
                                 <td class="amount">
                                     <b>

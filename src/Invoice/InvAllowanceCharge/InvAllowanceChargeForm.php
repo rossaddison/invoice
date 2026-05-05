@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAllowanceCharge;
 
-use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
+use App\Infrastructure\Persistence\{
+    InvAllowanceCharge\InvAllowanceCharge
+};
 use Yiisoft\Validator\Rule\GreaterThan;
 use Yiisoft\FormModel\FormModel;
 
@@ -13,9 +15,9 @@ final class InvAllowanceChargeForm extends FormModel
     private ?int $allowance_charge_id = null;
 
     #[GreaterThan(0)]
-    private ?int $amount = null;
+    private ?float $amount = null;
 
-    private ?int $vat_or_tax = null;
+    private ?float $vat_or_tax = null;
     
     private ?int $inv_id = null;
 
@@ -24,9 +26,9 @@ final class InvAllowanceChargeForm extends FormModel
         ?int $inv_id): self
     {
         $form = new self();
-        $form->allowance_charge_id = (int) $invAllowanceCharge->getAllowanceChargeId();
-        $form->amount = (int) $invAllowanceCharge->getAmount();
-        $form->vat_or_tax = (int) $invAllowanceCharge->getVatOrTax();
+        $form->allowance_charge_id = $invAllowanceCharge->reqAllowanceChargeId();
+        $form->amount = $invAllowanceCharge->getAmount();
+        $form->vat_or_tax = $invAllowanceCharge->getVatOrTax();
         $form->inv_id = $inv_id;
         return $form;
     }
@@ -41,12 +43,12 @@ final class InvAllowanceChargeForm extends FormModel
         return $this->allowance_charge_id;
     }
 
-    public function getAmount(): ?int
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    public function getVatOrTax(): ?int
+    public function getVatOrTax(): ?float
     {
         return $this->vat_or_tax;
     }

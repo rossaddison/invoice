@@ -98,7 +98,8 @@ trait Email
                             ['active' => 'quotes'],
                                 'settings[email_quote_template]');
                 }
-                $setting_status_email_template = $etR->repoEmailTemplatequery(
+                $setting_status_email_template =
+                    $etR->repoEmailTemplatequery((int)
                     $template_helper->selectEmailQuoteTemplate())
                                                ?: null;
                 null === $setting_status_email_template ? $this->flashMessage(
@@ -129,8 +130,8 @@ trait Email
                     'dropdownTitlesOfEmailTemplates' =>
                         $this->emailTemplates($etR),
                     'userInv' => $uiR->repoUserInvUserIdcount(
-                        (string) $quote->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery(
-                            (string) $quote->reqUserId()) : null,
+                        $quote->reqUserId()) > 0 ? $uiR->repoUserInvUserIdquery(
+                            $quote->reqUserId()) : null,
                     'quote' => $quote,
                     'pdfTemplates' => $this->emailGetQuoteTemplates('pdf'),
                     'templateTags' =>
@@ -246,15 +247,15 @@ trait Email
                                 $uiR, $webViewRenderer);
             if (null !== $pdf_template_target_path) {
                 $mail_message = $template_helper->parseTemplate(
-                    (string) $quote_id, false, $email_body, $cvR, $iR, $iaR,
+                    $quote_id, false, $email_body, $cvR, $iR, $iaR,
                         $qR, $qaR, $soR, $uiR);
                 $mail_subject = $template_helper->parseTemplate(
-                    (string) $quote_id, false, $subject, $cvR, $iR, $iaR, $qR,
+                    $quote_id, false, $subject, $cvR, $iR, $iaR, $qR,
                         $qaR, $soR, $uiR);
                 $mail_cc = $template_helper->parseTemplate(
-                    (string) $quote_id, false, $cc, $cvR, $iR, $iaR, $qR, $qaR,
+                    $quote_id, false, $cc, $cvR, $iR, $iaR, $qR, $qaR,
                         $soR, $uiR);
-                $mail_bcc = $template_helper->parseTemplate((string) $quote_id,
+                $mail_bcc = $template_helper->parseTemplate($quote_id,
                     false, $bcc, $cvR, $iR, $iaR, $qR, $qaR, $soR,
                         $uiR);
                 // from[0] is the from_email and from[1] is the from_name
@@ -263,10 +264,10 @@ trait Email
                  * @var string $from[1]
                  */
                 $mail_from
-                    = [$template_helper->parseTemplate((string) $quote_id, false,
+                    = [$template_helper->parseTemplate($quote_id, false,
                         $from[0], $cvR, $iR, $iaR, $qR, $qaR, $soR,
                             $uiR),
-                        $template_helper->parseTemplate((string) $quote_id, false,
+                        $template_helper->parseTemplate($quote_id, false,
                             $from[1], $cvR, $iR, $iaR, $qR, $qaR, $soR,
                                 $uiR)];
                 // mail_from[0] is the from_email and mail_from[1] is

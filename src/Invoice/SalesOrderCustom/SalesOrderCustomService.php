@@ -31,7 +31,7 @@ final readonly class SalesOrderCustomService
         }
         $custom_field =
             $this->customFieldRepository->repoCustomFieldquery(
-                (string) $array['custom_field_id']
+                (int) $array['custom_field_id']
             );
         if ($custom_field) {
             $model->setCustomField($custom_field);

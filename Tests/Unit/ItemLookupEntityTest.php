@@ -13,7 +13,7 @@ final class ItemLookupEntityTest extends Unit
     {
         $itemLookup = new ItemLookup();
 
-        $this->assertFalse($itemLookup->isPersisted());
+        $this->assertFalse($itemLookup->hasIdentity());
         $this->assertSame('', $itemLookup->getName());
         $this->assertSame('', $itemLookup->getDescription());
         $this->assertNull($itemLookup->getPrice());

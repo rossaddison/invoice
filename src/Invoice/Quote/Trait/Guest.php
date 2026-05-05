@@ -63,11 +63,11 @@ trait Guest
         // Retrieve the user from Yii-Demo's list of users in the User Table
         $user = $this->userService->getUser();
         if ($user) {
+            $userId = $user->reqId();
             // Use this user's id to see whether a user has been setup under
             // UserInv ie. yii-invoice's list of users
-            $userinv = ($uiR->repoUserInvUserIdcount(
-                    (string) $user->getId()) > 0
-                     ? $uiR->repoUserInvUserIdquery((string) $user->getId())
+            $userinv = ($uiR->repoUserInvUserIdcount($userId) > 0
+                     ? $uiR->repoUserInvUserIdquery($userId)
                      : null);
             if ($userinv && $userinv->getActive()) {
                 // Determine what clients have been allocated to this user
@@ -81,7 +81,7 @@ trait Guest
                 // the administrator so that they can view their quotes when
                 // they log in
                 $user_clients = $ucR->getAssignedToUser(
-                    (string) $user->getId());
+                    $userId);
                 if (!empty($user_clients)) {
 /**
  * @psalm-var \Yiisoft\Data\Reader\ReadableDataInterface<array-key, array<array-key, mixed>|object>&\Yiisoft\Data\Reader\LimitableDataInterface&\Yiisoft\Data\Reader\OffsetableDataInterface&\Yiisoft\Data\Reader\CountableDataInterface $quotes

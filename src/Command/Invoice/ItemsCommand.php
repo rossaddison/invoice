@@ -7,20 +7,20 @@ namespace App\Command\Invoice;
 use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Group\Group;
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvItemAllowanceCharge;
-use App\Invoice\Entity\InvItemAmount;
-use App\Invoice\Entity\InvTaxRate;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
+use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
+use App\Infrastructure\Persistence\InvTaxRate\InvTaxRate;
 use App\Infrastructure\Persistence\Family\Family;
 use App\Infrastructure\Persistence\Product\Product;
 use App\Infrastructure\Persistence\TaxRate\TaxRate;
 use App\Infrastructure\Persistence\Unit\Unit;
-use App\Invoice\Entity\UserClient;
-use App\Invoice\Entity\UserInv;
-use App\User\User;
+use App\Infrastructure\Persistence\UserClient\UserClient;
+use App\Infrastructure\Persistence\UserInv\UserInv;
+use App\Infrastructure\Persistence\User\User;
 use Cycle\ORM\EntityManager;
 use Doctrine\Inflector\InflectorFactory;
 use Exception;
@@ -200,7 +200,7 @@ final class ItemsCommand extends Command
         $invAllowanceChargeTotal = 0;
         foreach ($this->invAllowanceCharges as $invAllowanceCharge) {
             $amount = (float) $invAllowanceCharge->getAmount();
-            $offSet = ((int) $invAllowanceCharge->getAllowanceChargeId()) - 1;
+            $offSet = ($invAllowanceCharge->reqAllowanceChargeId()) - 1;
             $allowanceCharge = $this->allowanceCharges[$offSet] ?? null;
             $isCharge = $allowanceCharge?->getIdentifier() ?? false;
             $reason = $allowanceCharge?->getReason() ?? 'N/A';
@@ -280,7 +280,7 @@ final class ItemsCommand extends Command
         foreach ($invItems as $invItem) {
             $quantity = $invItem->getQuantity() ?? 0;
             $price = $invItem->getPrice() ?? 0;
-            $percentage = $invItem->getTaxRateId() == '1' ? 15 : 20;
+            $percentage = $invItem->reqTaxRateId() == '1' ? 15 : 20;
             $subTotal = $quantity * $price;
             $discount = 1;
             $netDiscount = ($quantity * ($price - $discount));
@@ -292,7 +292,7 @@ final class ItemsCommand extends Command
             $itemId = $currentIndex + 1;
             $hasAllowancesOrCharges = false;
             foreach ($this->invItemAllowanceCharges as $invItemAllowanceCharge) {
-                if ($invItemAllowanceCharge->getInvItemId() == (string)$itemId) {
+                if ($invItemAllowanceCharge->reqInvItemId() == $itemId) {
                     $hasAllowancesOrCharges = true;
                     break;
                 }
@@ -325,8 +325,8 @@ final class ItemsCommand extends Command
             $itemChargeTax = 0;
 
             foreach ($this->invItemAllowanceCharges as $invItemAllowanceCharge) {
-                if ($invItemAllowanceCharge->getInvItemId() == (string)$itemId) {
-                    $allowanceChargeId = (int)$invItemAllowanceCharge->getAllowanceChargeId();
+                if ($invItemAllowanceCharge->reqInvItemId() == $itemId) {
+                    $allowanceChargeId = $invItemAllowanceCharge->reqAllowanceChargeId();
                     $allowanceCharge = $this->allowanceCharges[$allowanceChargeId - 1] ?? null;
                     $isCharge = $allowanceCharge?->getIdentifier() ?? false;
                     $reason = $allowanceCharge?->getReason() ?? 'N/A';
@@ -620,7 +620,7 @@ final class ItemsCommand extends Command
         $itemAllowanceChargeAmountTotal = 0;
         $itemAllowanceChargeTaxTotal = 0;
         foreach ($this->invItemAllowanceCharges as $invItemAllowanceCharge) {
-            $allowanceChargeId = (int)$invItemAllowanceCharge->getAllowanceChargeId();
+            $allowanceChargeId = $invItemAllowanceCharge->reqAllowanceChargeId();
             $allowanceCharge = $this->allowanceCharges[$allowanceChargeId - 1] ?? null;
             $isCharge = $allowanceCharge?->getIdentifier() ?? false;
             $amount = (float)$invItemAllowanceCharge->getAmount();

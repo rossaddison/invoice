@@ -18,7 +18,7 @@ final readonly class AllowanceChargeService
     public function saveAllowanceCharge(
         AC $model,
         array $array
-    ): void {
+    ): AC {
         $model = $this->persist($model, $array);
         isset($array['identifier']) ?
             $model->setIdentifier((bool) $array['identifier']) : '';
@@ -36,6 +36,7 @@ final readonly class AllowanceChargeService
         isset($array['tax_rate_id']) ?
             $model->setTaxRateId((int) $array['tax_rate_id']) : '';
         $this->repository->save($model);
+        return $model;
     }
 
     private function persist(AC $model, array $array): AC
@@ -43,14 +44,14 @@ final readonly class AllowanceChargeService
         $tr = 'tax_rate_id';
         if (isset($array[$tr])) {
             $model->setTaxRate(
-                $this->trR->repoTaxRatequery(
-                    (string) $array[$tr]));
+                $this->trR->repoTaxRatequery((int) $array[$tr]));
         }
         return $model;
     }
 
-    public function deleteAllowanceCharge(AC $model): void
+    public function deleteAllowanceCharge(AC $model): AC
     {
         $this->repository->delete($model);
+        return $model;
     }
 }

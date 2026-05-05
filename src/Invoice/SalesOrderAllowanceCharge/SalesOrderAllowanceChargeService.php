@@ -24,7 +24,7 @@ final readonly class SalesOrderAllowanceChargeService
         array $array
     ): void {
         $allowance_charge = $this->acR->repoAllowanceChargequery(
-            (string) $array['allowance_charge_id']
+            (int) $array['allowance_charge_id']
         );
         if ($allowance_charge) {
             $model->setAllowanceCharge($allowance_charge);
@@ -52,7 +52,7 @@ final readonly class SalesOrderAllowanceChargeService
         isset($array['amount'])
             ? $model->setAmount((float) $array['amount'])
             : 0.00;
-        $acId = (string) $array['allowance_charge_id'];
+        $acId = (int) $array['allowance_charge_id'];
         $ac = $this->acR->repoAllowanceChargequery($acId);
         if (null !== $ac && null !== $ac->getTaxRate()
         ) {

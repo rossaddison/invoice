@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentPeppol;
 
-use App\Invoice\Entity\PaymentPeppol;
+use App\Infrastructure\Persistence\PaymentPeppol\PaymentPeppol;
 use App\Invoice\Inv\InvRepository as IR;
 
 final readonly class PaymentPeppolService
@@ -45,8 +45,7 @@ final readonly class PaymentPeppolService
     ): void {
         $inv = 'inv_id';
         if (isset($array[$inv])) {
-            $invEntity = $this->iR->repoInvUnLoadedquery(
-                (string) $array[$inv]);
+            $invEntity = $this->iR->repoInvUnLoadedquery((int) $array[$inv]);
             if ($invEntity) {
                 $model->setInv($invEntity);
             }

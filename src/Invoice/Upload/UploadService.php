@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Upload;
 
 use App\Invoice\Client\ClientRepository as CR;
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\Upload\Upload;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Files\FileHelper;
 

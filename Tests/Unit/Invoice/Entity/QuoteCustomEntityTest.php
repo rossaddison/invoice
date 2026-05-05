@@ -14,7 +14,7 @@ class QuoteCustomEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $qc = new QuoteCustom();
-        $this->assertFalse($qc->isPersisted());
+        $this->assertFalse($qc->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -28,7 +28,7 @@ class QuoteCustomEntityTest extends TestCase
     {
         $qc = new QuoteCustom();
         $qc->setId(8);
-        $this->assertTrue($qc->isPersisted());
+        $this->assertTrue($qc->hasIdentity());
         $this->assertSame(8, $qc->reqId());
     }
 
@@ -53,17 +53,18 @@ class QuoteCustomEntityTest extends TestCase
         $this->assertSame(20, $qc->reqQuoteId());
     }
 
-    public function testCustomFieldIdReturnsEmptyStringByDefault(): void
+    public function testCustomFieldIdThrowsWhenNotSet(): void
     {
         $qc = new QuoteCustom();
-        $this->assertSame('', $qc->getCustomFieldId());
+        $this->expectException(\LogicException::class);
+        $qc->reqCustomFieldId();
     }
 
     public function testCustomFieldIdSetterAndGetter(): void
     {
         $qc = new QuoteCustom();
         $qc->setCustomFieldId(7);
-        $this->assertSame('7', $qc->getCustomFieldId());
+        $this->assertSame(7, $qc->reqCustomFieldId());
     }
 
     public function testValueIsEmptyStringByDefault(): void

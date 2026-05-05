@@ -47,8 +47,7 @@ final readonly class SalesOrderItemService
             }
         }
         if (isset($array['tax_rate_id'])) {
-            $tax_rate = $this->trR->repoTaxRatequery(
-                (string) $array['tax_rate_id']
+            $tax_rate = $this->trR->repoTaxRatequery((int) $array['tax_rate_id']
             );
             if ($tax_rate) {
                 $model->setTaxRate($tax_rate);
@@ -56,19 +55,16 @@ final readonly class SalesOrderItemService
             }
         }
         if (isset($array['product_id'])) {
-            $product = $this->pR->repoProductquery(
-                (string) $array['product_id']
+            $product = $this->pR->repoProductquery((int) $array['product_id']
             );
             if ($product) {
                 $model->setProduct($product);
-                $model->setProductId(
-                    (int) $product->getProductId()
-                );
+                $model->setProductId($product->reqId());
             }
         }
         if (isset($array['task_id'])) {
             $task = $this->taskR->repoTaskquery(
-                (string) $array['task_id']
+                (int) $array['task_id']
             );
             if ($task) {
                 $model->setTask($task);
@@ -107,13 +103,12 @@ final readonly class SalesOrderItemService
         $product_id = (int) ($array['product_id'] ?? null);
         $task_id = (int) ($array['task_id'] ?? null);
         if (isset($array['product_id'])) {
-            $product = $pr->repoProductquery(
-                (string) $array['product_id']
+            $product = $pr->repoProductquery((int) $array['product_id']
             );
             $name = '';
             if ($product) {
             if (isset($array['product_id'])
-                && $pr->repoCount((string) $product_id) > 0
+                && $pr->repoCount($product_id) > 0
             ) {
                 $name = $product->getProductName();
             }
@@ -133,11 +128,11 @@ final readonly class SalesOrderItemService
         }
         }
         if (isset($array['task_id'])) {
-            $task = $taskR->repoTaskquery((string) $array['task_id']);
+            $task = $taskR->repoTaskquery((int) $array['task_id']);
             if ($task) {
                 $name = '';
                 if (isset($array['task_id'])
-                    && $taskR->repoCount((string) $task_id) > 0
+                    && $taskR->repoCount($task_id) > 0
                 ) {
                     $name = $task->getName();
                 }
@@ -174,7 +169,7 @@ final readonly class SalesOrderItemService
         // Product_unit is a string which we get from unit's name
         // field using the unit_id
         $unit = $uR->repoUnitquery(
-            (string) $array['product_unit_id']
+            (int) $array['product_unit_id']
         );
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());
@@ -207,11 +202,11 @@ final readonly class SalesOrderItemService
 
         if (isset($array['product_id'])) {
             $product = $pr->repoProductquery(
-                (string) $array['product_id']
+                (int) $array['product_id']
             );
             if ($product) {
                 $name = (((isset($array['product_id']))
-                    && ($pr->repoCount($product->getProductId()) > 0))
+                    && ($pr->repoCount($product->reqId()) > 0))
                     ? $product->getProductName()
                     : '');
                 $model->setName($name ?? '');
@@ -249,9 +244,7 @@ final readonly class SalesOrderItemService
             : '';
         // Product_unit is a string which we get from unit's name
         // field using the unit_id
-        $unit = $uR->repoUnitquery(
-            (string) $array['product_unit_id']
-        );
+        $unit = $uR->repoUnitquery((int) $array['product_unit_id']);
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());
         }
@@ -310,7 +303,7 @@ final readonly class SalesOrderItemService
         int $id,
         TRR $trr
     ): ?float {
-        $taxrate = $trr->repoTaxRatequery((string) $id);
+        $taxrate = $trr->repoTaxRatequery($id);
         if ($taxrate) {
             return $taxrate->getTaxRatePercent();
         }

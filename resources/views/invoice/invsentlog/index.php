@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\InvSentLog;
+use App\Infrastructure\Persistence\InvSentLog\InvSentLog;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -41,7 +41,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (InvSentLog $model): string {
-            return (string) $model->getId();
+            return (string) $model->reqId();
         },
     ),
     new DataColumn(
@@ -50,7 +50,7 @@ $columns = [
         content: static function (InvSentLog $model) use ($urlGenerator): A {
             return Html::a(($model->getInv()?->getNumber() ?? '#') . ' 🔍', $urlGenerator->generate(
                 'inv/view',
-                ['id' => $model->getId()],
+                ['id' => $model->reqId()],
             ), ['style' => 'text-decoration:none']);
         },
         filter: $optionsDataInvNumberDropDownFilter,

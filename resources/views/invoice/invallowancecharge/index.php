@@ -53,14 +53,14 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (InvAllowanceCharge $model) => $model->getId(),
+        content: static fn (InvAllowanceCharge $model) => $model->reqId(),
         withSorting: true,
     ),
     new DataColumn(
         property: 'filterInvNumber',
         header: $translator->translate('invoice'),
         content: static function (InvAllowanceCharge $model) use ($urlGenerator): A {
-            return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInvId()]), []);
+            return Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => (string) $model->reqInvId()]), []);
         },
         encodeContent: false,
         filter: $optionsDataInvNumberDropDownFilter,
@@ -87,20 +87,23 @@ $columns = [
     new DataColumn(
         property: 'amount',
         header: $translator->translate('allowance.or.charge.amount'),
-        content: static fn (InvAllowanceCharge $model) => $model->getAmount(),
+        content: static fn (InvAllowanceCharge $model) => $model->getAmount()
+            ?? 0.00,
         withSorting: true,
     ),
     new DataColumn(
         property: 'vat_or_tax',
         header: $vat ? $translator->translate('vat') : $translator->translate('tax'),
-        content: static fn (InvAllowanceCharge $model) => $model->getVatOrTax(),
+        content: static fn (InvAllowanceCharge $model) => $model->getVatOrTax()
+            ?? 0.00,
         withSorting: true,
     ),
     new ActionColumn(buttons: [
         new ActionButton(
             content: '🔎',
             url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('invallowancecharge/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('invallowancecharge/view', [
+                    'id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -110,7 +113,8 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('invallowancecharge/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('invallowancecharge/edit', [
+                    'id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -120,11 +124,13 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (InvAllowanceCharge $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('invallowancecharge/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('invallowancecharge/delete', [
+                    'id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
-                'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                'onclick' => "return confirm(" .
+                "'" . $translator->translate('delete.record.warning') . "');",
             ],
         ),
     ]),
@@ -141,7 +147,8 @@ $sort = Sort::only(['id', 'inv_id', 'allowance_charge_id', 'amount', 'vat_or_tax
     ->withOrderString($sortString);
 
 $sortedAndPagedPaginator = (new OffsetPaginator($invAllowanceCharges))
-    ->withPageSize($defaultPageSizeOffsetPaginator > 0 ? $defaultPageSizeOffsetPaginator : 1)
+    ->withPageSize($defaultPageSizeOffsetPaginator > 0 ?
+        $defaultPageSizeOffsetPaginator : 1)
     ->withCurrentPage($page)
     ->withSort($sort)
     ->withToken(PageToken::next((string) $page));

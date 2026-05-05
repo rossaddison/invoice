@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Inv;
 
 use App\Invoice\CustomFieldProcessor;
-use App\Invoice\Entity\InvCustom;
+use App\Infrastructure\Persistence\InvCustom\InvCustom;
 use App\Invoice\InvCustom\InvCustomForm;
 use App\Invoice\InvCustom\InvCustomRepository;
 use App\Invoice\InvCustom\InvCustomService;
@@ -25,19 +25,19 @@ final class InvCustomFieldProcessor implements CustomFieldProcessor
     }
 
     #[\Override]
-    public function exists(string $entityId, string $customFieldId): bool
+    public function exists(int $entityId, int $customFieldId): bool
     {
         return $this->repository->repoInvCustomCount($entityId, $customFieldId) > 0;
     }
 
     #[\Override]
-    public function findExisting(string $entityId, string $customFieldId): ?\App\Invoice\Entity\InvCustom
+    public function findExisting(int $entityId, int $customFieldId): ?InvCustom
     {
         return $this->repository->repoFormValuequery($entityId, $customFieldId);
     }
 
     #[\Override]
-    public function createEntity(): \App\Invoice\Entity\InvCustom
+    public function createEntity(): InvCustom
     {
         return new InvCustom();
     }
@@ -49,7 +49,7 @@ final class InvCustomFieldProcessor implements CustomFieldProcessor
             throw new \InvalidArgumentException('Entity must be an instance of InvCustom');
         }
 
-        return new InvCustomForm($entity);
+        return new InvCustomForm();
     }
 
     #[\Override]

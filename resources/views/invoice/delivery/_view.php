@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Invoice\Delivery\DeliveryForm $form
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
@@ -127,7 +127,7 @@ use Yiisoft\Html\Tag\Form;
         ->optionsData($optionsDataDel)
         ->value(Html::encode($form->getDeliveryLocationId()));
     } else {
-        echo Html::a($translator->translate('delivery.location.add'), $urlGenerator->generate('del/add', ['client_id' => $inv->getClientId()]), ['class' => 'btn btn-danger btn-lg mt-3']);
+        echo Html::a($translator->translate('delivery.location.add'), $urlGenerator->generate('del/add', ['client_id' => $inv->reqClientId()]), ['class' => 'btn btn-danger btn-lg mt-3']);
     }
 ?>
         <?= Html::closeTag('div'); ?>

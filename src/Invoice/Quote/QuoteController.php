@@ -7,12 +7,11 @@ namespace App\Invoice\Quote;
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
 use App\Widget\FormFields;
-use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Infrastructure\Persistence\Quote\Quote;
-use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
-use App\Infrastructure\Persistence\QuoteTaxRate\QuoteTaxRate;
+use App\Infrastructure\Persistence\{
+    TaxRate\TaxRate, Quote\Quote, QuoteItem\QuoteItem,
+    QuoteTaxRate\QuoteTaxRate, User\User
+};
 use App\User\UserService;
-use App\User\User;
 use App\Invoice\{
     Inv\InvService, InvItem\InvItemService,
     InvAllowanceCharge\InvAllowanceChargeService, InvAmount\InvAmountService, 
@@ -29,7 +28,7 @@ use App\Invoice\{
 };
 use App\Service\WebControllerService;
 // Forms
-use App\Invoice\Quote\Trait\{Add, Delete, Edit, Email, Guest, Index, OptionsData,
+use App\Invoice\Quote\Trait\{Add, ChangeStatus, Delete, Edit, Email, Guest, Index, OptionsData,
     PdfTrait, QuoteCopy, QuoteToInvoice, QuoteToSo, UrlKey, View};
 use App\Invoice\{
     Quote\QuoteCustomFieldProcessor,
@@ -69,8 +68,8 @@ use Psr\{
 
 final class QuoteController extends BaseController
 {
-    use Add, Delete, Edit, Email, Guest, Index, OptionsData, PdfTrait, QuoteCopy,
-        QuoteToInvoice, QuoteToSo, UrlKey, View;
+    use Add, ChangeStatus, Delete, Edit, Email, Guest, Index, OptionsData, PdfTrait,
+        QuoteCopy, QuoteToInvoice, QuoteToSo, UrlKey, View;
     
     protected string $controllerName = 'invoice/quote';
 
@@ -116,20 +115,18 @@ final class QuoteController extends BaseController
         $this->pdfHelper = new PdfHelper($sR, $session, $translator);
     }
 
-    private function activeUser(string $client_id, UR $uR, UCR $ucR,
+    private function activeUser(int $client_id, UR $uR, UCR $ucR,
         UIR $uiR): ?User
     {
         $user_client = $ucR->repoUserquery($client_id);
         if (null !== $user_client) {
             $user_client_count = $ucR->repoUserquerycount($client_id);
             if ($user_client_count == 1) {
-                $user_id = $user_client->getUserId();
+                $user_id = $user_client->reqUserId();
                 $user = $uR->findById($user_id);
-                if (null !== $user) {
-                    $user_inv = $uiR->repoUserInvUserIdquery($user_id);
-                    if (null !== $user_inv && $user_inv->getActive()) {
-                        return $user;
-                    }
+                $user_inv = $uiR->repoUserInvUserIdquery($user_id);
+                if (null !== $user_inv && $user_inv->getActive()) {
+                    return $user;
                 }
             }
         }
@@ -346,10 +343,11 @@ final class QuoteController extends BaseController
                 // the quote  is not a draft i.e. has been sent
                 && !($statusId === 1)
                 // the quote is intended for the current user
-                && ((string) $quote->reqUserId() === $this->userService->getUser()?->getId())
+                && ($quote->reqUserId() === $this->userService->getUser()?->reqId())
                 // the quote client is associated with the above user
-                && ($ucR->repoUserClientqueryCount((string) $quote->reqUserId(), (string) $quote->reqClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery((string) $quote->reqUserId());
+                && ($ucR->repoUserClientqueryCount(
+                    $quote->reqUserId(), $quote->reqClientId()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery($quote->reqUserId());
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {
                     return true;

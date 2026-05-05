@@ -107,7 +107,7 @@ final class UnitController extends BaseController
         UnitRepository $unitRepository,
         FormHydrator $formHydrator,
     ): Response {
-        $unit = $this->unit($unit_id, $unitRepository);
+        $unit = $this->unit((int) $unit_id, $unitRepository);
         if ($unit) {
             $form = UnitForm::show($unit);
             $parameters = [
@@ -143,7 +143,7 @@ final class UnitController extends BaseController
     {
         try {
             /** @var Unit $unit */
-            $unit = $this->unit($unit_id, $unitRepository);
+            $unit = $this->unit((int) $unit_id, $unitRepository);
             $this->unitService->deleteUnit($unit);
             $this->flashMessage('success', $this->translator->translate('record.successfully.deleted'));
             return $this->webService->getRedirectResponse('unit/index');
@@ -160,8 +160,8 @@ final class UnitController extends BaseController
      */
     public function view(#[RouteArgument('unit_id')] string $unit_id, UnitRepository $unitRepository): \Psr\Http\Message\ResponseInterface
     {
-        $unit = $this->unit($unit_id, $unitRepository);
-        if ($unit) {
+        $unit = $this->unit((int) $unit_id, $unitRepository);
+        if (null!==$unit) {
             $form = UnitForm::show($unit);
             $parameters = [
                 'title' => $this->translator->translate('view'),
@@ -175,16 +175,13 @@ final class UnitController extends BaseController
     }
 
     /**
-     * @param string $unit_id
+     * @param int $unit_id
      * @param UnitRepository $unitRepository
      * @return Unit|null
      */
-    private function unit(string $unit_id, UnitRepository $unitRepository): ?Unit
+    private function unit(int $unit_id, UnitRepository $unitRepository): ?Unit
     {
-        if ($unit_id) {
-            return $unitRepository->repoUnitquery($unit_id);
-        }
-        return null;
+        return $unitRepository->repoUnitquery($unit_id);
     }
 
     /**

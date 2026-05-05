@@ -207,19 +207,17 @@ final class ClientNoteController extends BaseController
                 'form' => $form,
                 'clients' => $clientRepository->findAllPreloaded(),
             ];
-            if ($this->rbacObserver(
-                                    $clientNote->getClientId(), $ucR, $uiR)) {
+            if ($this->rbacObserver($clientNote->reqClientId(), $ucR, $uiR)) {
                 return $this->webViewRenderer->render('_view', $parameters);
             }
         }
         return $this->webService->getRedirectResponse('clientnote/index');
     }
 
-    private function rbacObserver(
-                                    string $clientId, UCR $ucR, UIR $uiR): bool {
+    private function rbacObserver(int $clientId, UCR $ucR, UIR $uiR): bool {
         $userClient = $ucR->repoUserquery($clientId);
         if (null!==$userClient) {
-            $userId = $userClient->getUserId();
+            $userId = $userClient->reqUserId();
             $userInv = $uiR->repoUserInvUserIdquery($userId);
             if (null !== $userInv && $userInv->getActive()) {
                 return true;
@@ -236,10 +234,7 @@ final class ClientNoteController extends BaseController
     private function clientnote(CurrentRoute $currentRoute,
                         ClientNoteRepository $clientnoteRepository): ?ClientNote
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $clientnoteRepository->repoClientNotequery($id);
-        }
-        return null;
+        $id = (int) $currentRoute->getArgument('id');
+        return $clientnoteRepository->repoClientNotequery($id);
     }
 }

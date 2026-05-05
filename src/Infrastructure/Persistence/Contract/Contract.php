@@ -45,14 +45,14 @@ class Contract
         return $this->requireId($this->id, 'Contract');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
 
-    public function getClientId(): string
+    public function reqClientId(): int
     {
-        return (string) $this->client_id;
+        return $this->requireId($this->client_id, 'Client');
     }
 
     public function setClientId(int $client_id): void

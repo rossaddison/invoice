@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Helpers;
 
 // Entities
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 // Repositories
 use App\Invoice\ClientCustom\ClientCustomRepository as CCR;
 use App\Invoice\CustomField\CustomFieldRepository as CFR;
@@ -84,8 +84,9 @@ class MailerHelper
         $quote = $qR->repoCount((int) $quote_id) > 0 ? $qR->repoQuoteLoadedquery((int) $quote_id) : null;
         if ($quote) {
             $url = $urlGenerator->generate('quote/view', ['id' => $quote_id]);
-            $user_id = $quote->getUser()?->getId() ?? null;
-            $user_inv = null !== $user_id ? $uiR->repoUserInvUserIdquery($user_id) : null;
+            $user_id = $quote->getUser()?->reqId() ?? null;
+            $user_inv = null !== $user_id ?
+                $uiR->repoUserInvUserIdquery($user_id) : null;
             if (null !== $user_inv) {
                 if (null !== $quote->getClient()?->getClientName()) {
                     $from_email = $user_inv->getUser()?->getEmail() ?? '';
@@ -150,8 +151,9 @@ class MailerHelper
 
         // Bcc mails to admin && the admin email account has been setup under userinv which is an extension table of user
         if (null !== $uiR) {
-            if (($this->s->getSetting('bcc_mails_to_admin') == 1) && ($uiR->repoUserInvUserIdcount((string) 1) > 0)) {
-                $user_inv = $uiR->repoUserInvUserIdquery((string) 1) ?: null;
+            if (($this->s->getSetting('bcc_mails_to_admin') == 1)
+                    && ($uiR->repoUserInvUserIdcount(1) > 0)) {
+                $user_inv = $uiR->repoUserInvUserIdquery(1) ?: null;
                 $email = null !== $user_inv ? $user_inv->getUser()?->getEmail() : '';
                 // $bcc should be an array after the explode
                 is_array($bcc) && $email !== '' ? array_unshift($bcc, $email) : '';
@@ -209,7 +211,7 @@ class MailerHelper
         }
         // Ensure that the administrator exists in the userinv extension table. If the email is blank generate a flash
         if (null !== $uiR) {
-            if ($uiR->repoUserInvUserIdcount((string) 1) == 0) {
+            if ($uiR->repoUserInvUserIdcount(1) == 0) {
                 $admin = new UserInv();
                 $admin->setUserId(1);
                 // Administrator's are given a type of 0, Guests eg. Accountant 1

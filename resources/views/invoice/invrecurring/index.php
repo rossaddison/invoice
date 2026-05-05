@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\InvRecurring;
+use App\Infrastructure\Persistence\InvRecurring\InvRecurring;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Form;
@@ -15,7 +15,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\InvRecurring $invRecurring
+ * @var App\Infrastructure\Persistence\InvRecurring\InvRecurring $invRecurring
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
@@ -58,7 +58,8 @@ $columns = [
             return  new A()
                     ->addClass('style', 'text-decoration:none')
                     ->content($model->getInv()?->getNumber() ?? '#')
-                    ->href($urlGenerator->generate('inv/view', ['id' => $model->getInvId()]));
+                    ->href($urlGenerator->generate('inv/view', ['id' => (string) 
+                        $model->reqInvId()]));
         },
         encodeContent: false,
     ),
@@ -102,7 +103,7 @@ $columns = [
             },
             url: static function (InvRecurring $model) use ($urlGenerator): string {
                 $active = null !== $model->getNext();
-                return $urlGenerator->generate($active ? 'invrecurring/stop' : 'invrecurring/start', ['id' => $model->getId()]);
+                return $urlGenerator->generate($active ? 'invrecurring/stop' : 'invrecurring/start', ['id' => $model->reqId()]);
             },
             attributes: function (InvRecurring $model) use ($translator): array {
                 return [
@@ -114,7 +115,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (InvRecurring $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('invrecurring/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('invrecurring/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -124,7 +125,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (InvRecurring $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('invrecurring/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('invrecurring/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

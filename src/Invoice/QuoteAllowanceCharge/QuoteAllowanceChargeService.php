@@ -28,7 +28,7 @@ final readonly class QuoteAllowanceChargeService
     ): void {
         if (isset($array['allowance_charge_id'])) {
             $allowance_charge = $this->acR->repoAllowanceChargequery(
-                (string) $array['allowance_charge_id']
+                (int) $array['allowance_charge_id']
             );
             if ($allowance_charge) {
                 $model->setAllowanceCharge($allowance_charge);
@@ -65,7 +65,7 @@ final readonly class QuoteAllowanceChargeService
             $model->setAmount((float) $array['amount']) : 0.00;
         $allowance_charge =
             $this->acR->repoAllowanceChargequery(
-                (string) $array['allowance_charge_id']
+                (int) $array['allowance_charge_id']
             );
         if (null !== $allowance_charge
                 && null !== $allowance_charge->getTaxRate()) {

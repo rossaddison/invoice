@@ -62,7 +62,7 @@ class QuoteCustom
         return $this->requireId($this->id, 'QuoteCustom');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -82,9 +82,9 @@ class QuoteCustom
         $this->quote_id = $quote_id;
     }
 
-    public function getCustomFieldId(): string
+    public function reqCustomFieldId(): int
     {
-        return (string) $this->custom_field_id;
+        return $this->requireId($this->custom_field_id, 'Custom Field');
     }
 
 

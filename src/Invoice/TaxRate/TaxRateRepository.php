@@ -70,10 +70,10 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     * @param string $tax_rate_id
+     * @param int $tax_rate_id
      * @return TaxRate|null
      */
-    public function repoTaxRatequery(string $tax_rate_id): ?TaxRate
+    public function repoTaxRatequery(int $tax_rate_id): ?TaxRate
     {
         $query = $this
             ->select()
@@ -94,10 +94,10 @@ final class TaxRateRepository extends Select\Repository
     }
 
     /**
-     * @param string $tax_rate_id
+     * @param int $tax_rate_id
      * @return int
      */
-    public function repoCount(string $tax_rate_id): int
+    public function repoCount(int $tax_rate_id): int
     {
         return $this->select()
                       ->where(['id' => $tax_rate_id])

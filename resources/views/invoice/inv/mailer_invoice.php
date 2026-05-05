@@ -10,8 +10,8 @@ use Yiisoft\Html\Tag\Input;
 /**
  * Related logic: see InvController function emailStage0
  * @var App\Invoice\Inv\MailerInvForm $form
- * @var App\Invoice\Entity\Inv $invoice
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\Inv\Inv $invoice
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var Yiisoft\Router\UrlGeneratorInterface $urlGenerator
  * @var Yiisoft\Translator\TranslatorInterface $translator
  * @var array $autoTemplate

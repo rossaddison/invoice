@@ -8,7 +8,7 @@ use App\Infrastructure\Persistence\{
     Client\Client, SalesOrderItem\SalesOrderItem, Group\Group,
     Quote\Quote, SalesOrderAmount\SalesOrderAmount, Trait\RequireId};
 use App\Invoice\SalesOrder\SalesOrderRepository as SOR;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -124,7 +124,7 @@ class SalesOrder
         return $this->requireId($this->id, 'SalesOrder');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -174,9 +174,9 @@ class SalesOrder
         $this->quote = $quote;
     }
 
-    public function getUserId(): ?int
+    public function reqUserId(): int
     {
-        return $this->user_id;
+        return $this->requireId($this->user_id, 'User');
     }
 
     public function setUserId(int $user_id): void

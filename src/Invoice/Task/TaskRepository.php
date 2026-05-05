@@ -104,7 +104,7 @@ final class TaskRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoTaskquery(string $id): ?Task
+    public function repoTaskquery(int $id): ?Task
     {
         $query = $this->select()->load('tax_rate')
                                 ->where(['id' => $id]);
@@ -136,10 +136,10 @@ final class TaskRepository extends Select\Repository
     }
 
     /**
-     * @param string $task_id
+     * @param int $task_id
      * @return int
      */
-    public function repoCount(string $task_id): int
+    public function repoCount(int $task_id): int
     {
         return $this->select()
                       ->where(['id' => $task_id])

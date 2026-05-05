@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Form;
 /**
  *
  * @var App\Invoice\Client\ClientRepository $cR
- * @var App\Invoice\Entity\InvAmount $invAmount
+ * @var App\Infrastructure\Persistence\InvAmount\InvAmount $invAmount
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -77,12 +77,12 @@ echo $s->getSetting('disable_flash_messages') == '0' ? $alert : '';
                 <?php
     $optionsDataPaymentMethod = [];
 /**
- * @var App\Invoice\Entity\PaymentMethod $paymentMethod
+ * @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod $paymentMethod
  */
 foreach ($paymentMethods as $paymentMethod) {
-    $paymentMethodId = $paymentMethod->getId();
+    $paymentMethodId = $paymentMethod->reqId();
     $paymentMethodName = $paymentMethod->getName();
-    if ((strlen($paymentMethodId) > 0)
+    if (($paymentMethodId > 0)
         && (strlen(($paymentMethodName ?? '')) > 0) && (null !== $paymentMethodName) && ($paymentMethod->getActive())) {
         $optionsDataPaymentMethod[$paymentMethodId] = $paymentMethodName;
     }
@@ -96,15 +96,15 @@ echo Field::select($form, 'payment_method_id')
     $optionsDataInvId = [];
 if ($openInvsCount > 0) {
     /**
-     * @var App\Invoice\Entity\Inv $inv
+     * @var App\Infrastructure\Persistence\Inv\Inv $inv
      */
     foreach ($openInvs as $inv) {
-        $invAmount = $iaR->repoInvquery((int) $inv->getId());
+        $invAmount = $iaR->repoInvquery($inv->reqId());
         if (null !== $invAmount) {
-            $optionsDataInvId[(int) $inv->getId()]
+            $optionsDataInvId[$inv->reqId()]
                = ($inv->getNumber() ?? $translator->translate('number.no'))
                . ' - '
-               . ($clientHelper->formatClient($cR->repoClientquery((int) $inv->getClientId())))
+               . ($clientHelper->formatClient($cR->repoClientquery($inv->reqClientId())))
                . ' - '
                . ($numberHelper->formatCurrency($invAmount->getBalance()));
         }

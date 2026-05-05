@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Setting;
 
-use App\Invoice\Entity\Setting;
+use App\Infrastructure\Persistence\Setting\Setting;
 
 final readonly class SettingService
 {

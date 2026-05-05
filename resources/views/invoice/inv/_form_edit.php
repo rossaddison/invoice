@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Invoice\Helpers\CustomValuesHelper $cvH
  * @var App\Invoice\Inv\InvForm $form
  * @var App\Invoice\InvCustom\InvCustomForm $invCustomForm
@@ -101,9 +101,9 @@ if ($vat) {
     ->hint($translator->translate('hint.this.field.is.required'));
                                 ?>
                                 <?= Html::closeTag('div'); ?>
-                                <?php if (!empty($inv->getDeliveryId())) { ?>
+                                <?php if (($deliveryId = $inv->getDeliveryId()) > 0) { ?>
                                 <span class="input-group-text">
-                                    <a href="<?= $urlGenerator->generate('delivery/edit', ['id' => $inv->getDeliveryId()]); ?>"><i class="bi bi-pencil"></i>
+                                    <a href="<?= $urlGenerator->generate('delivery/edit', ['id' => $deliveryId]); ?>"><i class="bi bi-pencil"></i>
                                         <?= $translator->translate('delivery'); ?>
                                     </a>
                                 </span>
@@ -113,7 +113,7 @@ if ($vat) {
                                 </span>
                                 <?php
                             } else {
-                                echo Html::a($translator->translate('delivery.add'), $urlGenerator->generate('delivery/add', ['inv_id' => $inv->getId()]), ['class' => 'btn btn-danger btn-lg mt-3']);
+                                echo Html::a($translator->translate('delivery.add'), $urlGenerator->generate('delivery/add', ['inv_id' => $inv->reqId()]), ['class' => 'btn btn-danger btn-lg mt-3']);
                             }
 ?>
                             <?= html::br(); ?>
@@ -160,11 +160,11 @@ if ($vat) {
                                     $urlGenerator->generate(
                                         'del/add',
                                         [
-                                            'client_id' => $inv->getClientId(),
+                                            'client_id' => $inv->reqClientId(),
                                         ],
                                         [
                                             'origin' => 'inv',
-                                            'origin_id' => $inv->getId(),
+                                            'origin_id' => $inv->reqId(),
                                             'action' => 'edit',
                                         ],
                                     ),
@@ -190,7 +190,7 @@ if ($vat) {
                         <?php echo Html::a($translator->translate('contract.add'),
                             $urlGenerator->generate(
                                 'contract/add',
-                                ['client_id' => $inv->getClientId()],
+                                ['client_id' => $inv->reqClientId()],
                             ),
                             ['class' => 'btn btn-info btn-lg mt-3']); ?>
                         <?php if ($postalAddressCount > 0) { ?>
@@ -234,11 +234,11 @@ if ($vat) {
                                 $urlGenerator->generate(
                                     'postaladdress/add',
                                     [
-                                        'client_id' => $inv->getClientId(),
+                                        'client_id' => $inv->reqClientId(),
                                     ],
                                     [
                                         'origin' => 'inv',
-                                        'origin_id' => $inv->getId(),
+                                        'origin_id' => $inv->reqId(),
                                         'action' => 'edit',
                                     ],
                                 ),

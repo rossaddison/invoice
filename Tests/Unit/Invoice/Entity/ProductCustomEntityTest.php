@@ -14,7 +14,7 @@ class ProductCustomEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $productCustom = new ProductCustom();
-        $this->assertFalse($productCustom->isPersisted());
+        $this->assertFalse($productCustom->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -28,7 +28,7 @@ class ProductCustomEntityTest extends TestCase
     {
         $productCustom = new ProductCustom();
         $productCustom->setId(12);
-        $this->assertTrue($productCustom->isPersisted());
+        $this->assertTrue($productCustom->hasIdentity());
         $this->assertSame(12, $productCustom->reqId());
     }
 
@@ -42,8 +42,6 @@ class ProductCustomEntityTest extends TestCase
     public function testConstructorWithDefaults(): void
     {
         $productCustom = new ProductCustom();
-        $this->assertSame('', $productCustom->getProductId());
-        $this->assertSame('', $productCustom->getCustomFieldId());
         $this->assertSame('', $productCustom->getValue());
         $this->assertNull($productCustom->getProduct());
         $this->assertNull($productCustom->getCustomField());
@@ -57,8 +55,8 @@ class ProductCustomEntityTest extends TestCase
             value: 'red',
         );
 
-        $this->assertSame('10', $productCustom->getProductId());
-        $this->assertSame('3', $productCustom->getCustomFieldId());
+        $this->assertSame(10, $productCustom->reqProductId());
+        $this->assertSame(3, $productCustom->reqCustomFieldId());
         $this->assertSame('red', $productCustom->getValue());
     }
 
@@ -66,28 +64,28 @@ class ProductCustomEntityTest extends TestCase
     {
         $productCustom = new ProductCustom();
         $productCustom->setProductId(50);
-        $this->assertSame('50', $productCustom->getProductId());
+        $this->assertSame(50, $productCustom->reqProductId());
     }
 
     public function testProductIdIsReturnedAsString(): void
     {
         $productCustom = new ProductCustom(product_id: 7);
-        $this->assertIsString($productCustom->getProductId());
-        $this->assertSame('7', $productCustom->getProductId());
+        $this->assertIsInt($productCustom->reqProductId());
+        $this->assertSame(7, $productCustom->reqProductId());
     }
 
     public function testCustomFieldIdSetterAndGetter(): void
     {
         $productCustom = new ProductCustom();
         $productCustom->setCustomFieldId(8);
-        $this->assertSame('8', $productCustom->getCustomFieldId());
+        $this->assertSame(8, $productCustom->reqCustomFieldId());
     }
 
-    public function testCustomFieldIdIsReturnedAsString(): void
+    public function testCustomFieldIdIsReturnedAsInt(): void
     {
         $productCustom = new ProductCustom(custom_field_id: 15);
-        $this->assertIsString($productCustom->getCustomFieldId());
-        $this->assertSame('15', $productCustom->getCustomFieldId());
+        $this->assertIsInt($productCustom->reqCustomFieldId());
+        $this->assertSame(15, $productCustom->reqCustomFieldId());
     }
 
     public function testValueSetterAndGetter(): void

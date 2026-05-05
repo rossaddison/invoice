@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
-use App\Invoice\Entity\{Inv};
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\{
     Client\ClientRepository as CR,
     Group\GroupRepository as GR,
@@ -43,7 +43,7 @@ trait Add
     ): Response {
         $inv = new Inv();
         $errors = [];
-        $form = new InvForm($inv);
+        $form = new InvForm();
         $bootstrap5ModalInv = new Bootstrap5ModalInv(
             $this->translator,
             $this->webViewRenderer,
@@ -70,14 +70,14 @@ trait Add
                     /**
                      * @var string $body['client_id']
                      */
-                    $client_id = $body['client_id'];
+                    $client_id = (int) $body['client_id'];
                     $user_client = $ucR->repoUserquery($client_id);
                     if (null !== $user_client && null !==
                             $user_client->getClient()) {
                         // no warning necessary a user client relationship exists
                     } else {
                         $this->flashMessage('danger',
-                            $clientRepository->repoClientquery((int) $client_id)
+                            $clientRepository->repoClientquery($client_id)
                                              ->getClientFullName()
                                     . ': ' . $this->translator->translate(
                                             'user.client.no.account'));
@@ -101,8 +101,8 @@ $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                          * Related logic: see src\Invoice\Entity\Inv ...
                          * New InvAmount();
                          */
-                        $model_id = $saved_model->getId();
-                        if (null !== $model_id) {
+                        $model_id = $saved_model->reqId();
+                        if ($model_id > 0) {
                             $this->defaultTaxes($inv, $trR, $formHydrator);
                             // Inform the user of generated invoice number for
                             // draft setting

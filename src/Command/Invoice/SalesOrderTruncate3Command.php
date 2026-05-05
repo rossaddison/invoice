@@ -8,7 +8,7 @@ use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount;
 use App\Infrastructure\Persistence\SalesOrderItem\SalesOrderItem;
 use App\Infrastructure\Persistence\SalesOrderItemAmount\SalesOrderItemAmount;
-use App\Invoice\Entity\SalesOrderTaxRate;
+use App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

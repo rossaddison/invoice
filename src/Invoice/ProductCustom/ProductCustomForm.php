@@ -27,8 +27,8 @@ final class ProductCustomForm extends FormModel
     public static function show(ProductCustom $product_custom): self
     {
         $form = new self();
-        $form->product_id = (int) $product_custom->getProductId();
-        $form->custom_field_id = (int) $product_custom->getCustomFieldId();
+        $form->product_id = $product_custom->reqProductId();
+        $form->custom_field_id = $product_custom->reqCustomFieldId();
         $form->value = $product_custom->getValue();
         return $form;
     }

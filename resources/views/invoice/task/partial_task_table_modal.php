@@ -34,11 +34,18 @@ use Yiisoft\Html\Html;
             foreach ($tasks as $task) { ?>
             <tr class="task-row">
                 <td class="text-left">
-                    <input type="checkbox" class="modal-task-id" name="task_ids[]"
-                           id="task-id-<?= $task->reqId() ?>" value="<?= $task->reqId(); ?>">
+                    <input type="checkbox"
+                           class="modal-task-id"
+                           name="task_ids[]"
+                           id="task-id-<?= $task->reqId() ?>"
+                           value="<?= $task->reqId(); ?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?php echo ($p = $task->getProject()) !== null && $projectR->count((string) $p->reqId()) > 0 ? $projectR->repoProjectquery((string) $p->reqId())?->getName() ?? '' : '' ?></b>
+                    <b><?php echo ($p = $task->getProject()) !== null
+                        && $projectR->count($p->reqId()) > 0 ?
+                        $projectR->repoProjectquery(
+                            $p->reqId())?->getName() ?? '' : '' ?>
+                    </b>
                 </td>
                 <td>
                     <b><?php echo Html::encode($task->getName()); ?></b>

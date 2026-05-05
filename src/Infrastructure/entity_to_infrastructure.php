@@ -13,7 +13,7 @@ declare(strict_types=1);
  *                          • method is named reqId(), return type int
  *                            (non-nullable)
  *                          • throws \LogicException when $id is null
- *                          • companion isPersisted(): bool method is present
+ *                          • companion hasIdentity(): bool method is present
  *                          • setId(int $id): void is present
  *                        false means the class still uses the old getId().
  *   'var_annotations' => bool — true when every @var annotation in the
@@ -221,7 +221,7 @@ declare(strict_types=1);
  *     use statement at all (InvItem/QuoteItem pattern — caught by grep (c))
  *
  * STAGE 3 — apply reqId() pattern
- *   Update the infrastructure class: reqId(), isPersisted(), setId().
+ *   Update the infrastructure class: reqId(), hasIdentity(), setId().
  *   Set 'req_id' => true.
  *
  * STAGE 4 — update @var annotations in the infrastructure class

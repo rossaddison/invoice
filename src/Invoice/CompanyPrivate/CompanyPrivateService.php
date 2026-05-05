@@ -65,8 +65,7 @@ final readonly class CompanyPrivateService
         $company = 'company_id';
         if (isset($array[$company])) {
             $model->setCompany(
-                $this->cR->repoCompanyquery(
-                    (string) $array[$company]));
+                $this->cR->repoCompanyquery((int) $array[$company]));
         }
     }
 

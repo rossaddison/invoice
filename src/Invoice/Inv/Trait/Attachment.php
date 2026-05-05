@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Infrastructure\Persistence\{
+    Inv\Inv, Upload\Upload
+};
 use App\Invoice\{
-    Entity\Inv, Entity\Upload,
     Inv\InvRepository as IR,
     Upload\UploadRepository as UPR,
     UserClient\UserClientRepository as UCR,
@@ -96,7 +98,7 @@ trait Attachment
             if (!is_writable($targetPath)) {
                 return $this->attachmentNotWritable($inv_id);
             }
-            $invoice = $iR->repoInvLoadedquery((string) $inv_id) ?: null;
+            $invoice = $iR->repoInvLoadedquery($inv_id) ?: null;
             if ($invoice instanceof Inv) {
                 $client_id = $invoice->getClient()?->reqId();
                 if (null !== $client_id) {
@@ -148,7 +150,7 @@ $original_file_name = preg_replace(
     {
         $cC = 'Cache-Control: public, must-revalidate, post-check=0, pre-check=0';
         if ($upload_id) {
-            $upload = $upR->repoUploadquery((string) $upload_id);
+            $upload = $upR->repoUploadquery($upload_id);
             if (null !== $upload) {
                 $url_key = $upload->getUrlKey();
                 $inv = $iR->repoUrlKeyGuestLoaded($url_key);

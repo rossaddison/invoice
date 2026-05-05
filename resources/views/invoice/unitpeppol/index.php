@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\UnitPeppol;
+use App\Infrastructure\Persistence\UnitPeppol\UnitPeppol;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
@@ -16,7 +16,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Router\CurrentRoute;
 
 /**
- * @var App\Invoice\Entity\UnitPeppol $unitpeppol
+ * @var App\Infrastructure\Persistence\UnitPeppol\UnitPeppol $unitpeppol
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var string $alert
@@ -42,7 +42,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (UnitPeppol $model) => Html::encode($model->getId()),
+        content: static fn (UnitPeppol $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'unit_id',
@@ -72,14 +72,14 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (UnitPeppol $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('unitpeppol/view', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('unitpeppol/view', ['id' => $model->reqId()]), []);
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (UnitPeppol $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('unitpeppol/edit', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('unitpeppol/edit', ['id' => $model->reqId()]), []);
         },
         encodeContent: false,
     ),
@@ -96,7 +96,7 @@ $columns = [
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('unitpeppol/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('unitpeppol/delete', ['id' => $model->reqId()]),
                 [],
             );
         },

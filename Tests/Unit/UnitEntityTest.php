@@ -21,7 +21,7 @@ class UnitEntityTest extends BaseUnit
     {
         $defaultUnit = new Unit();
 
-        $this->assertFalse($defaultUnit->isPersisted());
+        $this->assertFalse($defaultUnit->hasIdentity());
         $this->assertEquals('', $defaultUnit->getUnitName());
         $this->assertEquals('', $defaultUnit->getUnitNamePlrl());
     }
@@ -33,17 +33,17 @@ class UnitEntityTest extends BaseUnit
             unit_name_plrl: 'Pieces'
         );
 
-        $this->assertFalse($unit->isPersisted());
+        $this->assertFalse($unit->hasIdentity());
         $this->assertEquals('Piece', $unit->getUnitName());
         $this->assertEquals('Pieces', $unit->getUnitNamePlrl());
     }
 
     public function testSetIdAndReqId(): void
     {
-        $this->assertFalse($this->unit->isPersisted());
+        $this->assertFalse($this->unit->hasIdentity());
 
         $this->unit->setId(1);
-        $this->assertTrue($this->unit->isPersisted());
+        $this->assertTrue($this->unit->hasIdentity());
         $this->assertEquals(1, $this->unit->reqId());
 
         $this->unit->setId(999);
@@ -58,13 +58,13 @@ class UnitEntityTest extends BaseUnit
 
     public function testIsPersistedReturnsFalseBeforeSetId(): void
     {
-        $this->assertFalse($this->unit->isPersisted());
+        $this->assertFalse($this->unit->hasIdentity());
     }
 
     public function testIsPersistedReturnsTrueAfterSetId(): void
     {
         $this->unit->setId(42);
-        $this->assertTrue($this->unit->isPersisted());
+        $this->assertTrue($this->unit->hasIdentity());
     }
 
     public function testUnitNameSetterAndGetter(): void
@@ -185,7 +185,7 @@ class UnitEntityTest extends BaseUnit
             unit_name_plrl: 'New Units'
         );
 
-        $this->assertFalse($newUnit->isPersisted());
+        $this->assertFalse($newUnit->hasIdentity());
         $this->assertEquals('New Unit', $newUnit->getUnitName());
         $this->assertEquals('New Units', $newUnit->getUnitNamePlrl());
     }

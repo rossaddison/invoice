@@ -394,7 +394,7 @@ trait View
             'inv_id' => $quote->getInvId(),
             'so_id' => $quote->getSoId(),
 
-            'user_id' => $quote->getUser()?->getId(),
+            'user_id' => $quote->getUser()?->reqId(),
             'group_id' => $quote->getGroup()?->reqId(),
             'client_id' => $quote->getClient()?->reqId(),
 

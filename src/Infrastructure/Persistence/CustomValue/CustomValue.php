@@ -18,9 +18,12 @@ class CustomValue
     #[BelongsTo(target: CustomField::class, nullable: false, fkAction: 'NO ACTION')]
     private ?CustomField $custom_field = null;
 
-    public function __construct(#[Column(type: 'primary')]
-        private ?int $id = null, #[Column(type: 'integer(11)', nullable: false)]
-        private ?int $custom_field_id = null, #[Column(type: 'text', nullable: false)]
+    public function __construct(
+        #[Column(type: 'primary')]
+        private ?int $id = null,
+        #[Column(type: 'integer(11)', nullable: false)]
+        private ?int $custom_field_id = null,
+        #[Column(type: 'text', nullable: false)]
         private string $value = '') {}
 
     public function reqId(): int
@@ -28,7 +31,7 @@ class CustomValue
         return $this->requireId($this->id, 'CustomValue');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -48,9 +51,9 @@ class CustomValue
         $this->custom_field = $custom_field;
     }
 
-    public function getCustomFieldId(): ?int
+    public function reqCustomFieldId(): int
     {
-        return $this->custom_field_id;
+        return $this->requireId($this->custom_field_id, 'CustomField');
     }
 
     public function setCustomFieldId(int $custom_field_id): void

@@ -87,8 +87,6 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                         <?= Html::openTag('td', ['class' => 'td-text']); ?>
                             <?= Field::hidden($form, 'inv_id')
                                 ->hideLabel(); ?>
-                            <?= Field::hidden($form, 'id')
-                                ->hideLabel(); ?>
                             <?= Field::hidden($form, 'task_id')
                                 ->value('0')
                                 ->hideLabel(); ?>
@@ -101,7 +99,7 @@ $vat = $s->getSetting('enable_vat_registration') === '1' ? true : false;
                          * @var App\Infrastructure\Persistence\Product\Product $product
                          */
                         foreach ($products as $product) {
-                            $productId = $product->getProductId();
+                            $productId = $product->reqId();
                             $productName = $product->getProductName() ?? '';
                             if (!empty($productId) && strlen($productName) > 0) {
                                 $optionsDataProduct[$productId] = $productName;

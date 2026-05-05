@@ -61,7 +61,8 @@ use Yiisoft\Html\Tag\Form;
                 <?= Html::closeTag('div'); ?>
                 <?= Html::a(
                     $form->getProduct()?->getProductName() ?? '',
-                    $urlGenerator->generate('product/view', ['id' => $form->getProduct()?->getProductId()]),
+                    $urlGenerator->generate('product/view',
+                        ['id' => $form->getProduct()?->reqId()]),
                 ); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>

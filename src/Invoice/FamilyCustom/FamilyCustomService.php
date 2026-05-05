@@ -43,14 +43,12 @@ final readonly class FamilyCustomService
         $family = 'family_id';
         if (isset($array[$family])) {
             $model->setFamily(
-                $this->fR->repoFamilyquery(
-                    (string) $array[$family]));
+                $this->fR->repoFamilyquery((int) $array[$family]));
         }
         $custom_field = 'custom_field_id';
         if (isset($array[$custom_field])) {
             $model->setCustomField(
-                $this->cfR->repoCustomFieldquery(
-                    (string) $array[$custom_field]));
+                $this->cfR->repoCustomFieldquery((int) $array[$custom_field]));
         }
     }
 

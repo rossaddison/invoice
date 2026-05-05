@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Gentor;
+use App\Infrastructure\Persistence\Gentor\Gentor;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -42,7 +42,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Gentor $model) => Html::encode($model->getGentorId() . '➡️' . $model->getCamelcaseCapitalName()),
+        content: static fn (Gentor $model) => Html::encode($model->reqGentorId() . '➡️' . $model->getCamelcaseCapitalName()),
         encodeContent: false,
     ),
     new DataColumn(
@@ -55,22 +55,22 @@ $columns = [
                 Html::encode($model->getCamelcaseCapitalName()),
                 $urlGenerator->generate(
                     'generator/view',
-                    ['id' => $model->getGentorId()],
+                    ['id' => $model->reqGentorId()],
                 ),
                 ['class' => 'btn btn-primary btn-sm active','aria-current' => 'page'],
             )->render();
 
-            $relations = $grR->repoGeneratorquery($model->getGentorId());
+            $relations = $grR->repoGeneratorquery($model->reqGentorId());
             $relations_content_render = '';
             /**
-             * @var App\Invoice\Entity\GentorRelation $relation
+             * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
              */
             foreach ($relations as $relation) {
                 $relations_content_render .= Html::a(
                     $relation->getLowercaseName() ?? '#',
                     $urlGenerator->generate(
                         'generatorrelation/edit',
-                        ['id' => $relation->getRelationId()],
+                        ['id' => $relation->reqRelationId()],
                     ),
                     ['class' => 'btn btn-primary btn-sm'],
                 )->render();
@@ -92,7 +92,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Gentor $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generator/view', ['id' => $model->getGentorId()]);
+                return $urlGenerator->generate('generator/view', ['id' => $model->reqGentorId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -102,7 +102,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Gentor $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generator/edit', ['id' => $model->getGentorId()]);
+                return $urlGenerator->generate('generator/edit', ['id' => $model->reqGentorId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -112,7 +112,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Gentor $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('generator/delete', ['id' => $model->getGentorId()]);
+                return $urlGenerator->generate('generator/delete', ['id' => $model->reqGentorId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),
@@ -128,7 +128,7 @@ $columns = [
 
             Html::a(
                 'Entity' . DIRECTORY_SEPARATOR . $model->getCamelcaseCapitalName(),
-                $urlGenerator->generate('generator/entity', ['id' => $model->getGentorId()]),
+                $urlGenerator->generate('generator/entity', ['id' => $model->reqGentorId()]),
                 ['class' => 'btn btn-secondary btn-sm ms-2'],
             );
         },
@@ -142,7 +142,7 @@ $columns = [
 
             Html::a(
                 $model->getCamelcaseCapitalName() . 'Controller',
-                $urlGenerator->generate('generator/controller', ['id' => $model->getGentorId()]),
+                $urlGenerator->generate('generator/controller', ['id' => $model->reqGentorId()]),
                 ['class' => 'btn btn-secondary btn-sm ms-2'],
             );
         },
@@ -156,7 +156,7 @@ $columns = [
 
             Html::a(
                 $model->getCamelcaseCapitalName() . 'Form',
-                $urlGenerator->generate('generator/form', ['id' => $model->getGentorId()]),
+                $urlGenerator->generate('generator/form', ['id' => $model->reqGentorId()]),
                 ['class' => 'btn btn-secondary btn-sm ms-2'],
             );
         },
@@ -170,7 +170,7 @@ $columns = [
 
             Html::a(
                 $model->getCamelcaseCapitalName() . 'Repository',
-                $urlGenerator->generate('generator/repo', ['id' => $model->getGentorId()]),
+                $urlGenerator->generate('generator/repo', ['id' => $model->reqGentorId()]),
                 ['class' => 'btn btn-secondary btn-sm ms-2'],
             );
         },
@@ -183,7 +183,7 @@ $columns = [
             return
             Html::a(
                 $model->getCamelcaseCapitalName() . 'Service',
-                $urlGenerator->generate('generator/service', ['id' => $model->getGentorId()]),
+                $urlGenerator->generate('generator/service', ['id' => $model->reqGentorId()]),
                 ['class' => 'btn btn-secondary btn-sm ms-2'],
             );
         },
@@ -197,7 +197,7 @@ $columns = [
 
             Html::a(
                 'index',
-                $urlGenerator->generate('generator/_index', ['id' => $model->getGentorId()]),
+                $urlGenerator->generate('generator/_index', ['id' => $model->reqGentorId()]),
                 ['class' => 'btn btn-secondary btn-sm ms-2'],
             );
         },
@@ -210,7 +210,7 @@ $columns = [
             return
             Html::a(
                 '_view',
-                $urlGenerator->generate('generator/_view', ['id' => $model->getGentorId()]),
+                $urlGenerator->generate('generator/_view', ['id' => $model->reqGentorId()]),
                 ['class' => 'btn btn-secondary btn-sm ms-2'],
             );
         },
@@ -224,7 +224,7 @@ $columns = [
 
             Html::a(
                 '_form',
-                $urlGenerator->generate('generator/_form', ['id' => $model->getGentorId()]),
+                $urlGenerator->generate('generator/_form', ['id' => $model->reqGentorId()]),
                 ['class' => 'btn btn-secondary btn-sm ms-2'],
             );
         },
@@ -238,7 +238,7 @@ $columns = [
 
             Html::a(
                 '_route',
-                $urlGenerator->generate('generator/_route', ['id' => $model->getGentorId()]),
+                $urlGenerator->generate('generator/_route', ['id' => $model->reqGentorId()]),
                 ['class' => 'btn btn-secondary btn-sm ms-2'],
             );
         },

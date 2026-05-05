@@ -51,10 +51,10 @@ use Yiisoft\Html\Tag\Form;
 <?php
 $optionsDataGenerators = [];
 /**
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  */
 foreach ($generators as $generator) {
-    $optionsDataGenerators[$generator->getGentorId()] = $generator->getCamelcaseCapitalName();
+    $optionsDataGenerators[$generator->reqGentorId()] = $generator->getCamelcaseCapitalName();
 }
 
 echo Field::select($form, 'gentor_id')

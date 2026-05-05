@@ -17,7 +17,7 @@ class CompanyEntityTest extends TestCase
     {
         $company = new Company();
         
-        $this->assertFalse($company->isPersisted());
+        $this->assertFalse($company->hasIdentity());
         $this->assertSame(0, $company->getCurrent());
         $this->assertSame('', $company->getName());
         $this->assertSame('', $company->getAddress1());
@@ -40,7 +40,7 @@ class CompanyEntityTest extends TestCase
         $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateCreated());
         $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateModified());
         $this->assertInstanceOf(ArrayCollection::class, $company->getCompanyPrivates());
-        $this->assertFalse($company->isPersisted());
+        $this->assertFalse($company->hasIdentity());
     }
 
     public function testConstructorWithAllParameters(): void
@@ -250,13 +250,13 @@ class CompanyEntityTest extends TestCase
         $this->assertSame('New York State', $company->getArbitrationJurisdiction());
     }
 
-    public function testIsPersisted(): void
+    public function testhasIdentity(): void
     {
         $company = new Company();
-        $this->assertFalse($company->isPersisted());
+        $this->assertFalse($company->hasIdentity());
         
         $company->setId(1);
-        $this->assertTrue($company->isPersisted());
+        $this->assertTrue($company->hasIdentity());
     }
 
     public function testDateTimeImmutableProperties(): void
@@ -477,7 +477,7 @@ class CompanyEntityTest extends TestCase
         $this->assertSame('+1-555-BIZWHAT', $company->getWhatsapp());
         $this->assertSame('Business Arbitration Panel', $company->getArbitrationBody());
         $this->assertSame('Business Law', $company->getArbitrationJurisdiction());
-        $this->assertTrue($company->isPersisted());
+        $this->assertTrue($company->hasIdentity());
     }
 
     public function testGetterMethodsConsistency(): void
@@ -561,7 +561,7 @@ class CompanyEntityTest extends TestCase
     {
         // Create new company
         $company = new Company();
-        $this->assertFalse($company->isPersisted());
+        $this->assertFalse($company->hasIdentity());
         
         // Set company details
         $company->setName('Workflow Test Company');
@@ -569,16 +569,16 @@ class CompanyEntityTest extends TestCase
         $company->setCity('Test City');
         
         // Still new until ID is set
-        $this->assertFalse($company->isPersisted());
+        $this->assertFalse($company->hasIdentity());
         
         // Assign ID (simulating database save)
         $company->setId(1);
-        $this->assertTrue($company->isPersisted());
+        $this->assertTrue($company->hasIdentity());
         
         // Update company details
         $company->setName('Updated Company Name');
         $this->assertSame('Updated Company Name', $company->getName());
-        $this->assertTrue($company->isPersisted());
+        $this->assertTrue($company->hasIdentity());
     }
 
     public function testTimezoneHandling(): void
@@ -600,7 +600,7 @@ class CompanyEntityTest extends TestCase
     {
         $company = new Company();
         
-        $this->assertFalse($company->isPersisted());
+        $this->assertFalse($company->hasIdentity());
         $this->assertInstanceOf(ArrayCollection::class, $company->getCompanyPrivates());
         $this->assertTrue($company->getCompanyPrivates()->isEmpty());
         $this->assertInstanceOf(DateTimeImmutable::class, $company->getDateCreated());

@@ -67,6 +67,7 @@ use App\Invoice\{
     UnitPeppol\UnitPeppolController,
     Upload\UploadController,
     UserClient\UserClientController,
+    CommonErrors\CommonErrorsController,
     // Quote
     UserInv\UserInvController};
 use App\Middleware\{AccessChecker as AC, ApiDataWrapper};
@@ -1735,6 +1736,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'saveQuoteTaxRate'])
                 ->name('quote/saveQuoteTaxRate'),
+            Route::methods([$mG, $mP], '/quote/changeStatus')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([QuoteController::class, 'changeStatus'])
+                ->name('quote/changeStatus'),
             Route::methods([$mG, $mP], '/quote/deleteQuoteTaxRate/{id}')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([QuoteController::class, 'deleteQuoteTaxRate'])
@@ -1930,6 +1935,10 @@ return [
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SettingController::class, 'debugIndex'])
                 ->name('setting/debugIndex'),
+            Route::get('/commonerrors/index')
+                ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
+                ->action([CommonErrorsController::class, 'index'])
+                ->name('commonerrors/index'),
             Route::methods([$mG, $mP], '/setting/save')
                 ->middleware(fn (AC $checker) => $checker->withPermission($pEI))
                 ->action([SettingController::class, 'save'])

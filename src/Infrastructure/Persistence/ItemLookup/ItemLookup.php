@@ -32,7 +32,7 @@ class ItemLookup
         return $this->requireId($this->id, 'ItemLookup');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

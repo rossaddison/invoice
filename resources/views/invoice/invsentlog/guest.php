@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\InvSentLog;
+use App\Infrastructure\Persistence\InvSentLog\InvSentLog;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -12,7 +12,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var App\Widget\PageSizeLimiter $pageSizeLimiter
@@ -46,7 +46,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (InvSentLog $model): string {
-            return (string) $model->getId();
+            return (string) $model->reqId();
         },
     ),
     new DataColumn(
@@ -55,7 +55,7 @@ $columns = [
         content: static function (InvSentLog $model) use ($urlGenerator): A {
             return Html::a(($model->getInv()?->getNumber() ?? '#') . ' 🔍', $urlGenerator->generate(
                 'inv/view',
-                ['id' => $model->getId()],
+                ['id' => $model->reqId()],
             ), ['style' => 'text-decoration:none']);
         },
         encodeContent: false,

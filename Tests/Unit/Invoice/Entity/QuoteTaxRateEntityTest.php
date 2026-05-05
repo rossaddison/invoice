@@ -14,7 +14,7 @@ class QuoteTaxRateEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $qtr = new QuoteTaxRate();
-        $this->assertFalse($qtr->isPersisted());
+        $this->assertFalse($qtr->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -28,7 +28,7 @@ class QuoteTaxRateEntityTest extends TestCase
     {
         $qtr = new QuoteTaxRate();
         $qtr->setId(5);
-        $this->assertTrue($qtr->isPersisted());
+        $this->assertTrue($qtr->hasIdentity());
         $this->assertSame(5, $qtr->reqId());
     }
 

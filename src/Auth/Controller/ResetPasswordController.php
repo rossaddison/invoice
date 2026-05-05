@@ -70,7 +70,7 @@ final class ResetPasswordController
                     self::REQUEST_PASSWORD_RESET_TOKEN);
                 if (null !== $identity) {
                     if (null !== ($user = $identity->getUser())
-                        && null !== ($identityId = $identity->getId())) {
+                        && ($identityId = (int) $identity->getId()) > 0) {
                         if ($formHydrator->populateFromPostAndValidate(
                                 $resetPasswordForm, $request)) {
 /**

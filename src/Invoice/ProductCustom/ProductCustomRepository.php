@@ -76,10 +76,10 @@ final class ProductCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return ProductCustom|null
      */
-    public function repoProductCustomquery(string $id): ?ProductCustom
+    public function repoProductCustomquery(int $id): ?ProductCustom
     {
         $query = $this->select()->load('custom_field')
                                 ->load('product')
@@ -88,11 +88,11 @@ final class ProductCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $product_id
-     * @param string $custom_field_id
+     * @param int $product_id
+     * @param int $custom_field_id
      * @return ProductCustom|null
      */
-    public function repoFormValuequery(string $product_id, string $custom_field_id): ?ProductCustom
+    public function repoFormValuequery(int $product_id, int $custom_field_id): ?ProductCustom
     {
         $query = $this->select()->where(['product_id' => $product_id])
                                 ->andWhere(['custom_field_id' => $custom_field_id]);
@@ -100,11 +100,11 @@ final class ProductCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $product_id
-     * @param string $custom_field_id
+     * @param int $product_id
+     * @param int $custom_field_id
      * @return int
      */
-    public function repoProductCustomCount(string $product_id, string $custom_field_id): int
+    public function repoProductCustomCount(int $product_id, int $custom_field_id): int
     {
         $query = $this->select()->where(['product_id' => $product_id])
                                 ->andWhere(['custom_field_id' => $custom_field_id]);
@@ -112,10 +112,10 @@ final class ProductCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $product_id
+     * @param int $product_id
      * @return int
      */
-    public function repoProductCount(string $product_id): int
+    public function repoProductCount(int $product_id): int
     {
         $query = $this->select()->where(['product_id' => $product_id]);
         return $query->count();
@@ -126,7 +126,7 @@ final class ProductCustomRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoFields(string $product_id): EntityReader
+    public function repoFields(int $product_id): EntityReader
     {
         $query = $this->select()->where(['product_id' => $product_id]);
         return $this->prepareDataReader($query);

@@ -72,22 +72,12 @@ class DeliveryLocation
         $this->date_modified = new DateTimeImmutable();
     }
 
-    /**
-     * Returns the database identifier for this DeliveryLocation
-     *
-     * @throws \LogicException if the entity has not been persisted yet.
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'DeliveryLocation');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -97,9 +87,9 @@ class DeliveryLocation
         $this->id = $id;
     }
 
-    public function getClientId(): int
+    public function reqClientId(): int
     {
-        return $this->client_id;
+        return $this->requireId($this->client_id, 'Client');
     }
 
     public function setClientId(int $client_id): void

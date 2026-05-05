@@ -12,7 +12,7 @@ class QaEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $qa = new Qa();
-        $this->assertFalse($qa->isPersisted());
+        $this->assertFalse($qa->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -27,7 +27,7 @@ class QaEntityTest extends TestCase
         $qa = new Qa();
         $qa->setId(7);
         $this->assertSame(7, $qa->reqId());
-        $this->assertTrue($qa->isPersisted());
+        $this->assertTrue($qa->hasIdentity());
     }
 
     public function testConstructorWithDefaults(): void
@@ -52,7 +52,7 @@ class QaEntityTest extends TestCase
         $this->assertSame('Universal Business Language.', $qa->getAnswer());
         $this->assertSame(1, $qa->getSortOrder());
         $this->assertSame(1, $qa->getActive());
-        $this->assertFalse($qa->isPersisted());
+        $this->assertFalse($qa->hasIdentity());
     }
 
     public function testQuestionSetterAndGetter(): void
@@ -89,9 +89,9 @@ class QaEntityTest extends TestCase
     public function testSetIdUpdatesPersistedState(): void
     {
         $qa = new Qa();
-        $this->assertFalse($qa->isPersisted());
+        $this->assertFalse($qa->hasIdentity());
         $qa->setId(42);
-        $this->assertTrue($qa->isPersisted());
+        $this->assertTrue($qa->hasIdentity());
         $this->assertSame(42, $qa->reqId());
     }
 

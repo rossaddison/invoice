@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Generator;
 
-use App\Invoice\Entity\Gentor;
+use App\Infrastructure\Persistence\Gentor\Gentor;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -70,7 +70,7 @@ final class GeneratorRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoGentorQuery(string $id): ?Gentor
+    public function repoGentorQuery(int $id): ?Gentor
     {
         $query = $this
             ->select()

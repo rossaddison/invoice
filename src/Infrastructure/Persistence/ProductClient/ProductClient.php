@@ -50,7 +50,7 @@ class ProductClient
         return $this->requireId($this->id, 'ProductClient');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

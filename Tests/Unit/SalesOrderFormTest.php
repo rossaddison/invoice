@@ -8,7 +8,7 @@ use App\Infrastructure\Persistence\SalesOrder\SalesOrder;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\SalesOrder\SalesOrderForm;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;

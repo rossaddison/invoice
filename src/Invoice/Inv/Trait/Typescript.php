@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Infrastructure\Persistence\InvTaxRate\InvTaxRate;
 use App\Invoice\{
-    Entity\InvTaxRate, InvTaxRate\InvTaxRateForm, Group\GroupRepository as GR,
+    InvTaxRate\InvTaxRateForm, Group\GroupRepository as GR,
     Inv\InvRepository as IR};
 use Psr\{
     Http\Message\ResponseInterface as Response,
@@ -34,15 +35,15 @@ trait Typescript
              */
             foreach ($keyList as $value) {
                 /**
-                 * @var \App\Invoice\Entity\Inv $inv
+                 * @var \App\Infrastructure\Persistence\Inv\Inv $inv
                  */
-                $inv = $iR->repoInvUnLoadedquery($value);
+                $inv = $iR->repoInvUnLoadedquery((int) $value);
                 if (null !== $inv->getInvAmount()->getTotal()
                         && $inv->getInvAmount()->getTotal() > 0) {
                     $inv->setStatusId(2);
                     if (strlen($inv->getNumber() ?? '') == 0) {
                         $inv->setNumber((string) $gR->generateNumber(
-                            (int) $inv->getGroupId(), true));
+                            $inv->reqGroupId(), true));
                     }
 /**
  * If the invoice has been sent either by 1. checkbox and the 'sent' button in
@@ -85,15 +86,15 @@ trait Typescript
              */
             foreach ($keyList as $value) {
                 /**
-                 * @var \App\Invoice\Entity\Inv $inv
+                 * @var \App\Infrastructure\Persistence\Inv\Inv $inv
                  */
-                $inv = $iR->repoInvUnLoadedquery($value);
+                $inv = $iR->repoInvUnLoadedquery((int) $value);
                 if ($inv->getInvAmount()->getTotal() >= 0) {
                     /**
                      * Only invoices with a 'sent' status are targeted to be
                      * set to draft
                      */
-                    if ($inv->getStatusId() == 2) {
+                    if ($inv->reqStatusId() == 2) {
                         $inv->setStatusId(1);
                     }
                     /**
@@ -135,7 +136,7 @@ trait Typescript
             'inv_tax_rate_amount' => 0.00,
         ];
         $invTaxRate = new InvTaxRate();
-        $form = new InvTaxRateForm($invTaxRate);
+        $form = new InvTaxRateForm();
         if ($formHydrator->populateAndValidate($form, $ajax_body)) {
             $this->inv_tax_rate_service->saveInvTaxRate($invTaxRate, $ajax_body);
             $parameters = [

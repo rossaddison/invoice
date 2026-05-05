@@ -59,7 +59,7 @@ final class ClientPeppolForm extends FormModel
     public static function show(ClientPeppol $client_peppol): self
     {
         $form = new self();
-        $form->client_id = (int) $client_peppol->getClientId();
+        $form->client_id = $client_peppol->reqClientId();
         $form->accounting_cost = $client_peppol->getAccountingCost();
         $form->buyer_reference = $client_peppol->getBuyerReference();
         $form->endpointid = $client_peppol->getEndpointid();

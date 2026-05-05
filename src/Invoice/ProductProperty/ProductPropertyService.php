@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductProperty;
 
-use App\Invoice\Entity\ProductProperty;
+use App\Infrastructure\Persistence\ProductProperty\ProductProperty;
 use App\Invoice\Product\ProductRepository as PR;
 
 final readonly class ProductPropertyService
@@ -41,7 +41,7 @@ final readonly class ProductPropertyService
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
-                (string) $array[$product]);
+                (int) $array[$product]);
             if ($productEntity) {
                 $model->setProduct($productEntity);
             }

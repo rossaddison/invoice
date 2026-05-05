@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
@@ -111,7 +111,7 @@ $clientColumns = [
             $translator,
             $urlGenerator
         ): Span {
-            return ($ucR->repoUserqueryCount((string) $model->reqId()) !== 0
+            return ($ucR->repoUserqueryCount($model->reqId()) !== 0
                     && $canEdit)
                 ? $button::activeLabel($translator)
                 : $button::inactiveWithAddUserAccount(
@@ -264,7 +264,7 @@ $columns = [
             $urlGenerator
         ): string|Yiisoft\Html\Tag\CustomTag|A {
             if (
-                $manager->getPermissionsByUserId($model->getUserId())
+                $manager->getPermissionsByUserId($model->reqUserId())
                 === $manager->getPermissionsByRoleName('observer')
             ) {
                 return Html::tag(
@@ -277,7 +277,7 @@ $columns = [
                     ]
                 );
             } else {
-                return $model->getUserId() !== '1'
+                return $model->reqUserId() !== 1
                     ? Html::a(
                         Html::tag(
                             'button',
@@ -299,7 +299,7 @@ $columns = [
                         ),
                         $urlGenerator->generate(
                             'userinv/observer',
-                            ['user_id' => $model->getUserId()]
+                            ['user_id' => $model->reqUserId()]
                         ),
                     )
                     : '';
@@ -318,7 +318,7 @@ $columns = [
             $urlGenerator
         ): Yiisoft\Html\Tag\CustomTag|A|string {
             if (
-                $manager->getPermissionsByUserId($model->getUserId())
+                $manager->getPermissionsByUserId($model->reqUserId())
                 === $manager->getPermissionsByRoleName('accountant')
             ) {
                 return Html::tag(
@@ -327,7 +327,7 @@ $columns = [
                     ['class' => 'badge text-bg-success']
                 )->render();
             } else {
-                return $model->getUserId() !== '1'
+                return $model->reqUserId() !== 1
                     ? Html::a(
                         Html::tag(
                             'button',
@@ -349,7 +349,7 @@ $columns = [
                         ),
                         $urlGenerator->generate(
                             'userinv/accountant',
-                            ['user_id' => $model->getUserId()]
+                            ['user_id' => $model->reqUserId()]
                         ),
                     )
                     : '';
@@ -368,7 +368,7 @@ $columns = [
             $urlGenerator
         ): Yiisoft\Html\Tag\CustomTag|A|string {
             if (
-                $manager->getPermissionsByUserId($model->getUserId())
+                $manager->getPermissionsByUserId($model->reqUserId())
                 === $manager->getPermissionsByRoleName('admin')
             ) {
                 return Html::tag(
@@ -377,7 +377,7 @@ $columns = [
                     ['class' => 'badge text-bg-success']
                 );
             } else {
-                if (!$model->getUserId() == '1') {
+                if (!$model->reqUserId() == 1) {
                     return Html::a(
                         Html::tag(
                             'button',
@@ -399,7 +399,7 @@ $columns = [
                         ),
                         $urlGenerator->generate(
                             'userinv/admin',
-                            ['user_id' => $model->getUserId()]
+                            ['user_id' => $model->reqUserId()]
                         ),
                     );
                 }
@@ -420,9 +420,9 @@ $columns = [
         ): A|string {
             if (
                 !empty($manager->getPermissionsByUserId(
-                    $model->getUserId()
+                    $model->reqUserId()
                 ))
-                && $model->getUserId() !== '1'
+                && $model->reqUserId() !== 1
             ) {
                 return Html::a(
                     Html::tag(
@@ -447,7 +447,7 @@ $columns = [
                     ),
                     $urlGenerator->generate(
                         'userinv/revoke',
-                        ['user_id' => $model->getUserId()]
+                        ['user_id' => $model->reqUserId()]
                     ),
                 );
             } else {
@@ -469,7 +469,7 @@ $columns = [
             UserInv $model
         ) use ($ucR, $urlGenerator): A {
             $assignedCount = count(
-                $ucR->getAssignedToUser($model->getUserId())
+                $ucR->getAssignedToUser($model->reqUserId())
             );
             return Html::a(
                 Html::tag(
@@ -479,7 +479,7 @@ $columns = [
                 ),
                 $urlGenerator->generate(
                     'userinv/client',
-                    ['id' => $model->getId()]
+                    ['id' => $model->reqId()]
                 ),
                 [
                     'class' => $assignedCount > 0
@@ -505,7 +505,7 @@ $columns = [
                     '🖉',
                     $urlGenerator->generate(
                         'userinv/edit',
-                        ['id' => $model->getId()]
+                        ['id' => $model->reqId()]
                     ),
                     ['style' => $textDecorationNone],
                 )
@@ -541,7 +541,7 @@ $columns = [
                     ),
                     $urlGenerator->generate(
                         'userinv/delete',
-                        ['id' => $model->getId()]
+                        ['id' => $model->reqId()]
                     ),
                     ['style' => $textDecorationNone],
                 )

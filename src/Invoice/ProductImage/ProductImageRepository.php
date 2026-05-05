@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductImage;
 
-use App\Invoice\Entity\ProductImage;
+use App\Infrastructure\Persistence\ProductImage\ProductImage;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -111,10 +111,10 @@ final class ProductImageRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return ProductImage|null
      */
-    public function repoProductImagequery(string $id): ?ProductImage
+    public function repoProductImagequery(int $id): ?ProductImage
     {
         $query = $this->select()
                       ->where(['id' => $id]);

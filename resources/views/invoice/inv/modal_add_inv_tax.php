@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 /**
- * Related logic: see InvController function view, search modal_add_inv_tax
  * Related logic: see id="add-inv-tax" triggered by <a href="#add-inv-tax" data-bs-toggle="modal"  style="text-decoration:none"> on views/inv/view.php line 67
- * Related logic: see Invoice/Asset/rebuild-1.13/js/inv.js/$(document).on('click', '#inv_tax_submit', function () {
- * Related logic: see InvController/save_inv_tax_rate
+ * Related logic: see Invoice/Asset/rebuild/js/invoice-typescript-iife.js
+ *  built from src\typescript\invoice.ts function 
+ * Related logic: see Inv\Trait function saveInvTaxRate and
+ *   src\typescript\invoice.ts function
+ *   private async handleAddInvoiceTax(invTaxSubmit: HTMLElement): Promise<void> {
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
  * @var App\Invoice\Setting\SettingRepository $s
  * @var Yiisoft\Translator\TranslatorInterface $translator

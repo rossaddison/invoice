@@ -31,19 +31,19 @@ trait HtmlTrait
             IIR $iiR, ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR,
             UIR $uiR, SOR $soR): Response
     {
-        $inv_id = (string) $this->session->get('inv_id');
-        $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ?
-                $iaR->repoInvquery((int) $inv_id) : null);
+        $inv_id = (int) $this->session->get('inv_id');
+        $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
+                $iaR->repoInvquery($inv_id) : null);
         if ($inv_amount) {
             $custom = ($include === 1);
             $inv_custom_values = $this->invCustomValues($inv_id, $icR);
             $inv = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
-                $so = ($inv->getSoId() ? $soR->repoSalesOrderLoadedquery(
-                    (int) $inv->getSoId()) : null);
+                $so = (($soId = $inv->getSoId()) > 0 ? $soR->repoSalesOrderLoadedquery(
+                    $soId) : null);
                 $html = $this->pdfHelper->generateInvHtml(
                     $inv_id,
-                    $inv->getUserId(),
+                    $inv->reqUserId(),
                     $custom,
                     $so,
                     $inv_amount,

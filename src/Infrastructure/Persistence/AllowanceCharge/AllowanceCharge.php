@@ -54,7 +54,7 @@ class AllowanceCharge
         return $this->requireId($this->id, 'AllowanceCharge');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

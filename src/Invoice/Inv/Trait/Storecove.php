@@ -59,7 +59,7 @@ trait Storecove
         }
         // Load the inv's HASONE relation 'invamount'
         if ($id) {
-            $invoice = $invRepo->repoInvLoadInvAmountquery((string) $id);
+            $invoice = $invRepo->repoInvLoadInvAmountquery($id);
             if ($invoice) {
                 $client_id = $invoice->getClient()?->reqId();
                 if (null !== $client_id) {

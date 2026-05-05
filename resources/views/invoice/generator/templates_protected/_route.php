@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * Related logic: see GeneratorController function _route
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  *
  */
 

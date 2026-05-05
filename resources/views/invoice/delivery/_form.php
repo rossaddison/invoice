@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Form;
 
 /**
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Invoice\Delivery\DeliveryForm $form
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Setting\SettingRepository $s
@@ -154,7 +154,7 @@ use Yiisoft\Html\Tag\Form;
             $translator->translate('delivery.location.add'),
             $urlGenerator->generate(
                 'del/add',
-                ['client_id' => $inv->getClientId()],
+                ['client_id' => $inv->reqClientId()],
                 ['origin' => 'delivery',
                     'origin_id' => $currentRoute->getArgument('inv_id'),
                     'action' => 'add'],

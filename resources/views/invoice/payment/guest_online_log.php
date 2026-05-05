@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Merchant;
+use App\Infrastructure\Persistence\Merchant\Merchant;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -38,7 +38,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Merchant $model) => $model->getId(),
+        content: static fn (Merchant $model) => $model->reqId(),
     ),
     new DataColumn(
         property: 'filterInvNumber',
@@ -46,7 +46,7 @@ $columns = [
         content: static function (Merchant $model) use ($urlGenerator): A|string {
             $return = '';
             if (null !== $model->getInv()) {
-                $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->getInvId()]), ['style' => 'text-decoration:none']);
+                $return = Html::a($model->getInv()?->getNumber() ?? '#', $urlGenerator->generate('inv/view', ['id' => $model->reqInvId()]), ['style' => 'text-decoration:none']);
             }
             return $return;
         },

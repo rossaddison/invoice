@@ -8,7 +8,7 @@ use App\Infrastructure\Persistence\Quote\Quote;
 use App\Infrastructure\Persistence\Client\Client;
 use App\Infrastructure\Persistence\Group\Group;
 use App\Invoice\Quote\QuoteForm;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\InvAllowanceCharge;
 
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository;
-use App\Invoice\Entity\Inv;
-use App\Infrastructure\Persistence\AllowanceCharge\AllowanceCharge;
+use App\Infrastructure\Persistence\{
+   AllowanceCharge\AllowanceCharge, Inv\Inv, Trait\RequireId
+};
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -15,6 +16,8 @@ use Cycle\Annotated\Annotation\Relation\BelongsTo;
 
 class InvAllowanceCharge
 {
+    use RequireId;
+ 
     #[BelongsTo(target: AllowanceCharge::class, nullable: false,
         fkAction: 'NO ACTION')]
     private ?AllowanceCharge $allowance_charge = null;
@@ -51,9 +54,14 @@ class InvAllowanceCharge
         $this->allowance_charge = $allowance_charge;
     }
 
-    public function getId(): string
+    public function reqId(): int
     {
-        return (string) $this->id;
+        return $this->requireId($this->id, 'InvAllowanceCharge');
+    }
+    
+    public function hasIdentity(): bool
+    {
+        return $this->id !== null;
     }
 
     public function setId(int $id): void
@@ -61,9 +69,9 @@ class InvAllowanceCharge
         $this->id = $id;
     }
 
-    public function getInvId(): string
+    public function reqInvId(): int
     {
-        return (string) $this->inv_id;
+        return $this->requireId($this->inv_id, 'Inv');
     }
 
     public function setInvId(int $inv_id): void
@@ -71,9 +79,9 @@ class InvAllowanceCharge
         $this->inv_id = $inv_id;
     }
 
-    public function getAllowanceChargeId(): string
+    public function reqAllowanceChargeId(): int
     {
-        return (string) $this->allowance_charge_id;
+        return $this->requireId($this->allowance_charge_id, 'AllowanceCharge');
     }
 
     public function setAllowanceChargeId(int $allowance_charge_id): void
@@ -81,9 +89,9 @@ class InvAllowanceCharge
         $this->allowance_charge_id = $allowance_charge_id;
     }
 
-    public function getAmount(): string
+    public function getAmount(): ?float
     {
-        return (string) $this->amount;
+        return $this->amount;
     }
 
     public function setAmount(float $amount): void
@@ -91,9 +99,9 @@ class InvAllowanceCharge
         $this->amount = $amount;
     }
 
-    public function getVatOrTax(): string
+    public function getVatOrTax(): ?float
     {
-        return (string) $this->vat_or_tax;
+        return $this->vat_or_tax;
     }
 
     public function setVatOrTax(float $vat_or_tax): void

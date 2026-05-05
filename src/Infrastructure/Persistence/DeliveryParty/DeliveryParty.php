@@ -27,7 +27,7 @@ class DeliveryParty
         return $this->requireId($this->id, 'DeliveryParty');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

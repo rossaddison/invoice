@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Invoice\Quote;
 
 // Entities
-use App\User\User;
-use App\Infrastructure\Persistence\Quote\Quote;
+use App\Infrastructure\Persistence\{
+    Quote\Quote, User\User
+};
 // Repositories
 use App\Invoice\Client\ClientRepository as CR;
 use App\Invoice\Group\GroupRepository as GR;
@@ -41,7 +42,7 @@ final readonly class QuoteService
         }
         if (isset($array['group_id'])) {
             $group = $this->gR->repoGroupquery(
-                (string) $array['group_id']
+                (int) $array['group_id']
             );
             if ($group) {
                 $model->setGroup($group);
@@ -49,11 +50,9 @@ final readonly class QuoteService
         }
         if (isset($array['user_id'])) {
             $user = $this->uR->findById(
-                (string) $array['user_id']
+                (int) $array['user_id']
             );
-            if ($user) {
-                $model->setUser($user);
-            }
+            $model->setUser($user);
         }
     }
 
@@ -80,7 +79,7 @@ final readonly class QuoteService
          * 2. Has no quote number
          * 3. Has a status of 'draft'
          */
-        if ($model->isPersisted() &&
+        if ($model->hasIdentity() &&
             (strlen($model->getNumber() ?? '') == 0)  &&
             ($array['status_id'] == 1)) {
             $model->setNumber(
@@ -127,7 +126,7 @@ final readonly class QuoteService
             $model->setPassword((string) $array['password']) : '';
         isset($array['notes']) ?
             $model->setNotes((string) $array['notes']) : '';
-        if (!$model->isPersisted()) {
+        if (!$model->hasIdentity()) {
             $model->setInvId(0);
             $model->setSoId(0);
             // if draft quotes must get quote numbers
@@ -145,7 +144,7 @@ final readonly class QuoteService
             }
             $model->setStatusId(1);
             $model->setUser($user);
-            $model->setUserId((int) $user->getId());
+            $model->setUserId($user->reqId());
             $model->setUrlKey(Random::string(32));
             $model->setDateCreated(new \DateTimeImmutable('now'));
             $model->setDateExpires($s);

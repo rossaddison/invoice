@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentMethod;
 
-use App\Invoice\Entity\PaymentMethod;
+use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -85,13 +85,13 @@ final class PaymentMethodRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      *
      * @return PaymentMethod|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoPaymentMethodquery(string $id): ?PaymentMethod
+    public function repoPaymentMethodquery(int $id): ?PaymentMethod
     {
         $query = $this->select()
                       ->where(['id' => $id]);
@@ -99,10 +99,10 @@ final class PaymentMethodRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoPaymentMethodqueryCount(string $id): int
+    public function repoPaymentMethodqueryCount(int $id): int
     {
         return $this->select()
                       ->where(['id' => $id])

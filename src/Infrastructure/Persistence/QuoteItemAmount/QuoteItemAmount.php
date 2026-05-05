@@ -45,7 +45,7 @@ class QuoteItemAmount
         return $this->requireId($this->id, 'QuoteItemAmount');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -65,9 +65,9 @@ class QuoteItemAmount
         $this->quote_item = $quote_item;
     }
 
-    public function getQuoteItemId(): string
+    public function reqQuoteItemId(): int
     {
-        return (string) $this->quote_item_id;
+        return $this->requireId($this->quote_item_id, 'QuoteItem');
     }
 
     public function setQuoteItemId(int $quote_item_id): void

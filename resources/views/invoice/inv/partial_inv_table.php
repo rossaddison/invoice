@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use Yiisoft\Data\Cycle\Reader\EntityReader;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
@@ -38,13 +38,13 @@ $columns = [
  new DataColumn(
   header: $translator->translate('status'),
   content: static function (Inv $model) use ($iR, $iaR, $irR, $translator): string {
-   $statusId = (string) $model->getStatusId();
-   $invoiceId = (int) $model->getId();
+   $statusId = $model->reqStatusId();
+   $invoiceId = $model->reqId();
    $inv_amount = $iaR->repoInvAmountCount($invoiceId) > 0 ?
            $iaR->repoInvquery($invoiceId) : null;
    $badge = Html::openTag('span', ['class' => 'badge text-bg-'
-       . $iR->getSpecificStatusArrayClass((int) $statusId)])
-    . Html::encode($iR->getSpecificStatusArrayLabel($statusId));
+       . $iR->getSpecificStatusArrayClass($statusId)])
+    . Html::encode($iR->getSpecificStatusArrayLabel((string) $statusId));
    if (!empty($invoiceId)
            && null !== $inv_amount
            && $iaR->repoInvAmountCount($invoiceId) > 0
@@ -58,7 +58,7 @@ $columns = [
             . (string) Html::tag('i', '', ['class' => 'bi bi-lock',
                 'title' => $translator->translate('read.only')]);
    }
-   if ($irR->repoCount((string) $model->getId()) > 0) {
+   if ($irR->repoCount($model->reqId()) > 0) {
     $badge .= chr(160) . (string) Html::tag('i', '', [
         'class' => 'bi bi-arrow-repeat',
         'title' => $translator->translate('recurring')]);
@@ -74,11 +74,11 @@ $columns = [
   content: static function (Inv $model)
    use ($urlGenerator, $session, $translator): string {
    $args = ['_language' => (string) ($session->get('_language') ?? ''),
-       'id' => $model->getId()];
+       'id' => $model->reqId()];
    return (string) Html::a(
     Html::encode(null !== $model->getNumber()
             ? $model->getNumber()
-            : (string) $model->getId()),
+            : (string) $model->reqId()),
     $urlGenerator->generate('inv/view', $args),
     ['title' => $translator->translate('edit'), 'style' => 'text-decoration:none'],
    );
@@ -109,7 +109,7 @@ $columns = [
   content: static function (Inv $model) use ($urlGenerator, $session,
           $clientHelper, $translator): string {
    $args = ['_language' => (string) ($session->get('_language') ?? ''),
-       'id' => $model->getClientId()];
+       'id' => $model->reqClientId()];
    return (string) Html::a(
     Html::encode($clientHelper->formatClient($model->getClient())),
     $urlGenerator->generate('client/view', $args),
@@ -123,7 +123,7 @@ $columns = [
  new DataColumn(
   header: $translator->translate('amount'),
   content: static function (Inv $model) use ($iaR, $s): string {
-   $invoiceId = (int) $model->getId();
+   $invoiceId = $model->reqId();
    $inv_amount = $iaR->repoInvAmountCount($invoiceId) > 0 ?
            $iaR->repoInvquery($invoiceId) : null;
    $class = (null !== $inv_amount && $inv_amount->getSign() === -1)
@@ -139,7 +139,7 @@ $columns = [
  new DataColumn(
   header: $translator->translate('balance'),
   content: static function (Inv $model) use ($iaR, $s): string {
-   $invoiceId = (int) $model->getId();
+   $invoiceId = $model->reqId();
    $inv_amount = $iaR->repoInvAmountCount($invoiceId) > 0 ?
            $iaR->repoInvquery($invoiceId) : null;
    return (string) Html::span(
@@ -161,7 +161,7 @@ $columns = [
       return '';
      }
      return $urlGenerator->generate('inv/view', ['_language' =>
-         (string) ($session->get('_language') ?? ''), 'id' => $model->getId()]);
+         (string) ($session->get('_language') ?? ''), 'id' => $model->reqId()]);
     },
     attributes: static function (Inv $model) use ($translator): array {
      if ($model->getIsReadOnly()) {
@@ -177,7 +177,7 @@ $columns = [
     content: (new I())->addClass('bi bi-printer'),
     url: static function (Inv $model) use ($urlGenerator): string {
      return $urlGenerator->generate('inv/pdfDashboardExcludeCf',
-             ['id' => $model->getId()]);
+             ['id' => $model->reqId()]);
     },
     attributes: ['data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('download.pdf'),
@@ -188,7 +188,7 @@ $columns = [
     url: static function (Inv $model) use ($urlGenerator, $session): string {
      return $urlGenerator->generate('inv/emailStage0', [
          '_language' => (string) ($session->get('_language') ?? ''),
-         'id' => $model->getId()]);
+         'id' => $model->reqId()]);
     },
     attributes: ['data-bs-toggle' => 'tooltip',
         'title' => $translator->translate('send.email'),
@@ -197,7 +197,7 @@ $columns = [
    new ActionButton(
     content: (new I())->addClass('bi bi-trash'),
     url: static function (Inv $model) use ($urlGenerator, $session, $s): string {
-     $deletable = $model->getStatusId() === 1
+     $deletable = $model->reqStatusId() === 1
       || ($s->getSetting('enable_invoice_deletion') == 1
              && $model->getIsReadOnly() !== true);
      if (!$deletable) {
@@ -205,10 +205,10 @@ $columns = [
      }
      return $urlGenerator->generate('inv/delete',
              ['_language' => (string) ($session->get('_language') ?? ''),
-                 'id' => $model->getId()]);
+                 'id' => $model->reqId()]);
     },
     attributes: static function (Inv $model) use ($s, $translator): array {
-     $deletable = $model->getStatusId() === 1
+     $deletable = $model->reqStatusId() === 1
       || ($s->getSetting('enable_invoice_deletion') == 1
              && $model->getIsReadOnly() !== true);
      if (!$deletable) {

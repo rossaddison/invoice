@@ -120,10 +120,10 @@ final class ProductRepository extends Select\Repository
         );
     }
 
-    public function filterFamilyId(string $family_id): EntityReader
+    public function filterFamilyId(int $family_id): EntityReader
     {
         $select = $this->select();
-        $query = $select->where(['family_id' => ltrim(rtrim($family_id))]);
+        $query = $select->where(['family_id' => $family_id]);
         return $this->prepareDataReader($query);
     }
 
@@ -151,13 +151,13 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     * @param string|null $product_id
+     * @param int $product_id
      *
      * @return Product|null
      *
      * @psalm-return TEntity|null
      */
-    public function repoProductquery(?string $product_id): ?Product
+    public function repoProductquery(int $product_id): ?Product
     {
         $query = $this
             ->select()
@@ -184,7 +184,8 @@ final class ProductRepository extends Select\Repository
      * Assist in checking for existing products when generating from family
      * @psalm-return EntityReader
      */
-    public function repoProductWithFamilyIdQuery(string $product_name, string $family_id): EntityReader
+    public function repoProductWithFamilyIdQuery(
+        string $product_name, int $family_id): EntityReader
     {
         $query = $this
             ->select()
@@ -192,8 +193,10 @@ final class ProductRepository extends Select\Repository
             ->load('tax_rate')
             ->load('unit');
 
-        if (!empty($product_name) && ($family_id > (string) 0)) {
-            $query = $query->andWhere(['family_id' => $family_id])->andWhere(['product_name' => ltrim(rtrim($product_name))]);
+        if (!empty($product_name) && ($family_id > 0)) {
+            $query = $query
+                    ->andWhere(['family_id' => $family_id])
+                    ->andWhere(['product_name' => ltrim(rtrim($product_name))]);
         }
 
         return $this->prepareDataReader($query);
@@ -262,10 +265,10 @@ final class ProductRepository extends Select\Repository
     }
 
     /**
-     * @param string $product_id
+     * @param int $product_id
      * @return int
      */
-    public function repoCount(string $product_id): int
+    public function repoCount(int $product_id): int
     {
         return $this->select()
                       ->where(['id' => $product_id])

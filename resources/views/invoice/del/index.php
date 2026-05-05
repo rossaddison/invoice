@@ -58,8 +58,8 @@ $columns = [
         'client_id',
         header: $translator->translate('client'),
         content: static function (DeliveryLocation $model) use ($cR): string {
-            if ($cR->repoClientCount($model->getClientId()) > 0) {
-                return $cR->repoClientquery($model->getClientId())->getClientName();
+            if ($cR->repoClientCount($model->reqClientId()) > 0) {
+                return $cR->repoClientquery($model->reqClientId())->getClientName();
             }
             return '#';
         },
@@ -102,28 +102,26 @@ $columns = [
             $invoices = $iR->findAllWithDeliveryLocation($deliveryLocationId);
             $buttons = '';
             /**
-             * @var App\Invoice\Entity\Inv $invoice
+             * @var App\Infrastructure\Persistence\Inv\Inv $invoice
              */
             foreach ($invoices as $invoice) {
-                $invoiceId = $invoice->getId();
-                if (null !== $invoiceId) {
-                    $button = (string) Html::a(
-                        ($invoice->getNumber() ?? '#') .
-                            ' ' .
-                            ($invoice->getDateCreated())->format(
-                                'Y-m-d',
-                            ),
-                        $urlGenerator->generate(
-                            'inv/view',
-                            ['id' => $invoiceId],
+                $invoiceId = $invoice->reqId();
+                $button = (string) Html::a(
+                    ($invoice->getNumber() ?? '#') .
+                        ' ' .
+                        ($invoice->getDateCreated())->format(
+                            'Y-m-d',
                         ),
-                        ['class' => 'btn btn-primary btn-sm',
-                            'data-bs-toggle' => 'tooltip',
-                            'title' => $invoiceId,
-                        ],
-                    );
-                    $buttons .= $button . str_repeat("&nbsp;", 1);
-                }
+                    $urlGenerator->generate(
+                        'inv/view',
+                        ['id' => $invoiceId],
+                    ),
+                    ['class' => 'btn btn-primary btn-sm',
+                        'data-bs-toggle' => 'tooltip',
+                        'title' => $invoiceId,
+                    ],
+                );
+                $buttons .= $button . str_repeat("&nbsp;", 1);
             }
             return $buttons;
         },

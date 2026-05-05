@@ -79,7 +79,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
         $quote_item = $qiR->repoQuoteItemquery((int) $quote_item_id);
         if ($quote_item) {
             $quote_item_ac = new QuoteItemAllowanceCharge();
-            $form = QuoteItemAllowanceChargeForm::show($quote_item_ac, (int) $quote_item_id);
+            $form = new QuoteItemAllowanceChargeForm();
             $quote_id = $quote_item->reqQuoteId();
             $parameters = [
                 'title' => $this->translator->translate('add'),
@@ -96,8 +96,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
                 if (is_array($body)) {
                     $body['quote_id'] = $quote_id;
                     $body['quote_item_id'] = $quote_item_id;
-                    /** @var string $allowance_charge_id */
-                    $allowance_charge_id = $body['allowance_charge_id'];
+                    $allowance_charge_id = (int) $body['allowance_charge_id'];
                     $allowance_charge = $acR->repoAllowanceChargequery(
                         $allowance_charge_id);
                     if ($allowance_charge) {
@@ -180,6 +179,7 @@ final class QuoteItemAllowanceChargeController extends BaseController
                             }
                             return $this->webService->getRedirectResponse(
                                 'quote/view', ['id' => $quote_id]);
+
                         }
                         $fvR = $form->getValidationResult();
                         $parameters['errors'] =
@@ -296,10 +296,8 @@ final class QuoteItemAllowanceChargeController extends BaseController
             ];
             $body = $request->getParsedBody() ?? [];
             if (is_array($body)) {
-                /** @var string $body['allowance_charge_id'] */
-                $allowance_charge_id = $body['allowance_charge_id'] ?? '';
-                /** @var float $body['amount'] */
-                $amount = $body['amount'] ?? 0.00;
+                $allowance_charge_id = (int) ($body['allowance_charge_id'] ?? '');
+                $amount = (float) ($body['amount'] ?? 0.00);
                 if ($request->getMethod() === Method::POST) {
                     if ($allowance_charge_id) {
                         $allowance_charge = $acR->repoAllowanceChargequery(

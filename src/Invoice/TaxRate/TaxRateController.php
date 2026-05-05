@@ -194,7 +194,7 @@ final class TaxRateController extends BaseController
     {
         $tax_rate_id = $currentRoute->getArgument('tax_rate_id');
         if (null !== $tax_rate_id) {
-            return $taxRateRepository->repoTaxRatequery($tax_rate_id);
+            return $taxRateRepository->repoTaxRatequery((int) $tax_rate_id);
         }
         return null;
     }

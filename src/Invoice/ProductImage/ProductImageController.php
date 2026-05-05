@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\ProductImage;
 
 use App\Invoice\BaseController;
-use App\Invoice\Entity\ProductImage;
+use App\Infrastructure\Persistence\ProductImage\ProductImage;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\Product\ProductRepository;
 use App\User\UserService;
@@ -96,9 +96,9 @@ final class ProductImageController extends BaseController
         FormHydrator $formHydrator,
         ProductRepository $productRepository,
     ): Response {
-        $product_id = $currentRoute->getArgument('product_id');
+        $product_id = (int) $currentRoute->getArgument('product_id');
         $productImage = new ProductImage();
-        $productImageForm = new ProductImageForm($productImage, (int) $product_id);
+        $productImageForm = ProductImageForm::show($productImage, $product_id);
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'productimage/add',
@@ -136,7 +136,7 @@ final class ProductImageController extends BaseController
             $productimage = $this->productimage($currentRoute, $productimageRepository);
             if ($productimage) {
                 $this->productimageService->deleteProductImage($productimage, $this->sR);
-                $product_id = (string) $productimage->getProduct()?->getProductId();
+                $product_id = (string) $productimage->getProduct()?->reqId();
                 $this->flashMessage('info', $this->translator->translate('record.successfully.deleted'));
                 return $this->factory->createResponse($this->webViewRenderer->renderPartialAsString(
                     '//invoice/setting/inv_message',
@@ -172,12 +172,12 @@ final class ProductImageController extends BaseController
     ): Response {
         $productImage = $this->productimage($currentRoute, $productimageRepository);
         if ($productImage) {
-            $product_id = $productImage->getProductId();
-            $form = new ProductImageForm($productImage, (int) $product_id);
+            $product_id = $productImage->reqProductId();
+            $form = ProductImageForm::show($productImage, $product_id);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'productimage/edit',
-                'actionArguments' => ['id' => $productImage->getId()],
+                'actionArguments' => ['id' => $productImage->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'products' => $productRepository->findAllPreloaded(),
@@ -210,9 +210,10 @@ final class ProductImageController extends BaseController
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'productimage/view',
-                'actionArguments' => ['id' => $productImage->getId()],
-                'form' => new ProductImageForm($productImage, (int) $productImage->getProductId()),
-                'productimage' => $productimageRepository->repoProductImagequery($productImage->getId()),
+                'actionArguments' => ['id' => $productImage->reqId()],
+                'form' => ProductImageForm::show(
+                    $productImage, $productImage->reqProductId()),
+                'productimage' => $productimageRepository->repoProductImagequery($productImage->reqId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
@@ -224,13 +225,11 @@ final class ProductImageController extends BaseController
      * @param ProductImageRepository $productimageRepository
      * @return ProductImage|null
      */
-    public function productimage(CurrentRoute $currentRoute, ProductImageRepository $productimageRepository): ?ProductImage
+    public function productimage(CurrentRoute $currentRoute,
+        ProductImageRepository $productimageRepository): ?ProductImage
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $productimageRepository->repoProductImagequery($id);
-        }
-        return null;
+        return $productimageRepository->repoProductImagequery(
+            (int) $currentRoute->getArgument('id'));
     }
 
     /**

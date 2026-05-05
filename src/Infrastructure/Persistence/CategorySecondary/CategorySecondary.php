@@ -29,17 +29,12 @@ class CategorySecondary
     ) {
     }
     
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function reqId(): int
     {
         return $this->requireId($this->id, 'CategorySecondary');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

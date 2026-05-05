@@ -9,8 +9,8 @@ use App\Invoice\BaseController;
 use App\Auth\TokenRepository as tR;
 use App\Invoice\Client\ClientRepository as cR;
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\UserClient;
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserClient\UserClient;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Helpers\CountryHelper;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\UserClient\UserClientRepository as ucR;
@@ -90,7 +90,7 @@ final class UserInvController extends BaseController
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         $countries = new CountryHelper();
         $userinv = new UserInv();
-        $form = new UserInvForm($userinv);
+        $form = new UserInvForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'userinv/add',
@@ -237,35 +237,32 @@ final class UserInvController extends BaseController
         $aliases = new Aliases(['@invoice' => dirname(__DIR__),
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         if (null !== $this->userService->getUser()) {
-            $id = $this->userService->getUser()?->getId();
-            if (null !== $id) {
-                $userinv = $uiR->repoUserInvUserIdquery($id);
-                if ($userinv) {
-                    $form = new UserInvForm($userinv);
-                    $parameters = [
-                        'title' => $this->translator->translate('edit'),
-                        'actionName' => 'userinv/guest',
-                        'actionArguments' => [],
-                        'errors' => [],
-                        'form' => $form,
-                        'aliases' => $aliases,
-                    ];
-                    if ($request->getMethod() === Method::POST) {
-                        $body = $request->getParsedBody() ?? [];
-                        if ($formHydrator->populateFromPostAndValidate($form, $request)) {
-                            if (is_array($body)) {
-                                $this->userinvService->saveUserInv($userinv, $body);
-                                return $this->webService->getRedirectResponse('invoice/index');
-                            }
+            $id = $this->userService->getUser()?->reqId();
+            $userinv = $uiR->repoUserInvUserIdquery((int) $id);
+            if ($userinv) {
+                $form = new UserInvForm();
+                $parameters = [
+                    'title' => $this->translator->translate('edit'),
+                    'actionName' => 'userinv/guest',
+                    'actionArguments' => [],
+                    'errors' => [],
+                    'form' => $form,
+                    'aliases' => $aliases,
+                ];
+                if ($request->getMethod() === Method::POST) {
+                    $body = $request->getParsedBody() ?? [];
+                    if ($formHydrator->populateFromPostAndValidate($form, $request)) {
+                        if (is_array($body)) {
+                            $this->userinvService->saveUserInv($userinv, $body);
+                            return $this->webService->getRedirectResponse('invoice/index');
                         }
-                        $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
-                        $parameters['form'] = $form;
                     }
-                    return $this->webViewRenderer->render('_form_guest', $parameters);
+                    $parameters['errors'] = $form->getValidationResult()->getErrorMessagesIndexedByProperty();
+                    $parameters['form'] = $form;
                 }
-                return $this->webService->getRedirectResponse('invoice/index');
-            } // nul!== $id
-            return $this->webService->getNotFoundResponse();
+                return $this->webViewRenderer->render('_form_guest', $parameters);
+            }
+            return $this->webService->getRedirectResponse('invoice/index');
         } // null!==$this->userService->getUser()
         return $this->webService->getNotFoundResponse();
     }
@@ -274,7 +271,7 @@ final class UserInvController extends BaseController
      * Related logic: see src\Widget\PageSizeLimiter buttonsGuest function
      * Related logic: see ..\resources\views\invoice\inv\guest.php
      * Related logic: see InvController\guest
-     * @param string $userInvId
+     * @param int $userInvId
      * @param string $origin
      * @param string $limit
      * @param uiR $uiR
@@ -282,14 +279,14 @@ final class UserInvController extends BaseController
      */
     public function guestlimit(
         #[RouteArgument('userinv_id')]
-        string $userInvId,
+        int $userInvId,
         #[RouteArgument('origin')]
         string $origin,
         #[RouteArgument('limit')]
         string $limit,
         uiR $uiR,
     ): Response {
-        if (strlen($userInvId) > 0 && strlen($origin) > 0) {
+        if ($userInvId > 0 && strlen($origin) > 0) {
             $limitInt = (int) $limit;
             $userInv = $uiR->repoUserInvquery($userInvId);
             if (null !== $userInv) {
@@ -365,11 +362,11 @@ final class UserInvController extends BaseController
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         $userinv = $this->userinv($id, $userinvRepository);
         if ($userinv) {
-            $form = new UserInvForm($userinv);
+            $form = UserInvForm::show($userinv);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'userinv/edit',
-                'actionArguments' => ['id' => $userinv->getId()],
+                'actionArguments' => ['id' => $userinv->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'formFields' => $this->formFields,
@@ -439,7 +436,7 @@ final class UserInvController extends BaseController
         // Use the primary key 'id' passed in userinv/index's urlGenerator to retrieve the user_id
         $userinv = $this->userinv($id, $uiR);
         if (null !== $userinv) {
-            $user_id = $userinv->getUserId();
+            $user_id = $userinv->reqUserId();
             if ($user_id) {
                 $parameters = [
                     'alert' => $this->alert(),
@@ -516,13 +513,13 @@ final class UserInvController extends BaseController
             if ((int) $timestamp + 3600 >= time()) {
                 $identity = $tR->findIdentityByToken($tokenWithoutTimestamp, $tokenType);
                 if (null !== $identity) {
-                    $userId = $identity->getUser()?->getId();
+                    $userId = $identity->getUser()?->reqId();
                     if (null !== $userId) {
                         $userInv = $uiR->repoUserInvUserIdquery($userId);
                         if (null !== $userInv) {
                             $userInv->setActive(true);
                             $uiR->save($userInv);
-                            $userId = $userInv->getUserId();
+                            $userId = $userInv->reqUserId();
                             // the status is now active i.e. 1, now make sure the token cannot be used again
                             $tokenEntity = $tR->findTokenByTokenAndType($tokenWithoutTimestamp, $tokenType);
                             if (null !== $tokenEntity) {
@@ -549,16 +546,16 @@ final class UserInvController extends BaseController
                                         $this->flashMessage('info', $this->translator->translate('assign.client.on.signup.done'));
                                         $clientId = $client->reqId();
                                         $userClient = new UserClient();
-                                        $userClient->setUserId((int) $userInv->getUserId());
+                                        $userClient->setUserId($userInv->reqUserId());
                                         $userClient->setClientId($clientId);
                                         $ucR->save($userClient);
                                         
-                                        if (strlen($userId) > 0 && $userId > 1) {
+                                        if ($userId > 0 && $userId > 1) {
                                             $this->manager->revokeAll($userId);
                                             $this->manager->assign('observer', $userId);
                                             $this->flashMessage('info', $this->translator->translate('user.inv.role.observer.assigned'));
                                         }
-                                        if (strlen($userId) > 0 && $userId == 1) {
+                                        if ($userId > 0 && $userId == 1) {
                                             $this->manager->revokeAll($userId);
                                             $this->manager->assign('admin', $userId);
                                             $this->flashMessage('info', $this->translator->translate('user.inv.role.admin.assigned'));
@@ -596,15 +593,15 @@ final class UserInvController extends BaseController
             '@language' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Language']);
         $userinv = $this->userinv($id, $userinvRepository);
         if ($userinv) {
-            $form = new UserInvForm($userinv);
+            $form = UserInvForm::show($userinv);
             $parameters = [
                 'aliases' => $aliases,
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'userinv/view',
-                'actionArguments' => ['id' => $userinv->getId()],
+                'actionArguments' => ['id' => $userinv->reqId()],
                 'errors' => [],
                 'form' => $form,
-                'userinv' => $userinvRepository->repoUserInvquery((string) $userinv->getId()),
+                'userinv' => $userinvRepository->repoUserInvquery($userinv->reqId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
@@ -647,7 +644,7 @@ final class UserInvController extends BaseController
     private function userinv(int $id, uiR $userinvRepository): ?UserInv
     {
         if ($id) {
-            return $userinvRepository->repoUserInvquery((string) $id);
+            return $userinvRepository->repoUserInvquery($id);
         }
         return null;
     }

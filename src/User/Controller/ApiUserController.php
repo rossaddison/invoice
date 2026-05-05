@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Controller;
 
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository;
 use OpenApi\Annotations as OA;
 use Yiisoft\DataResponse\ResponseFactory\DataResponseFactoryInterface;

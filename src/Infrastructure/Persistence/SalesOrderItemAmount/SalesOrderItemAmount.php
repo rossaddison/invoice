@@ -45,7 +45,7 @@ class SalesOrderItemAmount
         return $this->requireId($this->id, 'SalesOrderItemAmount');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -65,9 +65,9 @@ class SalesOrderItemAmount
         $this->sales_order_item = $sales_order_item;
     }
 
-    public function getSalesOrderItemId(): string
+    public function reqSalesOrderItemId(): int
     {
-        return (string) $this->sales_order_item_id;
+        return $this->requireId($this->sales_order_item_id, 'SalesOrderItem');
     }
 
     public function setSalesOrderItemId(int $sales_order_item_id): void

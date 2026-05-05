@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\Upload\Upload;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Yii\DataView\GridView\GridView;
@@ -44,7 +44,7 @@ $columns = [
                     ],
                 ),
                 $urlGenerator->generate('inv/downloadFile',
-                        ['upload_id' => $model->getId(), '_language' => 'en']),
+                        ['upload_id' => $model->reqId(), '_language' => 'en']),
                 [],
             );
         },
@@ -64,7 +64,7 @@ $columns = [
                     ],
                 ),
                 $urlGenerator->generate('upload/edit',
-                        ['id' => $model->getId(), '_language' => 'en']),
+                        ['id' => $model->reqId(), '_language' => 'en']),
                 [],
             );
         },
@@ -88,7 +88,7 @@ $columns = [
                     ],
                 ),
                 $urlGenerator->generate('upload/delete',
-                        ['id' => $model->getId(), '_language' => 'en']),
+                        ['id' => $model->reqId(), '_language' => 'en']),
                 [],
             );
         },

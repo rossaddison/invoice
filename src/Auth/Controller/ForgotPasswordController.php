@@ -6,7 +6,7 @@ namespace App\Auth\Controller;
 
 use App\Auth\Token;
 use App\Auth\TokenRepository as tR;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use App\User\UserRepository as uR;
 use App\Auth\AuthService;
 use App\Auth\Form\RequestPasswordResetTokenForm;
@@ -93,8 +93,8 @@ final class ForgotPasswordController
             $user = $uR->findByEmail(
                 $requestPasswordResetTokenForm->getEmail());
             if (null !== $user) {
-                $identityId = $user->getIdentity()->getId();
-                if (null !== $identityId) {
+                $identityId = (int) $user->getIdentity()->getId();
+                if ($identityId > 0) {
                     $tokenRecord = $tR->findTokenByIdentityIdAndType(
                         $identityId, self::REQUEST_PASSWORD_RESET_TOKEN);
                     if (null == $tokenRecord) {
@@ -201,15 +201,15 @@ final class ForgotPasswordController
     }
 
     /**
-     * @param string $identityId
+     * @param int $identityId
      * @param tR $tR
      * @return string
      */
     private function requestPasswordResetToken(
-        string $identityId,
+        int $identityId,
         tR $tR,
     ): string {
-        $newTokenRecord = new Token((int) $identityId,
+        $newTokenRecord = new Token($identityId,
             self::REQUEST_PASSWORD_RESET_TOKEN);
         $requestPasswordResetToken = '';
         $tR->save($newTokenRecord);
@@ -235,7 +235,7 @@ final class ForgotPasswordController
         string $randomAndTimeToken,
     ): string {
         $tokenWithMask = TokenMask::apply($randomAndTimeToken);
-        if (null !== ($userId = $user->getId())) {
+        if ($user->hasIdentity()) {
             $content = new A()
                 ->href($this->urlGenerator->generateAbsolute(
                     'auth/resetpassword',

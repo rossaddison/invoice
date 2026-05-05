@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
+use App\Infrastructure\Persistence\{Inv\Inv};
 use App\Invoice\Inv\Exception\PdfNotFoundException;
 
 use App\Invoice\{
@@ -11,7 +12,7 @@ use App\Invoice\{
     CustomValue\CustomValueRepository as CVR,
     CustomField\CustomFieldRepository as CFR,
     DeliveryLocation\DeliveryLocationRepository as DLR,
-    Entity\Inv, Group\GroupRepository as GR,
+    Group\GroupRepository as GR,
     Inv\InvRepository as IR,
     InvAllowanceCharge\InvAllowanceChargeRepository as ACIR,
     InvCustom\InvCustomRepository as ICR,
@@ -59,9 +60,9 @@ trait PdfTrait
             // include is a value of 0 or 1 passed from inv.js function
             // inv_to_pdf_with(out)_custom_fields indicating whether the user
             // wants custom fields included on the inv or not.
-            $inv_id = (string) ($this->session->get('inv_id') ?? '0');
-            $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ?
-                $iaR->repoInvquery((int) $inv_id) : null);
+            $inv_id = (int) ($this->session->get('inv_id') ?? '0');
+            $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
+                $iaR->repoInvquery($inv_id) : null);
             if ($inv_amount) {
                 $custom = ($include === 1);
                 $inv_custom_values = $this->invCustomValues($inv_id, $icR);
@@ -83,11 +84,10 @@ trait PdfTrait
                     $this->sR->invoiceMarkSent($inv_id, $iR);
                 }
                 $inv = $iR->repoInvUnloadedquery($inv_id);
-                if ($inv) {
-                    $so = !empty((int) $inv->getSoId()) ?
-                        $soR->repoSalesOrderUnloadedquery((int) $inv->getSoId()) :
-                            null;
-                    $pdfhelper->generateInvPdf($inv_id, $inv->getUserId(),
+                if (null !== $inv) {
+                    $so = (null !== ($soId = $inv->getSoId())) ?
+                        $soR->repoSalesOrderUnloadedquery($soId) : null;
+                    $pdfhelper->generateInvPdf($inv_id, $inv->reqUserId(),
                             $stream, $custom, $so, $inv_amount,
                             $inv_custom_values, $cR, $cvR, $cfR, $dlR, $aciR,
                             $iiR, $aciiR, $iiaR, $iR, $itrR, $uiR,
@@ -127,7 +127,7 @@ trait PdfTrait
             ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, UCR $ucR, UIR $uiR,
             SOR $soR): void
     {
-        $inv = $iR->repoInvUnLoadedquery((string) $inv_id);
+        $inv = $iR->repoInvUnLoadedquery($inv_id);
         if (null!==$inv) {
             $this->pdfNotFoundException($inv, $ucR, $uiR);
         }
@@ -135,8 +135,7 @@ trait PdfTrait
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
                     $iaR->repoInvquery($inv_id) : null);
             if ($inv_amount) {
-                $inv_custom_values = $this->invCustomValues(
-                        (string) $inv_id, $icR);
+                $inv_custom_values = $this->invCustomValues($inv_id, $icR);
                 // session is passed to the pdfHelper and will be used for
                 // the locale ie. $session->get('_language') or the
                 // print_language ie $session->get('print_language')
@@ -146,16 +145,16 @@ trait PdfTrait
                 $stream = true;
                 // If we are required to mark invoices as 'sent' when sent.
                 if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
-                    $this->generateInvNumberIfApplicable((string) $inv_id,
+                    $this->generateInvNumberIfApplicable($inv_id,
                         $iR, $this->sR, $gR);
-                    $this->sR->invoiceMarkSent((string) $inv_id, $iR);
+                    $this->sR->invoiceMarkSent($inv_id, $iR);
                 }
-                $inv = $iR->repoInvUnloadedquery((string) $inv_id);
+                $inv = $iR->repoInvUnloadedquery($inv_id);
                 if ($inv) {
                     $so = (!empty((int) $inv->getSoId()) ?
                         $soR->repoSalesOrderLoadedquery((int) $inv->getSoId()) : null);
                     $pdfhelper->generateInvPdf(
-                        (string) $inv_id, $inv->getUserId(), $stream, true,
+                            $inv_id, $inv->reqUserId(), $stream, true,
                             $so, $inv_amount, $inv_custom_values, $cR, $cvR,
                                 $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR,
                                     $itrR, $uiR, $this->webViewRenderer);
@@ -170,7 +169,7 @@ trait PdfTrait
             ACIIR $aciiR, IIAR $iiaR, IR $iR, ITRR $itrR, UCR $ucR, UIR $uiR,
             SOR $soR): void
     {
-        $inv = $iR->repoInvUnLoadedquery((string) $inv_id);
+        $inv = $iR->repoInvUnLoadedquery($inv_id);
         if (null !== $inv) {
             $this->pdfNotFoundException($inv, $ucR, $uiR);
         }
@@ -178,8 +177,7 @@ trait PdfTrait
             $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
                     $iaR->repoInvquery($inv_id) : null);
             if ($inv_amount) {
-                $inv_custom_values = $this->invCustomValues(
-                        (string) $inv_id, $icR);
+                $inv_custom_values = $this->invCustomValues($inv_id, $icR);
                 // session is passed to the pdfHelper and will be used for the
                 // locale ie. $session->get('_language') or the print_language
                 // ie $session->get('print_language')
@@ -190,15 +188,15 @@ trait PdfTrait
                 // If we are required to mark invoices as 'sent' when sent.
                 if ($this->sR->getSetting('mark_invoices_sent_pdf') == 1) {
                     $this->generateInvNumberIfApplicable(
-                        (string) $inv_id, $iR, $this->sR, $gR);
-                    $this->sR->invoiceMarkSent((string) $inv_id, $iR);
+                        $inv_id, $iR, $this->sR, $gR);
+                    $this->sR->invoiceMarkSent($inv_id, $iR);
                 }
-                $inv = $iR->repoInvUnloadedquery((string) $inv_id);
+                $inv = $iR->repoInvUnloadedquery($inv_id);
                 if ($inv) {
                     $so = (!empty((int) $inv->getSoId()) ?
                         $soR->repoSalesOrderLoadedquery((int) $inv->getSoId()) : null);
                     $pdfhelper->generateInvPdf(
-                        (string) $inv_id, $inv->getUserId(), $stream, false,
+                            $inv_id, $inv->reqUserId(), $stream, false,
                             $so, $inv_amount, $inv_custom_values, $cR, $cvR,
                                 $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR,
                                     $itrR, $uiR, $this->webViewRenderer);
@@ -226,9 +224,9 @@ trait PdfTrait
             $inv_guest = $iR->repoUrlKeyGuestCount($url_key) ?
                     $iR->repoUrlKeyGuestLoaded($url_key) : null;
             if ($inv_guest) {
-                $inv_id = $inv_guest->getId();
-                $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ?
-                        $iaR->repoInvquery((int) $inv_id) : null);
+                $inv_id = $inv_guest->reqId();
+                $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
+                        $iaR->repoInvquery($inv_id) : null);
                 if ($inv_amount) {
                     $inv_custom_values = $this->invCustomValues($inv_id, $icR);
                     // session is passed to the pdfHelper and will be used for
@@ -246,15 +244,15 @@ trait PdfTrait
                                 $this->sR, $gR);
                         $this->sR->invoiceMarkSent($inv_id, $iR);
                     }
-                    $inv = $iR->repoInvUnloadedquery((string) $inv_id);
+                    $inv = $iR->repoInvUnloadedquery($inv_id);
                     if ($inv) {
-                        $so = (!empty($inv->getSoId()) ?
+                        $so = (($inv->getSoId() > 0) ?
                             $soR->repoSalesOrderLoadedquery((int) $inv->getSoId()) :
                             null);
                         // Because the invoice is not streamed an aliase of
                         // temporary folder file location is returned
                         $temp_aliase = $pdfhelper->generateInvPdf(
-                            $inv_id, $inv->getUserId(), $stream, $c_f, $so,
+                            $inv_id, $inv->reqUserId(), $stream, $c_f, $so,
                                 $inv_amount, $inv_custom_values, $cR, $cvR,
                                     $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR,
                                         $iR, $itrR, $uiR, $this->webViewRenderer);
@@ -321,9 +319,9 @@ trait PdfTrait
             $inv_guest = $iR->repoUrlKeyGuestCount($urlKey) ?
                 $iR->repoUrlKeyGuestLoaded($urlKey) : null;
             if ($inv_guest) {
-                $inv_id = $inv_guest->getId();
-                $inv_amount = (($iaR->repoInvAmountCount((int) $inv_id) > 0) ?
-                    $iaR->repoInvquery((int) $inv_id) : null);
+                $inv_id = $inv_guest->reqId();
+                $inv_amount = (($iaR->repoInvAmountCount($inv_id) > 0) ?
+                    $iaR->repoInvquery($inv_id) : null);
                 if ($inv_amount) {
                     $inv_custom_values = $this->invCustomValues($inv_id, $icR);
                     // session is passed to the pdfHelper and will be used for
@@ -341,13 +339,13 @@ trait PdfTrait
                             $this->sR, $gR);
                         $this->sR->invoiceMarkSent($inv_id, $iR);
                     }
-                    $inv = $iR->repoInvUnloadedquery((string) $inv_id);
+                    $inv = $iR->repoInvUnloadedquery($inv_id);
                     if ($inv) {
                         $so = $soR->repoSalesOrderLoadedquery((int) $inv->getSoId());
                         // Because the invoice is not streamed an aliase of
                         // temporary folder file location is returned
                         $temp_aliase = $pdfhelper->generateInvPdf(
-                            $inv_id, $inv->getUserId(), $stream, $c_f, $so,
+                            $inv_id, $inv->reqUserId(), $stream, $c_f, $so,
                                 $inv_amount, $inv_custom_values, $cR, $cvR,
                                     $cfR, $dlR, $aciR, $iiR, $aciiR, $iiaR, $iR,
                                         $itrR, $uiR, $this->webViewRenderer);

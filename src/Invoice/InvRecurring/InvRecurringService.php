@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvRecurring;
 
-use App\Invoice\Entity\InvRecurring;
+use App\Infrastructure\Persistence\InvRecurring\InvRecurring;
 use App\Invoice\Helpers\DateHelper;
 use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Inv\InvRepository;
@@ -37,7 +37,7 @@ final readonly class InvRecurringService
                 (string) $array['frequency']) : '';
 
         $baseInvoice = $this->invR->repoInvUnloadedquery(
-            (string) $array['inv_id']);
+            (int) $array['inv_id']);
         if (null !== $baseInvoice) {
             $dateHelper = new DateHelper($this->s);
 
@@ -88,7 +88,7 @@ final readonly class InvRecurringService
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->invR->repoInvUnLoadedquery(
-                (string) $array[$inv]);
+                (int) $array[$inv]);
             if ($invEntity) {
                 $model->setInv($invEntity);
             }

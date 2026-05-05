@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\Libraries;
 
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAmount;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use App\Invoice\Ubl\{AdditionalDocumentReference, Address, Contact,
@@ -38,7 +38,7 @@ final readonly class PeppolUblXml
 
     public function xml(
         ?string $profileID,
-        ?string $id,
+        ?int $id,
         DateTime $issueDate,
         DateTime $dueDate,
         ?string $note,
@@ -55,7 +55,7 @@ final readonly class PeppolUblXml
         string $description_code,
         // OrderReference
         ?string $order_id,
-        ?string $sales_order_id,
+        ?int $sales_order_id,
         ?string $cdr_id,
         AdditionalDocumentReference $additionalDocumentReference,
         // AccountingSupplierParty
@@ -106,7 +106,7 @@ final readonly class PeppolUblXml
         return new Invoice(
             $this->sR,
             $profileID,
-            $id,
+            (string) $id,
             $issueDate,
             $dueDate,
             $note,
@@ -120,7 +120,7 @@ final readonly class PeppolUblXml
             ),
             new OrderReference(
                 $order_id,
-                $sales_order_id,
+                (string) $sales_order_id,
             ),
             null!== $cdr_id ? new ContractDocumentReference($cdr_id) : null,
             $additionalDocumentReference,

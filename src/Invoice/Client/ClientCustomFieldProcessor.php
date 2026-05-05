@@ -20,13 +20,13 @@ final class ClientCustomFieldProcessor implements CustomFieldProcessor
     }
 
     #[\Override]
-    public function exists(string $entityId, string $customFieldId): bool
+    public function exists(int $entityId, int $customFieldId): bool
     {
         return $this->clientCustomRepository->repoClientCustomCount($entityId, $customFieldId) > 0;
     }
 
     #[\Override]
-    public function findExisting(string $entityId, string $customFieldId): ?\App\Infrastructure\Persistence\ClientCustom\ClientCustom
+    public function findExisting(int $entityId, int $customFieldId): ?\App\Infrastructure\Persistence\ClientCustom\ClientCustom
     {
         return $this->clientCustomRepository->repoFormValuequery($entityId, $customFieldId);
     }

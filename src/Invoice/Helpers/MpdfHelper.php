@@ -6,8 +6,8 @@ namespace App\Invoice\Helpers;
 
 use App\Invoice\Setting\SettingRepository as SR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAmount;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
 use App\Infrastructure\Persistence\Quote\Quote;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Files\FileHelper;

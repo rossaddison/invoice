@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItem;
 
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvItemAmount;
-use App\Invoice\Entity\InvItemAllowanceCharge;
+use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
+use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
 use App\Infrastructure\Persistence\QuoteItemAllowanceCharge\QuoteItemAllowanceCharge;
 use App\Infrastructure\Persistence\Task\Task;
 use App\Invoice\QuoteItemAllowanceCharge\QuoteItemAllowanceChargeRepository
@@ -42,7 +42,7 @@ final readonly class InvItemService
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (string) $array[$inv]);
+                (int) $array[$inv]);
             if ($invEntity) {
                 $model->setInv($invEntity);
             }
@@ -51,12 +51,12 @@ final readonly class InvItemService
         if (isset($array[$tax_rate])) {
             $model->setTaxRate(
                 $this->trR->repoTaxRatequery(
-                    (string) $array[$tax_rate]));
+                    (int) $array[$tax_rate]));
         }
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
-                (string) $array[$product]);
+                (int) $array[$product]);
             if ($productEntity) {
                 $model->setProduct($productEntity);
             }
@@ -64,7 +64,7 @@ final readonly class InvItemService
         $task = 'task_id';
         if (isset($array[$task])) {
             $taskEntity = $this->taskR->repoTaskquery(
-                (string) $array[$task]);
+                (int) $array[$task]);
             if ($taskEntity) {
                 $model->setTask($taskEntity);
             }
@@ -102,21 +102,21 @@ final readonly class InvItemService
         // This function is used in product/save_product_lookup_item_product
         // when adding a product using the modal
         $tax_rate_id =
-            ((isset($array['tax_rate_id'])) ? (int) $array['tax_rate_id'] : '');
+            ((isset($array['tax_rate_id'])) ? (int) $array['tax_rate_id'] : 0);
         // The form is required to have a tax value even if it is a zero rate
-        $model->setTaxRateId((int) $tax_rate_id);
+        $model->setTaxRateId($tax_rate_id);
         $model->setInvId((int) $inv_id);
         $so_item_id =
-            ((isset($array['so_item_id'])) ? (int) $array['so_item_id'] : '');
-        $model->setSoItemId((int) $so_item_id);
+            ((isset($array['so_item_id'])) ? (int) $array['so_item_id'] : 0);
+        $model->setSoItemId($so_item_id);
         $product_id =
-            ((isset($array['product_id'])) ? (int) $array['product_id'] : '');
-        $model->setProductId((int) $product_id);
-        $product = $pr->repoProductquery((string) $product_id);
+            ((isset($array['product_id'])) ? (int) $array['product_id'] : 0);
+        $model->setProductId($product_id);
+        $product = $pr->repoProductquery($product_id);
 
         if (null !== $product) {
             $name = (((isset($array['product_id']))
-                    && ($pr->repoCount((string) $product_id) > 0)) ?
+                    && ($pr->repoCount($product_id) > 0)) ?
                     $product->getProductName() : '');
             $model->setName($name ?? '');
 
@@ -144,13 +144,13 @@ final readonly class InvItemService
 
         // Product_unit is a string which we get from unit's name field using
         // the unit_id
-        $unit = $unR->repoUnitquery((string) $array['product_unit_id']);
+        $unit = $unR->repoUnitquery((int) $array['product_unit_id']);
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());
         }
         $model->setProductUnitId((int) $array['product_unit_id']);
         $tax_rate_percentage =
-            $this->taxratePercentage((int) $tax_rate_id, $trr);
+            $this->taxratePercentage($tax_rate_id, $trr);
         // Users are required to enter a tax rate even if it is zero percent.
 
         $model->setBelongsToVatInvoice(
@@ -165,7 +165,7 @@ final readonly class InvItemService
                       $array['discount_amount'])
                 && null !== $tax_rate_percentage) {
                 $this->saveInvItemAmount(
-                    (int) $model->getId(),
+                    $model->reqId(),
                     (float) $array['quantity'],
                     (float) $array['price'],
                     (float) $array['discount_amount'],
@@ -174,12 +174,12 @@ final readonly class InvItemService
                     $iiar);
             }
         }
-        return $model->getId();
+        return $model->reqId();
     }
 
     public function accumulativeChargeTotal(int $iiId, ACIIR $aciiR): float
     {
-        $copyAcs = $aciiR->repoInvItemquery((string) $iiId);
+        $copyAcs = $aciiR->repoInvItemquery($iiId);
         $accumulativeChargeTotal = 0.00;
         /**
          * If identifier is 1 it is a charge
@@ -197,7 +197,7 @@ final readonly class InvItemService
 
     public function accumulativeAllowanceTotal(int $iiId, ACIIR $aciiR): float
     {
-        $copyAcs = $aciiR->repoInvItemquery((string) $iiId);
+        $copyAcs = $aciiR->repoInvItemquery($iiId);
         $accumulativeAllowanceTotal = 0.00;
         /**
          * If identifier is 0 it is an allowance
@@ -223,7 +223,7 @@ final readonly class InvItemService
     public function addInvItemAllowanceCharges(string $copyInvId,
         int $originalId, int $newId, ACIIR $aciiR): void
     {
-        $originalACs = $aciiR->repoInvItemquery((string) $originalId);
+        $originalACs = $aciiR->repoInvItemquery($originalId);
         /**
          * @var InvItemAllowanceCharge $originalAC
          */
@@ -291,11 +291,11 @@ final readonly class InvItemService
         $product_id = ((isset($array['product_id'])) ?
                 (int) $array['product_id'] : '');
         $model->setProductId((int) $product_id);
-        $product = $pr->repoProductquery((string) $product_id);
+        $product = $pr->repoProductquery((int) $product_id);
 
         if (null !== $product) {
             $name = (((isset($array['product_id']))
-                    && ($pr->repoCount((string) $product_id) > 0)) ?
+                    && ($pr->repoCount((int) $product_id) > 0)) ?
                     $product->getProductName() : '');
             $model->setName($name ?? '');
 
@@ -320,7 +320,7 @@ final readonly class InvItemService
 
         // Product_unit is a string which we get from unit's name field using
         // the unit_id
-        $unit = $unR->repoUnitquery((string) $array['product_unit_id']);
+        $unit = $unR->repoUnitquery((int) $array['product_unit_id']);
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());
         }
@@ -355,7 +355,7 @@ final readonly class InvItemService
         $model->setInvId((int) $inv_id);
 
         /** @var Task $task */
-        $task = $taskR->repoTaskquery((string) $array['task_id']);
+        $task = $taskR->repoTaskquery((int) $array['task_id']);
         $model->setName($task->getName() ?? '');
 
         // If the user has changed the description on the form => override
@@ -384,7 +384,7 @@ final readonly class InvItemService
             if (isset($array['quantity'], $array['price'],
                     $array['discount_amount'])
                         && null !== $tax_rate_percentage) {
-                $this->saveInvItemAmount((int) $model->getId(),
+                $this->saveInvItemAmount($model->reqId(),
                         (float) $array['quantity'],
                         (float) $array['price'],
                         (float) $array['discount_amount'],
@@ -393,7 +393,7 @@ final readonly class InvItemService
                         $iiar);
             }
         }
-        return $model->getId();
+        return $model->reqId();
     }
 
     /**
@@ -426,7 +426,7 @@ final readonly class InvItemService
         $model->setInvId((int) $inv_id);
 
         /** @var Task $task */
-        $task = $taskR->repoTaskquery((string) $array['task_id']);
+        $task = $taskR->repoTaskquery((int) $array['task_id']);
         if (isset($array['name'])) {
             $model->setName($task->getName() ?? '');
         }
@@ -481,12 +481,12 @@ final readonly class InvItemService
         $so_item_id = ((isset($array['so_item_id'])) ?
             (int) $array['so_item_id'] : '');
         $model->setSoItemId((int)$so_item_id);
-        $product = $pr->repoProductquery((string) $array['product_id']);
+        $product = $pr->repoProductquery((int) $array['product_id']);
         $name = '';
         if ($product) {
             $model->setProductId($product_id);
             if (isset($array['product_id'])
-                    && $pr->repoCount((string) $product_id) > 0) {
+                    && $pr->repoCount($product_id) > 0) {
                 $name = $product->getProductName();
             }
             null !== $name ? $model->setName($name) : $model->setName('');
@@ -499,11 +499,11 @@ final readonly class InvItemService
                 $model->setDescription($description) :
                 $model->setDescription($translator->translate('not.available')) ;
         }
-        $task = $taskR->repoTaskquery((string) $array['task_id']);
+        $task = $taskR->repoTaskquery((int) $array['task_id']);
         if ($task) {
             $model->setTaskId($task_id);
             if (isset($array['task_id'])
-                    && $taskR->repoCount((string) $task_id) > 0) {
+                    && $taskR->repoCount($task_id) > 0) {
                 $name = $task->getName();
             }
             null !== $name ? $model->setName($name) : $model->setName('');
@@ -530,7 +530,7 @@ final readonly class InvItemService
                 $model->setOrder(0) ;
         // Product_unit is a string which we get from unit's name field using
         //  the unit_id
-        $unit = $uR->repoUnitquery((string) $array['product_unit_id']);
+        $unit = $uR->repoUnitquery((int) $array['product_unit_id']);
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());
         }
@@ -577,8 +577,8 @@ final readonly class InvItemService
         // Fetch all allowance/charges for this item
         $all_charges = 0.00;
         $all_allowances = 0.00;
-        $aciis = $this->aciiR->repoInvItemquery((string)$inv_item_id);
-        /** @var \App\Invoice\Entity\InvItemAllowanceCharge $acii */
+        $aciis = $this->aciiR->repoInvItemquery($inv_item_id);
+        /** @var \App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge $acii */
         foreach ($aciis as $acii) {
             if ($acii->getAllowanceCharge()?->getIdentifier() == '1') {
                 $all_charges += (float) $acii->getAmount();
@@ -601,8 +601,8 @@ final readonly class InvItemService
         $iias_array['taxtotal'] = $tax_total;
         $iias_array['total'] = $ipInvAc - $discount_total + $tax_total;
         // retrieve the existing InvItemAmount record
-        $inv_item_amount = $iiar->repoInvItemAmountquery((string) $inv_item_id);
-        if ($iiar->repoCount((string) $inv_item_id) === 0) {
+        $inv_item_amount = $iiar->repoInvItemAmountquery($inv_item_id);
+        if ($iiar->repoCount($inv_item_id) === 0) {
             $iias->saveInvItemAmountNoForm(new InvItemAmount(), $iias_array);
         } else {
             if ($inv_item_amount) {
@@ -627,7 +627,7 @@ final readonly class InvItemService
      */
     public function taxratePercentage(int $id, TRR $trr): ?float
     {
-        $taxrate = $trr->repoTaxRatequery((string) $id);
+        $taxrate = $trr->repoTaxRatequery($id);
         if ($taxrate) {
             return $taxrate->getTaxRatePercent();
         }
@@ -644,12 +644,12 @@ final readonly class InvItemService
            string $new_inv_id, InvItemRepository $iiR, IIAR $iiaR): void
     {
         // Get the basis invoice's items and balance with a negative quantity
-        $items = $iiR->repoInvquery((string) $basis_inv_id);
+        $items = $iiR->repoInvquery($basis_inv_id);
         /** @var InvItem $item */
         foreach ($items as $item) {
             $new_item = new InvItem();
             $new_item->setInvId((int) $new_inv_id);
-            $new_item->setTaxRateId((int) $item->getTaxRateId());
+            $new_item->setTaxRateId($item->reqTaxRateId());
             null !== $item->getProductId() ?
                     $new_item->setProductId((int) $item->getProductId())
                         : $new_item->setTaskId((int) $item->getTaskId());
@@ -673,10 +673,10 @@ final readonly class InvItemService
             // Create an item amount for this item; reversing the items amounts
             // to negative
             $basis_item_amount =
-                        $iiaR->repoInvItemAmountquery((string) $item->getId());
+                        $iiaR->repoInvItemAmountquery($item->reqId());
             if ($basis_item_amount) {
                 $new_item_amount = new InvItemAmount();
-                $new_item_amount->setInvItemId((int) $new_item->getId());
+                $new_item_amount->setInvItemId($new_item->reqId());
                 $new_item_amount->setSubtotal(
                             ($basis_item_amount->getSubtotal() ?? 0.00) * -1.00);
                 $new_item_amount->setTaxTotal(

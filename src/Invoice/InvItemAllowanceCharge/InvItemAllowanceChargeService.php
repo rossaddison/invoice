@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItemAllowanceCharge;
 
-use App\Invoice\Entity\InvItemAllowanceCharge;
+use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
 use App\Invoice\AllowanceCharge\AllowanceChargeRepository as ACR;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
@@ -57,12 +57,12 @@ final readonly class InvItemAllowanceChargeService
         if (isset($array[$ac])) {
             $model->setAllowanceCharge(
                 $this->acR->repoAllowanceChargequery(
-                    (string) $array[$ac]));
+                    (int) $array[$ac]));
         }
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (string) $array[$inv]);
+                (int) $array[$inv]);
             if ($invEntity) {
                 $model->setInv($invEntity);
             }
@@ -70,7 +70,7 @@ final readonly class InvItemAllowanceChargeService
         $inv_item = 'inv_item_id';
         if (isset($array[$inv_item])) {
             $invItemEntity = $this->iiR->repoInvItemquery(
-                (string) $array[$inv_item]);
+                (int) $array[$inv_item]);
             if ($invItemEntity) {
                 $model->setInvItem($invItemEntity);
             }
@@ -85,7 +85,7 @@ final readonly class InvItemAllowanceChargeService
         // before deleting the allowance/charge,
         // record its related inv_item_id so that we can
         // update the inv_item_amount record
-        $inv_item_id = $model->getInvItemId();
+        $inv_item_id = $model->reqInvItemId();
         // delete the allowance / charge
         $this->repository->delete($model);
         $inv_item_amount = $iiaR->repoInvItemAmountquery(

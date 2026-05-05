@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItemAllowanceCharge;
 
-use App\Invoice\Entity\InvItemAllowanceCharge;
+use App\Infrastructure\Persistence\{
+    InvItemAllowanceCharge\InvItemAllowanceCharge
+};
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -15,15 +17,19 @@ final class InvItemAllowanceChargeForm extends FormModel
     private ?int $allowance_charge_id = null;
     #[Required]
     private ?float $amount = null;
-    #[Required]
     private ?float $vat_or_tax = null;
+    private ?int $inv_item_id = null;
 
-    public function __construct(InvItemAllowanceCharge $invItemAllowanceCharge, private readonly ?int $inv_item_id)
+    public static function show(InvItemAllowanceCharge $invItemAllowanceCharge,
+        ?int $inv_item_id): self
     {
-        $this->inv_id = (int) $invItemAllowanceCharge->getInvId();
-        $this->allowance_charge_id = (int) $invItemAllowanceCharge->getAllowanceChargeId();
-        $this->amount = (float) $invItemAllowanceCharge->getAmount();
-        $this->vat_or_tax = (float) $invItemAllowanceCharge->getVatOrTax();
+        $form = new self();
+        $form->inv_id = $invItemAllowanceCharge->reqInvId();
+        $form->allowance_charge_id = $invItemAllowanceCharge->reqAllowanceChargeId();
+        $form->amount = (float) $invItemAllowanceCharge->getAmount();
+        $form->vat_or_tax = (float) $invItemAllowanceCharge->getVatOrTax();
+        $form->inv_item_id = $inv_item_id;
+        return $form;
     }
 
     public function getInvId(): ?int

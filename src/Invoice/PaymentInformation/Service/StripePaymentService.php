@@ -8,7 +8,7 @@ use App\Invoice\Setting\SettingRepository;
 use App\Invoice\Libraries\Crypt;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 
 class StripePaymentService
 {

@@ -177,6 +177,14 @@ export class QuoteHandler {
             return;
         }
 
+        // Quote index: change status via dropdown
+        const statusItem = target.closest('.quote-status-item') as HTMLElement;
+        if (statusItem) {
+            event.preventDefault();
+            void this.handleChangeStatus(statusItem);
+            return;
+        }
+
         // PDF generation handlers
         this.handlePdfGeneration(target);
     }
@@ -493,6 +501,39 @@ export class QuoteHandler {
                 setButtonLoading(btn, false, originalHtml);
             }
             alert('An error occurred while copying quote. See console for details.');
+        }
+    }
+
+    private async handleChangeStatus(item: HTMLElement): Promise<void> {
+        const statusId = item.dataset['statusId'];
+        if (!statusId) return;
+
+        const table = document.getElementById('table-quote');
+        if (!table) return;
+
+        const checkboxes = table.querySelectorAll(
+            'input[type="checkbox"]:checked'
+        ) as NodeListOf<HTMLInputElement>;
+
+        const keylist: string[] = [];
+        checkboxes.forEach(cb => {
+            if (cb.id) keylist.push(cb.id);
+        });
+
+        if (keylist.length === 0) return;
+
+        const url = new URL(`${location.origin}/invoice/quote/changeStatus`);
+        url.searchParams.set('status_id', statusId);
+        keylist.forEach(id => url.searchParams.append('keylist[]', id));
+
+        try {
+            const response = await getJson<ApiResponse>(url.toString(), {});
+            const data = parsedata(response);
+            if (data.success === 1) {
+                secureReload();
+            }
+        } catch (error) {
+            console.error('quote/changeStatus error', error);
         }
     }
 

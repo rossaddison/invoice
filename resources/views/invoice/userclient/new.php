@@ -7,7 +7,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Security\Random;
 
 /**
- * @var App\Invoice\Entity\UserInv $userinv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userinv
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Invoice\Client\ClientRepository $cR
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
@@ -38,7 +38,7 @@ use Yiisoft\Security\Random;
         <?= Html::openTag('div', ['class' => 'col-xs-12 col-md-6 col-md-offset-3']); ?>
             <?= Field::hidden($form, 'user_id')
                     ->inputId('user_id-' . Random::string(10))
-                    ->value($userinv->getUserId()); ?>
+                    ->value($userinv->reqUserId()); ?>
                 <?= Html::openTag('div', ['class' => 'panel panel-default']); ?>
                     <?= Html::openTag('div', ['class' => 'panel-heading']); ?>
                         <?= Html::encode($userinv->getName()); ?>

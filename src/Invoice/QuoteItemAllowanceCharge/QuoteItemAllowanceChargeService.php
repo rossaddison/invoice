@@ -35,7 +35,7 @@ final readonly class QuoteItemAllowanceChargeService
     ): void {
         if (isset($array['allowance_charge_id'])) {
             $allowance_charge = $this->acR->repoAllowanceChargequery(
-                (string) $array['allowance_charge_id']
+                (int) $array['allowance_charge_id']
             );
             if ($allowance_charge) {
                 $model->setAllowanceCharge($allowance_charge);

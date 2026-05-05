@@ -13,7 +13,7 @@ class TaxRateEntityTest extends Unit
     {
         $taxRate = new TaxRate();
 
-        $this->assertFalse($taxRate->isPersisted());
+        $this->assertFalse($taxRate->hasIdentity());
         $this->assertSame('', $taxRate->getTaxRateCode());
         $this->assertSame('', $taxRate->getPeppolTaxRateCode());
         $this->assertSame('', $taxRate->getStorecoveTaxType());
@@ -33,7 +33,7 @@ class TaxRateEntityTest extends Unit
             true
         );
 
-        $this->assertFalse($taxRate->isPersisted());
+        $this->assertFalse($taxRate->hasIdentity());
         $this->assertSame('S', $taxRate->getTaxRateCode());
         $this->assertSame('S', $taxRate->getPeppolTaxRateCode());
         $this->assertSame('standard', $taxRate->getStorecoveTaxType());
@@ -55,7 +55,7 @@ class TaxRateEntityTest extends Unit
     {
         $taxRate = new TaxRate();
 
-        $this->assertFalse($taxRate->isPersisted());
+        $this->assertFalse($taxRate->hasIdentity());
     }
 
     public function testIsPersistedReturnsTrueAfterSetTaxRateId(): void
@@ -63,7 +63,7 @@ class TaxRateEntityTest extends Unit
         $taxRate = new TaxRate();
 
         $taxRate->setTaxRateId(1);
-        $this->assertTrue($taxRate->isPersisted());
+        $this->assertTrue($taxRate->hasIdentity());
     }
 
     public function testReqIdReturnsIntAfterSetTaxRateId(): void
@@ -264,7 +264,7 @@ class TaxRateEntityTest extends Unit
         $taxRate->setTaxRatePercent(20.00);
         $taxRate->setTaxRateDefault(true);
 
-        $this->assertTrue($taxRate->isPersisted());
+        $this->assertTrue($taxRate->hasIdentity());
         $this->assertSame(1, $taxRate->reqId());
         $this->assertSame('S', $taxRate->getTaxRateCode());
         $this->assertSame('S', $taxRate->getPeppolTaxRateCode());

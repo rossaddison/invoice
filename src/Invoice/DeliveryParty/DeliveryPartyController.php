@@ -155,17 +155,15 @@ final class DeliveryPartyController extends BaseController
     //For rbac refer to AccessChecker
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param DeliveryPartyRepository $deliverypartyRepository
+     * @param CurrentRoute $curR
+     * @param DeliveryPartyRepository $dpR
      * @return DeliveryParty|null
      */
-    private function deliveryparty(CurrentRoute $currentRoute, DeliveryPartyRepository $deliverypartyRepository): ?DeliveryParty
+    private function deliveryparty(
+        CurrentRoute $curR,
+        DeliveryPartyRepository $dpR): ?DeliveryParty
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $deliverypartyRepository->repoDeliveryPartyquery($id);
-        }
-        return null;
+        return $dpR->repoDeliveryPartyquery((int) $curR->getArgument('id'));
     }
 
     /**
@@ -173,9 +171,9 @@ final class DeliveryPartyController extends BaseController
      *
      * @psalm-return \Yiisoft\Data\Cycle\Reader\EntityReader
      */
-    private function deliveryparties(DeliveryPartyRepository $deliverypartyRepository): \Yiisoft\Data\Cycle\Reader\EntityReader
+    private function deliveryparties(DeliveryPartyRepository $dpR): \Yiisoft\Data\Cycle\Reader\EntityReader
     {
-        return $deliverypartyRepository->findAllPreloaded();
+        return $dpR->findAllPreloaded();
     }
 
     /**

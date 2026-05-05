@@ -87,7 +87,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
                  * @var CompanyPrivate $private
                  */
                 foreach ($companyPrivates as $private) {
-                    if ($private->getCompanyId() == (string) $company->reqId()
+                    if ($private->reqCompanyId() === $company->reqId()
                         && (
                             $private->getStartDate()?->format('Y-m-d')
                            < (new \DateTimeImmutable('now'))->format('Y-m-d')
@@ -209,7 +209,7 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         //  in e.g. salesorder\guest.php`
         $this->settingRepository->debugMode($debugMode);
         $user = $identity instanceof Identity ? $identity->getUser() : null;
-        $isGuest = ($user === null || $user->getId() === null);
+        $isGuest = ($user === null);
         $userLogin = (null !== $user ? $user->getLogin() : null);
         // Show the default logo if the logo applicable dates have expired
         //  under CompanyPrivate
@@ -222,16 +222,17 @@ final readonly class LayoutViewInjection implements LayoutParametersInjectionInt
         $siteIndex = 'site/index';
         
         $status = '';
-        if (null!== $user && null!==($userId = $user->getId())) {
-            if (!$isGuest && $this->manager->getPermissionsByUserId($userId)
+        if (null!== $user) {
+            $userId = $user->reqId();
+            if ($this->manager->getPermissionsByUserId($userId)
                   === $this->manager->getPermissionsByRoleName('observer')) {
                 $status = 'observer';
             }
-            if (!$isGuest && $this->manager->getPermissionsByUserId($userId)
+            if ($this->manager->getPermissionsByUserId($userId)
                   === $this->manager->getPermissionsByRoleName('admin')) {
                 $status = 'admin';
             }
-            if (!$isGuest && $this->manager->getPermissionsByUserId($userId)
+            if ($this->manager->getPermissionsByUserId($userId)
                   === $this->manager->getPermissionsByRoleName('accountant')) {
                 $status = 'accountant';
             }

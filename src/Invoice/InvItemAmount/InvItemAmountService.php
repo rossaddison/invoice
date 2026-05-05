@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvItemAmount;
 
-use App\Invoice\Entity\InvItemAmount;
+use App\Infrastructure\Persistence\InvItemAmount\InvItemAmount;
 use App\Invoice\InvItem\InvItemRepository as IIR;
 
 final readonly class InvItemAmountService
@@ -41,7 +41,7 @@ final readonly class InvItemAmountService
         $inv_item = 'inv_item_id';
         if (isset($array[$inv_item])) {
             $invItemEntity = $this->iiR->repoInvItemquery(
-                (string) $array[$inv_item]);
+                (int) $array[$inv_item]);
             if ($invItemEntity) {
                 $model->setInvItem($invItemEntity);
             }

@@ -62,7 +62,7 @@ class Delivery
         return $this->requireId($this->id, 'Delivery');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -158,9 +158,14 @@ class Delivery
         $this->date_modified = $date_modified;
     }
 
-    public function getDeliveryLocationId(): string
+    public function hasDeliveryLocationId(): bool
     {
-        return (string) $this->delivery_location_id;
+        return $this->delivery_location_id !== null;
+    }
+
+    public function reqDeliveryLocationId(): int
+    {
+        return $this->requireId($this->delivery_location_id, 'DeliveryLocation');
     }
 
     public function setDeliveryLocationId(int $delivery_location_id): void
@@ -168,9 +173,14 @@ class Delivery
         $this->delivery_location_id = $delivery_location_id;
     }
 
-    public function getDeliveryPartyId(): string
+    public function hasDeliveryPartyId(): bool
     {
-        return (string) $this->delivery_party_id;
+        return $this->delivery_party_id !== null;
+    }
+
+    public function reqDeliveryPartyId(): int
+    {
+        return $this->requireId($this->delivery_party_id, 'DeliveryParty');
     }
 
     public function setDeliveryPartyId(int $delivery_party_id): void

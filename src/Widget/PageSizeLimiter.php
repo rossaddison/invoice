@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Widget;
 
-use App\Invoice\Entity\UserInv;
+use App\Infrastructure\Persistence\UserInv\UserInv;
 use App\Invoice\Setting\SettingRepository as sR;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Router\CurrentRoute;
@@ -33,7 +33,7 @@ final class PageSizeLimiter
         ->id('btn-submit-' . $defaultListLimit)
         ->render();
         if (null !== $setting) {
-            $setting_id = $setting->getSettingId() ?? 0;
+            $setting_id = $setting->reqSettingId() ?: 0;
             $limits_array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 75, 100, 150, 200, 250, 300];
             foreach ($limits_array as $value) {
                 $buttons .=  new A()
@@ -71,7 +71,7 @@ final class PageSizeLimiter
         int $listLimit,
     ): string {
         $buttons = '';
-        $userinv_id = $userinv->getId();
+        $userinv_id = $userinv->reqId();
         $limits_array = [$listLimit, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 75, 100, 150, 200, 250, 300];
         foreach ($limits_array as $value) {
             $buttons .=  new A()

@@ -76,7 +76,8 @@
              be created using the ProxyFactory. -->             
         <ClassMustBeFinal errorLevel="suppress">
              <errorLevel type="suppress">
-                <directory name="src/Invoice/Entity" />
+                <!-- Implemented 06/05/2026 --> 
+                <directory name="src/Infrastructure/Persistence" />
             </errorLevel>
         </ClassMustBeFinal>    
     </issueHandlers>    

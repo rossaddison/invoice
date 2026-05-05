@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentCustom;
 
-use App\Invoice\Entity\PaymentCustom;
+use App\Infrastructure\Persistence\PaymentCustom\PaymentCustom;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -85,7 +85,7 @@ final class PaymentCustomRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoPaymentCustomquery(string $id): ?PaymentCustom
+    public function repoPaymentCustomquery(int $id): ?PaymentCustom
     {
         $query = $this->select()->load('payment')
             ->load('custom_field')
@@ -98,21 +98,21 @@ final class PaymentCustomRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoFormValuequery(string $payment_id, string $custom_field_id): ?PaymentCustom
+    public function repoFormValuequery(int $payment_id, int $custom_field_id): ?PaymentCustom
     {
         $query = $this->select()->where(['payment_id' => $payment_id])
                                 ->andWhere(['custom_field_id' => $custom_field_id]);
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoPaymentCustomCount(string $payment_id, string $custom_field_id): int
+    public function repoPaymentCustomCount(int $payment_id, int $custom_field_id): int
     {
         $query = $this->select()->where(['payment_id' => $payment_id])
                                 ->andWhere(['custom_field_id' => $custom_field_id]);
         return $query->count();
     }
 
-    public function repoPaymentCount(string $payment_id): int
+    public function repoPaymentCount(int $payment_id): int
     {
         $query = $this->select()->where(['payment_id' => $payment_id]);
         return $query->count();
@@ -123,7 +123,7 @@ final class PaymentCustomRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoFields(string $payment_id): EntityReader
+    public function repoFields(int $payment_id): EntityReader
     {
         $query = $this->select()->where(['payment_id' => $payment_id]);
         return $this->prepareDataReader($query);

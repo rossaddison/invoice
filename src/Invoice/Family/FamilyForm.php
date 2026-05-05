@@ -17,9 +17,9 @@ final class FamilyForm extends FormModel
 
     public ?string $family_productprefix = '';
 
-    public ?string $category_primary_id = null;
+    public ?int $category_primary_id = null;
 
-    public ?string $category_secondary_id = null;
+    public ?int $category_secondary_id = null;
 
     public static function show(Family $family): self
     {
@@ -27,8 +27,8 @@ final class FamilyForm extends FormModel
         $form->family_name = $family->getFamilyName();
         $form->family_commalist = $family->getFamilyCommalist();
         $form->family_productprefix = $family->getFamilyProductprefix();
-        $form->category_primary_id = $family->getCategoryPrimaryId();
-        $form->category_secondary_id = $family->getCategorySecondaryId();
+        $form->category_primary_id = $family->reqCategoryPrimaryId();
+        $form->category_secondary_id = $family->reqCategorySecondaryId();
         return $form;
     }
 
@@ -37,14 +37,14 @@ final class FamilyForm extends FormModel
         return $this->family_name;
     }
 
-    public function getCategoryPrimaryId(): string
+    public function getCategoryPrimaryId(): ?int
     {
-        return (string) $this->category_primary_id;
+        return $this->category_primary_id;
     }
 
-    public function getCategorySecondaryId(): string
+    public function getCategorySecondaryId(): ?int
     {
-        return (string) $this->category_secondary_id;
+        return $this->category_secondary_id;
     }
 
     public function getFamilyCommalist(): ?string

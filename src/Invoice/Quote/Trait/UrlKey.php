@@ -58,7 +58,7 @@ trait UrlKey
             // If the quote status is sent 2, viewed 3, or approved_with 4,
             // or approved_without 5 or rejected 6
             if (in_array($quote->reqStatusId(), [2,3,4,5,6])) {
-                $user_id = (string) $quote->reqUserId();
+                $user_id = $quote->reqUserId();
                 if ($uiR->repoUserInvUserIdcount($user_id) === 1) {
                     // After signup the user was included in the userinv using
                     // Settings...User Account...+
@@ -66,7 +66,7 @@ trait UrlKey
                     // The client has been assigned to the user id using
                     // Setting...User Account...Assigned Clients
                     $user_client = $ucR->repoUserClientqueryCount($user_id,
-                        (string) $quote->reqClientId()) === 1 ? true : false;
+                        $quote->reqClientId()) === 1 ? true : false;
                     if ($user_inv && $user_client && $user_inv->getActive()) {
                         // If the userinv is a Guest => type = 1 ie. NOT an
                         // administrator =>type = 0

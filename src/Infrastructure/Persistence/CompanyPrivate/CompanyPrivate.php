@@ -90,7 +90,7 @@ class CompanyPrivate
         return $this->requireId($this->id, 'CompanyPrivate');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }
@@ -100,9 +100,9 @@ class CompanyPrivate
         $this->id = $id;
     }
 
-    public function getCompanyId(): string
+    public function reqCompanyId(): int
     {
-        return (string) $this->company_id;
+        return $this->requireId($this->company_id, 'Company');
     }
 
     public function setCompanyId(int $company_id): void
@@ -219,7 +219,8 @@ class CompanyPrivate
 
     public function setStartDate(?DateTime $start_date): void
     {
-        $this->start_date = $start_date;
+        $this->start_date = $start_date !== null ?
+            DateTimeImmutable::createFromMutable($start_date) : null;
     }
 
     //cycle
@@ -231,6 +232,7 @@ class CompanyPrivate
 
     public function setEndDate(?DateTime $end_date): void
     {
-        $this->end_date = $end_date;
+        $this->end_date = $end_date !== null ?
+            DateTimeImmutable::createFromMutable($end_date) : null;
     }
 }

@@ -7,8 +7,8 @@ namespace App\Invoice\Report;
 use App\Invoice\BaseController;
 // Entites
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\Payment;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Infrastructure\Persistence\Payment\Payment;
 // Repositories
 use App\Invoice\Client\ClientRepository;
 use App\Invoice\Inv\InvRepository;
@@ -220,7 +220,7 @@ class ReportController extends BaseController
         $sum = 0.00;
         foreach ($invamounts as $invamount) {
             if ($invamount instanceof InvAmount) {
-                $sum += ($client_id == $invamount->getInv()?->getClientId()) ?
+                $sum += ($client_id == $invamount->getInv()?->reqClientId()) ?
                         ($invamount->getBalance() ?? 0.00) : 0.00;
             }
         }
@@ -537,7 +537,7 @@ class ReportController extends BaseController
          * @var \App\Infrastructure\Persistence\Product\Product $product
          */
         foreach ($products as $product) {
-            $product_id = (int) $product->getProductId();
+            $product_id = $product->reqId();
             if (!empty($product_id)) {
                 // Product name
                 $row['product_name'] = (string) $product->getProductName();

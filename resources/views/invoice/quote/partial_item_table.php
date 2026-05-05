@@ -141,7 +141,7 @@ foreach ($quoteItems as $item) {
             */
            foreach ($products as $product) {
                echo  new Option()
-                   ->value((string) $product->reqId())
+                   ->value($product->reqId())
                    ->selected($productId == $product->reqId())
                    ->content($product->getProductName() ?? '');
            }
@@ -323,7 +323,7 @@ foreach ($quoteItems as $item) {
                     $productImages = $piR->repoProductImageProductquery(0);
                  }
                  /**
-                  * @var App\Invoice\Entity\ProductImage $productImage
+                  * @var App\Infrastructure\Persistence\ProductImage\ProductImage $productImage
                   */
                  foreach ($productImages as $productImage) {
                      if (!empty($productImage->getFileNameOriginal())) {

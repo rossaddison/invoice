@@ -50,8 +50,7 @@ final class ProductClientService
     ): void {
         $product = 'product_id';
         if (isset($array[$product])) {
-            $productEntity = $this->pR->repoProductquery(
-                (string) $array[$product]);
+            $productEntity = $this->pR->repoProductquery((int) $array[$product]);
             if ($productEntity) {
                 $model->setProduct($productEntity);
             }

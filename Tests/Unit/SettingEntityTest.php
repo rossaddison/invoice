@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Invoice\Entity\Setting;
+use App\Infrastructure\Persistence\Setting\Setting;
 use Codeception\Test\Unit;
 
 final class SettingEntityTest extends Unit
@@ -13,7 +13,7 @@ final class SettingEntityTest extends Unit
     {
         $setting = new Setting();
         
-        $this->assertNull($setting->getSettingId());
+        $this->assertFalse($setting->hasIdentity());
         $this->assertSame('', $setting->getSettingKey());
         $this->assertSame('', $setting->getSettingValue());
     }
@@ -22,7 +22,7 @@ final class SettingEntityTest extends Unit
     {
         $setting = new Setting('theme', 'dark');
         
-        $this->assertNull($setting->getSettingId());
+        $this->assertFalse($setting->hasIdentity());
         $this->assertSame('theme', $setting->getSettingKey());
         $this->assertSame('dark', $setting->getSettingValue());
     }
@@ -47,7 +47,7 @@ final class SettingEntityTest extends Unit
     {
         $setting = new Setting();
         
-        $this->assertNull($setting->getSettingId());
+        $this->assertFalse($setting->hasIdentity());
     }
 
     public function testCommonSettingTypes(): void

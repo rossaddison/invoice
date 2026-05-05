@@ -30,7 +30,7 @@ final readonly class TaxRateService
         $model->setPeppolTaxRateCode((string) $array['peppol_tax_rate_code']) : '';
         isset($array['storecove_tax_type']) ?
         $model->setStorecoveTaxType((string) $array['storecove_tax_type']) : '';
-        if (!$model->isPersisted()) {
+        if (!$model->hasIdentity()) {
             $model->setTaxRateDefault(false);
         }
         $this->repository->save($model);

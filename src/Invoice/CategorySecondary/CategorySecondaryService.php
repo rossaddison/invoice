@@ -33,8 +33,7 @@ final readonly class CategorySecondaryService
         $cp = 'category_primary_id';
         if (isset($array[$cp])) {
             $model->setCategoryPrimary(
-                $this->cpR->repoCategoryPrimaryQuery(
-                    (string) $array[$cp]));
+                $this->cpR->repoCategoryPrimaryQuery((int) $array[$cp]));
         }
     }
 

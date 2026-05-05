@@ -64,7 +64,7 @@ class CustomField
         return $this->requireId($this->id, 'CustomField');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

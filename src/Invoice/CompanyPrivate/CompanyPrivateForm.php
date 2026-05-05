@@ -43,7 +43,7 @@ final class CompanyPrivateForm extends FormModel
     public static function show(CompanyPrivate $company_private): self
     {
         $form = new self();
-        $form->company_id = (int) $company_private->getCompanyId();
+        $form->company_id = $company_private->reqCompanyId();
         $form->company_public_name = $company_private->getCompany()?->getName();
         $form->vat_id = $company_private->getVatId();
         $form->tax_code = $company_private->getTaxCode();

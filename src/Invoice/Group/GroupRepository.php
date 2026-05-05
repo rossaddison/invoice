@@ -87,7 +87,7 @@ final class GroupRepository extends Select\Repository
     public function generateNumber(int $id, bool $set_next = false): mixed
     {
         /** @var Group $group */
-        $group = $this->repoGroupquery((string) $id);
+        $group = $this->repoGroupquery($id);
         $my_result = $this->parseIdentifierFormat(
             (string) $group->getIdentifierFormat(),
             (int) $group->getNextId(),
@@ -133,14 +133,14 @@ final class GroupRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoGroupquery(string $id): ?Group
+    public function repoGroupquery(int $id): ?Group
     {
         $query = $this->select()
                       ->where(['id' => $id]);
         return  $query->fetchOne() ?: null;
     }
 
-    public function repoGroupcount(string $id): int
+    public function repoGroupcount(int $id): int
     {
         return $this->select()
                       ->where(['id' => $id])
@@ -159,7 +159,7 @@ final class GroupRepository extends Select\Repository
      */
     public function setNextNumber(int $id): int
     {
-        $result = $this->repoGroupquery((string) $id) ?: null;
+        $result = $this->repoGroupquery($id) ?: null;
         if (null !== $result) {
             $current_id = $result->getNextId();
             $incremented_next_id = (int) $result->getNextId() + 1;

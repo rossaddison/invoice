@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Infrastructure\Persistence\Contract\Contract;
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -59,7 +59,7 @@ $columns = [
             foreach ($invoices as $invoice) {
                 $button = (string) Html::a(
                     $invoice->getNumber() ?? '#',
-                    $urlGenerator->generate('inv/view', ['id' => $invoice->getId()]),
+                    $urlGenerator->generate('inv/view', ['id' => $invoice->reqId()]),
                     ['class' => 'btn btn-primary btn-sm',
                         'data-bs-toggle' => 'tooltip',
                         'title' => $model->getReference(),
@@ -75,8 +75,8 @@ $columns = [
         'client_id',
         header: $translator->translate('client'),
         content: static function (Contract $model) use ($cR): string {
-            $client = ($cR->repoClientCount((int) $model->getClientId()) > 0 ?
-                    ($cR->repoClientquery((int) $model->getClientId()))->getClientName() : '');
+            $client = ($cR->repoClientCount($model->reqClientId()) > 0 ?
+                    ($cR->repoClientquery($model->reqClientId()))->getClientName() : '');
             return $client;
         },
     ),

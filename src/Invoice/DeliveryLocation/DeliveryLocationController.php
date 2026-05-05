@@ -294,7 +294,7 @@ final class DeliveryLocationController extends BaseController
                 'electronic_address_scheme' =>
                 PeppolArrays::electronicAddressScheme(),
             ];
-            if ($this->rbacObserver((string) $del->getClientId(), $ucR, $uiR) ||
+            if ($this->rbacObserver($del->reqClientId(), $ucR, $uiR) ||
                 $this->rbacAdmin()) {
                 return $this->webViewRenderer->render('_view', $parameters);
             }
@@ -302,10 +302,10 @@ final class DeliveryLocationController extends BaseController
         return $this->webService->getRedirectResponse('del/index');
     }
 
-    private function rbacObserver(string $clientId, UCR $ucR, UIR $uiR): bool {
+    private function rbacObserver(int $clientId, UCR $ucR, UIR $uiR): bool {
         $userClient = $ucR->repoUserquery($clientId);
         if (null!==$userClient) {
-            $userId = $userClient->getUserId();
+            $userId = $userClient->reqUserId();
             $userInv = $uiR->repoUserInvUserIdquery($userId);
             if (null !== $userInv && $userInv->getActive()) {
                 return true;

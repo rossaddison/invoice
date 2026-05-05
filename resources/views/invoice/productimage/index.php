@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\ProductImage;
+use App\Infrastructure\Persistence\ProductImage\ProductImage;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -36,7 +36,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (ProductImage $model) => Html::encode($model->getId()),
+        content: static fn (ProductImage $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'product_id',
@@ -61,13 +61,13 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (ProductImage $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('productimage/view', ['id' => $model->getId()]), [])->render();
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('productimage/view', ['id' => $model->reqId()]), [])->render();
         },
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (ProductImage $model) use ($urlGenerator): string {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('productimage/edit', ['id' => $model->getId()]), [])->render();
+            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('productimage/edit', ['id' => $model->reqId()]), [])->render();
         },
     ),
     new DataColumn(
@@ -83,7 +83,7 @@ $columns = [
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('productimage/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('productimage/delete', ['id' => $model->reqId()]),
                 [],
             );
         },

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\SalesOrderTaxRate;
 
-use App\Invoice\Entity\SalesOrderTaxRate;
+use App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -18,12 +18,14 @@ final class SalesOrderTaxRateForm extends FormModel
     private ?int $include_item_tax = null;
     private ?float $sales_order_tax_rate_amount = null;
 
-    public function __construct(SalesOrderTaxRate $salesOrderTaxRate)
+    public static function show(SalesOrderTaxRate $salesOrderTaxRate): self
     {
-        $this->sales_order_id = (int) $salesOrderTaxRate->getSalesOrderId();
-        $this->tax_rate_id = (int) $salesOrderTaxRate->getTaxRateId();
-        $this->include_item_tax = $salesOrderTaxRate->getIncludeItemTax();
-        $this->sales_order_tax_rate_amount = $salesOrderTaxRate->getSalesOrderTaxRateAmount();
+        $form = new self();
+        $form->sales_order_id = $salesOrderTaxRate->reqSalesOrderId();
+        $form->tax_rate_id = $salesOrderTaxRate->reqTaxRateId();
+        $form->include_item_tax = $salesOrderTaxRate->getIncludeItemTax();
+        $form->sales_order_tax_rate_amount = $salesOrderTaxRate->getSalesOrderTaxRateAmount();
+        return $form;
     }
 
     public function getSalesOrderId(): ?int

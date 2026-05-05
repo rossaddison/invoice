@@ -51,12 +51,12 @@ use Yiisoft\Html\Tag\Form;
                 <?php
     $optionsDataPaymentMethod = [];
 /**
- * @var App\Invoice\Entity\PaymentMethod $paymentMethod
+ * @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod $paymentMethod
  */
 foreach ($paymentMethods as $paymentMethod) {
-    $paymentMethodId = $paymentMethod->getId();
+    $paymentMethodId = $paymentMethod->reqId();
     $paymentMethodName = $paymentMethod->getName();
-    if ((strlen($paymentMethodId) > 0)
+    if ($paymentMethodId > 0
         && (strlen(($paymentMethodName ?? '')) > 0) && (null !== $paymentMethodName)) {
         $optionsDataPaymentMethod[$paymentMethodId] = $paymentMethodName;
     }

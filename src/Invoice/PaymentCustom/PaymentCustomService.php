@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\PaymentCustom;
 
-use App\Invoice\Entity\PaymentCustom;
+use App\Infrastructure\Persistence\PaymentCustom\PaymentCustom;
 use App\Invoice\CustomField\CustomFieldRepository as CFR;
 use App\Invoice\Payment\PaymentRepository as PR;
 
@@ -45,7 +45,7 @@ final readonly class PaymentCustomService
         $payment = 'payment_id';
         if (isset($array[$payment])) {
             $paymentEntity = $this->pR->repoPaymentquery(
-                (string) $array[$payment]);
+                (int) $array[$payment]);
             if ($paymentEntity) {
                 $model->setPayment($paymentEntity);
             }
@@ -54,7 +54,7 @@ final readonly class PaymentCustomService
         if (isset($array[$custom_field])) {
             $model->setCustomField(
                 $this->cfR->repoCustomFieldquery(
-                    (string) $array[$custom_field]));
+                    (int) $array[$custom_field]));
         }
     }
 

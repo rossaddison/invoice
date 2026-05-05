@@ -23,7 +23,7 @@ final class PostalAddressEntityTest extends Unit
     {
         $postalAddress = new PostalAddress();
         
-        $this->assertFalse($postalAddress->isPersisted());
+        $this->assertFalse($postalAddress->hasIdentity());
         $this->assertNull($postalAddress->getClientId());
         $this->assertSame('', $postalAddress->getStreetName());
         $this->assertSame('', $postalAddress->getAdditionalStreetName());

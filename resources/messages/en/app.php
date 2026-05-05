@@ -2104,6 +2104,8 @@ prior to importing and no existing documents e.g. Invoices.',
   'recent.quotes' => 'Recent Quotes',
   'record.successfully.created' =>
     'Record successfully created',
+  'record.successfully.created.not' =>
+    'Record NOT successfully created', 
   'record.successfully.deleted' =>
     'Record successfully deleted',
   'record.successfully.updated' =>

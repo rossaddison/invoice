@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\User;
 
+use App\Infrastructure\Persistence\User\User;
 use Yiisoft\Access\AccessCheckerInterface;
 use Yiisoft\User\CurrentUser;
 
@@ -23,7 +24,7 @@ final readonly class UserService
     {
         $userId = $this->currentUser->getId();
         if (null !== $userId) {
-            return $this->repository->findById($userId);
+            return $this->repository->findById((int) $userId);
         }
         return null;
     }

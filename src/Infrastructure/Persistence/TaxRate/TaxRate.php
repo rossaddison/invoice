@@ -43,7 +43,7 @@ class TaxRate
         return $this->requireId($this->id, 'TaxRate');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductImage;
 
-use App\Invoice\Entity\ProductImage;
+use App\Infrastructure\Persistence\ProductImage\ProductImage;
 use App\Invoice\Product\ProductRepository as PR;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Files\FileHelper;
@@ -58,7 +58,7 @@ final readonly class ProductImageService
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
-                (string) $array[$product]);
+                (int) $array[$product]);
             if ($productEntity) {
                 $model->setProduct($productEntity);
             }

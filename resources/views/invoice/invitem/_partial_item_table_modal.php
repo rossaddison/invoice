@@ -26,15 +26,15 @@ use Yiisoft\Html\Html;
         </tr>
         <?php
             /**
-             * @var App\Invoice\Entity\InvItem $invItem
+             * @var App\Infrastructure\Persistence\InvItem\InvItem $invItem
              */
             foreach ($invItems as $invItem) { ?>
             <tr class="product">
                 <td class="text-left">
-                    <input type="checkbox" name="item_ids[]" value="<?php echo $invItem->getId();?>">
+                    <input type="checkbox" name="item_ids[]" value="<?php echo $invItem->reqId();?>">
                 </td>
                 <td nowrap class="text-left">
-                    <b><?= Html::encode($invItem->getId()); ?></b>
+                    <b><?= Html::encode($invItem->reqId()); ?></b>
                 </td>
                 <td nowrap class="text-left">
                     <b><?= Html::encode($invItem->getProduct() ? $invItem->getProduct()?->getProductSku() : ''); ?></b>

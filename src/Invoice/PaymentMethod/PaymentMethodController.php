@@ -6,7 +6,7 @@ namespace App\Invoice\PaymentMethod;
 
 use App\Auth\Permissions;
 use App\Invoice\BaseController;
-use App\Invoice\Entity\PaymentMethod;
+use App\Infrastructure\Persistence\PaymentMethod\PaymentMethod;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -68,7 +68,7 @@ final class PaymentMethodController extends BaseController
      */
     public function add(Request $request, FormHydrator $formHydrator): Response
     {
-        $form = new PaymentMethodForm(new PaymentMethod());
+        $form = new PaymentMethodForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'paymentmethod/add',
@@ -106,11 +106,11 @@ final class PaymentMethodController extends BaseController
     ): Response {
         $payment_method = $this->paymentmethod($currentRoute, $paymentmethodRepository);
         if ($payment_method) {
-            $form = new PaymentMethodForm($payment_method);
+            $form = PaymentMethodForm::show($payment_method);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'paymentmethod/edit',
-                'actionArguments' => ['id' => $payment_method->getId()],
+                'actionArguments' => ['id' => $payment_method->reqId()],
                 'errors' => [],
                 'form' => $form,
             ];
@@ -162,15 +162,15 @@ final class PaymentMethodController extends BaseController
     {
         $payment_method = $this->paymentmethod($currentRoute, $paymentmethodRepository);
         if ($payment_method) {
-            $form = new PaymentMethodForm($payment_method);
+            $form = PaymentMethodForm::show($payment_method);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'paymentmethod/view',
-                'actionArguments' => ['id' => $payment_method->getId()],
+                'actionArguments' => ['id' => $payment_method->reqId()],
                 'form' => $form,
                 'paymentmethod' =>
                     $paymentmethodRepository->repoPaymentMethodquery(
-                            $payment_method->getId()),
+                            $payment_method->reqId()),
             ];
             return $this->webViewRenderer->render('_view', $parameters);
         }
@@ -189,19 +189,15 @@ final class PaymentMethodController extends BaseController
     }
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param PaymentMethodRepository $paymentmethodRepository
+     * @param CurrentRoute $curR
+     * @param PaymentMethodRepository $pmR
      * @return PaymentMethod|null
      */
     private function paymentmethod(
-        CurrentRoute $currentRoute,
-        PaymentMethodRepository $paymentmethodRepository,
+        CurrentRoute $curR,
+        PaymentMethodRepository $pmR,
     ): ?PaymentMethod {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $paymentmethodRepository->repoPaymentMethodquery($id);
-        }
-        return null;
+        return $pmR->repoPaymentMethodquery((int) $curR->getArgument('id'));
     }
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Widget;
 
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Invoice\InvAmount\InvAmountRepository;
 use App\Invoice\Setting\SettingRepository;
 use Yiisoft\Html\Html;
@@ -47,15 +47,15 @@ final readonly class ButtonsToolbarFull
         bool $isRecurring = false,
         bool $paymentCfExist = false,
     ): string {
-        $invId = $inv->getId();
+        $invId = $inv->reqId();
         $primaryButtons = [];
 
         // View originating quote (if exists)
-        if (!empty($inv->getQuoteId()) && $inv->getQuoteId() !== '0') {
+        if (($quoteId = $inv->getQuoteId()) > 0) {
             $primaryButtons[] = $this->createButton(
                 'view-quote',
                 $this->urlGenerator->generate('quote/view',
-                    ['id' => $inv->getQuoteId()]),
+                    ['id' => $quoteId]),
                 'fa-file-text-o',
                 'btn-info',
                 $this->translator->translate('view')
@@ -110,10 +110,10 @@ final readonly class ButtonsToolbarFull
         }
 
         // Payment Entry
-        $invAmount = $iaR->repoInvAmountcount((int) $invId) > 0 ?
-            $iaR->repoInvquery((int) $invId) : null;
+        $invAmount = $iaR->repoInvAmountcount($invId) > 0 ?
+            $iaR->repoInvquery($invId) : null;
         if ($invAmount && $invAmount->getBalance() >= 0.00
-            && $inv->getStatusId() !== 1 && $invEdit) {
+            && $inv->reqStatusId() !== 1 && $invEdit) {
             $primaryButtons[] = $this->createButton(
                 'payment',
                 $this->urlGenerator->generate('payment/add'),
@@ -133,7 +133,7 @@ final readonly class ButtonsToolbarFull
         }
 
         // Credit Invoice Creation
-        if (($read_only === true || $inv->getStatusId() === 4)
+        if (($read_only === true || $inv->reqStatusId() === 4)
                 && $invEdit
                 && !(int) $inv->getCreditinvoiceParentId() > 0) {
             $primaryButtons[] = $this->createModalButton(
@@ -171,14 +171,14 @@ final readonly class ButtonsToolbarFull
         array $enabledGateways,
         string $vat,
     ): array {
-        $invId = $inv->getId();
+        $invId = $inv->reqId();
         $buttons = [];
 
         // Tax and Allowance/Charge buttons
         if ($invEdit
             && $vat === '0'
             // Only allow adding if the invoice is in draft mode
-            && $inv->getStatusId() == 1) {
+            && $inv->reqStatusId() == 1) {
             $buttons[] = $this->createModalButton(
                 'add-tax',
                 '#add-inv-tax',
@@ -190,7 +190,7 @@ final readonly class ButtonsToolbarFull
 
         if ($invEdit
             // Only allow adding if the invoice is in draft mode
-            && $inv->getStatusId() == 1) {
+            && $inv->reqStatusId() == 1) {
             $buttons[] = $this->createModalButton(
                 'allowance-charge',
                 '#add-inv-allowance-charge',
@@ -201,7 +201,7 @@ final readonly class ButtonsToolbarFull
         }
 
         // PEPPOL features
-        if ($invEdit && $inv->getSoId()) {
+        if ($invEdit && ($inv->getSoId() > 0)) {
             $buttons[] = $this->createWindowButton(
                 'peppol',
                 $this->urlGenerator->generate('inv/peppol', ['id' => $invId]),
@@ -218,7 +218,7 @@ final readonly class ButtonsToolbarFull
                 $this->urlGenerator->generate('del/add',
                     // Arguments
                     [
-                        'client_id' => $inv->getClientId(),
+                        'client_id' => $inv->reqClientId(),
                     ],
                     // QueryParameters
                     [
@@ -343,11 +343,11 @@ final readonly class ButtonsToolbarFull
 
     private function canDeleteInvoice(Inv $inv, bool $invEdit): bool
     {
-        return ($inv->getStatusId() === 1
+        return ($inv->reqStatusId() === 1
                 && $this->settingRepository->getSetting(
                     'enable_invoice_deletion') === '1'
                 && $inv->getIsReadOnly() === false
-                && !$inv->getSoId()
+                && !($inv->getSoId() > 0)
                 && $invEdit);
     }
 
@@ -502,7 +502,7 @@ final readonly class ButtonsToolbarFull
                 ->render();
         }
 
-        $statusClass = match ($inv->getStatusId()) {
+        $statusClass = match ($inv->reqStatusId()) {
             1 => 'bg-secondary',
             2 => 'bg-info',
             3 => 'bg-warning',
@@ -511,7 +511,7 @@ final readonly class ButtonsToolbarFull
             default => 'bg-light',
         };
 
-        $statusText = match ($inv->getStatusId()) {
+        $statusText = match ($inv->reqStatusId()) {
             1 => '📝 ' . $this->translator->translate('draft'),
             2 => '📤 ' . $this->translator->translate('sent'),
             3 => '👁 ' . $this->translator->translate('viewed'),

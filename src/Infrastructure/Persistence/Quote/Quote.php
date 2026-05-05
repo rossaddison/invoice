@@ -10,7 +10,7 @@ use App\Infrastructure\Persistence\{
 };
 use App\Invoice\Quote\QuoteRepository;
 use App\Invoice\Setting\SettingRepository as sR;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Relation\BelongsTo;
@@ -101,7 +101,7 @@ class Quote
         return $this->requireId($this->id, 'Quote');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

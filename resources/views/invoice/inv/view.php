@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Option;
 
 /**
- * @var App\Invoice\Entity\Inv $inv
+ * @var App\Infrastructure\Persistence\Inv\Inv $inv
  * @var App\Invoice\Inv\InvForm $form
  * @var App\Invoice\InvAmount\InvAmountRepository $iaR
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
@@ -113,7 +113,7 @@ if (!empty($payments)) {
       echo H::closeTag('thead');
       echo H::closeTag('tbody');
       /**
-       * @var App\Invoice\Entity\Payment $payment
+       * @var App\Infrastructure\Persistence\Payment\Payment  $payment
        */
       foreach ($payments as $payment) {
         echo H::openTag('tr');
@@ -134,7 +134,7 @@ if (!empty($payments)) {
      echo H::closeTag('table');
     echo H::closeTag('div');
 }
-if ($readOnly === false && $invEdit && $inv->getStatusId() === 1) {
+if ($readOnly === false && $invEdit && $inv->reqStatusId() === 1) {
     echo '<br>';
     echo '<br>';
     echo H::openTag('ul', ['id' => 'product-tabs',
@@ -227,13 +227,13 @@ echo H::tag('input', '', [
   echo H::openTag('h1', ['class' => 'headerbar-title']);
    echo H::encode($translator->translate('invoice')) . ' ';
    echo H::encode(strlen($inv->getNumber() ?? '') > 0 ?
-        ' #' . ($inv->getNumber() ?? ' #') : $inv->getId());
+        ' #' . ($inv->getNumber() ?? ' #') : $inv->reqId());
   echo H::closeTag('h1');
  echo H::closeTag('div');
 // Toolbar
 echo $buttonsToolbarFull;
  echo H::openTag('div', ['class' => 'headerbar-item pull-left' .
-    ($inv->getIsReadOnly() === false || $inv->getStatusId() !== 4 ? ' btn-group' : '')]);
+    ($inv->getIsReadOnly() === false || $inv->reqStatusId() !== 4 ? ' btn-group' : '')]);
   echo H::openTag('div', ['class' => 'dropdown']);
    echo H::openTag('button', [
        'class' => 'btn btn-primary dropdown-toggle',
@@ -247,12 +247,12 @@ echo $buttonsToolbarFull;
 // Options...Edit
 if ($showButtons
         && $invEdit
-        && strlen($inv->getQuoteId()) === 0
+        && null === $inv->getQuoteId()
 // Only allow the editing of the invoice if not connected to a salesorder
-        && strlen($inv->getSoId()) === 0) {
+        && null === $inv->getSoId()) {
     echo H::openTag('li');
      echo H::openTag('a', [
-         'href' => $urlGenerator->generate('inv/edit', ['id' => $inv->getId()]),
+         'href' => $urlGenerator->generate('inv/edit', ['id' => $inv->reqId()]),
          'style' => 'text-decoration:none'
      ]);
       echo H::openTag('i', ['class' => 'bi-pencil-square']);
@@ -290,7 +290,7 @@ if ($showButtons
 //if ($showButtons && $invEdit) {
     echo H::openTag('li');
      echo H::openTag('a', [
-         'href' => $urlGenerator->generate('inv/peppol', ['id' => $inv->getId()]),
+         'href' => $urlGenerator->generate('inv/peppol', ['id' => $inv->reqId()]),
          'style' => 'text-decoration:none'
      ]);
       echo H::openTag('i', ['class' => 'bi bi-window-stack']);
@@ -301,7 +301,7 @@ if ($showButtons
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/peppolStreamToggle',
-                 ['id' => $inv->getId()]),
+                 ['id' => $inv->reqId()]),
          'style' => 'text-decoration:none'
      ]);
       echo H::openTag('i', [
@@ -317,7 +317,7 @@ if ($showButtons
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/peppolDocCurrencyToggle',
-                 ['id' => $inv->getId()]),
+                 ['id' => $inv->reqId()]),
          'style' => 'text-decoration:none'
      ]);
       echo H::openTag('i', [
@@ -349,7 +349,7 @@ if ($showButtons
     echo H::closeTag('li');
     echo H::openTag('li');
      echo H::openTag('a', [
-         'href' => $urlGenerator->generate('inv/storecove', ['id' => $inv->getId()]),
+         'href' => $urlGenerator->generate('inv/storecove', ['id' => $inv->reqId()]),
          'style' => 'text-decoration:none',
          'target' => '_blank'
      ]);
@@ -362,9 +362,9 @@ if ($showButtons
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('del/add',
-            ['client_id' => $inv->getClientId()],
+            ['client_id' => $inv->reqClientId()],
                  ['origin' => 'inv',
-                     'origin_id' => $inv->getId(), 'action' => 'view'],''),
+                     'origin_id' => $inv->reqId(), 'action' => 'view'],''),
          'style' => 'text-decoration:none'
      ]);
       echo H::openTag('i', ['class' => 'bi-plus']);
@@ -384,14 +384,14 @@ if ($showButtons
                      * run from src\Invoice\Asset\rebuild-1.1.3\inv.js
                      * create-credit-confirm
                      */
-                    if (($readOnly === true || $inv->getStatusId() === 4)
+                    if (($readOnly === true || $inv->reqStatusId() === 4)
                         && $invEdit
-                        && !(int) $inv->getCreditinvoiceParentId() > 0) {
+                        && null === $inv->getCreditinvoiceParentId()) {
         echo H::openTag('li');
          echo H::openTag('a', [
              'href' => '#create-credit-inv',
              'data-bs-toggle' => 'modal',
-             'data-invoice-id' => $inv->getId(),
+             'data-invoice-id' => $inv->reqId(),
              'style' => 'text-decoration:none'
          ]);
           echo H::openTag('i', ['class' => 'bi bi-dash-lg']);
@@ -402,20 +402,20 @@ if ($showButtons
     }
 // Options ... Enter Payment
 /**
- * @var App\Invoice\Entity\InvAmount $inv_amount
+ * @var App\Infrastructure\Persistence\InvAmount\InvAmount $inv_amount
  */
-$inv_amount = ($iaR->repoInvAmountcount((int) $inv->getId()) > 0 ?
-        $iaR->repoInvquery((int) $inv->getId()) : '');
+$inv_amount = ($iaR->repoInvAmountcount($inv->reqId()) > 0 ?
+        $iaR->repoInvquery($inv->reqId()) : '');
 // If there is a balance outstanding and the invoice is not a draft ie. at
 // least sent, allow a payment to be allocated against it.
 $invAmountBalance = $inv_amount->getBalance();
-if ($invAmountBalance >= 0.00 && $inv->getStatusId() !== 1 && $invEdit) :
+if ($invAmountBalance >= 0.00 && $inv->reqStatusId() !== 1 && $invEdit) :
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('payment/add'),
          'style' => 'text-decoration:none',
          'class' => 'invoice-add-payment',
-         'data-invoice-id' => H::encode($inv->getId()),
+         'data-invoice-id' => H::encode($inv->reqId()),
          'data-invoice-balance' => H::encode($invAmountBalance),
          'data-invoice-payment-method' => H::encode($inv->getPaymentMethod()),
          'data-payment-cf-exisst' => H::encode($paymentCfExist)
@@ -429,7 +429,7 @@ endif;
 // Options ... Pay Now
 // Show the pay now button if not a draft and the user has viewPayment
 // permission ie. not editPayment permission
-if ((in_array($inv->getStatusId(), [2, 3])
+if ((in_array($inv->reqStatusId(), [2, 3])
         && $invAmountBalance > 0)
         && $paymentView) {
     /**
@@ -476,7 +476,7 @@ if ((in_array($inv->getStatusId(), [2, 3])
         echo H::closeTag('li');
     }
 }
-if ((in_array($inv->getStatusId(), [1]))) {
+if ((in_array($inv->reqStatusId(), [1]))) {
     echo H::openTag('li');
         echo H::openTag('a', [
                 'href' => '#modal-message-inv',
@@ -544,7 +544,7 @@ if ($invEdit) {
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('invrecurring/add',
-                 ['inv_id' => $inv->getId()]),
+                 ['inv_id' => $inv->reqId()]),
          'style' => 'text-decoration:none'
      ]);
       echo H::openTag('i', ['class' => 'bi bi-arrow-clockwise']);
@@ -557,7 +557,7 @@ if ($invEdit) {
     echo H::openTag('li');
      echo H::openTag('a', [
          'href' => $urlGenerator->generate('inv/emailStage0',
-                 ['id' => $inv->getId()]),
+                 ['id' => $inv->reqId()]),
          'style' => 'text-decoration:none'
      ]);
       echo H::openTag('i', ['class' => 'bi bi-send']);
@@ -615,11 +615,11 @@ if ($invEdit) {
 // sales order
 
 // Options ... Delete Invoice
-if ($inv->getStatusId() === 1
+if ($inv->reqStatusId() === 1
         && $s->getSetting('enable_invoice_deletion') === '1'
         && $inv->getIsReadOnly() === false
-        && strlen($inv->getSoId()) === 0
-        && strlen($inv->getQuoteId()) === 0
+        && null === $inv->getSoId()
+        && null === $inv->getQuoteId()
         && $invEdit) {
     echo H::openTag('li');
      echo H::openTag('a', [
@@ -896,12 +896,12 @@ if ($inv->getPaymentMethod() !== 0) {
       ->value('0')
       ->content(H::encode($translator->translate('select.payment.method')));
     /**
-     * @var App\Invoice\Entity\PaymentMethod $payment_method
+     * @var App\Infrastructure\Persistence\PaymentMethod\PaymentMethod $payment_method
      */
     foreach ($payment_methods as $payment_method) {
         echo new Option()
-         ->value($payment_method->getId())
-         ->selected((string) $inv->getPaymentMethod() === $payment_method->getId())
+         ->value($payment_method->reqId())
+         ->selected($inv->getPaymentMethod() === $payment_method->reqId())
          ->content($payment_method->getName() ?? '');
     }
     echo H::closeTag('select');
@@ -919,7 +919,7 @@ if ($inv->getPaymentMethod() !== 0) {
 }
         echo H::closeTag('div');
 // Show originating quote button if invoice was created from a quote
-if ($inv->getQuoteId() !== '' && $inv->getQuoteId() !== '0') {
+if (null !== $inv->getQuoteId()) {
     echo H::openTag('div', ['class' => 'invoice-properties']);
      echo H::openTag('label', ['for' => 'quote-view-url']);
       echo H::openTag('b');
@@ -937,12 +937,12 @@ if ($inv->getQuoteId() !== '' && $inv->getQuoteId() !== '0') {
        echo H::closeTag('i');
        echo ' '
             . $translator->translate('invoice.created.from.quote')
-            . ' #' . $inv->getQuoteId();
+            . ' #' . (string) $inv->getQuoteId();
       echo H::closeTag('a');
      echo H::closeTag('div');
     echo H::closeTag('div');
 }
-if (($inv->getStatusId() !== 1) && ($invEdit)) {
+if (($inv->reqStatusId() !== 1) && ($invEdit)) {
     echo H::openTag('div', ['class' => 'invoice-properties']);
      echo H::openTag('label', ['for' => 'inv_password']);
       echo H::openTag('b');
@@ -999,8 +999,8 @@ $statusImages = [
     12 => ['/img/creditnote.png', 'credit.invoice.for.invoice'],
     13 => ['/img/writtenoff.png', 'loss']
 ];
-$statusId = $inv->getStatusId();
-if ($statusId !== null && isset($statusImages[$statusId])) {
+$statusId = $inv->reqStatusId();
+if (isset($statusImages[$statusId])) {
     $statusInfo = $statusImages[$statusId];
     echo H::tag('img', '', [
         'src' => $statusInfo[0],
@@ -1008,7 +1008,7 @@ if ($statusId !== null && isset($statusImages[$statusId])) {
     ]);
 }
     echo H::closeTag('div');
-if (!empty($inv->getSoId())) {
+if (null !== $inv->getSoId()) {
     echo H::openTag('div');
      echo $translator->translate('salesorder');
     echo H::closeTag('div');

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Payment;
+use App\Infrastructure\Persistence\Payment\Payment;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -40,7 +40,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Payment $model): string => Html::encode($model->getId()),
+        content: static fn (Payment $model): string => Html::encode($model->reqId()),
     ),
     new DataColumn(
         property: 'paymentDateFilter',
@@ -69,7 +69,7 @@ $columns = [
         'inv_id',
         header: $translator->translate('invoice'),
         content: static function (Payment $model) use ($urlGenerator): A {
-            return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->getInvId()]), ['style' => 'text-decoration:none']);
+            return Html::a($model->getInv()?->getNumber() ?? '', $urlGenerator->generate('inv/view', ['id' => $model->reqInvId()]), ['style' => 'text-decoration:none']);
         },
         encodeContent: false,
     ),
@@ -77,7 +77,7 @@ $columns = [
         'inv_id',
         header: $translator->translate('total'),
         content: static function (Payment $model) use ($s, $iaR): string {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInvId()) > 0) ? $iaR->repoInvquery((int) $model->getInvId()) : null);
+            $inv_amount = (($iaR->repoInvAmountCount($model->reqInvId()) > 0) ? $iaR->repoInvquery($model->reqInvId()) : null);
             return $s->formatCurrency(null !== $inv_amount ? $inv_amount->getTotal() : 0.00);
         },
         encodeContent: false,
@@ -85,7 +85,7 @@ $columns = [
     new DataColumn(
         header: $translator->translate('paid'),
         content: static function (Payment $model) use ($s, $iaR): string {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInvId()) > 0) ? $iaR->repoInvquery((int) $model->getInvId()) : null);
+            $inv_amount = (($iaR->repoInvAmountCount($model->reqInvId()) > 0) ? $iaR->repoInvquery($model->reqInvId()) : null);
             return $s->formatCurrency(null !== $inv_amount ? $inv_amount->getPaid() : 0.00);
         },
         encodeContent: false,
@@ -94,7 +94,7 @@ $columns = [
         'id',
         header: $translator->translate('balance'),
         content: static function (Payment $model) use ($s, $iaR): string {
-            $inv_amount = (($iaR->repoInvAmountCount((int) $model->getInvId()) > 0) ? $iaR->repoInvquery((int) $model->getInvId()) : null);
+            $inv_amount = (($iaR->repoInvAmountCount($model->reqInvId()) > 0) ? $iaR->repoInvquery($model->reqInvId()) : null);
             return $s->formatCurrency(null !== $inv_amount ? $inv_amount->getBalance() : 0.00);
         },
         encodeContent: false,

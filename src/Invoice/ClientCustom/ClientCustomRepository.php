@@ -82,10 +82,10 @@ final class ClientCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return ClientCustom|null
      */
-    public function repoClientCustomquery(string $id): ?ClientCustom
+    public function repoClientCustomquery(int $id): ?ClientCustom
     {
         $query = $this->select()
                       ->load('client')
@@ -95,10 +95,10 @@ final class ClientCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
+     * @param int $client_id
      * @return int
      */
-    public function repoClientCount(string $client_id): int
+    public function repoClientCount(int $client_id): int
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id]);
@@ -106,11 +106,11 @@ final class ClientCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
-     * @param string $custom_field_id
+     * @param int $client_id
+     * @param int $custom_field_id
      * @return ClientCustom|null
      */
-    public function repoFormValuequery(string $client_id, string $custom_field_id): ?ClientCustom
+    public function repoFormValuequery(int $client_id, int $custom_field_id): ?ClientCustom
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id])
@@ -119,11 +119,11 @@ final class ClientCustomRepository extends Select\Repository
     }
 
     /**
-     * @param string $client_id
-     * @param string $custom_field_id
+     * @param int $client_id
+     * @param int $custom_field_id
      * @return int
      */
-    public function repoClientCustomCount(string $client_id, string $custom_field_id): int
+    public function repoClientCustomCount(int $client_id, int $custom_field_id): int
     {
         $query = $this->select()
                       ->where(['client_id' => $client_id])
@@ -136,7 +136,7 @@ final class ClientCustomRepository extends Select\Repository
      *
      * @psalm-return EntityReader
      */
-    public function repoFields(string $client_id): EntityReader
+    public function repoFields(int $client_id): EntityReader
     {
         $query = $this->select()->where(['client_id' => $client_id]);
         return $this->prepareDataReader($query);

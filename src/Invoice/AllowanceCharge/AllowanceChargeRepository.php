@@ -91,11 +91,11 @@ final class AllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return AllowanceCharge|null
      */
-    public function repoAllowanceChargequery(string $id): ?AllowanceCharge
+    public function repoAllowanceChargequery(int $id): ?AllowanceCharge
     {
         $query = $this->select()
                       ->load('tax_rate')
@@ -104,10 +104,10 @@ final class AllowanceChargeRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

@@ -49,7 +49,7 @@ class Task
         return $this->requireId($this->id, 'Task');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

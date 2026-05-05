@@ -12,7 +12,7 @@ use Brick\Money\CurrencyConverter;
 // Use settings/view/peppol to manually load the exchange rate for today via:
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
 use Brick\Money\Money;
-use App\Invoice\Entity\Setting;
+use App\Infrastructure\Persistence\Setting\Setting;
 use App\Infrastructure\Persistence\Company\Company;
 use App\Infrastructure\Persistence\CompanyPrivate\CompanyPrivate;
 use App\Invoice\Company\CompanyRepository as compR;
@@ -470,10 +470,10 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @param string $setting_id
+     * @param int $setting_id
      * @return Setting|null
      */
-    public function repoSettingquery(string $setting_id): ?Setting
+    public function repoSettingquery(int $setting_id): ?Setting
     {
         $query = $this
             ->select()
@@ -701,7 +701,7 @@ final class SettingRepository extends Select\Repository
              * @var CompanyPrivate $private
              */
             foreach ($this->compPR->findAllPreloaded() as $private) {
-                if ($private->getCompanyId() == (string) $company->reqId()) {
+                if ($private->reqCompanyId() === $company->reqId()) {
                     // site's logo: take the first logo where the current date
                     //  falls within the logo's start and end dates
                     if ($private->getStartDate()?->format('Y-m-d') 
@@ -1043,16 +1043,16 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @param string $invoice_id
+     * @param int $invoice_id
      * @param IR $iR
      */
-    public function invoiceMarkViewed(string $invoice_id, IR $iR): void
+    public function invoiceMarkViewed(int $invoice_id, IR $iR): void
     {
         $invoice = $iR->repoInvUnloadedquery($invoice_id);
         if ($invoice) {
             //mark as viewed if status is 2
             if (($iR->repoCount($invoice_id) > 0)
-                    && $invoice->getStatusId() === 2) {
+                    && $invoice->reqStatusId() === 2) {
                 //set the invoice to viewed status ie 3
                 $invoice->setStatusId(3);
                 $iR->save($invoice);
@@ -1088,36 +1088,34 @@ final class SettingRepository extends Select\Repository
     }
 
     /**
-     * @param string|null $invoice_id
+     * @param int $invoice_id
      */
-    public function invoiceMarkSent(?string $invoice_id, IR $iR): void
+    public function invoiceMarkSent(int $invoice_id, IR $iR): void
     {
-        if (null !== $invoice_id) {
-            $invoice = $iR->repoInvUnloadedquery($invoice_id);
-            if ($invoice) {
-                //draft->sent->view->paid
-                //set the invoice to sent ie. 2
-                if ($invoice->getStatusId() === 1) {
-                    $invoice->setStatusId(2);
-                }
-                //set the invoice to read only ie. not updateable,
-                // if invoice_status_id is 2
-                if (null !== $this->withKey('read_only_toggle')) {
-                    if ($this->withKey(
-                            'read_only_toggle')?->getSettingValue() === '2') {
-                        $invoice->setIsReadOnly(true);
-                    }
-                }
-                $iR->save($invoice);
+        $invoice = $iR->repoInvUnloadedquery($invoice_id);
+        if ($invoice) {
+            //draft->sent->view->paid
+            //set the invoice to sent ie. 2
+            if ($invoice->reqStatusId() === 1) {
+                $invoice->setStatusId(2);
             }
+            //set the invoice to read only ie. not updateable,
+            // if invoice_status_id is 2
+            if (null !== $this->withKey('read_only_toggle')) {
+                if ($this->withKey(
+                        'read_only_toggle')?->getSettingValue() === '2') {
+                    $invoice->setIsReadOnly(true);
+                }
+            }
+            $iR->save($invoice);
         }
     }
 
     /**
-     * @param int|null $quote_id
+     * @param int $quote_id
      * @param QR $qR
      */
-    public function quoteMarkSent(?int $quote_id, QR $qR): void
+    public function quoteMarkSent(int $quote_id, QR $qR): void
     {
         // Quote exists and has a status of 1 ie. draft
         if ($qR->repoQuoteStatuscount($quote_id, 1) > 0) {

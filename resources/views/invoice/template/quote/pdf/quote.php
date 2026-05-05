@@ -135,15 +135,14 @@ if (strlen($clientPhone = $quote->getClient()?->getClientPhone() ?? '') > 0) {
         <?php
 if ($items) {
     /**
-     * @var App\Invoice\Entity\InvItem $item
+     * @var App\Infrastructure\Persistence\InvItem\InvItem $item
      */
     foreach ($items as $item) {
-        $quote_item_amount = $qiaR->repoQuoteItemAmountquery((int) $item->getId());
+        $quote_item_amount = $qiaR->repoQuoteItemAmountquery($item->reqId());
         // Display item-level allowances/charges BEFORE the item
         // if Peppol is enabled
         if ($s->getSetting('enable_peppol') == '1') {
-            $itemId = $item->getId();
-            if (null !== $itemId) {
+            $itemId = $item->reqId();
             $quoteItemAllowanceCharges =
                 $acqiR->repoQuoteItemquery($itemId);
             /**
@@ -209,7 +208,6 @@ if ($items) {
                 </td>
             </tr>
         <?php
-            }
             }
         }
         ?>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\UnitPeppol;
 
-use App\Invoice\Entity\UnitPeppol;
+use App\Infrastructure\Persistence\UnitPeppol\UnitPeppol;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -89,11 +89,11 @@ final class UnitPeppolRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @psalm-return TEntity|null
      * @return UnitPeppol|null
      */
-    public function repoUnitPeppolLoadedquery(string $id): ?UnitPeppol
+    public function repoUnitPeppolLoadedquery(int $id): ?UnitPeppol
     {
         $query = $this->select()
                       ->load('unit')
@@ -102,17 +102,17 @@ final class UnitPeppolRepository extends Select\Repository
     }
 
     /**
-     * @param string $unit_id
+     * @param int $unit_id
      * @return int
      */
-    public function repoUnitCount(string $unit_id): int
+    public function repoUnitCount(int $unit_id): int
     {
         $query = $this->select()
                       ->where(['unit_id' => $unit_id]);
         return $query->count();
     }
 
-    public function repoUnit(string $unit_id): ?UnitPeppol
+    public function repoUnit(int $unit_id): ?UnitPeppol
     {
         $query = $this->select()
                       ->where(['unit_id' => $unit_id]);
@@ -120,10 +120,10 @@ final class UnitPeppolRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return int
      */
-    public function repoCount(string $id): int
+    public function repoCount(int $id): int
     {
         $query = $this->select()
                       ->where(['id' => $id]);

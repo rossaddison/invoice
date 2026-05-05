@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\ProductProperty;
+use App\Infrastructure\Persistence\ProductProperty\ProductProperty;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Div;
@@ -37,7 +37,7 @@ $columns = [
         'id',
         header: $translator->translate('id'),
         content: static function (ProductProperty $model): string {
-            return (string) $model->getPropertyId();
+            return (string) $model->reqId();
         },
     ),
     new DataColumn(
@@ -53,13 +53,13 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (ProductProperty $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('productproperty/view', ['id' => $model->getPropertyId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('productproperty/view', ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (ProductProperty $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil']), $urlGenerator->generate('productproperty/edit', ['id' => $model->getPropertyId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi bi-pencil']), $urlGenerator->generate('productproperty/edit', ['id' => $model->reqId()]), []);
         },
     ),
     new DataColumn(
@@ -72,10 +72,14 @@ $columns = [
                     [
                         'type' => 'submit',
                         'class' => 'dropdown-button',
-                        'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
+                        'onclick' => "return confirm("
+                        . "'"
+                        . $translator->translate('delete.record.warning')
+                        . "');",
                     ],
                 ),
-                $urlGenerator->generate('productproperty/delete', ['id' => $model->getPropertyId()]),
+                $urlGenerator->generate('productproperty/delete',
+                        ['id' => $model->reqId()]),
                 [],
             );
         },

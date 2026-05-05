@@ -153,7 +153,7 @@ final class CategorySecondaryController extends BaseController
     private function categorysecondary(CategorySecondaryRepository $categorySecondaryRepository, int $id): ?CategorySecondary
     {
         if ($id) {
-            return $categorySecondaryRepository->repoCategorySecondaryLoadedQuery((string) $id);
+            return $categorySecondaryRepository->repoCategorySecondaryLoadedQuery($id);
         }
         return null;
     }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvTaxRate;
 
-use App\Invoice\Entity\InvTaxRate;
+use App\Infrastructure\Persistence\{
+    InvTaxRate\InvTaxRate
+};
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 
@@ -17,12 +19,14 @@ final class InvTaxRateForm extends FormModel
     #[Required]
     private ?float $inv_tax_rate_amount = null;
 
-    public function __construct(InvTaxRate $invTaxRate)
+    public static function show(InvTaxRate $invTaxRate): self
     {
-        $this->inv_id = $invTaxRate->getInvId();
-        $this->tax_rate_id = $invTaxRate->getTaxRateId();
-        $this->include_item_tax = $invTaxRate->getIncludeItemTax();
-        $this->inv_tax_rate_amount = $invTaxRate->getInvTaxRateAmount();
+        $form = new self();
+        $form->inv_id = (string) $invTaxRate->reqInvId();
+        $form->tax_rate_id = (string) $invTaxRate->reqTaxRateId();
+        $form->include_item_tax = $invTaxRate->getIncludeItemTax();
+        $form->inv_tax_rate_amount = $invTaxRate->getInvTaxRateAmount();
+        return $form;
     }
 
     public function getInvId(): ?string

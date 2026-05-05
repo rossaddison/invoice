@@ -23,7 +23,7 @@ final class EmailTemplateEntityTest extends Unit
     {
         $emailTemplate = new EmailTemplate();
         
-        $this->assertFalse($emailTemplate->isPersisted());
+        $this->assertFalse($emailTemplate->hasIdentity());
         $this->assertSame('', $emailTemplate->getEmailTemplateTitle());
         $this->assertSame('', $emailTemplate->getEmailTemplateType());
         $this->assertSame('', $emailTemplate->getEmailTemplateBody());
@@ -49,7 +49,7 @@ final class EmailTemplateEntityTest extends Unit
             'invoice_template.pdf'
         );
         
-        $this->assertFalse($emailTemplate->isPersisted());
+        $this->assertFalse($emailTemplate->hasIdentity());
         $this->assertSame($this->invoiceTemplate, $emailTemplate->getEmailTemplateTitle());
         $this->assertSame('invoice', $emailTemplate->getEmailTemplateType());
         $this->assertSame('<p>Your invoice is ready</p>', $emailTemplate->getEmailTemplateBody());
@@ -65,7 +65,7 @@ final class EmailTemplateEntityTest extends Unit
     {
         $emailTemplate = new EmailTemplate();
 
-        $this->assertFalse($emailTemplate->isPersisted());
+        $this->assertFalse($emailTemplate->hasIdentity());
     }
 
     public function testTitleSetterAndGetter(): void

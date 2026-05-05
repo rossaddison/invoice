@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\QuoteItem;
 
-use App\Infrastructure\Persistence\QuoteItemAmount\QuoteItemAmount;
-use App\Infrastructure\Persistence\Task\Task;
-use App\Infrastructure\Persistence\QuoteItem\QuoteItem;
+use App\Infrastructure\Persistence\{
+    QuoteItemAmount\QuoteItemAmount, Task\Task, QuoteItem\QuoteItem
+};
 use App\Invoice\
 {
     Product\ProductRepository as PR,
@@ -52,7 +52,7 @@ final readonly class QuoteItemService
         }
         if (isset($array['tax_rate_id'])) {
             $tax_rate = $this->tRR->repoTaxRatequery(
-                (string) $array['tax_rate_id']
+                (int) $array['tax_rate_id']
             );
             if ($tax_rate) {
                 $model->setTaxRate($tax_rate);
@@ -60,7 +60,7 @@ final readonly class QuoteItemService
         }
         if (isset($array['product_id'])) {
             $product = $this->pR->repoProductquery(
-                (string) $array['product_id']
+                (int) $array['product_id']
             );
             if ($product) {
                 $model->setProduct($product);
@@ -68,7 +68,7 @@ final readonly class QuoteItemService
         }
         if (isset($array['task_id'])) {
             $task = $this->taskR->repoTaskquery(
-                (string) $array['task_id']
+                (int) $array['task_id']
             );
             if ($task) {
                 $model->setTask($task);
@@ -110,13 +110,13 @@ final readonly class QuoteItemService
         $task_id =  (int) ($array['task_id'] ?? null);
         $model->setQuoteId((int) $quote_id);
         $product = $pr->repoProductquery(
-            (string) $array['product_id']
+            (int) $array['product_id']
         );
         $name = '';
         if ($product) {
             $model->setProductId($product_id);
             if (isset($array['product_id']) &&
-                $pr->repoCount((string) $product_id) > 0) {
+                $pr->repoCount($product_id) > 0) {
                 $name = $product->getProductName();
             }
             null !== $name ?
@@ -133,11 +133,11 @@ final readonly class QuoteItemService
                     $translator->translate('not.available')
                 );
         }
-        $task = $taskR->repoTaskquery((string) $array['task_id']);
+        $task = $taskR->repoTaskquery((int) $array['task_id']);
         if ($task) {
             $model->setTaskId($task_id);
             if (isset($array['task_id']) &&
-                $taskR->repoCount((string) $task_id) > 0) {
+                $taskR->repoCount($task_id) > 0) {
                 $name = $task->getName();
             }
             null !== $name ?
@@ -167,7 +167,7 @@ final readonly class QuoteItemService
         // Product_unit is a string which we get from unit's
         // name field using the unit_id
         $unit = $uR->repoUnitquery(
-            (string) $array['product_unit_id']
+            (int) $array['product_unit_id']
         );
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());
@@ -190,7 +190,7 @@ final readonly class QuoteItemService
                  * $this->acqiR in the function below which creates their
                  * accumulative totals and saves it using the $qiar.
                  */
-                (int) $model->getId(),
+                $model->reqId(),
                 (float) $array['quantity'],
                 (float) $array['price'],
                 (float) $array['discount_amount'],
@@ -234,12 +234,12 @@ final readonly class QuoteItemService
         $model->setProductId($product_id);
         $model->setQuoteId((int) $quote_id);
         $product = $pr->repoProductquery(
-            (string) $array['product_id']
+            (int) $array['product_id']
         );
         $name = '';
         if ($product) {
             if (isset($array['product_id']) &&
-                $pr->repoCount((string) $product_id) > 0) {
+                $pr->repoCount($product_id) > 0) {
                 $name = $product->getProductName();
             }
             null !== $name ?
@@ -269,7 +269,7 @@ final readonly class QuoteItemService
         // Product_unit is a string which we get from unit's
         // name field using the unit_id
         $unit = $uR->repoUnitquery(
-            (string) $array['product_unit_id']
+            (int) $array['product_unit_id']
         );
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());
@@ -293,7 +293,7 @@ final readonly class QuoteItemService
                  * accumulative totals and saves it using the $qiar.
                  */
                 $this->saveQuoteItemAmount(
-                    (int) $model->getId(),
+                    $model->reqId(),
                     (float) $array['quantity'],
                     (float) $array['price'],
                     (float) $array['discount_amount'],
@@ -340,7 +340,7 @@ final readonly class QuoteItemService
         $model->setQuoteId($quote_id);
 
         /** @var Task $task */
-        $task = $taskR->repoTaskquery((string) $array['task_id']);
+        $task = $taskR->repoTaskquery((int) $array['task_id']);
         $model->setName($task->getName() ?? '');
 
         // If the user has changed the description on the
@@ -378,7 +378,7 @@ final readonly class QuoteItemService
                  * accumulative totals and saves it using the $qiar.
                  */
                 $this->saveQuoteItemAmount(
-                    (int) $model->getId(),
+                    $model->reqId(),
                     (float) $array['quantity'],
                     (float) $array['price'],
                     (float) $array['discount_amount'],
@@ -423,7 +423,7 @@ final readonly class QuoteItemService
         $model->setTaxRateId((int) $tax_rate_id);
         isset($array['product_id']) ?
             $model->setProduct(
-                $model->getProduct()?->getProductId() ==
+                $model->getProduct()?->reqId() ==
                     (int) $array['product_id'] ?
                     $model->getProduct() : null
             ) : '';
@@ -436,11 +436,11 @@ final readonly class QuoteItemService
         );
         $model->setQuoteId((int) $quote_id);
         $product = $pr->repoProductquery(
-            (string) $array['product_id']
+            (int) $array['product_id']
         );
         if (null !== $product) {
             if (isset($array['product_id'])) {
-                $name = ($pr->repoCount((string) $product_id) > 0 ?
+                $name = ($pr->repoCount((int) $array['product_id']) > 0 ?
                     $product->getProductName() : '');
                 $model->setName($name ?? '');
                 // If the user has changed the description on the
@@ -466,7 +466,7 @@ final readonly class QuoteItemService
         // Product_unit is a string which we get from unit's
         // name field using the unit_id
         $unit = $uR->repoUnitquery(
-            (string) $array['product_unit_id']
+            (int) $array['product_unit_id']
         );
         if ($unit) {
             $model->setProductUnit($unit->getUnitName());
@@ -522,7 +522,7 @@ final readonly class QuoteItemService
         $model->setQuoteId((int) $quote_id);
 
         /** @var Task $task */
-        $task = $taskR->repoTaskquery((string) $array['task_id']);
+        $task = $taskR->repoTaskquery((int) $array['task_id']);
         if (isset($array['name'])) {
             $model->setName($task->getName() ?? '');
         }
@@ -564,7 +564,7 @@ final readonly class QuoteItemService
      */
     public function taxratePercentage(int $id, TRR $trr): ?float
     {
-        $taxrate = $trr->repoTaxRatequery((string) $id);
+        $taxrate = $trr->repoTaxRatequery($id);
         if ($taxrate) {
             return $taxrate->getTaxRatePercent();
         }

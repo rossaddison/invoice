@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
 * Related logic: see GeneratorController function entity
-* @var App\Invoice\Entity\Gentor $generator
+* @var App\Infrastructure\Persistence\Gentor\Gentor $generator
 * @var Cycle\Database\Table $orm_schema
 * @var array $relations
 * @var string $questionmark
@@ -22,7 +22,7 @@ namespace <?= $generator->getNamespacePath() . '\Entity'; ?>;
 /**
  * Related logic: see The namespace path normally begins with 'App' so
  *  alphabetically first
- * @var App\Invoice\Entity\GentorRelation $relation
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
 foreach ($relations as $relation) {
     echo 'use '
@@ -79,7 +79,7 @@ class <?= $generator->getCamelcaseCapitalName() . "\n"; ?>
 {
     <?php
       /**
-       * @var App\Invoice\Entity\GentorRelation $relation
+       * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
        */
        foreach ($relations as $relation) {
            echo '    #[BelongsTo(target:' . ($relation->getCamelcaseName() ?? '')
@@ -381,7 +381,7 @@ foreach ($orm_schema->getColumns() as $column) {
 echo '    }' . "\n";
 
 /**
- * @var App\Invoice\Entity\GentorRelation $relation
+ * @var App\Infrastructure\Persistence\GentorRelation\GentorRelation $relation
  */
 foreach ($relations as $relation) {
     echo '   ' . "\n";

@@ -17,7 +17,7 @@ final class PeppolProductUnitCodeNotFoundException extends \RuntimeException imp
     #[\Override]
     public function getName(): string
     {
-        $product_id = $this->product->getProductId();
+        $product_id = $this->product->reqId();
         $product_name = $this->product->getProductName();
         return (!empty($product_id)
                && null !== $product_name)

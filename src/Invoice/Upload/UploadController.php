@@ -7,7 +7,7 @@ namespace App\Invoice\Upload;
 use App\Invoice\BaseController;
 use App\Invoice\Client\ClientRepository;
 use App\Infrastructure\Persistence\Client\Client;
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\Upload\Upload;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\User\UserService;
 use App\Service\WebControllerService;
@@ -105,7 +105,7 @@ final class UploadController extends BaseController
         ClientRepository $clientRepository,
     ): Response {
         $upload = new Upload();
-        $form = new UploadForm($upload);
+        $form = new UploadForm();
         $parameters = [
             'title' => $this->translator->translate('add'),
             'actionName' => 'upload/add',
@@ -171,11 +171,11 @@ final class UploadController extends BaseController
     ): Response {
         $upload = $this->upload($currentRoute, $uploadRepository);
         if ($upload) {
-            $form = new UploadForm($upload);
+            $form = UploadForm::show($upload);
             $parameters = [
                 'title' => $this->translator->translate('edit'),
                 'actionName' => 'upload/edit',
-                'actionArguments' => ['id' => $upload->getId()],
+                'actionArguments' => ['id' => $upload->reqId()],
                 'errors' => [],
                 'form' => $form,
                 'optionsDataClients' => $this->optionsDataClients($clientRepository->findAllPreloaded()),
@@ -200,11 +200,11 @@ final class UploadController extends BaseController
     {
         $upload = $this->upload($currentRoute, $uploadRepository);
         if ($upload) {
-            $form = new UploadForm($upload);
+            $form = UploadForm::show($upload);
             $parameters = [
                 'title' => $this->translator->translate('view'),
                 'actionName' => 'upload/view',
-                'actionArguments' => ['id' => $upload->getId()],
+                'actionArguments' => ['id' => $upload->reqId()],
                 'form' => $form,
                 'optionsDataClients' => $this->optionsDataClients($clientRepository->findAllPreloaded()),
             ];
@@ -215,16 +215,12 @@ final class UploadController extends BaseController
 
     /**
      * @param CurrentRoute $currentRoute
-     * @param UploadRepository $uploadRepository
-     * @return Upload|null
+     * @param UploadRepository $uplR
+     * @return Upload
      */
-    public function upload(CurrentRoute $currentRoute, UploadRepository $uploadRepository): ?Upload
+    public function upload(CurrentRoute $currentRoute, UploadRepository $uplR): ?Upload
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $uploadRepository->repoUploadquery($id);
-        }
-        return null;
+        return $uplR->repoUploadquery((int) $currentRoute->getArgument('id'));
     }
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\GeneratorRelation;
 
-use App\Invoice\Entity\GentorRelation;
+use App\Infrastructure\Persistence\GentorRelation\GentorRelation;
 
 final readonly class GeneratorRelationService
 {

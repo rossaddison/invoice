@@ -13,7 +13,7 @@ class QuoteItemAmountEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $amount = new QuoteItemAmount();
-        $this->assertFalse($amount->isPersisted());
+        $this->assertFalse($amount->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -27,7 +27,7 @@ class QuoteItemAmountEntityTest extends TestCase
     {
         $amount = new QuoteItemAmount();
         $amount->setId(10);
-        $this->assertTrue($amount->isPersisted());
+        $this->assertTrue($amount->hasIdentity());
         $this->assertSame(10, $amount->reqId());
     }
 
@@ -41,7 +41,6 @@ class QuoteItemAmountEntityTest extends TestCase
     public function testConstructorWithDefaults(): void
     {
         $amount = new QuoteItemAmount();
-        $this->assertSame('', $amount->getQuoteItemId());
         $this->assertSame(0.00, $amount->getSubtotal());
         $this->assertSame(0.00, $amount->getTaxTotal());
         $this->assertSame(0.00, $amount->getDiscount());
@@ -63,7 +62,7 @@ class QuoteItemAmountEntityTest extends TestCase
             total: 116.50,
         );
 
-        $this->assertSame('5', $amount->getQuoteItemId());
+        $this->assertSame(5, $amount->reqQuoteItemId());
         $this->assertSame(100.00, $amount->getSubtotal());
         $this->assertSame(20.00, $amount->getTaxTotal());
         $this->assertSame(5.00, $amount->getDiscount());
@@ -76,7 +75,7 @@ class QuoteItemAmountEntityTest extends TestCase
     {
         $amount = new QuoteItemAmount();
         $amount->setQuoteItemId(99);
-        $this->assertSame('99', $amount->getQuoteItemId());
+        $this->assertSame(99, $amount->reqQuoteItemId());
     }
 
     public function testSubtotalSetterAndGetter(): void
@@ -155,10 +154,10 @@ class QuoteItemAmountEntityTest extends TestCase
         $this->assertSame(1234567.89, $amount->getSubtotal());
     }
 
-    public function testQuoteItemIdIsReturnedAsString(): void
+    public function testQuoteItemIdIsReturnedAsInt(): void
     {
         $amount = new QuoteItemAmount(quote_item_id: 42);
-        $this->assertIsString($amount->getQuoteItemId());
-        $this->assertSame('42', $amount->getQuoteItemId());
+        $this->assertIsInt($amount->reqQuoteItemId());
+        $this->assertSame(42, $amount->reqQuoteItemId());
     }
 }

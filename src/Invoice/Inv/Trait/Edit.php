@@ -24,7 +24,7 @@ use App\Invoice\{
     UserInv\UserInvRepository as UIR
 };
 use App\User\UserRepository as UR;
-use App\Invoice\Entity\InvCustom;
+use App\Infrastructure\Persistence\InvCustom\InvCustom;
 use App\Invoice\Helpers\{
     CustomValuesHelper as CVH, Peppol\PeppolArrays
 };
@@ -62,11 +62,10 @@ trait Edit
     ): Response {
         $inv = $this->inv($id, $invRepo, true);
         if ($inv) {
-            $form = new InvForm($inv);
-            $invCustom = new InvCustom();
-            $invCustomForm = new InvCustomForm($invCustom);
-            $inv_id = $inv->getId();
-            $client_id = $inv->getClientId();
+            $form = InvForm::show($inv);
+            $invCustomForm = new InvCustomForm();
+            $inv_id = $inv->reqId();
+            $client_id = $inv->reqClientId();
             $peppol_array = new PeppolArrays();
             $note_on_tax_point = '';
             $defaultGroupId = (int) $this->sR->getSetting('default_invoice_group');
@@ -79,7 +78,7 @@ trait Edit
                 'actionName' => 'inv/edit',
                 'actionArguments' => ['id' => $inv_id],
                 'contractCount' => $contractRepo->repoClientCount(
-                    $inv->getClientId()),
+                    $inv->reqClientId()),
                 'customFields' => $this->fetchCustomFieldsAndValues(
                     $cfR, $cvR, 'inv_custom')['customFields'],
                 'cvH' => new CVH($this->sR, $cvR),
@@ -90,9 +89,8 @@ trait Edit
                 // There will initially be no custom_values attached to this
                 // invoice until they are filled in the field on the form
                 'defaultGroupId' => $defaultGroupId,
-                'delCount' => $delRepo->repoClientCount($inv->getClientId()),
-                'deliveryCount' => (null !== $inv_id ?
-                    $deliveryRepo->repoCountInvoice($inv_id) : 0),
+                'delCount' => $delRepo->repoClientCount($inv->reqClientId()),
+                'deliveryCount' => $deliveryRepo->repoCountInvoice($inv_id),
                 'editInputAttributesPaymentMethod' =>
                     $this->editInputAttributesPaymentMethod($form),
                 'editInputAttributesUrlKey' =>
@@ -104,11 +102,11 @@ trait Edit
                 'invCustomValues' => $this->invCustomValues($inv_id, $icR),
                 'invCustomForm' => $invCustomForm,
                 'noteOnTaxPoint' => $note_on_tax_point ?: '',
-                'originId' => $inv->getId(),
+                'originId' => $inv->reqId(),
                 'optionsData' => $this->editOptionsData(
                     $peppol_array,
                     $inv,
-                    (int) $client_id,
+                    $client_id,
                     $clientRepo,
                     $contractRepo,
                     $deliveryRepo,
@@ -121,7 +119,7 @@ trait Edit
                 ),
                 'paR' => $paR,
                 'postalAddressCount' =>
-                    $paR->repoClientCount($inv->getClientId()),
+                    $paR->repoClientCount($inv->reqClientId()),
                 'formFields' => $this->formFields,
             ];
             if ($request->getMethod() === Method::POST) {
@@ -133,7 +131,7 @@ trait Edit
                     // If the status has changed to 'paid', check that the
                     // balance on the invoice is zero
                     if (!$this->editCheckStatusReconcilingWithBalance(
-                            $iaR, (int) $inv_id) && $body['status_id'] === 4) {
+                            $iaR, $inv_id) && $body['status_id'] === 4) {
                         return $this->factory->createResponse(
                             $this->webViewRenderer->renderPartialAsString(
                             '//invoice/setting/inv_message',
@@ -161,7 +159,7 @@ trait Edit
                                 $parameters);
                         }
                         $this->processCustomFields($body, $formHydrator,
-                                $this->customFieldProcessor, (string) $inv_id);
+                                $this->customFieldProcessor, $inv_id);
                         $this->flashMessage('success',
                             $this->translator->translate(
                             'record.successfully.updated'));
@@ -231,10 +229,10 @@ trait Edit
     {
         $inv = $this->inv($id, $invRepo, true);
         if ($inv) {
-            $client_id = $inv->getClientId();
+            $client_id = $inv->reqClientId();
             $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
             if (null !== $user) {
-                $form = new InvForm($inv);
+                $form = InvForm::show($inv);
                 if (null !== $body && is_array($body)) {
                     if ($formHydrator->populateAndValidate($form, $body)) {
                         $this->inv_service->saveInv($user, $inv, $body,

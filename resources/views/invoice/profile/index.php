@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Profile;
+use App\Infrastructure\Persistence\Profile\Profile;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -16,7 +16,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Router\CurrentRoute;
 
 /**
- * @var App\Invoice\Entity\Profile $profile
+ * @var App\Infrastructure\Persistence\Profile\Profile $profile
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\Button $button
  * @var App\Widget\GridComponents $gridComponents
@@ -42,7 +42,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Profile $model) => Html::encode($model->getId()),
+        content: static fn (Profile $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'company_id',
@@ -63,7 +63,7 @@ $columns = [
         new ActionButton(
             content: '🔎',
             url: static function (Profile $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('profile/view', ['id' => $model->getId()]);
+                return $urlGenerator->generate('profile/view', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -73,7 +73,7 @@ $columns = [
         new ActionButton(
             content: '✎',
             url: static function (Profile $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('profile/edit', ['id' => $model->getId()]);
+                return $urlGenerator->generate('profile/edit', ['id' => $model->reqId()]);
             },
             attributes: [
                 'data-bs-toggle' => 'tooltip',
@@ -83,7 +83,7 @@ $columns = [
         new ActionButton(
             content: '❌',
             url: static function (Profile $model) use ($urlGenerator): string {
-                return $urlGenerator->generate('profile/delete', ['id' => $model->getId()]);
+                return $urlGenerator->generate('profile/delete', ['id' => $model->reqId()]);
             },
             attributes: [
                 'title' => $translator->translate('delete'),

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\GeneratorRelation;
 
-use App\Invoice\Entity\GentorRelation;
+use App\Infrastructure\Persistence\GentorRelation\GentorRelation;
 use Cycle\ORM\Select;
 use Throwable;
 use Yiisoft\Data\Reader\Sort;
@@ -37,7 +37,7 @@ final class GeneratorRelationRepository extends Select\Repository
         return $this->prepareDataReader($query);
     }
 
-    public function findRelations(string $id): EntityReader
+    public function findRelations(int $id): EntityReader
     {
         $query = $this->select()->load('gentor')->where('gentor_id', $id);
         return $this->prepareDataReader($query);
@@ -76,7 +76,7 @@ final class GeneratorRelationRepository extends Select\Repository
      *
      * @psalm-return TEntity|null
      */
-    public function repoGeneratorRelationquery(string $id): ?GentorRelation
+    public function repoGeneratorRelationquery(int $id): ?GentorRelation
     {
         $query = $this
             ->select()
@@ -86,10 +86,10 @@ final class GeneratorRelationRepository extends Select\Repository
     }
 
     /**
-     * @param string $id
+     * @param int $id
      * @return array
      */
-    public function repoGeneratorquery(string $id): array
+    public function repoGeneratorquery(int $id): array
     {
         $query = $this
             ->select()

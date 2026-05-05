@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv;
 
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\Inv\Inv;
 use App\Infrastructure\Persistence\InvAllowanceCharge\InvAllowanceCharge;
-use App\Invoice\Entity\InvCustom;
-use App\Invoice\Entity\InvItem;
-use App\Invoice\Entity\InvItemAllowanceCharge;
-use App\Invoice\Entity\InvTaxRate;
+use App\Infrastructure\Persistence\InvCustom\InvCustom;
+use App\Infrastructure\Persistence\InvItem\InvItem;
+use App\Infrastructure\Persistence\InvItemAllowanceCharge\InvItemAllowanceCharge;
+use App\Infrastructure\Persistence\InvTaxRate\InvTaxRate;
 use App\Invoice\InvAllowanceCharge\InvAllowanceChargeRepository as ACIR;
 use App\Invoice\InvItemAllowanceCharge\InvItemAllowanceChargeRepository as ACIIR;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
@@ -40,8 +40,8 @@ final class InvDeletionService
 
     public function delete(Inv $inv): void
     {
-        $invId = (string) $inv->getId();
-        if (strlen($invId) == 0) {
+        $invId = $inv->reqId();
+        if ($invId == 0) {
             return;
         }
         
@@ -52,11 +52,11 @@ final class InvDeletionService
         $this->deleteAllowances($invId);
     }
 
-    private function deleteItems(string $invId): void
+    private function deleteItems(int $invId): void
     {
         /** @var InvItem $item */
         foreach ($this->itemRepo->repoInvItemIdquery($invId) as $item) {
-            $itemId = (string) $item->getId();
+            $itemId = $item->reqId();
             
             if (null!== ($amount = $this->itemAmountRepo->repoInvItemAmountquery($itemId))) {
                 $this->itemAmountRepo->delete($amount);
@@ -71,17 +71,17 @@ final class InvDeletionService
         }
     }
 
-    private function deleteInvAmount(string $invId): void
+    private function deleteInvAmount(int $invId): void
     {
-        if ($this->amountRepo->repoInvAmountCount((int) $invId) > 0) {
-            $amount = $this->amountRepo->repoInvquery((int) $invId);
+        if ($this->amountRepo->repoInvAmountCount($invId) > 0) {
+            $amount = $this->amountRepo->repoInvquery($invId);
             if ($amount) {
                 $this->amountService->deleteInvAmount($amount);
             }
         }
     }
 
-    private function deleteTaxes(string $invId): void
+    private function deleteTaxes(int $invId): void
     {
         /** @var InvTaxRate $itr */
         foreach ($this->taxRepo->repoInvquery($invId) as $itr) {
@@ -89,7 +89,7 @@ final class InvDeletionService
         }
     }
 
-    private function deleteCustomFields(string $invId): void
+    private function deleteCustomFields(int $invId): void
     {
         /** @var InvCustom $ic */
         foreach ($this->customRepo->repoFields($invId) as $ic) {
@@ -97,7 +97,7 @@ final class InvDeletionService
         }
     }
 
-    private function deleteAllowances(string $invId): void
+    private function deleteAllowances(int $invId): void
     {
         /** @var InvAllowanceCharge $iac */
         foreach ($this->allowanceRepo->repoACIquery($invId) as $iac) {

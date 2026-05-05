@@ -15,7 +15,7 @@ class ProductClientEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $pc = new ProductClient();
-        $this->assertFalse($pc->isPersisted());
+        $this->assertFalse($pc->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -29,7 +29,7 @@ class ProductClientEntityTest extends TestCase
     {
         $pc = new ProductClient();
         $pc->setId(14);
-        $this->assertTrue($pc->isPersisted());
+        $this->assertTrue($pc->hasIdentity());
         $this->assertSame(14, $pc->reqId());
     }
 

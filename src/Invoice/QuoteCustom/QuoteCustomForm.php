@@ -20,7 +20,7 @@ final class QuoteCustomForm extends FormModel
     {
         $form = new self();
         $form->quote_id = $quote_id;
-        $form->custom_field_id = (int) $quoteCustom->getCustomFieldId();
+        $form->custom_field_id = $quoteCustom->reqCustomFieldId();
         $form->value = $quoteCustom->getValue();
         return $form;
     }

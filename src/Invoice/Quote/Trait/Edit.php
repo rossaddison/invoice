@@ -64,7 +64,7 @@ trait Edit
             $quoteCustomForm = new QuoteCustomForm();
             $quote_id = $quote->reqId();
             $client_id = $quote->reqClientId();
-            $dels = $delRepo->repoClientquery((string) $quote->reqClientId());
+            $dels = $delRepo->repoClientquery($quote->reqClientId());
             $parameters = [
                 'title' => '',
                 'alert' => $this->alert(),
@@ -100,11 +100,11 @@ trait Edit
                 'quoteCustomValues' => $this->quoteCustomValues($quote_id, $qcR),
                 'quote' => $quote,
                 'quoteCustomForm' => $quoteCustomForm,
-                'delCount' => $delRepo->repoClientCount((string) $quote->reqClientId()),
+                'delCount' => $delRepo->repoClientCount($quote->reqClientId()),
                 'returnUrlAction' => 'edit',
                 'formFields' => $this->formFields,
             ];
-            $delRepo->repoClientCount((string) $quote->reqClientId()) > 0 ? '' :
+            $delRepo->repoClientCount($quote->reqClientId()) > 0 ? '' :
                 $this->flashMessage('warning', $this->translator->translate(
                     'quote.delivery.location.none'));
             if ($request->getMethod() === Method::POST) {
@@ -113,14 +113,14 @@ trait Edit
                 if ($quote) {
                     $form = QuoteForm::show($quote);
                     $client_id = $quote->reqClientId();
-                    $user = $this->activeUser((string) $client_id, $uR, $ucR, $uiR);
+                    $user = $this->activeUser($client_id, $uR, $ucR, $uiR);
                     if (null !== $user) {
                         if ($formHydrator->populateAndValidate($form, $body)) {
                             $this->quote_service->saveQuote($user, $quote,
                                 $body, $this->sR, $groupRepo);
                             $this->processCustomFields($body, $formHydrator,
                                 $this->quoteCustomFieldProcessor,
-                                    (string) $quote_id);
+                                    $quote_id);
                             $this->flashMessage('success',
                                 $this->translator->translate(
                                     'record.successfully.updated'));
@@ -183,7 +183,7 @@ trait Edit
         QR $quoteRepo,
         UCR $ucR,
     ): array {
-        $contracts = $contractRepo->repoClient((string) $quote->reqClientId());
+        $contracts = $contractRepo->repoClient($quote->reqClientId());
         $optionsDataContract = [];
         /**
          * @var Contract $contract
@@ -200,8 +200,7 @@ trait Edit
             $optionsDataContract[$id] = implode(',', $contractLine);
             
         }
-
-        $dLocs = $delRepo->repoClientquery((string) $client_id);
+        $dLocs = $delRepo->repoClientquery($client_id);
         $optionsDataDeliveryLocations = [];
         /**
          * @var DeliveryLocation $dLoc

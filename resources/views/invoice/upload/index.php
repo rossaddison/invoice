@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Invoice\Entity\Upload;
+use App\Infrastructure\Persistence\Upload\Upload;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
@@ -13,7 +13,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
- * @var App\Invoice\Entity\Upload $upload
+ * @var App\Infrastructure\Persistence\Upload\Upload $upload
  * @var App\Invoice\Setting\SettingRepository $s
  * @var App\Widget\GridComponents $gridComponents
  * @var OffsetPaginator $paginator
@@ -38,7 +38,7 @@ $columns = [
     new DataColumn(
         'id',
         header: $translator->translate('id'),
-        content: static fn (Upload $model) => Html::encode($model->getId()),
+        content: static fn (Upload $model) => Html::encode($model->reqId()),
     ),
     new DataColumn(
         'client_id',
@@ -63,14 +63,14 @@ $columns = [
     new DataColumn(
         header: $translator->translate('view'),
         content: static function (Upload $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('upload/view', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-eye']), $urlGenerator->generate('upload/view', ['id' => $model->reqId()]), []);
         },
         encodeContent: false,
     ),
     new DataColumn(
         header: $translator->translate('edit'),
         content: static function (Upload $model) use ($urlGenerator): A {
-            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('upload/edit', ['id' => $model->getId()]), []);
+            return Html::a(Html::tag('i', '', ['class' => 'bi-pencil-square']), $urlGenerator->generate('upload/edit', ['id' => $model->reqId()]), []);
         },
         encodeContent: false,
     ),
@@ -87,7 +87,7 @@ $columns = [
                         'onclick' => "return confirm(" . "'" . $translator->translate('delete.record.warning') . "');",
                     ],
                 ),
-                $urlGenerator->generate('upload/delete', ['id' => $model->getId()]),
+                $urlGenerator->generate('upload/delete', ['id' => $model->reqId()]),
                 [],
             );
         },

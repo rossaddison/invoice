@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @var App\Invoice\Entity\Gentor $generator
+ * @var App\Infrastructure\Persistence\Gentor\Gentor $generator
  * @var Cycle\Database\Table $orm_schema
  * @var array $relations
  * @var string $typecast

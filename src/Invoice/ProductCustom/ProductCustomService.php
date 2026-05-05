@@ -44,7 +44,7 @@ final readonly class ProductCustomService
         $product = 'product_id';
         if (isset($array[$product])) {
             $productEntity = $this->pR->repoProductquery(
-                (string) $array[$product]);
+                (int) $array[$product]);
             if ($productEntity) {
                 $model->setProduct($productEntity);
             }
@@ -52,8 +52,7 @@ final readonly class ProductCustomService
         $custom_field = 'custom_field_id';
         if (isset($array[$custom_field])) {
             $model->setCustomField(
-                $this->cfR->repoCustomFieldquery(
-                    (string) $array[$custom_field]));
+                $this->cfR->repoCustomFieldquery((int) $array[$custom_field]));
         }
 
     }

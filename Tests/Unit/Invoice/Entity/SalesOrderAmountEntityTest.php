@@ -13,7 +13,7 @@ class SalesOrderAmountEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $sa = new SalesOrderAmount();
-        $this->assertFalse($sa->isPersisted());
+        $this->assertFalse($sa->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -27,7 +27,7 @@ class SalesOrderAmountEntityTest extends TestCase
     {
         $sa = new SalesOrderAmount();
         $sa->setId(6);
-        $this->assertTrue($sa->isPersisted());
+        $this->assertTrue($sa->hasIdentity());
         $this->assertSame(6, $sa->reqId());
     }
 

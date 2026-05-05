@@ -14,7 +14,7 @@ class SalesOrderCustomEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $soCustom = new SalesOrderCustom();
-        $this->assertFalse($soCustom->isPersisted());
+        $this->assertFalse($soCustom->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -28,7 +28,7 @@ class SalesOrderCustomEntityTest extends TestCase
     {
         $soCustom = new SalesOrderCustom();
         $soCustom->setId(20);
-        $this->assertTrue($soCustom->isPersisted());
+        $this->assertTrue($soCustom->hasIdentity());
         $this->assertSame(20, $soCustom->reqId());
     }
 
@@ -42,8 +42,6 @@ class SalesOrderCustomEntityTest extends TestCase
     public function testConstructorWithDefaults(): void
     {
         $soCustom = new SalesOrderCustom();
-        $this->assertSame('', $soCustom->getSalesOrderId());
-        $this->assertSame('', $soCustom->getCustomFieldId());
         $this->assertSame('', $soCustom->getValue());
         $this->assertNull($soCustom->getSalesOrder());
         $this->assertNull($soCustom->getCustomField());
@@ -57,8 +55,8 @@ class SalesOrderCustomEntityTest extends TestCase
             value: 'Approved',
         );
 
-        $this->assertSame('4', $soCustom->getSalesOrderId());
-        $this->assertSame('2', $soCustom->getCustomFieldId());
+        $this->assertSame(4, $soCustom->reqSalesOrderId());
+        $this->assertSame(2, $soCustom->reqCustomFieldId());
         $this->assertSame('Approved', $soCustom->getValue());
     }
 
@@ -66,28 +64,28 @@ class SalesOrderCustomEntityTest extends TestCase
     {
         $soCustom = new SalesOrderCustom();
         $soCustom->setSalesOrderId(30);
-        $this->assertSame('30', $soCustom->getSalesOrderId());
+        $this->assertSame(30, $soCustom->reqSalesOrderId());
     }
 
-    public function testSalesOrderIdIsReturnedAsString(): void
+    public function testSalesOrderIdIsReturnedAsInt(): void
     {
         $soCustom = new SalesOrderCustom(sales_order_id: 9);
-        $this->assertIsString($soCustom->getSalesOrderId());
-        $this->assertSame('9', $soCustom->getSalesOrderId());
+        $this->assertIsInt($soCustom->reqSalesOrderId());
+        $this->assertSame(9, $soCustom->reqSalesOrderId());
     }
 
     public function testCustomFieldIdSetterAndGetter(): void
     {
         $soCustom = new SalesOrderCustom();
         $soCustom->setCustomFieldId(6);
-        $this->assertSame('6', $soCustom->getCustomFieldId());
+        $this->assertSame(6, $soCustom->reqCustomFieldId());
     }
 
-    public function testCustomFieldIdIsReturnedAsString(): void
+    public function testCustomFieldIdIsReturnedAsInt(): void
     {
         $soCustom = new SalesOrderCustom(custom_field_id: 11);
-        $this->assertIsString($soCustom->getCustomFieldId());
-        $this->assertSame('11', $soCustom->getCustomFieldId());
+        $this->assertIsInt($soCustom->reqCustomFieldId());
+        $this->assertSame(11, $soCustom->reqCustomFieldId());
     }
 
     public function testValueSetterAndGetter(): void

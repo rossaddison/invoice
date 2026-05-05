@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\Generator;
 
-use App\Invoice\Entity\Gentor;
+use App\Infrastructure\Persistence\Gentor\Gentor;
 
 final readonly class GeneratorService
 {

@@ -34,7 +34,7 @@ class Qa
         return $this->requireId($this->id, 'Qa');
     }
 
-    public function isPersisted(): bool
+    public function hasIdentity(): bool
     {
         return $this->id !== null;
     }

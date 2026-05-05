@@ -134,7 +134,7 @@ declare(strict_types=1);
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">$this</span>-&gt;authService-&gt;oauthLogin($login)) {
                 <span class="hljs-comment">// Handle existing user login</span>
                 $identity = <span class="hljs-keyword">$this</span>-&gt;authService-&gt;getIdentity();
-                $userId = $identity-&gt;getId();
+                $userId = $identity-&gt;reqId();
                 <span class="hljs-keyword">if</span> (<span class="hljs-keyword">null</span> !== $userId) {
                     $userInv = $uiR-&gt;repoUserInvUserIdquery($userId);
                     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">null</span> !== $userInv) {
@@ -153,7 +153,7 @@ declare(strict_types=1);
                 <span class="hljs-comment">// Handle new user registration</span>
                 $user = <span class="hljs-keyword">new</span> User($login, $email, $password);
                 $uR-&gt;save($user);
-                $userId = $user-&gt;getId();
+                $userId = $user-&gt;reqId();
                 <span class="hljs-keyword">if</span> ($userId &gt; <span class="hljs-number">0</span>) {
                     <span class="hljs-keyword">if</span> ($uR-&gt;repoCount() == <span class="hljs-number">1</span>) {
                         <span class="hljs-keyword">$this</span>-&gt;manager-&gt;revokeAll($userId);

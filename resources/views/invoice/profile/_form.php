@@ -46,41 +46,51 @@ use Yiisoft\Html\Tag\Form;
                     ->errors($errors)
                     ->header($translator->translate('error.summary'))
                     ->onlyCommonErrors()
-?>
+                ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?= Field::checkbox($form, 'current')
-        ->inputLabelAttributes(['class' => 'form-check-label'])
-        ->inputClass('form-check-input')
-        ->ariaDescribedBy($translator->translate('active'))
-?>
+                            ->label($translator->translate('profile.property.label.current'))                             ->inputLabelAttributes(['class' => 'form-check-label'])
+                            ->inputClass('form-check-input')
+                            ->ariaDescribedBy($translator->translate('active'))
+                    ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
                     <?php
-    $optionsDataCompany = [];
-/**
- * @var App\Infrastructure\Persistence\Company\Company $company
- */
-foreach ($companies as $company) {
-    $companyId = (string) $company->reqId();
-    $companyName = $company->getName();
-    if (strlen($companyId) > 0 && null !== $companyName) {
-        $optionsDataCompany[$companyId] = $companyName;
-    }
-}
-?>
+                        $optionsDataCompany = [];
+                    /**
+                     * @var App\Infrastructure\Persistence\Company\Company $company
+                     */
+                    foreach ($companies as $company) {
+                        $companyId = (string) $company->reqId();
+                        $companyName = $company->getName();
+                        if (strlen($companyId) > 0 && null !== $companyName) {
+                            $optionsDataCompany[$companyId] = $companyName;
+                        }
+                    }
+                    ?>
                     <?= Field::select($form, 'company_id')
-    ->prompt($translator->translate('none'))
-    ->optionsData($optionsDataCompany);
-?>
+                        ->label($translator->translate('profile.property.label.company'))
+                        ->prompt($translator->translate('none'))
+                        ->required()    
+                        ->optionsData($optionsDataCompany);
+                    ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= Field::telephone($form, 'mobile'); ?>
+                    <?= Field::telephone($form, 'mobile')
+                        ->label($translator->translate('profile.property.label.mobile'))
+                        ->required();
+                    ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= Field::email($form, 'email'); ?>
+                    <?= Field::email($form, 'email')
+                        ->label($translator->translate('profile.property.label.email'))
+                        ->required(); ?>
                 <?= Html::closeTag('div'); ?>
                 <?= Html::openTag('div', ['class' => 'mb-3 form-group']); ?>
-                    <?= Field::text($form, 'description'); ?>
+                    <?= Field::text($form, 'description')
+                        ->label($translator->translate('profile.property.label.'
+                                . 'description'))
+                        ->required(); ?>
                 <?= Html::closeTag('div'); ?>
             <?= Html::closeTag('div'); ?>
         <?= Html::closeTag('div'); ?>

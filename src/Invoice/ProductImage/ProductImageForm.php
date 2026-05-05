@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\ProductImage;
 
-use App\Invoice\Entity\ProductImage;
+use App\Infrastructure\Persistence\ProductImage\ProductImage;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Required;
 use DateTimeImmutable;
@@ -20,13 +20,19 @@ final class ProductImageForm extends FormModel
 
     #[Required]
     private mixed $uploaded_date = '';
-
-    public function __construct(ProductImage $productImage, private readonly ?int $product_id)
+    private ?int $product_id = null;
+    
+    public static function show(
+        ProductImage $productImage,
+        ?int $product_id): self
     {
-        $this->file_name_original = $productImage->getFileNameOriginal();
-        $this->file_name_new = $productImage->getFileNameNew();
-        $this->description = $productImage->getDescription();
-        $this->uploaded_date = $productImage->getUploadedDate();
+        $form = new self();
+        $form->file_name_original = $productImage->getFileNameOriginal();
+        $form->file_name_new = $productImage->getFileNameNew();
+        $form->description = $productImage->getDescription();
+        $form->uploaded_date = $productImage->getUploadedDate();
+        $form->product_id = $product_id;
+        return $form;
     }
 
     public function getProductId(): ?int

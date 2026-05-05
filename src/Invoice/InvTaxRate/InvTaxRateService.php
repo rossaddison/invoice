@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvTaxRate;
 
-use App\Invoice\Entity\InvTaxRate;
+use App\Infrastructure\Persistence\InvTaxRate\InvTaxRate;
 use App\Invoice\Inv\InvRepository as IR;
 use App\Invoice\TaxRate\TaxRateRepository as TRR;
 
@@ -54,7 +54,7 @@ final readonly class InvTaxRateService
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (string) $array[$inv]);
+                (int) $array[$inv]);
             if ($invEntity) {
                 $model->setInv($invEntity);
             }
@@ -63,7 +63,7 @@ final readonly class InvTaxRateService
         if (isset($array[$tax_rate])) {
             $model->setTaxRate(
                 $this->trR->repoTaxRatequery(
-                    (string) $array[$tax_rate]));
+                    (int) $array[$tax_rate]));
         }
     }
 
@@ -76,7 +76,7 @@ final readonly class InvTaxRateService
     ): void {
         $basis_invoice_tax_rates =
             $this->repository->repoInvquery(
-                (string) $basis_inv_id);
+                $basis_inv_id);
         /** @var InvTaxRate $basis_invoice_tax_rate */
         foreach ($basis_invoice_tax_rates
                  as $basis_invoice_tax_rate) {
@@ -84,8 +84,8 @@ final readonly class InvTaxRateService
             $new_invoice_tax_rate->setInvId(
                 (int) $new_inv_id);
             $new_invoice_tax_rate->setTaxRateId(
-                (int) $basis_invoice_tax_rate
-                    ->getTaxRateId());
+                $basis_invoice_tax_rate
+                    ->reqTaxRateId());
             if ($basis_invoice_tax_rate
                     ->getIncludeItemTax() == 1
                 || ($basis_invoice_tax_rate

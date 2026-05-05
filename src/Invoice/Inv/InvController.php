@@ -7,10 +7,12 @@ namespace App\Invoice\Inv;
 use App\Auth\Permissions;
 use App\Widget\FormFields;
 use App\Widget\ButtonsToolbarFull;
-use App\Infrastructure\Persistence\TaxRate\TaxRate;
-use App\Invoice\Entity\{Inv, InvItemAllowanceCharge, InvItem, InvTaxRate};
+use App\Infrastructure\Persistence\{
+    TaxRate\TaxRate, Inv\Inv, InvItemAllowanceCharge\InvItemAllowanceCharge,
+    InvItem\InvItem, InvTaxRate\InvTaxRate
+};
 use App\User\UserService;
-use App\User\User;
+use App\Infrastructure\Persistence\User\User;
 
 use App\Invoice\{
     BaseController, Inv\InvCustomFieldProcessor,
@@ -37,7 +39,7 @@ use App\Service\WebControllerService;
 use App\Invoice\Helpers\{DateHelper, NumberHelper, PdfHelper};
 use App\Invoice\Inv\Trait\{Add, Archive, Attachment, Credit, Delete, Edit, Email,
     Flush, Guest, HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol,
-    Storecove, UrlKey, View};
+    Storecove, Typescript, UrlKey, View};
 use Yiisoft\{
     DataResponse\ResponseFactory\DataResponseFactoryInterface,
     FormModel\FormHydrator, Html\Html,
@@ -54,7 +56,7 @@ final class InvController extends BaseController
 {
     use Add, Archive, Attachment, Credit, Delete, Edit, Email, Flush, Guest,
         HtmlTrait, Index, MultipleCopy, OptionsData, PdfTrait, Peppol, Storecove,
-        UrlKey, View;
+        Typescript, UrlKey, View;
     
     protected string $controllerName = 'invoice/inv';
 
@@ -94,20 +96,18 @@ final class InvController extends BaseController
     }
 
     // Add, Credit, MultipleCopy
-    private function activeUser(string $client_id, UR $uR, UCR $ucR, UIR $uiR):
+    private function activeUser(int $client_id, UR $uR, UCR $ucR, UIR $uiR):
         ?User
     {
         $user_client = $ucR->repoUserquery($client_id);
         if (null !== $user_client) {
             $user_client_count = $ucR->repoUserquerycount($client_id);
             if ($user_client_count == 1) {
-                $user_id = $user_client->getUserId();
+                $user_id = $user_client->reqUserId();
                 $user = $uR->findById($user_id);
-                if (null !== $user) {
-                    $user_inv = $uiR->repoUserInvUserIdquery($user_id);
-                    if (null !== $user_inv && $user_inv->getActive()) {
-                        return $user;
-                    }
+                $user_inv = $uiR->repoUserInvUserIdquery($user_id);
+                if (null !== $user_inv && $user_inv->getActive()) {
+                    return $user;
                 }
             }
         }
@@ -131,10 +131,8 @@ final class InvController extends BaseController
     public function defaultTaxInv(TaxRate $taxRate, Inv $inv,
             FormHydrator $formHydrator): void
     {
-        $invTaxRate = new InvTaxRate();
-        $invTaxRateForm = new InvTaxRateForm($invTaxRate);
         $inv_tax_rate = [];
-        $inv_tax_rate['inv_id'] = $inv->getId();
+        $inv_tax_rate['inv_id'] = $inv->reqId();
         $inv_tax_rate['tax_rate_id'] = $taxRate->reqId();
         /**
         * Related logic: see Settings ... View ... Taxes ...
@@ -146,7 +144,7 @@ final class InvController extends BaseController
             $this->sR->getSetting('default_include_item_tax') == '1' ? 1 : 0);
 
         $inv_tax_rate['inv_tax_rate_amount'] = 0;
-        ($formHydrator->populateAndValidate($invTaxRateForm, $inv_tax_rate))
+        ($formHydrator->populateAndValidate(new InvTaxRateForm(), $inv_tax_rate))
                         ? $this->inv_tax_rate_service->saveInvTaxRate(
                             new InvTaxRate(), $inv_tax_rate) : '';
     }
@@ -161,8 +159,8 @@ final class InvController extends BaseController
             if ($invItem) {
                 // Do not allow the item to be deleted if the invoice
                 // status is sent ie. 2
-                if ($invItem->getInv()?->getStatusId() !== 2) {
-                    $aciis = $aciiR->repoInvItemquery((string) $invItem->getId());
+                if ($invItem->getInv()?->reqStatusId() !== 2) {
+                    $aciis = $aciiR->repoInvItemquery($invItem->reqId());
                     /** @var InvItemAllowanceCharge $acii */
                     foreach ($aciis as $acii) {
                         $this->aciis->deleteInvItemAllowanceCharge($acii, $iiaR,
@@ -172,12 +170,12 @@ final class InvController extends BaseController
                     $this->flashMessage('info', $this->translator->translate(
                         'record.successfully.deleted'));
                     return $this->webService->getRedirectResponse(
-                        'inv/view', ['id' => $invItem->getInvId()]);
+                        'inv/view', ['id' => $invItem->reqInvId()]);
                 }
                 $this->flashMessage('warning',
                     $this->translator->translate('delete.sent'));
                 return $this->webService->getRedirectResponse('inv/view',
-                        ['id' => $invItem->getInvId()]);
+                        ['id' => $invItem->reqInvId()]);
             }
         } catch (\Exception $e) {
             $this->flashMessage('danger', $e->getMessage());
@@ -195,15 +193,15 @@ final class InvController extends BaseController
     }    
     
     // Email, PdfTrait
-    public function generateInvNumberIfApplicable(?string $inv_id, IR $iR,
+    public function generateInvNumberIfApplicable(int $inv_id, IR $iR,
         SR $sR, GR $gR): void
     {
-        if (null !== $inv_id) {
+        if ($inv_id > 0) {
             $inv = $iR->repoInvUnloadedquery($inv_id);
             if ($inv) {
-                $group_id = $inv->getGroupId();
+                $group_id = $inv->reqGroupId();
                 if ($iR->repoCount($inv_id) > 0) {
-                    if ($inv->getStatusId() === 1 && $inv->getNumber() === '') {
+                    if ($inv->reqStatusId() === 1 && $inv->getNumber() === '') {
                         // Generate new inv number if applicable
                         $inv->setNumber((string) $this->generateInvGetNumber(
                             $group_id, $sR, $iR, $gR));
@@ -215,7 +213,7 @@ final class InvController extends BaseController
     }
 
     // above function
-    private function generateInvGetNumber(string $group_id, SR $sR, IR $iR,
+    private function generateInvGetNumber(int $group_id, SR $sR, IR $iR,
         GR $gR): mixed
     {
         $inv_number = '';
@@ -230,8 +228,8 @@ final class InvController extends BaseController
     private function inv(int $id, IR $invRepo, bool $unloaded = false): ?Inv
     {
         if ($id) {
-            $inv = ($unloaded ? $invRepo->repoInvUnLoadedquery((string) $id) :
-                $invRepo->repoInvLoadedquery((string) $id));
+            $inv = ($unloaded ? $invRepo->repoInvUnLoadedquery($id) :
+                $invRepo->repoInvLoadedquery($id));
             if (null !== $inv) {
                 return $inv;
             }
@@ -242,17 +240,17 @@ final class InvController extends BaseController
 
     /**
      * Used in: Edit, Email, HtmlTrait, PdfTrait, View
-     * @param string|null $inv_id
+     * @param int $inv_id
      * @param icR $icR
      * @return array
      */
-    public function invCustomValues(?string $inv_id, ICR $icR): array
+    public function invCustomValues(int $inv_id, ICR $icR): array
     {
         // Get all the custom fields that have been registered with this inv on
         // creation, retrieve existing values via repo, and populate
         // custom_field_form_values array
         $custom_field_form_values = [];
-        if (null !== $inv_id) {
+        if ($inv_id > 0) {
             if ($icR->repoInvCount($inv_id) > 0) {
                 $inv_custom_fields = $icR->repoFields($inv_id);
                 /**
@@ -273,7 +271,7 @@ final class InvController extends BaseController
     private function invItem(int $id, IIR $invitemRepository): ?InvItem
     {
         if ($id) {
-            $invitem = $invitemRepository->repoInvItemquery((string) $id) ?: null;
+            $invitem = $invitemRepository->repoInvItemquery($id) ?: null;
             if ($invitem === null) {
                 return null;
             }
@@ -287,7 +285,7 @@ final class InvController extends BaseController
     {
         if ($id) {
             $invtaxrate =
-                $invtaxrateRepository->repoInvTaxRatequery((string) $id);
+                $invtaxrateRepository->repoInvTaxRatequery($id);
             if (null !== $invtaxrate) {
                 return $invtaxrate;
             }
@@ -304,20 +302,20 @@ final class InvController extends BaseController
      * Used in: Attachment, PdfTrait, View
      */
     private function rbacObserver(Inv $inv, UCR $ucR, UIR $uiR) : bool {
-        $statusId = $inv->getStatusId();
-        if (null!==$statusId) {
+        $statusId = $inv->reqStatusId();
+        if ($statusId > 0) {
             // has observer role
             if ($this->userService->hasPermission(Permissions::VIEW_INV)
                 && !($this->userService->hasPermission(Permissions::EDIT_INV))
                 // the invoice  is not a draft i.e. has been sent
                 && !($statusId === 1)
                 // the invoice is intended for the current user
-                && ($inv->getUserId() === $this->userService->getUser()?->getId())
+                && ($inv->reqUserId() === $this->userService->getUser()?->reqId())
                 // the invoice client is associated with the above user
                 // the observer user may be paying for more than one client
-                && ($ucR->repoUserClientqueryCount($inv->getUserId(),
-                                                $inv->getClientId()) > 0)) {
-                $userInv = $uiR->repoUserInvUserIdquery($inv->getUserId());
+                && ($ucR->repoUserClientqueryCount($inv->reqUserId(),
+                                                $inv->reqClientId()) > 0)) {
+                $userInv = $uiR->repoUserInvUserIdquery($inv->reqUserId());
                 // the current observer user is active
                 if (null !== $userInv && $userInv->getActive()) {
                     return true;
@@ -363,7 +361,7 @@ final class InvController extends BaseController
         $setting = $this->sR->withKey('mark_invoices_sent_copy');
         $setting_url = '';
         if (null !== $setting) {
-            $setting_id = $setting->getSettingId();
+            $setting_id = $setting->reqSettingId();
             $setting_url = $this->url_generator->generate('setting/markSent',
                 ['_language' => $_language, 'setting_id' => $setting_id]);
         }

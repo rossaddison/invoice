@@ -32,7 +32,7 @@ trait ClientNoteTrait
         /** @var int $body['client_id'] */
         $cId = $body['client_id'];
         $data = $cnR->repoClientNoteCount($cId) > 0 ?
-            $cnR->repoClientquery((string) $cId) : null;
+            $cnR->repoClientquery($cId) : null;
         $parameters = [
             'success' => 1,
             'data' => $data,
@@ -95,24 +95,11 @@ trait ClientNoteTrait
          */
         $note_id = $body['note_id'] ?? '';
 
-        //if (empty($note_id)) {
-        //    return $this->factory->createResponse(Json::encode([
-        //        'success' => 0,
-        //        'message' => 'Note ID is required',
-        //    ]));
-        //}
-
-        $clientNote = $cnR->repoClientNotequery($note_id);
+        $clientNote = $cnR->repoClientNotequery((int) $note_id);
         //if ($clientNote) {
         $cnS->deleteClientNote($clientNote);
             return $this->factory->createResponse(Json::encode([
             'success' => 1,
         ]));
-        //} else {
-        //    return $this->factory->createResponse(Json::encode([
-        //        'success' => 0,
-        //        'message' => 'Note not found',
-        //    ]));
-        //}
     }
 }

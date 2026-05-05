@@ -85,9 +85,9 @@ final class QuoteTaxRateRepository extends Select\Repository
     //used in quote/view to determine if a 'one-off'  quote tax rate acquired from tax rates is to be applied to the quote
     //quote tax rates are children of their parent tax rate and are normally used when all products use the same tax rate ie. no item tax
     /**
-     * @param int|null $quote_id
+     * @param int $quote_id
      */
-    public function repoCount(?int $quote_id): int
+    public function repoCount(int $quote_id): int
     {
         return $this->select()
                       ->where(['quote_id' => $quote_id])

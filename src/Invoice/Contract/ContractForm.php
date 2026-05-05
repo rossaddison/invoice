@@ -24,7 +24,7 @@ final class ContractForm extends FormModel
     private mixed $period_end = '';
 
     #[Required]
-    private ?string $client_id = '';
+    private ?int $client_id = null;
 
     public static function show(Contract $contract): self
     {
@@ -33,7 +33,7 @@ final class ContractForm extends FormModel
         $form->name = $contract->getName();
         $form->period_start = $contract->getPeriodStart()->format('Y-m-d');
         $form->period_end = $contract->getPeriodEnd()->format('Y-m-d');
-        $form->client_id = $contract->getClientId();
+        $form->client_id = $contract->reqClientId();
         return $form;
     }
 
@@ -63,7 +63,7 @@ final class ContractForm extends FormModel
         return $this->period_end;
     }
 
-    public function getClientId(): ?string
+    public function getClientId(): ?int
     {
         return $this->client_id;
     }

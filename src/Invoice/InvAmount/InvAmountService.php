@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvAmount;
 
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvItem;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Invoice\Helpers\NumberHelper;
 use App\Invoice\InvAmount\InvAmountRepository as IAR;
 use App\Invoice\Inv\InvRepository as IR;
@@ -22,14 +22,14 @@ final readonly class InvAmountService
 
     /**
      * @param InvAmount $model
-     * @param string $inv_id
+     * @param int $inv_id
      */
     public function initializeInvAmount(
         InvAmount $model,
-        string $inv_id
+        int $inv_id
     ): void {
         $this->persist($model, ['inv_id' => $inv_id]);
-        $inv_id ? $model->setInvId((int) $inv_id) : '';
+        $inv_id ? $model->setInvId($inv_id) : '';
         $model->setSign(1);
         $model->setItemSubtotal(0.00);
         $model->setItemTaxTotal(0.00);
@@ -137,7 +137,7 @@ final readonly class InvAmountService
         $inv = 'inv_id';
         if (isset($array[$inv])) {
             $invEntity = $this->iR->repoInvUnLoadedquery(
-                (string) $array[$inv]);
+                (int) $array[$inv]);
             if ($invEntity) {
                 $model->setInv($invEntity);
             }
@@ -191,9 +191,9 @@ final readonly class InvAmountService
                  * @var InvItem $item
                  */
                 foreach ($items as $item) {
-                    $invItemId = $item->getId();
-                    if (null !== $invItemId) {
-                        $invItemAmount = $iiaR->repoInvItemAmountquery((string) $invItemId);
+                    $invItemId = $item->reqId();
+                    {
+                        $invItemAmount = $iiaR->repoInvItemAmountquery($invItemId);
                         if ($invItemAmount) {
                             $subtotal += $invItemAmount->getSubtotal() ?? 0.00;
                             $taxTotal += $invItemAmount->getTaxTotal() ?? 0.00;
@@ -206,7 +206,7 @@ final readonly class InvAmountService
                 $model->setItemTaxTotal($taxTotal);
                 $model->setPackhandleshipTotal($packHandleShipTotal);
                 $model->setPackhandleshipTax($packHandleShipTax);
-                $additionalTaxTotal = $numberHelper->calculateInvTaxes((string) $inv_id, $itrR, $iaR);
+                $additionalTaxTotal = $numberHelper->calculateInvTaxes($inv_id, $itrR, $iaR);
                 $model->setTaxTotal($additionalTaxTotal);
                 $model->setTotal($subtotal + $taxTotal + $additionalTaxTotal);
                 $this->repository->save($model);

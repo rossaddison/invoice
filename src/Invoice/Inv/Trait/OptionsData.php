@@ -4,17 +4,12 @@ declare(strict_types=1);
 
 namespace App\Invoice\Inv\Trait;
 
-use App\Invoice\Entity\
-{
-    Inv, PaymentMethod, Setting, Upload,
-    UserClient
-};
 use App\Infrastructure\Persistence\{
     Client\Client, Contract\Contract, Delivery\Delivery,
-    DeliveryLocation\DeliveryLocation,
-    Group\Group,
-    PostalAddress\PostalAddress,
-    TaxRate\TaxRate
+    DeliveryLocation\DeliveryLocation, Inv\Inv,
+    Group\Group, PaymentMethod\PaymentMethod,
+    PostalAddress\PostalAddress, Setting\Setting, TaxRate\TaxRate,
+    Upload\Upload, UserClient\UserClient
 };
 use App\Invoice\{
     Client\ClientRepository as CR,
@@ -49,7 +44,7 @@ trait OptionsData
         PMR $pmRepo,
         UCR $ucR,
     ): array {
-        $contracts = $contractRepo->repoClient($inv->getClientId());
+        $contracts = $contractRepo->repoClient($inv->reqClientId());
         $optionsDataContract = [];
         /**
          * @var Contract $contract
@@ -87,7 +82,7 @@ trait OptionsData
             }
         }
 
-        $dLocs = $delRepo->repoClientquery((string) $client_id);
+        $dLocs = $delRepo->repoClientquery($client_id);
         $optionsDataDeliveryLocations = [];
         /**
          * @var DeliveryLocation $dLoc
@@ -114,7 +109,7 @@ trait OptionsData
          */
         foreach ($pmRepo->findAllPreloaded() as $pymntMthd) {
             if ($pymntMthd->getActive()) {
-                $optionsDataPaymentMethod[$pymntMthd->getId()] =
+                $optionsDataPaymentMethod[$pymntMthd->reqId()] =
                     $pymntMthd->getName();
             }
         }
@@ -131,7 +126,7 @@ trait OptionsData
         /**
          * @var PostalAddress $postalAddress
          */
-        foreach ($paR->repoClientAll((string) $client_id) as $postalAddress) {
+        foreach ($paR->repoClientAll($client_id) as $postalAddress) {
             $optionsDataPostalAddress[$postalAddress->reqId()] =
                     $postalAddress->getStreetName()
                         . ', ' . $postalAddress->getAdditionalStreetName()
@@ -185,7 +180,7 @@ trait OptionsData
     /**
      * If one user pays for more than one client, find all clients
      */
-    public function optionsDataUserClientsFilter(UCR $ucR, string $userId): array
+    public function optionsDataUserClientsFilter(UCR $ucR, int $userId): array
     {
         $optionsDataClients = [];
         $userClients = $ucR->repoClientquery($userId);
@@ -292,7 +287,7 @@ trait OptionsData
         /** @var Inv $inv */
         foreach ($iR->findAllPreloaded() as $inv) {
             $parentId = $inv->getCreditinvoiceParentId();
-            if ($parentId !== '' && $parentId !== '0') {
+            if (null !== $parentId) {
                 $parentInv = $iR->repoInvUnLoadedquery($parentId);
                 if (null !== $parentInv) {
                     $number = $parentInv->getNumber();
@@ -319,7 +314,7 @@ trait OptionsData
         /** @var Inv $inv */
         foreach ($invs as $inv) {
             $parentId = $inv->getCreditinvoiceParentId();
-            if ($parentId !== '' && $parentId !== '0') {
+            if (null !== $parentId) {
                 $parentInv = $iR->repoInvUnLoadedquery($parentId);
                 if (null !== $parentInv) {
                     $number = $parentInv->getNumber();

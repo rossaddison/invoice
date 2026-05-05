@@ -13,7 +13,7 @@ class QuoteAmountEntityTest extends TestCase
     public function testIsPersistedReturnsFalseByDefault(): void
     {
         $qa = new QuoteAmount();
-        $this->assertFalse($qa->isPersisted());
+        $this->assertFalse($qa->hasIdentity());
     }
 
     public function testReqIdThrowsWhenNotPersisted(): void
@@ -27,7 +27,7 @@ class QuoteAmountEntityTest extends TestCase
     {
         $qa = new QuoteAmount();
         $qa->setId(4);
-        $this->assertTrue($qa->isPersisted());
+        $this->assertTrue($qa->hasIdentity());
         $this->assertSame(4, $qa->reqId());
     }
 

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\InvSentLog;
 
-use App\Invoice\Entity\InvSentLog;
-use App\Invoice\Entity\Inv;
+use App\Infrastructure\Persistence\{
+    InvSentLog\InvSentLog, Inv\Inv
+};
 use Yiisoft\FormModel\FormModel;
 use DateTimeImmutable;
 
@@ -15,11 +16,13 @@ final class InvSentLogForm extends FormModel
     private mixed $date_sent = '';
     private ?Inv $inv = null;
 
-    public function __construct(InvSentLog $invsentlog)
+    public static function show(InvSentLog $invsentlog): self
     {
-        $this->inv = $invsentlog->getInv();
-        $this->inv_id = $invsentlog->getInvId();
-        $this->date_sent = $invsentlog->getDateSent();
+        $form = new self();
+        $form->inv = $invsentlog->getInv();
+        $form->inv_id = $invsentlog->reqInvId();
+        $form->date_sent = $invsentlog->getDateSent();
+        return $form;
     }
 
     public function getInvId(): ?int

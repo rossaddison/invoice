@@ -13,7 +13,7 @@ use Yiisoft\Html\Tag\Img;
  * @var App\Infrastructure\Persistence\Client\Client $client
  * @var App\Infrastructure\Persistence\SalesOrder\SalesOrder $salesorder
  * @var App\Infrastructure\Persistence\SalesOrderAmount\SalesOrderAmount $salesorder_amount
- * @var App\Invoice\Entity\UserInv $userInv
+ * @var App\Infrastructure\Persistence\UserInv\UserInv $userInv
  * @var App\Invoice\Helpers\ClientHelper $clientHelper
  * @var App\Invoice\Helpers\DateHelper $dateHelper
  * @var App\Invoice\Helpers\NumberHelper $numberHelper
@@ -509,7 +509,7 @@ $vat = $s->getSetting('enable_vat_registration');
                         <?php
     if (!empty($salesorder_tax_rates) && $vat == '0') {
         /**
-         * @var App\Invoice\Entity\SalesOrderTaxRate $salesorder_tax_rate
+         * @var App\Infrastructure\Persistence\SalesOrderTaxRate\SalesOrderTaxRate $salesorder_tax_rate
          */
         foreach ($salesorder_tax_rates as $salesorder_tax_rate) : ?>
                                 <tr>

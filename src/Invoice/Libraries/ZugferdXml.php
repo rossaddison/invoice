@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Invoice\Libraries;
 
-use App\Invoice\Entity\Inv;
-use App\Invoice\Entity\InvAmount;
-use App\Invoice\Entity\InvItem;
+use App\Infrastructure\Persistence\Inv\Inv;
+use App\Infrastructure\Persistence\InvAmount\InvAmount;
+use App\Infrastructure\Persistence\InvItem\InvItem;
 use App\Invoice\Setting\SettingRepository as sR;
 use App\Invoice\InvItemAmount\InvItemAmountRepository as iiaR;
 use Yiisoft\Html\Html;
@@ -128,7 +128,7 @@ final class ZugferdXml
         $node->appendChild($this->xmlApplicableSupplyChainTradeSettlement($doc));
         /**
          * @var int $index
-         * @var \App\Invoice\Entity\InvItem $item
+         * @var \App\Infrastructure\Persistence\InvItem\InvItem $item
          */
         foreach ($this->invoice->getItems() as $index => $item) {
             $node->appendChild($this->xmlIncludedSupplyChainTradeLineItem($doc, $index + 1, $item));
@@ -270,7 +270,7 @@ final class ZugferdXml
     {
         $result = [];
         /**
-         * @var \App\Invoice\Entity\InvItem $item
+         * @var \App\Infrastructure\Persistence\InvItem\InvItem $item
          */
         foreach ($this->invoice->getItems() as $item) {
             if ($item->getTaxRate()?->getTaxRatePercent() == 0) {
@@ -280,9 +280,11 @@ final class ZugferdXml
             if (!isset($result[$key])) {
                 $result[$key] = 0.00;
             }
-            $item_id = $item->getId();
-            /** @var \App\Invoice\Entity\InvItemAmount $inv_item_amount */
-            $inv_item_amount = $this->iiaR->repoInvItemAmountquery((string) $item_id);
+            $item_id = $item->reqId();
+/**
+ * @var \App\Infrastructure\Persistence\InvItemAmount\InvItemAmount $inv_item_amount
+ */
+            $inv_item_amount = $this->iiaR->repoInvItemAmountquery($item_id);
 
             $result[$key] += $inv_item_amount->getSubtotal() ?? 0.00;
         }

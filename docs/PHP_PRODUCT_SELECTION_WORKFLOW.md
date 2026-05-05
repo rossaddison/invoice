@@ -90,7 +90,7 @@ public function selection_inv(FormHydrator $formHydrator, Request $request, pR $
 private function save_product_lookup_item_inv(int $order, Product $product, string $inv_id, pR $pR, trR $trR, uR $unR, iiaR $iiaR, uR $uR, FormHydrator $formHydrator): void
 {
     $invItem = new InvItem();
-    $form = new InvItemForm($invItem, (int) $inv_id);
+    $form = new InvItemForm($invItem, $inv_id);
     
     $ajax_content = [
         'name' => $product->getProduct_name(),

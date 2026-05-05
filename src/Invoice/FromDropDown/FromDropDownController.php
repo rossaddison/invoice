@@ -153,17 +153,13 @@ final class FromDropDownController extends BaseController
     //For rbac refer to AccessChecker
 
     /**
-     * @param CurrentRoute $currentRoute
-     * @param FromDropDownRepository $fromRepository
+     * @param CurrentRoute $curR
+     * @param FromDropDownRepository $fR
      * @return FromDropDown|null
      */
-    private function from(CurrentRoute $currentRoute, FromDropDownRepository $fromRepository): ?FromDropDown
+    private function from(CurrentRoute $curR, FromDropDownRepository $fR): ?FromDropDown
     {
-        $id = $currentRoute->getArgument('id');
-        if (null !== $id) {
-            return $fromRepository->repoFromDropDownLoadedquery($id);
-        }
-        return null;
+        return $fR->repoFromDropDownLoadedquery((int) $curR->getArgument('id'));
     }
 
     /**
