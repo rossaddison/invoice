@@ -22361,12 +22361,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "de95f6d567110e037eddcefa3d0d8f22d75d4053"
+                "reference": "515c293bfd8f02861b1a4cae4ad32894d929782f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/de95f6d567110e037eddcefa3d0d8f22d75d4053",
-                "reference": "de95f6d567110e037eddcefa3d0d8f22d75d4053",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/515c293bfd8f02861b1a4cae4ad32894d929782f",
+                "reference": "515c293bfd8f02861b1a4cae4ad32894d929782f",
                 "shasum": ""
             },
             "conflict": {
@@ -22433,7 +22433,7 @@
                 "backpack/filemanager": "<2.0.2|>=3,<3.0.9",
                 "bacula-web/bacula-web": "<9.7.1",
                 "badaso/core": "<=2.9.11",
-                "bagisto/bagisto": "<2.3.10",
+                "bagisto/bagisto": "<=2.3.15",
                 "barrelstrength/sprout-base-email": "<1.2.7",
                 "barrelstrength/sprout-forms": "<3.9",
                 "barryvdh/laravel-translation-manager": "<0.6.8",
@@ -22657,6 +22657,7 @@
                 "flarum/nicknames": "<1.8.3",
                 "flarum/sticky": ">=0.1.0.0-beta14,<=0.1.0.0-beta15",
                 "flarum/tags": "<=0.1.0.0-beta13",
+                "flightphp/core": "<3.18.1",
                 "floriangaerber/magnesium": "<0.3.1",
                 "fluidtypo3/vhs": "<5.1.1",
                 "fof/byobu": ">=0.3.0.0-beta2,<1.1.7",
@@ -22688,6 +22689,7 @@
                 "getformwork/formwork": "<=2.3.3",
                 "getgrav/grav": "<2.0.0.0-beta4",
                 "getgrav/grav-plugin-api": "<1.0.0.0-beta15",
+                "getgrav/grav-plugin-form": "<9.1",
                 "getkirby/cms": "<4.9|>=5,<5.4",
                 "getkirby/kirby": "<3.9.8.3-dev|>=3.10,<3.10.1.2-dev|>=4,<4.7.1",
                 "getkirby/panel": "<2.5.14",
@@ -23415,7 +23417,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-06T21:27:25+00:00"
+            "time": "2026-05-06T23:20:48+00:00"
         },
         {
             "name": "sanmai/di-container",
