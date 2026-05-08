@@ -8,6 +8,7 @@ namespace App\Invoice\Setting;
 use Brick\Math\BigNumber;
 use Brick\Math\RoundingMode;
 //https://github.com/brick/money
+use Brick\Money\Context\DefaultContext;
 use Brick\Money\CurrencyConverter;
 // Use settings/view/peppol to manually load the exchange rate for today via:
 use Brick\Money\ExchangeRateProvider\ConfigurableProvider;
@@ -192,17 +193,15 @@ final class SettingRepository extends Select\Repository
         $b = $this->getSetting('peppol_document_currency');
         $one_of_a_converts_to_this_of_b = $this->getSetting('currency_from_to');
         $one_of_b_converts_to_this_of_a = $this->getSetting('currency_to_from');
-        $provider = new ConfigurableProvider();
-        // build the exchangeRates array
-        // $exchangeRates['GBP']['USD'] = 1.34
-        // $exchangeRates['USD']['GBP'] = 0.73
-        $provider->setExchangeRate($a, $b, $one_of_a_converts_to_this_of_b);
-        $provider->setExchangeRate($b, $a, $one_of_b_converts_to_this_of_a);
+        $provider = ConfigurableProvider::builder()
+            ->addExchangeRate($a, $b, $one_of_a_converts_to_this_of_b)
+            ->addExchangeRate($b, $a, $one_of_b_converts_to_this_of_a)
+            ->build();
         $converter = new CurrencyConverter($provider);
         if ($a !== $b) {
             $money = Money::of((string) $from, $a);
             // see https://github.com/brick/money#Using an ORM
-            $int = $converter->convert($money, $b, null, RoundingMode::Down)
+            $int = $converter->convert($money, $b, [], new DefaultContext(), RoundingMode::Down)
                 // convert to cents in order to use the int
                 ->getMinorAmount()
                 ->toInt();
